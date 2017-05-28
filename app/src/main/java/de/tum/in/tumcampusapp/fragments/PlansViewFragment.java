@@ -17,14 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.common.collect.ImmutableList;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -139,9 +133,7 @@ public class PlansViewFragment extends Fragment {
                     String currentLocalName = PlanFile.values()[pos].getLocalName();
                     File pdfFile = new File(fileDirectory, currentLocalName);
                     if (pdfFile.exists()){
-                        if (isFilePdf(pdfFile)){
-                            openPdfViewer(pdfFile);
-                        }else{
+                        if (!openPdfViewer(pdfFile)){
                             Toast.makeText(getContext(), "Invalid file format, contact the administrator via email and attach filename.", Toast.LENGTH_LONG).show();
                         }
                     }else{
@@ -190,37 +182,16 @@ public class PlansViewFragment extends Fragment {
             }).show();
     }
 
-    private boolean isFilePdf(File file){
-        BufferedReader bfr = null;
-        try{
-            bfr = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charset.forName("UTF-8")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
-        int curByte;
-        try {
-            String firstFourChars = "";
-            for (int i = 0; ((curByte = bfr.read()) != -1) && i < 4; i++){
-                firstFourChars += (char) curByte;
-            }
-            return firstFourChars.equals("%PDF");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
-    public void openPdfViewer(File pdf){
+    public boolean openPdfViewer(File pdf){
         PdfViewFragment pdfFragment = (PdfViewFragment)getActivity().getSupportFragmentManager().findFragmentByTag("PDF_FRAGMENT");
-        if (pdfFragment == null){
-            pdfFragment = new PdfViewFragment();
-        }
-        pdfFragment.setPdf(pdf);
+        if (pdfFragment == null) pdfFragment = new PdfViewFragment();
+        if (!pdfFragment.setPdf(pdf)) return false;
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.activity_plans_fragment_frame, pdfFragment, "PDF_FRAGMENT");
         transaction.addToBackStack(null);
         transaction.commit();
+        return true;
     }
 }
 
