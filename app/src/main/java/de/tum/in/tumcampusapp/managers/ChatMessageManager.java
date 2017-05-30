@@ -75,7 +75,7 @@ public class ChatMessageManager extends AbstractManager {
                 ChatMessage msg = new ChatMessage(cur.getString(1), member);
                 msg.setRoom(cur.getInt(2));
                 msg.setId(cur.getInt(3));
-                msg.internalID = cur.getInt(4);
+                msg.setInternalID(cur.getInt(4));
                 list.add(msg);
             } while (cur.moveToNext());
         }
@@ -129,7 +129,7 @@ public class ChatMessageManager extends AbstractManager {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
                 ChatMessage msg = new ChatMessage(cur.getString(1), member);
                 msg.setRoom(cur.getInt(2));
-                msg.internalID = cur.getInt(3);
+                msg.setInternalID(cur.getInt(3));
                 list.add(msg);
             } while (cur.moveToNext());
         }
@@ -151,7 +151,7 @@ public class ChatMessageManager extends AbstractManager {
      * Removes the message from unsent database
      */
     public void removeFromUnsent(ChatMessage message) {
-        db.execSQL("DELETE FROM unsent_chat_message WHERE _id=?", new String[]{String.valueOf(message.internalID)});
+        db.execSQL("DELETE FROM unsent_chat_message WHERE _id=?", new String[]{String.valueOf(message.getInternalID())});
     }
 
     /**
@@ -210,7 +210,7 @@ public class ChatMessageManager extends AbstractManager {
             read = true;
         }
         cur.close();
-        m.setStatus(ChatMessage.STATUS_SENT);
+        m.setStatus(ChatMessage.Companion.getSTATUS_SENT());
         m.setRead(read);
         replaceMessage(m);
         db.setTransactionSuccessful();
