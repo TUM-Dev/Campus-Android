@@ -426,4 +426,7 @@ Signatur: %5$s</string>
 
     <string name="transport_action_usage">Hilfestellung</string>
     <string name="transport_help_text">Tippe deine favorisierten Verkehrslinien an um sie hervorzuheben. Tippe erneut und sie sind wieder normal.</string>
+    <string name="timetable_widget">Stundenplan Widget TUM</string>
+    <string name="timetable_widget_select_lectures">Vorlesungen auswählen</string>
+    <string name="timetable_widget_no_lectures">KeineVorlesungen geplant :)</string>
 </resources>

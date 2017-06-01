@@ -154,6 +154,11 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
     }
 
+    public Cursor getNextWeekFromDb(){
+        String requestedDateString = Utils.getDateString(new Date());
+        //return db.rawQuery("SELECT * FROM calendar WHERE dtstart BETWEEN date(?) AND date(?) AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
+    }
+
     /**
      * Get current lecture from the database
      *
