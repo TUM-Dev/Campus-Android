@@ -6,13 +6,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.v4.app.NotificationCompat;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 
 public class FavoriteDishService extends IntentService {
 
@@ -23,32 +23,37 @@ public class FavoriteDishService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent ignored) {
+    protected void onHandleIntent(Intent handledCafeterias) {
         /**
          * create a notification that dish is available.
          */
-        Cursor c = new CafeteriaMenuManager(this).getFavoriteDishToday();
-        int index = 0;
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            do {
-                Intent intent = new Intent(this, CafeteriaActivity.class);
-                intent.putExtra(Const.MENSA_FOR_FAVORITEDISH, c.getInt(1));
-                PendingIntent pi = PendingIntent.getActivity(this, index, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Your Favorite Dish!")
-                        .setContentText(c.getString(0))
-                        .setAutoCancel(true);
+        int bestMensa = handledCafeterias.getIntExtra("bestMensa",-1);
+        CafeteriaManager cmm = new CafeteriaManager(getBaseContext());
+        String bestMensaName = cmm.getMensaNameFromId(bestMensa);
 
-                mBuilder.setContentIntent(pi);
-                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-                mBuilder.setAutoCancel(true);
-                NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(index, mBuilder.build());
-                index++;
-            }
-            while (c.moveToNext());
+        ArrayList<Integer> mensaIds = handledCafeterias.getIntegerArrayListExtra("mensaIds");
+        HashMap<Integer,ArrayList<String>> favoriteDishes = new HashMap<>();
+        for (int id : mensaIds){
+            favoriteDishes.put(id, handledCafeterias.getStringArrayListExtra(""+id));
+        }
+
+        ArrayList<String> bestMensasDishes = favoriteDishes.get(bestMensa);
+
+        for (int i=0; i < bestMensasDishes.size(); i++){
+            Intent intent = new Intent(this, CafeteriaActivity.class);
+            intent.putExtra(Const.MENSA_FOR_FAVORITEDISH, bestMensa);
+            PendingIntent pi = PendingIntent.getActivity(this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("Food: "+bestMensaName)
+                    .setContentText(bestMensasDishes.get(i))
+                    .setAutoCancel(true);
+
+            mBuilder.setContentIntent(pi);
+            mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+            mBuilder.setAutoCancel(true);
+            NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(i, mBuilder.build());
         }
     }
 }

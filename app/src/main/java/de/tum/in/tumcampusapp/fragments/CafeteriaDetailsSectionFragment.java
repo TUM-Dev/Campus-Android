@@ -1,10 +1,7 @@
 package de.tum.in.tumcampusapp.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,7 +32,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.managers.OpenHoursManager;
-import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
 
 /**
  * Fragment for each cafeteria-page.
@@ -140,18 +136,18 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                             String[] data = id.split("__");
                             String dishname = data[0];
                             int mensaId = Integer.parseInt(data[1]);
-                            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                            Intent myIntent = new Intent(context, FavoriteDishReceiver.class);
+
+                            /*AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                            Intent myIntent = new Intent(context, FavoriteDishAlarm.class);*/
 
                             if (((ToggleButton) view).isChecked()) {
                                 DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
                                 String currentDate = DateTime.now().toString(formatter);
-                                Cursor c = cmm.getFavoriteDishNextDates(mensaId, dishname);
                                 cmm.insertFavoriteDish(mensaId, dishname, currentDate, favDish.getTag().toString());
-
+                                cmm.notifyFavoriteFoodService();
+                                /*Cursor c = cmm.getFavoriteDishNextDates(mensaId, dishname);
                                 if (c.getCount() > 0) {
                                     while (c.moveToNext()) {
-
                                         cmm.insertFavoriteDish(mensaId, dishname, c.getString(0), favDish.getTag().toString());
                                         Cursor cur = cmm.getLastInsertedDishId(mensaId, dishname);
                                         DateTime dt = formatter.parseDateTime(c.getString(0)).withHourOfDay(9);
@@ -165,16 +161,15 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                                         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alertID, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                                         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millsToAlarm, pendingIntent);
                                     }
-                                }
+                                }*/
                             } else {
-                                Cursor curs = cmm.getFavoriteDishAllIds(mensaId, dishname);
+                                /*Cursor curs = cmm.getFavoriteDishAllIds(mensaId, dishname);
                                 while (curs.moveToNext()) {
                                     int alertId = curs.getInt(0);
                                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alertId, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                                     pendingIntent.cancel();
                                     alarmManager.cancel(pendingIntent);
-                                }
-
+                                }*/
                                 cmm.deleteFavoriteDish(mensaId, dishname);
                             }
                         }

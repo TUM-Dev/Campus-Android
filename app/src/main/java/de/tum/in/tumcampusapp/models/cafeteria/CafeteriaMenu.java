@@ -76,4 +76,8 @@ public class CafeteriaMenu {
 				+ this.typeShort + " typeLong=" + this.typeLong + " typeNr="
 				+ this.typeNr + " name=" + this.name;
 	}
+
+	public String getName(){
+		return name;
+	}
 }
