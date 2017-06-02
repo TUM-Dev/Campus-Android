@@ -186,6 +186,9 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         TransportManager transportManager = new TransportManager(this);
         transportManager.addWidget(appWidgetId, this.widgetDepartures);
 
+        // update alarms
+        MVVWidget.setAlarm(this);
+
         // update widget
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         MVVWidget.updateAppWidget(this, appWidgetManager, appWidgetId, true);

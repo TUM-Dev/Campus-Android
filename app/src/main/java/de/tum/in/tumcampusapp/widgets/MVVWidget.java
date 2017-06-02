@@ -16,6 +16,7 @@ import java.util.Timer;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.managers.TransportManager;
+import de.tum.in.tumcampusapp.managers.TransportManager.WidgetDepartures;
 
 /**
  * Implementation of App Widget functionality.
@@ -36,12 +37,13 @@ public class MVVWidget extends AppWidgetProvider {
         if (transportManager == null) transportManager = new TransportManager(context);
         updateAppWidgets(context, appWidgetManager, appWidgetIds);
         planUpdates(context, appWidgetManager, appWidgetIds);
-        setAlarm(context, appWidgetIds);
+        setAlarm(context);
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
+        if (transportManager == null) transportManager = new TransportManager(context);
         // When the user deletes the widget, delete the associated setting from the database.
         for (int appWidgetId : appWidgetIds) {
             transportManager.deleteWidget(appWidgetId);
@@ -54,22 +56,22 @@ public class MVVWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         if (transportManager == null) transportManager = new TransportManager(context);
         // Enter relevant functionality for when the first widget is created
-        setAlarm(context, this.getActiveWidgetIds(context));
+        setAlarm(context);
     }
 
     @Override
     public void onDisabled(Context context) {
         // Cancel alarm as the last widget has been removed
-        setAlarm(context, new int[0]);
+        setAlarm(context);
         super.onDisabled(context);
     }
 
     /**
      * If no alarm is running yet a new alarm is started which repeats every minute
      */
-    private static void setAlarm(Context context, int[] appWidgetIds) {
+    public static void setAlarm(Context context) {
         boolean auto_reload = false;
-        for (int appWidgetId : appWidgetIds) {
+        for (int appWidgetId : getActiveWidgetIds(context)) {
             if (transportManager.getWidget(appWidgetId).autoReload()) {
                 auto_reload = true;
                 break;
@@ -78,10 +80,12 @@ public class MVVWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, MVVWidget.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        System.out.println("cancel alarms");
         am.cancel(sender);
         if (auto_reload) {
             intent.setAction(MVVWidget.BROADCAST_RELOAD_ALL);
             am.setRepeating(AlarmManager.RTC, UPDATE_ALARM_DELAY, UPDATE_ALARM_DELAY, sender);
+            System.out.println("schedule alarms");
         }
     }
 
@@ -129,7 +133,7 @@ public class MVVWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, boolean forceLoadData) {
         // Get the settings for this widget from the database
-        TransportManager.WidgetDepartures widgetDepartures = transportManager.getWidget(appWidgetId);
+        WidgetDepartures widgetDepartures = transportManager.getWidget(appWidgetId);
 
         System.out.println("update" + appWidgetId + " force: " + forceLoadData + " " + widgetDepartures.getStationId());
 
@@ -190,14 +194,14 @@ public class MVVWidget extends AppWidgetProvider {
                 // There may be multiple widgets active, so update all of them
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                 int[] appWidgetIds = getActiveWidgetIds(context);
-                updateAppWidgets(context, appWidgetManager, this.getActiveWidgetIds(context));
+                updateAppWidgets(context, appWidgetManager, getActiveWidgetIds(context));
                 planUpdates(context, appWidgetManager, appWidgetIds);
                 break;
         }
         super.onReceive(context, intent);
     }
 
-    private int[] getActiveWidgetIds(Context context) {
+    private static int[] getActiveWidgetIds(Context context) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         ComponentName thisWidget = new ComponentName(context, MVVWidget.class);
         return appWidgetManager.getAppWidgetIds(thisWidget);

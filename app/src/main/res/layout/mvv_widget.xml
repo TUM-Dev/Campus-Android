@@ -34,7 +34,8 @@
             android:background="@color/color_primary"
             android:padding="10dp"
             android:src="@drawable/ic_autorenew"
-            android:typeface="sans" />
+            android:typeface="sans"
+            android:layout_centerVertical="true"/>
 
         <ImageView
             android:id="@+id/mvv_widget_setting"
@@ -45,7 +46,8 @@
             android:background="@color/color_primary"
             android:padding="10dp"
             android:src="@drawable/ic_action_settings"
-            android:typeface="sans" />
+            android:typeface="sans"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
 
