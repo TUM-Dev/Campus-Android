@@ -429,4 +429,6 @@ Signatur: %5$s</string>
     <string name="mvv_widget_no_station">Keine Station ausgewählt</string>
     <string name="mvv_widget_select_station">Station auswählen</string>
     <string name="mvv_widget_no_data">Offline oder keine Daten verfügbar</string>
+    <string name="mvv_auto_reload">Automatisch aktualisieren</string>
+    <string name="mvv_auto_reload_hint">Erhöht Strom und Datenverbrauch</string>
 </resources>

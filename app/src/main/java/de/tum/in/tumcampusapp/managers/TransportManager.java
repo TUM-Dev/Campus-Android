@@ -100,7 +100,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     private static final String POINTS = "points";
     private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
-    private static SparseArray<WidgetDepartures> widgetDepartures;
+    private static SparseArray<WidgetDepartures> widgetDeparturesList;
 
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
@@ -126,10 +126,10 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, symbol VARCHAR)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS transport_widgets (" +
-                "id INTEGER PRIMARY KEY, station VARCHAR, station_id VARCHAR, location BOOLEAN)");
+                "id INTEGER PRIMARY KEY, station VARCHAR, station_id VARCHAR, location BOOLEAN, reload BOOLEAN)");
 
-        if(TransportManager.widgetDepartures == null) {
-            TransportManager.widgetDepartures = new SparseArray<>();
+        if(TransportManager.widgetDeparturesList == null) {
+            TransportManager.widgetDeparturesList = new SparseArray<>();
         }
     }
 
@@ -160,19 +160,16 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
 
     /**
      * Adds the settings of a widget to the widget list, replaces the existing settings if there are some
-     *
-     * @param widget_id    The id of the widget
-     * @param station      The station id which will be displayed on the widget
-     * @param use_location True if not a fixed station is displayed but the nearest station
      */
-    public void addWidget(int widget_id, String station, String station_id, boolean use_location) {
+    public void addWidget(int appWidgetId, WidgetDepartures widgetDepartures) {
         ContentValues values = new ContentValues();
-        values.put("id", widget_id);
-        values.put("station", station);
-        values.put("station_id", station_id);
-        values.put("location", use_location);
+        values.put("id", appWidgetId);
+        values.put("station", widgetDepartures.getStation());
+        values.put("station_id", widgetDepartures.getStationId());
+        values.put("location", widgetDepartures.useLocation());
+        values.put("reload", widgetDepartures.autoReload());
         db.replace("transport_widgets", null, values);
-        TransportManager.widgetDepartures.remove(widget_id);
+        TransportManager.widgetDeparturesList.put(appWidgetId, widgetDepartures);
     }
 
     /**
@@ -182,7 +179,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      */
     public void deleteWidget(int widget_id) {
         db.delete("transport_widgets", "id = ?", new String[]{String.valueOf(widget_id)});
-        TransportManager.widgetDepartures.remove(widget_id);
+        TransportManager.widgetDeparturesList.remove(widget_id);
     }
 
     /**
@@ -196,26 +193,21 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @return The WidgetDepartures Object
      */
     public WidgetDepartures getWidget(int widget_id) {
-        if(TransportManager.widgetDepartures.indexOfKey(widget_id) >= 0){
-            return TransportManager.widgetDepartures.get(widget_id);
+        if(TransportManager.widgetDeparturesList.indexOfKey(widget_id) >= 0){
+            return TransportManager.widgetDeparturesList.get(widget_id);
         }
         Cursor c = db.rawQuery("SELECT * FROM transport_widgets WHERE id = ?", new String[]{String.valueOf(widget_id)});
-        String station = null;
-        String station_id = "";
+        WidgetDepartures widgetDepartures = new WidgetDepartures();
         if (c.getCount() >= 1) {
             c.moveToFirst();
-            station = c.getString(c.getColumnIndex("station"));
-            station_id = c.getString(c.getColumnIndex("station_id"));
-            boolean use_location = c.getInt(c.getColumnIndex("location")) != 0;
+            widgetDepartures.setStation(c.getString(c.getColumnIndex("station")));
+            widgetDepartures.setStationId(c.getString(c.getColumnIndex("station_id")));
+            widgetDepartures.setUseLocation(c.getInt(c.getColumnIndex("location")) != 0);
+            widgetDepartures.setAutoReload(c.getInt(c.getColumnIndex("reload")) != 0);
             c.close();
-            if (use_location) {
-                // TODO implement nearest station (replace the station_id string with the calculated station)
-                station = "use location";
-            }
         }
-        WidgetDepartures wD = new WidgetDepartures(station, station_id);
-        TransportManager.widgetDepartures.put(widget_id, wD);
-        return wD;
+        TransportManager.widgetDeparturesList.put(widget_id, widgetDepartures);
+        return widgetDepartures;
     }
 
     /**
@@ -407,20 +399,43 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     }
 
     public static class WidgetDepartures {
-        String station;
-        String station_id;
-        List<Departure> departures;
-        long last_load;
-        boolean is_offline = false;
+
+        private String station;
+        private String station_id;
+        private boolean use_location;
+        private boolean auto_reload;
+        private List<Departure> departures;
+        private long last_load;
+        private boolean is_offline = false;
 
         /**
          * Create a new WidgetDepartures. It contains the widget settings and can load the according departure list
-         *
-         * @param station The station name
-         * @param station_id The station id
          */
-        WidgetDepartures(String station, String station_id) {
-            this.station = station;
+        WidgetDepartures() {
+            this.station = "";
+            this.station_id = "";
+            this.auto_reload = false;
+            this.use_location = false;
+            this.departures = new ArrayList<>();
+        }
+
+        /**
+         * The station_id which is set for this widget
+         * @return The station name
+         */
+        public String getStationId() {
+            return this.station_id;
+        }
+
+        /**
+         * Sets a station_id for this widget
+         * @param station_id The station name
+         */
+        public void setStationId(String station_id) {
+            if(!station_id.equals(this.station_id)){
+                System.out.println("reset data because station changed");
+                this.departures.clear();
+            }
             this.station_id = station_id;
         }
 
@@ -429,8 +444,38 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
          * @return The station name
          */
         public String getStation() {
+            if (this.use_location) {
+                // TODO implement nearest station (replace the station_id string with the calculated station)
+                this.station = "use location";
+            }
             return this.station;
         }
+
+        /**
+         * Sets a station title for this widget
+         * @param station The station name
+         */
+        public void setStation(String station) { this.station = station;}
+
+        // TODO
+        public boolean useLocation() { return use_location; }
+
+        // TODO
+        public void setUseLocation(boolean use_location) { this.use_location = use_location; }
+
+        /**
+         * True if widget should update automatically, otherwise a button-press is required
+         * @return Whether auto_reload is enabled
+         */
+        public boolean autoReload() {
+            return this.auto_reload;
+        }
+
+        /**
+         * True if widget should update automatically, otherwise a button-press is required
+         * @param auto_reload Whether auto_reload should enabled
+         */
+        public void setAutoReload(boolean auto_reload) { this.auto_reload = auto_reload; }
 
         /**
          * Are the departure information older than two minutes (because of any connection problems)
@@ -446,13 +491,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
          *
          * @return The list of departures
          */
-        public List<Departure> getDepartures(Context context) {
+        public List<Departure> getDepartures(Context context, boolean force_server_load) {
             if(this.departures == null){
                 this.departures = new ArrayList<>();
             }
             // download only id there is no data or the last loading is more than 2min ago
-            if (this.departures.size() == 0 || System.currentTimeMillis() - this.last_load > MVVWidget.DOWNLOAD_DELAY) {
-                List<Departure> departures = TransportManager.getDeparturesFromExternal(context, station_id);
+            if (this.departures.size() == 0 || force_server_load || this.autoReload() && System.currentTimeMillis() - this.last_load > MVVWidget.DOWNLOAD_DELAY) {
+                List<Departure> departures = TransportManager.getDeparturesFromExternal(context, this.getStationId());
                 if(departures.size() == 0){
                     this.is_offline = true;
                 } else {

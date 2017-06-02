@@ -10,19 +10,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_primary"
-        android:elevation="2dp"
-        android:padding="10dp">
+        android:elevation="2dp">
 
         <TextView
             android:id="@+id/mvv_widget_station"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/mvv_widget_reload"
+            android:layout_toStartOf="@+id/mvv_widget_reload"
+            android:background="@color/color_primary"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:typeface="sans" />
+
+        <ImageView
+            android:id="@+id/mvv_widget_reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/mvv_widget_setting"
             android:layout_toStartOf="@+id/mvv_widget_setting"
             android:background="@color/color_primary"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:padding="10dp"
+            android:src="@drawable/ic_autorenew"
             android:typeface="sans" />
 
         <ImageView
@@ -32,6 +43,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:background="@color/color_primary"
+            android:padding="10dp"
             android:src="@drawable/ic_action_settings"
             android:typeface="sans" />
     </RelativeLayout>
