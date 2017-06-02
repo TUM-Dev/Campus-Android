@@ -50,7 +50,6 @@
     <!-- To potentially change the Do Not Disturb mode -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
-
     <!--
      Creates a custom permission so only this app can receive its messages.
 
@@ -130,8 +129,10 @@
             android:theme="@style/AppThemeStartup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
@@ -497,6 +498,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.BarrierFreeInfoActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/barrier_free"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity">
+        </activity>
 
         <!-- receiver for the mensaWidget -->
         <receiver
@@ -517,8 +525,10 @@
 
         <!-- receiver for the MVVWidget -->
 
-        <receiver android:name=".widgets.MVVWidget"
-            android:label="@string/mvv_widget">>
+        <receiver
+            android:name=".widgets.MVVWidget"
+            android:label="@string/mvv_widget">
+            >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -532,11 +542,12 @@
             android:name=".widgets.MVVWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <activity android:name=".widgets.MVVWidgetConfigureActivity"
+        <activity
+            android:name=".widgets.MVVWidgetConfigureActivity"
+            android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
-            android:allowTaskReparenting="false"
             android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -588,7 +599,6 @@
         <service
             android:name="de.tum.in.tumcampusapp.services.FavoriteDishService"
             android:enabled="true" />
-
         <service
             android:name=".services.DownloadService"
             android:exported="false" />

@@ -138,6 +138,7 @@
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
+    <string name="barrier_free">Barrier-free Information</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
