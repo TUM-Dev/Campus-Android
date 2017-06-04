@@ -29,14 +29,13 @@ import de.tum.in.tumcampusapp.adapters.PlanListAdapter.PlanListEntry;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
-
-/**
- * Created by Thomas-Notebook on 14.05.2017.
- */
-
 public class PlansViewFragment extends Fragment {
 
     private View fragmentView;
+
+    /**
+     * An enum to map urls to local filenames
+     */
     private enum PlanFile{
         SCHNELLBAHNNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Netz_2016_Version_MVG.PDF", "Schnellbahnnetz.pdf"),
         NACHTLINIENNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Nachtnetz_2016.pdf", "Nachtliniennetz.pdf"),
@@ -63,6 +62,10 @@ public class PlansViewFragment extends Fragment {
 
     private ProgressBar progressBar;
 
+    /**
+     * The actual downloading of the pdf files occurs here. Until the download process is finished
+     * the listview is disabled and the progressbar is shown.
+     */
     private final AsyncTask<PlanFile, Integer, Void> pdfDownloader = new AsyncTask<PlanFile, Integer, Void>() {
         @Override
         protected Void doInBackground(PlanFile... files) {
@@ -182,7 +185,15 @@ public class PlansViewFragment extends Fragment {
             }).show();
     }
 
-
+    /**
+     * Either creates a new one or uses a existing PdfViewFragment. Then the method tries to open
+     * a given file in the acquired pdf fragment. If that's successful, the current fragment gets
+     * added to the backstack and is being replaced by the pdf fragment.
+     * @param pdf
+     * The file to be opened
+     * @return
+     * True, if opening the Pdf was successful, False otherwise. (e.g. file was not pdf but 404 html instead)
+     */
     public boolean openPdfViewer(File pdf){
         PdfViewFragment pdfFragment = (PdfViewFragment)getActivity().getSupportFragmentManager().findFragmentByTag("PDF_FRAGMENT");
         if (pdfFragment == null) pdfFragment = new PdfViewFragment();

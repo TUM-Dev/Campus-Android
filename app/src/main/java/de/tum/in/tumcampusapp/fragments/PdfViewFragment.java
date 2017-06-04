@@ -1,5 +1,4 @@
 package de.tum.in.tumcampusapp.fragments;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,13 +12,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import com.github.barteksc.pdfviewer.PDFView;
-
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public class PdfViewFragment extends Fragment {
     private LayoutInflater inflater;
     private PDFView pdfView;
     private File pdf;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
@@ -40,6 +40,14 @@ public class PdfViewFragment extends Fragment {
         pdfView.fromFile(pdf).load();
     }
 
+    /**
+     * First checks whether the given file is actually a valid pdf and then sets it,
+     * without opening it yet.
+     * @param pdf
+     * The file to be opened.
+     * @return
+     * True, if file is a valid pdf, and False if not.
+     */
     public boolean setPdf(File pdf){
         if (isFilePdf(pdf)){
             this.pdf = pdf;
@@ -48,12 +56,19 @@ public class PdfViewFragment extends Fragment {
         return false;
     }
 
+    /**
+     * This method checks the first 4 characters/bytes of a file. A valid pdf starts with '%PDF'.
+     * @param file
+     * The file to be checked.
+     * @return
+     * True if file is a Pdf, False if not.
+     */
     private boolean isFilePdf(File file){
         BufferedReader bfr = null;
         try{
             bfr = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charset.forName("UTF-8")));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Utils.log(e);
             return false;
         }
         int curByte;
@@ -64,7 +79,7 @@ public class PdfViewFragment extends Fragment {
             }
             return firstFourChars.equals("%PDF");
         } catch (IOException e) {
-            e.printStackTrace();
+            Utils.log(e);
             return false;
         }
     }
