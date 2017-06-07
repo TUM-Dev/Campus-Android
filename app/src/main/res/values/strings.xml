@@ -138,6 +138,7 @@
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
+    <string name="facility_locator">Facility Locator</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
@@ -499,6 +500,9 @@ Signature: %5$s</string>
 
     <string name="transport_action_usage">Usage</string>
     <string name="transport_help_text">Tap your favorite transportation lines to highlight them. Tap again to revert them back to normal.</string>
+
+    <!--Facility Locator-->
+    <string name="tag_facility">Tag Facility</string>
 </resources>
 
 
