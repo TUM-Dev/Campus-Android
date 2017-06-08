@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.services.FavoriteDishAlarmScheduler;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
@@ -59,6 +60,14 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
          */
         mViewPager.setOffscreenPageLimit(50);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent cancelPendingFoodNotifications = new Intent(this, FavoriteDishAlarmScheduler.class);
+        cancelPendingFoodNotifications.putExtra("cancelNotifications",true);
+        sendBroadcast(cancelPendingFoodNotifications);
     }
 
     @Override

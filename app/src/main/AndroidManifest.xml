@@ -619,11 +619,7 @@
         </receiver>
 
         <!-- Used to set Notification for favoriteDish -->
-        <receiver android:name="de.tum.in.tumcampusapp.services.FavoriteDishAlarm"/>
-
-        <service
-            android:name="de.tum.in.tumcampusapp.services.FavoriteDishService"
-            android:enabled="true" />
+        <receiver android:name="de.tum.in.tumcampusapp.services.FavoriteDishAlarmScheduler"/>
 
         <service
             android:name=".services.DownloadService"

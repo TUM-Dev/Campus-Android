@@ -137,39 +137,11 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                             String dishname = data[0];
                             int mensaId = Integer.parseInt(data[1]);
 
-                            /*AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                            Intent myIntent = new Intent(context, FavoriteDishAlarm.class);*/
-
                             if (((ToggleButton) view).isChecked()) {
                                 DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
                                 String currentDate = DateTime.now().toString(formatter);
                                 cmm.insertFavoriteDish(mensaId, dishname, currentDate, favDish.getTag().toString());
-                                cmm.notifyFavoriteFoodService();
-                                /*Cursor c = cmm.getFavoriteDishNextDates(mensaId, dishname);
-                                if (c.getCount() > 0) {
-                                    while (c.moveToNext()) {
-                                        cmm.insertFavoriteDish(mensaId, dishname, c.getString(0), favDish.getTag().toString());
-                                        Cursor cur = cmm.getLastInsertedDishId(mensaId, dishname);
-                                        DateTime dt = formatter.parseDateTime(c.getString(0)).withHourOfDay(9);
-                                        long millsToAlarm = dt.getMillis() - DateTime.now().getMillis();
-
-                                        int alertID = 0;
-                                        if (cur.moveToFirst()) {
-                                            alertID = cur.getInt(0);
-                                        }
-
-                                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alertID, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millsToAlarm, pendingIntent);
-                                    }
-                                }*/
                             } else {
-                                /*Cursor curs = cmm.getFavoriteDishAllIds(mensaId, dishname);
-                                while (curs.moveToNext()) {
-                                    int alertId = curs.getInt(0);
-                                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alertId, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                                    pendingIntent.cancel();
-                                    alarmManager.cancel(pendingIntent);
-                                }*/
                                 cmm.deleteFavoriteDish(mensaId, dishname);
                             }
                         }
