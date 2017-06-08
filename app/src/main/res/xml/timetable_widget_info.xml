@@ -7,8 +7,8 @@
     android:minResizeHeight="60dp"
     android:minResizeWidth="220dp"
     android:minWidth="250dp"
+    android:previewImage="@drawable/widget_timetable_preview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="15000"
     android:widgetCategory="home_screen|keyguard"
     tools:targetApi="jelly_bean_mr1" />
-<!--android:previewImage="@drawable/widget_mvv_preview"-->
