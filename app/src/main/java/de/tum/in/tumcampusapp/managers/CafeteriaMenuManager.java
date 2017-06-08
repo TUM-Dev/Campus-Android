@@ -1,25 +1,19 @@
 package de.tum.in.tumcampusapp.managers;
-
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-
 import com.google.common.base.Optional;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
-import de.tum.in.tumcampusapp.services.FavoriteDishAlarm;
-import de.tum.in.tumcampusapp.services.FavoriteDishService;
+import de.tum.in.tumcampusapp.services.FavoriteFoodAlarmEntry;
 
 /**
  * Cafeteria Menu Manager, handles database stuff, external imports
@@ -123,7 +117,7 @@ public class CafeteriaMenuManager extends AbstractManager {
     public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {
         db.execSQL("INSERT INTO favorite_dishes (mensaId, dishName, date, tag) VALUES (?, ?, ?,?)",
                 new String[]{String.valueOf(mensaId), dishName, date, tag});
-        notifyFavoriteFoodService();
+        notifyFavoriteFoodService(false);
     }
 
     public Cursor getFavoriteDishNextDates(int mensaId, String dishName) {
@@ -149,6 +143,7 @@ public class CafeteriaMenuManager extends AbstractManager {
     public void deleteFavoriteDish(int mensaId, String dishName) {
         db.execSQL("DELETE "
                 + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{String.valueOf(mensaId), dishName});
+        notifyFavoriteFoodService(true);
     }
 
     public Cursor getFavoriteDishToday() {
@@ -220,52 +215,59 @@ public class CafeteriaMenuManager extends AbstractManager {
                 new String[]{String.valueOf(c.cafeteriaId),
                         Utils.getDateString(c.date), c.typeShort, c.typeLong,
                         String.valueOf(c.typeNr), c.name});
-        notifyFavoriteFoodService();
+        notifyFavoriteFoodService(true);
+    }
+    /**
+     * Queries all favorite dishes.
+     * @return
+     * A cursor to iterate through the dishnames.
+     */
+    private Cursor getAllFavoriteDishesByName(){
+        return db.rawQuery("SELECT dishName FROM favorite_dishes",null);
     }
 
     /**
-     * This method has to be called after we updated the local favorite database or if the cafeterias'
-     * menus have changed. It first checks whether there are any cafeterias, which serve a favorite food
-     * and only if there's at least one we query the location manager to see if it is the prefered one.
-     * Then a background service is started, which sends a notification at a given time and makes sure,
-     * that there's only one of these notifications per day.
+     * Prepares a bundle, which can be sent to the FavoriteDishAlarmScheduler, which contains all necessary
+     * information to schedule the FavoriteDishAlarms. Its procedure is the following: Get the names
+     * of all the favorite dishes and their corresponding mensaId (the user flags a food as favorite,
+     * which also stores the mensaId). By assuming that the user will only rate the food as a favorite,
+     * if he actually goes to that specific mensa, the method checks if there's any information about
+     * any of these mensas serving a user's favorite food in the future. If that is the case a Bundle
+     * containing the following information: MensaId, FavoriteDishName, Date will be constructed and
+     * sent to the FavoriteDishAlarmScheduler. This way it is possible to schedule multiple alarms in advance.
+     * @param resetAlarms
+     * True if all currently scheduled alarms should be discarded, False if not
      */
-    public void notifyFavoriteFoodService(){
-        Cursor c = db.rawQuery("SELECT dishName, mensaId FROM favorite_dishes", null);
-        String dishName;
-        int mensaId;
-
-        HashMap<Integer, ArrayList<String>> mensaServesDish = new HashMap<>();
-        while(c.moveToNext()){
-            dishName = c.getString(c.getColumnIndex("dishName"));
-            mensaId = c.getInt(c.getColumnIndex("mensaId"));
-            if (mensaServesDishToday(mensaId, dishName)) {
-                if (mensaServesDish.containsKey(mensaId)){
-                    mensaServesDish.get(mensaId).add(dishName);
-                }else{
-                    ArrayList<String> dishNames = new ArrayList<>();
-                    dishNames.add(dishName);
-                    mensaServesDish.put(mensaId, dishNames);
-                }
-            }
+    public void notifyFavoriteFoodService(boolean resetAlarms){
+        if(resetAlarms){
+            FavoriteFoodAlarmEntry.removeAll();
         }
-        if (mensaServesDish.size() > 0){
-            LocationManager lm = new LocationManager(mContext);
-            int bestMensaId = lm.getCafeteria();
-            Bundle notificationData = new Bundle();
-            if (mensaServesDish.containsKey(bestMensaId)){
-                notificationData.putInt("bestMensa",bestMensaId);
+        Cursor favoriteFoodWhere = db.rawQuery("SELECT mensaId,dishName FROM favorite_dishes GROUP BY mensaId,dishName",null);
+        while (favoriteFoodWhere.moveToNext()){
+            int mensaId = favoriteFoodWhere.getInt(0);
+            String dishName = favoriteFoodWhere.getString(1);
+            Cursor upcomingServings = db.rawQuery("SELECT mensaId,date,name FROM cafeterias_menus WHERE" +
+                    " date >= date('now','localtime') AND mensaId = ? AND name = ?",
+                    new String[]{""+mensaId, dishName});
+            while (upcomingServings.moveToNext()){
+                Calendar upcomingDate = Calendar.getInstance();
+                upcomingDate.setTime(Utils.getDate(upcomingServings.getString(1)));
+                new FavoriteFoodAlarmEntry(mensaId, dishName, upcomingDate, mContext);
             }
-            ArrayList<Integer> mensaIds = new ArrayList<>();
-            mensaIds.addAll(mensaServesDish.keySet());
-            notificationData.putIntegerArrayList("mensaIds", mensaIds);
-            for (Integer key : mensaServesDish.keySet()){
-                notificationData.putStringArrayList(""+key,mensaServesDish.get(key));
-            }
-            new FavoriteDishAlarm(mContext, notificationData, 1,00);
         }
     }
 
+    /**
+     * Constructs a cursor, which contains information about the dates a cafeteria serves a
+     * specified dish.
+     * @param dishName
+     * The name of the dish
+     * @return
+     * A cursor to iterate through the results.
+     */
+    private Cursor getCafeteriasAndUpcomingServingDates(String dishName){
+        return db.rawQuery("SELECT mensaId,date FROM cafeterias_menus WHERE date >= date('now','localtime') AND name = ?", new String[]{""+dishName});
+    }
     /**
      *
      * @param mensaId   The id of a cafeteria
