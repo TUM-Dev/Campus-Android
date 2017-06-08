@@ -7,20 +7,20 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
 
 public class TimetableWidget extends AppWidgetProvider {
 
-    public final static int UPDATE_ALARM_DELAY = 2 * 60 * 1000;
+    public final static int UPDATE_ALARM_DELAY = 30 * 60 * 1000;
     private static final String BROADCAST_ALARM_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_TIMETABLE_WIDGET_ALARM";
     private static boolean alarmIsSet = false;
 

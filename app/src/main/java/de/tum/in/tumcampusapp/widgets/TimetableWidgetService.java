@@ -4,20 +4,21 @@ import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.provider.CalendarContract;
+import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
-import de.tum.in.tumcampusapp.models.tumo.CalendarRow;
 
 @SuppressLint("Registered")
 public class TimetableWidgetService extends RemoteViewsService {
@@ -31,12 +32,12 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         private final Context applicationContext;
         private int appWidgetID;
-        private List<CalendarRow> calendarRowList;
+        private List<IntegratedCalendarEvent> calendarEvents;
 
         TimetableRemoteViewFactory(Context applicationContext, Intent intent) {
             this.applicationContext = applicationContext.getApplicationContext();
             this.appWidgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-            calendarRowList = new ArrayList<>();
+            calendarEvents = new ArrayList<>();
         }
 
         @Override
@@ -46,14 +47,16 @@ public class TimetableWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             CalendarManager calendarManager = new CalendarManager(this.applicationContext);
-            calendarRowList = calendarManager.getNextDaysFromDb(14);
-            Date currentDate = new Date();
-            currentDate.setTime(0);
-            for(CalendarRow calendarRow : calendarRowList){
-                Date calendarDate = calendarRow.getDtstartDate();
-                if(!Utils.isSameDay(currentDate, calendarDate)){
+            calendarEvents = calendarManager.getNextDaysFromDb(14);
+            Calendar currentDate = Calendar.getInstance();
+            Date startDate = new Date();
+            startDate.setTime(0);
+            currentDate.setTime(startDate);
+            for (IntegratedCalendarEvent calendarEvent : calendarEvents) {
+                Calendar calendarDate = calendarEvent.getStartTime();
+                if (!Utils.isSameDay(currentDate, calendarDate)) {
                     currentDate = calendarDate;
-                    calendarRow.setIsFirstOnDay(true);
+                    calendarEvent.setIsFirstOnDay(true);
                 }
             }
         }
@@ -64,24 +67,48 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            return this.calendarRowList.size();
+            return this.calendarEvents.size();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
             RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.timetable_widget_item);
-            if (this.calendarRowList == null) {
+            if (this.calendarEvents == null) {
                 return rv;
             }
 
             // get the lecture for this view
-            CalendarRow currentItem = this.calendarRowList.get(position);
+            IntegratedCalendarEvent currentItem = this.calendarEvents.get(position);
             if (currentItem == null) {
                 return null;
             }
 
-            // Setup the line symbol
-            rv.setTextViewText(R.id.timetable_widget_title, currentItem.getTitle());
+            Calendar calendar = currentItem.getStartTime();
+
+            if (currentItem.isFirstOnDay()) {
+                rv.setTextViewText(R.id.timetable_widget_date_day, String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+                rv.setTextViewText(R.id.timetable_widget_date_weekday, calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+                //rv.setViewVisibility(R.id.timetable_widget_date_month, View.VISIBLE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    rv.setViewPadding(R.id.timetable_widget_item, 0, 15, 0, 0);
+                }
+            }
+            // TODO add month labels every new month
+
+            // Setup event color
+            rv.setInt(R.id.timetable_widget_event, "setBackgroundColor", currentItem.getColor());
+
+            // Setup event title
+            rv.setTextViewText(R.id.timetable_widget_event_title, currentItem.getName());
+
+            // Setup event time
+            DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(applicationContext);
+            String time = timeFormat.format(currentItem.getStartTime().getTime());
+            time += "-" + timeFormat.format(currentItem.getEndTime().getTime());
+            rv.setTextViewText(R.id.timetable_widget_event_time, time);
+
+            // Setup event location
+            rv.setTextViewText(R.id.timetable_widget_event_location, currentItem.getLocation());
 
             return rv;
         }

@@ -28,6 +28,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.CalendarHelper;
+import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.cards.NextLectureCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRow;
@@ -155,30 +156,26 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
     }
 
-    public List<CalendarRow> getNextDaysFromDb(int dayCount){
+    /**
+     * Returns all stored events in the next days from db
+     *
+     * @param dayCount The number of days
+     * @return List<IntegratedCalendarEvent> List of Events
+     */
+    public List<IntegratedCalendarEvent> getNextDaysFromDb(int dayCount) {
         Calendar calendar = Calendar.getInstance();
         String from = Utils.getDateTimeString(calendar.getTime());
         calendar.add(Calendar.DAY_OF_YEAR, dayCount);
         String to = Utils.getDateTimeString(calendar.getTime());
 
-        List<CalendarRow> calendarRowList = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM calendar WHERE dtstart BETWEEN datetime(?) AND datetime(?) AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{from,to});
-        while (cursor.moveToNext()){
-            CalendarRow calendarRow = new CalendarRow();
-
-            calendarRow.setNr(cursor.getString(cursor.getColumnIndex("nr")));
-            calendarRow.setStatus(cursor.getString(cursor.getColumnIndex("status")));
-            calendarRow.setUrl(cursor.getString(cursor.getColumnIndex("url")));
-            calendarRow.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-            calendarRow.setDescription(cursor.getString(cursor.getColumnIndex("description")));
-            calendarRow.setDtstart(cursor.getString(cursor.getColumnIndex("dtstart")));
-            calendarRow.setDtend(cursor.getString(cursor.getColumnIndex("dtend")));
-            calendarRow.setLocation(cursor.getString(cursor.getColumnIndex("location")));
-
-            calendarRowList.add(calendarRow);
+        List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM calendar WHERE dtend BETWEEN datetime(?) AND datetime(?) AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{from, to});
+        while (cursor.moveToNext()) {
+            IntegratedCalendarEvent calendarEvent = new IntegratedCalendarEvent(cursor);
+            calendarEvents.add(calendarEvent);
         }
         cursor.close();
-        return calendarRowList;
+        return calendarEvents;
     }
 
     /**
