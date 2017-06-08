@@ -4,13 +4,18 @@ import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.provider.CalendarContract;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarRow;
 
 @SuppressLint("Registered")
 public class TimetableWidgetService extends RemoteViewsService {
@@ -24,10 +29,12 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         private final Context applicationContext;
         private int appWidgetID;
+        private List<CalendarRow> calendarRowList;
 
         TimetableRemoteViewFactory(Context applicationContext, Intent intent) {
             this.applicationContext = applicationContext.getApplicationContext();
             this.appWidgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+            calendarRowList = new ArrayList<>();
         }
 
         @Override
@@ -36,6 +43,8 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
+            CalendarManager calendarManager = new CalendarManager(this.applicationContext);
+            calendarRowList = calendarManager.getNextDaysFromDb(14);
         }
 
         @Override
@@ -44,36 +53,26 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            return 0;
+            return this.calendarRowList.size();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-            /*
-            RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.departure_line_widget);
-            if (this.departures == null) {
+            RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.timetable_widget_item);
+            if (this.calendarRowList == null) {
                 return rv;
             }
 
-            // get the departure for this view
-            TransportManager.Departure currentItem = this.departures.get(position);
+            // get the lecture for this view
+            CalendarRow currentItem = this.calendarRowList.get(position);
             if (currentItem == null) {
                 return null;
             }
 
             // Setup the line symbol
-            rv.setTextViewText(R.id.line_symbol, currentItem.symbol);
-            MVVSymbolView d = new MVVSymbolView(currentItem.symbol);
-            rv.setTextColor(R.id.line_symbol, d.getTextColor());
-            rv.setInt(R.id.line_symbol, "setBackgroundColor", d.getBackgroundColor());
-
-            // Setup the line name and the departure time
-            rv.setTextViewText(R.id.line_name, currentItem.direction);
-            rv.setTextViewText(R.id.departure_time, currentItem.getCalculatedCountDown()" min");
+            rv.setTextViewText(R.id.timetable_widget_title, currentItem.getTitle());
 
             return rv;
-            */
-            return null;
         }
 
         @Override

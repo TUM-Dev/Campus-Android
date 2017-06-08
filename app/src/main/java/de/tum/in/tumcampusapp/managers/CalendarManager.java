@@ -18,6 +18,7 @@ import com.google.common.base.Optional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -154,9 +155,30 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
     }
 
-    public Cursor getNextWeekFromDb(){
-        String requestedDateString = Utils.getDateString(new Date());
-        //return db.rawQuery("SELECT * FROM calendar WHERE dtstart BETWEEN date(?) AND date(?) AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
+    public List<CalendarRow> getNextDaysFromDb(int dayCount){
+        Calendar calendar = Calendar.getInstance();
+        String from = Utils.getDateTimeString(calendar.getTime());
+        calendar.add(Calendar.DAY_OF_YEAR, dayCount);
+        String to = Utils.getDateTimeString(calendar.getTime());
+
+        List<CalendarRow> calendarRowList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM calendar WHERE dtstart BETWEEN datetime(?) AND datetime(?) AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{from,to});
+        while (cursor.moveToNext()){
+            CalendarRow calendarRow = new CalendarRow();
+
+            calendarRow.setNr(cursor.getString(cursor.getColumnIndex("nr")));
+            calendarRow.setStatus(cursor.getString(cursor.getColumnIndex("status")));
+            calendarRow.setUrl(cursor.getString(cursor.getColumnIndex("url")));
+            calendarRow.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            calendarRow.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+            calendarRow.setDtstart(cursor.getString(cursor.getColumnIndex("dtstart")));
+            calendarRow.setDtend(cursor.getString(cursor.getColumnIndex("dtend")));
+            calendarRow.setLocation(cursor.getString(cursor.getColumnIndex("location")));
+
+            calendarRowList.add(calendarRow);
+        }
+        cursor.close();
+        return calendarRowList;
     }
 
     /**
