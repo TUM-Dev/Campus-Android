@@ -27,6 +27,7 @@ import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -118,6 +119,19 @@ public final class Utils {
     public static String getDateTimeString(Date d) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         return dateFormat.format(d);
+    }
+
+    /**
+     * Checks whether two Dates contain the same day
+     * @return true if both dates are on the same day
+     */
+    public static boolean isSameDay(Date first, Date second){
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(first);
+        cal2.setTime(second);
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
     /**

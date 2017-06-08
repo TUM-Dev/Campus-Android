@@ -3,6 +3,10 @@ package de.tum.in.tumcampusapp.models.tumo;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.util.Date;
+
+import de.tum.in.tumcampusapp.auxiliary.Utils;
+
 @Root(name = "event")
 public class CalendarRow {
 	@Element(required = false)
@@ -35,6 +39,8 @@ public class CalendarRow {
 	@Element(required = false)
 	private String url = "";
 
+	private boolean is_first_on_day = false;
+
 	// <org_nr_betreut>15393</org_nr_betreut>
 
 	public String getDescription() {
@@ -45,8 +51,16 @@ public class CalendarRow {
 		return dtend;
 	}
 
+	public Date getDtendDate(){
+		return Utils.getISODateTime(this.dtend);
+	}
+
 	public String getDtstart() {
 		return dtstart;
+	}
+
+	public Date getDtstartDate(){
+		return Utils.getISODateTime(this.dtstart);
 	}
 
 	public Geo getGeo() {
@@ -71,6 +85,10 @@ public class CalendarRow {
 
 	public String getUrl() {
 		return url;
+	}
+
+	public boolean isFirstOnDay() {
+		return this.is_first_on_day;
 	}
 
     public void setDescription(String description) {
@@ -108,6 +126,10 @@ public class CalendarRow {
     public void setGeo(Geo geo) {
         this.geo = geo;
     }
+
+    public void setIsFirstOnDay(Boolean is_first_on_day){
+		this.is_first_on_day = is_first_on_day;
+	}
 
     @Override
     public String toString() {
