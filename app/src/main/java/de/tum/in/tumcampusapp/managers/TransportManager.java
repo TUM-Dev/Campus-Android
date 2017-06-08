@@ -432,8 +432,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
          * @param station_id The station name
          */
         public void setStationId(String station_id) {
-            if(!station_id.equals(this.station_id)){
-                System.out.println("reset data because station changed");
+            if(!this.station_id.equals(station_id)){
                 this.departures.clear();
             }
             this.station_id = station_id;
@@ -457,11 +456,17 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
          */
         public void setStation(String station) { this.station = station;}
 
-        // TODO
-        public boolean useLocation() { return use_location; }
+        /**
+         * Whether this widgets station is determined by the current location
+         * @return True if location is used
+         */
+        boolean useLocation() { return use_location; }
 
-        // TODO
-        public void setUseLocation(boolean use_location) { this.use_location = use_location; }
+        /**
+         * Whether this widgets station should determined by the current location
+         * @param use_location True is location has to be used
+         */
+        void setUseLocation(boolean use_location) { this.use_location = use_location; }
 
         /**
          * True if widget should update automatically, otherwise a button-press is required
@@ -495,8 +500,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             if(this.departures == null){
                 this.departures = new ArrayList<>();
             }
-            // download only id there is no data or the last loading is more than 2min ago
-            if (this.departures.size() == 0 || force_server_load || this.autoReload() && System.currentTimeMillis() - this.last_load > MVVWidget.DOWNLOAD_DELAY) {
+            // download only id there is no data or the last loading is more than X min ago
+            if (this.departures.size() == 0 || force_server_load || (this.autoReload() && System.currentTimeMillis() - this.last_load > MVVWidget.DOWNLOAD_DELAY)) {
                 List<Departure> departures = TransportManager.getDeparturesFromExternal(context, this.getStationId());
                 if(departures.size() == 0){
                     this.is_offline = true;

@@ -190,8 +190,10 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         MVVWidget.setAlarm(this);
 
         // update widget
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        MVVWidget.updateAppWidget(this, appWidgetManager, appWidgetId, true);
+        Intent reloadIntent = new Intent(this, MVVWidget.class);
+        reloadIntent.setAction(MVVWidget.MVV_WIDGET_FORCE_RELOAD);
+        reloadIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        sendBroadcast(reloadIntent);
 
         // return to widget
         Intent resultValue = new Intent();
@@ -205,7 +207,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      */
     private void cancelAndReturn() {
         Intent resultValue = new Intent();
-        if(!widgetDepartures.getStation().isEmpty() && !widgetDepartures.getStationId().isEmpty()){
+        if (!widgetDepartures.getStation().isEmpty() && !widgetDepartures.getStationId().isEmpty()) {
             saveAndReturn();
         } else {
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

@@ -32,7 +32,7 @@ public class MVVWidgetService extends RemoteViewsService {
         MVVRemoteViewFactory(Context applicationContext, Intent intent) {
             this.applicationContext = applicationContext.getApplicationContext();
             this.appWidgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-            this.forceLoadDepartures = intent.getBooleanExtra(MVVWidget.MVV_WIDGET_FORCE_RELOAD, false);
+            this.forceLoadDepartures = intent.getBooleanExtra(MVVWidget.MVV_WIDGET_FORCE_RELOAD, true);
         }
 
         @Override
@@ -41,14 +41,11 @@ public class MVVWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-
             // load the departures for the widget
             TransportManager transportManager = new TransportManager(applicationContext);
             TransportManager.WidgetDepartures wd = transportManager.getWidget(this.appWidgetID);
 
-            System.out.println("load" + this.appWidgetID + " force: " + this.forceLoadDepartures + " " + wd.getStationId());
             this.departures = wd.getDepartures(applicationContext, this.forceLoadDepartures);
-            this.forceLoadDepartures = false;
         }
 
         @Override

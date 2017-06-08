@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.managers.TransportManager;
@@ -24,19 +25,20 @@ import de.tum.in.tumcampusapp.managers.TransportManager.WidgetDepartures;
  */
 public class MVVWidget extends AppWidgetProvider {
 
+    private static final String BROADCAST_RELOAD_ALL_ALARM = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL_ALARM";
     private static final String BROADCAST_RELOAD_ALL = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL";
     static final String MVV_WIDGET_FORCE_RELOAD = "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD";
     private static Timer timer;
     private static TransportManager transportManager;
 
-    public final static int UPDATE_ALARM_DELAY = 60 * 1000;
-    public final static int DOWNLOAD_DELAY = 5 * 60 * 1000;
+    public static final int UPDATE_ALARM_DELAY = 60 * 1000;
+    public static final int UPDATE_TRIGGER_DELAY = 20 * 1000;
+    public static final int DOWNLOAD_DELAY = 5 * 60 * 1000;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         if (transportManager == null) transportManager = new TransportManager(context);
         updateAppWidgets(context, appWidgetManager, appWidgetIds);
-        planUpdates(context, appWidgetManager, appWidgetIds);
         setAlarm(context);
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -80,38 +82,30 @@ public class MVVWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, MVVWidget.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        System.out.println("cancel alarms");
         am.cancel(sender);
         if (auto_reload) {
-            intent.setAction(MVVWidget.BROADCAST_RELOAD_ALL);
-            am.setRepeating(AlarmManager.RTC, UPDATE_ALARM_DELAY, UPDATE_ALARM_DELAY, sender);
-            System.out.println("schedule alarms");
+            intent.setAction(MVVWidget.BROADCAST_RELOAD_ALL_ALARM);
+            am.setRepeating(AlarmManager.RTC, 0, UPDATE_ALARM_DELAY, sender);
         }
     }
 
     /**
      * Plans updates the widgets after 30s and 60s
-     *
-     * @param appWidgetIds the ids of the widgets to update
      */
-    static void planUpdates(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
-        /*
+    static void planUpdates(final Context context) {
         if (MVVWidget.timer == null) {
             MVVWidget.timer = new Timer();
         }
-        MVVWidget.timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                updateAppWidgets(context, appWidgetManager, appWidgetIds);
-            }
-        }, UPDATE_TRIGGER_DELAY);
-        MVVWidget.timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                updateAppWidgets(context, appWidgetManager, appWidgetIds);
-            }
-        }, 2 * UPDATE_TRIGGER_DELAY);
-        */
+        for (int i = 1; i <= 3; i++) {
+            MVVWidget.timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Intent reloadIntent = new Intent(context, MVVWidget.class);
+                    reloadIntent.setAction(MVVWidget.BROADCAST_RELOAD_ALL);
+                    context.sendBroadcast(reloadIntent);
+                }
+            }, UPDATE_TRIGGER_DELAY * i);
+        }
     }
 
     /**
@@ -135,15 +129,9 @@ public class MVVWidget extends AppWidgetProvider {
         // Get the settings for this widget from the database
         WidgetDepartures widgetDepartures = transportManager.getWidget(appWidgetId);
 
-        System.out.println("update" + appWidgetId + " force: " + forceLoadData + " " + widgetDepartures.getStationId());
-
         // Instantiate the RemoteViews object for the app widget layout.
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mvv_widget);
-        String station = widgetDepartures.getStation();
-        if (station == null) {
-            station = context.getString(R.string.mvv_widget_no_station);
-        }
-        rv.setTextViewText(R.id.mvv_widget_station, station);
+        rv.setTextViewText(R.id.mvv_widget_station, widgetDepartures.getStation());
 
         // Set up offline symbol (may be shown one update delayed)
         rv.setViewVisibility(R.id.mvv_widget_offline, widgetDepartures.isOffline() ? View.VISIBLE : View.INVISIBLE);
@@ -151,14 +139,14 @@ public class MVVWidget extends AppWidgetProvider {
         // Set up the configuration activity listeners
         Intent configIntent = new Intent(context, MVVWidgetConfigureActivity.class);
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId * 10, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.mvv_widget_header, pendingIntent);
 
         // Set up the reload functionality
         Intent reloadIntent = new Intent(context, MVVWidget.class);
         reloadIntent.setAction(MVVWidget.MVV_WIDGET_FORCE_RELOAD);
         reloadIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(context, appWidgetId, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(context, appWidgetId + 10 + 1, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.mvv_widget_reload, pendingReloadIntent);
         rv.setViewVisibility(R.id.mvv_widget_reload, widgetDepartures.autoReload() ? View.GONE : View.VISIBLE);
 
@@ -166,7 +154,7 @@ public class MVVWidget extends AppWidgetProvider {
         // provide the departure times for this station
         Intent intent = new Intent(context, MVVWidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        intent.putExtra(MVV_WIDGET_FORCE_RELOAD, forceLoadData);
+        intent.putExtra(MVVWidget.MVV_WIDGET_FORCE_RELOAD, forceLoadData);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         rv.setRemoteAdapter(R.id.mvv_widget_listview, intent);
 
@@ -176,27 +164,23 @@ public class MVVWidget extends AppWidgetProvider {
         rv.setEmptyView(R.id.mvv_widget_listview, R.id.empty_list_item);
 
         // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, rv);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.mvv_widget_listview);
+        appWidgetManager.updateAppWidget(appWidgetId, rv);
     }
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        switch (intent.getAction()) {
-            case MVV_WIDGET_FORCE_RELOAD:
-                int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-                if (appWidgetId >= 0) {
-                    updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId, true);
-                }
-                break;
-            case BROADCAST_RELOAD_ALL:
-                System.out.println("BROADCAST RELOAD ALL");
-                // There may be multiple widgets active, so update all of them
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                int[] appWidgetIds = getActiveWidgetIds(context);
-                updateAppWidgets(context, appWidgetManager, getActiveWidgetIds(context));
-                planUpdates(context, appWidgetManager, appWidgetIds);
-                break;
+        String action = intent.getAction();
+        if (action == null || action.equals(MVVWidget.BROADCAST_RELOAD_ALL)) {
+            updateAppWidgets(context, AppWidgetManager.getInstance(context), getActiveWidgetIds(context));
+        } else if (action.equals(MVVWidget.BROADCAST_RELOAD_ALL_ALARM)) {
+            planUpdates(context);
+            updateAppWidgets(context, AppWidgetManager.getInstance(context), getActiveWidgetIds(context));
+        } else if (action.equals(MVVWidget.MVV_WIDGET_FORCE_RELOAD)) {
+            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+            if (appWidgetId >= 0) {
+                updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId, true);
+            }
         }
         super.onReceive(context, intent);
     }
