@@ -11,12 +11,13 @@ import android.widget.RemoteViewsService;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 
@@ -48,13 +49,14 @@ public class TimetableWidgetService extends RemoteViewsService {
         public void onDataSetChanged() {
             CalendarManager calendarManager = new CalendarManager(this.applicationContext);
             calendarEvents = calendarManager.getNextDaysFromDb(14);
+            Collections.sort(calendarEvents);
             Calendar currentDate = Calendar.getInstance();
             Date startDate = new Date();
             startDate.setTime(0);
             currentDate.setTime(startDate);
             for (IntegratedCalendarEvent calendarEvent : calendarEvents) {
                 Calendar calendarDate = calendarEvent.getStartTime();
-                if (!Utils.isSameDay(currentDate, calendarDate)) {
+                if (!DateUtils.isSameDay(currentDate, calendarDate)) {
                     currentDate = calendarDate;
                     calendarEvent.setIsFirstOnDay(true);
                 }

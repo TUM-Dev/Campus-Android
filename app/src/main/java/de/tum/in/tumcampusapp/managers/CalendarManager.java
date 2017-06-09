@@ -169,7 +169,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         String to = Utils.getDateTimeString(calendar.getTime());
 
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM calendar WHERE dtend BETWEEN datetime(?) AND datetime(?) AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{from, to});
+        Cursor cursor = db.rawQuery("SELECT * FROM calendar WHERE datetime(dtend) BETWEEN datetime(?) AND datetime(?) AND status!=\"CANCEL\" ORDER BY datetime(dtstart) ASC", new String[]{from, to});
         while (cursor.moveToNext()) {
             IntegratedCalendarEvent calendarEvent = new IntegratedCalendarEvent(cursor);
             calendarEvents.add(calendarEvent);

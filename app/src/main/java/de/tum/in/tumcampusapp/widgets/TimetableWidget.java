@@ -21,14 +21,16 @@ import de.tum.in.tumcampusapp.activities.CalendarActivity;
 public class TimetableWidget extends AppWidgetProvider {
 
     public final static int UPDATE_ALARM_DELAY = 30 * 60 * 1000;
-    private static final String BROADCAST_ALARM_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_TIMETABLE_WIDGET_ALARM";
+    private static final String BROADCAST_ALARM_NAME = "de.tum.in.tumcampusapp.intent.action.BROADCAST_TIMETABLE_WIDGET_ALARM";
     private static boolean alarmIsSet = false;
 
     /**
      * If no alarm is running yet a new alarm is started which repeats every minute
      */
     private static void setAlarm(Context context) {
-        if (alarmIsSet) return;
+        if (alarmIsSet) {
+            return;
+        }
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, TimetableWidget.class);
         intent.setAction(BROADCAST_ALARM_NAME);
@@ -72,8 +74,6 @@ public class TimetableWidget extends AppWidgetProvider {
 
         // Set up the calendar activity listeners
         Intent calendarIntent = new Intent(context, CalendarActivity.class);
-        // todo fix day on which the calendar is opened
-        calendarIntent.putExtra(CalendarActivity.EVENT_TIME, 0);
         PendingIntent pendingCalendarIntent = PendingIntent.getActivity(context, appWidgetId, calendarIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.timetable_widget_day, pendingCalendarIntent);
 
@@ -127,7 +127,7 @@ public class TimetableWidget extends AppWidgetProvider {
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         switch (intent.getAction()) {
-            case BROADCAST_ALARM_NAME:
+            case TimetableWidget.BROADCAST_ALARM_NAME:
                 // There may be multiple widgets active, so update all of them
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                 ComponentName thisWidget = new ComponentName(context, TimetableWidget.class);
