@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.MVVStationSuggestionProvider;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
+import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
 
 public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<Cursor> implements AdapterView.OnItemClickListener {
 
@@ -30,7 +31,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
     private SimpleCursorAdapter adapterStations;
     private RecentsManager recentsManager;
 
-    private TransportManager.WidgetDepartures widgetDepartures;
+    private WidgetDepartures widgetDepartures;
 
     public MVVWidgetConfigureActivity() {
         super(R.layout.activity_mvv_widget_configure, MVVStationSuggestionProvider.AUTHORITY, 3);

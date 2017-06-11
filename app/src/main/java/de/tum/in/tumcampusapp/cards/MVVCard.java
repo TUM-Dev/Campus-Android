@@ -26,6 +26,7 @@ import de.tum.in.tumcampusapp.auxiliary.DepartureView;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.TransportManager;
+import de.tum.in.tumcampusapp.models.efa.Departure;
 
 import static de.tum.in.tumcampusapp.managers.CardManager.CARD_MVV;
 
@@ -35,7 +36,7 @@ import static de.tum.in.tumcampusapp.managers.CardManager.CARD_MVV;
 public class MVVCard extends NotificationAwareCard {
     private static final String MVV_TIME = "mvv_time";
     private Pair<String, String> mStationNameIDPair;
-    private List<TransportManager.Departure> mDepartures;
+    private List<Departure> mDepartures;
 
     public MVVCard(Context context) {
         super(CARD_MVV, context, "card_mvv");
@@ -71,7 +72,7 @@ public class MVVCard extends NotificationAwareCard {
         // Fetch transport favorites, can only be updated in the detailed view
         TransportManager transportManager = new TransportManager(mContext);
         for (int i = 0; i < mDepartures.size() && i < 5; i++) {
-            TransportManager.Departure curr = mDepartures.get(i);
+            Departure curr = mDepartures.get(i);
             DepartureView view = new DepartureView(mContext);
             if (transportManager.isFavorite(curr.symbol)) {
                 view.setSymbol(curr.symbol, true);
@@ -114,7 +115,7 @@ public class MVVCard extends NotificationAwareCard {
 
         String firstContent = "";
         String firstTime = "";
-        for (TransportManager.Departure d : mDepartures) {
+        for (Departure d : mDepartures) {
             if (firstTime.isEmpty()) {
                 firstTime = d.countDown + "min";
                 firstContent = d.servingLine + " " + d.direction;
@@ -138,7 +139,7 @@ public class MVVCard extends NotificationAwareCard {
         this.mStationNameIDPair = stationNameIDPair;
     }
 
-    public void setDepartures(List<TransportManager.Departure> departures) {
+    public void setDepartures(List<Departure> departures) {
         this.mDepartures = departures;
     }
 
