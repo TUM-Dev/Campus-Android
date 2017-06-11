@@ -113,7 +113,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         return this.isFirstOnDay;
     }
 
-    public void setIsFirstOnDay(Boolean is_first_on_day) {
-        this.isFirstOnDay = is_first_on_day;
+    public void setIsFirstOnDay(Boolean isFirstOnDay) {
+        this.isFirstOnDay = isFirstOnDay;
     }
 }
