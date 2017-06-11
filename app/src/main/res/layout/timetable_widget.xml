@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/widget_margin"
+    android:theme="@style/AppTheme.WhiteBackground">
+
+    <RelativeLayout
+        android:id="@+id/timetable_widget_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_primary"
+        android:elevation="2dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/timetable_widget_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/timetable_widget_setting"
+            android:layout_toStartOf="@+id/timetable_widget_setting"
+            android:background="@color/color_primary"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:typeface="sans" />
+
+        <ImageView
+            android:id="@+id/timetable_widget_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@color/color_primary"
+            android:src="@drawable/ic_action_settings"
+            android:typeface="sans" />
+    </RelativeLayout>
+
+
+    <ListView
+        android:id="@+id/timetable_widget_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/timetable_widget_header"
+        android:divider="@null"
+        android:dividerHeight="0dp">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/empty_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/timetable_widget_header"
+        android:gravity="center"
+        android:text="@string/timetable_widget_no_lectures"
+        android:visibility="gone" />
+
+</RelativeLayout> 

@@ -429,4 +429,7 @@ Signatur: %5$s</string>
     <string name="mvv_widget_no_station">Keine Station ausgewählt</string>
     <string name="mvv_widget_select_station">Station auswählen</string>
     <string name="mvv_widget_no_data">Offline oder keine Daten verfügbar</string>
+    <string name="timetable_widget">Stundenplan Widget TUM</string>
+    <string name="timetable_widget_select_lectures">Vorlesungen auswählen</string>
+    <string name="timetable_widget_no_lectures">KeineVorlesungen geplant :)</string>
 </resources>
