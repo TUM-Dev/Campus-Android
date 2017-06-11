@@ -22,7 +22,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private static final Pattern PATTERN = Pattern.compile("\\([A-Z]+[0-9]+\\)");
     private static final Pattern COMPILE1 = Pattern.compile("\\([A-Z0-9\\.]+\\)");
     private final String location;
-    private boolean is_first_on_day = false;
+    private boolean isFirstOnDay = false;
 
     public IntegratedCalendarEvent(Cursor cEvents) {
         super(getEventIdFromCursor(cEvents),
@@ -110,10 +110,10 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     }
 
     public boolean isFirstOnDay() {
-        return this.is_first_on_day;
+        return this.isFirstOnDay;
     }
 
     public void setIsFirstOnDay(Boolean is_first_on_day) {
-        this.is_first_on_day = is_first_on_day;
+        this.isFirstOnDay = is_first_on_day;
     }
 }
