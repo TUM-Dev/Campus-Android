@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.widgets;
 
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -46,8 +47,11 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
+            // get events
             CalendarManager calendarManager = new CalendarManager(this.applicationContext);
-            calendarEvents = calendarManager.getNextDaysFromDb(14);
+            calendarEvents = calendarManager.getNextDaysFromDb(14, this.appWidgetID);
+
+            // set isFirstOnDay flags
             Calendar currentDate = Calendar.getInstance();
             Date startDate = new Date();
             startDate.setTime(0);
@@ -85,6 +89,7 @@ public class TimetableWidgetService extends RemoteViewsService {
 
             Calendar calendar = currentItem.getStartTime();
 
+            // Setup the date
             if (currentItem.isFirstOnDay()) {
                 rv.setTextViewText(R.id.timetable_widget_date_day, String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
                 rv.setTextViewText(R.id.timetable_widget_date_weekday, calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
@@ -115,6 +120,11 @@ public class TimetableWidgetService extends RemoteViewsService {
 
             // Setup event location
             rv.setTextViewText(R.id.timetable_widget_event_location, currentItem.getLocation());
+
+            // Setup action to open roomFinder
+            Intent fillInIntent = new Intent();
+            fillInIntent.putExtra(SearchManager.QUERY, currentItem.getLocation());
+            rv.setOnClickFillInIntent(R.id.timetable_widget_event, fillInIntent);
 
             return rv;
         }

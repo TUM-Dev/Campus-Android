@@ -17,11 +17,12 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
+import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
 
 public class TimetableWidget extends AppWidgetProvider {
 
     public final static int UPDATE_ALARM_DELAY = 30 * 60 * 1000;
-    private static final String BROADCAST_ALARM_NAME = "de.tum.in.tumcampusapp.intent.action.BROADCAST_TIMETABLE_WIDGET_ALARM";
+    public static final String BROADCAST_UPDATE_TIMETABLE_WIDGETS = "de.tum.in.tumcampusapp.intent.action.BROADCAST_UPDATE_TIMETABLE_WIDGETS";
     private static boolean alarmIsSet = false;
 
     /**
@@ -33,7 +34,7 @@ public class TimetableWidget extends AppWidgetProvider {
         }
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, TimetableWidget.class);
-        intent.setAction(BROADCAST_ALARM_NAME);
+        intent.setAction(BROADCAST_UPDATE_TIMETABLE_WIDGETS);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
         am.cancel(pi);
         am.setRepeating(AlarmManager.RTC, UPDATE_ALARM_DELAY, UPDATE_ALARM_DELAY, pi);
@@ -76,6 +77,12 @@ public class TimetableWidget extends AppWidgetProvider {
         Intent calendarIntent = new Intent(context, CalendarActivity.class);
         PendingIntent pendingCalendarIntent = PendingIntent.getActivity(context, appWidgetId, calendarIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.timetable_widget_day, pendingCalendarIntent);
+
+        // Set up the roomFinder activity listeners
+        Intent roomFinderIntent = new Intent(context, RoomFinderActivity.class);
+        roomFinderIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent roomFinderPendingIntent = PendingIntent.getActivity(context, appWidgetId, roomFinderIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        rv.setPendingIntentTemplate(R.id.timetable_widget_listview, roomFinderPendingIntent);
 
         // Set up the intent that starts the TimetableWidgetService, which will
         // provide the departure times for this station
@@ -127,7 +134,7 @@ public class TimetableWidget extends AppWidgetProvider {
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         switch (intent.getAction()) {
-            case TimetableWidget.BROADCAST_ALARM_NAME:
+            case TimetableWidget.BROADCAST_UPDATE_TIMETABLE_WIDGETS:
                 // There may be multiple widgets active, so update all of them
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                 ComponentName thisWidget = new ComponentName(context, TimetableWidget.class);
