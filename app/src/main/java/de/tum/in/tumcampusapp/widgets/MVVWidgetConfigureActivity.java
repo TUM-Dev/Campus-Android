@@ -57,9 +57,9 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         TransportManager tm = new TransportManager(this);
         this.widgetDepartures = tm.getWidget(appWidgetId);
 
-        Switch auto_reload_switch = (Switch) findViewById(R.id.mvv_widget_auto_reload);
-        auto_reload_switch.setChecked(this.widgetDepartures.autoReload());
-        auto_reload_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        Switch autoReloadSwitch = (Switch) findViewById(R.id.mvv_widget_auto_reload);
+        autoReloadSwitch.setChecked(this.widgetDepartures.autoReload());
+        autoReloadSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 widgetDepartures.setAutoReload(checked);

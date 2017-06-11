@@ -12,43 +12,43 @@ import de.tum.in.tumcampusapp.widgets.MVVWidget;
 public class WidgetDepartures {
 
     private String station;
-    private String station_id;
-    private boolean use_location;
-    private boolean auto_reload;
+    private String stationId;
+    private boolean useLocation;
+    private boolean autoReload;
     private List<Departure> departures;
-    private long last_load;
-    private boolean is_offline = false;
+    private long lastLoad;
+    private boolean isOffline = false;
 
     /**
      * Create a new WidgetDepartures. It contains the widget settings and can load the according departure list
      */
     public WidgetDepartures() {
         this.station = "";
-        this.station_id = "";
-        this.auto_reload = false;
-        this.use_location = false;
+        this.stationId = "";
+        this.autoReload = false;
+        this.useLocation = false;
         this.departures = new ArrayList<>();
     }
 
     /**
-     * The station_id which is set for this widget
+     * The stationId which is set for this widget
      *
      * @return The station name
      */
     public String getStationId() {
-        return this.station_id;
+        return this.stationId;
     }
 
     /**
-     * Sets a station_id for this widget
+     * Sets a stationId for this widget
      *
-     * @param station_id The station name
+     * @param stationId The station name
      */
-    public void setStationId(String station_id) {
-        if (!this.station_id.equals(station_id)) {
+    public void setStationId(String stationId) {
+        if (!this.stationId.equals(stationId)) {
             this.departures.clear();
         }
-        this.station_id = station_id;
+        this.stationId = stationId;
     }
 
     /**
@@ -57,8 +57,8 @@ public class WidgetDepartures {
      * @return The station name
      */
     public String getStation() {
-        if (this.use_location) {
-            // TODO implement nearest station (replace the station_id string with the calculated station)
+        if (this.useLocation) {
+            // TODO implement nearest station (replace the stationId string with the calculated station)
             this.station = "use location";
         }
         return this.station;
@@ -79,34 +79,34 @@ public class WidgetDepartures {
      * @return True if location is used
      */
     public boolean useLocation() {
-        return use_location;
+        return useLocation;
     }
 
     /**
      * Whether this widgets station should determined by the current location
      *
-     * @param use_location True is location has to be used
+     * @param useLocation True is location has to be used
      */
-    public void setUseLocation(boolean use_location) {
-        this.use_location = use_location;
+    public void setUseLocation(boolean useLocation) {
+        this.useLocation = useLocation;
     }
 
     /**
      * True if widget should update automatically, otherwise a button-press is required
      *
-     * @return Whether auto_reload is enabled
+     * @return Whether autoReload is enabled
      */
     public boolean autoReload() {
-        return this.auto_reload;
+        return this.autoReload;
     }
 
     /**
      * True if widget should update automatically, otherwise a button-press is required
      *
-     * @param auto_reload Whether auto_reload should enabled
+     * @param autoReload Whether autoReload should enabled
      */
-    public void setAutoReload(boolean auto_reload) {
-        this.auto_reload = auto_reload;
+    public void setAutoReload(boolean autoReload) {
+        this.autoReload = autoReload;
     }
 
     /**
@@ -115,7 +115,7 @@ public class WidgetDepartures {
      * @return True if only offline data available
      */
     public boolean isOffline() {
-        return this.is_offline;
+        return this.isOffline;
     }
 
     /**
@@ -123,19 +123,19 @@ public class WidgetDepartures {
      *
      * @return The list of departures
      */
-    public List<Departure> getDepartures(Context context, boolean force_server_load) {
+    public List<Departure> getDepartures(Context context, boolean forceServerLoad) {
         if (this.departures == null) {
             this.departures = new ArrayList<>();
         }
         // download only id there is no data or the last loading is more than X min ago
-        if (this.departures.size() == 0 || force_server_load || (this.autoReload() && System.currentTimeMillis() - this.last_load > MVVWidget.DOWNLOAD_DELAY)) {
+        if (this.departures.size() == 0 || forceServerLoad || (this.autoReload() && System.currentTimeMillis() - this.lastLoad > MVVWidget.DOWNLOAD_DELAY)) {
             List<Departure> departures = TransportManager.getDeparturesFromExternal(context, this.getStationId());
             if (departures.size() == 0) {
-                this.is_offline = true;
+                this.isOffline = true;
             } else {
                 this.departures = departures;
-                this.last_load = System.currentTimeMillis();
-                this.is_offline = false;
+                this.lastLoad = System.currentTimeMillis();
+                this.isOffline = false;
             }
         }
 

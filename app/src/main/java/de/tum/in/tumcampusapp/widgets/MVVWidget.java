@@ -72,10 +72,10 @@ public class MVVWidget extends AppWidgetProvider {
      * If no alarm is running yet a new alarm is started which repeats every minute
      */
     public static void setAlarm(Context context) {
-        boolean auto_reload = false;
+        boolean autoReload = false;
         for (int appWidgetId : getActiveWidgetIds(context)) {
             if (transportManager.getWidget(appWidgetId).autoReload()) {
-                auto_reload = true;
+                autoReload = true;
                 break;
             }
         }
@@ -83,7 +83,7 @@ public class MVVWidget extends AppWidgetProvider {
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.cancel(sender);
-        if (auto_reload) {
+        if (autoReload) {
             intent.setAction(MVVWidget.BROADCAST_RELOAD_ALL_ALARM);
             am.setRepeating(AlarmManager.RTC, 0, UPDATE_ALARM_DELAY, sender);
         }
