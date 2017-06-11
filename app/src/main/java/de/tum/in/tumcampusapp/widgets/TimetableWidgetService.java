@@ -11,7 +11,6 @@ import android.widget.RemoteViewsService;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +48,6 @@ public class TimetableWidgetService extends RemoteViewsService {
         public void onDataSetChanged() {
             CalendarManager calendarManager = new CalendarManager(this.applicationContext);
             calendarEvents = calendarManager.getNextDaysFromDb(14);
-            Collections.sort(calendarEvents);
             Calendar currentDate = Calendar.getInstance();
             Date startDate = new Date();
             startDate.setTime(0);
@@ -94,6 +92,13 @@ public class TimetableWidgetService extends RemoteViewsService {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     rv.setViewPadding(R.id.timetable_widget_item, 0, 15, 0, 0);
                 }
+            } else {
+                // overwrite unused parameters, as the elements are reused they may could be filled with old parameters
+                rv.setTextViewText(R.id.timetable_widget_date_day, "");
+                rv.setTextViewText(R.id.timetable_widget_date_weekday, "");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    rv.setViewPadding(R.id.timetable_widget_item, 0, 0, 0, 0);
+                }
             }
             // TODO add month labels every new month
 
@@ -135,5 +140,4 @@ public class TimetableWidgetService extends RemoteViewsService {
             return true;
         }
     }
-
 }

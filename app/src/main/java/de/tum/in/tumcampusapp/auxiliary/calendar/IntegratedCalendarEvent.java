@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.auxiliary.calendar;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.NonNull;
 
 import com.alamkanak.weekview.WeekViewEvent;
 
@@ -16,7 +15,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 /**
  * A class to represent events for the integrated WeekView calendar
  */
-public class IntegratedCalendarEvent extends WeekViewEvent implements Comparable<IntegratedCalendarEvent>{
+public class IntegratedCalendarEvent extends WeekViewEvent {
     private static final float SATURATION_ADJUST = 1.3f;
     private static final float INTENSITY_ADJUST = 0.8f;
     private static final Pattern COMPILE = Pattern.compile("[A-Z, 0-9(LV\\.Nr)=]+$");
@@ -116,10 +115,5 @@ public class IntegratedCalendarEvent extends WeekViewEvent implements Comparable
 
     public void setIsFirstOnDay(Boolean is_first_on_day) {
         this.is_first_on_day = is_first_on_day;
-    }
-
-    @Override
-    public int compareTo(@NonNull IntegratedCalendarEvent other) {
-        return this.getStartTime().compareTo(other.getStartTime());
     }
 }
