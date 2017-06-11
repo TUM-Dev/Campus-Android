@@ -521,6 +521,7 @@
             android:label="@string/mvv_widget">>
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
             </intent-filter>
 
             <meta-data
