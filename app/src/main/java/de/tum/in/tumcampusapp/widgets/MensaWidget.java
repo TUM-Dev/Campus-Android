@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.widgets;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -8,6 +9,8 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.services.MensaWidgetService;
 
@@ -28,9 +31,6 @@ public class MensaWidget extends AppWidgetProvider {
         this.appWidgetManager = appWidgetManager;
 
         for (int appWidgetId : appWidgetIds) {
-            Intent intent = new Intent(context, MensaWidgetService.class);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
 
             // set the header for the Widget layout
@@ -38,7 +38,16 @@ public class MensaWidget extends AppWidgetProvider {
             String mensaName = mensaManager.getBestMatchMensaName(context);
             rv.setTextViewText(R.id.mensa_widget_header, mensaName);
 
+            // set the header on click to open the mensa activity
+            Intent mensaIntent = new Intent(context, CafeteriaActivity.class);
+            mensaIntent.putExtra(Const.CAFETERIA_ID, mensaManager.getBestMatchMensaId(context));
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, mensaIntent, 0);
+            rv.setOnClickPendingIntent(R.id.mensa_widget_header_container, pendingIntent);
+
             // set the adapter for the list view in the mensaWidget
+            Intent intent = new Intent(context, MensaWidgetService.class);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
             rv.setRemoteAdapter(R.id.food_item, intent); //appWidgetIds[i],
             rv.setEmptyView(R.id.empty_view, R.id.empty_view);
             appWidgetManager.updateAppWidget(appWidgetId, rv);
