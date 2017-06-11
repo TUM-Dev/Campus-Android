@@ -145,7 +145,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * (nr, status, url, title, description, dtstart, dtend, location)
      */
     Cursor getAllFromDb() {
-        return db.rawQuery("SELECT * FROM calendar WHERE status!=\"CANCEL\"", null);
+        return db.rawQuery("SELECT * FROM calendar WHERE status!='CANCEL'", null);
     }
 
     public Cursor getFromDbForDate(Date date) {
@@ -153,7 +153,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         String requestedDateString = Utils.getDateString(date);
 
         // Fetch the data
-        return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
+        return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? AND status!='CANCEL' ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
     }
 
     /**
@@ -169,7 +169,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         String to = Utils.getDateTimeString(calendar.getTime());
 
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM calendar WHERE dtend BETWEEN ? AND ? AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{from, to});
+        Cursor cursor = db.rawQuery("SELECT * FROM calendar WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' ORDER BY dtstart ASC", new String[]{from, to});
         while (cursor.moveToNext()) {
             IntegratedCalendarEvent calendarEvent = new IntegratedCalendarEvent(cursor);
             calendarEvents.add(calendarEvent);
@@ -184,7 +184,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @return Database cursor (name, location, _id)
      */
     public Cursor getCurrentFromDb() {
-        return db.rawQuery("SELECT title, location, nr, dtend FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!=\"CANCEL\"", null);
+        return db.rawQuery("SELECT title, location, nr, dtend FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!='CANCEL'", null);
     }
 
     /**
@@ -250,8 +250,8 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     public Cursor getNextCalendarItem() {
         return db.rawQuery("SELECT title, dtstart, dtend, location FROM calendar JOIN " +
-                "(SELECT dtstart AS maxstart FROM calendar WHERE status!=\"CANCEL\" AND datetime('now', 'localtime')<dtstart " +
-                "ORDER BY dtstart LIMIT 1) ON status!=\"CANCEL\" AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
+                "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
+                "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
                 "ORDER BY dtend, dtstart LIMIT 4", null);
     }
 
@@ -263,7 +263,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         Cursor cur = db.rawQuery("SELECT r.latitude, r.longitude " +
                 "FROM calendar c, room_locations r " +
                 "WHERE datetime('now', 'localtime') < datetime(c.dtstart, '+1800 seconds') AND " +
-                "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!=\"CANCEL\"" +
+                "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!='CANCEL'" +
                 "ORDER BY dtstart LIMIT 1", null);
 
         Geo geo = null;
