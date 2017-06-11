@@ -502,9 +502,12 @@ Signature: %5$s</string>
     <string name="mvv_widget" translatable="false">MVV Widget TUM</string>
     <string name="mvv_widget_select_station">Select station</string>
     <string name="mvv_widget_no_station">No station selected</string>
-    <string name="mvv_widget_no_data">Offline or no data available</string>
+    <string name="mvv_widget_no_data">Offline or no data availiable</string>
     <string name="mvv_auto_reload">Automatic reload</string>
     <string name="mvv_auto_reload_hint">Will consume Energy and Data</string>
+    <string name="timetable_widget">Timetable Widget TUM</string>
+    <string name="timetable_widget_select_lectures">Select lectures</string>
+    <string name="timetable_widget_no_lectures">No lectures planned :)</string>
 </resources>
 
 

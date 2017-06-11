@@ -431,4 +431,7 @@ Signatur: %5$s</string>
     <string name="mvv_widget_no_data">Offline oder keine Daten verfügbar</string>
     <string name="mvv_auto_reload">Automatisch aktualisieren</string>
     <string name="mvv_auto_reload_hint">Erhöht Strom und Datenverbrauch</string>
+    <string name="timetable_widget">Stundenplan Widget TUM</string>
+    <string name="timetable_widget_select_lectures">Vorlesungen auswählen</string>
+    <string name="timetable_widget_no_lectures">KeineVorlesungen geplant :)</string>
 </resources>
