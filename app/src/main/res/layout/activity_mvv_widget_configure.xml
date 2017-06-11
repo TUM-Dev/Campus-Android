@@ -51,7 +51,7 @@
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@+id/mvv_widget_auto_reload"
             android:layout_toStartOf="@id/mvv_widget_auto_reload"
-            android:text="@string/mvv_auto_reload"
+            android:text="@string/mvv_widget_auto_reload"
             android:textSize="17sp" />
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_below="@id/mvv_widget_auto_reload_label"
             android:layout_toLeftOf="@+id/mvv_widget_auto_reload"
             android:layout_toStartOf="@id/mvv_widget_auto_reload"
-            android:text="@string/mvv_auto_reload_hint"
+            android:text="@string/mvv_widget_auto_reload_hint"
             android:textSize="12sp" />
 
         <Switch

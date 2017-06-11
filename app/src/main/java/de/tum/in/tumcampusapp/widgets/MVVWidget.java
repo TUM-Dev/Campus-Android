@@ -139,14 +139,14 @@ public class MVVWidget extends AppWidgetProvider {
         // Set up the configuration activity listeners
         Intent configIntent = new Intent(context, MVVWidgetConfigureActivity.class);
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId * 10, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.mvv_widget_header, pendingIntent);
 
         // Set up the reload functionality
         Intent reloadIntent = new Intent(context, MVVWidget.class);
         reloadIntent.setAction(MVVWidget.MVV_WIDGET_FORCE_RELOAD);
         reloadIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(context, appWidgetId + 10 + 1, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(context, appWidgetId, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.mvv_widget_reload, pendingReloadIntent);
         rv.setViewVisibility(R.id.mvv_widget_reload, widgetDepartures.autoReload() ? View.GONE : View.VISIBLE);
 
