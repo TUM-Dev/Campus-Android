@@ -179,6 +179,17 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     /**
+     * Collects relevant publicQuestions to be shown in the responses tab in the surveyActivity. A question is relevant when:
+     * 1. Is not deleted
+     * 2. its end date is still in the future
+     *
+     * @param date: is usually today's date
+     * @return relevant publicQuestions
+     */
+    public Cursor getRelevantPublicQuestionsSince(String date) {
+        return db.rawQuery("SELECT * FROM publicQuestions where deleted = 0 AND end >= '" + date + "'", null);
+    }
+    /**
      * Handles deleting ownQuestions that are shown in the response tab in SurveyActivity
      *
      * @param id: QuestionID

@@ -130,7 +130,7 @@ public class SurveyActivity extends ProgressActivity {
 
         @Override
         public void onClick(final View v) {
-            if (publicSurveyResultsFlag) hidePublicSurveyResults();
+            if (publicSurveyResultsFlag) showPersonalSurveyResults();
             else showPublicSurveyResults();
         }
 
@@ -164,7 +164,7 @@ public class SurveyActivity extends ProgressActivity {
         // TODO
     }
 
-    private void hidePublicSurveyResults() {
+    private void showPersonalSurveyResults() {
         publicSurveyResultsFlag = false;
         togglePublicSurveyResultsButton.setText(
                 getResources().getString(R.string.show_public_survey_results));
@@ -184,8 +184,15 @@ public class SurveyActivity extends ProgressActivity {
     //Set up the response tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
     private void setUpResponseTab() {
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // For converting Jade DateTime into String & vic versa (see show and discard functions)
-        Cursor c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // for converting
+            // Jade DateTime into String & vice versa (see show and discard functions)
+        Cursor c;
+        if (publicSurveyResultsFlag)
+            c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
+        else {
+            c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
+            // c = surveyManager.getRelevantPublicQuestionsSince(Utils.getDateTimeString(new Date()));
+        }
         int numberofquestion = c.getCount();
         //get response and question from database->set i<Number of question
         for (int i = 0; i < numberofquestion; i++) {
