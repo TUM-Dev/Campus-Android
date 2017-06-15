@@ -93,7 +93,9 @@ public class SurveyActivity extends ProgressActivity {
     private Spinner numOfQuestionsSpinner;
     private Button submitSurveyButton;
     private Button facultiesButton;
+    private Button togglePublicSurveyResultsButton;
     private CheckBox publicSurveyCheckbox;
+    private boolean publicSurveyResultsFlag = false;
 
     private final List<String> questions = new ArrayList<>();
     private final List<String> selectedFaculties = new ArrayList<>();
@@ -123,6 +125,17 @@ public class SurveyActivity extends ProgressActivity {
 
     };
 
+    //Handles clicking on 'togglePublicSurveyResults' button in responses tab
+    private final View.OnClickListener togglePublicSurveyResults = new View.OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+            if (publicSurveyResultsFlag) hidePublicSurveyResults();
+            else showPublicSurveyResults();
+        }
+
+    };
+
     public SurveyActivity() {
         super(R.layout.activity_survey);
     }
@@ -137,9 +150,9 @@ public class SurveyActivity extends ProgressActivity {
             setUpTabHost();
             setUpSelectedTargetFacultiesSpinner();
             setUpSpinnerForQuestionsNumber();
+            setUpTogglePublicSurveysButton();
             submitSurveyButtonListener();
             unregisterReceiver(connectivityChangeReceiver);
-            publicSurveyCheckbox = (CheckBox) findViewById(R.id.publicSurveyCheckbox);
         } else {
             setContentView(R.layout.layout_no_internet);
         }
@@ -149,6 +162,23 @@ public class SurveyActivity extends ProgressActivity {
     @Override
     public void onRefresh() {
         // TODO
+    }
+
+    private void hidePublicSurveyResults() {
+        publicSurveyResultsFlag = false;
+        togglePublicSurveyResultsButton.setText(
+                getResources().getString(R.string.show_public_survey_results));
+    }
+
+    private void showPublicSurveyResults() {
+        publicSurveyResultsFlag = true;
+        togglePublicSurveyResultsButton.setText(
+                getResources().getString(R.string.show_personal_survey_results));
+    }
+
+    // Set up togglePublicSurveyResults button
+    private void setUpTogglePublicSurveysButton() {
+        togglePublicSurveyResultsButton.setOnClickListener(togglePublicSurveyResults);
     }
 
     //Set up the response tab layout dynamically depending on number of questions
@@ -337,6 +367,8 @@ public class SurveyActivity extends ProgressActivity {
         numOfQuestionsSpinner = (Spinner) findViewById(R.id.spinner);
         submitSurveyButton = (Button) findViewById(R.id.submitSurveyButton);
         questionsLayout = (LinearLayout) findViewById(R.id.questionsEts);
+        publicSurveyCheckbox = (CheckBox) findViewById(R.id.publicSurveyCheckbox);
+        togglePublicSurveyResultsButton = (Button) findViewById(R.id.showPublicSurveyResultsButton);
     }
 
     /**
