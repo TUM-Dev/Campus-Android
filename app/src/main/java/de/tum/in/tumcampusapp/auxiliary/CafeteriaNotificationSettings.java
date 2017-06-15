@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 
+/**
+ * This class takes care of saving a user's preferred time for notifying him about a cafeteria's
+ * servings at a given day.
+ */
 public class CafeteriaNotificationSettings {
     private SharedPreferences sharedPreferences;
     private final String PREFIX = "CAFETERIA_SCHEDULE_";
@@ -54,6 +58,13 @@ public class CafeteriaNotificationSettings {
         return true;
     }
 
+    /**
+     * Returns the currently stored preferred hour and minute of a given day of the week.
+     * @param day
+     * A day from the interval [MONDAY, FRIDAY]
+     * @return
+     */
+
     public Pair<Integer,Integer> retrieveHourMinute(Calendar day){
         int dayOfWeek = day.get(Calendar.DAY_OF_WEEK);
         if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
@@ -65,17 +76,35 @@ public class CafeteriaNotificationSettings {
         return null;
     }
 
+    /**
+     * Checks if there's already a time preference for a weekday or not. The settings
+     * only differ by DAY_OF_WEEK.
+     * @param weekday
+     * A day ranging from MONDAY to FRIDAY
+     * @param hour
+     * The preferred hour for a notification
+     * @param minute
+     * The preferred minute for a notification
+     * @return
+     */
     private boolean updateHourMinuteOfDay(Calendar weekday, int hour, int minute){
         Pair<Integer, Integer> currentlyStored = retrieveHourMinute(weekday);
         if (currentlyStored != null && currentlyStored.first == hour && currentlyStored.second == minute){
             return false;
         }
-        if ((hour == -1 && minute == -1) || (hour > 0 && hour < 15 && minute >= 0 && minute < 60)){
+        if ((hour == -1 && minute == -1) || (hour >= 0 && hour < 24 && minute >= 0 && minute < 60)){
             return (writeDayToSettings(weekday, hour, minute, true));
         }
         return false;
     }
 
+    /**
+     * Stores all the preferred notification times from monday to friday.
+     * @param mondayToFriday
+     * An arraylist of hour-minute pairs ordered from monday to friday.
+     * @return
+     * True if actual changes occured, False if nothing really changed.
+     */
     public boolean saveWholeSchedule(ArrayList<Pair<Integer,Integer>> mondayToFriday){
         if (mondayToFriday == null || mondayToFriday.size() != 5){
             return false;

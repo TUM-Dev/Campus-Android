@@ -256,6 +256,9 @@
     <string name="action_ingredients">Inhaltsstoffe</string>
     <string name="cafeteria_notification_settings">Mensa Benachrichtigungen</string>
 
+    <!-- Cafeteria Notification Settings -->
+    <string name="invalid_notification_time">Ungültige Zeit ausgewählt. Bitte eine Uhrzeit im folgenden Intervall wählen:</string>
+
     <!-- Information -->
     <string name="version">Version</string>
     <string name="send_email">E-Mail Feedback senden</string>

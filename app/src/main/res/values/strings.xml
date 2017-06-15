@@ -266,6 +266,9 @@
     <string name="action_ingredients">Ingredients</string>
     <string name="cafeteria_notification_settings">Cafeteria Notification Settings</string>
 
+    <!-- Cafeteria Notification Settings -->
+    <string name="invalid_notification_time">Invalid time. Please pick a time ranging from:</string>
+
     <!-- Information -->
     <string name="version">Version</string>
     <string name="send_email">Send e-mail feedback</string>
