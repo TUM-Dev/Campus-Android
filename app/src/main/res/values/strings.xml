@@ -472,6 +472,7 @@ Signature: %5$s</string>
     <string name="quiz_target_faculty">Please choose your target audience:</string>
     <string name="tab_survey">Survey</string>
     <string name="tab_responses">Responses</string>
+    <string name="show_public_survey_results">Show all surveys</string>
     <string name="survey_submitted">Survey has been submitted</string>
     <string name="complete_question_form">Please complete question form</string>
     <string name="select_one_faculty">At least select one faculty</string>
