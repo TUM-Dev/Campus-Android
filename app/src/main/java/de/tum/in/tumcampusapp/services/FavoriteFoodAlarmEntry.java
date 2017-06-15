@@ -3,8 +3,16 @@ import android.content.Context;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
-
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+
+/**
+ * This class is responsible for keeping track of all the scheduled food alarms.
+ * By instantiating a new entry, it will automatically be added to a hashmap, which
+ * holds all the information about a given day's menus, which are marked as favorite.
+ * If and only if the alarm wasn't already set, an alarm will be scheduled for its date.
+ * This is achieved by instantiating a new instance of FavoriteDishAlarmScheduler, which constructs
+ * a notification, when it's fired.
+ */
 
 public class FavoriteFoodAlarmEntry{
     private static ConcurrentHashMap<Calendar, HashSet<FavoriteFoodAlarmEntry>> scheduledEntries = new ConcurrentHashMap<>();
@@ -20,8 +28,15 @@ public class FavoriteFoodAlarmEntry{
     }
 
     private static boolean put(Calendar date, FavoriteFoodAlarmEntry favoriteFoodAlarmEntry){
-        HashSet<FavoriteFoodAlarmEntry> alarmEntries;
         synchronized (scheduledEntries) {
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            for (Calendar calendar : scheduledEntries.keySet()){
+                if (calendar.before(today)){
+                    scheduledEntries.remove(calendar);
+                }
+            }
+            HashSet<FavoriteFoodAlarmEntry> alarmEntries;
             if (scheduledEntries.containsKey(date)) {
                 alarmEntries = scheduledEntries.get(date);
             } else {

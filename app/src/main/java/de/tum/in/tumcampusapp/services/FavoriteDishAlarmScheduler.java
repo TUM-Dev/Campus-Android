@@ -22,6 +22,13 @@ import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 
 /**
  * Alarm class for scheduling future favorite food notification.
+ * To support backward compatibility, one notification is constructed per
+ * found dish. This also ensures that tapping it shows the user the correct
+ * cafeteria in the newly opened cafeteria activity. The alarm itself,
+ * will launch at a given day and then consult the FavoriteFoodAlarmEntry's scheduledEntries
+ * to find out whether there are still outstanding notifications at that specific day, or
+ * if they've been canceled in the meantime. Depending on the result, the notification will
+ * either be triggered or the alarm will do nothing.
  */
 
 public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
@@ -39,9 +46,18 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
         Intent intent = new Intent(context, FavoriteDishAlarmScheduler.class);
         intent.putExtra("triggeredAt", Utils.getDateString(triggeredAt.getTime()));
         PendingIntent schedule = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Utils.log("Food Alarm scheduled at: " + scheduledAt.getTime().toString());
         alarmManager.set(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), schedule);
     }
+
+    /**
+     * Can either receive a date or a boolean cancelNotifications value. This way other activities
+     * can close the currently opened notifications and it is possible to schedule dates, where the
+     * alarm has to check for favorite dishes.
+     * @param context
+     * @param extra
+     * Extra can either be "cancelNotifications" or a date, when the alarm should check, if there are any
+     * favorite dishes at a given date.
+     */
 
     @Override
     public void onReceive(Context context, Intent extra) {
@@ -90,6 +106,13 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
             }
         }
     }
+
+    /**
+     * Checks if the user set / or disabled (hour =-1) an hour for a potential schedule.
+     * @param context
+     * @param scheduledAt
+     * @return
+     */
 
     private boolean loadTriggerHourAndMinute(Context context, Calendar scheduledAt){
         CafeteriaNotificationSettings cafeteriaNotificationSettings = new CafeteriaNotificationSettings(context);

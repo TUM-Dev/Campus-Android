@@ -21,6 +21,10 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
     private ArrayList<Pair<Integer, Integer>> dailySchedule;
     private LayoutInflater inflater;
     private Activity activity;
+
+    private final int EARLIEST_HOUR = 6;
+    private final int LATEST_HOUR = 15;
+
     static class ViewHolder {
         TextView weekday;
         Button time;
@@ -106,8 +110,9 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
              new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                    if(hour < 6 || hour > 15) {
-                        Toast.makeText(context,"Invalid hour, please choose an hour inbetween 06:00 and 15:00", Toast.LENGTH_SHORT).show();
+                    if(hour < EARLIEST_HOUR || hour > LATEST_HOUR) {
+                        Toast.makeText(context, context.getString(R.string.invalid_notification_time)
+                                +" "+EARLIEST_HOUR+" - "+LATEST_HOUR, Toast.LENGTH_SHORT).show();
                     }else{
                         dailySchedule.set(position, new Pair<>(hour, minute));
                         notifyDataSetChanged();
