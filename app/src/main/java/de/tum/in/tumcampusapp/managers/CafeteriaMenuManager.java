@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
 import com.google.common.base.Optional;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -117,7 +116,7 @@ public class CafeteriaMenuManager extends AbstractManager {
     public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {
         db.execSQL("INSERT INTO favorite_dishes (mensaId, dishName, date, tag) VALUES (?, ?, ?,?)",
                 new String[]{String.valueOf(mensaId), dishName, date, tag});
-        notifyFavoriteFoodService(false);
+        scheduleFoodAlarms(false);
     }
 
     public Cursor getFavoriteDishNextDates(int mensaId, String dishName) {
@@ -143,7 +142,7 @@ public class CafeteriaMenuManager extends AbstractManager {
     public void deleteFavoriteDish(int mensaId, String dishName) {
         db.execSQL("DELETE "
                 + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{String.valueOf(mensaId), dishName});
-        notifyFavoriteFoodService(true);
+        scheduleFoodAlarms(true);
     }
 
     public Cursor getFavoriteDishToday() {
@@ -215,7 +214,7 @@ public class CafeteriaMenuManager extends AbstractManager {
                 new String[]{String.valueOf(c.cafeteriaId),
                         Utils.getDateString(c.date), c.typeShort, c.typeLong,
                         String.valueOf(c.typeNr), c.name});
-        notifyFavoriteFoodService(true);
+        scheduleFoodAlarms(true);
     }
     /**
      * Queries all favorite dishes.
@@ -235,11 +234,11 @@ public class CafeteriaMenuManager extends AbstractManager {
      * any of these mensas serving a user's favorite food in the future. If that is the case a Bundle
      * containing the following information: MensaId, FavoriteDishName, Date will be constructed and
      * sent to the FavoriteDishAlarmScheduler. This way it is possible to schedule multiple alarms in advance.
-     * @param resetAlarms
+     * @param completeReschedule
      * True if all currently scheduled alarms should be discarded, False if not
      */
-    public void notifyFavoriteFoodService(boolean resetAlarms){
-        if(resetAlarms){
+    public void scheduleFoodAlarms(boolean completeReschedule){
+        if(completeReschedule){
             FavoriteFoodAlarmEntry.removeAll();
         }
         Cursor favoriteFoodWhere = db.rawQuery("SELECT mensaId,dishName FROM favorite_dishes GROUP BY mensaId,dishName",null);
@@ -247,7 +246,7 @@ public class CafeteriaMenuManager extends AbstractManager {
             int mensaId = favoriteFoodWhere.getInt(0);
             String dishName = favoriteFoodWhere.getString(1);
             Cursor upcomingServings = db.rawQuery("SELECT mensaId,date,name FROM cafeterias_menus WHERE" +
-                    " date >= date('now','localtime') AND mensaId = ? AND name = ?",
+                    " date > date('now','localtime') AND mensaId = ? AND name = ?",
                     new String[]{""+mensaId, dishName});
             while (upcomingServings.moveToNext()){
                 Calendar upcomingDate = Calendar.getInstance();

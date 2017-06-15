@@ -66,7 +66,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     protected void onResume() {
         super.onResume();
         Intent cancelPendingFoodNotifications = new Intent(this, FavoriteDishAlarmScheduler.class);
-        cancelPendingFoodNotifications.putExtra("cancelNotifications",true);
+        cancelPendingFoodNotifications.putExtra(FavoriteDishAlarmScheduler.INTENT_CANCEL_ALL_NOTIFICATIONS,true);
         sendBroadcast(cancelPendingFoodNotifications);
     }
 
@@ -84,6 +84,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             new AlertDialog.Builder(this).setTitle(R.string.action_ingredients)
                     .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
                     .setPositiveButton(android.R.string.ok, null).create().show();
+            return true;
+        }
+        if (item.getItemId() == R.id.action_settings){
+            startActivity(new Intent(this, CafeteriaNotificationSettingsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -7,14 +7,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.util.Pair;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
+import de.tum.in.tumcampusapp.auxiliary.CafeteriaNotificationSettings;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
@@ -26,14 +27,20 @@ import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
     private static Set<Integer> activeNotifications = Collections.synchronizedSet(new HashSet<Integer>());
     private static final String NOTIFICATION_TAG = "TCA_FAV_FOOD";
+    public static final String INTENT_CANCEL_ALL_NOTIFICATIONS = "cancelNotifications";
 
     public FavoriteDishAlarmScheduler(){}
     public FavoriteDishAlarmScheduler(Calendar triggeredAt, Context context){
+        Calendar scheduledAt = (Calendar) triggeredAt.clone();
+        if (!loadTriggerHourAndMinute(context, scheduledAt)){
+            return;
+        }
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, FavoriteDishAlarmScheduler.class);
         intent.putExtra("triggeredAt", Utils.getDateString(triggeredAt.getTime()));
         PendingIntent schedule = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000, schedule);
+        Utils.log("Food Alarm scheduled at: " + scheduledAt.getTime().toString());
+        alarmManager.set(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), schedule);
     }
 
     @Override
@@ -82,5 +89,16 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
                 it.remove();
             }
         }
+    }
+
+    private boolean loadTriggerHourAndMinute(Context context, Calendar scheduledAt){
+        CafeteriaNotificationSettings cafeteriaNotificationSettings = new CafeteriaNotificationSettings(context);
+        Pair<Integer, Integer> hourMinute = cafeteriaNotificationSettings.retrieveHourMinute(scheduledAt);
+        if (hourMinute.first == -1){
+            return false;
+        }
+        scheduledAt.set(Calendar.HOUR_OF_DAY, hourMinute.first);
+        scheduledAt.set(Calendar.MINUTE, hourMinute.second);
+        return true;
     }
 }
