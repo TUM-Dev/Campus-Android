@@ -23,6 +23,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -71,6 +72,7 @@ public class SurveyActivity extends ProgressActivity {
             }
         }
     };
+
     private final View.OnClickListener showFaculties = new View.OnClickListener() {
 
         @Override
@@ -87,27 +89,32 @@ public class SurveyActivity extends ProgressActivity {
         }
 
     };
+
     private Spinner numOfQuestionsSpinner;
     private Button submitSurveyButton;
     private Button facultiesButton;
+    private CheckBox publicSurveyCheckbox;
+
     private final List<String> questions = new ArrayList<>();
     private final List<String> selectedFaculties = new ArrayList<>();
     private boolean[] checkedFaculties;
+
     private LinearLayout mainResponseLayout;
     private LinearLayout questionsLayout;
     private final List<String> fetchedFaculties = new ArrayList<>();
     private SurveyManager surveyManager;
+
     //Handles clicking on 'delete' button of an own question in responses tab
     private final View.OnClickListener deleteQuestion = new View.OnClickListener() {
 
         @Override
         public void onClick(final View v) {
             if (NetUtils.isConnected(getApplicationContext())) {
-                //remove view and delete from database.
+                //Remove view and delete from database.
                 v.setEnabled(false);
                 int tag = (int) v.getTag();
                 surveyManager.deleteMyOwnQuestion(tag);
-                zoomOutanimation(v); // provides a smoth delete animation of the question
+                zoomOutanimation(v); // provides a smooth delete animation of the question
                 Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG).show();
             } else {
                 restartActivity();
@@ -132,6 +139,7 @@ public class SurveyActivity extends ProgressActivity {
             setUpSpinnerForQuestionsNumber();
             submitSurveyButtonListener();
             unregisterReceiver(connectivityChangeReceiver);
+            publicSurveyCheckbox = (CheckBox) findViewById(R.id.publicSurveyCheckbox);
         } else {
             setContentView(R.layout.layout_no_internet);
         }
@@ -143,7 +151,7 @@ public class SurveyActivity extends ProgressActivity {
         // TODO
     }
 
-    //set up the respone tab layout dynamically depending on number of questions
+    //Set up the response tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
     private void setUpResponseTab() {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // For converting Jade DateTime into String & vic versa (see show and discard functions)
@@ -443,8 +451,9 @@ public class SurveyActivity extends ProgressActivity {
                     new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected void onPreExecute() {
+                            Boolean isPublicSurvey = publicSurveyCheckbox.isChecked();
                             for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) {
-                                Question ques = new Question(questions.get(i), selectedFacIds);
+                                Question ques = new Question(questions.get(i), selectedFacIds, isPublicSurvey);
                                 // Submit Question to the server
                                 TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
                                     @Override
@@ -514,6 +523,7 @@ public class SurveyActivity extends ProgressActivity {
      * Help function for clearing data and layout entries after submitting questions
      */
     private void clearData() {
+        publicSurveyCheckbox.setChecked(false);
         selectedFaculties.clear();
         questions.clear();
         for (int i = 0; i < checkedFaculties.length; i++) { // uncheck selected faculties

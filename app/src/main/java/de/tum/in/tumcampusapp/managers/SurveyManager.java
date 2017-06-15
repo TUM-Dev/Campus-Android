@@ -241,7 +241,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         try {
             // In case there are answered but not yet synced questions in local db
             while (cursor.moveToNext()) {
-                Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")), cursor.getInt(cursor.getColumnIndex("answerid")));
+                Question answeredQuestion = new Question(
+                        cursor.getString(cursor.getColumnIndex("question")),
+                        cursor.getInt(cursor.getColumnIndex("answerid")));
 
                 // Submit Answer to Serve
                 TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
