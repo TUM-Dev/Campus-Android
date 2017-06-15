@@ -451,7 +451,7 @@ public class SurveyActivity extends ProgressActivity {
                     new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected void onPreExecute() {
-                            Boolean isPublicSurvey = publicSurveyCheckbox.isChecked();
+                            boolean isPublicSurvey = publicSurveyCheckbox.isChecked();
                             for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) {
                                 Question ques = new Question(questions.get(i), selectedFacIds, isPublicSurvey);
                                 // Submit Question to the server

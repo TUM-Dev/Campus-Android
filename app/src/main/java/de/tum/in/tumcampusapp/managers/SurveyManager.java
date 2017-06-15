@@ -363,29 +363,50 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         if (ownQuestions.isEmpty()) {
             return;
         }
-        for (int i = 0; i < ownQuestions.size(); i++) {
-            replaceIntoDbOwnQuestions(ownQuestions.get(i));
+        for (Question q : ownQuestions) {
+            replaceIntoDbQuestions(q, "publicQuestions");
         }
     }
 
     /**
-     * Help function for downLoadOwnQuestions to write questions in db
+     * Downloads publicQuestions from server via TUMCabeClient and
+     * saves them in local db if they don't exist
+     */
+    public void downLoadPublicQuestions() {
+        List<Question> publicQuestions = new ArrayList<>();
+        try {
+            publicQuestions = TUMCabeClient.getInstance(mContext).getPublicQuestions();
+        } catch (IOException e) {
+            Utils.log(e);
+        }
+        if (publicQuestions.isEmpty()) {
+            return;
+        }
+        for (Question q : publicQuestions) {
+            replaceIntoDbQuestions(q, "ownQuestions");
+        }
+    }
+
+    /**
+     * Help function for downLoad<...>Questions to write questions in db
      *
      * @param q
      */
-    void replaceIntoDbOwnQuestions(Question q) {
-        Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()});
+    void replaceIntoDbQuestions(Question q, String dbName) {
+        Cursor c = db.rawQuery(
+                "SELECT question FROM " + dbName + " WHERE question = ?",
+                new String[]{q.getQuestion()});
 
         try {
             db.beginTransaction();
 
 
             if (c.moveToFirst()) {// update non-exsisting question fields in the db (false means don't update 'delete' and 'synced' fields
-                ContentValues cv = setOwnQuestionFields(q, false);
-                db.update("ownQuestions", cv, "question=" + q.getQuestion(), null);
+                ContentValues cv = setQuestionFields(q, false);
+                db.update(dbName, cv, "question=" + q.getQuestion(), null);
             } else { // if question doesn't exist -> insert into DB
-                ContentValues cv = setOwnQuestionFields(q, true);
-                db.insert("ownQuestions", null, cv);
+                ContentValues cv = setQuestionFields(q, true);
+                db.insert(dbName, null, cv);
             }
 
             db.setTransactionSuccessful();
@@ -396,13 +417,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     /**
-     * Help function for replaceIntoDBOwnQuestions
+     * Help function for replaceIntoDBQuestions
      *
      * @param q:               question
      * @param setDeletedSynced a flag whether fields 'deleted' and 'synced' in db should be synced
      * @return Contentvalues that updates all respective fields of the question in db
      */
-    public ContentValues setOwnQuestionFields(Question q, boolean setDeletedSynced) {
+    public ContentValues setQuestionFields(Question q, boolean setDeletedSynced) {
         Question.Answer[] answers = q.getResults();
         ContentValues cv = new ContentValues();
 

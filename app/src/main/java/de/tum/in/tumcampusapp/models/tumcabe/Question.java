@@ -18,7 +18,7 @@ public class Question {
     private Answer[] results;
     private String created;
     private String end;
-    private Boolean isPublic;
+    private boolean isPublic;
 
     /**
      * Used in the help function for deleting flagged questions in SurveyManager
@@ -59,7 +59,7 @@ public class Question {
      * @param faculties
      * @param isPublic
      */
-    public Question(String text, List<String> faculties, Boolean isPublic) {
+    public Question(String text, List<String> faculties, boolean isPublic) {
         this.text = text;
         this.faculty = Utils.arrayListToString(faculties);
         this.isPublic = isPublic;

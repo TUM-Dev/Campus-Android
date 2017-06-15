@@ -54,6 +54,7 @@ public class TUMCabeClient {
     private static final String API_QUESTION = "question/";
     private static final String API_ANSWER_QUESTION = "question/answer/";
     private static final String API_OWN_QUESTIONS = "question/my/";
+    private static final String API_PUBLIC_QUESTIONS = "question/public";
     private static final String API_FACULTY = "faculty/";
 
 
@@ -106,6 +107,11 @@ public class TUMCabeClient {
     // Fetches users ownQuestions and responses.Relevant for displaying results on ownQuestion under responses in SurveyActivity
     public List<Question> getOwnQuestions() throws IOException {
         return service.getOwnQuestions().execute().body();
+    }
+
+    // Fetches publicQuestions and responses.Relevant for displaying results on publicQuestion under responses in SurveyActivity
+    public List<Question> getPublicQuestions() throws IOException {
+        return service.getPublicQuestions().execute().body();
     }
 
     // Submits user's answer on a given question.Gets triggered through in the survey card.
@@ -226,6 +232,9 @@ public class TUMCabeClient {
 
         @GET(API_OWN_QUESTIONS)
         Call<List<Question>> getOwnQuestions();
+
+        @GET(API_PUBLIC_QUESTIONS)
+        Call<List<Question>> getPublicQuestions();
 
         @POST(API_ANSWER_QUESTION)
         Call<Question> answerQuestion(@Body Question question);
