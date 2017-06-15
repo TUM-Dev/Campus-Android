@@ -8,7 +8,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public class FavoriteFoodAlarmEntry{
     private static ConcurrentHashMap<Calendar, HashSet<FavoriteFoodAlarmEntry>> scheduledEntries = new ConcurrentHashMap<>();
-
     private int mensaId;
     private String dishName;
     private Context context;
