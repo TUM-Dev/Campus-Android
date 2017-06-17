@@ -54,6 +54,9 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                 + "nr VARCHAR PRIMARY KEY, status VARCHAR, url VARCHAR, "
                 + "title VARCHAR, description VARCHAR, dtstart VARCHAR, dtend VARCHAR, "
                 + "location VARCHAR REFERENCES room_locations)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS widgets_timetable_blacklist ("
+                + "widget_id INTEGER, lecture_title VARCHAR, PRIMARY KEY (widget_id, lecture_title))");
     }
 
     /**
@@ -158,21 +161,24 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
     /**
      * Returns all stored events in the next days from db
+     * If there is a valid widget id (> 0) the events are filtered by the widgets blacklist
      *
      * @param dayCount The number of days
+     * @param widgetId The id of the widget
      * @return List<IntegratedCalendarEvent> List of Events
      */
-    public List<IntegratedCalendarEvent> getNextDaysFromDb(int dayCount) {
+    public List<IntegratedCalendarEvent> getNextDaysFromDb(int dayCount, int widgetId) {
         Calendar calendar = Calendar.getInstance();
         String from = Utils.getDateTimeString(calendar.getTime());
         calendar.add(Calendar.DAY_OF_YEAR, dayCount);
         String to = Utils.getDateTimeString(calendar.getTime());
 
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM calendar WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' ORDER BY dtstart ASC", new String[]{from, to});
+        Cursor cursor = db.rawQuery("SELECT * FROM calendar c WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' " +
+                "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title) " +
+                "ORDER BY dtstart ASC", new String[]{from, to, String.valueOf(widgetId)});
         while (cursor.moveToNext()) {
-            IntegratedCalendarEvent calendarEvent = new IntegratedCalendarEvent(cursor);
-            calendarEvents.add(calendarEvent);
+            calendarEvents.add(new IntegratedCalendarEvent(cursor));
         }
         cursor.close();
         return calendarEvents;
@@ -200,6 +206,42 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         }
         c.close();
         return result;
+    }
+
+    /**
+     * Add a lecture to the blacklist of a widget
+     *
+     * @param widgetId the Id of the widget
+     * @param lecture  the title of the lecture
+     */
+    public void addLectureToBlacklist(int widgetId, String lecture) {
+        ContentValues values = new ContentValues();
+        values.put("widget_id", widgetId);
+        values.put("lecture_title", lecture);
+        db.replace("widgets_timetable_blacklist", null, values);
+    }
+
+    /**
+     * Remove a lecture from the blacklist of a widget
+     *
+     * @param widgetId the Id of the widget
+     * @param lecture  the title of the lecture
+     */
+    public void deleteLectureFromBlacklist(int widgetId, String lecture) {
+        db.delete("widgets_timetable_blacklist", "widget_id = ? AND lecture_title = ?",
+                new String[]{String.valueOf(widgetId), lecture});
+    }
+
+    /**
+     * get all lectures and the information whether they are on the blacklist for the given widget
+     *
+     * @param widgetId the Id of the widget
+     * @return A cursor containing a list of lectures and the is_on_blacklist flag
+     */
+    public Cursor getLecturesFromWidget(int widgetId) {
+        return db.rawQuery("SELECT DISTINCT c.ROWID as _id, c.title, EXISTS (" +
+                "SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title" +
+                ") as is_on_blacklist from calendar c GROUP BY c.title", new String[]{String.valueOf(widgetId)});
     }
 
     public void importCalendar(CalendarRowSet myCalendarList) {
