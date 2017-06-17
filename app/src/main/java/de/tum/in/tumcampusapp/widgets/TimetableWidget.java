@@ -133,14 +133,12 @@ public class TimetableWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        switch (intent.getAction()) {
-            case TimetableWidget.BROADCAST_UPDATE_TIMETABLE_WIDGETS:
-                // There may be multiple widgets active, so update all of them
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                ComponentName thisWidget = new ComponentName(context, TimetableWidget.class);
-                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-                updateAppWidgets(context, appWidgetManager, appWidgetIds);
-                break;
+        if (intent.getAction().equals(TimetableWidget.BROADCAST_UPDATE_TIMETABLE_WIDGETS)) {
+            // There may be multiple widgets active, so update all of them
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            ComponentName thisWidget = new ComponentName(context, TimetableWidget.class);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+            updateAppWidgets(context, appWidgetManager, appWidgetIds);
         }
         super.onReceive(context, intent);
     }

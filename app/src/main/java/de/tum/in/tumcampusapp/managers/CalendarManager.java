@@ -174,17 +174,11 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         String to = Utils.getDateTimeString(calendar.getTime());
 
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
-        Cursor cursor;
-        if (widgetId >= 0) {
-            cursor = db.rawQuery("SELECT * FROM calendar c WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' " +
-                    "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title) " +
-                    "ORDER BY dtstart ASC", new String[]{from, to, String.valueOf(widgetId)});
-        } else {
-            cursor = db.rawQuery("SELECT * FROM calendar WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' ORDER BY dtstart ASC", new String[]{from, to});
-        }
+        Cursor cursor = db.rawQuery("SELECT * FROM calendar c WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' " +
+                "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title) " +
+                "ORDER BY dtstart ASC", new String[]{from, to, String.valueOf(widgetId)});
         while (cursor.moveToNext()) {
-            IntegratedCalendarEvent calendarEvent = new IntegratedCalendarEvent(cursor);
-            calendarEvents.add(calendarEvent);
+            calendarEvents.add(new IntegratedCalendarEvent(cursor));
         }
         cursor.close();
         return calendarEvents;
@@ -228,7 +222,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
     }
 
     /**
-     * Remove a lecture to the blacklist of a widget
+     * Remove a lecture from the blacklist of a widget
      *
      * @param widgetId the Id of the widget
      * @param lecture  the title of the lecture
