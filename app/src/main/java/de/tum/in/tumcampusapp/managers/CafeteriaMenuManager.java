@@ -111,6 +111,7 @@ public class CafeteriaMenuManager extends AbstractManager {
             db.endTransaction();
         }
         sync.replaceIntoDb(this);
+        scheduleFoodAlarms(true);
     }
 
     public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {
@@ -214,7 +215,6 @@ public class CafeteriaMenuManager extends AbstractManager {
                 new String[]{String.valueOf(c.cafeteriaId),
                         Utils.getDateString(c.date), c.typeShort, c.typeLong,
                         String.valueOf(c.typeNr), c.name});
-        scheduleFoodAlarms(true);
     }
     /**
      * Queries all favorite dishes.
