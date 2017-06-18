@@ -1,8 +1,12 @@
 package de.tum.in.tumcampusapp.services;
 import android.content.Context;
+import android.support.v4.util.Pair;
+
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
+
+import de.tum.in.tumcampusapp.auxiliary.CafeteriaNotificationSettings;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
@@ -24,17 +28,37 @@ public class FavoriteFoodAlarmEntry{
         this.mensaId = mensaId;
         this.dishName = dishName;
         this.context = context;
-        put(date, this);
+        put(date, context, this);
     }
 
-    private static boolean put(Calendar date, FavoriteFoodAlarmEntry favoriteFoodAlarmEntry){
+    private static boolean put(Calendar date, Context context, FavoriteFoodAlarmEntry favoriteFoodAlarmEntry){
         synchronized (scheduledEntries) {
+            //Clear old entries
             Calendar today = Calendar.getInstance();
-            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.HOUR_OF_DAY,0);
             for (Calendar calendar : scheduledEntries.keySet()){
                 if (calendar.before(today)){
                     scheduledEntries.remove(calendar);
                 }
+            }
+
+            int yearScheduled = date.get(Calendar.YEAR);
+            int dayOfYearScheduled = date.get(Calendar.DAY_OF_YEAR);
+            int hourScheduled = date.get(Calendar.HOUR_OF_DAY);
+            int minuteScheduled = date.get(Calendar.MINUTE);
+
+            today = Calendar.getInstance();
+            int year = today.get(Calendar.YEAR);
+            int dayOfYear = today.get(Calendar.DAY_OF_YEAR);
+
+            CafeteriaNotificationSettings cfs = new CafeteriaNotificationSettings(context);
+            Pair<Integer,Integer> preferredHourAndMinute = cfs.retrieveHourMinute(date);
+
+            int inMinutesScheduled = hourScheduled*60+minuteScheduled;
+            int inMinutesPreferred = preferredHourAndMinute.first*60+preferredHourAndMinute.second;
+            //If entry is for today and past the preferred scheduling time cancel otherwise continue constructing an alarm
+            if (yearScheduled == year && dayOfYear == dayOfYearScheduled && inMinutesScheduled >= inMinutesPreferred) {
+                return false;
             }
             HashSet<FavoriteFoodAlarmEntry> alarmEntries;
             if (scheduledEntries.containsKey(date)) {
