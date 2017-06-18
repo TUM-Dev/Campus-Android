@@ -70,7 +70,9 @@ public class CafeteriaNotificationSettings {
         if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
             int hour = sharedPreferences.getInt(PREFIX+dayOfWeek+HOUR, -2);
             int minute = sharedPreferences.getInt(PREFIX+dayOfWeek+MINUTE, -2);
-            if (hour == -2 || minute == -2) return null;
+            if (hour == -2 || minute == -2){
+                return null;
+            }
             return new Pair<>(hour,minute);
         }
         return null;

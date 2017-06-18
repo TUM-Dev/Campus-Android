@@ -246,7 +246,7 @@ public class CafeteriaMenuManager extends AbstractManager {
             int mensaId = favoriteFoodWhere.getInt(0);
             String dishName = favoriteFoodWhere.getString(1);
             Cursor upcomingServings = db.rawQuery("SELECT mensaId,date,name FROM cafeterias_menus WHERE" +
-                    " date > date('now','localtime') AND mensaId = ? AND name = ?",
+                    " date >= date('now','localtime') AND mensaId = ? AND name = ?",
                     new String[]{""+mensaId, dishName});
             while (upcomingServings.moveToNext()){
                 Calendar upcomingDate = Calendar.getInstance();
