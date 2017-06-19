@@ -37,14 +37,17 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
 
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
-    public static final String FACILITY_NAME = "facility_name";
+    public static final String FACILITY_NAME = "name";
+    public static final String FACILITY_ID = "facility_id";
+    public static final String FACILITY_CATEGORY_ID = "category_id";
+
 
 
     private Map<String, String> options;
     private ArrayAdapter<String> arrayAdapter;
     private NetUtils net;
 
-    private static final String MOCK_FACILITIES="[{facility_id:1,name:'Garching Library',longitude:11.666862,latitude:48.262547,category_id:1}," +
+    public static final String MOCK_FACILITIES="[{facility_id:1,name:'Garching Library',longitude:11.666862,latitude:48.262547,category_id:1}," +
                                                 "{facility_id:2,name:'Main campus Library',longitude:11.568010,latitude:48.148848,category_id:1}," +
                                                 "{facility_id:3,name:'Stucafe Informatics',latitude:48.262403, longitude:11.668032,category_id:2}," +
                                                 "{facility_id:4,name:'Stucafe Mechanical',latitude:48.265767, longitude:11.667571,category_id:2}]";
@@ -65,6 +68,8 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
         list.setOnItemClickListener(this);
 
         String category_id = getIntent().getExtras().getString(FacilityCategoriesActivity.CATEGORY_ID);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Fetch all curricula from webservice via parent async class
         this.startLoading(category_id);
@@ -139,5 +144,16 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
         intent.putExtra(LONGITUDE, longitude);
         intent.putExtra(LATITUDE, latitude);
         this.startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

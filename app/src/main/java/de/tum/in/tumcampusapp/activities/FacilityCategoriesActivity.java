@@ -16,17 +16,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
+import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
+import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.FacilityLocatorSuggestionProvider;
+import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
+import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequestFetchListener;
 
 /**
  * Activity to fetch and display the curricula of different study programs.
  */
-public class FacilityCategoriesActivity extends ActivityForSearching implements OnItemClickListener {
+public class FacilityCategoriesActivity extends ActivityForSearching implements OnItemClickListener,TUMRoomFinderRequestFetchListener {
     public static final String CATEGORY_ID = "category_id";
+
+    private TUMRoomFinderRequest roomFinderRequest;
 
     private Map<String, String> options;
     private ArrayAdapter<String> arrayAdapter;
@@ -40,6 +47,8 @@ public class FacilityCategoriesActivity extends ActivityForSearching implements 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        roomFinderRequest = new TUMRoomFinderRequest(this);
 
         // Sets the adapter
         ListView list = (ListView) this.findViewById(R.id.activity_facility_categories_list_view);
@@ -102,12 +111,35 @@ public class FacilityCategoriesActivity extends ActivityForSearching implements 
 
     @Override
     protected void onStartSearch(String query) {
-
+        roomFinderRequest.fetchSearchInteractiveFacilities(this, this, query);
     }
 
+
+    @Override
+    public void onFetch(List<Map<String, String>> result) {
+        if (result.isEmpty()) {
+//            list.setAdapter(new NoResultsAdapter(this));
+        } else {
+//            adapter = new RoomFinderListAdapter(this, result);
+//            list.setAdapter(adapter);
+            showLoadingEnded();
+        }
+    }
+
+    @Override
+    public void onFetchError(String errorReason) {
+        roomFinderRequest.cancelRequest(true);
+        showError(errorReason);
+    }
 
 //    @Override
     public void openTaggingActivitty() {
         this.startActivity(new Intent(this,FacilityTaggingActivity.class));
     }
+
+    @Override
+    public void onNoInternetError() {
+        showNoInternetLayout();
+    }
+
 }

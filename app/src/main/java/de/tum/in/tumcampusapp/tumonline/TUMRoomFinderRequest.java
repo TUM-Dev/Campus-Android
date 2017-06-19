@@ -29,6 +29,13 @@ import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.managers.CacheManager;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
 
+import static de.tum.in.tumcampusapp.activities.FacilityActivity.FACILITY_NAME;
+import static de.tum.in.tumcampusapp.activities.FacilityActivity.FACILITY_ID;
+import static de.tum.in.tumcampusapp.activities.FacilityActivity.LONGITUDE;
+import static de.tum.in.tumcampusapp.activities.FacilityActivity.LATITUDE;
+import static de.tum.in.tumcampusapp.activities.FacilityActivity.FACILITY_CATEGORY_ID;
+import static de.tum.in.tumcampusapp.activities.FacilityActivity.MOCK_FACILITIES;
+
 /**
  * Base class for communication with TUMRoomFinder
  */
@@ -62,6 +69,7 @@ public class TUMRoomFinderRequest {
     private static final String RPC_API_BASE_URL = "http://roomfinder.ze.tum.de:8192/xmlrpc";
     private static final String RPC_API_GEO_MAPS =  "getGeoMaps";
     private static final String RPC_API_FLAG_GEO =  "flagGeo";
+    private static final String API_URL_SEARCH_FACILITIES = "to_be_added_search_endpoint";
 
 
     private final NetUtils net;
@@ -234,6 +242,44 @@ public class TUMRoomFinderRequest {
         return roomsList;
     }
 
+
+    public List<Map<String, String>> fetchFacilities(String searchString) {
+//        TODO:replace with actual search call
+        String url = API_URL_SEARCH_FACILITIES + encodeUrl(searchString);
+//        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+        Optional<JSONArray> jsonArray=null;
+        try {
+            Optional.of(new JSONArray(MOCK_FACILITIES));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        List<Map<String, String>> facilitiesList = new ArrayList<>();
+        try {
+            if (jsonArray.isPresent()) {
+                JSONArray arr = jsonArray.get();
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject obj = arr.getJSONObject(i);
+                    Map<String, String> facilityMap = new HashMap<>();
+                    facilityMap.put(FACILITY_ID, obj.getString(FACILITY_ID));
+                    facilityMap.put(FACILITY_NAME, obj.getString(FACILITY_NAME));
+                    facilityMap.put(LONGITUDE, obj.getString(LONGITUDE));
+                    facilityMap.put(LATITUDE, obj.getString(LATITUDE));
+                    facilityMap.put(FACILITY_CATEGORY_ID, obj.getString(FACILITY_CATEGORY_ID));
+                    // adding HashList to ArrayList
+                    facilitiesList.add(facilityMap);
+                }
+            }
+        } catch (JSONException e) {
+            Utils.log(e);
+        }
+
+        return facilitiesList;
+    }
+
+
+
     /**
      * fetches all available maps of the room or building
      *
@@ -371,4 +417,58 @@ public class TUMRoomFinderRequest {
 
         backgroundTask.execute(searchString);
     }
+
+
+//    TODO:Move to a separate class
+    public void fetchSearchInteractiveFacilities(final Context context,
+                                       final TUMRoomFinderRequestFetchListener listener,
+                                       String searchString) {
+
+        // fetch information in a background task and show progress dialog in
+        // meantime
+        backgroundTask = new AsyncTask<String, Void, List<Map<String, String>>>() {
+
+            /**
+             * property to determine if there is an internet connection
+             */
+            boolean isOnline;
+
+            @Override
+            protected List<Map<String, String>> doInBackground(
+                    String... searchString) {
+                // set parameter on the TUMRoomFinder request an fetch the
+                // results
+                isOnline = NetUtils.isConnected(context);
+                if (!isOnline) {
+                    // not online, fetch does not make sense
+                    return null;
+                }
+                // we are online, return fetch result
+
+                return fetchFacilities(searchString[0]);
+            }
+
+            @Override
+            protected void onPostExecute(List<Map<String, String>> result) {
+                // handle result
+                if (!isOnline) {
+                    listener.onNoInternetError();
+                    return;
+                }
+                if (result == null) {
+                    listener.onFetchError(context
+                            .getString(R.string.empty_result));
+                    return;
+                }
+                // If there could not be found any problems return usual on
+                // Fetch method
+                listener.onFetch(result);
+            }
+
+        };
+
+        backgroundTask.execute(searchString);
+    }
+
+
 }
