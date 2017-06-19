@@ -82,12 +82,10 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
             Intent intent = new Intent(context, CafeteriaActivity.class);
             intent.putExtra(Const.MENSA_FOR_FAVORITEDISH, fae.getMensaId());
             PendingIntent pi = PendingIntent.getActivity(context, fae.getMensaId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            String message = mensaName+"\n"+fae.getDishName();
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("TumCampusApp")
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                    .setContentText(message)
+                    .setContentTitle(mensaName)
+                    .setContentText(fae.getDishName())
                     .setAutoCancel(true);
             mBuilder.setContentIntent(pi);
             mBuilder.setDefaults(Notification.DEFAULT_SOUND);
