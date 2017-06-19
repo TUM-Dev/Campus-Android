@@ -65,9 +65,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     @Override
     protected void onResume() {
         super.onResume();
-        Intent cancelPendingFoodNotifications = new Intent(this, FavoriteDishAlarmScheduler.class);
-        cancelPendingFoodNotifications.putExtra(FavoriteDishAlarmScheduler.INTENT_CANCEL_ALL_NOTIFICATIONS,true);
-        sendBroadcast(cancelPendingFoodNotifications);
     }
 
     @Override

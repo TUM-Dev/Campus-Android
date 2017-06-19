@@ -31,11 +31,23 @@ public class FavoriteFoodAlarmEntry{
         put(date, context, this);
     }
 
+    /**
+     * @param date
+     * date as day, month, year. all other values like minutes, seconds etc. have to be zero
+     * @param context
+     * @param favoriteFoodAlarmEntry
+     * @return
+     */
+
     private static boolean put(Calendar date, Context context, FavoriteFoodAlarmEntry favoriteFoodAlarmEntry){
         synchronized (scheduledEntries) {
-            //Clear old entries
             Calendar today = Calendar.getInstance();
             today.setTime(Utils.getDate(Utils.getDateString(today.getTime())));
+            //Dont add entries which are from yesterday or older
+            if (date.before(today)){
+                return false;
+            }
+            //Clear all entries added in the past
             for (Calendar calendar : scheduledEntries.keySet()){
                 if (calendar.before(today)){
                     scheduledEntries.remove(calendar);
@@ -44,28 +56,35 @@ public class FavoriteFoodAlarmEntry{
 
             int yearScheduled = date.get(Calendar.YEAR);
             int dayOfYearScheduled = date.get(Calendar.DAY_OF_YEAR);
-            int hourScheduled = date.get(Calendar.HOUR_OF_DAY);
-            int minuteScheduled = date.get(Calendar.MINUTE);
-
             today = Calendar.getInstance();
             int year = today.get(Calendar.YEAR);
             int dayOfYear = today.get(Calendar.DAY_OF_YEAR);
+            int currentMinutes = today.get(Calendar.HOUR_OF_DAY)*60+today.get(Calendar.MINUTE);
 
-            CafeteriaNotificationSettings cfs = new CafeteriaNotificationSettings(context);
-            Pair<Integer,Integer> preferredHourAndMinute = cfs.retrieveHourMinute(date);
-
-            int inMinutesScheduled = hourScheduled*60+minuteScheduled;
-            int inMinutesPreferred = preferredHourAndMinute.first*60+preferredHourAndMinute.second;
-            //If entry is for today and past the preferred scheduling time cancel otherwise continue constructing an alarm
-            if (yearScheduled == year && dayOfYear == dayOfYearScheduled && inMinutesScheduled >= inMinutesPreferred) {
-                return false;
+            //if the dish is served today
+            if (year == yearScheduled && dayOfYear == dayOfYearScheduled){
+                //Get the user preferred time for this alarm
+                CafeteriaNotificationSettings cfs = new CafeteriaNotificationSettings(context);
+                Pair<Integer,Integer> preferredHourAndMinute = cfs.retrieveHourMinute(date);
+                int inMinutesPreferred = preferredHourAndMinute.first*60+preferredHourAndMinute.second;
+                //And if it's already later than the preferred time, dont add the alarm
+                //This is necessary, because alarms scheduled in the past fire instantly
+                if (currentMinutes >= inMinutesPreferred){
+                    return false;
+                }
             }
+            //
             HashSet<FavoriteFoodAlarmEntry> alarmEntries;
+            /*if there's already a calendar entry for a scheduled alarm, e.g. by another dish served
+             at the same date, append to its dishlist otherwise create a new dishlist and add the current
+             dish to it
+             */
             if (scheduledEntries.containsKey(date)) {
                 alarmEntries = scheduledEntries.get(date);
             } else {
                 alarmEntries = new HashSet<>();
             }
+            //Check if an actual entry was made
             int sizeBefore = alarmEntries.size();
             alarmEntries.add(favoriteFoodAlarmEntry);
             scheduledEntries.put(date, alarmEntries);
