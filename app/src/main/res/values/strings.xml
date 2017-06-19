@@ -505,11 +505,14 @@ Signature: %5$s</string>
     <string name="tag_facility">Tag Facility</string>
     <string name="facility_name">Facility Name</string>
     <string name="save">Save</string>
+    <string name="add_facility">Add Facility</string>
 
     <string-array name="facility_categories">
         <item>Library</item>
         <item>Cafeteria</item>
     </string-array>
+
+    <string name="search_facilities">Search facilities</string>
 </resources>
 
 

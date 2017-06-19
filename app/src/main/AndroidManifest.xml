@@ -122,6 +122,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
         </provider>
+        <provider
+            android:name=".auxiliary.FacilityLocatorSuggestionProvider"
+            android:authorities="de.tum.in.tumcampusapp.auxiliary.FacilityLocatorSuggestionProvider"
+            android:exported="false" />
 
         <activity
             android:name=".activities.StartupActivity"
@@ -506,6 +510,13 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_facilities" />
         </activity>
         <activity
             android:name=".activities.FacilityActivity"

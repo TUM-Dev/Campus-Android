@@ -73,7 +73,7 @@ public class LocationManager {
      *
      * @return Returns the more or less current position or null on failure
      */
-    Location getCurrentLocation() {
+    public Location getCurrentLocation() {
         if (servicesConnected()) {
             Location loc = getLastLocation();
             if (loc != null) {

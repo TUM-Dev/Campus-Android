@@ -19,11 +19,23 @@
                 layout="@layout/layout_all_errors"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" />
-
+            <TextView
+                android:id="@+id/search_categories_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Search by categories" />
             <ListView
                 android:id="@+id/activity_facility_categories_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_below="@+id/search_categories_title"/>
+
+            <Button android:id="@+id/add_facility"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="@string/add_facility" />
 
         </RelativeLayout>
 

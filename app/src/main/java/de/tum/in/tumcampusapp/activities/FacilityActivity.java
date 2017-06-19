@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.common.base.Optional;
+import com.google.common.math.DoubleMath;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,19 +33,21 @@ import static de.tum.in.tumcampusapp.activities.CurriculaActivity.CURRICULA_URL;
  * Activity to fetch and display the curricula of different study programs.
  */
 public class FacilityActivity extends ActivityForLoadingInBackground<String, Optional<JSONArray>> implements OnItemClickListener {
-    public static final String NAME = "name";
     public static final String URL = "url";
 
-    public static final String FACILITY = "https://tumcabe.in.tum.de/Api/curricula";
+    public static final String LONGITUDE = "longitude";
+    public static final String LATITUDE = "latitude";
+    public static final String FACILITY_NAME = "facility_name";
+
 
     private Map<String, String> options;
     private ArrayAdapter<String> arrayAdapter;
     private NetUtils net;
 
-    private static final String MOCK_FACILITIES="[{facility_id:1,name:'Garching Library',position:1234,category_id:1}," +
-                                                "{facility_id:2,name:'Main campus Library',position:1234,category_id:1}," +
-                                                "{facility_id:3,name:'Stucafe Informatics',position:1234,category_id:2}," +
-                                                "{facility_id:4,name:'Stucafe Mechanical',position:1234,category_id:2}]";
+    private static final String MOCK_FACILITIES="[{facility_id:1,name:'Garching Library',longitude:11.666862,latitude:48.262547,category_id:1}," +
+                                                "{facility_id:2,name:'Main campus Library',longitude:11.568010,latitude:48.148848,category_id:1}," +
+                                                "{facility_id:3,name:'Stucafe Informatics',latitude:48.262403, longitude:11.668032,category_id:2}," +
+                                                "{facility_id:4,name:'Stucafe Mechanical',latitude:48.265767, longitude:11.667571,category_id:2}]";
 
     public FacilityActivity() {
         super(R.layout.activity_facility);
@@ -107,7 +110,7 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
                 JSONObject item = arr.getJSONObject(i);
 
                 arrayAdapter.add(item.getString("name"));
-                options.put(item.getString("name"), item.getString("position"));
+                options.put(item.getString("name"), item.getDouble("longitude")+"-"+item.getDouble("latitude"));
             }
         } catch (JSONException e) {
             Utils.log(e);
@@ -125,7 +128,17 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+        String facilityName = ((TextView) view).getText().toString();
 
+        // Puts URL and name into an intent and starts the detail view
+        Intent intent = new Intent(this, FacilityDisplayActivity.class);
+        String[] tokens=options.get(facilityName).split("-");
+        double longitude= Double.parseDouble(tokens[0]);
+        double latitude= Double.parseDouble(tokens[1]);
+        intent.putExtra(FACILITY_NAME, facilityName);
+        intent.putExtra(LONGITUDE, longitude);
+        intent.putExtra(LATITUDE, latitude);
+        this.startActivity(intent);
     }
 
     @Override
@@ -134,5 +147,17 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
         MenuItem tagFacility = menu.findItem(R.id.action_tag_facility);
         tagFacility.setVisible(true);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.action_tag_facility) {
+            this.startActivity(new Intent(this,FacilityTaggingActivity.class));
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
