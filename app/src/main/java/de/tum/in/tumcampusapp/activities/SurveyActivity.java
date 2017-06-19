@@ -95,12 +95,12 @@ public class SurveyActivity extends ProgressActivity {
     private Button facultiesButton;
     private Button togglePublicSurveyResultsButton;
     private CheckBox publicSurveyCheckbox;
-    private boolean publicSurveyResultsFlag = false;
 
     private final List<String> questions = new ArrayList<>();
     private final List<String> selectedFaculties = new ArrayList<>();
     private boolean[] checkedFaculties;
-
+    private boolean publicSurveyResultsFlag = false; // if true: show public surveys,
+                                                     // else: show only own questions
     private LinearLayout mainResponseLayout;
     private LinearLayout questionsLayout;
     private final List<String> fetchedFaculties = new ArrayList<>();
@@ -166,14 +166,14 @@ public class SurveyActivity extends ProgressActivity {
 
     private void showPersonalSurveyResults() {
         publicSurveyResultsFlag = false;
-        togglePublicSurveyResultsButton.setText(
-                getResources().getString(R.string.show_public_survey_results));
+        togglePublicSurveyResultsButton.setText(getResources().getString(R.string.show_public_survey_results));
+        setUpResponseTab();
     }
 
     private void showPublicSurveyResults() {
         publicSurveyResultsFlag = true;
-        togglePublicSurveyResultsButton.setText(
-                getResources().getString(R.string.show_personal_survey_results));
+        togglePublicSurveyResultsButton.setText(getResources().getString(R.string.show_personal_survey_results));
+        setUpResponseTab();
     }
 
     // Set up togglePublicSurveyResults button
@@ -184,18 +184,19 @@ public class SurveyActivity extends ProgressActivity {
     //Set up the response tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
     private void setUpResponseTab() {
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // for converting
-            // Jade DateTime into String & vice versa (see show and discard functions)
+        // for converting Jade DateTime into String & vice versa (see show and discard functions):
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+
         Cursor c;
         if (publicSurveyResultsFlag)
-            c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
+            c = surveyManager.getRelevantPublicQuestionsSince(Utils.getDateTimeString(new Date()));
         else {
-            c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
-            // c = surveyManager.getRelevantPublicQuestionsSince(Utils.getDateTimeString(new Date()));
+            c = surveyManager.getRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
         }
-        int numberofquestion = c.getCount();
+        int numberOfQuestions = c.getCount();
+
         //get response and question from database->set i<Number of question
-        for (int i = 0; i < numberofquestion; i++) {
+        for (int i = 0; i < numberOfQuestions; i++) {
             c.moveToNext();
             DateTime endDate = fmt.parseDateTime(c.getString(c.getColumnIndex("end")));
             Duration tillDeleteDay = new Duration(DateTime.now(), endDate);
@@ -243,7 +244,8 @@ public class SurveyActivity extends ProgressActivity {
             l.addView(l2);
 
             TextView endDateTV = new TextView(this);
-            LinearLayout.LayoutParams tvparams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams tvparams1 = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             tvparams1.setMargins(50, 10, 0, 0);
             endDateTV.setLayoutParams(tvparams1);
             endDateTV.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
@@ -259,7 +261,8 @@ public class SurveyActivity extends ProgressActivity {
 
             //adding quesion tv
             TextView questionTv = new TextView(this);
-            LinearLayout.LayoutParams tvparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams tvparams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             tvparams.setMargins(50, 10, 0, 0);
             questionTv.setLayoutParams(tvparams);
             questionTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
@@ -267,14 +270,16 @@ public class SurveyActivity extends ProgressActivity {
             //setText(question)
             questionTv.setText(questionText);
             l1.addView(questionTv);
-            //adding button delete
+            //adding button delete (only for own questions)
             float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
-            Button deleteButton = new Button(this);
-            deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
-            deleteButton.setBackgroundResource(R.drawable.minusicon);
-            deleteButton.setOnClickListener(deleteQuestion);
-            deleteButton.setTag(id);
-            l2.addView(deleteButton);
+            if (!publicSurveyResultsFlag) {
+                Button deleteButton = new Button(this);
+                deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
+                deleteButton.setBackgroundResource(R.drawable.minusicon);
+                deleteButton.setOnClickListener(deleteQuestion);
+                deleteButton.setTag(id);
+                l2.addView(deleteButton);
+            }
 
             Button infoButton = new Button(this);
             LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels, (int) inPixels);
@@ -375,7 +380,7 @@ public class SurveyActivity extends ProgressActivity {
         submitSurveyButton = (Button) findViewById(R.id.submitSurveyButton);
         questionsLayout = (LinearLayout) findViewById(R.id.questionsEts);
         publicSurveyCheckbox = (CheckBox) findViewById(R.id.publicSurveyCheckbox);
-        togglePublicSurveyResultsButton = (Button) findViewById(R.id.showPublicSurveyResultsButton);
+        togglePublicSurveyResultsButton = (Button) findViewById(R.id.togglePublicSurveyResultsButton);
     }
 
     /**
@@ -516,6 +521,7 @@ public class SurveyActivity extends ProgressActivity {
                                 Utils.log(e);
                             }
                             surveyManager.downLoadOwnQuestions();
+                            surveyManager.downLoadPublicQuestions();
                             return null;
                         }
 

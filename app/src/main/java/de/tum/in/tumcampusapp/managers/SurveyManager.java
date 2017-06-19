@@ -35,9 +35,18 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      */
     public SurveyManager(Context context) {
         super(context);
-        db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)"); // for facultyData
-        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)"); // for SurveyCard
-        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
+        db.execSQL("CREATE TABLE IF NOT EXISTS faculties " +
+                "(faculty INTEGER, name VARCHAR)"); // for facultyData
+        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions " +
+                "(question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, " +
+                "answerid INTEGER, answered BOOLEAN, synced BOOLEAN)"); // for SurveyCard
+        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions " +
+                "(question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, " +
+                "end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
+        db.execSQL("CREATE TABLE IF NOT EXISTS publicQuestions " +
+                "(question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, " +
+                "end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on publicQuestions
+
     }
 
     /**
@@ -174,7 +183,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param date: is usually today's date
      * @return relevant ownQuestions
      */
-    public Cursor getMyRelevantOwnQuestionsSince(String date) {
+    public Cursor getRelevantOwnQuestionsSince(String date) {
         return db.rawQuery("SELECT * FROM ownQuestions where deleted = 0 AND end >= '" + date + "'", null);
     }
 
@@ -375,7 +384,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             return;
         }
         for (Question q : ownQuestions) {
-            replaceIntoDbQuestions(q, "publicQuestions");
+            replaceIntoDbQuestions(q, "ownQuestions");
         }
     }
 
@@ -394,7 +403,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             return;
         }
         for (Question q : publicQuestions) {
-            replaceIntoDbQuestions(q, "ownQuestions");
+            replaceIntoDbQuestions(q, "publicQuestions");
         }
     }
 
