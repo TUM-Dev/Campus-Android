@@ -35,7 +35,7 @@ public class FavoriteFoodAlarmEntry{
         synchronized (scheduledEntries) {
             //Clear old entries
             Calendar today = Calendar.getInstance();
-            today.set(Calendar.HOUR_OF_DAY,0);
+            today.setTime(Utils.getDate(Utils.getDateString(today.getTime())));
             for (Calendar calendar : scheduledEntries.keySet()){
                 if (calendar.before(today)){
                     scheduledEntries.remove(calendar);
