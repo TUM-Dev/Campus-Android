@@ -140,24 +140,4 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
         intent.putExtra(LATITUDE, latitude);
         this.startActivity(intent);
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_facility, menu);
-        MenuItem tagFacility = menu.findItem(R.id.action_tag_facility);
-        tagFacility.setVisible(true);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.action_tag_facility) {
-            this.startActivity(new Intent(this,FacilityTaggingActivity.class));
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 }
