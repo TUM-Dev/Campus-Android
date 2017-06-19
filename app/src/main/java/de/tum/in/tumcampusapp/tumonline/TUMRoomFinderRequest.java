@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.tumonline;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Base64;
 
 import com.google.common.base.Optional;
 import com.google.common.net.UrlEscapers;
@@ -10,12 +11,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.timroes.axmlrpc.XMLRPCClient;
+import de.timroes.axmlrpc.XMLRPCException;
+import de.timroes.axmlrpc.XMLRPCServerException;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -45,17 +50,57 @@ public class TUMRoomFinderRequest {
     // Api urls
     private static final String API_BASE_URL = "https://tumcabe.in.tum.de/Api/roomfinder/";
 
+
     private static final String API_URL_SEARCH = API_BASE_URL + "room/search/";
     private static final String API_URL_DEFAULT_MAP = API_BASE_URL + "room/defaultMap/";
     private static final String API_URL_MAP = API_BASE_URL + "room/map/";
     private static final String API_URL_COORDINATES = API_BASE_URL + "room/coordinates/";
     private static final String API_URL_AVAILABLE_MAPS = API_BASE_URL + "room/availableMaps/";
     private static final String API_URL_SCHEDULE = API_BASE_URL + "room/scheduleById/";
+
+//    XML RPC urls
+    private static final String RPC_API_BASE_URL = "http://roomfinder.ze.tum.de:8192/xmlrpc";
+    private static final String RPC_API_GEO_MAPS =  "getGeoMaps";
+    private static final String RPC_API_FLAG_GEO =  "flagGeo";
+
+
     private final NetUtils net;
     /**
      * asynchronous task for interactive fetch
      */
     private AsyncTask<String, Void, List<Map<String, String>>> backgroundTask;
+
+    @SuppressWarnings("unchecked")
+    public static String getMapWithLocation(double longitude, double latitude){
+
+//        TODO:Replace with the new api call
+        try {
+            XMLRPCClient client = new XMLRPCClient(new URL(RPC_API_BASE_URL));
+            Object[] maps = (Object[])client.call(RPC_API_GEO_MAPS,longitude, latitude);
+            if(maps.length>0){
+                Integer mapId=(Integer)((Object[])maps[0])[1];
+                Object[] map=(Object[])client.call(RPC_API_FLAG_GEO,longitude, latitude,mapId);
+                String imageString=(String)(map[0]);
+                return imageString;
+            }
+            else{
+                return null;
+            }
+
+        } catch(XMLRPCServerException ex) {
+            ex.printStackTrace();
+            return null;
+            // The server throw an error.
+        } catch(XMLRPCException ex) {
+            ex.printStackTrace();
+            return null;
+            // An error occured in the client.
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return null;
+            // Any other exception
+        }
+    }
 
     public TUMRoomFinderRequest(Context context) {
         net = new NetUtils(context);

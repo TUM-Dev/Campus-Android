@@ -517,6 +517,26 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.activities.FacilityCategoriesActivity" />
         </activity>
+        <activity
+            android:name=".activities.FacilityTaggingActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/facility_locator"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.FacilityCategoriesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.FacilityCategoriesActivity" />
+        </activity>
+        <activity
+            android:name=".activities.FacilityDisplayActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/facility_locator"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.FacilityActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.FacilityActivity" />
+        </activity>
 
 
         <!-- receiver for the mensaWidget -->
