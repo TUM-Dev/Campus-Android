@@ -512,7 +512,7 @@ Signature: %5$s</string>
         <item>Cafeteria</item>
     </string-array>
 
-    <string name="search_facilities">Search facilities</string>
+    <string name="search_facilities">Search by name</string>
 </resources>
 
 

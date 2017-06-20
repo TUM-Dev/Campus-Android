@@ -1,8 +1,5 @@
 package de.tum.in.tumcampusapp.activities;
 
-
-import android.content.DialogInterface;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -43,7 +40,8 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
         longitude = getIntent().getExtras().getDouble(FacilityActivity.LONGITUDE);
         latitude = getIntent().getExtras().getDouble(FacilityActivity.LATITUDE);
         facilityName=getIntent().getExtras().getString(FacilityActivity.FACILITY_NAME);
-
+        setTitle(facilityName);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         startLoading();
     }
 

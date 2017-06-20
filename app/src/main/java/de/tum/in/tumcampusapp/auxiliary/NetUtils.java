@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.Helper;
 import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.tumonline.TUMFacilityLocatorRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -225,7 +226,7 @@ public class NetUtils {
     public Optional<File> getFacilityMapImage(String facilityName, double longitude, double latitude){
         try{
 
-            String map= TUMRoomFinderRequest.getMapWithLocation(longitude, latitude);
+            String map= TUMFacilityLocatorRequest.getMapWithLocation(longitude, latitude);
 
             if(map==null){
                 return Optional.absent();

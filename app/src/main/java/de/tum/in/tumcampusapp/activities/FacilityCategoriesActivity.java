@@ -11,33 +11,33 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
-import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
-import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.FacilityLocatorSuggestionProvider;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequestFetchListener;
+import de.tum.in.tumcampusapp.tumonline.TUMFacilityLocatorRequest;
 
 /**
  * Activity to fetch and display the curricula of different study programs.
  */
-public class FacilityCategoriesActivity extends ActivityForSearching implements OnItemClickListener,TUMRoomFinderRequestFetchListener {
-    public static final String CATEGORY_ID = "category_id";
-
-    private TUMRoomFinderRequest roomFinderRequest;
+public class FacilityCategoriesActivity extends ActivityForSearching implements OnItemClickListener {
+    public static final String FACILITY_CATEGORY_ID = "category_id";
+    public static final String FACILITY_CATEGORY_NAME = "category_name";
+    public static final String FACILITY_SEARCH_QUERY="facility_search_query";
 
     private Map<String, String> options;
     private ArrayAdapter<String> arrayAdapter;
     private Button addFacilityButton;
+
+    TUMFacilityLocatorRequest facilityLocatorRequest;
 
 
     public FacilityCategoriesActivity() {
@@ -48,7 +48,7 @@ public class FacilityCategoriesActivity extends ActivityForSearching implements 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        roomFinderRequest = new TUMRoomFinderRequest(this);
+        this.facilityLocatorRequest=new TUMFacilityLocatorRequest(this);
 
         // Sets the adapter
         ListView list = (ListView) this.findViewById(R.id.activity_facility_categories_list_view);
@@ -73,13 +73,15 @@ public class FacilityCategoriesActivity extends ActivityForSearching implements 
 
     private void createCategoriesMenu() {
         try {
-            JSONArray categoriesJSONMenu=new JSONArray("[{id:1,name:Library,url:'http://google.com'},{id:2,name:Cafeteria,url:'http://google.com'}]");
-
-            options = new HashMap<>();
-            for (int i = 0; i < categoriesJSONMenu.length(); i++) {
-                JSONObject item = categoriesJSONMenu.getJSONObject(i);
-                arrayAdapter.add(item.getString("name"));
-                options.put(item.getString("name"), item.getString("id"));
+            Optional<JSONArray> facilityCategories=facilityLocatorRequest.fetchFacilityCategories();
+            if(facilityCategories.isPresent()){
+                JSONArray categoriesJSONMenu=facilityCategories.get();
+                options = new HashMap<>();
+                for (int i = 0; i < categoriesJSONMenu.length(); i++) {
+                    JSONObject item = categoriesJSONMenu.getJSONObject(i);
+                    arrayAdapter.add(item.getString("name"));
+                    options.put(item.getString("name"), item.getString("id"));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -97,10 +99,10 @@ public class FacilityCategoriesActivity extends ActivityForSearching implements 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
         String categoryName = ((TextView) view).getText().toString();
-
         // Puts URL and name into an intent and starts the detail view
         Intent intent = new Intent(this, FacilityActivity.class);
-        intent.putExtra(CATEGORY_ID, options.get(categoryName));
+        intent.putExtra(FACILITY_CATEGORY_ID, options.get(categoryName));
+        intent.putExtra(FACILITY_CATEGORY_NAME,categoryName);
         this.startActivity(intent);
     }
 
@@ -111,35 +113,15 @@ public class FacilityCategoriesActivity extends ActivityForSearching implements 
 
     @Override
     protected void onStartSearch(String query) {
-        roomFinderRequest.fetchSearchInteractiveFacilities(this, this, query);
+        Intent intent = new Intent(this, FacilityActivity.class);
+        intent.putExtra(FACILITY_SEARCH_QUERY, query);
+        this.startActivity(intent);
     }
 
-
-    @Override
-    public void onFetch(List<Map<String, String>> result) {
-        if (result.isEmpty()) {
-//            list.setAdapter(new NoResultsAdapter(this));
-        } else {
-//            adapter = new RoomFinderListAdapter(this, result);
-//            list.setAdapter(adapter);
-            showLoadingEnded();
-        }
-    }
-
-    @Override
-    public void onFetchError(String errorReason) {
-        roomFinderRequest.cancelRequest(true);
-        showError(errorReason);
-    }
 
 //    @Override
     public void openTaggingActivitty() {
         this.startActivity(new Intent(this,FacilityTaggingActivity.class));
-    }
-
-    @Override
-    public void onNoInternetError() {
-        showNoInternetLayout();
     }
 
 }

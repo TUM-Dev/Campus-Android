@@ -16,6 +16,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.managers.LocationManager;
+import de.tum.in.tumcampusapp.tumonline.TUMFacilityLocatorRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 /**
@@ -74,7 +75,7 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
     @Override
     protected Optional<File> onLoadInBackground(Void... arg) {
         Location currentLocation=new LocationManager(this).getCurrentLocation();
-        String map=TUMRoomFinderRequest.getMapWithLocation(currentLocation.getLongitude(), currentLocation.getLatitude());
+        String map= TUMFacilityLocatorRequest.getMapWithLocation(currentLocation.getLongitude(), currentLocation.getLatitude());
         if(map==null){
             Utils.showToast(this, "Your current location is not in any university campus");
             this.finish();

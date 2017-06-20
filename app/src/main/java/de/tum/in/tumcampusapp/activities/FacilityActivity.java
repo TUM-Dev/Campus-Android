@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,7 +11,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.common.base.Optional;
-import com.google.common.math.DoubleMath;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,18 +20,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
+
+import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
+import de.tum.in.tumcampusapp.auxiliary.FacilityLocatorSuggestionProvider;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.managers.CacheManager;
-
-import static de.tum.in.tumcampusapp.activities.CurriculaActivity.CURRICULA_URL;
+import de.tum.in.tumcampusapp.tumonline.TUMFacilityLocatorRequest;
+import de.tum.in.tumcampusapp.tumonline.TUMFacilityLocatorRequestFetchListener;
 
 /**
  * Activity to fetch and display the curricula of different study programs.
  */
-public class FacilityActivity extends ActivityForLoadingInBackground<String, Optional<JSONArray>> implements OnItemClickListener {
-    public static final String URL = "url";
+public class FacilityActivity extends ActivityForSearching implements OnItemClickListener,TUMFacilityLocatorRequestFetchListener {
+
+    private TUMFacilityLocatorRequest facilityLocatorRequest;
 
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
@@ -47,18 +47,16 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
     private ArrayAdapter<String> arrayAdapter;
     private NetUtils net;
 
-    public static final String MOCK_FACILITIES="[{facility_id:1,name:'Garching Library',longitude:11.666862,latitude:48.262547,category_id:1}," +
-                                                "{facility_id:2,name:'Main campus Library',longitude:11.568010,latitude:48.148848,category_id:1}," +
-                                                "{facility_id:3,name:'Stucafe Informatics',latitude:48.262403, longitude:11.668032,category_id:2}," +
-                                                "{facility_id:4,name:'Stucafe Mechanical',latitude:48.265767, longitude:11.667571,category_id:2}]";
 
     public FacilityActivity() {
-        super(R.layout.activity_facility);
+        super(R.layout.activity_facility, FacilityLocatorSuggestionProvider.AUTHORITY,3);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        facilityLocatorRequest = new TUMFacilityLocatorRequest(this);
 
         net = new NetUtils(this);
         // Sets the adapter
@@ -67,60 +65,19 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
         list.setAdapter(arrayAdapter);
         list.setOnItemClickListener(this);
 
-        String category_id = getIntent().getExtras().getString(FacilityCategoriesActivity.CATEGORY_ID);
+        String categoryId = getIntent().getExtras().getString(FacilityCategoriesActivity.FACILITY_CATEGORY_ID);
+        String facilitySearchQuery = getIntent().getExtras().getString(FacilityCategoriesActivity.FACILITY_SEARCH_QUERY);
+
+        if(categoryId!=null){
+            setTitle("Category : "+getIntent().getExtras().getString(FacilityCategoriesActivity.FACILITY_CATEGORY_NAME));
+            facilityLocatorRequest.fetchSearchInteractiveFacilities(this, this, categoryId, true);
+        }else if(facilitySearchQuery!=null){
+            setTitle("Search : "+facilitySearchQuery);
+            this.requestSearch(facilitySearchQuery);
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Fetch all curricula from webservice via parent async class
-        this.startLoading(category_id);
-    }
-
-    @Override
-    protected Optional<JSONArray> onLoadInBackground(String... params) {
-            return getMockFacilities(params[0]);
-//        return net.downloadJsonArray(CURRICULA_URL, CacheManager.VALIDITY_ONE_MONTH, false);
-    }
-
-
-    private Optional<JSONArray> getMockFacilities(String id){
-        JSONArray result=new JSONArray();
-        try {
-            JSONArray mockFacilitiesJson=new JSONArray(MOCK_FACILITIES);
-            for (int i = 0; i < mockFacilitiesJson.length(); i++) {
-                JSONObject item = mockFacilitiesJson.getJSONObject(i);
-                if(item.getString("category_id").equals(id)){
-                    result.put(item);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return Optional.of(result);
-    }
-
-    @Override
-    protected void onLoadFinished(Optional<JSONArray> jsonData) {
-        if (!jsonData.isPresent()) {
-            if (NetUtils.isConnected(this)) {
-                showErrorLayout();
-            } else {
-                showNoInternetLayout();
-            }
-            return;
-        }
-        JSONArray arr = jsonData.get();
-        try {
-            options = new HashMap<>();
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject item = arr.getJSONObject(i);
-
-                arrayAdapter.add(item.getString("name"));
-                options.put(item.getString("name"), item.getDouble("longitude")+"-"+item.getDouble("latitude"));
-            }
-        } catch (JSONException e) {
-            Utils.log(e);
-        }
-        showLoadingEnded();
     }
 
     /**
@@ -155,5 +112,58 @@ public class FacilityActivity extends ActivityForLoadingInBackground<String, Opt
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStartSearch() {
+
+    }
+
+    @Override
+    protected void onStartSearch(String query) {
+        facilityLocatorRequest.fetchSearchInteractiveFacilities(this, this, query, false);
+    }
+
+    @Override
+    public void onFetch(Optional<JSONArray> result) {
+        if (result.isPresent()) {
+            fillListView(result);
+            showLoadingEnded();
+        }
+    }
+
+    @Override
+    public void onFetchError(String errorReason) {
+        facilityLocatorRequest.cancelRequest(true);
+        showError(errorReason);
+    }
+
+    @Override
+    public void onNoInternetError() {
+        showNoInternetLayout();
+    }
+
+    private void fillListView(Optional<JSONArray> jsonData) {
+        if (!jsonData.isPresent()) {
+            if (NetUtils.isConnected(this)) {
+                showErrorLayout();
+            } else {
+                showNoInternetLayout();
+            }
+            return;
+        }
+        JSONArray arr = jsonData.get();
+        arrayAdapter.clear();
+        try {
+            options = new HashMap<>();
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject item = arr.getJSONObject(i);
+                arrayAdapter.add(item.getString("name"));
+                options.put(item.getString("name"), item.getDouble("longitude")+"-"+item.getDouble("latitude"));
+            }
+        } catch (JSONException e) {
+            Utils.log(e);
+        }
+        showLoadingEnded();
     }
 }
