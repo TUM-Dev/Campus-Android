@@ -19,12 +19,6 @@ import de.timroes.axmlrpc.XMLRPCServerException;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 
-import static de.tum.in.tumcampusapp.activities.FacilityActivity.FACILITY_NAME;
-import static de.tum.in.tumcampusapp.activities.FacilityActivity.FACILITY_ID;
-import static de.tum.in.tumcampusapp.activities.FacilityActivity.LONGITUDE;
-import static de.tum.in.tumcampusapp.activities.FacilityActivity.LATITUDE;
-import static de.tum.in.tumcampusapp.activities.FacilityActivity.FACILITY_CATEGORY_ID;
-
 /**
  * Base class for communication with TUMRoomFinder
  */
@@ -100,61 +94,13 @@ public class TUMFacilityLocatorRequest {
 
     public Optional<JSONArray> fetchFacilitiesByQuery(String searchString) {
 //        TODO:replace with actual search call
-//        String url = API_URL_SEARCH_FACILITIES_BY_QUERY + encodeUrl(searchString);
-//        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
         Optional<JSONArray> facilitiesList=getMockFacilitiesByQuery(searchString);
-
-
-//        List<Map<String, String>> facilitiesList = new ArrayList<>();
-//        try {
-//            if (jsonArray.isPresent()) {
-//                JSONArray arr = jsonArray.get();
-//                for (int i = 0; i < arr.length(); i++) {
-//                    JSONObject obj = arr.getJSONObject(i);
-//                    Map<String, String> facilityMap = new HashMap<>();
-//                    facilityMap.put(FACILITY_ID, obj.getString(FACILITY_ID));
-//                    facilityMap.put(FACILITY_NAME, obj.getString(FACILITY_NAME));
-//                    facilityMap.put(LONGITUDE, obj.getString(LONGITUDE));
-//                    facilityMap.put(LATITUDE, obj.getString(LATITUDE));
-//                    facilityMap.put(FACILITY_CATEGORY_ID, obj.getString(FACILITY_CATEGORY_ID));
-//                    // adding HashList to ArrayList
-//                    facilitiesList.add(facilityMap);
-//                }
-//            }
-//        } catch (JSONException e) {
-//            Utils.log(e);
-//        }
-
         return facilitiesList;
     }
 
     public Optional<JSONArray> fetchFacilitiesByCategory(String categoryId) {
 //        TODO:replace with actual search call
-//        String url = API_URL_SEARCH_FACILITIES_BY_CATEGORY + encodeUrl(searchString);
-//        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
         Optional<JSONArray> facilitiesList=getMockFacilitiesByCategory(categoryId);
-
-
-//        List<Map<String, String>> facilitiesList = new ArrayList<>();
-//        try {
-//            if (jsonArray.isPresent()) {
-//                JSONArray arr = jsonArray.get();
-//                for (int i = 0; i < arr.length(); i++) {
-//                    JSONObject obj = arr.getJSONObject(i);
-//                    Map<String, String> facilityMap = new HashMap<>();
-//                    facilityMap.put(FACILITY_ID, obj.getString(FACILITY_ID));
-//                    facilityMap.put(FACILITY_NAME, obj.getString(FACILITY_NAME));
-//                    facilityMap.put(LONGITUDE, obj.getString(LONGITUDE));
-//                    facilityMap.put(LATITUDE, obj.getString(LATITUDE));
-//                    facilityMap.put(FACILITY_CATEGORY_ID, obj.getString(FACILITY_CATEGORY_ID));
-//                    // adding HashList to ArrayList
-//                    facilitiesList.add(facilityMap);
-//                }
-//            }
-//        } catch (JSONException e) {
-//            Utils.log(e);
-//        }
-
         return facilitiesList;
     }
 

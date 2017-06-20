@@ -4,7 +4,9 @@ import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.common.base.Optional;
@@ -30,6 +32,8 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
     private NetUtils net;
     private Fragment fragment;
 
+    private Button saveFacilityButton;
+
     public FacilityTaggingActivity() {
         super(R.layout.activity_facility_tagging);
     }
@@ -48,9 +52,19 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
                 R.array.facility_categories, android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinner.setAdapter(adapter);
+
+        saveFacilityButton = (Button) findViewById(R.id.save_facility);
+        saveFacilityButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                saveFacility();
+            }
+        });
         startLoading();
+    }
+
+    private void saveFacility() {
+//        findViewById(R.id.save_facility).getVa
     }
 
 

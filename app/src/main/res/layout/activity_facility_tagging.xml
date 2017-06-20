@@ -35,10 +35,10 @@
                 android:id="@+id/current_location_map"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/save"
+                android:layout_above="@+id/save_facility"
                 android:layout_below="@+id/facility_categories_spinner"/>
 
-            <Button android:id="@+id/save"
+            <Button android:id="@+id/save_facility"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"

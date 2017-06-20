@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.common.base.Optional;
 
@@ -24,6 +26,8 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
     private double longitude,latitude;
     private String facilityName;
 
+
+    
     public FacilityDisplayActivity() {
         super(R.layout.activity_facility_display);
     }
@@ -44,6 +48,8 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         startLoading();
     }
+
+
 
 
     @Override
