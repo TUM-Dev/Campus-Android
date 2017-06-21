@@ -26,6 +26,7 @@ import de.tum.in.tumcampusapp.activities.StudyRoomsActivity;
 import de.tum.in.tumcampusapp.activities.SurveyActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
+import de.tum.in.tumcampusapp.activities.wizard.GradingActivity;
 
 public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -48,7 +49,8 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.quiz_title, R.drawable.ic_pie_chart, SurveyActivity.class, true, false),
             new SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity.class, true, false),
             new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, OrganisationActivity.class, true, false),
-            new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)
+            new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false),
+            new SideNavigationItem(R.string.grading,R.drawable.ic_grading, GradingActivity.class, false , false)
     };
 
     private final Context mContext;
