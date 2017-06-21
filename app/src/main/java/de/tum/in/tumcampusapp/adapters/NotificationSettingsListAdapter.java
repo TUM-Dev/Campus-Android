@@ -23,7 +23,7 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
     private Activity activity;
 
     private final int EARLIEST_HOUR = 6;
-    private final int LATEST_HOUR = 15;
+    private final int LATEST_HOUR = 23;
 
     static class ViewHolder {
         TextView weekday;

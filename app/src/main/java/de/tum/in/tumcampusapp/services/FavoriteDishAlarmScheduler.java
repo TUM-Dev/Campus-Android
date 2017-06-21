@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.Pair;
 import java.util.Calendar;
@@ -37,16 +38,21 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
     public static final String INTENT_CANCEL_ALL_NOTIFICATIONS = "cancelNotifications";
 
     public FavoriteDishAlarmScheduler(){}
-    public FavoriteDishAlarmScheduler(Calendar triggeredAt, Context context){
-        Calendar scheduledAt = (Calendar) triggeredAt.clone();
+    public FavoriteDishAlarmScheduler(Calendar triggeredAtDayMonthYear, Context context){
+        Calendar scheduledAt = (Calendar) triggeredAtDayMonthYear.clone();
         if (!loadTriggerHourAndMinute(context, scheduledAt)){
             return;
         }
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, FavoriteDishAlarmScheduler.class);
-        intent.putExtra("triggeredAt", Utils.getDateString(triggeredAt.getTime()));
-        PendingIntent schedule = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), schedule);
+        intent.putExtra("triggeredAt", Utils.getDateString(triggeredAtDayMonthYear.getTime()));
+        PendingIntent schedule = PendingIntent.getBroadcast(context, triggeredAtDayMonthYear.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if ( Build.VERSION.SDK_INT < 19){
+            alarmManager.set(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), schedule);
+        }
+        else{
+            alarmManager.setWindow(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), 2000, schedule);
+        }
     }
 
     /**
