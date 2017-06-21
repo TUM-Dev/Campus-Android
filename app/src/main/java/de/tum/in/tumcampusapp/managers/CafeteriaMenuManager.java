@@ -245,12 +245,10 @@ public class CafeteriaMenuManager extends AbstractManager {
         while (favoriteFoodWhere.moveToNext()){
             int mensaId = favoriteFoodWhere.getInt(0);
             String dishName = favoriteFoodWhere.getString(1);
-            Cursor upcomingServings = db.rawQuery("SELECT mensaId,date,name FROM cafeterias_menus WHERE" +
-                    " date >= date('now','localtime') AND mensaId = ? AND name = ?",
-                    new String[]{""+mensaId, dishName});
+            Cursor upcomingServings = db.rawQuery("SELECT date FROM cafeterias_menus WHERE date >= date('now','localtime') AND mensaId = ? AND name = ?",new String[]{""+mensaId, dishName});
             while (upcomingServings.moveToNext()){
                 Calendar upcomingDate = Calendar.getInstance();
-                upcomingDate.setTime(Utils.getDate(upcomingServings.getString(1)));
+                upcomingDate.setTime(Utils.getDate(upcomingServings.getString(0)));
                 new FavoriteFoodAlarmEntry(mensaId, dishName, upcomingDate, mContext);
             }
         }

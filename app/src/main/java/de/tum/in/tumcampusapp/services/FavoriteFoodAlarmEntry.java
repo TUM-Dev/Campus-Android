@@ -39,12 +39,12 @@ public class FavoriteFoodAlarmEntry{
      * @return
      */
 
-    private static boolean put(Calendar date, Context context, FavoriteFoodAlarmEntry favoriteFoodAlarmEntry){
+    private static boolean put(Calendar dateDayMonthYear, Context context, FavoriteFoodAlarmEntry favoriteFoodAlarmEntry){
         synchronized (scheduledEntries) {
             Calendar today = Calendar.getInstance();
             today.setTime(Utils.getDate(Utils.getDateString(today.getTime())));
             //Dont add entries which are from yesterday or older
-            if (date.before(today)){
+            if (dateDayMonthYear.before(today)){
                 return false;
             }
             //Clear all entries added in the past
@@ -54,8 +54,8 @@ public class FavoriteFoodAlarmEntry{
                 }
             }
 
-            int yearScheduled = date.get(Calendar.YEAR);
-            int dayOfYearScheduled = date.get(Calendar.DAY_OF_YEAR);
+            int yearScheduled = dateDayMonthYear.get(Calendar.YEAR);
+            int dayOfYearScheduled = dateDayMonthYear.get(Calendar.DAY_OF_YEAR);
             today = Calendar.getInstance();
             int year = today.get(Calendar.YEAR);
             int dayOfYear = today.get(Calendar.DAY_OF_YEAR);
@@ -65,7 +65,7 @@ public class FavoriteFoodAlarmEntry{
             if (year == yearScheduled && dayOfYear == dayOfYearScheduled){
                 //Get the user preferred time for this alarm
                 CafeteriaNotificationSettings cfs = new CafeteriaNotificationSettings(context);
-                Pair<Integer,Integer> preferredHourAndMinute = cfs.retrieveHourMinute(date);
+                Pair<Integer,Integer> preferredHourAndMinute = cfs.retrieveHourMinute(dateDayMonthYear);
                 int inMinutesPreferred = preferredHourAndMinute.first*60+preferredHourAndMinute.second;
                 //And if it's already later than the preferred time, dont add the alarm
                 //This is necessary, because alarms scheduled in the past fire instantly
@@ -79,16 +79,16 @@ public class FavoriteFoodAlarmEntry{
              at the same date, append to its dishlist otherwise create a new dishlist and add the current
              dish to it
              */
-            if (scheduledEntries.containsKey(date)) {
-                alarmEntries = scheduledEntries.get(date);
+            if (scheduledEntries.containsKey(dateDayMonthYear)) {
+                alarmEntries = scheduledEntries.get(dateDayMonthYear);
             } else {
                 alarmEntries = new HashSet<>();
             }
             //Check if an actual entry was made
             int sizeBefore = alarmEntries.size();
             alarmEntries.add(favoriteFoodAlarmEntry);
-            scheduledEntries.put(date, alarmEntries);
-            new FavoriteDishAlarmScheduler(date, favoriteFoodAlarmEntry.getContext());
+            scheduledEntries.put(dateDayMonthYear, alarmEntries);
+            new FavoriteDishAlarmScheduler(dateDayMonthYear, favoriteFoodAlarmEntry.getContext());
             return (alarmEntries.size() > sizeBefore);
         }
     }
