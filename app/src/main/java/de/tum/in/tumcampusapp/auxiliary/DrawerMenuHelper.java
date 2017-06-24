@@ -15,6 +15,7 @@ import de.tum.in.tumcampusapp.activities.CalendarActivity;
 import de.tum.in.tumcampusapp.activities.ChatRoomsActivity;
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
+import de.tum.in.tumcampusapp.activities.GradingActivity;
 import de.tum.in.tumcampusapp.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.activities.NewsActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
@@ -26,7 +27,7 @@ import de.tum.in.tumcampusapp.activities.StudyRoomsActivity;
 import de.tum.in.tumcampusapp.activities.SurveyActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
-import de.tum.in.tumcampusapp.activities.wizard.GradingActivity;
+
 
 public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelectedListener {
 

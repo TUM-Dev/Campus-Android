@@ -73,10 +73,10 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
             // set UI elements
             holder.tvLectureName = (TextView) convertView
                     .findViewById(R.id.tvLectureName);
-            holder.tvTypeSWSSemester = (TextView) convertView
-                    .findViewById(R.id.tvTypeSWSSemester);
-            holder.tvDozent = (TextView) convertView
-                    .findViewById(R.id.tvDozent);
+            //holder.tvTypeSWSSemester = (TextView) convertView
+              //      .findViewById(R.id.tvTypeSemester);
+            //holder.tvDozent = (TextView) convertView
+              //      .findViewById(R.id.tvDozent);
 
             convertView.setTag(holder);
         } else {

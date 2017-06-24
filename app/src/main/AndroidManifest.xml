@@ -661,7 +661,10 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.GradingActivity"></activity>
+        <activity
+            android:name=".activities.GradingActivity"
+            android:label="@string/title_activity_grading"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

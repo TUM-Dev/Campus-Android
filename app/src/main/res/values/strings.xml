@@ -509,6 +509,7 @@ Signature: %5$s</string>
     <string name="timetable_widget">Timetable Widget TUM</string>
     <string name="timetable_widget_select_lectures">Select lectures</string>
     <string name="timetable_widget_no_lectures">No lectures planned :)</string>
+    <string name="title_activity_grading">CourseRatingActivity</string>
 </resources>
 
 
