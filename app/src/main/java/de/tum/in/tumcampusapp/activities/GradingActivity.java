@@ -1,13 +1,16 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 
 import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingTumOnline;
-import de.tum.in.tumcampusapp.adapters.LecturesListAdapter;
+import de.tum.in.tumcampusapp.adapters.GradingAdapter;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.LectureSearchSuggestionProvider;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
@@ -41,7 +44,7 @@ private final static String P_SUCHE = "pSuche";
 
         // bind UI elements
         lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList);
-/*
+
         // handle on click events by showing its LectureDetails
         lvMyLecturesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -53,13 +56,13 @@ private final static String P_SUCHE = "pSuche";
                 Bundle bundle = new Bundle();
                 // we need the stp_sp_nr
                 bundle.putString(LecturesSearchRow.STP_SP_NR, item.getStp_sp_nr());
-                Intent intent = new Intent(GradingActivity.this, LecturesDetailsActivity.class);
+                Intent intent = new Intent(GradingActivity.this, GradingDetailsActivity.class);
                 intent.putExtras(bundle);
                 // start LectureDetails for given stp_sp_nr
                 startActivity(intent);
             }
         });
-*/
+
         onStartSearch();
 
 
@@ -98,7 +101,7 @@ private final static String P_SUCHE = "pSuche";
             Collections.sort(lectures);
 
             // set ListView to data via the LecturesListAdapter
-            lvMyLecturesList.setAdapter(LecturesListAdapter.newInstance(this, lectures));
+            lvMyLecturesList.setAdapter(GradingAdapter.newInstance(this, lectures));
         }
     }
 
