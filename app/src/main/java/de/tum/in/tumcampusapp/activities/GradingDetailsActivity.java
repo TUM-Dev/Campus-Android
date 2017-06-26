@@ -1,43 +1,25 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.tumo.LectureDetailsRow;
 import de.tum.in.tumcampusapp.models.tumo.LectureDetailsRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
-/**
- * This Activity will show all details found on the TUMOnline web service
- * identified by its lecture id (which has to be posted to this activity by
- * bundle).
- * <p/>
- * There is also the opportunity to get all appointments which are related to
- * this lecture by clicking the button on top of the view.
- * <p/>
- * HINT: a valid TUM Online token is needed
- * <p/>
- * NEEDS: stp_sp_nr set in incoming bundle (lecture id)
- */
-public class GradingDetailsActivity extends ActivityForAccessingTumOnline<LectureDetailsRowSet> implements OnClickListener {
 
-    /**
-     * UI elements
-     */
-    private Button btnLDetailsTermine;
+public class GradingDetailsActivity extends ActivityForAccessingTumOnline<LectureDetailsRowSet> {
 
-    /**
-     * the current processing Lecture item (model: LectureDetailsRow)
-     */
+    public GradingDetailsActivity() {
+        super(TUMOnlineConst.LECTURES_DETAILS, R.layout.activity_grading_details);
+    }
+
+
+
     private LectureDetailsRow currentItem;
     private TextView tvLDetailsDozent;
     private TextView tvLDetailsInhalt;
@@ -50,42 +32,25 @@ public class GradingDetailsActivity extends ActivityForAccessingTumOnline<Lectur
     private TextView tvLDetailsTermin;
     private TextView tvLDetailsZiele;
 
-    public GradingDetailsActivity() {
-        super(TUMOnlineConst.LECTURES_DETAILS, R.layout.activity_gradingdetails);
-    }
 
-    @Override
-    public void onClick(View view) {
-        super.onClick(view);
-        if (view.getId() == btnLDetailsTermine.getId()) {
-            // start LectureAppointments
-            Bundle bundle = new Bundle();
-            // LectureAppointments need the name and id of the facing lecture
-            bundle.putString("stp_sp_nr", currentItem.getStp_sp_nr());
-            bundle.putString(Const.TITLE_EXTRA, currentItem.getStp_sp_titel());
 
-            Intent i = new Intent(this, LecturesAppointmentsActivity.class);
-            i.putExtras(bundle);
-            startActivity(i);
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        tvLDetailsName = (TextView) findViewById(R.id.tvLDetailsName);
-        tvLDetailsSWS = (TextView) findViewById(R.id.tvLDetailsSWS);
-        tvLDetailsSemester = (TextView) findViewById(R.id.tvLDetailsSemester);
-        tvLDetailsDozent = (TextView) findViewById(R.id.tvLDetailsDozent);
-        tvLDetailsOrg = (TextView) findViewById(R.id.tvLDetailsOrg);
-        tvLDetailsInhalt = (TextView) findViewById(R.id.tvLDetailInhalt);
-        tvLDetailsMethode = (TextView) findViewById(R.id.tvLDetailsMethode);
-        tvLDetailsZiele = (TextView) findViewById(R.id.tvLDetailsZiele);
-        tvLDetailsTermin = (TextView) findViewById(R.id.tvLDetailsTermin);
-        tvLDetailsLiteratur = (TextView) findViewById(R.id.tvLDetailsLiteratur);
-        btnLDetailsTermine = (Button) findViewById(R.id.btnLDetailsTermine);
-        btnLDetailsTermine.setOnClickListener(this);
+        tvLDetailsName = (TextView) findViewById(R.id.tvLDetailsName1);
+        tvLDetailsSWS = (TextView) findViewById(R.id.tvLDetailsSWS1);
+        tvLDetailsSemester = (TextView) findViewById(R.id.tvLDetailsSemester1);
+        tvLDetailsDozent = (TextView) findViewById(R.id.tvLDetailsDozent1);
+        tvLDetailsOrg = (TextView) findViewById(R.id.tvLDetailsOrg1);
+        tvLDetailsInhalt = (TextView) findViewById(R.id.tvLDetailInhalt1);
+        tvLDetailsMethode = (TextView) findViewById(R.id.tvLDetailsMethode1);
+        tvLDetailsZiele = (TextView) findViewById(R.id.tvLDetailsZiele1);
+        tvLDetailsTermin = (TextView) findViewById(R.id.tvLDetailsTermin1);
+        tvLDetailsLiteratur = (TextView) findViewById(R.id.tvLDetailsLiteratur1);
+        //btnLDetailsTermine = (Button) findViewById(R.id.btnLDetailsTermine);
+        //btnLDetailsTermine.setOnClickListener(this);
 
         // Reads lecture id from bundle
         Bundle bundle = this.getIntent().getExtras();
@@ -94,12 +59,9 @@ public class GradingDetailsActivity extends ActivityForAccessingTumOnline<Lectur
         super.requestFetch();
     }
 
-    /**
-     * process the given TUMOnline Data and display the details
-     *
-     * @param xmllv Raw text response
-     */
-    @Override
+
+
+
     public void onFetch(LectureDetailsRowSet xmllv) {
         // we got exactly one row, that's fine
         currentItem = xmllv.getLehrveranstaltungenDetails().get(0);
@@ -121,4 +83,5 @@ public class GradingDetailsActivity extends ActivityForAccessingTumOnline<Lectur
 
         showLoadingEnded();
     }
+
 }

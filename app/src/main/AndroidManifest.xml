@@ -664,6 +664,10 @@
         <activity
             android:name=".activities.GradingActivity"
             android:label="@string/title_activity_grading"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.GradingDetailsActivity"
+            android:label="@string/title_activity_grading_details"
             android:theme="@style/AppTheme"></activity>
     </application>
 

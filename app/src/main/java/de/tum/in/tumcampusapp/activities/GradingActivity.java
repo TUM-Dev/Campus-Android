@@ -10,7 +10,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingTumOnline;
-import de.tum.in.tumcampusapp.adapters.GradingAdapter;
+import de.tum.in.tumcampusapp.adapters.GradingListAdapter;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.LectureSearchSuggestionProvider;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
@@ -19,31 +19,30 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
+/**
+ * This activity presents the users' lectures using the TUMOnline web service
+ * the results can be filtered by the semester or all shown.
+ *
+ * This activity uses the same models as FindLectures.
+ *
+ * HINT: a TUMOnline access token is needed
+ */
+public class GradingActivity extends ActivityForSearchingTumOnline<LecturesSearchRowSet> {
+    private final static String P_SUCHE = "pSuche";
 
-public class GradingActivity  extends ActivityForSearchingTumOnline<LecturesSearchRowSet> {
-
-
-
+    /** UI elements */
     private StickyListHeadersListView lvMyLecturesList;
-private final static String P_SUCHE = "pSuche";
 
     public GradingActivity() {
-        super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
+        super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_grading, LectureSearchSuggestionProvider.AUTHORITY, 4);
     }
-
-
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
         // bind UI elements
-        lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList);
+        lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList1);
 
         // handle on click events by showing its LectureDetails
         lvMyLecturesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,16 +62,11 @@ private final static String P_SUCHE = "pSuche";
             }
         });
 
+
+
+
+
         onStartSearch();
-
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -101,8 +95,7 @@ private final static String P_SUCHE = "pSuche";
             Collections.sort(lectures);
 
             // set ListView to data via the LecturesListAdapter
-            lvMyLecturesList.setAdapter(GradingAdapter.newInstance(this, lectures));
+            lvMyLecturesList.setAdapter(GradingListAdapter.newInstance(this, lectures));
         }
     }
-
 }
