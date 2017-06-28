@@ -291,13 +291,11 @@
     <string name="card_eduroam_summary">Hilft dir eduroam einzurichten</string>
     <string name="pin_lock">PIN-Sperre</string>
     <string name="pin_lock_desc">Für die Einrichtung des WLAN-Zugangs wird eine PIN-Sperre benötigt.
-        Falls du noch keine PIN-Sperre verwendet kannst du hier eine einrichten.
-    <a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">Mehr Infos</a></string>
+        Falls du noch keine PIN-Sperre verwendet kannst du hier eine einrichten.</string>
     <string name="enable_pin_lock">PIN-Sperre aktivieren</string>
     <string name="data_backup">Daten-Backup</string>
     <string name="data_backup_desc">Aus Sicherheitsgründen muss das Daten-Backup deaktiviert werden, damit die TUM-Zugangsdaten nicht unverschlüsselt auf den Google Servern gespeichert werden.
-        Dazu unter ‘Sichern &amp; zurücksetzen’ > ‘Meine Daten sichern’ deaktivieren.
-    <a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">Mehr Infos</a></string>
+        Dazu unter ‘Sichern &amp; zurücksetzen’ > ‘Meine Daten sichern’ deaktivieren.</string>
     <string name="disable_data_backup">Daten-Backup deaktivieren</string>
     <string name="eduroam_success">Eduroam wurde erfolgreich eingerichtet</string>
     <string name="pin_lock_rem"><b>Konfiguration fehlgeschlagen!</b>\nHast du eine PIN-Sperre eingerichtet?</string>
