@@ -23,8 +23,8 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 514
-        versionName "1.4.8-dev"
+        versionCode 99999
+        versionName "1.4.10-dev"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -80,6 +80,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'net.danlew:android.joda:2.9.9'
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
+    compile 'com.github.barteksc:android-pdf-viewer:2.5.1'
 
     androidTestCompile "com.android.support:support-annotations:$androidSupportVersion"
     androidTestCompile 'com.android.support.test:runner:0.5'

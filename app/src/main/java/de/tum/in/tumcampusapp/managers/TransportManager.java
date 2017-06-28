@@ -1,9 +1,11 @@
 package de.tum.in.tumcampusapp.managers;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.util.Pair;
+import android.util.SparseArray;
 
 import com.google.common.base.Optional;
 import com.google.common.net.UrlEscapers;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,6 +28,9 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.MVVCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.models.efa.Departure;
+import de.tum.in.tumcampusapp.models.efa.StationResult;
+import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
 
 /**
  * Transport Manager, handles querying data from mvv and card creation
@@ -66,6 +73,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     private static final String COORD_OUTPUT_FORMAT = "coordOutputFormat=WGS84";
     private static final String LOCATION_SERVER = "locationServerActive=1";
     private static final String STATION_SEARCH_TYPE = "type_sf=any";
+    private static final String STATION_SEARCH_TYPE_COORD = "type_sf=coord";
     private static final String STATION_SEARCH_COMMON = "anyObjFilter_sf=126&reducedAnyPostcodeObjFilter_sf=64&reducedAnyTooManyObjFilter_sf=2&useHouseNumberList=true";
     private static final String STATION_SEARCH_HITLIST_SIZE = "anyMaxSizeHitList=10"; // 10 <=> what we can display on one page
     private static final String DEPARTURE_QUERY_TYPE = "type_dm=stop";
@@ -92,6 +100,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     private static final String POINTS = "points";
     private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
+    private static SparseArray<WidgetDepartures> widgetDeparturesList;
+
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
         stationSearch.append(STATION_SEARCH).append('?');
@@ -114,6 +124,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         // Create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS transport_favorites (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, symbol VARCHAR)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS widgets_transport (" +
+                "id INTEGER PRIMARY KEY, station VARCHAR, station_id VARCHAR, location BOOLEAN, reload BOOLEAN)");
+
+        if(TransportManager.widgetDeparturesList == null) {
+            TransportManager.widgetDeparturesList = new SparseArray<>();
+        }
     }
 
     /**
@@ -142,6 +159,58 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     }
 
     /**
+     * Adds the settings of a widget to the widget list, replaces the existing settings if there are some
+     */
+    public void addWidget(int appWidgetId, WidgetDepartures widgetDepartures) {
+        ContentValues values = new ContentValues();
+        values.put("id", appWidgetId);
+        values.put("station", widgetDepartures.getStation());
+        values.put("station_id", widgetDepartures.getStationId());
+        values.put("location", widgetDepartures.useLocation());
+        values.put("reload", widgetDepartures.autoReload());
+        db.replace("widgets_transport", null, values);
+        TransportManager.widgetDeparturesList.put(appWidgetId, widgetDepartures);
+    }
+
+    /**
+     * Deletes the settings of a widget to the widget list
+     *
+     * @param widget_id The id of the widget
+     */
+    public void deleteWidget(int widget_id) {
+        db.delete("widgets_transport", "id = ?", new String[]{String.valueOf(widget_id)});
+        TransportManager.widgetDeparturesList.remove(widget_id);
+    }
+
+    /**
+     * A WidgetDepartures Object containing the settings of this widget.
+     * This object can provide the departures needed by this widget as well.
+     * The settings are cached, only the first time its loded from the database.
+     * If there is no widget with this id saved (in cache and the database) a new WidgetDepartures Object is generated
+     * containing a NULL for the station and an empty string for the station id. This is not cached or saved to the database.
+     *
+     * @param widget_id The id of the widget
+     * @return The WidgetDepartures Object
+     */
+    public WidgetDepartures getWidget(int widget_id) {
+        if(TransportManager.widgetDeparturesList.indexOfKey(widget_id) >= 0){
+            return TransportManager.widgetDeparturesList.get(widget_id);
+        }
+        Cursor c = db.rawQuery("SELECT * FROM widgets_transport WHERE id = ?", new String[]{String.valueOf(widget_id)});
+        WidgetDepartures widgetDepartures = new WidgetDepartures();
+        if (c.getCount() >= 1) {
+            c.moveToFirst();
+            widgetDepartures.setStation(c.getString(c.getColumnIndex("station")));
+            widgetDepartures.setStationId(c.getString(c.getColumnIndex("station_id")));
+            widgetDepartures.setUseLocation(c.getInt(c.getColumnIndex("location")) != 0);
+            widgetDepartures.setAutoReload(c.getInt(c.getColumnIndex("reload")) != 0);
+            c.close();
+        }
+        TransportManager.widgetDeparturesList.put(widget_id, widgetDepartures);
+        return widgetDepartures;
+    }
+
+    /**
      * Get all departures for a station.
      * Cursor includes target station name, departure in remaining minutes.
      *
@@ -165,7 +234,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                 return result;
             }
 
-            if (departures.get().get("departureList") == null) {
+            if (departures.get().isNull("departureList")) {
                 return result;
             }
 
@@ -173,12 +242,15 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
+                JSONObject time = departure.getJSONObject("dateTime");
+                Date date = new GregorianCalendar(time.getInt("year"), time.getInt("month") - 1, time.getInt("day"), time.getInt("hour"), time.getInt("minute")).getTime();
                 result.add(new Departure(
                         servingLine.getString("name"),
                         servingLine.getString("direction"),
                         // Limit symbol length to 3, longer symbols are pointless
                         String.format("%3.3s", servingLine.getString("symbol")).trim(),
-                        departure.getInt("countdown")
+                        departure.getInt("countdown"),
+                        date.getTime()
                 ));
             }
 
@@ -287,31 +359,5 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         card.setDepartures(cur);
         card.apply();
 
-    }
-
-    public static class Departure {
-        final public String servingLine;
-        final public String direction;
-        final public String symbol;
-        final public int countDown;
-
-        public Departure(String servingLine, String direction, String symbol, int countDown) {
-            this.servingLine = servingLine;
-            this.direction = direction;
-            this.symbol = symbol;
-            this.countDown = countDown;
-        }
-    }
-
-    public static class StationResult {
-        final String station;
-        final String id;
-        final int quality;
-
-        public StationResult(String station, String id, int quality) {
-            this.station = station;
-            this.id = id;
-            this.quality = quality;
-        }
     }
 }
