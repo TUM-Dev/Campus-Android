@@ -35,6 +35,7 @@ public class EduroamManager {
     private static final String INT_CA_CERT = "ca_cert";
     private static final String INT_ANONYMOUS_IDENTITY = "anonymous_identity";
     private static final String INT_ENTERPRISE_FIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
+    private static final String ANON_IDENTITY = "anonymous@eduroam.mwn.de";
 
     private final Context mContext;
 
@@ -129,7 +130,7 @@ public class EduroamManager {
         conf.enterpriseConfig.setPassword(networkPass);
         conf.enterpriseConfig.setEapMethod(WifiEnterpriseConfig.Eap.PEAP);
         conf.enterpriseConfig.setPhase2Method(WifiEnterpriseConfig.Phase2.MSCHAPV2);
-        conf.enterpriseConfig.setAnonymousIdentity("anonymous@mwn.de");
+        conf.enterpriseConfig.setAnonymousIdentity(ANON_IDENTITY);
 
         // Install certificate
         X509Certificate cert;
@@ -184,7 +185,7 @@ public class EduroamManager {
             Field[] wcefFields = WifiConfiguration.class.getFields();
             for (Field wcefField : wcefFields) {
                 if (wcefField.getName().trim().equals(INT_ANONYMOUS_IDENTITY)) {
-                    wcefSetValue.invoke(wcefField.get(conf), "anonymous@mwn.de");
+                    wcefSetValue.invoke(wcefField.get(conf), ANON_IDENTITY);
                 } else if (wcefField.getName().trim().equals(INT_CA_CERT)) {
                     wcefSetValue.invoke(wcefField.get(conf), "keystore://CACERT_eduroam");
                 } else if (wcefField.getName().trim().equals(INT_EAP)) {
