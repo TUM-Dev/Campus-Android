@@ -361,13 +361,13 @@
     <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
     <string name="card_eduroam_summary">Allows you to easily set up eduroam wifi connection</string>
     <string name="pin_lock">PIN-Lock</string>
-    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
+    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.</string>
     <string name="enable_pin_lock">Enable PIN-Lock</string>
     <string name="data_backup">Data-Backup</string>
-    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the TUM credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
+    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the TUM credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.</string>
     <string name="disable_data_backup">Disable Data-Backup</string>
     <string name="eduroam_success">Eduroam successfully configured</string>
-    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?</string>
+    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?\nDeleted the manually created profile? We cannot overwrite manually created wifi profiles!</string>
     <string name="install_certificate">Install certificate</string>
     <string name="certificate">Certificate</string>
     <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click ‘Install certificate’ and confirm with ‘OK’.</string>
@@ -511,8 +511,19 @@ Signature: %5$s</string>
         <item>Library</item>
         <item>Cafeteria</item>
     </string-array>
-
     <string name="search_facilities">Search by name</string>
+
+    <string name="mvv_widget" translatable="false">MVV Widget TUM</string>
+    <string name="mvv_widget_select_station">Select station</string>
+    <string name="mvv_widget_no_station">No station selected</string>
+    <string name="mvv_widget_no_data">Offline or no data available</string>
+    <string name="mvv_widget_auto_reload">Automatic reload</string>
+    <string name="mvv_widget_auto_reload_hint">Will consume Energy and Data</string>
+    <string name="timetable_widget">Timetable Widget TUM</string>
+    <string name="timetable_widget_select_lectures">Select lectures</string>
+    <string name="timetable_widget_no_lectures">No lectures planned :)</string>
+    <string name="eduroam_not_valid_id">Not a valid TUM-ID.</string>
+    <string name="eduroam_please_enter_password">Please enter your password. It will not be saved.</string>
 </resources>
 
 

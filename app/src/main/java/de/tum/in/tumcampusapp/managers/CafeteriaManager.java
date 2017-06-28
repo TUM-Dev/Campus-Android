@@ -291,4 +291,13 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
 
         return cafeteriaName + ' ' + dateStr;
     }
+
+    public int getBestMatchMensaId(Context context) {
+        // Choose which mensa should be shown
+        int cafeteriaId = new LocationManager(context).getCafeteria();
+        if (cafeteriaId == -1) {
+            Utils.log("could not get a Cafeteria form locationManager!");
+        }
+        return cafeteriaId;
+    }
 }

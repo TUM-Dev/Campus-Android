@@ -37,8 +37,13 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             return;
         }
 
-        // Test if eduroam is available
+        //Check if wifi is turned on at all, as we cannot say if it was configured if its off
         WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if(!wifi.isWifiEnabled()) {
+            return;
+        }
+
+        // Test if eduroam is available
         List<ScanResult> scan = wifi.getScanResults();
         for (ScanResult network : scan) {
             if (network.SSID.equals(EduroamManager.NETWORK_SSID)) {
