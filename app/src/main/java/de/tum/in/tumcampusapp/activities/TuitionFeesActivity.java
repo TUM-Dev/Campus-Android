@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -33,6 +34,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         amountTextView = (TextView) findViewById(R.id.soll);
         deadlineTextView = (TextView) findViewById(R.id.frist);
         semesterTextView = (TextView) findViewById(R.id.semester);
+        ((TextView) findViewById(R.id.fees_aid)).setMovementMethod(LinkMovementMethod.getInstance());
 
         requestFetch();
     }
