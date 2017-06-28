@@ -37,7 +37,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             return;
         }
 
-        //Check if wifi is turned on at all
+        //Check if wifi is turned on at all, as we cannot say if it was configured if its off
         WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if(!wifi.isWifiEnabled()) {
             return;
