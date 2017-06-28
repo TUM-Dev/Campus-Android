@@ -54,7 +54,13 @@ public class SetupEduroamActivity extends BaseActivity {
         lrz = (EditText) findViewById(R.id.wifi_lrz_id);
         lrz.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
         password = (EditText) findViewById(R.id.wifi_password);
-        password.requestFocus();
+
+        //Set the focus for improved UX experience
+        if(lrz.getText().length() == 0) {
+            lrz.requestFocus();
+        }else{
+            password.requestFocus();
+        }
     }
 
     /**
