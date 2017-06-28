@@ -127,8 +127,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(mContext);
 
-        NotificationCompat.WearableExtender morePageNotification =
-                new NotificationCompat.WearableExtender();
+        NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
 
         StringBuilder allContent = new StringBuilder();
         StringBuilder firstContent = new StringBuilder();
@@ -137,9 +136,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                 continue;
             }
 
-            NotificationCompat.Builder pageNotification =
-                    new NotificationCompat.Builder(mContext)
-                            .setContentTitle(PATTERN.matcher(menu.typeLong).replaceAll("").trim());
+            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext).setContentTitle(PATTERN.matcher(menu.typeLong).replaceAll("").trim());
 
             StringBuilder content = new StringBuilder(menu.name);
             if (rolePrices.containsKey(menu.typeLong)) {

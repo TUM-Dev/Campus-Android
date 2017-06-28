@@ -9,7 +9,9 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 
 import com.google.common.base.Optional;
 
@@ -20,6 +22,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.MVVStationSuggestionProvider;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
+import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
 
 public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<Cursor> implements AdapterView.OnItemClickListener {
 
@@ -27,6 +30,8 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
     private ListView listViewResults;
     private SimpleCursorAdapter adapterStations;
     private RecentsManager recentsManager;
+
+    private WidgetDepartures widgetDepartures;
 
     public MVVWidgetConfigureActivity() {
         super(R.layout.activity_mvv_widget_configure, MVVStationSuggestionProvider.AUTHORITY, 3);
@@ -48,6 +53,19 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
+
+        TransportManager tm = new TransportManager(this);
+        this.widgetDepartures = tm.getWidget(appWidgetId);
+
+        Switch autoReloadSwitch = (Switch) findViewById(R.id.mvv_widget_auto_reload);
+        autoReloadSwitch.setChecked(this.widgetDepartures.autoReload());
+        autoReloadSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                widgetDepartures.setAutoReload(checked);
+            }
+        });
+        // TODO add handling for use location
 
         // Det all stations from db
         recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
@@ -74,8 +92,9 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
     @Override
     public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
         Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
-        saveAndReturn(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)),
-                departureCursor.getString(departureCursor.getColumnIndex(Const.ID_COLUMN)), false);
+        widgetDepartures.setStation(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)));
+        widgetDepartures.setStationId(departureCursor.getString(departureCursor.getColumnIndex(Const.ID_COLUMN)));
+        saveAndReturn();
     }
 
 
@@ -162,19 +181,20 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
 
     /**
      * Saves the selection to the database, triggers a widget update and closes this activity
-     *
-     * @param station      the selected station
-     * @param station_id   the id of the selected station
-     * @param use_location [not implemented yet] whether the station should be selected automatically by the nearest station
      */
-    private void saveAndReturn(String station, String station_id, boolean use_location) {
+    private void saveAndReturn() {
         // save the settings
         TransportManager transportManager = new TransportManager(this);
-        transportManager.addWidget(appWidgetId, station, station_id, use_location);
+        transportManager.addWidget(appWidgetId, this.widgetDepartures);
+
+        // update alarms
+        MVVWidget.setAlarm(this);
 
         // update widget
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        MVVWidget.updateAppWidget(this, appWidgetManager, appWidgetId);
+        Intent reloadIntent = new Intent(this, MVVWidget.class);
+        reloadIntent.setAction(MVVWidget.MVV_WIDGET_FORCE_RELOAD);
+        reloadIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        sendBroadcast(reloadIntent);
 
         // return to widget
         Intent resultValue = new Intent();
@@ -188,8 +208,12 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      */
     private void cancelAndReturn() {
         Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        setResult(RESULT_CANCELED, resultValue);
-        finish();
+        if (!widgetDepartures.getStation().isEmpty() && !widgetDepartures.getStationId().isEmpty()) {
+            saveAndReturn();
+        } else {
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            setResult(RESULT_CANCELED, resultValue);
+            finish();
+        }
     }
 }

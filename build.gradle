@@ -9,12 +9,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
 allprojects {
     tasks.withType(JavaCompile) {
+        options.fork = true  // Fork your compilation into a child process
+        options.forkOptions.setMemoryMaximumSize("4g") // Set maximum memory to 4g
         options.compilerArgs << "-Xlint:all"
         options.compilerArgs << "-Werror"
     }

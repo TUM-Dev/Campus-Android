@@ -1,11 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="@dimen/widget_margin"
     android:theme="@style/AppTheme.WhiteBackground">
 
     <RelativeLayout
-        android:id="@+id/mensa_widget_header_container"
+        android:id="@+id/timetable_widget_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_primary"
@@ -13,42 +14,46 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/mensa_widget_header"
+            android:id="@+id/timetable_widget_day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/mensa_widget_icon"
-            android:layout_toStartOf="@+id/mensa_widget_icon"
+            android:layout_toLeftOf="@+id/timetable_widget_setting"
+            android:layout_toStartOf="@+id/timetable_widget_setting"
             android:background="@color/color_primary"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:typeface="sans" />
 
         <ImageView
-            android:id="@+id/mensa_widget_icon"
+            android:id="@+id/timetable_widget_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:background="@color/color_primary"
-            android:src="@drawable/ic_cutlery"
-            android:tint="@android:color/white" />
+            android:src="@drawable/ic_action_settings"
+            android:typeface="sans" />
     </RelativeLayout>
 
 
     <ListView
-        android:id="@+id/food_item"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mensa_widget_header_container" />
-
-    <TextView
-        android:id="@+id/empty_view"
+        android:id="@+id/timetable_widget_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/food_item"
+        android:layout_below="@+id/timetable_widget_header"
+        android:divider="@null"
+        android:dividerHeight="0dp">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/empty_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/timetable_widget_header"
         android:gravity="center"
-        android:textColor="#ff656865"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-</RelativeLayout>
+        android:text="@string/timetable_widget_no_lectures"
+        android:visibility="gone" />
+
+</RelativeLayout> 

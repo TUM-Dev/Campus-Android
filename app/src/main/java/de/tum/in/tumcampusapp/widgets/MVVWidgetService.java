@@ -13,6 +13,8 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.MVVSymbolView;
 import de.tum.in.tumcampusapp.managers.TransportManager;
+import de.tum.in.tumcampusapp.models.efa.Departure;
+import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
 
 @SuppressLint("Registered")
 public class MVVWidgetService extends RemoteViewsService {
@@ -25,12 +27,14 @@ public class MVVWidgetService extends RemoteViewsService {
     private class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
         private final Context applicationContext;
-        private List<TransportManager.Departure> departures = new ArrayList<>();
+        private List<Departure> departures = new ArrayList<>();
         private int appWidgetID;
+        private boolean forceLoadDepartures = false;
 
         MVVRemoteViewFactory(Context applicationContext, Intent intent) {
             this.applicationContext = applicationContext.getApplicationContext();
             this.appWidgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+            this.forceLoadDepartures = intent.getBooleanExtra(MVVWidget.MVV_WIDGET_FORCE_RELOAD, true);
         }
 
         @Override
@@ -41,7 +45,9 @@ public class MVVWidgetService extends RemoteViewsService {
         public void onDataSetChanged() {
             // load the departures for the widget
             TransportManager transportManager = new TransportManager(applicationContext);
-            this.departures = transportManager.getWidget(this.appWidgetID).getDepartures(applicationContext);
+            WidgetDepartures wd = transportManager.getWidget(this.appWidgetID);
+
+            this.departures = wd.getDepartures(applicationContext, this.forceLoadDepartures);
         }
 
         @Override
@@ -64,7 +70,7 @@ public class MVVWidgetService extends RemoteViewsService {
             }
 
             // get the departure for this view
-            TransportManager.Departure currentItem = this.departures.get(position);
+            Departure currentItem = this.departures.get(position);
             if (currentItem == null) {
                 return null;
             }

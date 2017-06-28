@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
@@ -53,7 +54,13 @@ public class SetupEduroamActivity extends BaseActivity {
         lrz = (EditText) findViewById(R.id.wifi_lrz_id);
         lrz.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
         password = (EditText) findViewById(R.id.wifi_password);
-        password.requestFocus();
+
+        //Set the focus for improved UX experience
+        if(lrz.getText().length() == 0) {
+            lrz.requestFocus();
+        }else{
+            password.requestFocus();
+        }
     }
 
     /**
@@ -63,6 +70,20 @@ public class SetupEduroamActivity extends BaseActivity {
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickSetup(View v) {
+        //Verify that we have a valid LRZ / TUM ID
+        final Pattern pattern = Pattern.compile("^[a-z]{2}[0-9]{2}[a-z]{3}$");
+        if (!pattern.matcher(lrz.getText()).matches()) {
+            Utils.showToast(this, getString(R.string.eduroam_not_valid_id));
+            return;
+        }
+
+        //We need some sort of password
+        if(password.getText().length() == 0) {
+            Utils.showToast(this, getString(R.string.eduroam_please_enter_password));
+            return;
+        }
+
+        //Do Setup
         EduroamManager manager = new EduroamManager(getApplicationContext());
         boolean success = manager.configureEduroam(lrz.getText().toString(), password.getText().toString());
         if (success) {
