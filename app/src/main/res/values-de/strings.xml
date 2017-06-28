@@ -434,4 +434,6 @@ Signatur: %5$s</string>
     <string name="timetable_widget">Stundenplan Widget TUM</string>
     <string name="timetable_widget_select_lectures">Vorlesungen auswählen</string>
     <string name="timetable_widget_no_lectures">KeineVorlesungen geplant :)</string>
+    <string name="eduroam_not_valid_id">Keine gültige TUM-Kennung</string>
+    <string name="eduroam_please_enter_password">Bitte Passwort eingeben. Dieses wird nicht gespeichert.</string>
 </resources>

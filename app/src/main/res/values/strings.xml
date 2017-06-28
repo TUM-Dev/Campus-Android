@@ -508,6 +508,8 @@ Signature: %5$s</string>
     <string name="timetable_widget">Timetable Widget TUM</string>
     <string name="timetable_widget_select_lectures">Select lectures</string>
     <string name="timetable_widget_no_lectures">No lectures planned :)</string>
+    <string name="eduroam_not_valid_id">Not a valid TUM-ID.</string>
+    <string name="eduroam_please_enter_password">Please enter your password. It will not be saved.</string>
 </resources>
 
 
