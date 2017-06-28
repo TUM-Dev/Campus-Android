@@ -366,7 +366,7 @@
     <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the TUM credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.</string>
     <string name="disable_data_backup">Disable Data-Backup</string>
     <string name="eduroam_success">Eduroam successfully configured</string>
-    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?</string>
+    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?\nDeleted the manually created profile? We cannot overwrite manually created wifi profiles!</string>
     <string name="install_certificate">Install certificate</string>
     <string name="certificate">Certificate</string>
     <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click ‘Install certificate’ and confirm with ‘OK’.</string>
