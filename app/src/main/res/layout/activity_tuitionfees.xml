@@ -69,9 +69,9 @@
                     android:textSize="@dimen/large_text_size" />
 
                 <TextView
+                    android:id="@+id/fees_aid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:linksClickable="true"
                     android:padding="16dp"
                     android:text="@string/tuition_fee_more"
                     android:textSize="16sp" />
