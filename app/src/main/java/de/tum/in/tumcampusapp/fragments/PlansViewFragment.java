@@ -37,10 +37,10 @@ public class PlansViewFragment extends Fragment {
      * An enum to map urls to local filenames
      */
     private enum PlanFile{
-        SCHNELLBAHNNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Netz_2016_Version_MVG.PDF", "Schnellbahnnetz.pdf"),
-        NACHTLINIENNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Nachtnetz_2016.pdf", "Nachtliniennetz.pdf"),
-        TRAMNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Tramnetz_2016.pdf", "Tramnetz.pdf"),
-        TARIFPLAN("http://www.mvv-muenchen.de/fileadmin/media/Dateien/3_Tickets_Preise/dokumente/TARIFPLAN_2016-Innenraum.pdf", "Tarifplan.pdf");
+        SCHNELLBAHNNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Netz_2017_Version_EFA-2.PDF", "Schnellbahnnetz2017.pdf"),
+        NACHTLINIENNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Nachtnetz_2017.pdf", "Nachtliniennetz2017.pdf"),
+        TRAMNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Tramnetz_2017.pdf", "Tramnetz2017.pdf"),
+        GESAMTNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/3_Tickets_Preise/dokumente/TARIFPLAN_2017-Gesamtnetz.PDF", "Gesamtnetz2017.pdf");
 
         private final String localName;
         private final String url;
@@ -106,8 +106,7 @@ public class PlansViewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.fragmentView = inflater.inflate(R.layout.fragment_plans_view, container, false);
         progressBar = (ProgressBar) fragmentView.findViewById(R.id.progressBar2);
 
@@ -125,8 +124,11 @@ public class PlansViewFragment extends Fragment {
                 .add(new PlanListEntry(R.drawable.plan_campus_weihenstephan_icon, R.string.campus_weihenstephan, R.string.campus_weihenstephan_adress, R.drawable.campus_weihenstephan))
                 .build();
 
-        mListAdapter = new PlanListAdapter(getActivity(), listMenuEntrySet);
+        //Check if there are any new files to download
         downloadFiles();
+
+        //Add files/links to listview
+        mListAdapter = new PlanListAdapter(getActivity(), listMenuEntrySet);
         list.setAdapter(mListAdapter);
         list.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -137,7 +139,7 @@ public class PlansViewFragment extends Fragment {
                     File pdfFile = new File(fileDirectory, currentLocalName);
                     if (pdfFile.exists()){
                         if (!openPdfViewer(pdfFile)){
-                            Toast.makeText(getContext(), "Invalid file format, contact the administrator via email and attach filename.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Invalid file format, please let us know of this bug - plans have probably been updated.", Toast.LENGTH_LONG).show();
                         }
                     }else{
                         Toast.makeText(getContext(), "File doesn't exist yet...did you download it?", Toast.LENGTH_LONG).show();
@@ -156,6 +158,7 @@ public class PlansViewFragment extends Fragment {
 
     private void downloadFiles(){
         for (PlanFile file : PlanFile.values()){
+            Utils.log(fileDirectory+"/"+file.getLocalName());
             if (!(new File(fileDirectory+"/"+file.getLocalName())).exists()){
                 displayDownloadDialog();
                 break;
