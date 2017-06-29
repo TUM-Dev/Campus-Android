@@ -531,6 +531,7 @@
             >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
             </intent-filter>
 
             <meta-data
@@ -578,6 +579,35 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity android:name=".widgets.CardsWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- receiver for the TimetableWidget -->
+
+        <receiver
+            android:name=".widgets.TimetableWidget"
+            android:label="@string/timetable_widget">>
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/timetable_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".widgets.TimetableWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity
+            android:name=".widgets.TimetableWidgetConfigureActivity"
+            android:allowTaskReparenting="false"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/timetable_widget_select_lectures"
+            android:launchMode="singleTop"
+            android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>

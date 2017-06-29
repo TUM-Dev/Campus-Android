@@ -64,10 +64,9 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
             return null;
         }
         RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mensa_widget_item);
-        rv.setTextViewText(R.id.menu_type, currentItem.typeShort);
 
         String menuContent = COMPILE.matcher(currentItem.name).replaceAll("").trim();
-        rv.setTextViewText(R.id.menu_content, menuContent);
+        rv.setTextViewText(R.id.menu_content, menuContent + " (" + currentItem.typeShort + ")");
 
         String price = CafeteriaPrices.getPrice(applicationContext, currentItem.typeLong);
         if (price == null) {

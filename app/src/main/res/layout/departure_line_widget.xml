@@ -31,7 +31,9 @@
         android:layout_toLeftOf="@+id/departure_time"
         android:layout_toRightOf="@id/line_symbol_ll"
         android:layout_toStartOf="@id/line_switcher"
+        android:ellipsize="end"
         android:gravity="center_vertical"
+        android:maxLines="1"
         android:textSize="16sp" />
 
     <TextView
@@ -41,8 +43,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:minWidth="50dp"
+        android:layout_margin="10dp"
+        android:gravity="end"
+        android:minWidth="40dp"
+        android:textAlignment="textEnd"
         android:textColor="@color/sections_green" />
 </RelativeLayout>

@@ -18,6 +18,7 @@ import com.google.common.base.Optional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.CalendarHelper;
+import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.cards.NextLectureCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRow;
@@ -52,6 +54,9 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                 + "nr VARCHAR PRIMARY KEY, status VARCHAR, url VARCHAR, "
                 + "title VARCHAR, description VARCHAR, dtstart VARCHAR, dtend VARCHAR, "
                 + "location VARCHAR REFERENCES room_locations)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS widgets_timetable_blacklist ("
+                + "widget_id INTEGER, lecture_title VARCHAR, PRIMARY KEY (widget_id, lecture_title))");
     }
 
     /**
@@ -143,7 +148,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * (nr, status, url, title, description, dtstart, dtend, location)
      */
     Cursor getAllFromDb() {
-        return db.rawQuery("SELECT * FROM calendar WHERE status!=\"CANCEL\"", null);
+        return db.rawQuery("SELECT * FROM calendar WHERE status!='CANCEL'", null);
     }
 
     public Cursor getFromDbForDate(Date date) {
@@ -151,7 +156,32 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         String requestedDateString = Utils.getDateString(date);
 
         // Fetch the data
-        return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
+        return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? AND status!='CANCEL' ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
+    }
+
+    /**
+     * Returns all stored events in the next days from db
+     * If there is a valid widget id (> 0) the events are filtered by the widgets blacklist
+     *
+     * @param dayCount The number of days
+     * @param widgetId The id of the widget
+     * @return List<IntegratedCalendarEvent> List of Events
+     */
+    public List<IntegratedCalendarEvent> getNextDaysFromDb(int dayCount, int widgetId) {
+        Calendar calendar = Calendar.getInstance();
+        String from = Utils.getDateTimeString(calendar.getTime());
+        calendar.add(Calendar.DAY_OF_YEAR, dayCount);
+        String to = Utils.getDateTimeString(calendar.getTime());
+
+        List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM calendar c WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' " +
+                "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title) " +
+                "ORDER BY dtstart ASC", new String[]{from, to, String.valueOf(widgetId)});
+        while (cursor.moveToNext()) {
+            calendarEvents.add(new IntegratedCalendarEvent(cursor));
+        }
+        cursor.close();
+        return calendarEvents;
     }
 
     /**
@@ -160,7 +190,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @return Database cursor (name, location, _id)
      */
     public Cursor getCurrentFromDb() {
-        return db.rawQuery("SELECT title, location, nr, dtend FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!=\"CANCEL\"", null);
+        return db.rawQuery("SELECT title, location, nr, dtend FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!='CANCEL'", null);
     }
 
     /**
@@ -176,6 +206,42 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         }
         c.close();
         return result;
+    }
+
+    /**
+     * Add a lecture to the blacklist of a widget
+     *
+     * @param widgetId the Id of the widget
+     * @param lecture  the title of the lecture
+     */
+    public void addLectureToBlacklist(int widgetId, String lecture) {
+        ContentValues values = new ContentValues();
+        values.put("widget_id", widgetId);
+        values.put("lecture_title", lecture);
+        db.replace("widgets_timetable_blacklist", null, values);
+    }
+
+    /**
+     * Remove a lecture from the blacklist of a widget
+     *
+     * @param widgetId the Id of the widget
+     * @param lecture  the title of the lecture
+     */
+    public void deleteLectureFromBlacklist(int widgetId, String lecture) {
+        db.delete("widgets_timetable_blacklist", "widget_id = ? AND lecture_title = ?",
+                new String[]{String.valueOf(widgetId), lecture});
+    }
+
+    /**
+     * get all lectures and the information whether they are on the blacklist for the given widget
+     *
+     * @param widgetId the Id of the widget
+     * @return A cursor containing a list of lectures and the is_on_blacklist flag
+     */
+    public Cursor getLecturesFromWidget(int widgetId) {
+        return db.rawQuery("SELECT DISTINCT c.ROWID as _id, c.title, EXISTS (" +
+                "SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title" +
+                ") as is_on_blacklist from calendar c GROUP BY c.title", new String[]{String.valueOf(widgetId)});
     }
 
     public void importCalendar(CalendarRowSet myCalendarList) {
@@ -226,8 +292,8 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     public Cursor getNextCalendarItem() {
         return db.rawQuery("SELECT title, dtstart, dtend, location FROM calendar JOIN " +
-                "(SELECT dtstart AS maxstart FROM calendar WHERE status!=\"CANCEL\" AND datetime('now', 'localtime')<dtstart " +
-                "ORDER BY dtstart LIMIT 1) ON status!=\"CANCEL\" AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
+                "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
+                "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
                 "ORDER BY dtend, dtstart LIMIT 4", null);
     }
 
@@ -239,7 +305,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         Cursor cur = db.rawQuery("SELECT r.latitude, r.longitude " +
                 "FROM calendar c, room_locations r " +
                 "WHERE datetime('now', 'localtime') < datetime(c.dtstart, '+1800 seconds') AND " +
-                "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!=\"CANCEL\"" +
+                "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!='CANCEL'" +
                 "ORDER BY dtstart LIMIT 1", null);
 
         Geo geo = null;
