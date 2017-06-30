@@ -75,7 +75,8 @@
         android:logo="@drawable/tum_logo"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
