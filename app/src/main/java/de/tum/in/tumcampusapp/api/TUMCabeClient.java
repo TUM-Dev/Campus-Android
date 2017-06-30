@@ -21,6 +21,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
+import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,6 +56,8 @@ public class TUMCabeClient {
     private static final String API_ANSWER_QUESTION = "question/answer/";
     private static final String API_OWN_QUESTIONS = "question/my/";
     private static final String API_FACULTY = "faculty/";
+
+    private static final String API_WIFI_HEATMAP = "wifimap/";
 
 
     private static TUMCabeClient instance;
@@ -216,6 +219,10 @@ public class TUMCabeClient {
         service.deviceUploadGcmToken(verification).enqueue(cb);
     }
 
+    public void createMeasurement(WifiMeasurement wifiMeasurement) throws IOException{
+        service.createMeasurement(wifiMeasurement).execute().body();
+    }
+
     private interface TUMCabeAPIService {
 
         @GET(API_FACULTY)
@@ -303,6 +310,10 @@ public class TUMCabeClient {
 
         @POST(API_DEVICE + "addGcmToken/")
         Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadGcmToken verification);
+
+        //WifiHeatmap
+        @POST(API_WIFI_HEATMAP+"create_measurement/")
+        Call<WifiMeasurement> createMeasurement(@Body WifiMeasurement wifiMeasurement);
 
     }
 }

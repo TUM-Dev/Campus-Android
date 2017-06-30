@@ -1,23 +1,29 @@
 package de.tum.in.tumcampusapp.services;
 
+import android.Manifest;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.LocationManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
-
+import java.util.Calendar;
 import java.util.List;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.auxiliary.WifiMeasurementLocationListener;
 import de.tum.in.tumcampusapp.managers.EduroamManager;
+import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 
 /**
  * Listens for android's ScanResultsAvailable broadcast and checks if eduroam is nearby.
@@ -25,11 +31,48 @@ import de.tum.in.tumcampusapp.managers.EduroamManager;
  */
 public class ScanResultsAvailableReceiver extends BroadcastReceiver {
     private static final String SHOULD_SHOW = "wifi_setup_notification_dismissed";
+    private static final int MINIMUM_BATTERY_PERCENTAGE = 50;
 
     @Override
+    /**
+     * This method either gets called by broadcast directly or gets repeatedly triggered by the
+     * WifiScanHandler, which starts scans at time periods, as long as an eduroam or lrz network is
+     * visible. onReceive then continues to store information like dBm and SSID to the local database.
+     * The SyncManager then takes care of sending the Wifi measurements to the server in a given time
+     * interval.
+     */
     public void onReceive(Context context, Intent intent) {
         if (!intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
             return;
+        }
+        //Check if wifi is turned on at all
+        WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (!wifi.isWifiEnabled()) {
+            return;
+        }
+
+        WifiScanHandler wifiScanHandler = WifiScanHandler.getInstance(context);
+        List<ScanResult> scan = wifi.getScanResults();
+        boolean networkFound = false;
+        for (final ScanResult network : scan) {
+            //skips if network is not either eduroam or lrz network
+            //otherwise stores it to the local db (which gets synced to remote later) with information like dBm
+            if (network.SSID.equals("eduroam")){
+                showNotification(context);
+            }else if(network.SSID.equals("lrz")){
+            }else{
+                continue;
+            }
+            networkFound = true;
+            storeWifiMeasurement(context, network);
+        }
+        //if the battery level is above 50% and there's still an eduroam/lrz network visible
+        //schedule another scan
+        if (networkFound && Utils.getBatteryLevel(context) >= MINIMUM_BATTERY_PERCENTAGE){
+            wifiScanHandler.startRepetition();
+            Utils.log("WifiScanHandler rescheduled");
+        }else{
+            Utils.log("WifiScanHandler stopped");
         }
 
         // Test if user has eduroam configured already
@@ -37,26 +80,35 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             return;
         }
 
-        //Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if(!wifi.isWifiEnabled()) {
-            return;
-        }
-
-        // Test if eduroam is available
-        List<ScanResult> scan = wifi.getScanResults();
-        for (ScanResult network : scan) {
-            if (network.SSID.equals(EduroamManager.NETWORK_SSID)) {
-                //Show notification
-                showNotification(context);
-                return;
-            }
-        }
-
         //???
         if (!Utils.getInternalSettingBool(context, SHOULD_SHOW, true)) {
             Utils.setInternalSetting(context, SHOULD_SHOW, true);
         }
+    }
+
+    /**
+     * This method stores wifi scan results to the server. When they first get created by the
+     * ScanResultsAvailable's onReceive method, they lack gps information for creating a heatmap.
+     * Therefore we request an update from the WifiMeasurementLocationListener, passing the incomplete WifiMeasurement.
+     * The WifiMeasurementLocationListener then takes care of adding the location information, whenever it is ready.
+     * @param context
+     * @param scanResult
+     */
+
+    private void storeWifiMeasurement(Context context, ScanResult scanResult){
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            Utils.log("Permission not granted for FINE location scan in ScanResultsAvailableReceiver");
+            return;
+        }
+        LocationManager locationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        criteria.setVerticalAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setHorizontalAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setBearingRequired(false);
+        criteria.setAltitudeRequired(false);
+        criteria.setSpeedRequired(false);
+        WifiMeasurement wifiMeasurement = new WifiMeasurement("",scanResult.SSID, scanResult.BSSID, scanResult.level, -1, -1, -1);
+        locationManager.requestSingleUpdate(criteria, new WifiMeasurementLocationListener(context, wifiMeasurement, Calendar.getInstance().getTimeInMillis()), null);
     }
 
     /**
