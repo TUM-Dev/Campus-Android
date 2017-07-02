@@ -438,6 +438,18 @@ public final class Utils {
     }
 
     /**
+     * Sets an internal preference's string value
+     *
+     * @param context Context
+     * @param key     Key
+     * @param value   Value
+     */
+    public static void setInternalSetting(Context context, String key, float value) {
+        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
+        prefs.edit().putFloat(key, value).apply();
+    }
+
+    /**
      * Gets an internal preference's boolean value
      *
      * @param context Context
@@ -491,6 +503,20 @@ public final class Utils {
     public static String getInternalSettingString(Context context, String key, String value) {
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
         return prefs.getString(key, value);
+    }
+
+    /**
+     * Gets an internal preference's float value
+     *
+     * @param context Context
+     * @param key     Key
+     * @param value   Default value
+     * @return The value of the setting or the default value,
+     * if no setting with the specified key exists
+     */
+    public static float getInternalSettingFloat(Context context, String key, float value) {
+        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
+        return prefs.getFloat(key, value);
     }
 
     /**

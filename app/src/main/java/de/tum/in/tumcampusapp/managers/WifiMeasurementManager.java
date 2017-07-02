@@ -4,7 +4,12 @@ import android.database.Cursor;
 import java.io.IOException;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurementList;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WifiMeasurementManager extends AbstractManager {
     public WifiMeasurementManager(Context context) {
@@ -27,13 +32,23 @@ public class WifiMeasurementManager extends AbstractManager {
 
     /**
      * Calls the api-interface for storing the measurement data
-     * @param wifiMeasurement
+     * @param wifiMeasurements
      * @throws IOException
      */
 
-    private void sendMeasurementToRemote(final WifiMeasurement wifiMeasurement) throws IOException {
+    private void sendMeasurementsToRemote(final WifiMeasurementList wifiMeasurements) throws IOException {
         TUMCabeClient tumCabeClient = TUMCabeClient.getInstance(mContext);
-        tumCabeClient.createMeasurement(wifiMeasurement);
+        tumCabeClient.createMeasurements(wifiMeasurements, new Callback<TUMCabeStatus>() {
+            @Override
+            public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
+                Utils.log("WifiMeasurements successfully sent to the server! "+response);
+            }
+
+            @Override
+            public void onFailure(Call<TUMCabeStatus> call, Throwable throwable) {
+                Utils.log("WifiMeasurements weren't sent to the server! "+ throwable.getMessage());
+            }
+        });
     }
 
     /**
@@ -56,29 +71,6 @@ public class WifiMeasurementManager extends AbstractManager {
         return new WifiMeasurement(date,SSID,BSSID,dBm, accuracy, latitude,longitude);
     }
 
-    public void printLastLine(){
-        Cursor c = db.rawQuery("SELECT * FROM wifi_measurement ORDER BY id DESC LIMIT 1;", null);
-        if(c.moveToNext()) {
-            String message = "";
-            for (int i = 0; i < c.getColumnCount(); i++) {
-                message += " " + c.getString(i);
-            }
-            if (!message.isEmpty()) {
-                Utils.log("WifiMeasurement" + message);
-            }
-        }
-    }
-
-    public void printToLog(){
-        Cursor c = db.rawQuery("SELECT * from wifi_measurement",null);
-        while (c.moveToNext()){
-            String date = c.getString(1);
-            String SSID = c.getString(2);
-            String level = c.getString(4);
-            Utils.log("MEASUREMENT: "+date+" "+SSID+" "+level);
-        }
-    }
-
     /**
      * This method iterates through all local database entries and tries to store them
      * to the server. If an error during network transmission occurs, it tries a maximum of
@@ -90,28 +82,30 @@ public class WifiMeasurementManager extends AbstractManager {
      */
     public void uploadMeasurementsToRemote(int maxRetries, int waitTimeInMillis) {
         Cursor wifiMeasurementIterator = db.rawQuery("SELECT * FROM wifi_measurement;", null);
+        WifiMeasurementList wifiMeasurements = new WifiMeasurementList();
         while(wifiMeasurementIterator.moveToNext()){
-            Utils.log("Attempting to send wifiMeasurement NR: "+wifiMeasurementIterator.getPosition());
-            boolean successful = false;
-            int currentAttempts = 0;
-            while (currentAttempts < maxRetries && !successful) {
-                try {
-                    WifiMeasurement wifiMeasurement = getWifiMeasurement(wifiMeasurementIterator);
-                    if (wifiMeasurement != null){
-                        sendMeasurementToRemote(wifiMeasurement);
-                    }
-                    successful = true;
-                } catch (IOException e) {
-                    Utils.log(e);
-                    try{
-                        Thread.sleep(waitTimeInMillis);
-                    }
-                    catch(InterruptedException ie){
-                        Utils.log(ie);
-                    }
+            wifiMeasurements.addMeasurement(getWifiMeasurement(wifiMeasurementIterator));
+        }
+        if (wifiMeasurements.isEmpty()){
+            return;
+        }
+
+        boolean successful = false;
+        int currentAttempts = 0;
+        while (currentAttempts < maxRetries && !successful) {
+            try {
+                sendMeasurementsToRemote(wifiMeasurements);
+                successful = true;
+            } catch (IOException e) {
+                Utils.log(e);
+                try{
+                    Thread.sleep(waitTimeInMillis);
                 }
-                currentAttempts++;
+                catch(InterruptedException ie){
+                    Utils.log(ie);
+                }
             }
+            currentAttempts++;
         }
         db.execSQL("DELETE FROM wifi_measurement;");
     }

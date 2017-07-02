@@ -28,8 +28,7 @@ public class StartSyncReceiver extends BroadcastReceiver {
         alarm.cancel(pendingIntent);
         if(Build.VERSION.SDK_INT < 19) {
             alarm.set(AlarmManager.RTC, System.currentTimeMillis() + StartSyncReceiver.START_INTERVAL, pendingIntent);
-        }
-        else{
+        }else{
             alarm.setExact(AlarmManager.RTC, System.currentTimeMillis() + StartSyncReceiver.START_INTERVAL, pendingIntent);
         }
     }

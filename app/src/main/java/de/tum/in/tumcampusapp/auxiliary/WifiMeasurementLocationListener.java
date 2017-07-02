@@ -18,9 +18,15 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 public class WifiMeasurementLocationListener implements LocationListener{
     private Context context;
     private WifiMeasurement wifiMeasurement;
+    //MAX_MILLISECONDS_PASSED defines the maximum time we wait until a location was found before throwing
+    //the measurement away
     private static final int MAX_MILLISECONDS_PASSED = 3000;
+    //MINIMUM_ACCURACY_IN_METERS defines the minimum location accuracy. If the location is less
+    //accurate the measurement is thrown away
     private static final int MINIMUM_ACCURACY_IN_METERS = 25;
-    private final long measurementTakenInMillis;
+    //The Calendar-time we filled the measurement with wifi information, meaning that location information
+    //is not yet generated
+    private long measurementTakenInMillis;
     public WifiMeasurementLocationListener(Context context, WifiMeasurement wifiMeasurement, long measurementTakenInMillis){
         this.context = context;
         this.wifiMeasurement = wifiMeasurement;
@@ -32,28 +38,30 @@ public class WifiMeasurementLocationListener implements LocationListener{
      * If it fulfills the minimum requirements to be stored, it is then saved to the local database.
      * @param location
      */
-        @Override
-        public void onLocationChanged(Location location) {
-            String date = Utils.getDateString(Calendar.getInstance().getTime());
-            WifiMeasurementManager wifiMeasurementManager = new WifiMeasurementManager(context);
-            if (Calendar.getInstance().getTimeInMillis() - measurementTakenInMillis > MAX_MILLISECONDS_PASSED) {
-                Utils.log("Wifi Measurement thrown away, location stale!");
-                return;
-            }
-            if (location.getAccuracy() < MINIMUM_ACCURACY_IN_METERS){
-                wifiMeasurement.setAccuracyInMeters(location.getAccuracy());
-                wifiMeasurement.setLatitude(location.getLatitude());
-                wifiMeasurement.setLongitude(location.getLongitude());
-                wifiMeasurementManager.insertWifiMeasurement(wifiMeasurement);
-            }
-        }
+     @Override
+     public void onLocationChanged(Location location) {
+         String date = Utils.getDateString(Calendar.getInstance().getTime());
+         WifiMeasurementManager wifiMeasurementManager = new WifiMeasurementManager(context);
+         //Since onLocationChanged can take time, this condition decides, whether the found location is
+         //already too old (MAX_MILLISECONDS_PASSED) for being used for the measurement data (dBm etc...),
+         //which were originally taken at measurementTakenInMillis
+         boolean locationFixTookTooLong = Calendar.getInstance().getTimeInMillis() - measurementTakenInMillis > MAX_MILLISECONDS_PASSED;
+         if (location.getAccuracy() >= MINIMUM_ACCURACY_IN_METERS || locationFixTookTooLong) {
+             Utils.log("Wifi Measurement thrown away");
+             return;
+         }
+         wifiMeasurement.setAccuracyInMeters(location.getAccuracy());
+         wifiMeasurement.setLatitude(location.getLatitude());
+         wifiMeasurement.setLongitude(location.getLongitude());
+         wifiMeasurementManager.insertWifiMeasurement(wifiMeasurement);
+     }
 
-        @Override
-        public void onStatusChanged(String status, int i, Bundle bundle) {}
+     @Override
+     public void onStatusChanged(String status, int i, Bundle bundle) {}
 
-        @Override
-        public void onProviderEnabled(String status) {}
+     @Override
+     public void onProviderEnabled(String status) {}
 
-        @Override
-        public void onProviderDisabled(String status) {}
+     @Override
+     public void onProviderDisabled(String status) {}
 }

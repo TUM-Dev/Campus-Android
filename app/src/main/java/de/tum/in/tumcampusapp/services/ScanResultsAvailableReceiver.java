@@ -31,7 +31,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
  */
 public class ScanResultsAvailableReceiver extends BroadcastReceiver {
     private static final String SHOULD_SHOW = "wifi_setup_notification_dismissed";
-    private static final int MINIMUM_BATTERY_PERCENTAGE = 50;
+    private LocationManager locationManager;
 
     @Override
     /**
@@ -51,33 +51,49 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             return;
         }
 
+        // Test if user has eduroam configured already
+        boolean eduroamConfiguredAlready = EduroamManager.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18;
+
+        //Initialize locationManager for generating location information for wifimeasurements
+        if(locationManager == null){
+            locationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        }
+        //Check if locations are enabled
+        boolean locationsEnabled = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean wifiScansEnabled  = Utils.getInternalSettingBool(context,"WIFI_SCANS_ALLOWED", true);
+        boolean nextScanScheduled = false;
         WifiScanHandler wifiScanHandler = WifiScanHandler.getInstance(context);
         List<ScanResult> scan = wifi.getScanResults();
-        boolean networkFound = false;
         for (final ScanResult network : scan) {
             //skips if network is not either eduroam or lrz network
             //otherwise stores it to the local db (which gets synced to remote later) with information like dBm
             if (network.SSID.equals("eduroam")){
-                showNotification(context);
+                if (!eduroamConfiguredAlready){
+                    showNotification(context);
+                }
             }else if(network.SSID.equals("lrz")){
             }else{
                 continue;
             }
-            networkFound = true;
-            storeWifiMeasurement(context, network);
-        }
-        //if the battery level is above 50% and there's still an eduroam/lrz network visible
-        //schedule another scan
-        if (networkFound && Utils.getBatteryLevel(context) >= MINIMUM_BATTERY_PERCENTAGE){
-            wifiScanHandler.startRepetition();
-            Utils.log("WifiScanHandler rescheduled");
-        }else{
-            Utils.log("WifiScanHandler stopped");
+            if (locationsEnabled && wifiScansEnabled){
+                storeWifiMeasurement(context, network);
+                nextScanScheduled = true;
+            }
         }
 
-        // Test if user has eduroam configured already
-        if (EduroamManager.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18) {
-            return;
+        if (nextScanScheduled){
+            //WIFI_SCAN_MINIMUM_BATTERY_LEVEL is used to decide, whether another Wifi-Scan is initiated on
+            //encountering an eduroam/lrz network. If the battery is lower, no new automatic scan will be
+            //scheduled. This setting can be used as additional way to limit battery consumption and leaves
+            //the user more freedom in deciding, when to scan.
+            float currentBattery = Utils.getBatteryLevel(context);
+            float minimumBattery = Utils.getInternalSettingFloat(context,"WIFI_SCAN_MINIMUM_BATTERY_LEVEL",50.0f);
+            if (currentBattery > minimumBattery){
+                wifiScanHandler.startRepetition();
+                Utils.log("WifiScanHandler rescheduled");
+            }else{
+                Utils.log("WifiScanHandler stopped");
+            }
         }
 
         //???
@@ -95,12 +111,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
      * @param scanResult
      */
 
-    private void storeWifiMeasurement(Context context, ScanResult scanResult){
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            Utils.log("Permission not granted for FINE location scan in ScanResultsAvailableReceiver");
-            return;
-        }
-        LocationManager locationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+    private void storeWifiMeasurement(Context context, ScanResult scanResult) throws SecurityException{
         Criteria criteria = new Criteria();
         criteria.setVerticalAccuracy(Criteria.ACCURACY_FINE);
         criteria.setHorizontalAccuracy(Criteria.ACCURACY_FINE);
