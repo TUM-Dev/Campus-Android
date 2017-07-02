@@ -16,7 +16,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * and start BackgroundService if enabled in settings
  */
 public class StartSyncReceiver extends BroadcastReceiver {
-    private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR * 3;
+    private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR*3;
 
     private static void setAlarm(Context context) {
         // Intent to call on alarm

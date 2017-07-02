@@ -31,7 +31,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
  */
 public class ScanResultsAvailableReceiver extends BroadcastReceiver {
     private static final String SHOULD_SHOW = "wifi_setup_notification_dismissed";
-    private LocationManager locationManager;
+    private static LocationManager locationManager;
 
     @Override
     /**
@@ -51,13 +51,13 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             return;
         }
 
-        // Test if user has eduroam configured already
-        boolean eduroamConfiguredAlready = EduroamManager.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18;
-
-        //Initialize locationManager for generating location information for wifimeasurements
         if(locationManager == null){
             locationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         }
+
+        // Test if user has eduroam configured already
+        boolean eduroamConfiguredAlready = EduroamManager.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18;
+
         //Check if locations are enabled
         boolean locationsEnabled = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         boolean wifiScansEnabled  = Utils.getInternalSettingBool(context,"WIFI_SCANS_ALLOWED", true);
@@ -113,7 +113,6 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
 
     private void storeWifiMeasurement(Context context, ScanResult scanResult) throws SecurityException{
         Criteria criteria = new Criteria();
-        criteria.setVerticalAccuracy(Criteria.ACCURACY_FINE);
         criteria.setHorizontalAccuracy(Criteria.ACCURACY_FINE);
         criteria.setBearingRequired(false);
         criteria.setAltitudeRequired(false);

@@ -87,6 +87,7 @@ public class WifiMeasurementManager extends AbstractManager {
             wifiMeasurements.addMeasurement(getWifiMeasurement(wifiMeasurementIterator));
         }
         if (wifiMeasurements.isEmpty()){
+            Utils.log("WifiMeasurements Empty");
             return;
         }
 

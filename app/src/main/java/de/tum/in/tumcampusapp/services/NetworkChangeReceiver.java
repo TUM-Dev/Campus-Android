@@ -7,6 +7,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import de.tum.in.tumcampusapp.auxiliary.Utils;
+
 public class NetworkChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -14,7 +16,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         NetworkInfo info = conManager.getActiveNetworkInfo();
         if (info == null) return;
         if (info.isConnected()) {
-            Log.d("NetworkChange ", "YES");
+            Utils.log("WifiStateChange");
             WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             wm.startScan();
         }

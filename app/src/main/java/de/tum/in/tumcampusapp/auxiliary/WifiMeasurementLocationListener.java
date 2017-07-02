@@ -40,16 +40,14 @@ public class WifiMeasurementLocationListener implements LocationListener{
      */
      @Override
      public void onLocationChanged(Location location) {
-         String date = Utils.getDateString(Calendar.getInstance().getTime());
-         WifiMeasurementManager wifiMeasurementManager = new WifiMeasurementManager(context);
          //Since onLocationChanged can take time, this condition decides, whether the found location is
          //already too old (MAX_MILLISECONDS_PASSED) for being used for the measurement data (dBm etc...),
          //which were originally taken at measurementTakenInMillis
          boolean locationFixTookTooLong = Calendar.getInstance().getTimeInMillis() - measurementTakenInMillis > MAX_MILLISECONDS_PASSED;
          if (location.getAccuracy() >= MINIMUM_ACCURACY_IN_METERS || locationFixTookTooLong) {
-             Utils.log("Wifi Measurement thrown away");
              return;
          }
+         WifiMeasurementManager wifiMeasurementManager = new WifiMeasurementManager(context);
          wifiMeasurement.setAccuracyInMeters(location.getAccuracy());
          wifiMeasurement.setLatitude(location.getLatitude());
          wifiMeasurement.setLongitude(location.getLongitude());
