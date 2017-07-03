@@ -23,6 +23,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.WifiMeasurementLocationListener;
 import de.tum.in.tumcampusapp.managers.EduroamManager;
+import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 
 /**
@@ -60,21 +61,21 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
 
         //Check if locations are enabled
         boolean locationsEnabled = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean wifiScansEnabled  = Utils.getInternalSettingBool(context,"WIFI_SCANS_ALLOWED", true);
+        boolean wifiScansEnabled  = Utils.getInternalSettingBool(context, WifiMeasurementManager.WIFI_SCANS_ALLOWED, false);
         boolean nextScanScheduled = false;
         WifiScanHandler wifiScanHandler = WifiScanHandler.getInstance(context);
         List<ScanResult> scan = wifi.getScanResults();
         for (final ScanResult network : scan) {
             //skips if network is not either eduroam or lrz network
-            //otherwise stores it to the local db (which gets synced to remote later) with information like dBm
-            if (network.SSID.equals("eduroam")){
-                if (!eduroamConfiguredAlready){
-                    showNotification(context);
-                }
-            }else if(network.SSID.equals("lrz")){
-            }else{
+            if(!(network.SSID.equals("eduroam") || network.SSID.equals("lrz"))){
                 continue;
             }
+            //if eduroam is not configured, set it up
+            if (network.SSID.equals("eduroam") && !eduroamConfiguredAlready){
+                showNotification(context);
+            }
+
+            //if user allowed us to store his signal strength, store measurement to the local DB and later sync to remote
             if (locationsEnabled && wifiScansEnabled){
                 storeWifiMeasurement(context, network);
                 nextScanScheduled = true;
@@ -87,7 +88,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             //scheduled. This setting can be used as additional way to limit battery consumption and leaves
             //the user more freedom in deciding, when to scan.
             float currentBattery = Utils.getBatteryLevel(context);
-            float minimumBattery = Utils.getInternalSettingFloat(context,"WIFI_SCAN_MINIMUM_BATTERY_LEVEL",50.0f);
+            float minimumBattery = Utils.getInternalSettingFloat(context,WifiMeasurementManager.WIFI_SCAN_MINIMUM_BATTERY_LEVEL,50.0f);
             if (currentBattery > minimumBattery){
                 wifiScanHandler.startRepetition();
                 Utils.log("WifiScanHandler rescheduled");

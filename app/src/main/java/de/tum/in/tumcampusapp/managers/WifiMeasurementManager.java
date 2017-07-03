@@ -2,16 +2,19 @@ package de.tum.in.tumcampusapp.managers;
 import android.content.Context;
 import android.database.Cursor;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
-import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurementList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class WifiMeasurementManager extends AbstractManager {
+    public static final String WIFI_SCANS_ALLOWED = "WIFI_SCANS_ALLOWED";
+    public static final String WIFI_SCAN_MINIMUM_BATTERY_LEVEL = "WIFI_SCAN_MINIMUM_BATTERY_LEVEL";
     public WifiMeasurementManager(Context context) {
         super(context);
         db.execSQL("CREATE TABLE IF NOT EXISTS wifi_measurement ("
@@ -36,7 +39,7 @@ public class WifiMeasurementManager extends AbstractManager {
      * @throws IOException
      */
 
-    private void sendMeasurementsToRemote(final WifiMeasurementList wifiMeasurements) throws IOException {
+    private void sendMeasurementsToRemote(final WifiMeasurement[] wifiMeasurements) throws IOException {
         TUMCabeClient tumCabeClient = TUMCabeClient.getInstance(mContext);
         tumCabeClient.createMeasurements(wifiMeasurements, new Callback<TUMCabeStatus>() {
             @Override
@@ -81,21 +84,26 @@ public class WifiMeasurementManager extends AbstractManager {
      * The wait time after a failed attempt to send a measurement to the server
      */
     public void uploadMeasurementsToRemote(int maxRetries, int waitTimeInMillis) {
+        //Collect wifiMeasurements
         Cursor wifiMeasurementIterator = db.rawQuery("SELECT * FROM wifi_measurement;", null);
-        WifiMeasurementList wifiMeasurements = new WifiMeasurementList();
+        ArrayList<WifiMeasurement> wifiMeasurements = new ArrayList<>();
         while(wifiMeasurementIterator.moveToNext()){
-            wifiMeasurements.addMeasurement(getWifiMeasurement(wifiMeasurementIterator));
+            wifiMeasurements.add(getWifiMeasurement(wifiMeasurementIterator));
         }
         if (wifiMeasurements.isEmpty()){
             Utils.log("WifiMeasurements Empty");
             return;
         }
 
+        WifiMeasurement[] measurementsAsArray = new WifiMeasurement[wifiMeasurements.size()];
+        measurementsAsArray = wifiMeasurements.toArray(measurementsAsArray);
+
+        //Try to send them to the server
         boolean successful = false;
         int currentAttempts = 0;
         while (currentAttempts < maxRetries && !successful) {
             try {
-                sendMeasurementsToRemote(wifiMeasurements);
+                sendMeasurementsToRemote(measurementsAsArray);
                 successful = true;
             } catch (IOException e) {
                 Utils.log(e);

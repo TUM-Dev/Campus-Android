@@ -21,7 +21,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
-import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurementList;
+import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -217,7 +217,7 @@ public class TUMCabeClient {
         service.deviceUploadGcmToken(verification).enqueue(cb);
     }
 
-    public void createMeasurements(WifiMeasurementList wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException{
+    public void createMeasurements(WifiMeasurement[] wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException{
         service.createMeasurements(wifiMeasurementList).enqueue(cb);
     }
 
@@ -311,7 +311,6 @@ public class TUMCabeClient {
 
         //WifiHeatmap
         @POST(API_WIFI_HEATMAP+"create_measurements/")
-        Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurementList wifiMeasurementList);
-
+        Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
     }
 }
