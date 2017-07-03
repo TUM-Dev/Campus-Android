@@ -3,7 +3,6 @@ import android.content.Context;
 import android.database.Cursor;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
