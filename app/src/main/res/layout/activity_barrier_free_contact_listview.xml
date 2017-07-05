@@ -32,10 +32,12 @@
             android:autoLink="email"
             android:text="" />
 
-        <Button
+        <TextView
             android:id="@+id/barrierfreeContactListViewTumOnlineMore"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
+            android:onClick="onClick"
+            android:clickable="true"
             android:visibility="gone"
             android:text="" />
     </LinearLayout>

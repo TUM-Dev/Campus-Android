@@ -10,13 +10,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
 
 public class TUMBarrierFreeRequest {
     // Json keys
@@ -24,61 +25,105 @@ public class TUMBarrierFreeRequest {
     public static final String KEY_PERSON_TELEPHONE = "telephone";
     public static final String KEY_PERSON_EMAIL= "email";
     public static final String KEY_PERSON_FACULTY = "faculty";
-    public static final String KEY_PERSON_OFFICE = "office";
-    public static final String KEY_PERSON_OFFICEHOUR = "officeHour";
+    public static final String KEY_PERSON_TUM_ID = "tumID";
 
     // Api urls
     //private static final String API_BASE_URL = "https://tumcabe.in.tum.de/Api/roomfinder/";
     // local testing
+    // TODO: 7/5/2017 Change to real server when used
     private static final String API_BASE_URL = "http://10.0.2.2/api/barrierfree/";
 
-    private static final String API_URL_RESPONSIBLEPERSON = API_BASE_URL + "persons";
+    private static final String API_URL_RESPONSIBLEPERSON = API_BASE_URL + "contacts";
 
     private final NetUtils net;
 
+    private AsyncTask<Void, Void, List<BarrierfreeContact>> contactBackgroundTask;
 
     public TUMBarrierFreeRequest(Context context) {
         net = new NetUtils(context);
     }
 
-    public List<Map<String, String>> fetchResponsiblePersonList() {
+
+    public void fetchContactsInteractive(final Context context,
+                                       final TUMBarrierFreeContactsRequestFetchListener listener) {
+
+        // fetch information in a background task and show progress dialog in
+        // meantime
+        contactBackgroundTask = new AsyncTask<Void, Void, List<BarrierfreeContact>>() {
+            boolean isOnline;
+
+            @Override
+            protected List<BarrierfreeContact> doInBackground(Void... params) {
+                isOnline = NetUtils.isConnected(context);
+                if (!isOnline) {
+                    // not online, fetch does not make sense
+                    return null;
+                }
+                // we are online, return fetch result
+
+                return fetchResponsiblePersonList();
+            }
+
+            @Override
+            protected void onPostExecute(List<BarrierfreeContact> result) {
+                // handle result
+                if (!isOnline) {
+                    listener.onNoInternetError();
+                    return;
+                }
+                if (result == null) {
+                    listener.onFetchError(context
+                            .getString(R.string.empty_result));
+                    return;
+                }
+                // If there could not be found any problems return usual on
+                // Fetch method
+                listener.onFetch(result);
+            }
+        };
+
+        contactBackgroundTask.execute();
+    }
+
+    public List<BarrierfreeContact> fetchResponsiblePersonList() {
 
         String url = API_URL_RESPONSIBLEPERSON;
         Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
 
-        List<Map<String, String>> personList = new ArrayList<>();
+        List<BarrierfreeContact> contactsList = new ArrayList<>();
         try {
             if (jsonArray.isPresent()) {
                 JSONArray arr = jsonArray.get();
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject obj = arr.getJSONObject(i);
-                    Map<String, String> roomMap = new HashMap<>();
-                    roomMap.put(KEY_PERSON_NAME, obj.getString(KEY_PERSON_NAME));
-                    roomMap.put(KEY_PERSON_TELEPHONE, obj.getString(KEY_PERSON_TELEPHONE));
-                    roomMap.put(KEY_PERSON_EMAIL, obj.getString(KEY_PERSON_EMAIL));
-                    roomMap.put(KEY_PERSON_FACULTY, obj.getString(KEY_PERSON_FACULTY));
-                    roomMap.put(KEY_PERSON_OFFICE, obj.getString(KEY_PERSON_OFFICE));
-                    roomMap.put(KEY_PERSON_OFFICEHOUR, obj.getString(KEY_PERSON_OFFICEHOUR));
 
-                    // adding HashList to ArrayList
-                    personList.add(roomMap);
+                    String name = obj.getString(KEY_PERSON_NAME);
+                    String phone = obj.getString(KEY_PERSON_TELEPHONE);
+                    String email = obj.getString(KEY_PERSON_EMAIL);
+                    String faculty = obj.getString(KEY_PERSON_FACULTY);
+                    String tumID = obj.getString(KEY_PERSON_TUM_ID);
+
+                    BarrierfreeContact contact = new BarrierfreeContact();
+                    contact.setName(name);
+                    contact.setFaculty(faculty);
+                    contact.setPhone(phone);
+                    contact.setEmail(email);
+                    contact.setTumonlineID(tumID);
+
+                    contactsList.add(contact);
                 }
             }
         } catch (JSONException e) {
             Utils.log(e);
         }
 
-        return personList;
+        return contactsList;
     }
 
-    public List<String> getNames(){
-        List<String> names = new ArrayList<>();
-        List<Map<String, String>> maps = fetchResponsiblePersonList();
-        for (Map<String, String>map: maps) {
-            System.out.println(map.get(KEY_PERSON_NAME));
-            names.add(map.get(KEY_PERSON_NAME));
+    public void cancelContactsRequest(boolean mayInterruptIfRunning) {
+        // Cancel background task just if one has been established
+        if (contactBackgroundTask != null) {
+            contactBackgroundTask.cancel(mayInterruptIfRunning);
         }
-
-        return names;
     }
 }

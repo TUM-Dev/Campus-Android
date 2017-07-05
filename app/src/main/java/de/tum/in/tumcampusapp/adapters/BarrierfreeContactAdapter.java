@@ -1,18 +1,21 @@
 package de.tum.in.tumcampusapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.PersonsDetailsActivity;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
+import de.tum.in.tumcampusapp.models.tumo.Person;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -23,6 +26,8 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
     private final List<String> headerIdIndex;
     private final LayoutInflater inflater;
 
+    private Context context;
+
     public static BarrierfreeContactAdapter newAdapter(Context context, List<BarrierfreeContact> contactPersons){
         contacts = contactPersons;
         return new BarrierfreeContactAdapter(context);
@@ -30,6 +35,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
 
     private BarrierfreeContactAdapter(Context context) {
         inflater = LayoutInflater.from(context);
+        this.context = context;
 
         //// TODO: 7/5/2017 Use a better way to create header id
         headerIdIndex = new ArrayList<>();
@@ -58,7 +64,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         View view = convertView;
         if(view == null){
             view = inflater.inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
@@ -71,7 +77,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
                     .findViewById(R.id.barrierfreeContactListViewPhone);
             holder.email = (TextView) view
                     .findViewById(R.id.barrierfreeContactListViewEmail);
-            holder.moreButton = (Button) view
+            holder.more = (TextView) view
                     .findViewById(R.id.barrierfreeContactListViewTumOnlineMore);
 
             view.setTag(holder);
@@ -80,7 +86,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
         }
 
         // display information of current person
-        BarrierfreeContact contact = contacts.get(position);
+        final BarrierfreeContact contact = contacts.get(position);
 
         if(contact != null){
             holder.name.setText(contact.getName());
@@ -88,16 +94,27 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
             holder.email.setText(contact.getEmail());
 
             // Has information in tumonline
-            if (!contact.getTumonlineID().equals("")){
-                holder.moreButton.setVisibility(View.VISIBLE);
-                holder.moreButton.setText("More");
-                holder.moreButton.setOnClickListener(new View.OnClickListener() {
+            if (!contact.getTumonlineID().equals("null")){
+                // Jump to PersonDetail Activity
+                holder.more.setVisibility(View.VISIBLE);
+                holder.more.setText("More");
+                holder.more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //// TODO: 7/5/2017 intent to new PersonDetail Activity
-                        System.out.println("Button pressed.");
+                        Person person = new Person();
+                        person.setName(contact.getName());
+                        person.setId(contact.getTumonlineID());
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("personObject", person);
+
+                        Intent intent = new Intent(context, PersonsDetailsActivity.class);
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
                     }
                 });
+            } else {
+                holder.more.setVisibility(View.GONE);
             }
         }
 
@@ -137,7 +154,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
         TextView name;
         TextView phone;
         TextView email;
-        Button moreButton;
+        TextView more;
     }
 
     static class HeaderViewHolder {
