@@ -503,9 +503,15 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/barrier_free"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".activities.MainActivity"></activity>
+        <activity
+            android:name=".activities.BarrierFreeContactActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/contact_person"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.BarrierFreeInfoActivity"
+            >
         </activity>
-
         <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".widgets.MensaWidget"
@@ -557,6 +563,7 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_mvv" />
+
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -588,10 +595,12 @@
 
         <receiver
             android:name=".widgets.TimetableWidget"
-            android:label="@string/timetable_widget">>
+            android:label="@string/timetable_widget">
+            >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/timetable_widget_info" />
@@ -624,10 +633,10 @@
         </receiver>
 
         <!-- Used to set Notification for favoriteDish -->
-        <receiver android:name="de.tum.in.tumcampusapp.services.FavoriteDishReceiver" />
+        <receiver android:name=".services.FavoriteDishReceiver" />
 
         <service
-            android:name="de.tum.in.tumcampusapp.services.FavoriteDishService"
+            android:name=".services.FavoriteDishService"
             android:enabled="true" />
         <service
             android:name=".services.DownloadService"

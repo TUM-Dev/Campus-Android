@@ -30,9 +30,9 @@ public class TUMBarrierFreeRequest {
     // Api urls
     //private static final String API_BASE_URL = "https://tumcabe.in.tum.de/Api/roomfinder/";
     // local testing
-    private static final String API_BASE_URL = "http://10.0.2.2/Api/barrierfree/";
+    private static final String API_BASE_URL = "http://10.0.2.2/api/barrierfree/";
 
-    private static final String API_URL_RESPONSIBLEPERSON = API_BASE_URL + "persons/";
+    private static final String API_URL_RESPONSIBLEPERSON = API_BASE_URL + "persons";
 
     private final NetUtils net;
 
@@ -69,5 +69,16 @@ public class TUMBarrierFreeRequest {
         }
 
         return personList;
+    }
+
+    public List<String> getNames(){
+        List<String> names = new ArrayList<>();
+        List<Map<String, String>> maps = fetchResponsiblePersonList();
+        for (Map<String, String>map: maps) {
+            System.out.println(map.get(KEY_PERSON_NAME));
+            names.add(map.get(KEY_PERSON_NAME));
+        }
+
+        return names;
     }
 }
