@@ -106,7 +106,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
             holder.email.setText(contact.getEmail());
 
             // Has information in tumonline
-            if (!contact.getTumonlineID().equals("null")){
+            if (!contact.getTumonlineID().equals("null") && !contact.getTumonlineID().equals("")){
                 // Jump to PersonDetail Activity
                 holder.more.setVisibility(View.VISIBLE);
                 holder.more.setText(context.getString(R.string.more_info));
