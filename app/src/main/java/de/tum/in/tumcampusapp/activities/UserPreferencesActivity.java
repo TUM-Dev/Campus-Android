@@ -58,7 +58,7 @@ public class UserPreferencesActivity extends BaseActivity  implements
         args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
         fragment.setArguments(args);
 
-        ft.add(R.id.settings_frame, fragment, preferenceScreen.getKey());
+        ft.replace(R.id.settings_frame, fragment, preferenceScreen.getKey());
         ft.addToBackStack(preferenceScreen.getKey());
         ft.commit();
         return true;
