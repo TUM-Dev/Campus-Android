@@ -6,16 +6,18 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
 
 /**
  * Receives on boot completed broadcast, sets alarm for next sync-try
  * and start BackgroundService if enabled in settings
  */
 public class StartSyncReceiver extends BroadcastReceiver {
-    private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR * 3;
+    private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR*3;
 
     private static void setAlarm(Context context) {
         // Intent to call on alarm
@@ -25,7 +27,11 @@ public class StartSyncReceiver extends BroadcastReceiver {
         // Set alarm
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pendingIntent);
-        alarm.set(AlarmManager.RTC, System.currentTimeMillis() + StartSyncReceiver.START_INTERVAL, pendingIntent);
+        if(Build.VERSION.SDK_INT < 19) {
+            alarm.set(AlarmManager.RTC, System.currentTimeMillis() + StartSyncReceiver.START_INTERVAL, pendingIntent);
+        }else{
+            alarm.setExact(AlarmManager.RTC, System.currentTimeMillis() + StartSyncReceiver.START_INTERVAL, pendingIntent);
+        }
     }
 
     @Override
@@ -54,5 +60,8 @@ public class StartSyncReceiver extends BroadcastReceiver {
 
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
         context.startService(new Intent(context, SilenceService.class));
+        if (intent.getAction() != "android.net.wifi.WIFI_STATE_CHANGED" && Utils.getInternalSettingBool(context, WifiMeasurementManager.WIFI_SCANS_ALLOWED,false)){
+            context.startService(new Intent(context, SendWifiMeasurementService.class));
+        }
     }
 }
