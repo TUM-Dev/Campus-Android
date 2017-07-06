@@ -8,11 +8,11 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.BarrierfreeContactAdapter;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
-import de.tum.in.tumcampusapp.tumonline.TUMBarrierFreeContactsRequestFetchListener;
+import de.tum.in.tumcampusapp.tumonline.TUMBarrierFreeRequestFetchListener;
 import de.tum.in.tumcampusapp.tumonline.TUMBarrierFreeRequest;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class BarrierFreeContactActivity extends BaseActivity implements TUMBarrierFreeContactsRequestFetchListener{
+public class BarrierFreeContactActivity extends BaseActivity implements TUMBarrierFreeRequestFetchListener<BarrierfreeContact> {
 
     public StickyListHeadersListView listview;
     private List<BarrierfreeContact> contacts;
@@ -27,6 +27,11 @@ public class BarrierFreeContactActivity extends BaseActivity implements TUMBarri
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
 
         listview = (StickyListHeadersListView) findViewById(R.id.activity_barrier_free_person_list_view);
 

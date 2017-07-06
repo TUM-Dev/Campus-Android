@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -45,7 +44,7 @@ public class TUMBarrierFreeRequest {
 
 
     public void fetchContactsInteractive(final Context context,
-                                       final TUMBarrierFreeContactsRequestFetchListener listener) {
+                                       final TUMBarrierFreeRequestFetchListener<BarrierfreeContact> listener) {
 
         // fetch information in a background task and show progress dialog in
         // meantime
@@ -103,14 +102,17 @@ public class TUMBarrierFreeRequest {
                     String faculty = obj.getString(KEY_PERSON_FACULTY);
                     String tumID = obj.getString(KEY_PERSON_TUM_ID);
 
-                    BarrierfreeContact contact = new BarrierfreeContact();
-                    contact.setName(name);
-                    contact.setFaculty(faculty);
-                    contact.setPhone(phone);
-                    contact.setEmail(email);
-                    contact.setTumonlineID(tumID);
+                    if (!name.equals("null")){
+                        BarrierfreeContact contact = new BarrierfreeContact();
+                        contact.setName(name);
+                        contact.setFaculty(faculty);
+                        contact.setPhone(phone);
+                        contact.setEmail(email);
+                        contact.setTumonlineID(tumID);
 
-                    contactsList.add(contact);
+                        contactsList.add(contact);
+                    }
+
                 }
             }
         } catch (JSONException e) {

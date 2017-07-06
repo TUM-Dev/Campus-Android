@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.PersonsDetailsActivity;
+import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
 import de.tum.in.tumcampusapp.models.tumo.Person;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -90,14 +93,23 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
 
         if(contact != null){
             holder.name.setText(contact.getName());
-            holder.phone.setText(contact.getPhone());
+
+//            HTMLStringBuffer contentText = new HTMLStringBuffer();
+
+//            contentText.appendField(context.getString(R.string.mobile_phone), contact.getPhone());
+//            holder.phone.setText(Utils.fromHtml(contentText.toString()),
+//                    TextView.BufferType.SPANNABLE);
+
+            holder.phone.setText(contact.getPhone(), TextView.BufferType.SPANNABLE);
+            Linkify.addLinks(holder.phone, Linkify.ALL);
+
             holder.email.setText(contact.getEmail());
 
             // Has information in tumonline
             if (!contact.getTumonlineID().equals("null")){
                 // Jump to PersonDetail Activity
                 holder.more.setVisibility(View.VISIBLE);
-                holder.more.setText("More");
+                holder.more.setText(context.getString(R.string.more_info));
                 holder.more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -145,7 +157,6 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
     @Override
     public long getHeaderId(int i) {
         // return faculty as id for header
-        //// TODO: 7/5/2017 Bug here
         return headerIdIndex.indexOf(contacts.get(i).getFaculty());
     }
 

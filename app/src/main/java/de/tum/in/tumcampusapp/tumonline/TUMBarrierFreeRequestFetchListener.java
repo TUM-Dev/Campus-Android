@@ -7,7 +7,7 @@ import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
 /**
  * Define how to interact with TUMBarrierFreeRequest by activities.
  */
-public interface TUMBarrierFreeContactsRequestFetchListener {
+public interface TUMBarrierFreeRequestFetchListener<T> {
 
     void onNoInternetError();
 
@@ -17,7 +17,7 @@ public interface TUMBarrierFreeContactsRequestFetchListener {
      *
      * @param result this will be the raw return of the fetch
      */
-    void onFetch(List<BarrierfreeContact> result);
+    void onFetch(List<T> result);
 
     /**
      * if the fetchInteractive method will result in null or there is no
