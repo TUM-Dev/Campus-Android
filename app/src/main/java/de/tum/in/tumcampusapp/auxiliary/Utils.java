@@ -3,9 +3,12 @@ package de.tum.in.tumcampusapp.auxiliary;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -435,6 +438,18 @@ public final class Utils {
     }
 
     /**
+     * Sets an internal preference's string value
+     *
+     * @param context Context
+     * @param key     Key
+     * @param value   Value
+     */
+    public static void setInternalSetting(Context context, String key, float value) {
+        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
+        prefs.edit().putFloat(key, value).apply();
+    }
+
+    /**
      * Gets an internal preference's boolean value
      *
      * @param context Context
@@ -488,6 +503,20 @@ public final class Utils {
     public static String getInternalSettingString(Context context, String key, String value) {
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
         return prefs.getString(key, value);
+    }
+
+    /**
+     * Gets an internal preference's float value
+     *
+     * @param context Context
+     * @param key     Key
+     * @param value   Default value
+     * @return The value of the setting or the default value,
+     * if no setting with the specified key exists
+     */
+    public static float getInternalSettingFloat(Context context, String key, float value) {
+        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
+        return prefs.getFloat(key, value);
     }
 
     /**
@@ -554,5 +583,15 @@ public final class Utils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
                 Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY) :
                 Html.fromHtml(source);
+    }
+
+    public static float getBatteryLevel(Context context) {
+        Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        if(level == -1 || scale == -1) {
+            return -1;
+        }
+        return ((float)level / (float)scale) * 100.0f;
     }
 }
