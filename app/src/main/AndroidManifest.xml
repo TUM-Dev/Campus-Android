@@ -503,14 +503,28 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/barrier_free"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity"></activity>
+            android:parentActivityName=".activities.MainActivity">
+        </activity>
         <activity
             android:name=".activities.BarrierFreeContactActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/contact_person"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.BarrierFreeInfoActivity"
-            >
+            android:parentActivityName=".activities.BarrierFreeInfoActivity">
+        </activity>
+        <activity
+            android:name=".activities.BarrierFreeFacilitiesActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/facilities"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.BarrierFreeInfoActivity">
+        </activity>
+        <activity
+            android:name=".activities.BarrierFreeMoreInfoActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/more_info"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.BarrierFreeInfoActivity">
         </activity>
         <!-- receiver for the mensaWidget -->
         <receiver

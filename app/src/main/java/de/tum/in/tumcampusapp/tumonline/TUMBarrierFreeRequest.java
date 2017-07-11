@@ -10,13 +10,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CacheManager;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
+
+import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_BUILDING_TITLE;
+import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_CAMPUS_ID;
+import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_CAMPUS_TITLE;
+import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ARCH_ID;
+import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ROOM_ID;
+import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ROOM_TITLE;
+
 
 public class TUMBarrierFreeRequest {
     // Json keys
@@ -33,10 +43,14 @@ public class TUMBarrierFreeRequest {
     private static final String API_BASE_URL = "http://10.0.2.2/api/barrierfree/";
 
     private static final String API_URL_RESPONSIBLEPERSON = API_BASE_URL + "contacts";
+    private static final String API_URL_LIST_OF_TOILETS = API_BASE_URL + "listOfToilets";
+    private static final String API_URL_LIST_OF_ELEVATORS = API_BASE_URL + "listOfElevators";
 
     private final NetUtils net;
 
     private AsyncTask<Void, Void, List<BarrierfreeContact>> contactBackgroundTask;
+
+    private AsyncTask<Void, Void, List<Map<String, String>>> facilitiesBackgroundTask;
 
     public TUMBarrierFreeRequest(Context context) {
         net = new NetUtils(context);
@@ -82,6 +96,76 @@ public class TUMBarrierFreeRequest {
         };
 
         contactBackgroundTask.execute();
+    }
+
+    public void fetchListOfElevators(final Context context, final TUMRoomFinderRequestFetchListener listener){
+        String url = API_URL_LIST_OF_ELEVATORS;
+        fetchListOfFacilities(context, listener, url);
+    }
+
+    public void fetchListOfToilets(final Context context, final TUMRoomFinderRequestFetchListener listener){
+        String url = API_URL_LIST_OF_TOILETS;
+        fetchListOfFacilities(context, listener, url);
+    }
+
+    private void fetchListOfFacilities(final Context context,
+                                       final TUMRoomFinderRequestFetchListener listener, final String url){
+        facilitiesBackgroundTask = new AsyncTask<Void, Void, List<Map<String, String>>>() {
+
+            boolean isOnline;
+
+            @Override
+            protected List<Map<String, String>> doInBackground(
+                    Void... params) {
+                isOnline = NetUtils.isConnected(context);
+                if (!isOnline) {
+                    return null;
+                }
+
+                Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+
+                List<Map<String, String>> facilitiesList = new ArrayList<>();
+                try {
+                    if (jsonArray.isPresent()) {
+                        JSONArray arr = jsonArray.get();
+                        for (int i = 0; i < arr.length(); i++) {
+                            JSONObject obj = arr.getJSONObject(i);
+                            Map<String, String> roomMap = new HashMap<>();
+                            roomMap.put(KEY_CAMPUS_ID, obj.getString(KEY_CAMPUS_ID));
+                            roomMap.put(KEY_CAMPUS_TITLE, obj.getString(KEY_CAMPUS_TITLE));
+                            roomMap.put(KEY_BUILDING_TITLE, obj.getString(KEY_BUILDING_TITLE));
+                            roomMap.put(KEY_ROOM_TITLE, obj.getString(KEY_ROOM_TITLE));
+                            roomMap.put(KEY_ARCH_ID, obj.getString(KEY_ARCH_ID));
+                            roomMap.put(KEY_ROOM_ID, obj.getString(KEY_ROOM_ID));
+
+                            facilitiesList.add(roomMap);
+                        }
+                    }
+                } catch (JSONException e) {
+                    Utils.log(e);
+                }
+
+                return facilitiesList;
+            }
+
+            @Override
+            protected void onPostExecute(List<Map<String, String>> result) {
+                // handle result
+                if (!isOnline) {
+                    listener.onNoInternetError();
+                    return;
+                }
+                if (result == null) {
+                    listener.onFetchError(context
+                            .getString(R.string.empty_result));
+                    return;
+                }
+                listener.onFetch(result);
+            }
+
+        };
+
+        facilitiesBackgroundTask.execute();
     }
 
     public List<BarrierfreeContact> fetchResponsiblePersonList() {

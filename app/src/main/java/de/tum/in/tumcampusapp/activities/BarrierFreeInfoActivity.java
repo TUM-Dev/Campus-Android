@@ -34,7 +34,7 @@ public class BarrierFreeInfoActivity extends BaseActivity {
                         intent = new Intent(BarrierFreeInfoActivity.this, BarrierFreeFacilitiesActivity.class);
                         break;
                     case 2:
-                        intent = new Intent(BarrierFreeInfoActivity.this, BarrierFreeMoreActivity.class);
+                        intent = new Intent(BarrierFreeInfoActivity.this, BarrierFreeMoreInfoActivity.class);
                         break;
                     default:
                         intent = new Intent();

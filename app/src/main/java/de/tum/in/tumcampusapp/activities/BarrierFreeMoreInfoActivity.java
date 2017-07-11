@@ -5,9 +5,9 @@ import android.os.Bundle;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 
-public class BarrierFreeFacilitiesActivity extends BaseActivity{
-    public BarrierFreeFacilitiesActivity(){
-        super(R.layout.activity_barrier_free_facilities);
+public class BarrierFreeMoreInfoActivity extends BaseActivity{
+    public BarrierFreeMoreInfoActivity(){
+        super(R.layout.activity_barrier_free_more_info);
     }
 
     @Override
