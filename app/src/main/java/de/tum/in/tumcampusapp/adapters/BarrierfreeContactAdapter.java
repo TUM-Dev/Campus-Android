@@ -94,12 +94,6 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
         if(contact != null){
             holder.name.setText(contact.getName());
 
-//            HTMLStringBuffer contentText = new HTMLStringBuffer();
-
-//            contentText.appendField(context.getString(R.string.mobile_phone), contact.getPhone());
-//            holder.phone.setText(Utils.fromHtml(contentText.toString()),
-//                    TextView.BufferType.SPANNABLE);
-
             holder.phone.setText(contact.getPhone(), TextView.BufferType.SPANNABLE);
             Linkify.addLinks(holder.phone, Linkify.ALL);
 
