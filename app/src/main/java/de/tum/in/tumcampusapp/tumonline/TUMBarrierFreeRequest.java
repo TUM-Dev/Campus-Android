@@ -30,11 +30,15 @@ import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ROOM_TIT
 
 public class TUMBarrierFreeRequest {
     // Json keys
+    // contact
     public static final String KEY_PERSON_NAME = "name";
     public static final String KEY_PERSON_TELEPHONE = "telephone";
     public static final String KEY_PERSON_EMAIL= "email";
     public static final String KEY_PERSON_FACULTY = "faculty";
     public static final String KEY_PERSON_TUM_ID = "tumID";
+
+    // facilities
+    public static final String KEY_MAP_TITLE = "description";
 
     // Api urls
     //private static final String API_BASE_URL = "https://tumcabe.in.tum.de/Api/roomfinder/";
@@ -42,60 +46,16 @@ public class TUMBarrierFreeRequest {
     // TODO: 7/5/2017 Change to real server when used
     private static final String API_BASE_URL = "http://10.0.2.2/api/barrierfree/";
 
-    private static final String API_URL_RESPONSIBLEPERSON = API_BASE_URL + "contacts";
-    private static final String API_URL_LIST_OF_TOILETS = API_BASE_URL + "listOfToilets";
-    private static final String API_URL_LIST_OF_ELEVATORS = API_BASE_URL + "listOfElevators";
+    public static final String API_URL_RESPONSIBLEPERSON = API_BASE_URL + "contacts";
+    public static final String API_URL_LIST_OF_TOILETS = API_BASE_URL + "listOfToilets";
+    public static final String API_URL_LIST_OF_ELEVATORS = API_BASE_URL + "listOfElevators";
 
     private final NetUtils net;
-
-    private AsyncTask<Void, Void, List<BarrierfreeContact>> contactBackgroundTask;
 
     private AsyncTask<Void, Void, List<Map<String, String>>> facilitiesBackgroundTask;
 
     public TUMBarrierFreeRequest(Context context) {
         net = new NetUtils(context);
-    }
-
-
-    public void fetchContactsInteractive(final Context context,
-                                       final TUMBarrierFreeRequestFetchListener<BarrierfreeContact> listener) {
-
-        // fetch information in a background task and show progress dialog in
-        // meantime
-        contactBackgroundTask = new AsyncTask<Void, Void, List<BarrierfreeContact>>() {
-            boolean isOnline;
-
-            @Override
-            protected List<BarrierfreeContact> doInBackground(Void... params) {
-                isOnline = NetUtils.isConnected(context);
-                if (!isOnline) {
-                    // not online, fetch does not make sense
-                    return null;
-                }
-                // we are online, return fetch result
-
-                return fetchResponsiblePersonList();
-            }
-
-            @Override
-            protected void onPostExecute(List<BarrierfreeContact> result) {
-                // handle result
-                if (!isOnline) {
-                    listener.onNoInternetError();
-                    return;
-                }
-                if (result == null) {
-                    listener.onFetchError(context
-                            .getString(R.string.empty_result));
-                    return;
-                }
-                // If there could not be found any problems return usual on
-                // Fetch method
-                listener.onFetch(result);
-            }
-        };
-
-        contactBackgroundTask.execute();
     }
 
     public void fetchListOfElevators(final Context context, final TUMRoomFinderRequestFetchListener listener){
@@ -134,6 +94,7 @@ public class TUMBarrierFreeRequest {
                             roomMap.put(KEY_CAMPUS_ID, obj.getString(KEY_CAMPUS_ID));
                             roomMap.put(KEY_CAMPUS_TITLE, obj.getString(KEY_CAMPUS_TITLE));
                             roomMap.put(KEY_BUILDING_TITLE, obj.getString(KEY_BUILDING_TITLE));
+                            roomMap.put(KEY_MAP_TITLE, obj.getString(KEY_MAP_TITLE));
                             roomMap.put(KEY_ROOM_TITLE, obj.getString(KEY_ROOM_TITLE));
                             roomMap.put(KEY_ARCH_ID, obj.getString(KEY_ARCH_ID));
                             roomMap.put(KEY_ROOM_ID, obj.getString(KEY_ROOM_ID));
@@ -206,10 +167,11 @@ public class TUMBarrierFreeRequest {
         return contactsList;
     }
 
-    public void cancelContactsRequest(boolean mayInterruptIfRunning) {
+    public void cancelRequest(boolean mayInterruptIfRunning) {
         // Cancel background task just if one has been established
-        if (contactBackgroundTask != null) {
-            contactBackgroundTask.cancel(mayInterruptIfRunning);
+        if (facilitiesBackgroundTask != null) {
+            facilitiesBackgroundTask.cancel(mayInterruptIfRunning);
         }
     }
+
 }

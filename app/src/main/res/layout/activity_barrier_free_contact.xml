@@ -17,6 +17,11 @@
             android:layout_height="fill_parent"
             android:orientation="vertical">
 
+            <include
+                layout="@layout/layout_all_errors"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
             <se.emilsjolander.stickylistheaders.StickyListHeadersListView
                 android:id="@+id/activity_barrier_free_person_list_view"
                 android:layout_width="match_parent"
@@ -28,5 +33,4 @@
 
     <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer" />
-
 </android.support.v4.widget.DrawerLayout>
