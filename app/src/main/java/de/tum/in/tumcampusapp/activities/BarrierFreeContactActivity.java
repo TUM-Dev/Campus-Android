@@ -2,13 +2,6 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.os.Bundle;
 
-import com.google.common.base.Optional;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -26,19 +19,22 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
     private TUMBarrierFreeRequest request;
 
     public BarrierFreeContactActivity() {
-        super(R.layout.activity_barrier_free_contact);
+        super(R.layout.activity_barrier_free_list_info);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // action bar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        listview = (StickyListHeadersListView) findViewById(R.id.activity_barrier_free_person_list_view);
+        listview = (StickyListHeadersListView) findViewById(R.id.activity_barrier_info_list_view);
+
+        // request contact from database
         request = new TUMBarrierFreeRequest(this);
         startLoading();
     }

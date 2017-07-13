@@ -117,7 +117,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
         return view;
     }
 
-    // Header view
+    //Generate the view of the heaer
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup partent) {
         HeaderViewHolder holder;
@@ -131,7 +131,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
         } else {
             holder = (HeaderViewHolder) view.getTag();
         }
-        //set header text as first char in name
+        //set header text as faculty
         String headerText = contacts.get(position).getFaculty();
         holder.text.setText(headerText);
 
@@ -156,6 +156,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
         TextView more;
     }
 
+    // Header view
     static class HeaderViewHolder {
         TextView text;
     }

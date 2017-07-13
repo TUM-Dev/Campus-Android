@@ -514,6 +514,9 @@ Signature: %5$s</string>
 
     <!-- Barrier-free  -->
     <string name="facilities">Facilities</string>
+    <string name="nerby_facilities">Nerby Facilities</string>
+    <string name="barrierfree_toilets">Barrierfree Toilets</string>
+    <string name="elevators">Elevators</string>
 </resources>
 
 

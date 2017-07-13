@@ -18,6 +18,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
 
 import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_BUILDING_TITLE;
@@ -27,7 +28,9 @@ import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ARCH_ID;
 import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ROOM_ID;
 import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ROOM_TITLE;
 
-
+/**
+ * The class used to handle Barrierfree data exchange with backend
+ */
 public class TUMBarrierFreeRequest {
     // Json keys
     // contact
@@ -54,8 +57,12 @@ public class TUMBarrierFreeRequest {
 
     private AsyncTask<Void, Void, List<Map<String, String>>> facilitiesBackgroundTask;
 
+    //// TODO: 7/13/2017 Check how location manager works
+    private LocationManager locationManager;
+
     public TUMBarrierFreeRequest(Context context) {
         net = new NetUtils(context);
+        locationManager = new LocationManager(context);
     }
 
     public void fetchListOfElevators(final Context context, final TUMRoomFinderRequestFetchListener listener){
@@ -127,6 +134,10 @@ public class TUMBarrierFreeRequest {
         };
 
         facilitiesBackgroundTask.execute();
+    }
+
+    public void fetchListOfNerbyFacilities(final Context context, final TUMOnlineRequestFetchListener listener){
+//        int campusID = locationManager
     }
 
     public List<BarrierfreeContact> fetchResponsiblePersonList() {

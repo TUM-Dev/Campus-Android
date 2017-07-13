@@ -2,12 +2,17 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.os.Bundle;
 
-import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
+import java.util.List;
 
-public class BarrierFreeMoreInfoActivity extends BaseActivity{
+import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeMoreInfo;
+
+public class BarrierFreeMoreInfoActivity extends ActivityForLoadingInBackground<Void, List<BarrierfreeMoreInfo>> {
+
+
     public BarrierFreeMoreInfoActivity(){
-        super(R.layout.activity_barrier_free_more_info);
+        super(R.layout.activity_barrier_free_list_info);
     }
 
     @Override
@@ -17,5 +22,15 @@ public class BarrierFreeMoreInfoActivity extends BaseActivity{
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
+    }
+
+    @Override
+    protected void onLoadFinished(List<BarrierfreeMoreInfo> result) {
+
+    }
+
+    @Override
+    protected List<BarrierfreeMoreInfo> onLoadInBackground(Void... arg) {
+        return null;
     }
 }
