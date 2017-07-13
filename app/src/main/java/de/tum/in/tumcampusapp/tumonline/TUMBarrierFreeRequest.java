@@ -136,7 +136,7 @@ public class TUMBarrierFreeRequest {
         facilitiesBackgroundTask.execute();
     }
 
-    public void fetchListOfNerbyFacilities(final Context context, final TUMOnlineRequestFetchListener listener){
+    public void fetchListOfNerbyFacilities(final Context context, final TUMRoomFinderRequestFetchListener listener){
 //        int campusID = locationManager
     }
 

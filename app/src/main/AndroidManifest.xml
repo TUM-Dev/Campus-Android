@@ -50,6 +50,7 @@
     <!-- To potentially change the Do Not Disturb mode -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
+
     <!--
      Creates a custom permission so only this app can receive its messages.
 
@@ -129,10 +130,8 @@
             android:theme="@style/AppThemeStartup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
@@ -526,6 +525,8 @@
             android:launchMode="singleTop"
             android:parentActivityName=".activities.BarrierFreeInfoActivity">
         </activity>
+
+
         <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".widgets.MensaWidget"
@@ -545,10 +546,8 @@
 
         <!-- receiver for the MVVWidget -->
 
-        <receiver
-            android:name=".widgets.MVVWidget"
-            android:label="@string/mvv_widget">
-            >
+        <receiver android:name=".widgets.MVVWidget"
+            android:label="@string/mvv_widget">>
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
@@ -563,12 +562,11 @@
             android:name=".widgets.MVVWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <activity
-            android:name=".widgets.MVVWidgetConfigureActivity"
-            android:allowTaskReparenting="false"
+        <activity android:name=".widgets.MVVWidgetConfigureActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
+            android:allowTaskReparenting="false"
             android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -577,7 +575,6 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_mvv" />
-
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -609,12 +606,10 @@
 
         <receiver
             android:name=".widgets.TimetableWidget"
-            android:label="@string/timetable_widget">
-            >
+            android:label="@string/timetable_widget">>
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/timetable_widget_info" />
@@ -653,11 +648,12 @@
         </receiver>
 
         <!-- Used to set Notification for favoriteDish -->
-        <receiver android:name=".services.FavoriteDishReceiver" />
+        <receiver android:name="de.tum.in.tumcampusapp.services.FavoriteDishReceiver" />
 
         <service
-            android:name=".services.FavoriteDishService"
+            android:name="de.tum.in.tumcampusapp.services.FavoriteDishService"
             android:enabled="true" />
+
         <service
             android:name=".services.DownloadService"
             android:exported="false" />
