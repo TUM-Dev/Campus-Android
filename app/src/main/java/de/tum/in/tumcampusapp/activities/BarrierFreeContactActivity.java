@@ -44,15 +44,14 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
     }
 
     @Override
-    protected void onLoadFinished(List<BarrierfreeContact> result) {
-        System.out.println("Load Finished!");
-        contacts = result;
-        adapter = BarrierfreeContactAdapter.newAdapter(this, contacts);
-        listview.setAdapter(adapter);
+    protected List<BarrierfreeContact> onLoadInBackground(Void... arg) {
+        return request.fetchResponsiblePersonList();
     }
 
     @Override
-    protected List<BarrierfreeContact> onLoadInBackground(Void... arg) {
-        return request.fetchResponsiblePersonList();
+    protected void onLoadFinished(List<BarrierfreeContact> result) {
+        contacts = result;
+        adapter = BarrierfreeContactAdapter.newAdapter(this, contacts);
+        listview.setAdapter(adapter);
     }
 }

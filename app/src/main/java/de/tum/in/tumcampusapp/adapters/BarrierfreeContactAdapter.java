@@ -26,7 +26,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  */
 public class BarrierfreeContactAdapter extends BaseAdapter implements StickyListHeadersAdapter {
     private static List<BarrierfreeContact> contacts;
-    private final List<String> headerIdIndex;
     private final LayoutInflater inflater;
 
     private Context context;
@@ -39,15 +38,6 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
     private BarrierfreeContactAdapter(Context context) {
         inflater = LayoutInflater.from(context);
         this.context = context;
-
-        //// TODO: 7/5/2017 Use a better way to create header id
-        headerIdIndex = new ArrayList<>();
-        for (BarrierfreeContact contact : contacts) {
-            String item = contact.getFaculty();
-            if (!headerIdIndex.contains(item)) {
-                headerIdIndex.add(item);
-            }
-        }
     }
 
     @Override
@@ -148,11 +138,15 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
         return view;
     }
 
-    @Override
     public long getHeaderId(int i) {
         // return faculty as id for header
-        return headerIdIndex.indexOf(contacts.get(i).getFaculty());
+        String faculty = contacts.get(i).getFaculty();
+        if(faculty == null || faculty.equals("null")){
+            return 'Z';
+        }
+        return faculty.hashCode();
     }
+
 
     // the layout of the list
     static class ViewHolder {
