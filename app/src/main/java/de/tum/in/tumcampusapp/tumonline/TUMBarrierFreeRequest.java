@@ -47,7 +47,7 @@ public class TUMBarrierFreeRequest {
     public static final String KEY_BUILDING_TO_GPS_LONGITUDE = "longitude";
 
     // facilities
-    public static final String KEY_MAP_TITLE = "description";
+    public static final String KEY_FACILITY_PURPOSE = "purpose";
 
     // Api urls
     //private static final String API_BASE_URL = "https://tumcabe.in.tum.de/Api/roomfinder/";
@@ -111,7 +111,7 @@ public class TUMBarrierFreeRequest {
                             roomMap.put(KEY_CAMPUS_ID, obj.getString(KEY_CAMPUS_ID));
                             roomMap.put(KEY_CAMPUS_TITLE, obj.getString(KEY_CAMPUS_TITLE));
                             roomMap.put(KEY_BUILDING_TITLE, obj.getString(KEY_BUILDING_TITLE));
-                            roomMap.put(KEY_MAP_TITLE, obj.getString(KEY_MAP_TITLE));
+                            roomMap.put(KEY_FACILITY_PURPOSE, obj.getString(KEY_FACILITY_PURPOSE));
                             roomMap.put(KEY_ROOM_TITLE, obj.getString(KEY_ROOM_TITLE));
                             roomMap.put(KEY_ARCH_ID, obj.getString(KEY_ARCH_ID));
                             roomMap.put(KEY_ROOM_ID, obj.getString(KEY_ROOM_ID));
