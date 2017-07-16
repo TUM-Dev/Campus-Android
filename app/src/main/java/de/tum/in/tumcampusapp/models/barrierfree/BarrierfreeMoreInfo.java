@@ -1,9 +1,11 @@
 package de.tum.in.tumcampusapp.models.barrierfree;
 
+import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
+
 /**
  * The model used to display more infromation in barrier free page
  */
-public class BarrierfreeMoreInfo {
+public class BarrierfreeMoreInfo implements SimpleStickyListHeadersAdapter.SimpleStickyListItem{
 //    private int id;
     private String title;
     private String category;
@@ -25,5 +27,10 @@ public class BarrierfreeMoreInfo {
 
     public String getUrl() {
         return url;
+    }
+
+    @Override
+    public String getHeadName() {
+        return getCategory();
     }
 }

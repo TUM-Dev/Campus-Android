@@ -39,14 +39,14 @@ public class BarrierfreeFacilityListFragment extends Fragment
         request = new TUMBarrierFreeRequest(getActivity());
 
         recentsManager = new RecentsManager(getActivity(), RecentsManager.ROOMS);
-        ;
+
         if (getArguments().containsKey(Const.BARRIER_FREE_FACILITY_PAGE_ID)) {
             pageID = getArguments().getInt(Const.BARRIER_FREE_FACILITY_PAGE_ID);
         }
 
         switch (pageID){
             case 0:
-                //// TODO: 7/13/2017 nerby facilities
+                // TODO: 7/13/2017 nerby facilities
                 break;
             case 1:
                 System.out.println("Toilet");

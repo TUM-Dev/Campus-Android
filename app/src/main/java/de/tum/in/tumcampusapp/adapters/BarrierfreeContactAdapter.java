@@ -4,19 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.util.Linkify;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.PersonsDetailsActivity;
-import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
 import de.tum.in.tumcampusapp.models.tumo.Person;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -24,35 +19,10 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 /**
  * An adapter used to display contact information in barrierfree page.
  */
-public class BarrierfreeContactAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-    private static List<BarrierfreeContact> contacts;
-    private final LayoutInflater inflater;
-
-    private Context context;
-
-    public static BarrierfreeContactAdapter newAdapter(Context context, List<BarrierfreeContact> contactPersons){
-        contacts = contactPersons;
-        return new BarrierfreeContactAdapter(context);
-    }
-
-    private BarrierfreeContactAdapter(Context context) {
-        inflater = LayoutInflater.from(context);
-        this.context = context;
-    }
-
-    @Override
-    public int getCount() {
-        return contacts.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return contacts.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<BarrierfreeContact>
+        implements StickyListHeadersAdapter {
+    public BarrierfreeContactAdapter(Context context, List<BarrierfreeContact> infos) {
+        super(context, infos);
     }
 
     @Override
@@ -60,7 +30,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
         final ViewHolder holder;
         View view = convertView;
         if(view == null){
-            view = inflater.inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
+            view = getInflater().inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
 
             // Crate UI element
             holder = new ViewHolder();
@@ -79,7 +49,7 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
         }
 
         // display information of current person
-        final BarrierfreeContact contact = contacts.get(position);
+        final BarrierfreeContact contact = getInfoList().get(position);
 
         if(contact != null){
             holder.name.setText(contact.getName());
@@ -116,48 +86,11 @@ public class BarrierfreeContactAdapter extends BaseAdapter implements StickyList
 
         return view;
     }
-
-    //Generate the view of the heaer
-    @Override
-    public View getHeaderView(int position, View convertView, ViewGroup partent) {
-        HeaderViewHolder holder;
-        View view = convertView;
-
-        if (view == null) {
-            holder = new HeaderViewHolder();
-            view = inflater.inflate(R.layout.header, partent, false);
-            holder.text = (TextView) view.findViewById(R.id.lecture_header);
-            view.setTag(holder);
-        } else {
-            holder = (HeaderViewHolder) view.getTag();
-        }
-        //set header text as faculty
-        String headerText = contacts.get(position).getFaculty();
-        holder.text.setText(headerText);
-
-        return view;
-    }
-
-    public long getHeaderId(int i) {
-        // return faculty as id for header
-        String faculty = contacts.get(i).getFaculty();
-        if(faculty == null || faculty.equals("null")){
-            return 'Z';
-        }
-        return faculty.hashCode();
-    }
-
-
     // the layout of the list
     static class ViewHolder {
         TextView name;
         TextView phone;
         TextView email;
         TextView more;
-    }
-
-    // Header view
-    static class HeaderViewHolder {
-        TextView text;
     }
 }

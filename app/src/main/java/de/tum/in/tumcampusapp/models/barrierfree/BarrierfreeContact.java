@@ -1,9 +1,11 @@
 package de.tum.in.tumcampusapp.models.barrierfree;
 
+import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
+
 /**
  * The model used to display contact infromation in barrier free page
  */
-public class BarrierfreeContact {
+public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.SimpleStickyListItem{
 //    private int id;
     private String name;
     private String phone;
@@ -64,6 +66,11 @@ public class BarrierfreeContact {
 
     public String getTumonlineID() {
         return tumonlineID;
+    }
+
+    @Override
+    public String getHeadName() {
+        return getFaculty();
     }
 
     @Override

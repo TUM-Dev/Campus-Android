@@ -20,6 +20,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CacheManager;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
+import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeMoreInfo;
 
 import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_BUILDING_TITLE;
 import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_CAMPUS_ID;
@@ -40,6 +41,10 @@ public class TUMBarrierFreeRequest {
     public static final String KEY_PERSON_FACULTY = "faculty";
     public static final String KEY_PERSON_TUM_ID = "tumID";
 
+    public static final String KEY_MORE_INFO_TITLE = "title";
+    public static final String KEY_MORE_INFO_CATEGORY = "category";
+    public static final String KEY_MORE_INFO_URL = "url";
+
     // facilities
     public static final String KEY_MAP_TITLE = "description";
 
@@ -50,6 +55,7 @@ public class TUMBarrierFreeRequest {
     private static final String API_BASE_URL = "http://10.0.2.2/api/barrierfree/";
 
     public static final String API_URL_RESPONSIBLEPERSON = API_BASE_URL + "contacts";
+    public static final String API_URL_MORE_INFO = API_BASE_URL + "moreInformation";
     public static final String API_URL_LIST_OF_TOILETS = API_BASE_URL + "listOfToilets";
     public static final String API_URL_LIST_OF_ELEVATORS = API_BASE_URL + "listOfElevators";
 
@@ -176,6 +182,34 @@ public class TUMBarrierFreeRequest {
         }
 
         return contactsList;
+    }
+
+    public List<BarrierfreeMoreInfo> fetchMoreInfoList(){
+        String url = API_URL_MORE_INFO;
+        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+
+        List<BarrierfreeMoreInfo> infoList = new ArrayList<>();
+        try {
+            if (jsonArray.isPresent()) {
+                JSONArray arr = jsonArray.get();
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject obj = arr.getJSONObject(i);
+
+                    String title = obj.getString(KEY_MORE_INFO_TITLE);
+                    String category = obj.getString(KEY_MORE_INFO_CATEGORY);
+                    String infoUrl = obj.getString(KEY_MORE_INFO_URL);
+
+                    if (!title.equals("null")){
+                        BarrierfreeMoreInfo info = new BarrierfreeMoreInfo(title, category, infoUrl);
+                        infoList.add(info);
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            Utils.log(e);
+        }
+
+        return infoList;
     }
 
     public void cancelRequest(boolean mayInterruptIfRunning) {

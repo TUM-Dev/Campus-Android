@@ -47,7 +47,7 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
     @Override
     protected void onLoadFinished(List<BarrierfreeContact> result) {
         contacts = result;
-        adapter = BarrierfreeContactAdapter.newAdapter(this, contacts);
+        adapter = new BarrierfreeContactAdapter(this, contacts);
         listview.setAdapter(adapter);
     }
 }
