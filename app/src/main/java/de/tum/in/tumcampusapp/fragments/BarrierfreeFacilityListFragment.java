@@ -46,10 +46,9 @@ public class BarrierfreeFacilityListFragment extends Fragment
 
         switch (pageID){
             case 0:
-                // TODO: 7/13/2017 nerby facilities
+                request.fetchListOfNerbyFacilities(getActivity(), this);
                 break;
             case 1:
-                System.out.println("Toilet");
                 request.fetchListOfToilets(getActivity(), this);
                 break;
             case 2:

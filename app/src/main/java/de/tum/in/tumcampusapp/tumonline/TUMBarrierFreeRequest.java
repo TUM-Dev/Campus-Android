@@ -22,12 +22,7 @@ import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeMoreInfo;
 
-import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_BUILDING_TITLE;
-import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_CAMPUS_ID;
-import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_CAMPUS_TITLE;
-import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ARCH_ID;
-import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ROOM_ID;
-import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.KEY_ROOM_TITLE;
+import static de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest.*;
 
 /**
  * The class used to handle Barrierfree data exchange with backend
@@ -41,9 +36,15 @@ public class TUMBarrierFreeRequest {
     public static final String KEY_PERSON_FACULTY = "faculty";
     public static final String KEY_PERSON_TUM_ID = "tumID";
 
+    // More info
     public static final String KEY_MORE_INFO_TITLE = "title";
     public static final String KEY_MORE_INFO_CATEGORY = "category";
     public static final String KEY_MORE_INFO_URL = "url";
+
+    //Building to gps
+    public static final String KEY_BUILDING_TO_GPS_Building_ID = "id";
+    public static final String KEY_BUILDING_TO_GPS_LATITUDE= "latitude";
+    public static final String KEY_BUILDING_TO_GPS_LONGITUDE = "longitude";
 
     // facilities
     public static final String KEY_MAP_TITLE = "description";
@@ -58,17 +59,16 @@ public class TUMBarrierFreeRequest {
     public static final String API_URL_MORE_INFO = API_BASE_URL + "moreInformation";
     public static final String API_URL_LIST_OF_TOILETS = API_BASE_URL + "listOfToilets";
     public static final String API_URL_LIST_OF_ELEVATORS = API_BASE_URL + "listOfElevators";
+    public static final String API_URL_BUILDINGS_TO_GPS = API_BASE_URL + "getBuilding2Gps";
+    public static final String API_URL_Nerby_FACILITIES = API_BASE_URL + "nerby";
 
     private final NetUtils net;
 
     private AsyncTask<Void, Void, List<Map<String, String>>> facilitiesBackgroundTask;
-
-    //// TODO: 7/13/2017 Check how location manager works
-    private LocationManager locationManager;
+    private AsyncTask<Void, Void, List<Map<String, String>>> buildingsToGpsBackgroundTask;
 
     public TUMBarrierFreeRequest(Context context) {
         net = new NetUtils(context);
-        locationManager = new LocationManager(context);
     }
 
     public void fetchListOfElevators(final Context context, final TUMRoomFinderRequestFetchListener listener){
@@ -79,6 +79,10 @@ public class TUMBarrierFreeRequest {
     public void fetchListOfToilets(final Context context, final TUMRoomFinderRequestFetchListener listener){
         String url = API_URL_LIST_OF_TOILETS;
         fetchListOfFacilities(context, listener, url);
+    }
+
+    public void fetchListOfNerbyFacilities(final Context context, final TUMRoomFinderRequestFetchListener listener){
+        fetchBuildings2GpsAndFacilities(context, listener);
     }
 
     private void fetchListOfFacilities(final Context context,
@@ -95,7 +99,7 @@ public class TUMBarrierFreeRequest {
                     return null;
                 }
 
-                Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+                Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_ONE_MONTH, false);
 
                 List<Map<String, String>> facilitiesList = new ArrayList<>();
                 try {
@@ -142,14 +146,81 @@ public class TUMBarrierFreeRequest {
         facilitiesBackgroundTask.execute();
     }
 
-    public void fetchListOfNerbyFacilities(final Context context, final TUMRoomFinderRequestFetchListener listener){
-//        int campusID = locationManager
+    private void fetchBuildings2GpsAndFacilities(final Context context, final TUMRoomFinderRequestFetchListener listener){
+        final String url = API_URL_BUILDINGS_TO_GPS;
+
+        facilitiesBackgroundTask = new AsyncTask<Void, Void, List<Map<String, String>>>() {
+
+            boolean isOnline;
+
+            @Override
+            protected List<Map<String, String>> doInBackground(
+                    Void... params) {
+                isOnline = NetUtils.isConnected(context);
+                if (!isOnline) {
+                    return null;
+                }
+
+                // TODO: 7/16/2017 Improve caching method. This is no good.
+                Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_ONE_MONTH, false);
+
+                List<Map<String, String>> buildingsToGps = new ArrayList<>();
+                try {
+                    if (jsonArray.isPresent()) {
+                        JSONArray arr = jsonArray.get();
+                        for (int i = 0; i < arr.length(); i++) {
+                            JSONObject obj = arr.getJSONObject(i);
+                            Map<String, String>  building2Gps = new HashMap<>();
+                            String id = obj.getString(KEY_BUILDING_TO_GPS_Building_ID);
+                            String longitude = obj.getString(KEY_BUILDING_TO_GPS_LONGITUDE);
+                            String latitude = obj.getString(KEY_BUILDING_TO_GPS_LATITUDE);
+
+                            building2Gps.put(KEY_BUILDING_TO_GPS_Building_ID, id);
+                            building2Gps.put(KEY_BUILDING_TO_GPS_LONGITUDE, longitude);
+                            building2Gps.put(KEY_BUILDING_TO_GPS_LATITUDE, latitude);
+
+                            buildingsToGps.add(building2Gps);
+                        }
+                    }
+                } catch (JSONException e) {
+                    Utils.log(e);
+                }
+
+                return buildingsToGps;
+            }
+
+            @Override
+            protected void onPostExecute(List<Map<String, String>> result) {
+                if (!isOnline) {
+                    listener.onNoInternetError();
+                    return;
+                }
+                if (result == null) {
+                    listener.onFetchError(context.getString(R.string.empty_result));
+                    return;
+                }
+
+                LocationManager locationManager = new LocationManager(context);
+                String buildingID = locationManager.getBuildingIDFromCurrentLocation(result);
+
+                if (buildingID == null || buildingID.equals("") || buildingID.equals("null")){
+                    listener.onFetchError(context.getString(R.string.empty_result));
+                    return;
+                }
+
+                String url = API_URL_Nerby_FACILITIES + "/" + buildingID;
+                fetchListOfFacilities(context, listener, url);
+            }
+
+        };
+
+        facilitiesBackgroundTask.execute();
     }
 
     public List<BarrierfreeContact> fetchResponsiblePersonList() {
 
         String url = API_URL_RESPONSIBLEPERSON;
-        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_ONE_MONTH, false);
 
         List<BarrierfreeContact> contactsList = new ArrayList<>();
         try {
@@ -186,7 +257,7 @@ public class TUMBarrierFreeRequest {
 
     public List<BarrierfreeMoreInfo> fetchMoreInfoList(){
         String url = API_URL_MORE_INFO;
-        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_ONE_MONTH, false);
 
         List<BarrierfreeMoreInfo> infoList = new ArrayList<>();
         try {
@@ -218,5 +289,4 @@ public class TUMBarrierFreeRequest {
             facilitiesBackgroundTask.cancel(mayInterruptIfRunning);
         }
     }
-
 }
