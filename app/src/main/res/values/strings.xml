@@ -503,16 +503,28 @@ Signature: %5$s</string>
 
     <!--Facility Locator-->
     <string name="tag_facility">Tag Facility</string>
+    <string name="delete_facility">Delete Facility</string>
     <string name="facility_name">Facility Name</string>
     <string name="save">Save</string>
     <string name="add_facility">Add Facility</string>
 
-    <string-array name="facility_categories">
-        <item>Library</item>
-        <item>Cafeteria</item>
-    </string-array>
+    <string name="facility_save_success">Facility saved successfully</string>
+    <string name="facility_vote_save_success">Vote saved successfully</string>
+    <string name="facility_delete_success">Facility deleted successfully</string>
 
+
+    <string name="facility_log_in_error">You need to log in in order to add</string>
+    <string name="facility_tab_categories">Facility Categories</string>
+    <string name="facility_tab_my">My Facilities</string>
     <string name="search_facilities">Search by name</string>
+
+    <string name="facility_save_failure">Facility could not be saved</string>
+    <string name="facility_delete_failure">Facility could not be deleted</string>
+    <string name="facility_map_failure">Facility map could not be downloaded</string>
+    <string name="facility_votes_failure">Error while getting votes</string>
+    <string name="facility_categories_failure">An unexpected error occured while getting facility categories</string>
+    <string name="facility_name_empty_error">Name cannot be empty</string>
+    <string name="facility_my_facilities_error">Error while getting your facilities</string>
 </resources>
 
 

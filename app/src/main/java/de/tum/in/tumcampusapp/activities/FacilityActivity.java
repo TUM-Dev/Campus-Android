@@ -10,43 +10,29 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.common.base.Optional;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.FacilityLocatorSuggestionProvider;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.tumonline.TUMFacilityLocatorRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMFacilityLocatorRequestFetchListener;
+import de.tum.in.tumcampusapp.models.tumcabe.Facility;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Activity to fetch and display the curricula of different study programs.
  */
-public class FacilityActivity extends ActivityForSearching implements OnItemClickListener,TUMFacilityLocatorRequestFetchListener {
+public class FacilityActivity extends ActivityForSearching implements OnItemClickListener {
 
-    private TUMFacilityLocatorRequest facilityLocatorRequest;
-
-    public static final String LONGITUDE = "longitude";
-    public static final String LATITUDE = "latitude";
-    public static final String FACILITY_NAME = "name";
-    public static final String FACILITY_ID = "facility_id";
-    public static final String FACILITY_CATEGORY_ID = "category_id";
-
-
-
-    private Map<String, String> options;
+    private Map<String, Facility> options;
     private ArrayAdapter<String> arrayAdapter;
-    private NetUtils net;
-
 
     public FacilityActivity() {
         super(R.layout.activity_facility, FacilityLocatorSuggestionProvider.AUTHORITY,3);
@@ -56,28 +42,87 @@ public class FacilityActivity extends ActivityForSearching implements OnItemClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        facilityLocatorRequest = new TUMFacilityLocatorRequest(this);
-
-        net = new NetUtils(this);
         // Sets the adapter
         ListView list = (ListView) this.findViewById(R.id.activity_facility_list_view);
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         list.setAdapter(arrayAdapter);
         list.setOnItemClickListener(this);
 
-        String categoryId = getIntent().getExtras().getString(FacilityCategoriesActivity.FACILITY_CATEGORY_ID);
-        String facilitySearchQuery = getIntent().getExtras().getString(FacilityCategoriesActivity.FACILITY_SEARCH_QUERY);
+        Integer categoryId = getIntent().getExtras().getInt(FacilityMainActivity.FACILITY_CATEGORY_ID);
+        String facilitySearchQuery = getIntent().getExtras().getString(FacilityMainActivity.FACILITY_SEARCH_QUERY);
 
-        if(categoryId!=null){
-            setTitle("Category : "+getIntent().getExtras().getString(FacilityCategoriesActivity.FACILITY_CATEGORY_NAME));
-            facilityLocatorRequest.fetchSearchInteractiveFacilities(this, this, categoryId, true);
+        if(categoryId!=null && categoryId!=0){
+            setTitle("Category : "+getIntent().getExtras().getString(FacilityMainActivity.FACILITY_CATEGORY_NAME));
+            fetchFacilitiesByCategory(categoryId);
         }else if(facilitySearchQuery!=null){
             setTitle("Search : "+facilitySearchQuery);
-            this.requestSearch(facilitySearchQuery);
+            fetchFacilitiesByQuery(facilitySearchQuery);
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    private void fetchFacilitiesByQuery(String query) {
+        try {
+        TUMCabeClient.getInstance(this).getFacilitiesByQuery(query,new Callback<List<Facility>>() {
+                @Override
+                public void onResponse(Call<List<Facility>> call, Response<List<Facility>> response) {
+                    if (!response.isSuccessful()) {
+                        Utils.logv("Error getting facility categories: " + response.message());
+                        return;
+                    }
+                    List<Facility> facilities=response.body();
+                    if(facilities!=null && facilities.size()>0){
+                        arrayAdapter.clear();
+                        options = new HashMap<>();
+                        for (Facility facility: facilities) {
+                            arrayAdapter.add(facility.getName());
+                            options.put(facility.getName(), facility);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Facility>> call, Throwable throwable) {
+                    Utils.log(throwable, "Failure getting facility categories from the server");
+                    Utils.showToastOnUIThread(FacilityActivity.this, R.string.facility_categories_failure);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fetchFacilitiesByCategory(Integer categoryId) {
+        try {
+            TUMCabeClient.getInstance(this).getFacilitiesByCategory(categoryId,new Callback<List<Facility>>() {
+                @Override
+                public void onResponse(Call<List<Facility>> call, Response<List<Facility>> response) {
+                    if (!response.isSuccessful()) {
+                        Utils.logv("Error getting facility categories: " + response.message());
+                        return;
+                    }
+                    List<Facility> facilities=response.body();
+                    if(facilities!=null && facilities.size()>0){
+                        arrayAdapter.clear();
+                        options = new HashMap<>();
+                        for (Facility facility: facilities) {
+                            arrayAdapter.add(facility.getName());
+                            options.put(facility.getName(), facility);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Facility>> call, Throwable throwable) {
+                    Utils.log(throwable, "Failure getting facility categories from the server");
+                    Utils.showToastOnUIThread(FacilityActivity.this, R.string.facility_categories_failure);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -93,14 +138,16 @@ public class FacilityActivity extends ActivityForSearching implements OnItemClic
         String facilityName = ((TextView) view).getText().toString();
 
         // Puts URL and name into an intent and starts the detail view
+
         Intent intent = new Intent(this, FacilityDisplayActivity.class);
-        String[] tokens=options.get(facilityName).split("-");
-        double longitude= Double.parseDouble(tokens[0]);
-        double latitude= Double.parseDouble(tokens[1]);
-        intent.putExtra(FACILITY_NAME, facilityName);
-        intent.putExtra(LONGITUDE, longitude);
-        intent.putExtra(LATITUDE, latitude);
+        Facility facility=options.get(facilityName);
+        Bundle bundle=new Bundle();
+        bundle.putSerializable(FacilityDisplayActivity.FACILITY,facility);
+        intent.putExtras(bundle);
+
         this.startActivity(intent);
+
+
     }
 
     @Override
@@ -121,49 +168,6 @@ public class FacilityActivity extends ActivityForSearching implements OnItemClic
 
     @Override
     protected void onStartSearch(String query) {
-        facilityLocatorRequest.fetchSearchInteractiveFacilities(this, this, query, false);
-    }
-
-    @Override
-    public void onFetch(Optional<JSONArray> result) {
-        if (result.isPresent()) {
-            fillListView(result);
-            showLoadingEnded();
-        }
-    }
-
-    @Override
-    public void onFetchError(String errorReason) {
-        facilityLocatorRequest.cancelRequest(true);
-        showError(errorReason);
-    }
-
-    @Override
-    public void onNoInternetError() {
-        showNoInternetLayout();
-    }
-
-    private void fillListView(Optional<JSONArray> jsonData) {
-        if (!jsonData.isPresent()) {
-            if (NetUtils.isConnected(this)) {
-                showErrorLayout();
-            } else {
-                showNoInternetLayout();
-            }
-            return;
-        }
-        JSONArray arr = jsonData.get();
-        arrayAdapter.clear();
-        try {
-            options = new HashMap<>();
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject item = arr.getJSONObject(i);
-                arrayAdapter.add(item.getString("name"));
-                options.put(item.getString("name"), item.getDouble("longitude")+"-"+item.getDouble("latitude"));
-            }
-        } catch (JSONException e) {
-            Utils.log(e);
-        }
-        showLoadingEnded();
+        fetchFacilitiesByQuery(query);
     }
 }

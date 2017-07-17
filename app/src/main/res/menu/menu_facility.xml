@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_tag_facility"
-        android:icon="@drawable/ic_location"
-        android:title="@string/tag_facility"
+        android:id="@+id/action_delete_facility"
+        android:icon="@drawable/ic_delete"
+        android:title="@string/delete_facility"
         tumcampus:showAsAction="ifRoom" />
 </menu>

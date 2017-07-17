@@ -1,7 +1,9 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
+import de.tum.in.tumcampusapp.activities.FacilityMainActivity;
+
 /**
- * Suggestion provider for {@link de.tum.in.tumcampusapp.activities.FacilityCategoriesActivity}
+ * Suggestion provider for {@link FacilityMainActivity}
  */
 public class FacilityLocatorSuggestionProvider extends EnhancedSearchRecentSuggestionsProvider {
 	public final static String AUTHORITY = "de.tum.in.tumcampusapp.auxiliary.FacilityLocatorSuggestionProvider";

@@ -22,9 +22,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.Helper;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.managers.CacheManager;
-import de.tum.in.tumcampusapp.tumonline.TUMFacilityLocatorRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
+import de.tum.in.tumcampusapp.models.tumcabe.FacilityMap;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -206,42 +206,51 @@ public class NetUtils {
         }
     }
 
-    public Optional<File> saveCurrentLocationImage(String encodedImage){
+//    public Optional<File> saveCurrentLocationImage(String encodedImage){
+//
+//        if(encodedImage==null){
+//            return Optional.absent();
+//        }
+//
+//        try{
+//            Optional<String> file=Optional.of(mContext.getCacheDir().getAbsolutePath() + '/'+ "current_location_map.jpg");
+//            File f = new File(file.get());
+//            byte[] imageData= Base64.decode(encodedImage,Base64.DEFAULT);
+//            BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(f));
+//            writer.write(imageData);
+//            writer.flush();
+//            writer.close();
+//            return Optional.of(f);
+//        }
+//        catch (IOException e){
+//            Utils.log(e, "Could not save the current location map image");
+//            return Optional.absent();
+//        }
+//    }
+
+    public Optional<File> getFacilityMapImage(Context context,String facilityName, double longitude, double latitude){
         try{
-            Optional<String> file=Optional.of(mContext.getCacheDir().getAbsolutePath() + '/'+ "current_location_map.jpg");
-            File f = new File(file.get());
-            byte[] imageData= Base64.decode(encodedImage,Base64.DEFAULT);
-            BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(f));
-            writer.write(imageData);
-            writer.flush();
-            writer.close();
-            return Optional.of(f);
-        }
-        catch (IOException e){
-            Utils.log(e, "Could not save the current location map image");
-            return Optional.absent();
-        }
-    }
-
-    public Optional<File> getFacilityMapImage(String facilityName, double longitude, double latitude){
-        try{
-
-            String map= TUMFacilityLocatorRequest.getMapWithLocation(longitude, latitude);
-
-            if(map==null){
-                return Optional.absent();
-            }
-
-            Optional<String> file = cacheManager.getFromCache(facilityName);
-            if (file.isPresent()) {
-                File result = new File(file.get());
-
-                // TODO: remove this check when #391 is fixed
-                // The cache could have been cleaned manually, so we need an existence check
-                if (result.exists()) {
-                    return Optional.of(result);
+            Optional<String> file=null;
+            if(facilityName!=null){
+                file = cacheManager.getFromCache(facilityName);
+                if (file.isPresent()) {
+                    File result = new File(file.get());
+                    // TODO: remove this check when #391 is fixed
+                    // The cache could have been cleaned manually, so we need an existence check
+                    if (result.exists()) {
+                        return Optional.of(result);
+                    }
                 }
             }
+            else{
+                facilityName="current_location_map";
+            }
+
+            FacilityMap facilityMap = TUMCabeClient.getInstance(context).getMapWithLocation(longitude,latitude);
+            if(facilityMap==null){
+                return Optional.absent();
+            }
+            String map= facilityMap.getMapString();
 
             file=Optional.of(mContext.getCacheDir().getAbsolutePath() + '/'+ facilityName+".jpg");
             File f = new File(file.get());

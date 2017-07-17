@@ -73,17 +73,17 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             Utils.log(e);
             return;
         }
+        if(openQuestions!=null){
+            deleteFlaggedQuestions(openQuestions);
+            // filters the questions relevant for the user
+            for (int i = 0; i < openQuestions.size(); i++) {
+                List<String> openQuestionFaculties = Arrays.asList(openQuestions.get(i).getFacultiesOfOpenQuestions());
+                String userMajor = Utils.getInternalSettingString(mContext, "user_major", "");
 
-        deleteFlaggedQuestions(openQuestions);
-
-        // filters the questions relevant for the user
-        for (int i = 0; i < openQuestions.size(); i++) {
-            List<String> openQuestionFaculties = Arrays.asList(openQuestions.get(i).getFacultiesOfOpenQuestions());
-            String userMajor = Utils.getInternalSettingString(mContext, "user_major", "");
-
-            // Incase  the user selected the major upon app start, then save the major related questions. Otherwise save all questions
-            if ("0".equals(userMajor) || openQuestionFaculties.contains(userMajor)) {
-                replaceIntoDBOpenQuestions(openQuestions.get(i));
+                // Incase  the user selected the major upon app start, then save the major related questions. Otherwise save all questions
+                if ("0".equals(userMajor) || openQuestionFaculties.contains(userMajor)) {
+                    replaceIntoDBOpenQuestions(openQuestions.get(i));
+                }
             }
         }
     }
@@ -353,11 +353,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      */
     public void downLoadOwnQuestions() {
         List<Question> ownQuestions = new ArrayList<>();
-        try {
-            ownQuestions = TUMCabeClient.getInstance(mContext).getOwnQuestions();
-        } catch (IOException e) {
-            Utils.log(e);
-        }
+//        try {
+//            //ownQuestions = TUMCabeClient.getInstance(mContext).getOwnQuestions();
+//        } catch (IOException e) {
+//            Utils.log(e);
+//        }
         if (ownQuestions.isEmpty()) {
             return;
         }

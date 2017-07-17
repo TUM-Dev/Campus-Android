@@ -502,7 +502,7 @@
                 android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.FacilityCategoriesActivity"
+            android:name=".activities.FacilityMainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/facility_locator"
             android:launchMode="singleTop"
@@ -523,10 +523,10 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/facility_locator"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.FacilityCategoriesActivity">
+            android:parentActivityName=".activities.FacilityMainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.FacilityCategoriesActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.FacilityMainActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -539,10 +539,10 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/facility_locator"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.FacilityCategoriesActivity">
+            android:parentActivityName=".activities.FacilityMainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.FacilityCategoriesActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.FacilityMainActivity" />
         </activity>
         <activity
             android:name=".activities.FacilityDisplayActivity"
