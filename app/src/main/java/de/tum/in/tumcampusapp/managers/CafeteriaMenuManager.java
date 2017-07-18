@@ -225,7 +225,7 @@ public class CafeteriaMenuManager extends AbstractManager {
      * True if all currently scheduled alarms should be discarded, False if not
      */
     public void scheduleFoodAlarms(boolean completeReschedule){
-        FavoriteFoodAlarmStorage favoriteFoodAlarmStorage = FavoriteFoodAlarmStorage.getInstance(mContext);
+        FavoriteFoodAlarmStorage favoriteFoodAlarmStorage = FavoriteFoodAlarmStorage.getInstance().initialize(mContext);
         if(completeReschedule){
             favoriteFoodAlarmStorage.cancelOutstandingAlarms();
         }

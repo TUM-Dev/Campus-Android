@@ -13,9 +13,9 @@ import de.tum.in.tumcampusapp.services.FavoriteDishAlarmScheduler;
  */
 
 public class FavoriteFoodAlarmStorage {
-    private static SharedPreferences sharedPreferences;
-    private static SharedPreferences.Editor editor;
-    private static Context context;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private Context context;
 
     private FavoriteFoodAlarmStorage(){}
 
@@ -34,8 +34,8 @@ public class FavoriteFoodAlarmStorage {
      */
     public synchronized FavoriteFoodAlarmStorage initialize(Context context){
         this.context = context;
-        this.sharedPreferences = context.getSharedPreferences("FavoriteFoodAlarmStorage", Context.MODE_PRIVATE);
-        this.editor = sharedPreferences.edit();
+        this.sharedPreferences = this.context.getSharedPreferences("FavoriteFoodAlarmStorage", Context.MODE_PRIVATE);
+        this.editor = this.sharedPreferences.edit();
         return this;
     }
 
