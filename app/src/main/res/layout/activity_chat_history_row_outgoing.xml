@@ -57,7 +57,8 @@
                 android:contentDescription="@string/status_sent"
                 android:layout_margin="0dp"
                 android:padding="0dp"
-                android:src="@drawable/ic_done"
+                android:src="@drawable/ic_check"
+                android:tint="@color/text_light_gray"
                 android:textColor="@color/text_light_gray"
                 android:layout_weight="1"
                 android:visibility="gone"/>

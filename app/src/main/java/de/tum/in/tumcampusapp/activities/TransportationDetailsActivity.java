@@ -16,13 +16,14 @@ import de.tum.in.tumcampusapp.auxiliary.DepartureView;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
+import de.tum.in.tumcampusapp.models.efa.Departure;
 
 /**
  * Activity to show transport departures for a specified station
  * <p>
  * NEEDS: EXTRA_STATION set in incoming bundle (station name)
  */
-public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String, List<TransportManager.Departure>> {
+public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String, List<Departure>> {
     public static final String EXTRA_STATION = "station";
     public static final String EXTRA_STATION_ID = "stationID";
 
@@ -81,7 +82,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
      * @return List of departures
      */
     @Override
-    protected List<TransportManager.Departure> onLoadInBackground(String... arg) {
+    protected List<Departure> onLoadInBackground(String... arg) {
         final String location = arg[0];
 
         // save clicked station into db
@@ -95,7 +96,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
 
         // get departures from website
         final String locationID = arg[1];
-        List<TransportManager.Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, locationID);
+        List<Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, locationID);
         if (departureCursor.isEmpty()) {
             showError(R.string.no_departures_found);
         }
@@ -109,13 +110,13 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
      * @param result List of departures
      */
     @Override
-    protected void onLoadFinished(List<TransportManager.Departure> result) {
+    protected void onLoadFinished(List<Departure> result) {
         showLoadingEnded();
         if (result == null) {
             return;
         }
         mViewResults.removeAllViews();
-        for (TransportManager.Departure d : result) {
+        for (Departure d : result) {
             DepartureView view = new DepartureView(this, true);
 
             view.setOnClickListener(new View.OnClickListener() {

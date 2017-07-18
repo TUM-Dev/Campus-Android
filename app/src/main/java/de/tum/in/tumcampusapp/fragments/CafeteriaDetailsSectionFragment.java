@@ -213,6 +213,53 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         replaceWithImg(context, processedMenu, text, "(S)", R.drawable.meal_pork);
         replaceWithImg(context, processedMenu, text, "(GQB)", R.drawable.ic_gqb);
         replaceWithImg(context, processedMenu, text, "(99)", R.drawable.meal_alcohol);
+        /* TODO Somday replace all of them:
+        '2'	:	'mit Konservierungsstoff',
+		'3'	:	'mit Antioxidationsmittel',
+		'4'	:	'mit Geschmacksverstärker',
+		'5'	:	'geschwefelt',
+		'6'	:	'geschwärzt (Oliven)',
+		'7'	:	'unbekannt',
+		'8'	:	'mit Phosphat',
+		'9'	:	'mit Süßungsmitteln',
+		'10':	'enthält eine Phenylalaninquelle',
+		'11':	'mit einer Zuckerart und Süßungsmitteln',
+		'99':	'mit Alkohol',
+		'f'	:	'fleischloses Gericht',
+		'v'	:	'veganes Gericht',
+		'GQB'	:	'Geprüfte Qualität - Bayern',
+		'S'	:	'mit Schweinefleisch',
+		'R'	:	'mit Rindfleisch',
+		'K'	:	'mit Kalbfleisch',
+		'MSC':	'Marine Stewardship Council',
+		'Kn':	'Knoblauch',
+		'13':	'kakaohaltige Fettglasur',
+		'14':	'Gelatine',
+		'Ei':	'Hühnerei',
+		'En':	'Erdnuss',
+		'Fi':	'Fisch',
+		'Gl':	'Glutenhaltiges Getreide',
+		'GlW':	'Weizen',
+		'GlR':	'Roggen',
+		'GlG':	'Gerste',
+		'GlH':	'Hafer',
+		'GlD':	'Dinkel',
+		'Kr':	'Krebstiere',
+		'Lu':	'Lupinen',
+		'Mi':	'Milch und Laktose',
+		'Sc':	'Schalenfrüchte',
+		'ScM':	'Mandeln',
+		'ScH':	'Haselnüsse',
+		'ScW':	'Walnüsse',
+		'ScC':	'Cashewnüssen',
+		'ScP':	'Pistazien',
+		'Se':	'Sesamsamen',
+		'Sf':	'Senf',
+		'Sl':	'Sellerie',
+		'So':	'Soja',
+		'Sw':	'Schwefeloxid und Sulfite',
+		'Wt':	'Weichtiere'
+         */
         return text;
     }
 

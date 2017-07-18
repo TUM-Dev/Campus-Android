@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
+import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,7 +37,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-
 
 public class TUMCabeClient {
 
@@ -59,6 +59,7 @@ public class TUMCabeClient {
     private static final String API_ANSWER_QUESTION = "question/answer/";
     private static final String API_OWN_QUESTIONS = "question/my/";
     private static final String API_FACULTY = "faculty/";
+    private static final String API_WIFI_HEATMAP = "wifimap/";
 
     private static final String API_FACILITY = "facility/";
 
@@ -66,24 +67,16 @@ public class TUMCabeClient {
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
 
-    private final TUMCabeAPIService mockService;
+
 
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://" + "192.168.2.183" + API_BASEURL)
+                .baseUrl("http://" + "131.159.204.78" + API_BASEURL)
+//                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addConverterFactory(GsonConverterFactory.create());
 
         builder.client(Helper.getOkClient(c));
         service = builder.build().create(TUMCabeAPIService.class);
-
-
-        Retrofit.Builder mockBuilder = new Retrofit.Builder()
-                .baseUrl("http://131.159.207.170"+API_BASEURL)
-                .addConverterFactory(GsonConverterFactory.create());
-
-        mockBuilder.client(Helper.getOkClient(c));
-        mockService = mockBuilder.build().create(TUMCabeAPIService.class);
-
 
         /*
         TODO port the error handler to Retrofit 2
@@ -233,6 +226,10 @@ public class TUMCabeClient {
         service.deviceUploadGcmToken(verification).enqueue(cb);
     }
 
+    public void createMeasurements(WifiMeasurement[] wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException{
+        service.createMeasurements(wifiMeasurementList).enqueue(cb);
+    }
+
 //Facilities
     public void getFacilityCategories(Callback<List<FacilityCategory>> cb) throws IOException {
         service.getFacilityCategories().enqueue(cb);
@@ -364,35 +361,38 @@ public class TUMCabeClient {
         @POST(API_DEVICE + "addGcmToken/")
         Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadGcmToken verification);
 
-//        Facilities
-        @GET("facility/category")
+        //WifiHeatmap
+        @POST(API_WIFI_HEATMAP+"create_measurements/")
+        Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
+        //        Facilities
+        @GET(API_FACILITY+"category")
         Call<List<FacilityCategory>> getFacilityCategories();
 
-        @GET("facility/category/"+"{categoryId}")
+        @GET(API_FACILITY+"category/"+"{categoryId}")
         Call<List<Facility>> getFacilitiesByCategory(@Path("categoryId") int categoryId);
 
-        @GET("facility/"+"{query}")
+        @GET(API_FACILITY+"{query}")
         Call<List<Facility>> getFacilitiesByQuery(@Path("query") String query);
 
-        @GET("facility/user/"+"{lrzId}")
+        @GET(API_FACILITY+"user/"+"{lrzId}")
         Call<List<Facility>> getMyFacilities(@Path("lrzId") String lrzId);
 
-        @POST("facility/delete/"+"{id}")
+        @POST(API_FACILITY+"delete/"+"{id}")
         Call<Void> deleteFacility(@Path("id") Integer id,@Body ChatVerification verification);
 
-        @POST("facility/")
+        @POST(API_FACILITY)
         Call<Void> saveFacility(@Body Facility facility);
 
-        @GET("facility/"+"{id}"+"/votes/")
+        @GET(API_FACILITY+"{id}"+"/votes/")
         Call<Integer[]> getFacilityVotes(@Path("id") Integer id);
 
-        @POST("facility/"+"{id}"+"/votes/")
+        @POST(API_FACILITY+"{id}"+"/votes/")
         Call<Void> saveFacilityVote(@Path("id") Integer id,@Body FacilityVote facilityVote);
 
-        @GET("facility/"+"{id}"+"/votes/"+"{user}")
+        @GET(API_FACILITY+"{id}"+"/votes/"+"{user}")
         Call<FacilityVote> getFacilityVote(@Path("id") Integer id,@Path("user") String lrzId);
 
-        @GET("facility/map/{longitude}/{latitude}")
+        @GET(API_FACILITY+"map/{longitude}/{latitude}")
         Call<FacilityMap> getMapWithLocation(@Path("longitude") Double longitude, @Path("latitude") Double latitude);
 
     }

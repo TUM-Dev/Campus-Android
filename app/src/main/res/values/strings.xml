@@ -138,7 +138,7 @@
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
-    <string name="facility_locator">Facility Locator</string>
+    <string name="facility_locator" translatable="false">Facility Locator</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
@@ -361,13 +361,13 @@
     <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
     <string name="card_eduroam_summary">Allows you to easily set up eduroam wifi connection</string>
     <string name="pin_lock">PIN-Lock</string>
-    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
+    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.</string>
     <string name="enable_pin_lock">Enable PIN-Lock</string>
     <string name="data_backup">Data-Backup</string>
-    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the TUM credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
+    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the TUM credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.</string>
     <string name="disable_data_backup">Disable Data-Backup</string>
     <string name="eduroam_success">Eduroam successfully configured</string>
-    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?</string>
+    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?\nDeleted the manually created profile? We cannot overwrite manually created wifi profiles!</string>
     <string name="install_certificate">Install certificate</string>
     <string name="certificate">Certificate</string>
     <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click ‘Install certificate’ and confirm with ‘OK’.</string>
@@ -502,29 +502,41 @@ Signature: %5$s</string>
     <string name="transport_help_text">Tap your favorite transportation lines to highlight them. Tap again to revert them back to normal.</string>
 
     <!--Facility Locator-->
-    <string name="tag_facility">Tag Facility</string>
-    <string name="delete_facility">Delete Facility</string>
-    <string name="facility_name">Facility Name</string>
-    <string name="save">Save</string>
-    <string name="add_facility">Add Facility</string>
+    <string name="tag_facility" translatable="false">Tag Facility</string>
+    <string name="delete_facility" translatable="false">Delete Facility</string>
+    <string name="facility_name" translatable="false">Facility Name</string>
+    <string name="save" translatable="false">Save</string>
+    <string name="add_facility" translatable="false">Add Facility</string>
 
-    <string name="facility_save_success">Facility saved successfully</string>
-    <string name="facility_vote_save_success">Vote saved successfully</string>
-    <string name="facility_delete_success">Facility deleted successfully</string>
+    <string name="facility_save_success" translatable="false">Facility saved successfully</string>
+    <string name="facility_vote_save_success" translatable="false">Vote saved successfully</string>
+    <string name="facility_delete_success" translatable="false">Facility deleted successfully</string>
 
 
-    <string name="facility_log_in_error">You need to log in in order to add</string>
-    <string name="facility_tab_categories">Facility Categories</string>
-    <string name="facility_tab_my">My Facilities</string>
-    <string name="search_facilities">Search by name</string>
+    <string name="facility_log_in_error" translatable="false">You need to log in in order to add</string>
+    <string name="facility_tab_categories" translatable="false">Facility Categories</string>
+    <string name="facility_tab_my" translatable="false">My Facilities</string>
+    <string name="search_facilities" translatable="false">Search by name</string>
 
-    <string name="facility_save_failure">Facility could not be saved</string>
-    <string name="facility_delete_failure">Facility could not be deleted</string>
-    <string name="facility_map_failure">Facility map could not be downloaded</string>
-    <string name="facility_votes_failure">Error while getting votes</string>
-    <string name="facility_categories_failure">An unexpected error occured while getting facility categories</string>
-    <string name="facility_name_empty_error">Name cannot be empty</string>
-    <string name="facility_my_facilities_error">Error while getting your facilities</string>
+    <string name="facility_save_failure" translatable="false">Facility could not be saved</string>
+    <string name="facility_delete_failure" translatable="false">Facility could not be deleted</string>
+    <string name="facility_map_failure" translatable="false">Facility map could not be downloaded</string>
+    <string name="facility_votes_failure" translatable="false">Error while getting votes</string>
+    <string name="facility_categories_failure" translatable="false">An unexpected error occured while getting facility categories</string>
+    <string name="facility_name_empty_error" translatable="false">Name cannot be empty</string>
+    <string name="facility_my_facilities_error" translatable="false">Error while getting your facilities</string>
+
+    <string name="mvv_widget" translatable="false">MVV Widget TUM</string>
+    <string name="mvv_widget_select_station">Select station</string>
+    <string name="mvv_widget_no_station">No station selected</string>
+    <string name="mvv_widget_no_data">Offline or no data available</string>
+    <string name="mvv_widget_auto_reload">Automatic reload</string>
+    <string name="mvv_widget_auto_reload_hint">Will consume Energy and Data</string>
+    <string name="timetable_widget">Timetable Widget TUM</string>
+    <string name="timetable_widget_select_lectures">Select lectures</string>
+    <string name="timetable_widget_no_lectures">No lectures planned :)</string>
+    <string name="eduroam_not_valid_id">Not a valid TUM-ID.</string>
+    <string name="eduroam_please_enter_password">Please enter your password. It will not be saved.</string>
 </resources>
 
 

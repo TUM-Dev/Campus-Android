@@ -569,14 +569,47 @@
                 android:resource="@xml/mensa_widget_info" />
         </receiver>
 
-        <!-- receiver for the MVVWidget -->
         <service
             android:name=".services.MensaWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
+        <!-- receiver for the MVVWidget -->
+
+        <receiver android:name=".widgets.MVVWidget"
+            android:label="@string/mvv_widget">>
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mvv_widget_info" />
+        </receiver>
+
         <service
-            android:name=".widgets.CardsWidgetService"
+            android:name=".widgets.MVVWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity android:name=".widgets.MVVWidgetConfigureActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/mvv_widget_select_station"
+            android:launchMode="singleTop"
+            android:allowTaskReparenting="false"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_mvv" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- receiver for the CardWidget -->
 
         <receiver android:name=".widgets.CardsWidget">
             <intent-filter>
@@ -588,7 +621,40 @@
                 android:resource="@xml/cards_widget_info" />
         </receiver>
 
+        <service
+            android:name=".widgets.CardsWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <activity android:name=".widgets.CardsWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- receiver for the TimetableWidget -->
+
+        <receiver
+            android:name=".widgets.TimetableWidget"
+            android:label="@string/timetable_widget">>
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/timetable_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".widgets.TimetableWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity
+            android:name=".widgets.TimetableWidgetConfigureActivity"
+            android:allowTaskReparenting="false"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/timetable_widget_select_lectures"
+            android:launchMode="singleTop"
+            android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -598,10 +664,16 @@
         <receiver android:name=".services.StartSyncReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.SCAN_RESULTS" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
+        </receiver>
+
+        <!-- Used for generating the wifi-heatmap data -->
+        <receiver android:name=".services.NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>intent-filter>
         </receiver>
 
         <!-- Used to set Notification for favoriteDish -->
@@ -619,6 +691,9 @@
             android:exported="false" />
         <service
             android:name=".services.SendMessageService"
+            android:exported="false" />
+        <service
+            android:name=".services.SendWifiMeasurementService"
             android:exported="false" />
         <service
             android:name=".services.BackgroundService"

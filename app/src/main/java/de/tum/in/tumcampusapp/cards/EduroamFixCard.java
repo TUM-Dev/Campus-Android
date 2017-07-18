@@ -59,6 +59,12 @@ public class EduroamFixCard extends NotificationAwareCard {
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
+        //Check if wifi is turned on at all, as we cannot say if it was configured if its off
+        WifiManager wifi = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if(!wifi.isWifiEnabled()) {
+            return false;
+        }
+
         return !isConfigValid();
     }
 

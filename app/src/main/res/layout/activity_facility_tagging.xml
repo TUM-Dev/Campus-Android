@@ -67,7 +67,7 @@
                 android:id="@+id/save_facility"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_done"
+                android:src="@drawable/ic_check"
                 android:clickable="true"
                 android:layout_margin="16dp"
                 android:layout_alignParentRight="true"

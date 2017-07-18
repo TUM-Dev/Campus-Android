@@ -91,9 +91,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             setSummary("card_default_campus");
             setSummary("silent_mode_set_to");
             setSummary("background_mode_set_to");
-
-            // Populate news sources
-            populateNewsSources();
         }
 
         // Register the change listener to react immediately on changes
@@ -106,41 +103,50 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         // Set the default white background in the view so as to avoid transparency
         view.setBackgroundColor(Color.WHITE);
+
+        // Populate news sources
+        populateNewsSources();
     }
 
     private void populateNewsSources() {
         PreferenceCategory newsSources = (PreferenceCategory) findPreference("card_news_sources");
-        NewsManager cm = new NewsManager(mContext);
-        final NetUtils net = new NetUtils(mContext);
-        Cursor cur = cm.getNewsSources();
-        if (cur.moveToFirst()) {
-            do {
-                final CheckBoxPreference pref = new CheckBoxPreference(mContext);
-                pref.setKey("card_news_source_" + cur.getString(0));
-                pref.setDefaultValue(true);
-                // Load news source icon in background and set it
-                final String url = cur.getString(1);
-                if (url != null) { // Skip News that do not have a image
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (bmp.isPresent()) {
-                                        pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
-                                    }
-                                }
-                            });
-                        }
-                    }).start();
-                }
 
-                pref.setTitle(cur.getString(2));
-                newsSources.addPreference(pref);
-            } while (cur.moveToNext());
+        NewsManager cm = new NewsManager(mContext);
+        Cursor cur = cm.getNewsSources();
+        //If we don't have any, we can't add any
+        if (!cur.moveToFirst() || newsSources == null) {
+            cur.close();
+            return;
         }
+
+        final NetUtils net = new NetUtils(mContext);
+        do {
+            final CheckBoxPreference pref = new CheckBoxPreference(mContext);
+            pref.setKey("card_news_source_" + cur.getString(0));
+            pref.setDefaultValue(true);
+            // Load news source icon in background and set it
+            final String url = cur.getString(1);
+
+            if (url != null) { // Skip News that do not have a image
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (bmp.isPresent()) {
+                                    pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
+                                }
+                            }
+                        });
+                    }
+                }).start();
+            }
+
+            pref.setTitle(cur.getString(2));
+            newsSources.addPreference(pref);
+        } while (cur.moveToNext());
         cur.close();
     }
 
