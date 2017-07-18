@@ -7,11 +7,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.adapters.BarrierfreeMoreInfoAdapter;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.tumonline.TUMBarrierFreeRequest;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -45,6 +48,11 @@ public class BarrierFreeMoreInfoActivity
 
     @Override
     protected void onLoadFinished(List<BarrierfreeMoreInfo> result) {
+        if (result == null) {
+            showErrorLayout();
+            return;
+        }
+
         infos = result;
         adapter = new BarrierfreeMoreInfoAdapter(this, infos);
         listview.setAdapter(adapter);
@@ -53,7 +61,15 @@ public class BarrierFreeMoreInfoActivity
 
     @Override
     protected List<BarrierfreeMoreInfo> onLoadInBackground(Void... arg) {
-        return request.fetchMoreInfoList();
+        List<BarrierfreeMoreInfo> result;
+        try {
+            result = TUMCabeClient.getInstance(this).getMoreInfoList();
+            //result = TUMCabeClient.getInstance(this).getMoreInfoList();
+        } catch (IOException e) {
+            Utils.log(e);
+            return null;
+        }
+        return result;
     }
 
     @Override

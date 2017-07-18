@@ -29,6 +29,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         View view = convertView;
+
         if(view == null){
             view = getInflater().inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
 
@@ -51,21 +52,22 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         // display information of current person
         final BarrierfreeContact contact = getInfoList().get(position);
 
-        if(contact == null) {
-            holder.more.setVisibility(View.GONE);
+        if(!contact.ifValid()) {
+            view.setVisibility(View.GONE);
             return view;
         }
 
+        view.setVisibility(View.VISIBLE);
 
         holder.name.setText(contact.getName());
 
-        holder.phone.setText(contact.getPhone(), TextView.BufferType.SPANNABLE);
+        holder.phone.setText(contact.getTelephone(), TextView.BufferType.SPANNABLE);
         Linkify.addLinks(holder.phone, Linkify.ALL);
 
         holder.email.setText(contact.getEmail());
 
         // Has information in tumonline
-        if (!contact.getTumonlineID().equals("null") && !contact.getTumonlineID().equals("")){
+        if (contact.ifHaveTumID()){
             // Jump to PersonDetail Activity
             holder.more.setVisibility(View.VISIBLE);
             holder.more.setText(context.getString(R.string.more_info));
@@ -74,7 +76,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
                 public void onClick(View v) {
                     Person person = new Person();
                     person.setName(contact.getName());
-                    person.setId(contact.getTumonlineID());
+                    person.setId(contact.getTumID());
 
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("personObject", person);
@@ -84,6 +86,8 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
                     context.startActivity(intent);
                 }
             });
+        } else {
+            holder.more.setVisibility(View.GONE);
         }
 
         return view;

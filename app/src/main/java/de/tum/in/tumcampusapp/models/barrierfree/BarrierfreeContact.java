@@ -21,19 +21,23 @@ public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.Simple
         this.tumID = tumonlineID;
     }
 
-    public BarrierfreeContact(){
-
+    public boolean ifValid(){
+        return name != null && !name.equals("null");
     }
 
-    public String getName(){
+    public boolean ifHaveTumID(){
+        return !(tumID.equals("null") || tumID.equals(""));
+    }
+
+    public String getName() {
         return name;
     }
 
-    public String getPhone(){
+    public String getTelephone() {
         return telephone;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return email;
     }
 
@@ -41,7 +45,7 @@ public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.Simple
         return faculty;
     }
 
-    public String getTumonlineID() {
+    public String getTumID() {
         return tumID;
     }
 

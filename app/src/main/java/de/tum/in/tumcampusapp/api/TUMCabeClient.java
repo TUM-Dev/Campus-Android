@@ -7,6 +7,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
+import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
@@ -229,8 +230,12 @@ public class TUMCabeClient {
         service.createMeasurements(wifiMeasurementList).enqueue(cb);
     }
 
-    public List<BarrierfreeContact> getBarrierfreeContactList() throws IOException{
+    public List<BarrierfreeContact> getBarrierfreeContactList() throws IOException {
         return service.getBarrierfreeContactList().execute().body();
+    }
+
+    public List<BarrierfreeMoreInfo> getMoreInfoList() throws IOException {
+        return service.getMoreInfoList().execute().body();
     }
 
     private interface TUMCabeAPIService {
@@ -325,17 +330,13 @@ public class TUMCabeClient {
         @POST(API_WIFI_HEATMAP+"create_measurements/")
         Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
 
-        // Barrier free
+        // Barrier free contacts
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)
         Call<List<BarrierfreeContact>> getBarrierfreeContactList();
 
-    }
+        // Barrier free More Info
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_MORE_INFO)
+        Call<List<BarrierfreeMoreInfo>> getMoreInfoList();
 
-    public TUMCabeClient(final Context c, String string) {
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2/" + API_BASEURL)
-                .addConverterFactory(GsonConverterFactory.create());
-        builder.client(Helper.getOkClient(c));
-        service = builder.build().create(TUMCabeAPIService.class);
     }
 }
