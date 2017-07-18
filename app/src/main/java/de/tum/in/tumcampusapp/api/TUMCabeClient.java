@@ -370,6 +370,5 @@ public class TUMCabeClient {
         // building to gps information
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
         Call<List<Map<String, String>>> getBuilding2Gps();
-
     }
 }

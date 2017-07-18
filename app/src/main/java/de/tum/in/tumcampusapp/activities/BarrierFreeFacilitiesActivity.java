@@ -67,6 +67,7 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
     @Override
     protected List<Map<String, String>> onLoadInBackground(Void... arg) {
         if (building2Gps == null && !building2GpsFail) {
+            // if buildings2gps is not ready, it need to be fetched first
             return fetchBuilding2Gps();
         }
 
@@ -98,10 +99,13 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
     protected void onLoadFinished(List<Map<String, String>> result) {
         if (building2Gps == null && !building2GpsFail) {
             if (result == null) {
+                // try to fetch building2gps but get null, no more try
                 building2GpsFail = true;
                 showErrorLayout();
                 return;
             }
+
+            // buildings2gps if fetched. get real data
             building2Gps = result;
             startLoading();
             return;
