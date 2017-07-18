@@ -64,15 +64,12 @@ public class CafeteriaNotificationSettingsActivity extends BaseActivity {
     public void setupList(){
         Calendar it = Calendar.getInstance();
         it.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        int i = 0;
-        while (it.get(Calendar.DAY_OF_WEEK) < Calendar.SATURDAY){
+        for (int i = 0; it.get(Calendar.DAY_OF_WEEK) < Calendar.SATURDAY; i++, it.add(Calendar.DAY_OF_WEEK, 1)){
             if (i < dailySchedule.size()){
                 dailySchedule.set(i,cafeteriaNotificationSettings.retrieveHourMinute(it));
             }else{
                 dailySchedule.add(i,cafeteriaNotificationSettings.retrieveHourMinute(it));
             }
-            it.add(Calendar.DAY_OF_WEEK,1);
-            i++;
         }
     }
 }

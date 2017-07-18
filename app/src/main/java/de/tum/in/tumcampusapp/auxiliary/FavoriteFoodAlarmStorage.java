@@ -13,36 +13,44 @@ import de.tum.in.tumcampusapp.services.FavoriteDishAlarmScheduler;
  */
 
 public class FavoriteFoodAlarmStorage {
-    private static FavoriteFoodAlarmStorage singleton;
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
     private static Context context;
 
     private FavoriteFoodAlarmStorage(){}
-    public static FavoriteFoodAlarmStorage getInstance(Context context){
-        if (singleton == null){
-            singleton = new FavoriteFoodAlarmStorage();
-        }
-        FavoriteFoodAlarmStorage.context = context;
-        sharedPreferences = context.getSharedPreferences("FavoriteFoodAlarmStorage", Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        return singleton;
+
+    private static class FavoriteFoodAlarmStorageLazyHolder {
+        static final FavoriteFoodAlarmStorage SINGLETON = new FavoriteFoodAlarmStorage();
+    }
+
+    public static FavoriteFoodAlarmStorage getInstance() {
+        return FavoriteFoodAlarmStorageLazyHolder.SINGLETON;
+    }
+
+    /**
+     * Called after using getInstance() to initialize correct variables
+     * @param context
+     * @return
+     */
+    public synchronized FavoriteFoodAlarmStorage initialize(Context context){
+        this.context = context;
+        this.sharedPreferences = context.getSharedPreferences("FavoriteFoodAlarmStorage", Context.MODE_PRIVATE);
+        this.editor = sharedPreferences.edit();
+        return this;
     }
 
     /**
      * Schedules an alarm at a given day, if there's not already an alarm scheduled for that day.
      * @param when
      */
-    public void scheduleAlarm(String when){
-        synchronized (singleton) {
-            if (sharedPreferences.getBoolean(when, false)) {
-                return;
-            }
-            editor.putBoolean(when, true);
-            editor.commit();
-            FavoriteDishAlarmScheduler favoriteDishAlarmScheduler = new FavoriteDishAlarmScheduler();
-            favoriteDishAlarmScheduler.setFoodAlarm(context, when);
+    public synchronized void scheduleAlarm(String when){
+        if (sharedPreferences.getBoolean(when, false)) {
+            return;
         }
+        editor.putBoolean(when, true);
+        editor.commit();
+        FavoriteDishAlarmScheduler favoriteDishAlarmScheduler = new FavoriteDishAlarmScheduler();
+        favoriteDishAlarmScheduler.setFoodAlarm(context, when);
     }
 
     /**
@@ -50,26 +58,22 @@ public class FavoriteFoodAlarmStorage {
      * @param when
      */
 
-    public void cancelAlarm(String when){
-        synchronized (singleton) {
-            if (!sharedPreferences.getBoolean(when, false)) {
-                return;
-            }
-            editor.remove(when);
-            editor.commit();
-            FavoriteDishAlarmScheduler favoriteDishAlarmScheduler = new FavoriteDishAlarmScheduler();
-            favoriteDishAlarmScheduler.cancelFoodAlarm(context, when);
+    public synchronized  void cancelAlarm(String when){
+        if (!sharedPreferences.getBoolean(when, false)) {
+            return;
         }
+        editor.remove(when);
+        editor.commit();
+        FavoriteDishAlarmScheduler favoriteDishAlarmScheduler = new FavoriteDishAlarmScheduler();
+        favoriteDishAlarmScheduler.cancelFoodAlarm(context, when);
     }
 
     /**
      * Goes through all scheduled alarms and cancels them by calling cancelAlarm() on each of them.
      */
-    public void cancelOutstandingAlarms(){
-        synchronized (singleton){
-            for(String when : sharedPreferences.getAll().keySet()){
-                cancelAlarm(when);
-            }
+    public synchronized  void cancelOutstandingAlarms(){
+        for(String when : sharedPreferences.getAll().keySet()){
+            cancelAlarm(when);
         }
     }
 }

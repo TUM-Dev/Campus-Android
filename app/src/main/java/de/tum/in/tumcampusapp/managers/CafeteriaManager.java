@@ -131,9 +131,9 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
     }
 
     public String getMensaNameFromId(int mensaId){
-        Cursor c = db.rawQuery("SELECT id,name FROM cafeterias WHERE id = ?", new String[]{""+mensaId});
+        Cursor c = db.rawQuery("SELECT name FROM cafeterias WHERE id = ?", new String[]{""+mensaId});
         if(c.moveToNext()){
-            return c.getString(c.getColumnIndex("name"));
+            return c.getString(0);
         }
         return null;
     }

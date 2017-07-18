@@ -87,6 +87,13 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
         return view;
     }
 
+
+    /**
+     * Returns a String in the format [one digit hour]:[zero prepended two digit minute]
+     * @param hour
+     * @param minute
+     * @return
+     */
     private String getTimeString(int hour, int minute){
         return (hour+":"+((minute < 10)?"0"+minute:minute));
     }

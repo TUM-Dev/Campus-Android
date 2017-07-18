@@ -63,11 +63,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Add info icon to show ingredients
         getMenuInflater().inflate(R.menu.menu_section_fragment_cafeteria_details, menu);
