@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +15,6 @@ import de.tum.in.tumcampusapp.adapters.BarrierfreeMoreInfoAdapter;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeMoreInfo;
-import de.tum.in.tumcampusapp.tumonline.TUMBarrierFreeRequest;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class BarrierFreeMoreInfoActivity
@@ -26,7 +24,6 @@ public class BarrierFreeMoreInfoActivity
     public StickyListHeadersListView listview;
     public List<BarrierfreeMoreInfo> infos;
     public BarrierfreeMoreInfoAdapter adapter;
-    private TUMBarrierFreeRequest request;
 
     public BarrierFreeMoreInfoActivity(){
         super(R.layout.activity_barrier_free_list_info);
@@ -42,7 +39,6 @@ public class BarrierFreeMoreInfoActivity
 
         listview = (StickyListHeadersListView) findViewById(R.id.activity_barrier_info_list_view);
 
-        request = new TUMBarrierFreeRequest(this);
         startLoading();
     }
 

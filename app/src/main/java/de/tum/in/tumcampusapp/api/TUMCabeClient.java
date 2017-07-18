@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
@@ -238,6 +239,22 @@ public class TUMCabeClient {
         return service.getMoreInfoList().execute().body();
     }
 
+    public List<Map<String, String>> getListOfToilets() throws IOException {
+        return service.getListOfToilets().execute().body();
+    }
+
+    public List<Map<String, String>> getListOfElevators() throws IOException {
+        return service.getListOfElevators().execute().body();
+    }
+
+    public List<Map<String, String>> getListOfNearbyFacilities(String buildingId) throws IOException {
+        return service.getListOfNearbyFacilities(buildingId).execute().body();
+    }
+
+    public List<Map<String, String>> getBuilding2Gps() throws IOException {
+        return service.getBuilding2Gps().execute().body();
+    }
+
     private interface TUMCabeAPIService {
 
         @GET(API_FACULTY)
@@ -337,6 +354,22 @@ public class TUMCabeClient {
         // Barrier free More Info
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_MORE_INFO)
         Call<List<BarrierfreeMoreInfo>> getMoreInfoList();
+
+        // Barrier free toilets list
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_TOILETS)
+        Call<List<Map<String, String>>> getListOfToilets();
+
+        // Barrier free elevator list
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_ELEVATORS)
+        Call<List<Map<String, String>>> getListOfElevators();
+
+        // Barrier free nearby list
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_Nerby_FACILITIES + "{buildingId}/")
+        Call<List<Map<String, String>>> getListOfNearbyFacilities(@Path("buildingId") String buildingId);
+
+        // building to gps information
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
+        Call<List<Map<String, String>>> getBuilding2Gps();
 
     }
 }

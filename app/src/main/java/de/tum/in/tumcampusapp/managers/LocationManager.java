@@ -23,9 +23,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
-import de.tum.in.tumcampusapp.tumonline.TUMBarrierFreeRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequestFetchListener;
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -359,14 +357,14 @@ public class LocationManager {
         String bestBuilding = "";
 
         for (Map<String, String> building : buildingsToGps) {
-            double buildingLat = Double.parseDouble(building.get(TUMBarrierFreeRequest.KEY_BUILDING_TO_GPS_LATITUDE));
-            double buildingLng = Double.parseDouble(building.get(TUMBarrierFreeRequest.KEY_BUILDING_TO_GPS_LONGITUDE));
+            double buildingLat = Double.parseDouble(building.get(Const.JSON_LATITUDE));
+            double buildingLng = Double.parseDouble(building.get(Const.JSON_LONGITUDE));
 
             Location.distanceBetween(buildingLat, buildingLng, lat, lng, results);
             float distance = results[0];
             if (distance < bestDistance) {
                 bestDistance = distance;
-                bestBuilding = building.get(TUMBarrierFreeRequest.KEY_BUILDING_TO_GPS_Building_ID);
+                bestBuilding = building.get(Const.JSON_BUILDING_TO_GPS_Building_ID);
             }
         }
 
