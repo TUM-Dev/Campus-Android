@@ -264,7 +264,7 @@
     <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
     <string name="default_cafeteria">Standardmensa</string>
     <string name="default_station">Standardhaltestelle</string>
-    <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
+    <string name="campus_klinikum_grosshadern">Klinikum Großhadern</string>
     <string name="cafeteria">Mensa</string>
     <string name="card_cafeteria_summary">Zeigt den Mensa-Speiseplan an</string>
     <string name="card_mvv_summary">Zeigt die Abfahrtszeiten der öffentlich Verkehrmittel an</string>
@@ -431,7 +431,14 @@ Signatur: %5$s</string>
     <string name="mvv_widget_auto_reload_hint">Erhöht Strom und Datenverbrauch</string>
     <string name="timetable_widget">Stundenplan Widget TUM</string>
     <string name="timetable_widget_select_lectures">Vorlesungen auswählen</string>
-    <string name="timetable_widget_no_lectures">KeineVorlesungen geplant :)</string>
+    <string name="timetable_widget_no_lectures">Keine Vorlesungen geplant :)</string>
     <string name="eduroam_not_valid_id">Keine gültige TUM-Kennung</string>
     <string name="eduroam_please_enter_password">Bitte Passwort eingeben. Dieses wird nicht gespeichert.</string>
+    <string name="study_cards_title">Cards</string>
+    <string name="card_title">Titel</string>
+    <string name="create_card">Karte hinzufügen</string>
+    <string name="title_activity_cards">CardsActivity</string>
+    <string name="card_front_text">Vorderseite</string>
+    <string name="card_back_text">Hinterseite</string>
+    <string name="title_activity_cards_detail">Karte bearbeiten</string>
 </resources>

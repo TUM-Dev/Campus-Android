@@ -34,7 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Default layouts for user interaction
      */
-    private final int mLayoutId;
+    protected final Integer mLayoutId;
 
     protected DrawerLayout mDrawerLayout;
     protected NavigationView mDrawerList;
@@ -50,12 +50,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         mLayoutId = layoutId;
     }
 
+    public BaseActivity() { mLayoutId = null;}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
-        setContentView(mLayoutId);
 
+        if (this.mLayoutId != null) {
+            setContentView(mLayoutId);
+            this.setUpDrawer();
+            this.setUpToolbar();
+        }
+    }
+
+    public void setUpDrawer() {
         // Get handles to navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
@@ -83,7 +92,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             // Set the NavigationDrawer's click listener
             mDrawerList.setNavigationItemSelectedListener(helper);
         }
+    }
 
+    public void setUpToolbar() {
         String parent = NavUtils.getParentActivityName(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);

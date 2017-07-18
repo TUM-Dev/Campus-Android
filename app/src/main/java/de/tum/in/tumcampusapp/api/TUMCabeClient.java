@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.models.cards.StudyCard;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
@@ -38,6 +39,7 @@ public class TUMCabeClient {
 
     private static final String API_HOSTNAME = Const.API_HOSTNAME;
     private static final String API_BASEURL = "/Api/";
+    private static final String API_CARD = "cards/";
     private static final String API_CHAT = "chat/";
     private static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     private static final String API_CHAT_MEMBERS = API_CHAT + "members/";
@@ -139,6 +141,15 @@ public class TUMCabeClient {
 
     public ChatMember createMember(ChatMember chatMember) throws IOException {
         return service.createMember(chatMember).execute().body();
+    }
+
+    public List<StudyCard> getStudyCards() throws IOException {
+        return service.getStudyCards().execute().body();
+    }
+
+    public StudyCard addStudyCard(StudyCard card, ChatVerification verification) throws IOException {
+        verification.setData(card);
+        return service.addStudyCard(verification).execute().body();
     }
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
@@ -263,6 +274,12 @@ public class TUMCabeClient {
 
         @POST(API_CHAT_MEMBERS)
         Call<ChatMember> createMember(@Body ChatMember chatMember);
+
+        @GET(API_CARD)
+        Call<List<StudyCard>> getStudyCards();
+
+        @PUT(API_CARD)
+        Call<StudyCard> addStudyCard(@Body ChatVerification verification);
 
         @GET(API_CHAT_MEMBERS + "{lrz_id}/")
         Call<ChatMember> getMember(@Path("lrz_id") String lrzId);

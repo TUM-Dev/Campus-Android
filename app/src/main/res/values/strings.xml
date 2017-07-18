@@ -321,7 +321,7 @@
     <string name="min_search_len" tools:ignore="PluralsCandidate">Query must be at least %d chars long</string>
     <string name="default_cafeteria">Default Cafeteria</string>
     <string name="default_station">Default Station</string>
-    <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
+    <string name="campus_klinikum_grosshadern">Klinikum Großhadern</string>
     <string name="cafeteria">Cafeteria</string>
     <string name="card_cafeteria_summary">Displays the cafeteria menu</string>
     <string name="card_mvv_summary">Shows you the departure times of public transport</string>
@@ -510,6 +510,13 @@ Signature: %5$s</string>
     <string name="timetable_widget_no_lectures">No lectures planned :)</string>
     <string name="eduroam_not_valid_id">Not a valid TUM-ID.</string>
     <string name="eduroam_please_enter_password">Please enter your password. It will not be saved.</string>
+    <string name="title_activity_cards">CardsActivity</string>
+    <string name="study_cards_title">Cards</string>
+    <string name="create_card">create card</string>
+    <string name="card_title" >Title</string>
+    <string name="card_front_text">Front text</string>
+    <string name="card_back_text">Back text</string>
+    <string name="title_activity_cards_detail">Edit card</string>
 </resources>
 
 

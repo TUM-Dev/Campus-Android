@@ -123,7 +123,7 @@
                     android:entries="@array/stations_K"
                     android:entryValues="@array/stations_K"
                     android:key="card_stations_default_K"
-                    android:title="@string/campus_klinikum_großhadern" />
+                    android:title="@string/campus_klinikum_grosshadern" />
             </PreferenceCategory>
         </PreferenceScreen>
 

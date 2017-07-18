@@ -12,6 +12,7 @@ import android.view.SubMenu;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
+import de.tum.in.tumcampusapp.activities.CardsActivity;
 import de.tum.in.tumcampusapp.activities.ChatRoomsActivity;
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
@@ -46,6 +47,7 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work, StudyRoomsActivity.class, false, false),
             new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity.class, false, false),
             new SideNavigationItem(R.string.quiz_title, R.drawable.ic_pie_chart, SurveyActivity.class, true, false),
+            new SideNavigationItem(R.string.study_cards_title, R.drawable.ic_layers, CardsActivity.class, true, true),
             new SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity.class, true, false),
             new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, OrganisationActivity.class, true, false),
             new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)

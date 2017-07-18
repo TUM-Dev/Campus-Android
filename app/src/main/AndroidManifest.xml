@@ -497,6 +497,25 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.CardsActivity"
+            android:label="@string/title_activity_cards"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.CardsDetailActivity"
+            android:label="@string/title_activity_cards_detail"
+            android:parentActivityName=".activities.CardsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.CardsActivity" />
+        </activity>
 
         <!-- receiver for the mensaWidget -->
         <receiver
@@ -517,8 +536,9 @@
 
         <!-- receiver for the MVVWidget -->
 
-        <receiver android:name=".widgets.MVVWidget"
-            android:label="@string/mvv_widget">>
+        <receiver
+            android:name=".widgets.MVVWidget"
+            android:label="@string/mvv_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
@@ -533,11 +553,12 @@
             android:name=".widgets.MVVWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <activity android:name=".widgets.MVVWidgetConfigureActivity"
+        <activity
+            android:name=".widgets.MVVWidgetConfigureActivity"
+            android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
-            android:allowTaskReparenting="false"
             android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -577,7 +598,7 @@
 
         <receiver
             android:name=".widgets.TimetableWidget"
-            android:label="@string/timetable_widget">>
+            android:label="@string/timetable_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
