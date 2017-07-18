@@ -8,32 +8,29 @@ import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
 public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.SimpleStickyListItem{
 //    private int id;
     private String name;
-    private String phone;
+    private String telephone;
     private String email;
     private String faculty;
-    private String tumonlineID = "";
+    private String tumID = "";
 
-    public BarrierfreeContact(String name, String phone, String email, String faculty){
+    public BarrierfreeContact(String name, String phone, String email, String faculty, String tumonlineID){
         this.name = name;
-        this.phone = phone;
+        this.telephone = phone;
         this.email = email;
         this.faculty = faculty;
+        this.tumID = tumonlineID;
     }
 
     public BarrierfreeContact(){
 
     }
 
-//    public int getId() {
-//        return id;
-//    }
-
     public String getName(){
         return name;
     }
 
     public String getPhone(){
-        return phone;
+        return telephone;
     }
 
     public String getEmail(){
@@ -44,28 +41,8 @@ public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.Simple
         return faculty;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setFaculty(String faculty) {
-        this.faculty = faculty;
-    }
-
-    public void setTumonlineID(String tumonlineID) {
-        this.tumonlineID = tumonlineID;
-    }
-
     public String getTumonlineID() {
-        return tumonlineID;
+        return tumID;
     }
 
     @Override
@@ -77,10 +54,10 @@ public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.Simple
     public String toString() {
         return "BarrierfreeContact{" +
                 "name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
+                ", phone='" + telephone + '\'' +
                 ", email='" + email + '\'' +
                 ", faculty='" + faculty + '\'' +
-                ", tumonlineID='" + tumonlineID + '\'' +
+                ", tumonlineID='" + tumID + '\'' +
                 '}';
     }
 }

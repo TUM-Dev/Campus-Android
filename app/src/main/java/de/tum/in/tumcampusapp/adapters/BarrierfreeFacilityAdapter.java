@@ -25,7 +25,6 @@ public class BarrierfreeFacilityAdapter extends FragmentStatePagerAdapter{
     public Fragment getItem(int position) {
         Fragment fragment = new BarrierfreeFacilityListFragment();
         Bundle args = new Bundle();
-        System.out.println(currentPageID);
         args.putInt(Const.BARRIER_FREE_FACILITY_PAGE_ID, currentPageID);
         fragment.setArguments(args);
         return fragment;

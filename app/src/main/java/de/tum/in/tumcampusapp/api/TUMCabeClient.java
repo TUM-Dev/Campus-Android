@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
@@ -56,6 +57,13 @@ public class TUMCabeClient {
     private static final String API_OWN_QUESTIONS = "question/my/";
     private static final String API_FACULTY = "faculty/";
     private static final String API_WIFI_HEATMAP = "wifimap/";
+    private static final String API_BARRIER_FREE = "barrierfree/";
+    private static final String API_BARRIER_FREE_CONTACT = "contacts/";
+    private static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
+    private static final String API_BARRIER_FREE_Nerby_FACILITIES = "nerby/";
+    private static final String API_BARRIER_FREE_LIST_OF_TOILETS = "listOfToilets/";
+    private static final String API_BARRIER_FREE_LIST_OF_ELEVATORS = "listOfElevators/";
+    private static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
 
 
     private static TUMCabeClient instance;
@@ -221,6 +229,10 @@ public class TUMCabeClient {
         service.createMeasurements(wifiMeasurementList).enqueue(cb);
     }
 
+    public List<BarrierfreeContact> getBarrierfreeContactList() throws IOException{
+        return service.getBarrierfreeContactList().execute().body();
+    }
+
     private interface TUMCabeAPIService {
 
         @GET(API_FACULTY)
@@ -312,5 +324,18 @@ public class TUMCabeClient {
         //WifiHeatmap
         @POST(API_WIFI_HEATMAP+"create_measurements/")
         Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
+
+        // Barrier free
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)
+        Call<List<BarrierfreeContact>> getBarrierfreeContactList();
+
+    }
+
+    public TUMCabeClient(final Context c, String string) {
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2/" + API_BASEURL)
+                .addConverterFactory(GsonConverterFactory.create());
+        builder.client(Helper.getOkClient(c));
+        service = builder.build().create(TUMCabeAPIService.class);
     }
 }

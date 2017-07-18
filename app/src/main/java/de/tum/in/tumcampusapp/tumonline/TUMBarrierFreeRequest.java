@@ -236,12 +236,7 @@ public class TUMBarrierFreeRequest {
                     String tumID = obj.getString(KEY_PERSON_TUM_ID);
 
                     if (!name.equals("null")){
-                        BarrierfreeContact contact = new BarrierfreeContact();
-                        contact.setName(name);
-                        contact.setFaculty(faculty);
-                        contact.setPhone(phone);
-                        contact.setEmail(email);
-                        contact.setTumonlineID(tumID);
+                        BarrierfreeContact contact = new BarrierfreeContact(name, phone, email, faculty, tumID);
 
                         contactsList.add(contact);
                     }
