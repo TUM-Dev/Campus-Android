@@ -370,10 +370,6 @@ public class LocationManager {
             }
         }
 
-        System.out.println(lat + ", " + lng);
-        System.out.println(bestBuilding);
-        System.out.println(bestDistance);
-
         if (bestDistance < 1000) {
             return bestBuilding;
         } else {

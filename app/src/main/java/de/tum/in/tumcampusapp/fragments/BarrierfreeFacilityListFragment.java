@@ -54,8 +54,6 @@ public class BarrierfreeFacilityListFragment extends Fragment
             case 2:
                 request.fetchListOfElevators(getActivity(),this);
                 break;
-            default:
-                break;
         }
 
         return view;

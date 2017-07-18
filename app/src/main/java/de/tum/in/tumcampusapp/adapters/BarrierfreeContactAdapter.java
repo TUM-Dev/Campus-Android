@@ -51,37 +51,39 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         // display information of current person
         final BarrierfreeContact contact = getInfoList().get(position);
 
-        if(contact != null){
-            holder.name.setText(contact.getName());
+        if(contact == null) {
+            holder.more.setVisibility(View.GONE);
+            return view;
+        }
 
-            holder.phone.setText(contact.getPhone(), TextView.BufferType.SPANNABLE);
-            Linkify.addLinks(holder.phone, Linkify.ALL);
 
-            holder.email.setText(contact.getEmail());
+        holder.name.setText(contact.getName());
 
-            // Has information in tumonline
-            if (!contact.getTumonlineID().equals("null") && !contact.getTumonlineID().equals("")){
-                // Jump to PersonDetail Activity
-                holder.more.setVisibility(View.VISIBLE);
-                holder.more.setText(context.getString(R.string.more_info));
-                holder.more.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Person person = new Person();
-                        person.setName(contact.getName());
-                        person.setId(contact.getTumonlineID());
+        holder.phone.setText(contact.getPhone(), TextView.BufferType.SPANNABLE);
+        Linkify.addLinks(holder.phone, Linkify.ALL);
 
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("personObject", person);
+        holder.email.setText(contact.getEmail());
 
-                        Intent intent = new Intent(context, PersonsDetailsActivity.class);
-                        intent.putExtras(bundle);
-                        context.startActivity(intent);
-                    }
-                });
-            } else {
-                holder.more.setVisibility(View.GONE);
-            }
+        // Has information in tumonline
+        if (!contact.getTumonlineID().equals("null") && !contact.getTumonlineID().equals("")){
+            // Jump to PersonDetail Activity
+            holder.more.setVisibility(View.VISIBLE);
+            holder.more.setText(context.getString(R.string.more_info));
+            holder.more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Person person = new Person();
+                    person.setName(contact.getName());
+                    person.setId(contact.getTumonlineID());
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("personObject", person);
+
+                    Intent intent = new Intent(context, PersonsDetailsActivity.class);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            });
         }
 
         return view;
