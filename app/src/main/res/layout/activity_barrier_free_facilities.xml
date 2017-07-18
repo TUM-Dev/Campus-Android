@@ -48,10 +48,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" />
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/barrier_free_facilities_pager"
+            <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+                android:id="@+id/activity_barrier_free_facilities_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"/>
         </LinearLayout>
     </LinearLayout>
 

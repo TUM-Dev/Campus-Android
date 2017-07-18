@@ -51,7 +51,6 @@ public final class Const {
     public static final String SYNC_CLICKED = "automaticWidgetSyncButtonClick";
     public static final String TITLE_EXTRA = "title";
     public static final String TRANSPORT_COLUMN = "transport";
-    public static final String BARRIER_FREE_FACILITY_PAGE_ID = "barrierFreeFacilitiesPageID";
 
     public static final String API_HOSTNAME = "tumcabe.in.tum.de";
     public static final String CURRENT_CHAT_ROOM = "current_chat_room";

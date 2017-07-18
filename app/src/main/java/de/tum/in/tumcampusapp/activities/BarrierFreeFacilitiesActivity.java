@@ -9,12 +9,9 @@ import android.widget.Spinner;
 import de.tum.in.tumcampusapp.R;
 
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
-import de.tum.in.tumcampusapp.adapters.BarrierfreeFacilityAdapter;
 
 public class BarrierFreeFacilitiesActivity extends BaseActivity implements AdapterView.OnItemSelectedListener{
     private int selectedFacilityPage = -1;
-    private ViewPager facilityViewPager;
-    private BarrierfreeFacilityAdapter adapter;
 
     public BarrierFreeFacilitiesActivity(){
         super(R.layout.activity_barrier_free_facilities);
@@ -30,9 +27,6 @@ public class BarrierFreeFacilitiesActivity extends BaseActivity implements Adapt
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        facilityViewPager = (ViewPager) findViewById(R.id.barrier_free_facilities_pager);
-        adapter = new BarrierfreeFacilityAdapter(getSupportFragmentManager());
-
         // set spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinnerToolbar);
         spinner.setOnItemSelectedListener(this);
@@ -41,8 +35,6 @@ public class BarrierFreeFacilitiesActivity extends BaseActivity implements Adapt
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         selectedFacilityPage = position;
-        adapter.setCurrentPageID(selectedFacilityPage);
-        facilityViewPager.setAdapter(adapter);
     }
 
     @Override
