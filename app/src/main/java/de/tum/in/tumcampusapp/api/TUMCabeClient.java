@@ -62,7 +62,7 @@ public class TUMCabeClient {
     private static final String API_BARRIER_FREE = "barrierfree/";
     private static final String API_BARRIER_FREE_CONTACT = "contacts/";
     private static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
-    private static final String API_BARRIER_FREE_Nerby_FACILITIES = "nerby/";
+    private static final String API_BARRIER_FREE_NERBY_FACILITIES = "nerby/";
     private static final String API_BARRIER_FREE_LIST_OF_TOILETS = "listOfToilets/";
     private static final String API_BARRIER_FREE_LIST_OF_ELEVATORS = "listOfElevators/";
     private static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
@@ -364,7 +364,7 @@ public class TUMCabeClient {
         Call<List<Map<String, String>>> getListOfElevators();
 
         // Barrier free nearby list
-        @GET(API_BARRIER_FREE + API_BARRIER_FREE_Nerby_FACILITIES + "{buildingId}/")
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_NERBY_FACILITIES + "{buildingId}/")
         Call<List<Map<String, String>>> getListOfNearbyFacilities(@Path("buildingId") String buildingId);
 
         // building to gps information
