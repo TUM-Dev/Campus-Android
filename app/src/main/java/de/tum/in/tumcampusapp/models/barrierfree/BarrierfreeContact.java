@@ -54,6 +54,11 @@ public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.Simple
     }
 
     @Override
+    public String getHeaderId() {
+        return getFaculty();
+    }
+
+    @Override
     public String toString() {
         return "BarrierfreeContact{" +
                 "name='" + name + '\'' +

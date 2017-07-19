@@ -32,4 +32,9 @@ public class BarrierfreeMoreInfo implements SimpleStickyListHeadersAdapter.Simpl
     public String getHeadName() {
         return getCategory();
     }
+
+    @Override
+    public String getHeaderId() {
+        return getCategory();
+    }
 }
