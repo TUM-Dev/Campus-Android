@@ -152,4 +152,9 @@ public class StudyCard extends BaseObservable {
         // TODO
         return !this.getTitle().isEmpty();
     }
+
+    @Override
+    public String toString() {
+        return this.getTitle();
+    }
 }

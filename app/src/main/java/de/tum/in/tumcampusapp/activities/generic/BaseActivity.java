@@ -34,7 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Default layouts for user interaction
      */
-    protected final Integer mLayoutId;
+    private final int mLayoutId;
 
     protected DrawerLayout mDrawerLayout;
     protected NavigationView mDrawerList;
@@ -50,18 +50,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         mLayoutId = layoutId;
     }
 
-    public BaseActivity() { mLayoutId = null;}
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
 
-        if (this.mLayoutId != null) {
-            setContentView(mLayoutId);
-            this.setUpDrawer();
-            this.setUpToolbar();
-        }
+        setUpLayout();
+        setUpDrawer();
+        setUpToolbar();
+    }
+
+    public void setUpLayout() {
+        setContentView(mLayoutId);
     }
 
     public void setUpDrawer() {

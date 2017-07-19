@@ -51,18 +51,10 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         super(layoutId);
     }
 
-    public ProgressActivity() { super(); }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (this.mLayoutId != null) {
-            this.setUpProgress();
-        }
-    }
-
-    public void setUpProgress() {
         // Get handles to all error layouts
         allErrorsLayout = (LinearLayout) findViewById(R.id.errors_layout);
         progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);

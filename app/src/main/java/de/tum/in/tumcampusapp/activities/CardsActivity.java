@@ -32,23 +32,23 @@ public class CardsActivity extends ActivityForLoadingInBackground<Void, List<Stu
     private StudyCardListAdapter adapter;
 
     public CardsActivity() {
-        super();
+        super(R.layout.activity_cards);
         this.state = new CardActivityState();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityCardsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_cards);
-        binding.setState(this.state);
-
-        this.setUpDrawer();
-        this.setUpToolbar();
-        this.setUpProgress();
 
         // bind UI elements
         cardList = (ListView) findViewById(R.id.card_list);
         cardList.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void setUpLayout() {
+        ActivityCardsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_cards);
+        binding.setState(this.state);
     }
 
     @Override

@@ -2,10 +2,7 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +10,7 @@ import android.view.MenuItem;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -22,24 +20,31 @@ import de.tum.in.tumcampusapp.models.cards.StudyCard;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 
-public class CardsDetailActivity extends AppCompatActivity {
+public class CardsDetailActivity extends ActivityForLoadingInBackground<Void, StudyCard> {
     StudyCard card;
-    ActivityCardsDetailBinding binding;
+
+    public CardsDetailActivity() {
+        super(R.layout.activity_cards_detail);
+        this.card = new StudyCard();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.card = new StudyCard();
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cards_detail);
-        binding.setCard(card);
-
         // TODO handle different states (add/view/edit)
         setTitle("add Card");
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
+    @Override
+    public void setUpLayout() {
+        ActivityCardsDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_cards_detail);
+        binding.setCard(card);
+    }
+
+    @Override
+    public void setUpToolbar() {
+        super.setUpToolbar();
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
@@ -61,40 +66,34 @@ public class CardsDetailActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.save_card:
-                if (save()) {
-                    finish();
-                }
+                startLoading();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private boolean save() {
-        if (card.is_valid()) {
-            try {
-                final ChatVerification v = new ChatVerification(this, Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class));
-                final Context c = this;
+    @Override
+    protected StudyCard onLoadInBackground(Void... arg) {
+        if (!card.is_valid()) {
+            return null;
+        }
+        try {
+            final ChatVerification v = new ChatVerification(this, Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class));
+            final Context c = this;
+            return TUMCabeClient.getInstance(c).addStudyCard(card, v);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoPrivateKey noPrivateKey) {
+            noPrivateKey.printStackTrace();
+        }
+        return null;
+    }
 
-                AsyncTask t = new AsyncTask() {
-                    @Override
-                    protected Object doInBackground(Object[] objects) {
-                        try {
-                            TUMCabeClient.getInstance(c).addStudyCard(card, v);
-                        } catch (IOException e) {
-                            System.out.println(e.toString());
-                            e.printStackTrace();
-                        }
-                        return "Uploaded";
-                    }
-                };
-                t.execute("");
-            } catch (NoPrivateKey noPrivateKey) {
-                noPrivateKey.printStackTrace();
-            }
-            return true;
-        } else {
-            return false;
+    @Override
+    protected void onLoadFinished(StudyCard card) {
+        if (card != null) {
+            finish();
         }
     }
 }

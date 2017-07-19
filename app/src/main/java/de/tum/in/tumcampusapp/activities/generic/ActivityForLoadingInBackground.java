@@ -38,8 +38,6 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
 		super(layoutId);
 	}
 
-	public ActivityForLoadingInBackground() { super(); }
-
     /**
      * Starts a new background task.
      * The work that should be done in background must be specified in the {@link #onLoadInBackground(Object[])} method.
