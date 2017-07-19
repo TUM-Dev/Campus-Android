@@ -229,14 +229,14 @@ public class CafeteriaMenuManager extends AbstractManager {
         if(completeReschedule){
             favoriteFoodAlarmStorage.cancelOutstandingAlarms();
         }
-        Cursor favoriteFoodWhere = db.rawQuery("SELECT mensaId,dishName FROM favorite_dishes GROUP BY mensaId,dishName",null);
+
+        String query = "SELECT cafeterias_menus.date FROM favorite_dishes INNER JOIN cafeterias_menus" +
+                        " ON cafeterias_menus.mensaId = favorite_dishes.mensaId" +
+                        " AND favorite_dishes.dishName = cafeterias_menus.name";
+
+        Cursor favoriteFoodWhere = db.rawQuery(query, null);
         while (favoriteFoodWhere.moveToNext()){
-            int mensaId = favoriteFoodWhere.getInt(0);
-            String dishName = favoriteFoodWhere.getString(1);
-            Cursor upcomingServings = db.rawQuery("SELECT date FROM cafeterias_menus WHERE date >= date('now','localtime') AND mensaId = ? AND name = ?",new String[]{""+mensaId, dishName});
-            while (upcomingServings.moveToNext()){
-                favoriteFoodAlarmStorage.scheduleAlarm(upcomingServings.getString(0));
-            }
+            favoriteFoodAlarmStorage.scheduleAlarm(favoriteFoodWhere.getString(0));
         }
     }
 
@@ -248,26 +248,28 @@ public class CafeteriaMenuManager extends AbstractManager {
      */
     public HashMap<Integer,HashSet<CafeteriaMenu>> getServedFavoritesAtDate(String dayMonthYear){
         HashMap<Integer,HashSet<CafeteriaMenu>> cafeteriaServedDish = new HashMap<>();
-        Cursor favoriteFoodWhere = db.rawQuery("SELECT mensaId,dishName FROM favorite_dishes GROUP BY mensaId,dishName",null);
-        while (favoriteFoodWhere.moveToNext()){
-            int mensaId = favoriteFoodWhere.getInt(0);
-            String dishName = favoriteFoodWhere.getString(1);
-            Cursor upcomingServings = db.rawQuery("SELECT * FROM cafeterias_menus WHERE date = ? AND mensaId = ? AND name = ?",new String[]{dayMonthYear,""+mensaId, dishName});
-            while (upcomingServings.moveToNext()){
-                int dishId = upcomingServings.getInt(upcomingServings.getColumnIndex("id"));
-                String typeShort = upcomingServings.getString(upcomingServings.getColumnIndex("typeShort"));
-                String typeLong = upcomingServings.getString(upcomingServings.getColumnIndex("typeLong"));
-                int typeNr = upcomingServings.getInt(upcomingServings.getColumnIndex("typeNr"));
-                CafeteriaMenu cafeteriaMenu = new CafeteriaMenu(dishId,mensaId,Utils.getDate(dayMonthYear),typeShort,typeLong,typeNr,dishName);
-                HashSet<CafeteriaMenu> servedAtCafeteria;
-                if (cafeteriaServedDish.containsKey(mensaId)){
-                    servedAtCafeteria = cafeteriaServedDish.get(mensaId);
-                }else{
-                    servedAtCafeteria = new HashSet<>();
-                    cafeteriaServedDish.put(mensaId, servedAtCafeteria);
-                }
-                servedAtCafeteria.add(cafeteriaMenu);
+        String query = "SELECT cafeterias_menus.* FROM favorite_dishes INNER JOIN cafeterias_menus" +
+                " ON cafeterias_menus.mensaId = favorite_dishes.mensaId" +
+                " AND favorite_dishes.dishName = cafeterias_menus.name WHERE cafeterias_menus.date = ?";
+
+        Cursor upcomingServings = db.rawQuery(query, new String[]{dayMonthYear});
+        while (upcomingServings.moveToNext()){
+            int mensaId = upcomingServings.getInt(upcomingServings.getColumnIndex("mensaId"));
+            String dishName = upcomingServings.getString(upcomingServings.getColumnIndex("name"));
+
+            int dishId = upcomingServings.getInt(upcomingServings.getColumnIndex("id"));
+            String typeShort = upcomingServings.getString(upcomingServings.getColumnIndex("typeShort"));
+            String typeLong = upcomingServings.getString(upcomingServings.getColumnIndex("typeLong"));
+            int typeNr = upcomingServings.getInt(upcomingServings.getColumnIndex("typeNr"));
+            CafeteriaMenu cafeteriaMenu = new CafeteriaMenu(dishId,mensaId,Utils.getDate(dayMonthYear),typeShort,typeLong,typeNr,dishName);
+            HashSet<CafeteriaMenu> servedAtCafeteria;
+            if (cafeteriaServedDish.containsKey(mensaId)){
+                servedAtCafeteria = cafeteriaServedDish.get(mensaId);
+            }else{
+                servedAtCafeteria = new HashSet<>();
+                cafeteriaServedDish.put(mensaId, servedAtCafeteria);
             }
+            servedAtCafeteria.add(cafeteriaMenu);
         }
         return cafeteriaServedDish;
     }
