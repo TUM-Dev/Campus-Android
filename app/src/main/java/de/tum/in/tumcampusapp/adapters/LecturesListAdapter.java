@@ -22,44 +22,22 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * show semester info as sticky header.
  */
 
-public class LecturesListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-
-    private static List<LecturesSearchRow> lecturesList;
-    private final List<String> filters;
-    private final LayoutInflater mInflater;
-    private final Context context;
+public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<LecturesSearchRow> {
 
     public static LecturesListAdapter newInstance(Context context, List<LecturesSearchRow> results) {
-        lecturesList = results;
-        return new LecturesListAdapter(context);
+        return new LecturesListAdapter(context, results);
     }
 
-    private LecturesListAdapter(Context context) {
-        this.context = context;
-        mInflater = LayoutInflater.from(context);
-
-        filters = new ArrayList<>();
-        for (LecturesSearchRow result : lecturesList) {
-            String item = result.getSemester_id();
-            if (!filters.contains(item)) {
-                filters.add(item);
-            }
-        }
+    private LecturesListAdapter(Context context, List<LecturesSearchRow> results) {
+        super(context, results);
     }
 
     @Override
-    public int getCount() {
-        return lecturesList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return lecturesList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+    String genenrateHeaderName(LecturesSearchRow item) {
+        String headerText = super.genenrateHeaderName(item);
+        headerText = headerText.replaceAll("Sommersemester", this.context.getString(R.string.semester_summer));
+        headerText = headerText.replaceAll("Wintersemester", this.context.getString(R.string.semester_winter));
+        return headerText;
     }
 
     @Override
@@ -83,7 +61,7 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
             holder = (ViewHolder) convertView.getTag();
         }
 
-        LecturesSearchRow lvItem = lecturesList.get(position);
+        LecturesSearchRow lvItem = infoList.get(position);
 
         // if we have something to display - set for each lecture element
         if (lvItem != null) {
@@ -95,41 +73,10 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
         return convertView;
     }
 
-    // Generate header view
-    @Override
-    public View getHeaderView(int pos, View view, ViewGroup parent) {
-        HeaderViewHolder holder;
-        View convertView = view;
-        if (convertView == null) {
-            holder = new HeaderViewHolder();
-            convertView = mInflater.inflate(R.layout.header, parent, false);
-            holder.text = (TextView) convertView.findViewById(R.id.lecture_header);
-            convertView.setTag(holder);
-        } else {
-            holder = (HeaderViewHolder) convertView.getTag();
-        }
-        //set header text as first char in name
-        String headerText = lecturesList.get(pos).getSemester_name();
-        headerText = headerText.replaceAll("Sommersemester", this.context.getString(R.string.semester_summer));
-        headerText = headerText.replaceAll("Wintersemester", this.context.getString(R.string.semester_winter));
-
-        holder.text.setText(headerText);
-        return convertView;
-    }
-
-    @Override
-    public long getHeaderId(int i) {
-        return filters.indexOf(lecturesList.get(i).getSemester_id());
-    }
-
     // the layout of the list
     static class ViewHolder {
         TextView tvDozent;
         TextView tvLectureName;
         TextView tvTypeSWSSemester;
-    }
-
-    static class HeaderViewHolder {
-        TextView text;
     }
 }
