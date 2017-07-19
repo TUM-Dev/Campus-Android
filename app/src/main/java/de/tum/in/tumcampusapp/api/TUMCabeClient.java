@@ -71,8 +71,7 @@ public class TUMCabeClient {
 
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://" + "131.159.204.78" + API_BASEURL)
-//                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
+                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addConverterFactory(GsonConverterFactory.create());
 
         builder.client(Helper.getOkClient(c));

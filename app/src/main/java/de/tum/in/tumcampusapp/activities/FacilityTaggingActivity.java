@@ -82,13 +82,23 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
             }
             else{
                 facility=new Facility();
+                String lrzId=Utils.getSetting(FacilityTaggingActivity.this, Const.LRZ_ID, "");
+                if(lrzId==null || lrzId.isEmpty()){
+                    Utils.logv("User not logged in while adding new facility");
+                    Utils.showToastOnUIThread(FacilityTaggingActivity.this, R.string.facility_log_in_error);
+                    finish();
+                }
+                Location currentLocation=new LocationManager(FacilityTaggingActivity.this).getCurrentLocation();
+                facility.setLatitude(currentLocation.getLatitude());
+                facility.setLongitude(currentLocation.getLongitude());
+                facility.setCreatedBy(lrzId);
             }
         }
         
         mImage = ImageViewTouchFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.current_location_map, mImage).commit();
 
-        createCategoriesSpinner();
+        initForm();
 
         saveFacilityButton = (FloatingActionButton) findViewById(R.id.save_facility);
         saveFacilityButton.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +109,7 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
         startLoading();
     }
 
-    private void createCategoriesSpinner() {
+    private void initForm() {
         Spinner spinner = (Spinner) findViewById(R.id.facility_categories_spinner);
         spinnerAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -120,6 +130,18 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
                         for (FacilityCategory facilityCategory: facilityCategories) {
                             spinnerAdapter.add(facilityCategory.getName());
                             options.put(facilityCategory.getName(), facilityCategory.getId());
+                        }
+                        if(editMode){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    EditText editText=(EditText) FacilityTaggingActivity.this.findViewById(R.id.facility_name);
+                                    int position=spinnerAdapter.getPosition(facility.getFacilityCategory().getName());
+                                    Spinner spinner=(Spinner) FacilityTaggingActivity.this.findViewById(R.id.facility_categories_spinner);
+                                    editText.setText(facility.getName());
+                                    spinner.setSelection(position);
+                                }
+                            });
                         }
                     }
                 }
@@ -191,32 +213,6 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
 
     @Override
     protected Optional<File> onLoadInBackground(Void... arg) {
-        if(editMode){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    EditText editText=(EditText) FacilityTaggingActivity.this.findViewById(R.id.facility_name);
-                    int position=spinnerAdapter.getPosition(facility.getFacilityCategory().getName());
-                    Spinner spinner=(Spinner) FacilityTaggingActivity.this.findViewById(R.id.facility_categories_spinner);
-                    editText.setText(facility.getName());
-                    spinner.setSelection(position);
-                }
-            });
-
-        }
-        else{
-            String lrzId=Utils.getSetting(this, Const.LRZ_ID, "");
-            if(lrzId==null || lrzId.isEmpty()){
-                Utils.logv("User not logged in while adding new facility");
-                Utils.showToastOnUIThread(FacilityTaggingActivity.this, R.string.facility_log_in_error);
-                finish();
-            }
-            Location currentLocation=new LocationManager(this).getCurrentLocation();
-            facility.setLatitude(currentLocation.getLatitude());
-            facility.setLongitude(currentLocation.getLongitude());
-            facility.setCreatedBy(lrzId);
-        }
-
         return net.getFacilityMapImage(this,facility.getName(),facility.getLongitude(), facility.getLatitude());
     }
 
@@ -301,13 +297,4 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
             e.printStackTrace();
         }
     }
-
-//    private FacilityMap getMapWithLocation(final Double lon, final Double lat){
-//        try {
-//            return TUMCabeClient.getInstance(this).getMapWithLocation(lon,lat);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
 }
