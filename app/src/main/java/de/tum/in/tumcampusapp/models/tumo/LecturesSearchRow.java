@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
+
 /**
  * This class is dealing with the deserialization of the output of TUMOnline to
  * the method "sucheLehrveranstaltungen".
@@ -12,7 +14,8 @@ import org.simpleframework.xml.Root;
  */
 
 @Root(name = "row")
-public class LecturesSearchRow implements Comparable<LecturesSearchRow> {
+public class LecturesSearchRow
+        implements Comparable<LecturesSearchRow>, SimpleStickyListHeadersAdapter.SimpleStickyListItem{
 
     public static final String STP_SP_NR = "stp_sp_nr";
 
@@ -143,5 +146,15 @@ public class LecturesSearchRow implements Comparable<LecturesSearchRow> {
     @Override
     public int compareTo(@NonNull LecturesSearchRow lecturesSearchRow) {
         return lecturesSearchRow.getSemester_id().compareTo(semester_id);
+    }
+
+    @Override
+    public String getHeadName() {
+        return getSemester_name();
+    }
+
+    @Override
+    public String getHeaderId() {
+        return getSemester_id();
     }
 }
