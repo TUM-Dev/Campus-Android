@@ -6,7 +6,6 @@ import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
  * The model used to display more infromation in barrier free page
  */
 public class BarrierfreeMoreInfo implements SimpleStickyListHeadersAdapter.SimpleStickyListItem{
-//    private int id;
     private String title;
     private String category;
     private String url;

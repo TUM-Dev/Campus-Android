@@ -6,7 +6,6 @@ import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
  * The model used to display contact infromation in barrier free page
  */
 public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.SimpleStickyListItem{
-//    private int id;
     private String name;
     private String telephone;
     private String email;
