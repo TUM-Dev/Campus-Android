@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.models.barrierfree;
+package de.tum.in.tumcampusapp.models.tumcabe;
 
 import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
 

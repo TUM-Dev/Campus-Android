@@ -12,7 +12,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.PersonsDetailsActivity;
-import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
 import de.tum.in.tumcampusapp.models.tumo.Person;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 

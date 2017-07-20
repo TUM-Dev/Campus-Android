@@ -14,7 +14,7 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.adapters.BarrierfreeMoreInfoAdapter;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeMoreInfo;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class BarrierFreeMoreInfoActivity

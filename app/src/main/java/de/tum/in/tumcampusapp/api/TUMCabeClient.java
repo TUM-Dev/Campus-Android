@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeContact;
-import de.tum.in.tumcampusapp.models.barrierfree.BarrierfreeMoreInfo;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
