@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,22 +17,26 @@ import android.view.MenuItem;
 import com.google.common.base.Optional;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.fragments.WeekViewFragment;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 /**
  * Displays the map regarding the searched room.
  */
-public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Void, Optional<File>> implements DialogInterface.OnClickListener {
+public class RoomFinderDetailsActivity
+        extends ActivityForLoadingInBackground<Void, Optional<File>>
+        implements DialogInterface.OnClickListener {
 
     public static final String EXTRA_ROOM_INFO = "roomInfo";
     public static final String EXTRA_LOCATION = "location";
@@ -44,9 +49,11 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     private Bundle roomInfo;
     private String mapId = "";
-    private List<Map<String, String>> mapsList;
+    private List<RoomFinderMap> mapsList;
     private boolean infoLoaded;
     private Fragment fragment;
+
+    private AsyncTask<String, Void, List<RoomFinderMap>> mapListaSyncTask;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);
@@ -134,8 +141,8 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         CharSequence[] list = new CharSequence[mapsList.size()];
         int curPos = 0;
         for (int i = 0; i < mapsList.size(); i++) {
-            list[i] = mapsList.get(i).get(TUMRoomFinderRequest.KEY_DESCRIPTION);
-            if (mapsList.get(i).get(TUMRoomFinderRequest.KEY_MAP_ID).equals(mapId)) {
+            list[i] = mapsList.get(i).getDescription();
+            if (mapsList.get(i).getMap_id().equals(mapId)) {
                 curPos = i;
             }
         }
@@ -146,7 +153,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     public void onClick(DialogInterface dialog, int whichButton) {
         dialog.dismiss();
         int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-        mapId = mapsList.get(selectedPosition).get(TUMRoomFinderRequest.KEY_MAP_ID);
+        mapId = mapsList.get(selectedPosition).getMap_id();
         startLoading();
     }
 
@@ -221,21 +228,53 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             getSupportActionBar().setTitle(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_TITLE));
             getSupportActionBar().setSubtitle(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_TITLE));
         }
+
         showLoadingEnded();
-        new Thread(new Runnable() {
+
+        startLoadingMapList(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
+    }
+
+    private void onMapListLoadFinished(List<RoomFinderMap> result){
+        mapsList = result;
+        if (mapsList.size() > 1) {
+            mapsLoaded = true;
+        }
+        supportInvalidateOptionsMenu();
+    }
+
+    private List<RoomFinderMap> onLoadMapListInBackground(String archId){
+        try {
+            return TUMCabeClient.getInstance(this).fetchAvailableMaps(archId);
+        } catch (IOException e) {
+            Utils.log(e);
+        }
+
+        return null;
+    }
+
+    final void startLoadingMapList(String... params){
+        if (mapListaSyncTask != null) {
+            mapListaSyncTask.cancel(true);
+        }
+
+        mapListaSyncTask = new AsyncTask<String, Void, List<RoomFinderMap>>() {
             @Override
-            public void run() {
-                mapsList = request.fetchAvailableMaps(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
-                if (mapsList.size() > 1) {
-                    mapsLoaded = true;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            supportInvalidateOptionsMenu();
-                        }
-                    });
-                }
+            protected void onPreExecute() {
+                showLoadingStart();
             }
-        }).start();
+
+            @Override
+            protected List<RoomFinderMap> doInBackground(String... params) {
+                return onLoadMapListInBackground(params[0]);
+            }
+
+            @Override
+            protected void onPostExecute(List<RoomFinderMap> result) {
+                showLoadingEnded();
+                onMapListLoadFinished(result);
+                mapListaSyncTask = null;
+            }
+        };
+        mapListaSyncTask.execute(params);
     }
 }

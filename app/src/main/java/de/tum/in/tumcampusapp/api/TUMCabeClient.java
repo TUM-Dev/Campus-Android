@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 
+import com.google.common.net.UrlEscapers;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
@@ -201,6 +204,10 @@ public class TUMCabeClient {
         service.putBugReport(r).execute().body();
     }
 
+    public List<RoomFinderMap> fetchAvailableMaps(String archId) throws IOException {
+        return service.fetchAvailableMaps(encodeUrl(archId)).execute().body();
+    }
+
     public void putStatistics(Statistics s) {
         service.putStatistics(s).enqueue(new Callback<List<String>>() {
             @Override
@@ -226,6 +233,17 @@ public class TUMCabeClient {
 
     public void createMeasurements(WifiMeasurement[] wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException{
         service.createMeasurements(wifiMeasurementList).enqueue(cb);
+    }
+
+    /**
+     * encodes an url
+     *
+     * @param pUrl input url
+     * @return encoded url
+     */
+    private static String encodeUrl(String pUrl) {
+        String url = pUrl.replace("/", ""); //remove slashes in queries as this breaks the url
+        return UrlEscapers.urlPathSegmentEscaper().escape(url);
     }
 
     private interface TUMCabeAPIService {
@@ -319,5 +337,9 @@ public class TUMCabeClient {
         //WifiHeatmap
         @POST(API_WIFI_HEATMAP+"create_measurements/")
         Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
+
+        //RoomFinder
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")
+        Call<List<RoomFinderMap>> fetchAvailableMaps(@Path("archId") String archId);
     }
 }

@@ -190,39 +190,6 @@ public class TUMRoomFinderRequest {
     }
 
     /**
-     * fetches all available maps of the room or building
-     *
-     * @param archId architecture id
-     * @return list of HashMap representing available maps
-     */
-    public List<Map<String, String>> fetchAvailableMaps(String archId) {
-
-        String url = API_URL_AVAILABLE_MAPS + encodeUrl(archId);
-
-        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
-        List<Map<String, String>> mapsList = new ArrayList<>();
-
-        try {
-            if (jsonArray.isPresent()) {
-                JSONArray arr = jsonArray.get();
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject obj = arr.getJSONObject(i);
-                    Map<String, String> mapMap = new HashMap<>();
-                    mapMap.put(KEY_MAP_ID, obj.getString(KEY_MAP_ID));
-                    mapMap.put(KEY_DESCRIPTION, obj.getString(KEY_DESCRIPTION));
-
-                    // adding HashList to ArrayList
-                    mapsList.add(mapMap);
-                }
-            }
-        } catch (JSONException e) {
-            Utils.log(String.valueOf(e));
-        }
-
-        return mapsList;
-    }
-
-    /**
      * fetches the room schedule for a given room
      *
      * @param roomId roomId
