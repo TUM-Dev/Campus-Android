@@ -56,6 +56,13 @@ public class TUMCabeClient {
     private static final String API_OWN_QUESTIONS = "question/my/";
     private static final String API_FACULTY = "faculty/";
     private static final String API_WIFI_HEATMAP = "wifimap/";
+    private static final String API_ROOM_FINDER = "roomfinder/room/";
+    private static final String API_ROOM_FINDER_SEARCH= "search/";
+    private static final String API_ROOM_FINDER_DEFAULT_MAP = "";
+    private static final String API_ROOM_FINDER_MAP = "map/";
+    private static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
+    private static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
+    private static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
 
 
     private static TUMCabeClient instance;
