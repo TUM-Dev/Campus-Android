@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,10 +25,8 @@ import de.tum.in.tumcampusapp.models.cards.StudyCard;
 
 public class CardsActivity extends ActivityForLoadingInBackground<Void, List<StudyCard>> implements AdapterView.OnItemClickListener {
 
-    private ListView cardList;
-
+    ActivityCardsBinding binding;
     CardActivityState state;
-    private StudyCardListAdapter adapter;
 
     public CardsActivity() {
         super(R.layout.activity_cards);
@@ -39,16 +36,20 @@ public class CardsActivity extends ActivityForLoadingInBackground<Void, List<Stu
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // bind UI elements
-        cardList = (ListView) findViewById(R.id.card_list);
-        cardList.setOnItemClickListener(this);
     }
 
     @Override
     public void setUpLayout() {
-        ActivityCardsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_cards);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_cards);
         binding.setState(this.state);
+        binding.cardList.setOnItemClickListener(this);
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(binding.fab.getContext(), CardsQuizActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -66,7 +67,6 @@ public class CardsActivity extends ActivityForLoadingInBackground<Void, List<Stu
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.create_card:
                 Intent intent = new Intent(this, CardsDetailActivity.class);
@@ -92,11 +92,10 @@ public class CardsActivity extends ActivityForLoadingInBackground<Void, List<Stu
     protected void onLoadFinished(List<StudyCard> cards) {
         showLoadingEnded();
         if (cards.size() == 0) {
-            cardList.setAdapter(new NoResultsAdapter(this));
+            binding.cardList.setAdapter(new NoResultsAdapter(this));
         } else {
-            // set ListView to data via the LecturesListAdapter
-            adapter = new StudyCardListAdapter(this, cards);
-            cardList.setAdapter(adapter);
+            StudyCardListAdapter adapter = new StudyCardListAdapter(this, cards);
+            binding.cardList.setAdapter(adapter);
         }
     }
 

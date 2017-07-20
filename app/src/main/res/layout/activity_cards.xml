@@ -42,27 +42,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_marginLeft="-10dp"
+                    android:layout_marginStart="-10dp"
                     android:fitsSystemWindows="true">
 
                     <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/filter_box"
-                            style="?android:attr/spinnerStyle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginTop="8dp"
-                            android:padding="8dp"
-                            android:text="@{state.boxFilter.toString()}"
-                            android:textSize="20sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toLeftOf="@+id/filter_lecture"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="All Boxes" />
 
                         <Button
                             android:id="@+id/filter_lecture"
@@ -72,10 +57,10 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginTop="8dp"
                             android:padding="8dp"
-                            android:text="@{state.lectureFilter.toString()}"
+                            android:text="@{state.lectureFilter.getResource(context)}"
                             android:textSize="20sp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toRightOf="@+id/filter_box"
+                            app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toLeftOf="@+id/filter"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="All Lectures" />

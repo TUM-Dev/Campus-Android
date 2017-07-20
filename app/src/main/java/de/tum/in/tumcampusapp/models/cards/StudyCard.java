@@ -3,20 +3,14 @@ package de.tum.in.tumcampusapp.models.cards;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
-import com.google.gson.annotations.SerializedName;
-
 import de.tum.in.tumcampusapp.BR;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 
 
 public class StudyCard extends BaseObservable {
 
     private int id;
-    //private ChatMember member;
     private int member;
-    //private Lecture lecture;
     private int lecture;
-    //private CardType card_type;
     private int card_type;
     private String title;
     private String front_text;
@@ -26,6 +20,7 @@ public class StudyCard extends BaseObservable {
     private boolean can_shift;
 
     public StudyCard() {
+        // TODO remove default values for lecture (eg use -1 as default and user has to select a lecture)
         this.setLecture(1);
         this.setCard_type(1);
         this.setTitle("");
@@ -150,7 +145,7 @@ public class StudyCard extends BaseObservable {
 
     public boolean is_valid() {
         // TODO
-        return !this.getTitle().isEmpty();
+        return !this.getTitle().isEmpty() && this.getLecture() != -1;
     }
 
     @Override

@@ -517,6 +517,16 @@
                 android:value="de.tum.in.tumcampusapp.activities.CardsActivity" />
         </activity>
 
+        <activity
+            android:name=".activities.CardsQuizActivity"
+            android:label="@string/title_activity_cards_quiz"
+            android:parentActivityName=".activities.CardsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.CardsActivity" />
+        </activity>
+
         <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".widgets.MensaWidget"

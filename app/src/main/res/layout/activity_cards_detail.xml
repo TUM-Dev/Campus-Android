@@ -48,10 +48,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp">
+
+                    <Button
+                        style="?android:attr/spinnerStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Android Praktikum"
+                        android:textSize="20sp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp" />
+
+                    <Button
+                        style="?android:attr/spinnerStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Q|A"
+                        android:textSize="20sp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+
                 <!-- TODO lecture, type, owner -->
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/textInputLayoutTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -68,7 +95,6 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/textInputLayoutFrontText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -83,7 +109,6 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/textInputLayoutBackText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"

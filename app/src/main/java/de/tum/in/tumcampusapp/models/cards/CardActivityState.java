@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.models.cards;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 public class CardActivityState {
@@ -13,7 +15,11 @@ public class CardActivityState {
     }
 
     public enum LectureFilter {
-        ALL_LECTURES, OWN_LECTURES, SELECTED_LECTURES
+        ALL_LECTURES, OWN_LECTURES, SELECTED_LECTURES;
+
+        public int getResource(Context context) {
+            return context.getResources().getIdentifier("filter_lecture_" + this.toString(), "string", context.getPackageName());
+        }
     }
 
     public CardState state;

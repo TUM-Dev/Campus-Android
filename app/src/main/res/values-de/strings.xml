@@ -437,8 +437,14 @@ Signatur: %5$s</string>
     <string name="study_cards_title">Cards</string>
     <string name="card_title">Titel</string>
     <string name="create_card">Karte hinzufügen</string>
-    <string name="title_activity_cards">CardsActivity</string>
+    <string name="title_activity_cards">Karteikarten</string>
     <string name="card_front_text">Vorderseite</string>
     <string name="card_back_text">Hinterseite</string>
-    <string name="title_activity_cards_detail">Karte bearbeiten</string>
+    <string name="title_activity_cards_detail">Karte hinzufügen</string>
+    <string name="card_question">Frage</string>
+    <string name="card_answer">Antwort</string>
+    <string name="filter_lecture_ALL_LECTURES">Alle Vorlesungen</string>
+    <string name="filter_lecture_OWN_LECTURES">Eigene Vorlesungen</string>
+    <string name="filter_lecture_SELECTED_LECTURES">Ausgewählte Vorlesungen</string>
+    <string name="show_answer">Antwort anzeigen</string>
 </resources>

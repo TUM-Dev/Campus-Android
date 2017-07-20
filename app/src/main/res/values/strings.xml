@@ -510,13 +510,20 @@ Signature: %5$s</string>
     <string name="timetable_widget_no_lectures">No lectures planned :)</string>
     <string name="eduroam_not_valid_id">Not a valid TUM-ID.</string>
     <string name="eduroam_please_enter_password">Please enter your password. It will not be saved.</string>
-    <string name="title_activity_cards">CardsActivity</string>
+    <string name="title_activity_cards">Study Cards</string>
     <string name="study_cards_title">Cards</string>
     <string name="create_card">create card</string>
-    <string name="card_title" >Title</string>
+    <string name="card_title">Title</string>
     <string name="card_front_text">Front text</string>
     <string name="card_back_text">Back text</string>
-    <string name="title_activity_cards_detail">Edit card</string>
+    <string name="title_activity_cards_detail">Add Card</string>
+    <string name="title_activity_cards_quiz">CardsQuizActivity</string>
+    <string name="card_question">Question</string>
+    <string name="card_answer">Answer</string>
+    <string name="filter_lecture_ALL_LECTURES">All Lectures</string>
+    <string name="filter_lecture_OWN_LECTURES">Own Lectures</string>
+    <string name="filter_lecture_SELECTED_LECTURES">Selected Lectures</string>
+    <string name="show_answer">Show Answer</string>
 </resources>
 
 
