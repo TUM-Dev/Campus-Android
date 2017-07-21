@@ -53,7 +53,7 @@ public class RoomFinderDetailsActivity
     private boolean infoLoaded;
     private Fragment fragment;
 
-    private AsyncTask<String, Void, List<RoomFinderMap>> mapListaSyncTask;
+    private AsyncTask<String, Void, List<RoomFinderMap>> mapListAsyncTask;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);
@@ -253,11 +253,11 @@ public class RoomFinderDetailsActivity
     }
 
     final void startLoadingMapList(String... params){
-        if (mapListaSyncTask != null) {
-            mapListaSyncTask.cancel(true);
+        if (mapListAsyncTask != null) {
+            mapListAsyncTask.cancel(true);
         }
 
-        mapListaSyncTask = new AsyncTask<String, Void, List<RoomFinderMap>>() {
+        mapListAsyncTask = new AsyncTask<String, Void, List<RoomFinderMap>>() {
             @Override
             protected void onPreExecute() {
                 showLoadingStart();
@@ -272,9 +272,9 @@ public class RoomFinderDetailsActivity
             protected void onPostExecute(List<RoomFinderMap> result) {
                 showLoadingEnded();
                 onMapListLoadFinished(result);
-                mapListaSyncTask = null;
+                mapListAsyncTask = null;
             }
         };
-        mapListaSyncTask.execute(params);
+        mapListAsyncTask.execute(params);
     }
 }

@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
@@ -204,10 +205,6 @@ public class TUMCabeClient {
         service.putBugReport(r).execute().body();
     }
 
-    public List<RoomFinderMap> fetchAvailableMaps(String archId) throws IOException {
-        return service.fetchAvailableMaps(encodeUrl(archId)).execute().body();
-    }
-
     public void putStatistics(Statistics s) {
         service.putStatistics(s).enqueue(new Callback<List<String>>() {
             @Override
@@ -235,13 +232,22 @@ public class TUMCabeClient {
         service.createMeasurements(wifiMeasurementList).enqueue(cb);
     }
 
+    public List<RoomFinderMap> fetchAvailableMaps(String archId) throws IOException {
+        return service.fetchAvailableMaps(encodeUrl(archId)).execute().body();
+    }
+
+    public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
+        System.out.println(service.fetchRooms(encodeUrl(searchStrings)).execute().message());
+        return service.fetchRooms(encodeUrl(searchStrings)).execute().body();
+    }
+
     /**
      * encodes an url
      *
      * @param pUrl input url
      * @return encoded url
      */
-    private static String encodeUrl(String pUrl) {
+    public static String encodeUrl(String pUrl) {
         String url = pUrl.replace("/", ""); //remove slashes in queries as this breaks the url
         return UrlEscapers.urlPathSegmentEscaper().escape(url);
     }
@@ -338,8 +344,12 @@ public class TUMCabeClient {
         @POST(API_WIFI_HEATMAP+"create_measurements/")
         Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
 
-        //RoomFinder
+        //RoomFinder maps
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")
         Call<List<RoomFinderMap>> fetchAvailableMaps(@Path("archId") String archId);
+
+        //RoomFinder maps
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_SEARCH + "{searchStrings}")
+        Call<List<RoomFinderRoom>> fetchRooms(@Path("searchStrings") String searchStrings);
     }
 }
