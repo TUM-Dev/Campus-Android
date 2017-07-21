@@ -234,6 +234,7 @@ public class RoomFinderDetailsActivity
         startLoadingMapList(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
     }
 
+    //// TODO: 7/21/2017 deal with empty return values
     private void onMapListLoadFinished(List<RoomFinderMap> result){
         mapsList = result;
         if (mapsList.size() > 1) {

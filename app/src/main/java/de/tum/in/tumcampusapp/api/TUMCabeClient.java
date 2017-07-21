@@ -237,7 +237,6 @@ public class TUMCabeClient {
     }
 
     public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
-        System.out.println(service.fetchRooms(encodeUrl(searchStrings)).execute().message());
         return service.fetchRooms(encodeUrl(searchStrings)).execute().body();
     }
 

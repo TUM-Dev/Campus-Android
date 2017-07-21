@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.google.common.base.Optional;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,10 +19,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
@@ -30,7 +33,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * Activity to show a convenience interface for using the MyTUM room finder.
  */
-public class RoomFinderActivity extends ActivityForSearching
+public class RoomFinderActivity extends ActivityForSearchingInBackground<List<RoomFinderRoom>>
         implements OnItemClickListener {
 
     private RecentsManager recentsManager;
@@ -66,27 +69,48 @@ public class RoomFinderActivity extends ActivityForSearching
     }
 
     @Override
-    protected void onStartSearch() {
-        List<RoomFinderRoom> recents = getRecents();
-        if (recents.isEmpty()) {
-            finish();
-            return;
-        }
-        adapter = new RoomFinderListAdapter(this, recents);
-        list.setAdapter(adapter);
+    protected Optional<List<RoomFinderRoom>> onSearchInBackground() {
+        // TODO: 7/21/2017 Return recent information
+        return Optional.of(getRecents());
     }
 
     @Override
-    public void onStartSearch(String query) {
-        startLoadSearchResult(query);
+    protected Optional<List<RoomFinderRoom>> onSearchInBackground(String query) {
+        try {
+            List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this).fetchRooms(query);
+            return Optional.of(rooms);
+        } catch (IOException e) {
+            Utils.log(e);
+        }
+        return null;
     }
 
+    @Override
+    protected void onSearchFinished(Optional<List<RoomFinderRoom>> result) {
+        if(!result.isPresent()){
+            if (NetUtils.isConnected(this)) {
+                showErrorLayout();
+            } else {
+                showNoInternetLayout();
+            }
+            return;
+        }
+
+        List<RoomFinderRoom> searchResult = result.get();
+        if (searchResult.isEmpty()) {
+            list.setAdapter(new NoResultsAdapter(this));
+        } else {
+            adapter = new RoomFinderListAdapter(this, searchResult);
+            list.setAdapter(adapter);
+        }
+        showLoadingEnded();
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        TreeMap<String, String> room = new TreeMap<>((HashMap<String, String>) list.getAdapter().getItem(position));
-
-        openRoomDetails(room);
+        RoomFinderRoom room = (RoomFinderRoom) list.getAdapter().getItem(position);
+        // TODO: 7/21/2017 Rewrite open details
+//        openRoomDetails(room);
     }
 
     /**
@@ -133,51 +157,5 @@ public class RoomFinderActivity extends ActivityForSearching
         }
         recentStations.close();
         return roomList;
-    }
-
-    private List<RoomFinderRoom> onLoadSearchResultInBackground(String query){
-        try {
-            return TUMCabeClient.getInstance(this).fetchRooms(query);
-        } catch (IOException e) {
-            Utils.log(e);
-        }
-
-        return null;
-    }
-
-    private void onSearchResultLoadFinished(List<RoomFinderRoom> result){
-        if (result.isEmpty()) {
-            list.setAdapter(new NoResultsAdapter(this));
-        } else {
-            adapter = new RoomFinderListAdapter(this, result);
-            list.setAdapter(adapter);
-        }
-    }
-
-    // TODO: 7/21/2017 Rewrite in optional 
-    private final void startLoadSearchResult(String... params){
-        if (searchRoomAsyncTask != null) {
-            searchRoomAsyncTask.cancel(true);
-        }
-
-        searchRoomAsyncTask = new AsyncTask<String, Void, List<RoomFinderRoom>>() {
-            @Override
-            protected void onPreExecute() {
-                showLoadingStart();
-            }
-
-            @Override
-            protected List<RoomFinderRoom> doInBackground(String... params) {
-                return onLoadSearchResultInBackground(params[0]);
-            }
-
-            @Override
-            protected void onPostExecute(List<RoomFinderRoom> result) {
-                showLoadingEnded();
-                onSearchResultLoadFinished(result);
-                searchRoomAsyncTask = null;
-            }
-        };
-        searchRoomAsyncTask.execute(params);
     }
 }
