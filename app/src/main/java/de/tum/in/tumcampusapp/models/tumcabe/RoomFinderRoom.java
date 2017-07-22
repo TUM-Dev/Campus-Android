@@ -1,11 +1,15 @@
 package de.tum.in.tumcampusapp.models.tumcabe;
 
+import java.io.Serializable;
+
 import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter.SimpleStickyListItem;
 
 /**
  * This class is used as a model for rooms in Roomfinder retrofit request.
  */
-public class RoomFinderRoom implements SimpleStickyListItem{
+public class RoomFinderRoom implements SimpleStickyListItem, Serializable{
+    private static final long serialVersionUID = 6631656320611471476L;
+
     String campus;
     String address;
     String info;
@@ -43,6 +47,9 @@ public class RoomFinderRoom implements SimpleStickyListItem{
     }
 
     public String getName() {
+        if (name != null && name.equals("null")){
+            return "";
+        }
         return name;
     }
 
@@ -54,5 +61,12 @@ public class RoomFinderRoom implements SimpleStickyListItem{
     @Override
     public String getHeaderId() {
         return getHeadName();
+    }
+
+    @Override
+    public String toString(){
+        return getCampus() + ";" + getAddress() + ";"
+                + getInfo() + ";" + getArch_id() + ";"
+                + getRoom_id() + ";" + getName();
     }
 }

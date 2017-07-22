@@ -28,6 +28,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.fragments.WeekViewFragment;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
@@ -47,13 +48,13 @@ public class RoomFinderDetailsActivity
     private TUMRoomFinderRequest request;
     private NetUtils net;
 
-    private Bundle roomInfo;
+    private RoomFinderRoom room;
     private String mapId = "";
     private List<RoomFinderMap> mapsList;
     private boolean infoLoaded;
     private Fragment fragment;
 
-    private AsyncTask<String, Void, List<RoomFinderMap>> mapListAsyncTask;
+    private AsyncTask<String, Void, Optional<List<RoomFinderMap>>> mapListaSyncTask;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);
@@ -68,8 +69,8 @@ public class RoomFinderDetailsActivity
         mImage = ImageViewTouchFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mImage).commit();
 
-        roomInfo = getIntent().getExtras().getBundle(EXTRA_ROOM_INFO);
-        if (roomInfo == null) {
+        room = (RoomFinderRoom) getIntent().getExtras().getSerializable(EXTRA_ROOM_INFO);
+        if (room == null) {
             Utils.showToast(this, "No room information passed");
             this.finish();
             return;
@@ -131,7 +132,7 @@ public class RoomFinderDetailsActivity
             fragment = null;
             return;
         }
-        String roomApiCode = roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_ID);
+        String roomApiCode = room.getRoom_id();
         fragment = WeekViewFragment.newInstance(roomApiCode);
         ft.replace(R.id.fragment_container, fragment);
         ft.commit();
@@ -161,7 +162,7 @@ public class RoomFinderDetailsActivity
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Optional<Geo> geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
+                final Optional<Geo> geo = request.fetchCoordinates(room.getArch_id());
                 if (!geo.isPresent()) {
                     Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
                     return;
@@ -194,7 +195,7 @@ public class RoomFinderDetailsActivity
 
     @Override
     protected Optional<File> onLoadInBackground(Void... arg) {
-        String archId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID);
+        String archId = room.getArch_id();
         String url;
 
         if (mapId == null || mapId.isEmpty()) {
@@ -225,57 +226,70 @@ public class RoomFinderDetailsActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mImage).commit();
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_TITLE));
-            getSupportActionBar().setSubtitle(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_TITLE));
+            getSupportActionBar().setTitle(room.getInfo());
+            getSupportActionBar().setSubtitle(room.getAddress());
         }
 
         showLoadingEnded();
 
-        startLoadingMapList(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
+        startLoadingMapList(room.getArch_id());
     }
 
-    //// TODO: 7/21/2017 deal with empty return values
-    private void onMapListLoadFinished(List<RoomFinderMap> result){
-        mapsList = result;
+    private void onMapListLoadFinished(Optional<List<RoomFinderMap>> result){
+        if(!result.isPresent()){
+            if (NetUtils.isConnected(this)) {
+                showErrorLayout();
+            } else {
+                showNoInternetLayout();
+            }
+            return;
+        }
+
+        mapsList = result.get();
         if (mapsList.size() > 1) {
             mapsLoaded = true;
         }
+
         supportInvalidateOptionsMenu();
     }
 
-    private List<RoomFinderMap> onLoadMapListInBackground(String archId){
+    private Optional<List<RoomFinderMap>> onLoadMapListInBackground(String archId){
         try {
-            return TUMCabeClient.getInstance(this).fetchAvailableMaps(archId);
-        } catch (IOException e) {
+            Optional<List<RoomFinderMap>> data =
+                    Optional.of(TUMCabeClient.getInstance(this).fetchAvailableMaps(archId));
+            if(data.isPresent()){
+                return data;
+            }
+        } catch (IOException | NullPointerException e) {
             Utils.log(e);
         }
 
-        return null;
+        return Optional.absent();
     }
 
     final void startLoadingMapList(String... params){
-        if (mapListAsyncTask != null) {
-            mapListAsyncTask.cancel(true);
+        if (mapListaSyncTask != null) {
+            mapListaSyncTask.cancel(true);
         }
 
-        mapListAsyncTask = new AsyncTask<String, Void, List<RoomFinderMap>>() {
+        mapListaSyncTask = new AsyncTask<String, Void, Optional<List<RoomFinderMap>>>() {
             @Override
             protected void onPreExecute() {
                 showLoadingStart();
             }
 
             @Override
-            protected List<RoomFinderMap> doInBackground(String... params) {
+            protected Optional<List<RoomFinderMap>> doInBackground(String... params) {
                 return onLoadMapListInBackground(params[0]);
             }
 
             @Override
-            protected void onPostExecute(List<RoomFinderMap> result) {
+            protected void onPostExecute(Optional<List<RoomFinderMap>> result) {
                 showLoadingEnded();
                 onMapListLoadFinished(result);
-                mapListAsyncTask = null;
+                mapListaSyncTask = null;
             }
         };
-        mapListAsyncTask.execute(params);
+        mapListaSyncTask.execute(params);
     }
 }

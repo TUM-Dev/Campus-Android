@@ -13,10 +13,7 @@ import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingInBackground;
@@ -70,7 +67,6 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
 
     @Override
     protected Optional<List<RoomFinderRoom>> onSearchInBackground() {
-        // TODO: 7/21/2017 Return recent information
         return Optional.of(getRecents());
     }
 
@@ -109,50 +105,37 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         RoomFinderRoom room = (RoomFinderRoom) list.getAdapter().getItem(position);
-        // TODO: 7/21/2017 Rewrite open details
-//        openRoomDetails(room);
+        openRoomDetails(room);
     }
 
     /**
      * Opens a {@link RoomFinderDetailsActivity} that displays details (e.g. location on a map) for
      * a given room. Also adds this room to the recent queries.
      */
-    // TODO: 7/21/2017 Rewrite open details
-    private void openRoomDetails(Map<String, String> room) {
-        // Add to recents
-        StringBuilder val = new StringBuilder();
-        Bundle b = new Bundle();
-        for (Map.Entry<String, String> entry : room.entrySet()) {
-            val.append(entry.getKey()).append('=').append(entry.getValue()).append(';');
-            b.putString(entry.getKey(), entry.getValue());
-        }
-        recentsManager.replaceIntoDb(val.toString());
+    private void openRoomDetails(RoomFinderRoom room) {
+        recentsManager.replaceIntoDb(room.toString());
 
         // Start detail activity
         Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
-        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, b);
+        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, room);
         startActivity(intent);
     }
 
     /**
      * Reconstruct recents from String
      */
-    // TODO: 7/21/2017 Rewrite getRecents
     private List<RoomFinderRoom> getRecents() {
         Cursor recentStations = recentsManager.getAllFromDb();
         List<RoomFinderRoom> roomList = new ArrayList<>(recentStations.getCount());
         if (recentStations.moveToFirst()) {
             do {
                 String[] values = recentStations.getString(0).split(";");
-                HashMap<String, String> e = new HashMap<>();
-                for (String entry : values) {
-                    if (entry.isEmpty()) {
-                        continue;
-                    }
-                    String[] kv = entry.split("=");
-                    e.put(kv[0], kv[1]);
+                if(values.length != 6) {
+                    continue;
                 }
-//                roomList.add(e);
+                RoomFinderRoom room = new RoomFinderRoom(values[0], values[1],
+                        values[2], values[3], values[4], values[5]);
+                roomList.add(room);
             } while (recentStations.moveToNext());
         }
         recentStations.close();
