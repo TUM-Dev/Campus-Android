@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.api;
 import android.content.Context;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -23,10 +22,10 @@ import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
-import de.tum.in.tumcampusapp.models.tumo.Geo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,8 +62,6 @@ public class TUMCabeClient {
     private static final String API_WIFI_HEATMAP = "wifimap/";
     private static final String API_ROOM_FINDER = "roomfinder/room/";
     private static final String API_ROOM_FINDER_SEARCH= "search/";
-    private static final String API_ROOM_FINDER_DEFAULT_MAP = "";
-    private static final String API_ROOM_FINDER_MAP = "map/";
     private static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
     private static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     private static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
@@ -245,6 +242,11 @@ public class TUMCabeClient {
         return service.fetchCoordinates(Helper.encodeUrl(archId)).execute().body();
     }
 
+    public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException{
+        return service.fetchSchedule(Helper.encodeUrl(roomId),
+                Helper.encodeUrl(start), Helper.encodeUrl(end)).execute().body();
+    }
+
     private interface TUMCabeAPIService {
 
         @GET(API_FACULTY)
@@ -348,5 +350,10 @@ public class TUMCabeClient {
         //RoomFinder cordinates
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_COORDINATES + "{archId}")
         Call<RoomFinderCoordinate> fetchCoordinates(@Path("archId") String archId);
+
+        //RoomFinder schedule
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
+        Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
+                                               @Path("start") String start, @Path("end") String end);
     }
 }

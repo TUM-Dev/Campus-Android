@@ -18,15 +18,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -343,6 +342,11 @@ public class LocationManager {
         return new Geo(d17, d18);
     }
 
+    /**
+     * Get the geo information for a room
+     * @param archId arch_id of the room
+     * @return Location or null on failure
+     */
     public Optional<Geo> fetchRoomGeo(String archId){
         Geo result;
 
@@ -374,16 +378,22 @@ public class LocationManager {
      */
     public Optional<Geo> roomLocationStringToGeo(String roomTitle) {
         String loc = roomTitle;
-        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(mContext);
         if (loc.contains("(")) {
             loc = loc.substring(0, loc.indexOf('(')).trim();
         }
 
-        List<Map<String, String>> request = requestHandler.fetchRooms(loc);
-        if (request != null && !request.isEmpty()) {
-            String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
-            return fetchRoomGeo(room);
+        try {
+            Optional<List<RoomFinderRoom>> rooms = Optional.of(TUMCabeClient.getInstance(mContext).fetchRooms(loc));
+
+            if(rooms.isPresent() && !rooms.get().isEmpty()){
+                String room = rooms.get().get(0).getArch_id();
+                return fetchRoomGeo(room);
+            }
+
+        } catch (IOException | NullPointerException e) {
+            Utils.log(e);
         }
+
         return Optional.absent();
     }
 }

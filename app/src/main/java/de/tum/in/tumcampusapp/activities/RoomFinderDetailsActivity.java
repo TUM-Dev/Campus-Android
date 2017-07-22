@@ -22,7 +22,9 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.api.Helper;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
@@ -31,7 +33,6 @@ import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 /**
  * Displays the map regarding the searched room.
@@ -46,7 +47,6 @@ public class RoomFinderDetailsActivity
     private ImageViewTouchFragment mImage;
 
     private boolean mapsLoaded;
-    private TUMRoomFinderRequest request;
     private NetUtils net;
 
     private RoomFinderRoom room;
@@ -78,8 +78,6 @@ public class RoomFinderDetailsActivity
             this.finish();
             return;
         }
-
-        request = new TUMRoomFinderRequest(this);
 
         startLoading();
     }
@@ -167,9 +165,9 @@ public class RoomFinderDetailsActivity
         String url;
 
         if (mapId == null || mapId.isEmpty()) {
-            url = TUMRoomFinderRequest.fetchDefaultMap(archId);
+            url = Const.URL_DEFAULT_MAP_IMAGE + Helper.encodeUrl(archId);
         } else {
-            url = TUMRoomFinderRequest.fetchMap(archId, mapId);
+            url = Const.URL_MAP_IMAGE + Helper.encodeUrl(archId) + '/' + Helper.encodeUrl(mapId);
         }
 
         return net.downloadImage(url);

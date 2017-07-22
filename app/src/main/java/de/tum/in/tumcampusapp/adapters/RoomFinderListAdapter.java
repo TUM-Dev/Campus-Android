@@ -6,12 +6,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * Custom UI adapter for a list of employees.
