@@ -115,12 +115,14 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
     }
 
     private void onLoadFinished(Optional<List<RoomFinderSchedule>> result){
-        if(!result.isPresent()){
-            return;
+        List<RoomFinderSchedule> schedules;
+        if(result.isPresent()){
+            schedules = result.get();
+        } else {
+            schedules = new ArrayList<>();
         }
 
         //Convert to the proper type
-        List<RoomFinderSchedule> schedules = result.get();
         List<WeekViewEvent> events = new ArrayList<>(schedules.size());
 
         for(RoomFinderSchedule schedule : schedules){
