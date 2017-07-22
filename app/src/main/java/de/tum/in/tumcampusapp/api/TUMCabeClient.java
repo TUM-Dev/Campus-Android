@@ -2,9 +2,8 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 
-import com.google.common.net.UrlEscapers;
-
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -21,11 +20,13 @@ import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import de.tum.in.tumcampusapp.models.tumo.Geo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -233,22 +234,15 @@ public class TUMCabeClient {
     }
 
     public List<RoomFinderMap> fetchAvailableMaps(String archId) throws IOException {
-        return service.fetchAvailableMaps(encodeUrl(archId)).execute().body();
+        return service.fetchAvailableMaps(Helper.encodeUrl(archId)).execute().body();
     }
 
     public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
-        return service.fetchRooms(encodeUrl(searchStrings)).execute().body();
+        return service.fetchRooms(Helper.encodeUrl(searchStrings)).execute().body();
     }
 
-    /**
-     * encodes an url
-     *
-     * @param pUrl input url
-     * @return encoded url
-     */
-    public static String encodeUrl(String pUrl) {
-        String url = pUrl.replace("/", ""); //remove slashes in queries as this breaks the url
-        return UrlEscapers.urlPathSegmentEscaper().escape(url);
+    public RoomFinderCoordinate fetchCoordinates(String archId) throws IOException {
+        return service.fetchCoordinates(Helper.encodeUrl(archId)).execute().body();
     }
 
     private interface TUMCabeAPIService {
@@ -350,5 +344,9 @@ public class TUMCabeClient {
         //RoomFinder maps
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_SEARCH + "{searchStrings}")
         Call<List<RoomFinderRoom>> fetchRooms(@Path("searchStrings") String searchStrings);
+
+        //RoomFinder cordinates
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_COORDINATES + "{archId}")
+        Call<RoomFinderCoordinate> fetchCoordinates(@Path("archId") String archId);
     }
 }

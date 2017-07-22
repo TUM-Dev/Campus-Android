@@ -14,14 +14,17 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.common.base.Optional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
@@ -315,6 +318,54 @@ public class LocationManager {
     }
 
     /**
+     * Converts UTM based coordinates to latitude and longitude based format
+     */
+    private static Geo convertUTMtoLL(double north, double east, double zone) {
+        double d = 0.99960000000000004;
+        double d1 = 6378137;
+        double d2 = 0.0066943799999999998;
+        double d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2));
+        double d15 = east - 500000;
+        double d11 = (zone - 1) * 6 - 180 + 3;
+        double d3 = d2 / (1 - d2);
+        double d10 = north / d;
+        double d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3)) / 256));
+        double d14 = d12 + ((3 * d4) / 2 - (27 * Math.pow(d4, 3)) / 32) * Math.sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * Math.pow(d4, 4)) / 32) * Math.sin(4 * d12) + ((151 * Math.pow(d4, 3)) / 96) * Math.sin(6 * d12);
+        double d5 = d1 / Math.sqrt(1 - d2 * Math.sin(d14) * Math.sin(d14));
+        double d6 = Math.tan(d14) * Math.tan(d14);
+        double d7 = d3 * Math.cos(d14) * Math.cos(d14);
+        double d8 = (d1 * (1 - d2)) / Math.pow(1 - d2 * Math.sin(d14) * Math.sin(d14), 1.5);
+        double d9 = d15 / (d5 * d);
+        double d17 = d14 - ((d5 * Math.tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6)) / 720);
+        d17 *= 180 / Math.PI;
+        double d18 = (d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
+        d18 = d11 + d18 * 180 / Math.PI;
+        return new Geo(d17, d18);
+    }
+
+    public Optional<Geo> fetchRoomGeo(String archId){
+        Geo result;
+
+        try {
+            Optional<RoomFinderCoordinate> coordinate =
+                    Optional.of(TUMCabeClient.getInstance(mContext).fetchCoordinates(archId));
+
+
+            double zone = Double.parseDouble(coordinate.get().getUtm_zone());
+            double easting = Double.parseDouble(coordinate.get().getUtm_easting());
+            double northing = Double.parseDouble(coordinate.get().getUtm_northing());
+            result = convertUTMtoLL(northing, easting, zone);
+
+            return Optional.of(result);
+
+        } catch (IOException | NullPointerException | NumberFormatException e) {
+            Utils.log(e);
+        }
+
+        return Optional.absent();
+    }
+
+    /**
      * Translates room title to Geo
      * HINT: Don't call from UI thread
      *
@@ -331,7 +382,7 @@ public class LocationManager {
         List<Map<String, String>> request = requestHandler.fetchRooms(loc);
         if (request != null && !request.isEmpty()) {
             String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
-            return requestHandler.fetchCoordinates(room);
+            return fetchRoomGeo(room);
         }
         return Optional.absent();
     }

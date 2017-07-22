@@ -94,66 +94,6 @@ public class TUMRoomFinderRequest {
     }
 
     /**
-     * Converts UTM based coordinates to latitude and longitude based format
-     */
-    private static Geo convertUTMtoLL(double north, double east, double zone) {
-        double d = 0.99960000000000004;
-        double d1 = 6378137;
-        double d2 = 0.0066943799999999998;
-        double d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2));
-        double d15 = east - 500000;
-        double d11 = (zone - 1) * 6 - 180 + 3;
-        double d3 = d2 / (1 - d2);
-        double d10 = north / d;
-        double d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3)) / 256));
-        double d14 = d12 + ((3 * d4) / 2 - (27 * Math.pow(d4, 3)) / 32) * Math.sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * Math.pow(d4, 4)) / 32) * Math.sin(4 * d12) + ((151 * Math.pow(d4, 3)) / 96) * Math.sin(6 * d12);
-        double d5 = d1 / Math.sqrt(1 - d2 * Math.sin(d14) * Math.sin(d14));
-        double d6 = Math.tan(d14) * Math.tan(d14);
-        double d7 = d3 * Math.cos(d14) * Math.cos(d14);
-        double d8 = (d1 * (1 - d2)) / Math.pow(1 - d2 * Math.sin(d14) * Math.sin(d14), 1.5);
-        double d9 = d15 / (d5 * d);
-        double d17 = d14 - ((d5 * Math.tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6)) / 720);
-        d17 *= 180 / Math.PI;
-        double d18 = (d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
-        d18 = d11 + d18 * 180 / Math.PI;
-        return new Geo(d17, d18);
-    }
-
-    public void cancelRequest(boolean mayInterruptIfRunning) {
-        // Cancel background task just if one has been established
-        if (backgroundTask != null) {
-            backgroundTask.cancel(mayInterruptIfRunning);
-        }
-    }
-
-    /**
-     * fetches the room coordinates
-     *
-     * @param archId architecture id
-     * @return coordinates of the room
-     */
-    public Optional<Geo> fetchCoordinates(String archId) {
-
-        String url = API_URL_COORDINATES + encodeUrl(archId);
-        Geo result = null;
-
-        try {
-            Optional<JSONObject> jsonObject = net.downloadJson(url);
-            if (jsonObject.isPresent()) {
-                double zone = jsonObject.get().getDouble(KEY_UTM_ZONE);
-                double easting = jsonObject.get().getDouble(KEY_UTM_EASTING);
-                double northing = jsonObject.get().getDouble(KEY_UTM_NORTHING);
-                result = convertUTMtoLL(northing, easting, zone);
-            }
-        } catch (JSONException e) {
-            Utils.log(String.valueOf(e));
-        }
-
-        // if something went wrong
-        return Optional.fromNullable(result);
-    }
-
-    /**
      * fetches all rooms that match the search string
      *
      * @param searchString string that was entered by the user

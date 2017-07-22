@@ -27,6 +27,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.fragments.WeekViewFragment;
+import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
@@ -54,7 +55,9 @@ public class RoomFinderDetailsActivity
     private boolean infoLoaded;
     private Fragment fragment;
 
-    private AsyncTask<String, Void, Optional<List<RoomFinderMap>>> mapListaSyncTask;
+    private AsyncTask<String, Void, Optional<List<RoomFinderMap>>> mapListAsyncTask;
+
+    private AsyncTask<String, Void, Optional<Geo>> geoASyncTask;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);
@@ -101,7 +104,7 @@ public class RoomFinderDetailsActivity
             supportInvalidateOptionsMenu();
             return true;
         } else if (i == R.id.action_directions) {
-            getDirections();
+            startLoadingGeo(room.getArch_id());
             return true;
         } else if (i == R.id.action_switch_map) {
             showMapSwitch();
@@ -158,41 +161,6 @@ public class RoomFinderDetailsActivity
         startLoading();
     }
 
-    private void getDirections() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Optional<Geo> geo = request.fetchCoordinates(room.getArch_id());
-                if (!geo.isPresent()) {
-                    Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
-                    return;
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Build get directions intent and see if some app can handle it
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + geo.get().getLatitude() + ',' + geo.get().getLongitude()));
-                        List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
-
-                        // If some app can handle this intent start it
-                        if (!pkgAppsList.isEmpty()) {
-                            startActivity(intent);
-                            return;
-                        }
-
-                        // If no app is capable of opening it link to google maps market entry
-                        try {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps")));
-                        } catch (ActivityNotFoundException e) {
-                            Utils.log(e);
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
-                        }
-                    }
-                });
-            }
-        }).start();
-    }
-
     @Override
     protected Optional<File> onLoadInBackground(Void... arg) {
         String archId = room.getArch_id();
@@ -206,7 +174,6 @@ public class RoomFinderDetailsActivity
 
         return net.downloadImage(url);
     }
-
 
     @Override
     protected void onLoadFinished(Optional<File> result) {
@@ -268,11 +235,11 @@ public class RoomFinderDetailsActivity
     }
 
     final void startLoadingMapList(String... params){
-        if (mapListaSyncTask != null) {
-            mapListaSyncTask.cancel(true);
+        if (mapListAsyncTask != null) {
+            mapListAsyncTask.cancel(true);
         }
 
-        mapListaSyncTask = new AsyncTask<String, Void, Optional<List<RoomFinderMap>>>() {
+        mapListAsyncTask = new AsyncTask<String, Void, Optional<List<RoomFinderMap>>>() {
             @Override
             protected void onPreExecute() {
                 showLoadingStart();
@@ -287,9 +254,64 @@ public class RoomFinderDetailsActivity
             protected void onPostExecute(Optional<List<RoomFinderMap>> result) {
                 showLoadingEnded();
                 onMapListLoadFinished(result);
-                mapListaSyncTask = null;
+                mapListAsyncTask = null;
             }
         };
-        mapListaSyncTask.execute(params);
+        mapListAsyncTask.execute(params);
+    }
+
+    private Optional<Geo> onLoadGeoInBackground(String archId){
+        return new LocationManager(this).fetchRoomGeo(archId);
+    }
+
+    private void onGeoLoadFinished(Optional<Geo> result){
+        if (!result.isPresent()) {
+            Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
+            return;
+        }
+
+        // Build get directions intent and see if some app can handle it
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + result.get().getLatitude() + ',' + result.get().getLongitude()));
+        List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+
+        // If some app can handle this intent start it
+        if (!pkgAppsList.isEmpty()) {
+            startActivity(intent);
+            return;
+        }
+
+        // If no app is capable of opening it link to google maps market entry
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps")));
+        } catch (ActivityNotFoundException e) {
+            Utils.log(e);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
+        }
+    }
+
+    final void startLoadingGeo(String... params){
+        if (geoASyncTask != null) {
+            geoASyncTask.cancel(true);
+        }
+
+        geoASyncTask = new AsyncTask<String, Void, Optional<Geo>>() {
+            @Override
+            protected void onPreExecute() {
+                showLoadingStart();
+            }
+
+            @Override
+            protected Optional<Geo> doInBackground(String... params) {
+                return onLoadGeoInBackground(params[0]);
+            }
+
+            @Override
+            protected void onPostExecute(Optional<Geo> result) {
+                showLoadingEnded();
+                onGeoLoadFinished(result);
+                geoASyncTask = null;
+            }
+        };
+        geoASyncTask.execute(params);
     }
 }
