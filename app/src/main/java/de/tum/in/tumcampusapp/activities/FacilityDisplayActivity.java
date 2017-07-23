@@ -18,7 +18,10 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumcabe.Facility;
 import de.tum.in.tumcampusapp.models.tumcabe.FacilityMap;
 import de.tum.in.tumcampusapp.models.tumcabe.FacilityVote;
@@ -93,7 +96,8 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
         facilityVote.setVote(vote);
 
         try {
-            TUMCabeClient.getInstance(this).saveFacilityVote(facility.getId(),facilityVote, new Callback<Void>() {
+            final ChatVerification v = new ChatVerification(this, Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class));
+            TUMCabeClient.getInstance(this).saveFacilityVote(facility.getId(),facilityVote,v, new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (!response.isSuccessful()) {
@@ -120,7 +124,9 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        catch (NoPrivateKey noPrivateKey) {
+            noPrivateKey.printStackTrace();
+        }
     }
 
     private void fetchVotes() {

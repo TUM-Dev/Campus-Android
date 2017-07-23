@@ -71,7 +71,8 @@ public class TUMCabeClient {
 
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
+                .baseUrl("http://" + "192.168.2.183" + API_BASEURL)
+//                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addConverterFactory(GsonConverterFactory.create());
 
         builder.client(Helper.getOkClient(c));
@@ -246,8 +247,9 @@ public class TUMCabeClient {
         service.getMyFacilities(lrzId).enqueue(cb);
     }
 
-    public void saveFacility(Facility facility, Callback<Void> cb) throws IOException {
-        service.saveFacility(facility).enqueue(cb);
+    public void saveFacility(Facility facility,ChatVerification chatVerification, Callback<Void> cb) throws IOException {
+        chatVerification.setData(facility);
+        service.saveFacility(chatVerification).enqueue(cb);
     }
 
     public void deleteFacility(Integer id,ChatVerification verification, Callback<Void> cb) throws IOException {
@@ -262,8 +264,9 @@ public class TUMCabeClient {
         service.getFacilityVote(id,lrzId).enqueue(cb);
     }
 
-    public void saveFacilityVote(Integer id,FacilityVote facilityVote, Callback<Void> cb) throws IOException {
-        service.saveFacilityVote(id,facilityVote).enqueue(cb);
+    public void saveFacilityVote(Integer id,FacilityVote facilityVote,ChatVerification cv, Callback<Void> cb) throws IOException {
+        cv.setData(facilityVote);
+        service.saveFacilityVote(id,cv).enqueue(cb);
     }
 
     public FacilityMap getMapWithLocation(Double lon,Double lat) throws IOException {
@@ -380,13 +383,13 @@ public class TUMCabeClient {
         Call<Void> deleteFacility(@Path("id") Integer id,@Body ChatVerification verification);
 
         @POST(API_FACILITY)
-        Call<Void> saveFacility(@Body Facility facility);
+        Call<Void> saveFacility(@Body ChatVerification chatVerification);
 
         @GET(API_FACILITY+"{id}"+"/votes/")
         Call<Integer[]> getFacilityVotes(@Path("id") Integer id);
 
         @POST(API_FACILITY+"{id}"+"/votes/")
-        Call<Void> saveFacilityVote(@Path("id") Integer id,@Body FacilityVote facilityVote);
+        Call<Void> saveFacilityVote(@Path("id") Integer id,@Body ChatVerification chatVerification);
 
         @GET(API_FACILITY+"{id}"+"/votes/"+"{user}")
         Call<FacilityVote> getFacilityVote(@Path("id") Integer id,@Path("user") String lrzId);

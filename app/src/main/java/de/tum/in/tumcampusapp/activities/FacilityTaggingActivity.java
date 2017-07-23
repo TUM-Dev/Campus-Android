@@ -167,7 +167,8 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
         facility.setName(facilityName);
         facility.setFacilityCategory(new FacilityCategory(categoryId));
         try {
-            TUMCabeClient.getInstance(this).saveFacility(facility, new Callback<Void>() {
+            final ChatVerification v = new ChatVerification(this, Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class));
+            TUMCabeClient.getInstance(this).saveFacility(facility,v, new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (!response.isSuccessful()) {
@@ -191,6 +192,8 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
             });
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NoPrivateKey noPrivateKey) {
+            noPrivateKey.printStackTrace();
         }
     }
 
@@ -260,16 +263,8 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
     }
 
     private void deleteFacility() {
-
-        ChatVerification verification;
         try {
-            verification = new ChatVerification(FacilityTaggingActivity.this, chatMember);
-        } catch (NoPrivateKey noPrivateKey) {
-            return; //In this case we simply cannot do anything
-        }
-
-
-        try {
+            ChatVerification verification = new ChatVerification(FacilityTaggingActivity.this, chatMember);
             TUMCabeClient.getInstance(this).deleteFacility(facility.getId(),verification, new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
@@ -295,6 +290,9 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
             });
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        catch (NoPrivateKey noPrivateKey) {
+            return; //In this case we simply cannot do anything
         }
     }
 }
