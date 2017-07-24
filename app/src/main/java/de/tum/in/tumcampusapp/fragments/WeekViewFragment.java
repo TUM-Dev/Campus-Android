@@ -13,6 +13,7 @@ import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -71,13 +72,16 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
                 calendar.set(newYear, newMonth - 1, 1);
                 int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-                long startTime = calendar.getTimeInMillis();
+
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                String startTime =format.format(calendar.getTime());
+
                 calendar.set(newYear, newMonth - 1, daysInMonth);
-                long endTime = calendar.getTimeInMillis();
+                String endTime =format.format(calendar.getTime());
 
                 List<IntegratedCalendarEvent> roomFinderResult = new ArrayList<>();
                 TUMRoomFinderRequest request = new TUMRoomFinderRequest(getContext());
-                request.fetchRoomSchedule(roomApiCode, Long.toString(startTime), Long.toString(endTime), roomFinderResult);
+                request.fetchRoomSchedule(roomApiCode, startTime, endTime, roomFinderResult);
 
                 //Convert to the proper type
                 final List<WeekViewEvent> events = new ArrayList<>(roomFinderResult.size());
