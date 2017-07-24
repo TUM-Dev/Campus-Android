@@ -37,8 +37,6 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
     private StickyListHeadersListView list;
     private RoomFinderListAdapter adapter;
 
-    private AsyncTask<String, Void, List<RoomFinderRoom>> searchRoomAsyncTask;
-
     public RoomFinderActivity() {
         super(R.layout.activity_roomfinder, RoomFinderSuggestionProvider.AUTHORITY, 3);
     }

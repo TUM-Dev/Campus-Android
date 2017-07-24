@@ -110,8 +110,7 @@ public final class Helper {
      * @return encoded url
      */
     public static String encodeUrl(String pUrl) {
-        String url = pUrl.replace("/", ""); //remove slashes in queries as this breaks the url
-        return UrlEscapers.urlPathSegmentEscaper().escape(url);
+        return UrlEscapers.urlPathSegmentEscaper().escape(pUrl);
     }
 
     private Helper() {
