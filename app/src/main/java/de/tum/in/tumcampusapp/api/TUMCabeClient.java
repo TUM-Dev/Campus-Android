@@ -391,8 +391,8 @@ public class TUMCabeClient {
         @POST(API_FACILITY+"{id}"+"/votes/")
         Call<Void> saveFacilityVote(@Path("id") Integer id,@Body ChatVerification chatVerification);
 
-        @GET(API_FACILITY+"{id}"+"/votes/"+"{user}")
-        Call<FacilityVote> getFacilityVote(@Path("id") Integer id,@Path("user") String lrzId);
+        @GET(API_FACILITY+"{id}"+"/votes/"+"{lrzId}")
+        Call<FacilityVote> getFacilityVote(@Path("id") Integer id,@Path("lrzId") String lrzId);
 
         @GET(API_FACILITY+"map/{longitude}/{latitude}")
         Call<FacilityMap> getMapWithLocation(@Path("longitude") Double longitude, @Path("latitude") Double latitude);

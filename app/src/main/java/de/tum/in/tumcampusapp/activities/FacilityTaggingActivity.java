@@ -22,6 +22,7 @@ import java.util.Map;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -79,6 +80,12 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
             editMode=bundle.getBoolean(EDIT_MODE);
             if(editMode){
                 facility= (Facility) bundle.getSerializable(FACILITY);
+                AuthenticationManager am = new AuthenticationManager(this);
+                try {
+                    facility.setSignature(am.sign(facility.getName()));
+                } catch (NoPrivateKey noPrivateKey) {
+                    noPrivateKey.printStackTrace();
+                }
             }
             else{
                 facility=new Facility();
@@ -89,9 +96,9 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
                     finish();
                 }
                 Location currentLocation=new LocationManager(FacilityTaggingActivity.this).getCurrentLocation();
+
                 facility.setLatitude(currentLocation.getLatitude());
                 facility.setLongitude(currentLocation.getLongitude());
-                facility.setCreatedBy(lrzId);
             }
         }
         

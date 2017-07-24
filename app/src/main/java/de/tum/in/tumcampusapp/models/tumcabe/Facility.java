@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.models.tumcabe;
 
 import java.io.Serializable;
 
+
 /**
  * Presents the faculty model that is used in fetching the facultyData from server
  */
@@ -14,7 +15,8 @@ public class Facility implements Serializable{
     private Double longitude;
     private Double latitude;
     private FacilityCategory facilityCategory;
-    private String createdBy;
+    private int member;
+    private String signature;
 
     public int getId() {
         return id;
@@ -56,11 +58,19 @@ public class Facility implements Serializable{
         this.facilityCategory = facilityCategory;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public int getMember() {
+        return member;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setMember(int member) {
+        this.member = member;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 }

@@ -12,7 +12,7 @@ public class FacilityVote implements Serializable{
     private int id;
     private Facility facility;
     private boolean vote;
-    private String user;
+    private int member;
 
     public int getId() {
         return id;
@@ -38,11 +38,11 @@ public class FacilityVote implements Serializable{
         this.vote = vote;
     }
 
-    public String getUser() {
-        return user;
+    public int getMember() {
+        return member;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setMember(int member) {
+        this.member = member;
     }
 }

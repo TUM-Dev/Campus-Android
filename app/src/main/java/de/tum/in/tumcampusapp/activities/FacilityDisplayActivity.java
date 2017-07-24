@@ -101,12 +101,6 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (!response.isSuccessful()) {
-                        try {
-                            String error= response.errorBody().string();
-                            System.out.print(error);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                         Utils.logv("Error saving vote: " + response.message());
                         Utils.showToastOnUIThread(FacilityDisplayActivity.this, R.string.facility_votes_failure);
                         return;
@@ -209,7 +203,6 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
                     if(facilityVote==null || facilityVote.getId()==0){
                         facilityVote=new FacilityVote();
                         facilityVote.setFacility(facility);
-                        facilityVote.setUser(lrzId);
                         updateButtons(true,true);
                     }
                     else{
