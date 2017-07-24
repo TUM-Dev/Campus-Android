@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 
+import com.google.common.base.Optional;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -230,8 +232,22 @@ public class TUMCabeClient {
         service.createMeasurements(wifiMeasurementList).enqueue(cb);
     }
 
-    public List<RoomFinderMap> fetchAvailableMaps(String archId) throws IOException {
-        return service.fetchAvailableMaps(Helper.encodeUrl(archId)).execute().body();
+    public void fetchAvailableMaps(String archId, final AsyncRequestListener<List<RoomFinderMap>> listener)
+            throws IOException{
+        service.fetchAvailableMaps(Helper.encodeUrl(archId)).enqueue(new Callback<List<RoomFinderMap>>() {
+            @Override
+            public void onResponse(Call<List<RoomFinderMap>> call, Response<List<RoomFinderMap>> response) {
+                if(!response.isSuccessful()){
+                    listener.onFailure();
+                }
+                listener.onResponse(response);
+            }
+
+            @Override
+            public void onFailure(Call<List<RoomFinderMap>> call, Throwable throwable) {
+                listener.onFailure();
+            }
+        });
     }
 
     public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
@@ -355,5 +371,14 @@ public class TUMCabeClient {
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
         Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
                                                @Path("start") String start, @Path("end") String end);
+    }
+
+    /**
+     * The listner for async request. Methods in this interface are callbacks of retrofit requests.
+     * @param <T> The type of requesting
+     */
+    public interface AsyncRequestListener<T> {
+        void onResponse(Response<T> response);
+        void onFailure();
     }
 }
