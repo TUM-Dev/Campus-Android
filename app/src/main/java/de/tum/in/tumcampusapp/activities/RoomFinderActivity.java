@@ -76,7 +76,7 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
         } catch (IOException e) {
             Utils.log(e);
         }
-        return null;
+        return Optional.absent();
     }
 
     @Override
