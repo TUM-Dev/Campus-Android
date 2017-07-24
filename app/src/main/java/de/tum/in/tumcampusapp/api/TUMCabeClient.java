@@ -232,30 +232,21 @@ public class TUMCabeClient {
         service.createMeasurements(wifiMeasurementList).enqueue(cb);
     }
 
-    public void fetchAvailableMaps(String archId, final AsyncRequestListener<List<RoomFinderMap>> listener)
-            throws IOException{
-        service.fetchAvailableMaps(Helper.encodeUrl(archId)).enqueue(new Callback<List<RoomFinderMap>>() {
-            @Override
-            public void onResponse(Call<List<RoomFinderMap>> call, Response<List<RoomFinderMap>> response) {
-                if(!response.isSuccessful()){
-                    listener.onFailure();
-                }
-                listener.onResponse(response);
-            }
-
-            @Override
-            public void onFailure(Call<List<RoomFinderMap>> call, Throwable throwable) {
-                listener.onFailure();
-            }
-        });
+    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException{
+        service.fetchAvailableMaps(Helper.encodeUrl(archId)).enqueue(cb);
     }
 
     public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
         return service.fetchRooms(Helper.encodeUrl(searchStrings)).execute().body();
     }
 
-    public RoomFinderCoordinate fetchCoordinates(String archId) throws IOException {
+    public RoomFinderCoordinate fetchCoordinates(String archId)
+            throws IOException {
         return service.fetchCoordinates(Helper.encodeUrl(archId)).execute().body();
+    }
+
+    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) throws IOException {
+        service.fetchCoordinates(Helper.encodeUrl(archId)).enqueue(cb);
     }
 
     public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException{
@@ -371,14 +362,5 @@ public class TUMCabeClient {
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
         Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
                                                @Path("start") String start, @Path("end") String end);
-    }
-
-    /**
-     * The listner for async request. Methods in this interface are callbacks of retrofit requests.
-     * @param <T> The type of requesting
-     */
-    public interface AsyncRequestListener<T> {
-        void onResponse(Response<T> response);
-        void onFailure();
     }
 }

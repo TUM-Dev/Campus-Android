@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,16 +24,19 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.api.Helper;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.TUMCabeClient.AsyncRequestListener;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.fragments.WeekViewFragment;
 import de.tum.in.tumcampusapp.managers.LocationManager;
+import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -57,8 +59,6 @@ public class RoomFinderDetailsActivity
     private List<RoomFinderMap> mapsList;
     private boolean infoLoaded;
     private Fragment fragment;
-
-    private AsyncTask<String, Void, Optional<List<RoomFinderMap>>> mapListAsyncTask;
 
     private AsyncTask<String, Void, Optional<Geo>> geoASyncTask;
 
@@ -105,7 +105,7 @@ public class RoomFinderDetailsActivity
             supportInvalidateOptionsMenu();
             return true;
         } else if (i == R.id.action_directions) {
-            startLoadingGeo(room.getArch_id());
+            loadGeo();
             return true;
         } else if (i == R.id.action_switch_map) {
             showMapSwitch();
@@ -200,12 +200,41 @@ public class RoomFinderDetailsActivity
 
         showLoadingEnded();
 
-//        startLoadingMapList(room.getArch_id());
-        MapListRequestHandler mapListRequestHandler = new MapListRequestHandler(this);
+        loadMapList();
     }
 
-    private void onMapListLoadFinished(Optional<List<RoomFinderMap>> result){
-        if(!result.isPresent()){
+    private void loadMapList() {
+        showLoadingStart();
+        try {
+            TUMCabeClient.getInstance(this).fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
+                @Override
+                public void onResponse(Call<List<RoomFinderMap>> call, Response<List<RoomFinderMap>> response) {
+                    try {
+                        onMapListLoadFinished(Optional.of(response.body()));
+                    } catch (NullPointerException e) {
+                        Utils.log(e);
+                        onMapListLoadFailed();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<RoomFinderMap>> call, Throwable throwable) {
+                    onMapListLoadFailed();
+                }
+            });
+        } catch (IOException e) {
+            Utils.log(e);
+            onMapListLoadFailed();
+        }
+    }
+
+    private void onMapListLoadFailed() {
+        onMapListLoadFinished(Optional.<List<RoomFinderMap>>absent());
+    }
+
+    private void onMapListLoadFinished(Optional<List<RoomFinderMap>> result) {
+        showLoadingEnded();
+        if (!result.isPresent()) {
             if (NetUtils.isConnected(this)) {
                 showErrorLayout();
             } else {
@@ -213,7 +242,6 @@ public class RoomFinderDetailsActivity
             }
             return;
         }
-
         mapsList = result.get();
         if (mapsList.size() > 1) {
             mapsLoaded = true;
@@ -222,51 +250,38 @@ public class RoomFinderDetailsActivity
         supportInvalidateOptionsMenu();
     }
 
-//    private Optional<List<RoomFinderMap>> onLoadMapListInBackground(String archId){
-//        try {
-//            Optional<List<RoomFinderMap>> data =
-//                    Optional.of(TUMCabeClient.getInstance(this).fetchAvailableMaps(archId));
-//            if(data.isPresent()){
-//                return data;
-//            }
-//        } catch (IOException | NullPointerException e) {
-//            Utils.log(e);
-//        }
-//
-//        return Optional.absent();
-//    }
+    private void loadGeo() {
+        showLoadingStart();
+        try {
+            TUMCabeClient.getInstance(this).fetchCoordinates(room.getArch_id(), new Callback<RoomFinderCoordinate>() {
+                @Override
+                public void onResponse(Call<RoomFinderCoordinate> call, Response<RoomFinderCoordinate> response) {
+                    try {
+                        Optional<Geo> result = LocationManager.convertRoomFinderCoordinateToGeo(response.body());
+                        onGeoLoadFinished(result);
+                    } catch (NullPointerException e) {
+                        Utils.log(e);
+                        onLoadGeoFailed();
+                    }
+                }
 
-//    final void startLoadingMapList(String... params){
-//        if (mapListAsyncTask != null) {
-//            mapListAsyncTask.cancel(true);
-//        }
-//
-//        mapListAsyncTask = new AsyncTask<String, Void, Optional<List<RoomFinderMap>>>() {
-//            @Override
-//            protected void onPreExecute() {
-//                showLoadingStart();
-//            }
-//
-//            @Override
-//            protected Optional<List<RoomFinderMap>> doInBackground(String... params) {
-//                return onLoadMapListInBackground(params[0]);
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Optional<List<RoomFinderMap>> result) {
-//                showLoadingEnded();
-//                onMapListLoadFinished(result);
-//                mapListAsyncTask = null;
-//            }
-//        };
-//        mapListAsyncTask.execute(params);
-//    }
-
-    private Optional<Geo> onLoadGeoInBackground(String archId){
-        return new LocationManager(this).fetchRoomGeo(archId);
+                @Override
+                public void onFailure(Call<RoomFinderCoordinate> call, Throwable throwable) {
+                    onLoadGeoFailed();
+                }
+            });
+        } catch (IOException e) {
+            Utils.log(e);
+            onLoadGeoFailed();
+        }
     }
 
-    private void onGeoLoadFinished(Optional<Geo> result){
+    private void onLoadGeoFailed() {
+        onGeoLoadFinished(Optional.<Geo>absent());
+    }
+
+    private void onGeoLoadFinished(Optional<Geo> result) {
+        showLoadingEnded();
         if (!result.isPresent()) {
             Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
             return;
@@ -288,62 +303,6 @@ public class RoomFinderDetailsActivity
         } catch (ActivityNotFoundException e) {
             Utils.log(e);
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
-        }
-    }
-
-    final void startLoadingGeo(String... params){
-        if (geoASyncTask != null) {
-            geoASyncTask.cancel(true);
-        }
-
-        geoASyncTask = new AsyncTask<String, Void, Optional<Geo>>() {
-            @Override
-            protected void onPreExecute() {
-                showLoadingStart();
-            }
-
-            @Override
-            protected Optional<Geo> doInBackground(String... params) {
-                return onLoadGeoInBackground(params[0]);
-            }
-
-            @Override
-            protected void onPostExecute(Optional<Geo> result) {
-                showLoadingEnded();
-                onGeoLoadFinished(result);
-                geoASyncTask = null;
-            }
-        };
-        geoASyncTask.execute(params);
-    }
-
-    private class MapListRequestHandler implements AsyncRequestListener<List<RoomFinderMap>> {
-
-        Context context;
-
-        public MapListRequestHandler (Context context){
-            this.context = context;
-            createRequest();
-        }
-
-        private void createRequest(){
-            try {
-                TUMCabeClient.getInstance(context).fetchAvailableMaps(room.getArch_id(), this) ;
-            } catch (IOException | NullPointerException e) {
-                Utils.log(e);
-                onFailure();
-            }
-        }
-
-        @Override
-        public void onResponse(Response<List<RoomFinderMap>> response) {
-            Optional<List<RoomFinderMap>> result = Optional.of(response.body());
-            onMapListLoadFinished(result);
-        }
-
-        @Override
-        public void onFailure() {
-            showErrorLayout();
         }
     }
 }

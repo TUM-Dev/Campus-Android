@@ -26,6 +26,7 @@ import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
+import retrofit2.Response;
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -342,27 +343,33 @@ public class LocationManager {
         return new Geo(d17, d18);
     }
 
-    /**
-     * Get the geo information for a room
-     * @param archId arch_id of the room
-     * @return Location or null on failure
-     */
-    public Optional<Geo> fetchRoomGeo(String archId){
+    public static Optional<Geo> convertRoomFinderCoordinateToGeo(RoomFinderCoordinate roomFinderCoordinate){
         Geo result;
-
         try {
-            Optional<RoomFinderCoordinate> coordinate =
-                    Optional.of(TUMCabeClient.getInstance(mContext).fetchCoordinates(archId));
-
-
+            Optional<RoomFinderCoordinate> coordinate = Optional.of(roomFinderCoordinate);
             double zone = Double.parseDouble(coordinate.get().getUtm_zone());
             double easting = Double.parseDouble(coordinate.get().getUtm_easting());
             double northing = Double.parseDouble(coordinate.get().getUtm_northing());
             result = convertUTMtoLL(northing, easting, zone);
 
             return Optional.of(result);
+        } catch (NullPointerException | NumberFormatException e) {
+            Utils.log(e);
+        }
 
-        } catch (IOException | NullPointerException | NumberFormatException e) {
+        return Optional.absent();
+    }
+
+    /**
+     * Get the geo information for a room
+     * @param archId arch_id of the room
+     * @return Location or null on failure
+     */
+    public Optional<Geo> fetchRoomGeo(String archId){
+        try {
+            RoomFinderCoordinate coordinate = TUMCabeClient.getInstance(mContext).fetchCoordinates(archId);
+            return convertRoomFinderCoordinateToGeo(coordinate);
+        } catch (IOException e) {
             Utils.log(e);
         }
 
