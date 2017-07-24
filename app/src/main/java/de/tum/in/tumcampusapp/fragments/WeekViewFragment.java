@@ -15,6 +15,7 @@ import com.alamkanak.weekview.WeekViewEvent;
 import com.google.common.base.Optional;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -76,12 +77,15 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
                 calendar.set(newYear, newMonth - 1, 1);
                 int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-                long startTime = calendar.getTimeInMillis();
+
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                String startTime =format.format(calendar.getTime());
+
                 calendar.set(newYear, newMonth - 1, daysInMonth);
-                long endTime = calendar.getTimeInMillis();
+                String endTime =format.format(calendar.getTime());
 
                 //Convert to the proper type
-                final List<WeekViewEvent> events = fetchEventList(roomApiCode, Long.toString(startTime), Long.toString(endTime));
+                final List<WeekViewEvent> events = fetchEventList(roomApiCode, startTime, endTime);
 
                 //Finish loading
                 context.runOnUiThread(new Runnable() {
