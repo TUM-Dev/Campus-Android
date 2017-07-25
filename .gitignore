@@ -1,8 +1,13 @@
 .gradle
 /local.properties
-/.idea/
 .DS_Store
 /build
 *.iml
+/.idea/
+!/.idea/codeStyleSettings.xml
+!/.idea/fileTemplates/
+!/.idea/inspectionProfiles/
+!/.idea/vcs.xml
+!/.idea/vcs.xml
 *.apk
 gradlew
