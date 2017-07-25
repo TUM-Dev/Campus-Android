@@ -152,7 +152,7 @@ public class Chat extends GenericNotification {
                             .build();
 
             //Create a nice notification
-            return new NotificationCompat.Builder(context)
+            return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                     .setSmallIcon(this.icon)
                     .setContentTitle(chatRoom.getName().substring(4))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))

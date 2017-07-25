@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 
 public abstract class NotificationAwareCard extends Card {
     public NotificationAwareCard(int cardType, Context context, String settings) {
@@ -35,7 +36,7 @@ public abstract class NotificationAwareCard extends Card {
     private void notifyUser() {
         // Start building our notification
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext)
+                new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT)
                         .setAutoCancel(true)
                         .setContentTitle(getTitle());
 
