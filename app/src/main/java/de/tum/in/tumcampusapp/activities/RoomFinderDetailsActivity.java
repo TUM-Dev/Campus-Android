@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -30,7 +29,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.fragments.WeekViewFragment;
 import de.tum.in.tumcampusapp.managers.LocationManager;
-import de.tum.in.tumcampusapp.models.cafeteria.Location;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
@@ -59,8 +57,6 @@ public class RoomFinderDetailsActivity
     private List<RoomFinderMap> mapsList;
     private boolean infoLoaded;
     private Fragment fragment;
-
-    private AsyncTask<String, Void, Optional<Geo>> geoASyncTask;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);

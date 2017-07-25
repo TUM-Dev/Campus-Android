@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.activities;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
