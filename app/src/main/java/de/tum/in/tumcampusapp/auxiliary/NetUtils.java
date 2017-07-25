@@ -189,7 +189,7 @@ public class NetUtils {
                 }
             }
 
-            file = Optional.of(mContext.getCacheDir().getAbsolutePath() + '/' + Utils.md5(url) + ".jpg");
+            file = Optional.of(mContext.getCacheDir().getAbsolutePath() + '/' + Utils.hash(url) + ".jpg");
             File f = new File(file.get());
             downloadToFile(url, file.get());
 
