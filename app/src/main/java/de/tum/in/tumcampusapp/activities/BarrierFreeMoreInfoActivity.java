@@ -44,6 +44,7 @@ public class BarrierFreeMoreInfoActivity
 
     @Override
     protected void onLoadFinished(List<BarrierfreeMoreInfo> result) {
+        showLoadingEnded();
         if (result == null) {
             showErrorLayout();
             return;
@@ -57,6 +58,7 @@ public class BarrierFreeMoreInfoActivity
 
     @Override
     protected List<BarrierfreeMoreInfo> onLoadInBackground(Void... arg) {
+        showLoadingStart();
         List<BarrierfreeMoreInfo> result;
         try {
             result = TUMCabeClient.getInstance(this).getMoreInfoList();

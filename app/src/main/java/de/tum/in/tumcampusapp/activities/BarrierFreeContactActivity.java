@@ -40,6 +40,7 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
 
     @Override
     protected List<BarrierfreeContact> onLoadInBackground(Void... arg) {
+        showLoadingStart();
         List<BarrierfreeContact> result;
         try {
             result = TUMCabeClient.getInstance(this).getBarrierfreeContactList();
@@ -52,6 +53,7 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
 
     @Override
     protected void onLoadFinished(List<BarrierfreeContact> result) {
+        showLoadingEnded();
         if(result == null){
             showErrorLayout();
             return;
