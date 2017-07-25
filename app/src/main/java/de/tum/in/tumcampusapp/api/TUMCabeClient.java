@@ -12,6 +12,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
+import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
@@ -248,19 +249,19 @@ public class TUMCabeClient {
         return service.getMoreInfoList().execute().body();
     }
 
-    public List<Map<String, String>> getListOfToilets() throws IOException {
+    public List<RoomFinderRoom> getListOfToilets() throws IOException {
         return service.getListOfToilets().execute().body();
     }
 
-    public List<Map<String, String>> getListOfElevators() throws IOException {
+    public List<RoomFinderRoom> getListOfElevators() throws IOException {
         return service.getListOfElevators().execute().body();
     }
 
-    public List<Map<String, String>> getListOfNearbyFacilities(String buildingId) throws IOException {
+    public List<RoomFinderRoom> getListOfNearbyFacilities(String buildingId) throws IOException {
         return service.getListOfNearbyFacilities(buildingId).execute().body();
     }
 
-    public List<Map<String, String>> getBuilding2Gps() throws IOException {
+    public List<BuildingsToGps> getBuilding2Gps() throws IOException {
         return service.getBuilding2Gps().execute().body();
     }
 
@@ -389,19 +390,19 @@ public class TUMCabeClient {
 
         // Barrier free toilets list
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_TOILETS)
-        Call<List<Map<String, String>>> getListOfToilets();
+        Call<List<RoomFinderRoom>> getListOfToilets();
 
         // Barrier free elevator list
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_ELEVATORS)
-        Call<List<Map<String, String>>> getListOfElevators();
+        Call<List<RoomFinderRoom>> getListOfElevators();
 
         // Barrier free nearby list
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_NERBY_FACILITIES + "{buildingId}/")
-        Call<List<Map<String, String>>> getListOfNearbyFacilities(@Path("buildingId") String buildingId);
+        Call<List<RoomFinderRoom>> getListOfNearbyFacilities(@Path("buildingId") String buildingId);
 
         // building to gps information
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
-        Call<List<Map<String, String>>> getBuilding2Gps();
+        Call<List<BuildingsToGps>> getBuilding2Gps();
 
         //RoomFinder maps
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")

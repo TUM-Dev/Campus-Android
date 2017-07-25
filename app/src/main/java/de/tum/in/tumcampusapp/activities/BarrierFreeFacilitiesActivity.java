@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import com.google.common.base.Optional;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -15,20 +17,22 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackground<Void, List<Map<String, String>>>
+public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackground<Void, Optional<List<RoomFinderRoom>>>
         implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener{
     private int selectedFacilityPage = -1;
     private RoomFinderListAdapter adapter;
     private StickyListHeadersListView stickyList;
-    private List<Map<String, String>> facilities;
-
-    private List<Map<String, String>> building2Gps = null;
-    private boolean building2GpsFail = false;
+    private List<RoomFinderRoom> facilities;
 
     private RecentsManager recentsManager;
     private LocationManager locationManager;
@@ -65,88 +69,70 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
     }
 
     @Override
-    protected List<Map<String, String>> onLoadInBackground(Void... arg) {
-        if (building2Gps == null && !building2GpsFail) {
-            // if buildings2gps is not ready, it need to be fetched first
-            return fetchBuilding2Gps();
-        }
-
-        List<Map<String, String>> result = null;
+    protected Optional<List<RoomFinderRoom>> onLoadInBackground(Void... arg) {
+        showLoadingStart();
+        List<RoomFinderRoom> result = null;
         TUMCabeClient cabeClient = TUMCabeClient.getInstance(this);
 
         try {
             switch (selectedFacilityPage) {
                 case 0:
-                    String buildingId = locationManager.getBuildingIDFromCurrentLocation(building2Gps);
-                    result = cabeClient.getListOfNearbyFacilities(buildingId);
+                    // Nearby staff - need to fetch building id first
+                    Optional<String> buildingId = locationManager.getBuildingIDFromCurrentLocation();
+                    if(buildingId.isPresent()){
+                        result = cabeClient.getListOfNearbyFacilities(buildingId.get());
+                    } else {
+                        return Optional.absent();
+                    }
                     break;
+
                 case 1:
                     result = cabeClient.getListOfToilets();
                     break;
+
                 case 2:
                     result = cabeClient.getListOfElevators();
                     break;
             }
         } catch (IOException e) {
             Utils.log(e);
-            return null;
+            return Optional.absent();
         }
 
-        return result;
+        if(result == null){
+            return Optional.absent();
+        }
+
+        return Optional.of(result);
     }
 
     @Override
-    protected void onLoadFinished(List<Map<String, String>> result) {
-        if (building2Gps == null && !building2GpsFail) {
-            if (result == null) {
-                // try to fetch building2gps but get null, no more try
-                building2GpsFail = true;
+    protected void onLoadFinished(Optional<List<RoomFinderRoom>> result) {
+        showLoadingEnded();
+        if (!result.isPresent()) {
+            if (NetUtils.isConnected(this)) {
                 showErrorLayout();
-                return;
+            } else {
+                showNoInternetLayout();
             }
-
-            // buildings2gps if fetched. get real data
-            building2Gps = result;
-            startLoading();
             return;
         }
 
-        if (result == null){
-            showErrorLayout();
-            return;
-        }
-
-        facilities = result;
+        facilities = result.get();
         adapter = new RoomFinderListAdapter(this, facilities);
         stickyList.setAdapter(adapter);
         stickyList.setOnItemClickListener(this);
     }
 
-    public List<Map<String, String>> fetchBuilding2Gps(){
-        try {
-            return TUMCabeClient.getInstance(this).getBuilding2Gps();
-        } catch (IOException e) {
-            Utils.log(e);
-            building2GpsFail = true;
-            showErrorLayout();
-            return null;
-        }
-    }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Map<String, String> facility = facilities.get(position);
+        RoomFinderRoom facility = facilities.get(position);
 
-        StringBuilder val = new StringBuilder();
-        Bundle b = new Bundle();
-        for (Map.Entry<String, String> entry : facility.entrySet()) {
-            val.append(entry.getKey()).append('=').append(entry.getValue()).append(';');
-            b.putString(entry.getKey(), entry.getValue());
-        }
-        recentsManager.replaceIntoDb(val.toString());
+        recentsManager.replaceIntoDb(facility.toString());
 
+        // Start detail activity
         Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
-        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, b);
+        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, facility);
         startActivity(intent);
     }
 

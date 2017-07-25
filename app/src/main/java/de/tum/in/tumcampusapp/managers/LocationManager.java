@@ -17,22 +17,29 @@ import com.google.common.base.Optional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
+import de.tum.in.tumcampusapp.trace.Util;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
  * the users current location, campus, next public transfer station and best cafeteria
  */
-public class LocationManager {
+public class LocationManager extends AbstractManager{
     private static final double[][] CAMPUS_LOCATIONS = {
             {48.2648424, 11.6709511}, // Garching Forschungszentrum
             {48.249432, 11.633905}, // Garching Hochbrück
@@ -68,7 +75,9 @@ public class LocationManager {
     private final Context mContext;
 
     public LocationManager(Context c) {
+        super(c);
         mContext = c;
+        createBuildingsToGpsTable();
     }
 
     /**
@@ -404,42 +413,111 @@ public class LocationManager {
         return Optional.absent();
     }
 
-    /**
-     * Get Building ID accroding to the current location
-     * @return the id of current building
-     */
-    public String getBuildingIDFromCurrentLocation(List<Map<String, String>> buildingsToGps){
-        return getBuildingIDFromLocation(getCurrentLocation(), buildingsToGps);
+    private final void createBuildingsToGpsTable(){
+        db.execSQL("CREATE TABLE IF NOT EXISTS buildings2gps ("
+                + "id VARCHAR PRIMARY KEY, latitude VARCHAR, longitude VARCHAR)");
+    }
+
+    private void insertInBuildingsToGps(BuildingsToGps map){
+        String[] params = new String[]{
+                map.getId(),
+                map.getLatitude(),
+                map.getLongitude()
+        };
+        db.execSQL("INSERT INTO buildings2gps (id, latitude, longitude) VALUES (?, ?, ?)", params);
     }
 
     /**
-     * Get Building ID accroding to the given location
+     * This method tries to get the list of BuildingsToGps by querying database or requesting the server.
+     * If both two ways fail, it returns Optional.absent().
+     * @return The list of BuildingsToGps
+     */
+    private List<BuildingsToGps> getOrFetchBuildingsToGps() {
+        Cursor cursor = db.rawQuery("SELECT * FROM buildings2gps", null);
+        List<BuildingsToGps> result = new ArrayList<>();
+
+        while (cursor.moveToNext()){
+            if(cursor.isAfterLast()){
+                continue;
+            }
+
+            String id = cursor.getString(0);
+            String latitude = cursor.getString(1);
+            String longitude = cursor.getString(2);
+
+            BuildingsToGps mapping = new BuildingsToGps(id, latitude, longitude);
+
+            result.add(mapping);
+        }
+        cursor.close();
+
+        if (result.isEmpty()) {
+            // we have to fetch buildings to gps mapping first.
+
+            try {
+                result = TUMCabeClient.getInstance(mContext).getBuilding2Gps();
+                if(result == null){
+                    return new ArrayList<>();
+                }
+
+                for (BuildingsToGps map : result) {
+                    insertInBuildingsToGps(map);
+                }
+
+            } catch (IOException e) {
+                Utils.log(e);
+                return new ArrayList<>();
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Get Building ID accroding to the current location
+     * Do not call on UI thread.
+     * @return the id of current building
+     */
+    public Optional<String> getBuildingIDFromCurrentLocation(){
+        return getBuildingIDFromLocation(getCurrentLocation());
+    }
+
+    /**
+     * Get Building ID accroding to the given location.
+     * Do not call on UI thread.
      * @param location the give location
      * @return the id of current building
      */
-    private String getBuildingIDFromLocation(Location location, List<Map<String, String>> buildingsToGps){
+    private Optional<String> getBuildingIDFromLocation(Location location) {
+        List<BuildingsToGps> buildingsToGpsList = getOrFetchBuildingsToGps();
+
+        if (buildingsToGpsList.isEmpty()){
+            return Optional.absent();
+        }
+
+
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
         float[] results = new float[1];
         float bestDistance = Float.MAX_VALUE;
         String bestBuilding = "";
 
-        for (Map<String, String> building : buildingsToGps) {
-            double buildingLat = Double.parseDouble(building.get(Const.JSON_LATITUDE));
-            double buildingLng = Double.parseDouble(building.get(Const.JSON_LONGITUDE));
+        for (BuildingsToGps building : buildingsToGpsList) {
+            double buildingLat = Double.parseDouble(building.getLatitude());
+            double buildingLng = Double.parseDouble(building.getLongitude());
 
             Location.distanceBetween(buildingLat, buildingLng, lat, lng, results);
             float distance = results[0];
             if (distance < bestDistance) {
                 bestDistance = distance;
-                bestBuilding = building.get(Const.JSON_BUILDING_TO_GPS_Building_ID);
+                bestBuilding = building.getId();
             }
         }
 
         if (bestDistance < 1000) {
-            return bestBuilding;
+            return Optional.of(bestBuilding);
         } else {
-            return "";
+            return Optional.absent();
         }
     }
 }
