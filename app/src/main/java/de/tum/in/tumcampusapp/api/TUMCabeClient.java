@@ -22,6 +22,10 @@ import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
@@ -66,6 +70,11 @@ public class TUMCabeClient {
     private static final String API_BARRIER_FREE_LIST_OF_TOILETS = "listOfToilets/";
     private static final String API_BARRIER_FREE_LIST_OF_ELEVATORS = "listOfElevators/";
     private static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
+    private static final String API_ROOM_FINDER = "roomfinder/room/";
+    private static final String API_ROOM_FINDER_SEARCH= "search/";
+    private static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
+    private static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
+    private static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
 
 
     private static TUMCabeClient instance;
@@ -255,6 +264,28 @@ public class TUMCabeClient {
         return service.getBuilding2Gps().execute().body();
     }
 
+    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException{
+        service.fetchAvailableMaps(Helper.encodeUrl(archId)).enqueue(cb);
+    }
+
+    public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
+        return service.fetchRooms(Helper.encodeUrl(searchStrings)).execute().body();
+    }
+
+    public RoomFinderCoordinate fetchCoordinates(String archId)
+            throws IOException {
+        return service.fetchCoordinates(Helper.encodeUrl(archId)).execute().body();
+    }
+
+    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) throws IOException {
+        service.fetchCoordinates(Helper.encodeUrl(archId)).enqueue(cb);
+    }
+
+    public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException{
+        return service.fetchSchedule(Helper.encodeUrl(roomId),
+                Helper.encodeUrl(start), Helper.encodeUrl(end)).execute().body();
+    }
+
     private interface TUMCabeAPIService {
 
         @GET(API_FACULTY)
@@ -347,6 +378,7 @@ public class TUMCabeClient {
         @POST(API_WIFI_HEATMAP+"create_measurements/")
         Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
 
+
         // Barrier free contacts
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)
         Call<List<BarrierfreeContact>> getBarrierfreeContactList();
@@ -370,5 +402,22 @@ public class TUMCabeClient {
         // building to gps information
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
         Call<List<Map<String, String>>> getBuilding2Gps();
+
+        //RoomFinder maps
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")
+        Call<List<RoomFinderMap>> fetchAvailableMaps(@Path("archId") String archId);
+
+        //RoomFinder maps
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_SEARCH + "{searchStrings}")
+        Call<List<RoomFinderRoom>> fetchRooms(@Path("searchStrings") String searchStrings);
+
+        //RoomFinder cordinates
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_COORDINATES + "{archId}")
+        Call<RoomFinderCoordinate> fetchCoordinates(@Path("archId") String archId);
+
+        //RoomFinder schedule
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
+        Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
+                                               @Path("start") String start, @Path("end") String end);
     }
 }

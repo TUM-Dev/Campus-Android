@@ -116,6 +116,10 @@ public final class Const {
     public static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     public static final String CHATTERMS_URL = "https://tumcabe.in.tum.de/landing/chatterms/";
 
+    public static final String URL_ROOM_FINDER_API = "/Api/roomfinder/room/";
+    public static final String URL_DEFAULT_MAP_IMAGE = "https://" + API_HOSTNAME + URL_ROOM_FINDER_API + "defaultMap/";
+    public static final String URL_MAP_IMAGE = "https://" + API_HOSTNAME+ URL_ROOM_FINDER_API + "map/";
+    public static final String ROOM_ID = "room_id";
 
     private Const() {
         // Const is a utility class
