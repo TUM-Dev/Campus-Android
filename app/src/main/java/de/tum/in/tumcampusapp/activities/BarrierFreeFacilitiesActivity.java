@@ -9,6 +9,7 @@ import android.widget.Spinner;
 import com.google.common.base.Optional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
     @Override
     protected Optional<List<RoomFinderRoom>> onLoadInBackground(Void... arg) {
         showLoadingStart();
-        List<RoomFinderRoom> result = null;
+        List<RoomFinderRoom> result = new ArrayList<>();
         TUMCabeClient cabeClient = TUMCabeClient.getInstance(this);
 
         try {
@@ -93,6 +94,8 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
                 case 2:
                     result = cabeClient.getListOfElevators();
                     break;
+                default:
+                    return Optional.absent();
             }
         } catch (IOException e) {
             Utils.log(e);

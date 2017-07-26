@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import android.os.Bundle;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -41,12 +42,12 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
     @Override
     protected List<BarrierfreeContact> onLoadInBackground(Void... arg) {
         showLoadingStart();
-        List<BarrierfreeContact> result;
+        List<BarrierfreeContact> result = new ArrayList<>();
         try {
             result = TUMCabeClient.getInstance(this).getBarrierfreeContactList();
         } catch (IOException e) {
             Utils.log(e);
-            return null;
+            return result;
         }
         return result;
     }
@@ -54,7 +55,7 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
     @Override
     protected void onLoadFinished(List<BarrierfreeContact> result) {
         showLoadingEnded();
-        if(result == null){
+        if(result == null || result.isEmpty()){
             showErrorLayout();
             return;
         }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -45,7 +46,7 @@ public class BarrierFreeMoreInfoActivity
     @Override
     protected void onLoadFinished(List<BarrierfreeMoreInfo> result) {
         showLoadingEnded();
-        if (result == null) {
+        if (result == null || result.isEmpty()) {
             showErrorLayout();
             return;
         }
@@ -59,12 +60,12 @@ public class BarrierFreeMoreInfoActivity
     @Override
     protected List<BarrierfreeMoreInfo> onLoadInBackground(Void... arg) {
         showLoadingStart();
-        List<BarrierfreeMoreInfo> result;
+        List<BarrierfreeMoreInfo> result = new ArrayList<>();
         try {
             result = TUMCabeClient.getInstance(this).getMoreInfoList();
         } catch (IOException e) {
             Utils.log(e);
-            return null;
+            return result;
         }
         return result;
     }

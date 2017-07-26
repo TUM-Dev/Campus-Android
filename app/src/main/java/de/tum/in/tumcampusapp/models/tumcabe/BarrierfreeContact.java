@@ -20,11 +20,11 @@ public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.Simple
         this.tumID = tumonlineID;
     }
 
-    public boolean ifValid(){
+    public boolean isValid(){
         return name != null && !name.equals("null");
     }
 
-    public boolean ifHaveTumID(){
+    public boolean isHavingTumID(){
         return !(tumID.equals("null") || tumID.equals(""));
     }
 

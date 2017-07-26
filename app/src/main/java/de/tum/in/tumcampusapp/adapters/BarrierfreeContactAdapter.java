@@ -31,19 +31,8 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         View view = convertView;
 
         if(view == null){
-            view = getInflater().inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
-
             // Crate UI element
-            holder = new ViewHolder();
-            holder.name = (TextView) view
-                    .findViewById(R.id.barrierfreeContactListViewName);
-            holder.phone = (TextView) view
-                    .findViewById(R.id.barrierfreeContactListViewPhone);
-            holder.email = (TextView) view
-                    .findViewById(R.id.barrierfreeContactListViewEmail);
-            holder.more = (TextView) view
-                    .findViewById(R.id.barrierfreeContactListViewTumOnlineMore);
-
+            holder = new ViewHolder(parent);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -52,51 +41,65 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         // display information of current person
         final BarrierfreeContact contact = getInfoList().get(position);
 
-        if(!contact.ifValid()) {
+        if(!contact.isValid()) {
             view.setVisibility(View.GONE);
             return view;
         }
 
+        // set Information
         view.setVisibility(View.VISIBLE);
-
-        holder.name.setText(contact.getName());
-
-        holder.phone.setText(contact.getTelephone(), TextView.BufferType.SPANNABLE);
-        Linkify.addLinks(holder.phone, Linkify.ALL);
-
-        holder.email.setText(contact.getEmail());
-
-        // Has information in tumonline
-        if (contact.ifHaveTumID()){
-            // Jump to PersonDetail Activity
-            holder.more.setVisibility(View.VISIBLE);
-            holder.more.setText(context.getString(R.string.more_info));
-            holder.more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Person person = new Person();
-                    person.setName(contact.getName());
-                    person.setId(contact.getTumID());
-
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("personObject", person);
-
-                    Intent intent = new Intent(context, PersonsDetailsActivity.class);
-                    intent.putExtras(bundle);
-                    context.startActivity(intent);
-                }
-            });
-        } else {
-            holder.more.setVisibility(View.GONE);
-        }
+        holder.setContent(contact);
 
         return view;
     }
     // the layout of the list
-    static class ViewHolder {
+    class ViewHolder {
         TextView name;
         TextView phone;
         TextView email;
         TextView more;
+
+        ViewHolder(ViewGroup parent) {
+            View view = getInflater().inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
+            name = (TextView) view
+                    .findViewById(R.id.barrierfreeContactListViewName);
+            phone = (TextView) view
+                    .findViewById(R.id.barrierfreeContactListViewPhone);
+            email = (TextView) view
+                    .findViewById(R.id.barrierfreeContactListViewEmail);
+            more = (TextView) view
+                    .findViewById(R.id.barrierfreeContactListViewTumOnlineMore);
+        }
+
+        void setContent(final BarrierfreeContact contact){
+            name.setText(contact.getName());
+            phone.setText(contact.getTelephone(), TextView.BufferType.SPANNABLE);
+            Linkify.addLinks(phone, Linkify.ALL);
+            email.setText(contact.getEmail());
+
+            // Has information in tumonline
+            if (!contact.isHavingTumID()){
+                more.setVisibility(View.GONE);
+            } else {
+                // Jump to PersonDetail Activity
+                more.setVisibility(View.VISIBLE);
+                more.setText(context.getString(R.string.more_info));
+                more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Person person = new Person();
+                        person.setName(contact.getName());
+                        person.setId(contact.getTumID());
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("personObject", person);
+
+                        Intent intent = new Intent(context, PersonsDetailsActivity.class);
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
+                    }
+                });
+            }
+        }
     }
 }
