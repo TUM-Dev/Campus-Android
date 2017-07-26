@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
 import android.provider.SearchRecentSuggestions;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -76,7 +75,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
 
         // Get SearchView
         mSearchItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
+        mSearchView = (SearchView) mSearchItem.getActionView();
 
         // Set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -112,14 +111,14 @@ public abstract class ActivityForSearching extends ProgressActivity {
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                MenuItemCompat.collapseActionView(mSearchItem);
+                mSearchItem.collapseActionView();
                 mQuery = null;
                 onStartSearch();
                 return false;
             }
         });
 
-        MenuItemCompat.setOnActionExpandListener(mSearchItem, new MenuItemCompat.OnActionExpandListener() {
+        mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
@@ -138,8 +137,8 @@ public abstract class ActivityForSearching extends ProgressActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (mOpenSearch) {
-            MenuItemCompat.setShowAsAction(mSearchItem, MenuItemCompat.SHOW_AS_ACTION_ALWAYS | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-            MenuItemCompat.expandActionView(mSearchItem);
+            mSearchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            mSearchItem.expandActionView();
             return true;
         }
         return super.onPrepareOptionsMenu(menu);

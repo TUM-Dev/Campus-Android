@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.WifiMeasurementLocationListener;
 import de.tum.in.tumcampusapp.managers.EduroamManager;
 import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 
 /**
  * Listens for android's ScanResultsAvailable broadcast and checks if eduroam is nearby.
@@ -141,7 +142,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         PendingIntent hideIntent = PendingIntent.getService(context, 0, hide, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Create GCMNotification using NotificationCompat.Builder
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setSmallIcon(R.drawable.ic_notification_wifi)
                 .setTicker(context.getString(R.string.setup_eduroam))
                 .setContentTitle(context.getString(R.string.setup_eduroam))
