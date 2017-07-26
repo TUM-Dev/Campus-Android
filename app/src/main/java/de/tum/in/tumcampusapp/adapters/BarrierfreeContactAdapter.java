@@ -32,7 +32,8 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
 
         if(view == null){
             // Crate UI element
-            holder = new ViewHolder(parent);
+            view = getInflater().inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
+            holder = new ViewHolder(view, parent);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -59,8 +60,8 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         TextView email;
         TextView more;
 
-        ViewHolder(ViewGroup parent) {
-            View view = getInflater().inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
+        ViewHolder(View view, ViewGroup parent) {
+
             name = (TextView) view
                     .findViewById(R.id.barrierfreeContactListViewName);
             phone = (TextView) view
