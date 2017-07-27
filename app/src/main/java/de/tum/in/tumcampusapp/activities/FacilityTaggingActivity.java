@@ -22,7 +22,6 @@ import java.util.Map;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -33,7 +32,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumcabe.Facility;
 import de.tum.in.tumcampusapp.models.tumcabe.FacilityCategory;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
+import de.tum.in.tumcampusapp.models.tumcabe.FacilityMap;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,16 +40,13 @@ import retrofit2.Response;
 /**
  * Displays the map regarding the searched room.
  */
-public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void, Optional<File>> implements DialogInterface.OnClickListener{
-
+public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Facility, Optional<File>> implements DialogInterface.OnClickListener{
 
     private ImageViewTouchFragment mImage;
-    private TUMRoomFinderRequest request;
     private NetUtils net;
     private Fragment fragment;
 
     private FloatingActionButton saveFacilityButton;
-
 
     ArrayAdapter<String> spinnerAdapter;
     Map<String,Integer> options;
@@ -75,28 +71,22 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
 
         chatMember=Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
 
+        saveFacilityButton = (FloatingActionButton) findViewById(R.id.save_facility);
+        saveFacilityButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                saveFacility();
+            }
+        });
+
         Bundle bundle=getIntent().getExtras();
         if(bundle!=null){
             editMode=bundle.getBoolean(EDIT_MODE);
             if(editMode){
                 facility= (Facility) bundle.getSerializable(FACILITY);
-                AuthenticationManager am = new AuthenticationManager(this);
-                try {
-                    facility.setSignature(am.sign(facility.getName()));
-                } catch (NoPrivateKey noPrivateKey) {
-                    noPrivateKey.printStackTrace();
-                }
             }
             else{
                 facility=new Facility();
-                String lrzId=Utils.getSetting(FacilityTaggingActivity.this, Const.LRZ_ID, "");
-                if(lrzId==null || lrzId.isEmpty()){
-                    Utils.logv("User not logged in while adding new facility");
-                    Utils.showToastOnUIThread(FacilityTaggingActivity.this, R.string.facility_log_in_error);
-                    finish();
-                }
                 Location currentLocation=new LocationManager(FacilityTaggingActivity.this).getCurrentLocation();
-
                 facility.setLatitude(currentLocation.getLatitude());
                 facility.setLongitude(currentLocation.getLongitude());
             }
@@ -104,16 +94,36 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
         
         mImage = ImageViewTouchFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.current_location_map, mImage).commit();
+        startLoading(facility);
+    }
 
+    @Override
+    protected Optional<File> onLoadInBackground(Facility... arg) {
         initForm();
+        try {
+            FacilityMap map=TUMCabeClient.getInstance(this).getMapWithLocation(facility.getLongitude(),facility.getLatitude());
+            facility.setMap(map.getMapString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return net.getFacilityMapImage(Optional.fromNullable(facility.getMap()));
+    }
 
-        saveFacilityButton = (FloatingActionButton) findViewById(R.id.save_facility);
-        saveFacilityButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                saveFacility();
+    @Override
+    protected void onLoadFinished(Optional<File> result) {
+        if (!result.isPresent()) {
+            if (NetUtils.isConnected(this)) {
+                showErrorLayout();
+            } else {
+                showNoInternetLayout();
             }
-        });
-        startLoading();
+            return;
+        }
+        supportInvalidateOptionsMenu();
+        //Update the fragment
+        mImage = ImageViewTouchFragment.newInstance(result.get());
+        getSupportFragmentManager().beginTransaction().replace(R.id.current_location_map, mImage).commit();
+        showLoadingEnded();
     }
 
     private void initForm() {
@@ -163,6 +173,43 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (fragment != null) {
+            supportInvalidateOptionsMenu();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int whichButton) {
+        dialog.dismiss();
+        startLoading();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(editMode){
+            getMenuInflater().inflate(R.menu.menu_facility, menu);
+            MenuItem deleteFacility = menu.findItem(R.id.action_delete_facility);
+            deleteFacility.setVisible(true);
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.action_delete_facility) {
+            deleteFacility();
+            return true;
+        }
+        return false;
+    }
+
     private void saveFacility() {
         String facilityName = ((EditText) findViewById(R.id.facility_name)).getText().toString();
         if(facilityName==null || facilityName.isEmpty()){
@@ -204,71 +251,6 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
         }
     }
 
-
-    @Override
-    public void onBackPressed() {
-        if (fragment != null) {
-            supportInvalidateOptionsMenu();
-            return;
-        }
-
-        super.onBackPressed();
-    }
-
-    @Override
-    public void onClick(DialogInterface dialog, int whichButton) {
-        dialog.dismiss();
-        startLoading();
-    }
-
-    @Override
-    protected Optional<File> onLoadInBackground(Void... arg) {
-        return net.getFacilityMapImage(this,facility.getName(),facility.getLongitude(), facility.getLatitude());
-    }
-
-
-
-    @Override
-    protected void onLoadFinished(Optional<File> result) {
-        if (!result.isPresent()) {
-            if (NetUtils.isConnected(this)) {
-                showErrorLayout();
-            } else {
-                showNoInternetLayout();
-            }
-            return;
-        }
-
-        supportInvalidateOptionsMenu();
-
-        //Update the fragment
-        mImage = ImageViewTouchFragment.newInstance(result.get());
-        getSupportFragmentManager().beginTransaction().replace(R.id.current_location_map, mImage).commit();
-        showLoadingEnded();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if(editMode){
-            getMenuInflater().inflate(R.menu.menu_facility, menu);
-            MenuItem deleteFacility = menu.findItem(R.id.action_delete_facility);
-            deleteFacility.setVisible(true);
-            return true;
-        }
-        return false;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.action_delete_facility) {
-            deleteFacility();
-            return true;
-        }
-        return false;
-    }
-
     private void deleteFacility() {
         try {
             ChatVerification verification = new ChatVerification(FacilityTaggingActivity.this, chatMember);
@@ -276,12 +258,6 @@ public class FacilityTaggingActivity extends ActivityForLoadingInBackground<Void
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (!response.isSuccessful()) {
-                        try {
-                            String error= response.errorBody().string();
-                            System.out.print(error);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                         Utils.logv("Error deleting Facility: " + response.message());
                         Utils.showToastOnUIThread(FacilityTaggingActivity.this, R.string.facility_delete_failure);
                         return;

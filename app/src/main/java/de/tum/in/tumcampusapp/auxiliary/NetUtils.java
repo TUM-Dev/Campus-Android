@@ -206,61 +206,19 @@ public class NetUtils {
         }
     }
 
-//    public Optional<File> saveCurrentLocationImage(String encodedImage){
-//
-//        if(encodedImage==null){
-//            return Optional.absent();
-//        }
-//
-//        try{
-//            Optional<String> file=Optional.of(mContext.getCacheDir().getAbsolutePath() + '/'+ "current_location_map.jpg");
-//            File f = new File(file.get());
-//            byte[] imageData= Base64.decode(encodedImage,Base64.DEFAULT);
-//            BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(f));
-//            writer.write(imageData);
-//            writer.flush();
-//            writer.close();
-//            return Optional.of(f);
-//        }
-//        catch (IOException e){
-//            Utils.log(e, "Could not save the current location map image");
-//            return Optional.absent();
-//        }
-//    }
-
-    public Optional<File> getFacilityMapImage(Context context,String facilityName, double longitude, double latitude){
+    public Optional<File> getFacilityMapImage(Optional<String> map){
         try{
-            Optional<String> file=null;
-            if(facilityName!=null){
-                file = cacheManager.getFromCache(facilityName);
-                if (file.isPresent()) {
-                    File result = new File(file.get());
-                    // TODO: remove this check when #391 is fixed
-                    // The cache could have been cleaned manually, so we need an existence check
-                    if (result.exists()) {
-                        return Optional.of(result);
-                    }
-                }
-            }
-            else{
-                facilityName="current_location_map";
-            }
-
-            FacilityMap facilityMap = TUMCabeClient.getInstance(context).getMapWithLocation(longitude,latitude);
-            if(facilityMap==null){
+            if(!map.isPresent()){
                 return Optional.absent();
             }
-            String map= facilityMap.getMapString();
 
-            file=Optional.of(mContext.getCacheDir().getAbsolutePath() + '/'+ facilityName+".jpg");
+            Optional<String> file=Optional.of(mContext.getCacheDir().getAbsolutePath() + "/current_location_map.jpg");
             File f = new File(file.get());
-            byte[] imageData= Base64.decode(map,Base64.DEFAULT);
+            byte[] imageData= Base64.decode(map.get(),Base64.DEFAULT);
             BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(f));
             writer.write(imageData);
             writer.flush();
             writer.close();
-
-            cacheManager.addToCache(facilityName, file.get(), CacheManager.VALIDITY_TEN_DAYS, CacheManager.CACHE_TYP_IMAGE);
             return Optional.of(f);
         }
         catch (IOException e){

@@ -6,10 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.common.base.Optional;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -23,7 +20,6 @@ import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumcabe.Facility;
-import de.tum.in.tumcampusapp.models.tumcabe.FacilityMap;
 import de.tum.in.tumcampusapp.models.tumcabe.FacilityVote;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,23 +28,21 @@ import retrofit2.Response;
 /**
  * Displays the map regarding the searched room.
  */
-public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void, Optional<File>>{
+public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Integer, Optional<Facility>>{
     private ImageViewTouchFragment mImage;
 
     private NetUtils net;
     private Fragment fragment;
-    private double longitude,latitude;
-    private String facilityName;
     private Facility facility;
 
-    public static final String FACILITY="facility";
+    public static final String FACILITY_ID ="facility_id";
 
     private Button upvoteButton;
     private Button downvoteButton;
 
     private FacilityVote facilityVote;
 
-    
+
     public FacilityDisplayActivity() {
         super(R.layout.activity_facility_display);
     }
@@ -57,60 +51,50 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         net = new NetUtils(this);
-
-        Bundle bundle=getIntent().getExtras();
-        if(bundle!=null){
-            facility= (Facility) bundle.getSerializable(FACILITY);
-            longitude = facility.getLongitude();
-            latitude = facility.getLatitude();
-            facilityName=facility.getName();
-            setTitle(facilityName);
-        }
-
         upvoteButton=(Button)findViewById(R.id.upvote);
+        upvoteButton.setEnabled(false);
         downvoteButton=(Button)findViewById(R.id.downvote);
-
+        downvoteButton.setEnabled(false);
 
         upvoteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                saveFacilityVote(true);
+                saveFacilityVote(1);
 
             }
         });
-
         downvoteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                saveFacilityVote(false);
+                saveFacilityVote(-1);
             }
         });
-
 
         mImage = ImageViewTouchFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.facility_location_map, mImage).commit();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        startLoading();
+
+        Bundle bundle=getIntent().getExtras();
+        if(bundle!=null){
+            startLoading((Integer) bundle.getSerializable(FACILITY_ID));
+        }
     }
 
-    private void saveFacilityVote(boolean vote) {
-        facilityVote.setVote(vote);
-
+    private void saveFacilityVote(Integer vote) {
         try {
             final ChatVerification v = new ChatVerification(this, Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class));
-            TUMCabeClient.getInstance(this).saveFacilityVote(facility.getId(),facilityVote,v, new Callback<Void>() {
+            TUMCabeClient.getInstance(this).saveFacilityVote(facility.getId(),vote,v, new Callback<Facility>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(Call<Facility> call, Response<Facility> response) {
                     if (!response.isSuccessful()) {
                         Utils.logv("Error saving vote: " + response.message());
                         Utils.showToastOnUIThread(FacilityDisplayActivity.this, R.string.facility_votes_failure);
                         return;
                     }
+                    facility=response.body();
+                    updateButtons();
                     Utils.showToastOnUIThread(FacilityDisplayActivity.this, R.string.facility_vote_save_success);
-                    fetchVotes();
-                    fetchVotingStatus();
                 }
                 @Override
-                public void onFailure(Call<Void> call, Throwable throwable) {
+                public void onFailure(Call<Facility> call, Throwable throwable) {
                     Utils.log(throwable, "Failure saving vote");
                     Utils.showToastOnUIThread(FacilityDisplayActivity.this, R.string.facility_votes_failure);
                 }
@@ -120,43 +104,6 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
         }
         catch (NoPrivateKey noPrivateKey) {
             noPrivateKey.printStackTrace();
-        }
-    }
-
-    private void fetchVotes() {
-
-        try {
-            TUMCabeClient.getInstance(this).getFacilityVotes(facility.getId(), new Callback<Integer[]>() {
-                @Override
-                public void onResponse(Call<Integer[]> call, Response<Integer[]> response) {
-                    if (!response.isSuccessful()) {
-                        try {
-                            String error= response.errorBody().string();
-                            System.out.print(error);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Utils.logv("Error getting votes: " + response.message());
-                        Utils.showToastOnUIThread(FacilityDisplayActivity.this, R.string.facility_votes_failure);
-                        return;
-                    }
-                    final Integer[] votes=response.body();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            upvoteButton.setText("Upvote("+votes[0]+")");
-                            downvoteButton.setText("Downvote("+votes[1]+")");
-                        }
-                    });
-                }
-                @Override
-                public void onFailure(Call<Integer[]> call, Throwable throwable) {
-                    Utils.log(throwable, "Failure getting votes");
-                    Utils.showToastOnUIThread(FacilityDisplayActivity.this, R.string.facility_votes_failure);
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -172,70 +119,18 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
 
 
     @Override
-    protected Optional<File> onLoadInBackground(Void... arg) {
-
-        fetchVotes();
-        fetchVotingStatus();
-
-        return net.getFacilityMapImage(this,facilityName,longitude,latitude);
-
-    }
-
-    private void fetchVotingStatus() {
-        final String lrzId=Utils.getSetting(this, Const.LRZ_ID, "");
+    protected Optional<Facility> onLoadInBackground(Integer... arg) {
         try {
-            TUMCabeClient.getInstance(this).getFacilityVote(facility.getId(),lrzId, new Callback<FacilityVote>() {
-                @Override
-                public void onResponse(Call<FacilityVote> call, Response<FacilityVote> response) {
-                    if (!response.isSuccessful()) {
-                        try {
-                            String error= response.errorBody().string();
-                            System.out.print(error);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Utils.logv("Error getting vote status " + response.message());
-                        Utils.showToastOnUIThread(FacilityDisplayActivity.this, R.string.facility_votes_failure);
-                        return;
-                    }
-                    facilityVote=response.body();
-
-                    if(facilityVote==null || facilityVote.getId()==0){
-                        facilityVote=new FacilityVote();
-                        facilityVote.setFacility(facility);
-                        updateButtons(true,true);
-                    }
-                    else{
-                        updateButtons(!facilityVote.isVote(),facilityVote.isVote());
-                    }
-
-                }
-                @Override
-                public void onFailure(Call<FacilityVote> call, Throwable throwable) {
-                    Utils.log(throwable, "Failure getting vote status");
-                    Utils.showToastOnUIThread(FacilityDisplayActivity.this, R.string.facility_votes_failure);
-                }
-            });
+            Facility facility = TUMCabeClient.getInstance(this).getFacilityById(arg[0]);
+            return Optional.fromNullable(facility);
         } catch (IOException e) {
             e.printStackTrace();
+            return Optional.absent();
         }
-
-    }
-
-
-    private void updateButtons(final boolean upvote, final boolean downvote){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            upvoteButton.setEnabled(upvote);
-            downvoteButton.setEnabled(downvote);
-
-            }
-        });
     }
 
     @Override
-    protected void onLoadFinished(Optional<File> result) {
+    protected void onLoadFinished(Optional<Facility> result) {
         if (!result.isPresent()) {
             if (NetUtils.isConnected(this)) {
                 showErrorLayout();
@@ -244,11 +139,36 @@ public class FacilityDisplayActivity extends ActivityForLoadingInBackground<Void
             }
             return;
         }
-        supportInvalidateOptionsMenu();
 
+        this.facility=result.get();
+        updateButtons();
+
+        supportInvalidateOptionsMenu();
         //Update the fragment
-        mImage = ImageViewTouchFragment.newInstance(result.get());
+        mImage = ImageViewTouchFragment.newInstance(net.getFacilityMapImage(Optional.of(result.get().getMap())).get());
         getSupportFragmentManager().beginTransaction().replace(R.id.facility_location_map, mImage).commit();
         showLoadingEnded();
+    }
+
+    private void updateButtons(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                upvoteButton.setText("Upvote("+facility.getUpVotes()+")");
+                downvoteButton.setText("Downvote("+facility.getDownVotes()+")");
+                if(facility.getMyVote()==null){
+                    upvoteButton.setEnabled(true);
+                    downvoteButton.setEnabled(true);
+                }
+                else if(facility.getMyVote()==1){
+                    upvoteButton.setEnabled(false);
+                    downvoteButton.setEnabled(true);
+                }
+                else{
+                    upvoteButton.setEnabled(true);
+                    downvoteButton.setEnabled(false);
+                }
+            }
+        });
     }
 }

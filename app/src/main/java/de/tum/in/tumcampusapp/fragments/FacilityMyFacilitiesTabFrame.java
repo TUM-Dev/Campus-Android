@@ -18,11 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.FacilityActivity;
 import de.tum.in.tumcampusapp.activities.FacilityTaggingActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumcabe.Facility;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +44,7 @@ public class FacilityMyFacilitiesTabFrame extends Fragment implements AdapterVie
     @Override
     public void onResume() {
         super.onResume();
-        createMyFacilitiesList(lrzId);
+        createMyFacilitiesList();
     }
 
     @Override
@@ -54,13 +56,14 @@ public class FacilityMyFacilitiesTabFrame extends Fragment implements AdapterVie
         list.setAdapter(arrayAdapter);
         list.setOnItemClickListener(this);
         lrzId=Utils.getSetting(getActivity(), Const.LRZ_ID, "");
-        createMyFacilitiesList(lrzId);
+        createMyFacilitiesList();
         return view;
     }
 
-    private void createMyFacilitiesList(String lrzId) {
+    private void createMyFacilitiesList() {
         try {
-            TUMCabeClient.getInstance(getActivity()).getMyFacilities(lrzId,new Callback<List<Facility>>() {
+            final ChatVerification v = new ChatVerification(getContext(), Utils.getSetting(getContext(), Const.CHAT_MEMBER, ChatMember.class));
+            TUMCabeClient.getInstance(getActivity()).getMyFacilities(v,new Callback<List<Facility>>() {
                 @Override
                 public void onResponse(Call<List<Facility>> call, Response<List<Facility>> response) {
                     if (!response.isSuccessful()) {
@@ -77,7 +80,6 @@ public class FacilityMyFacilitiesTabFrame extends Fragment implements AdapterVie
                         }
                     }
                 }
-
                 @Override
                 public void onFailure(Call<List<Facility>> call, Throwable throwable) {
                     Utils.log(throwable, "Failure getting my facilities");
@@ -86,6 +88,8 @@ public class FacilityMyFacilitiesTabFrame extends Fragment implements AdapterVie
             });
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NoPrivateKey noPrivateKey) {
+            noPrivateKey.printStackTrace();
         }
     }
 
@@ -99,7 +103,6 @@ public class FacilityMyFacilitiesTabFrame extends Fragment implements AdapterVie
         bundle.putSerializable(FacilityTaggingActivity.FACILITY,facility);
         bundle.putBoolean(FacilityTaggingActivity.EDIT_MODE, true);
         intent.putExtras(bundle);
-
         this.startActivity(intent);
     }
 }

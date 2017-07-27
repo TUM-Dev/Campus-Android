@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.models.tumcabe;
 
+import com.google.common.base.Optional;
+
 import java.io.Serializable;
 
 
@@ -16,7 +18,10 @@ public class Facility implements Serializable{
     private Double latitude;
     private FacilityCategory facilityCategory;
     private int member;
-    private String signature;
+    private int downVotes;
+    private int upVotes;
+    private Integer myVote;
+    private String map;
 
     public int getId() {
         return id;
@@ -66,11 +71,35 @@ public class Facility implements Serializable{
         this.member = member;
     }
 
-    public String getSignature() {
-        return signature;
+    public int getDownVotes() {
+        return downVotes;
     }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
+    public void setDownVotes(int downVotes) {
+        this.downVotes = downVotes;
+    }
+
+    public int getUpVotes() {
+        return upVotes;
+    }
+
+    public void setUpVotes(int upVotes) {
+        this.upVotes = upVotes;
+    }
+
+    public Integer getMyVote() {
+        return myVote;
+    }
+
+    public void setMyVote(Integer myVote) {
+        this.myVote = myVote;
+    }
+
+    public String getMap() {
+        return map;
+    }
+
+    public void setMap(String map) {
+        this.map = map;
     }
 }

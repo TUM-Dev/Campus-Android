@@ -31,7 +31,7 @@ import retrofit2.Response;
  */
 public class FacilityActivity extends ActivityForSearching implements OnItemClickListener {
 
-    private Map<String, Facility> options;
+    private Map<String, Integer> options;
     private ArrayAdapter<String> arrayAdapter;
 
     public FacilityActivity() {
@@ -78,7 +78,7 @@ public class FacilityActivity extends ActivityForSearching implements OnItemClic
                         options = new HashMap<>();
                         for (Facility facility: facilities) {
                             arrayAdapter.add(facility.getName());
-                            options.put(facility.getName(), facility);
+                            options.put(facility.getName(), facility.getId());
                         }
                     }
                 }
@@ -109,7 +109,7 @@ public class FacilityActivity extends ActivityForSearching implements OnItemClic
                         options = new HashMap<>();
                         for (Facility facility: facilities) {
                             arrayAdapter.add(facility.getName());
-                            options.put(facility.getName(), facility);
+                            options.put(facility.getName(), facility.getId());
                         }
                     }
                 }
@@ -140,14 +140,11 @@ public class FacilityActivity extends ActivityForSearching implements OnItemClic
         // Puts URL and name into an intent and starts the detail view
 
         Intent intent = new Intent(this, FacilityDisplayActivity.class);
-        Facility facility=options.get(facilityName);
+        Integer facilityId=options.get(facilityName);
         Bundle bundle=new Bundle();
-        bundle.putSerializable(FacilityDisplayActivity.FACILITY,facility);
+        bundle.putSerializable(FacilityDisplayActivity.FACILITY_ID,facilityId);
         intent.putExtras(bundle);
-
         this.startActivity(intent);
-
-
     }
 
     @Override
