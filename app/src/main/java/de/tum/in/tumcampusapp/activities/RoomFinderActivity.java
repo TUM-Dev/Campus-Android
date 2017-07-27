@@ -8,29 +8,29 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.google.common.base.Optional;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequestFetchListener;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Activity to show a convenience interface for using the MyTUM room finder.
  */
-public class RoomFinderActivity extends ActivityForSearching implements TUMRoomFinderRequestFetchListener, OnItemClickListener {
-
-    // HTTP client for sending requests to MyTUM roomFinder
-    private TUMRoomFinderRequest roomFinderRequest;
+public class RoomFinderActivity extends ActivityForSearchingInBackground<List<RoomFinderRoom>>
+        implements OnItemClickListener {
 
     private RecentsManager recentsManager;
     private StickyListHeadersListView list;
@@ -44,7 +44,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        roomFinderRequest = new TUMRoomFinderRequest(this);
         list = (StickyListHeadersListView) findViewById(R.id.list);
         list.setOnItemClickListener(this);
         recentsManager = new RecentsManager(this, RecentsManager.ROOMS);
@@ -64,43 +63,45 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     }
 
     @Override
-    protected void onStartSearch() {
-        List<Map<String, String>> recents = getRecents();
-        if (recents.isEmpty()) {
-            finish();
+    protected Optional<List<RoomFinderRoom>> onSearchInBackground() {
+        return Optional.of(getRecents());
+    }
+
+    @Override
+    protected Optional<List<RoomFinderRoom>> onSearchInBackground(String query) {
+        try {
+            List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this).fetchRooms(query);
+            return Optional.of(rooms);
+        } catch (IOException e) {
+            Utils.log(e);
+        }
+        return Optional.absent();
+    }
+
+    @Override
+    protected void onSearchFinished(Optional<List<RoomFinderRoom>> result) {
+        if(!result.isPresent()){
+            if (NetUtils.isConnected(this)) {
+                showErrorLayout();
+            } else {
+                showNoInternetLayout();
+            }
             return;
         }
-        adapter = new RoomFinderListAdapter(this, recents);
-        list.setAdapter(adapter);
-    }
 
-    @Override
-    public void onStartSearch(String query) {
-        roomFinderRequest.fetchSearchInteractive(this, this, query);
-    }
-
-    @Override
-    public void onFetch(List<Map<String, String>> result) {
-        if (result.isEmpty()) {
+        List<RoomFinderRoom> searchResult = result.get();
+        if (searchResult.isEmpty()) {
             list.setAdapter(new NoResultsAdapter(this));
         } else {
-            adapter = new RoomFinderListAdapter(this, result);
+            adapter = new RoomFinderListAdapter(this, searchResult);
             list.setAdapter(adapter);
-            showLoadingEnded();
         }
-    }
-
-    @Override
-    public void onFetchError(String errorReason) {
-        roomFinderRequest.cancelRequest(true);
-        showError(errorReason);
+        showLoadingEnded();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        @SuppressWarnings("unchecked")
-        TreeMap<String, String> room = new TreeMap<>((HashMap<String, String>) list.getAdapter().getItem(position));
-
+        RoomFinderRoom room = (RoomFinderRoom) list.getAdapter().getItem(position);
         openRoomDetails(room);
     }
 
@@ -108,48 +109,33 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
      * Opens a {@link RoomFinderDetailsActivity} that displays details (e.g. location on a map) for
      * a given room. Also adds this room to the recent queries.
      */
-    private void openRoomDetails(Map<String, String> room) {
-        // Add to recents
-        StringBuilder val = new StringBuilder();
-        Bundle b = new Bundle();
-        for (Map.Entry<String, String> entry : room.entrySet()) {
-            val.append(entry.getKey()).append('=').append(entry.getValue()).append(';');
-            b.putString(entry.getKey(), entry.getValue());
-        }
-        recentsManager.replaceIntoDb(val.toString());
+    private void openRoomDetails(RoomFinderRoom room) {
+        recentsManager.replaceIntoDb(room.toString());
 
         // Start detail activity
         Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
-        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, b);
+        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, room);
         startActivity(intent);
-    }
-
-    @Override
-    public void onNoInternetError() {
-        showNoInternetLayout();
     }
 
     /**
      * Reconstruct recents from String
      */
-    private List<Map<String, String>> getRecents() {
+    private List<RoomFinderRoom> getRecents() {
         Cursor recentStations = recentsManager.getAllFromDb();
-        List<Map<String, String>> map = new ArrayList<>(recentStations.getCount());
+        List<RoomFinderRoom> roomList = new ArrayList<>(recentStations.getCount());
         if (recentStations.moveToFirst()) {
             do {
                 String[] values = recentStations.getString(0).split(";");
-                HashMap<String, String> e = new HashMap<>();
-                for (String entry : values) {
-                    if (entry.isEmpty()) {
-                        continue;
-                    }
-                    String[] kv = entry.split("=");
-                    e.put(kv[0], kv[1]);
+                if(values.length != 6) {
+                    continue;
                 }
-                map.add(e);
+                RoomFinderRoom room = new RoomFinderRoom(values[0], values[1],
+                        values[2], values[3], values[4], values[5]);
+                roomList.add(room);
             } while (recentStations.moveToNext());
         }
         recentStations.close();
-        return map;
+        return roomList;
     }
 }

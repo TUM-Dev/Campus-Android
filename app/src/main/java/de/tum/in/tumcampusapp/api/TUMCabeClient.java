@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 
+import com.google.common.base.Optional;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -23,6 +25,10 @@ import de.tum.in.tumcampusapp.models.tumcabe.FacilityMap;
 import de.tum.in.tumcampusapp.models.tumcabe.FacilityVote;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
@@ -60,6 +66,11 @@ public class TUMCabeClient {
     private static final String API_OWN_QUESTIONS = "question/my/";
     private static final String API_FACULTY = "faculty/";
     private static final String API_WIFI_HEATMAP = "wifimap/";
+    private static final String API_ROOM_FINDER = "roomfinder/room/";
+    private static final String API_ROOM_FINDER_SEARCH= "search/";
+    private static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
+    private static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
+    private static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
 
     private static final String API_FACILITY = "facility/";
 
@@ -230,50 +241,27 @@ public class TUMCabeClient {
         service.createMeasurements(wifiMeasurementList).enqueue(cb);
     }
 
-//Facilities
-    public void getFacilityCategories(Callback<List<FacilityCategory>> cb) throws IOException {
-        service.getFacilityCategories().enqueue(cb);
+    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException{
+        service.fetchAvailableMaps(Helper.encodeUrl(archId)).enqueue(cb);
     }
 
-    public void getFacilitiesByCategory(int categoryId,Callback<List<Facility>> cb) throws IOException {
-        service.getFacilitiesByCategory(categoryId).enqueue(cb);
+    public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
+        return service.fetchRooms(Helper.encodeUrl(searchStrings)).execute().body();
     }
 
-    public void getFacilitiesByQuery(String query,Callback<List<Facility>> cb) throws IOException {
-        service.getFacilitiesByQuery(query).enqueue(cb);
+    public RoomFinderCoordinate fetchCoordinates(String archId)
+            throws IOException {
+        return service.fetchCoordinates(Helper.encodeUrl(archId)).execute().body();
     }
 
-    public void getMyFacilities(String lrzId,Callback<List<Facility>> cb) throws IOException {
-        service.getMyFacilities(lrzId).enqueue(cb);
+    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) throws IOException {
+        service.fetchCoordinates(Helper.encodeUrl(archId)).enqueue(cb);
     }
 
-    public void saveFacility(Facility facility,ChatVerification chatVerification, Callback<Void> cb) throws IOException {
-        chatVerification.setData(facility);
-        service.saveFacility(chatVerification).enqueue(cb);
+    public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException{
+        return service.fetchSchedule(Helper.encodeUrl(roomId),
+                Helper.encodeUrl(start), Helper.encodeUrl(end)).execute().body();
     }
-
-    public void deleteFacility(Integer id,ChatVerification verification, Callback<Void> cb) throws IOException {
-        service.deleteFacility(id,verification).enqueue(cb);
-    }
-
-    public void getFacilityVotes(Integer id, Callback<Integer[]> cb) throws IOException {
-        service.getFacilityVotes(id).enqueue(cb);
-    }
-
-    public void getFacilityVote(Integer id, String lrzId, Callback<FacilityVote> cb) throws IOException {
-        service.getFacilityVote(id,lrzId).enqueue(cb);
-    }
-
-    public void saveFacilityVote(Integer id,FacilityVote facilityVote,ChatVerification cv, Callback<Void> cb) throws IOException {
-        cv.setData(facilityVote);
-        service.saveFacilityVote(id,cv).enqueue(cb);
-    }
-
-    public FacilityMap getMapWithLocation(Double lon,Double lat) throws IOException {
-        return service.getMapWithLocation(lon,lat).execute().body();
-    }
-
-
 
     private interface TUMCabeAPIService {
 
@@ -366,36 +354,22 @@ public class TUMCabeClient {
         //WifiHeatmap
         @POST(API_WIFI_HEATMAP+"create_measurements/")
         Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
-        //        Facilities
-        @GET(API_FACILITY+"category")
-        Call<List<FacilityCategory>> getFacilityCategories();
 
-        @GET(API_FACILITY+"category/"+"{categoryId}")
-        Call<List<Facility>> getFacilitiesByCategory(@Path("categoryId") int categoryId);
+        //RoomFinder maps
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")
+        Call<List<RoomFinderMap>> fetchAvailableMaps(@Path("archId") String archId);
 
-        @GET(API_FACILITY+"{query}")
-        Call<List<Facility>> getFacilitiesByQuery(@Path("query") String query);
+        //RoomFinder maps
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_SEARCH + "{searchStrings}")
+        Call<List<RoomFinderRoom>> fetchRooms(@Path("searchStrings") String searchStrings);
 
-        @GET(API_FACILITY+"user/"+"{lrzId}")
-        Call<List<Facility>> getMyFacilities(@Path("lrzId") String lrzId);
+        //RoomFinder cordinates
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_COORDINATES + "{archId}")
+        Call<RoomFinderCoordinate> fetchCoordinates(@Path("archId") String archId);
 
-        @POST(API_FACILITY+"delete/"+"{id}")
-        Call<Void> deleteFacility(@Path("id") Integer id,@Body ChatVerification verification);
-
-        @POST(API_FACILITY)
-        Call<Void> saveFacility(@Body ChatVerification chatVerification);
-
-        @GET(API_FACILITY+"{id}"+"/votes/")
-        Call<Integer[]> getFacilityVotes(@Path("id") Integer id);
-
-        @POST(API_FACILITY+"{id}"+"/votes/")
-        Call<Void> saveFacilityVote(@Path("id") Integer id,@Body ChatVerification chatVerification);
-
-        @GET(API_FACILITY+"{id}"+"/votes/"+"{lrzId}")
-        Call<FacilityVote> getFacilityVote(@Path("id") Integer id,@Path("lrzId") String lrzId);
-
-        @GET(API_FACILITY+"map/{longitude}/{latitude}")
-        Call<FacilityMap> getMapWithLocation(@Path("longitude") Double longitude, @Path("latitude") Double latitude);
-
+        //RoomFinder schedule
+        @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
+        Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
+                                               @Path("start") String start, @Path("end") String end);
     }
 }

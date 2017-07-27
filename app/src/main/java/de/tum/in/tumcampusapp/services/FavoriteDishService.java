@@ -35,7 +35,7 @@ public class FavoriteDishService extends IntentService {
                 Intent intent = new Intent(this, CafeteriaActivity.class);
                 intent.putExtra(Const.MENSA_FOR_FAVORITEDISH, c.getInt(1));
                 PendingIntent pi = PendingIntent.getActivity(this, index, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "default")
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Your Favorite Dish!")
                         .setContentText(c.getString(0))

@@ -30,7 +30,6 @@ import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -256,13 +255,13 @@ public final class Utils {
     }
 
     /**
-     * Get md5 hash from string
+     * Get a persistent hash from string
      *
      * @param str String to hash
-     * @return md5 hash as string
+     * @return hash hash as string
      */
-    public static String md5(String str) {
-        return Hashing.md5().hashBytes(str.getBytes(Charsets.UTF_8)).toString();
+    public static String hash(String str) {
+        return Hashing.murmur3_128().hashBytes(str.getBytes(Charsets.UTF_8)).toString();
     }
 
     /**

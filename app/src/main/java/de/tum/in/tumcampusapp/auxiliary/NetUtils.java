@@ -91,7 +91,7 @@ public class NetUtils {
     private Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
-        if (!isOnline || url == null) {
+        if (!isOnline || url == null || url.equals("null")) {
             return Optional.absent();
         }
 
@@ -193,7 +193,7 @@ public class NetUtils {
                 }
             }
 
-            file = Optional.of(mContext.getCacheDir().getAbsolutePath() + '/' + Utils.md5(url) + ".jpg");
+            file = Optional.of(mContext.getCacheDir().getAbsolutePath() + '/' + Utils.hash(url) + ".jpg");
             File f = new File(file.get());
             downloadToFile(url, file.get());
 

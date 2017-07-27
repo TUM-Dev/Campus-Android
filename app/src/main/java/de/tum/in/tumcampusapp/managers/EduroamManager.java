@@ -118,8 +118,7 @@ public class EduroamManager {
             return false;
         }
 
-        //Save, enable and exit
-        wifiManager.saveConfiguration();
+        //Enable and exit
         wifiManager.enableNetwork(networkId, true);
         return true;
     }

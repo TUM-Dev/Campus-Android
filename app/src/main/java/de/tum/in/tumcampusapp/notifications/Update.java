@@ -19,6 +19,7 @@ import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMUpdate;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 
 public class Update extends GenericNotification {
 
@@ -78,7 +79,7 @@ public class Update extends GenericNotification {
             title = info.getTitle();
         }
 
-        return new NotificationCompat.Builder(context)
+        return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setSmallIcon(this.icon)
                 .setContentTitle(title)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
