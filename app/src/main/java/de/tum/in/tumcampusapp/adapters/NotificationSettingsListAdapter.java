@@ -22,7 +22,9 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
     private LayoutInflater inflater;
     private Activity activity;
 
+    //Earliest hour a user can pick in the time picker dialog
     private final int EARLIEST_HOUR = 6;
+    //Earliest minute a user can pick in the time picker dialog
     private final int LATEST_HOUR = 23;
 
     static class ViewHolder {
@@ -55,6 +57,16 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
         return position;
     }
 
+    /**
+     * Takes care of generating the notification settings list.
+     * For each day (Monday-Friday) add a list-item and display
+     * in a checkbox whether the alarm is disabled for that day (hour == -1)
+     * or enabled (hour != 1)
+     * @param position
+     * @param view
+     * @param viewGroup
+     * @return
+     */
     @Override
     public View getView(final int position, View view, ViewGroup viewGroup) {
         final ViewHolder viewHolder;
@@ -98,6 +110,10 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
         return (hour+":"+((minute < 10)?"0"+minute:minute));
     }
 
+    /**
+     * Triggered when clicking the TextView, displaying the preferred notification time
+     * It opens a time-picker dialog and sets the time to "defaultHour":"defaultMinute"
+     */
     private class OnTimeClickListener implements View.OnClickListener{
         private Context context;
         private final int position;
@@ -106,6 +122,10 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
         public OnTimeClickListener(Context context, int position, int hour, int minute){
             this.context = context;
             this.position = position;
+            if (hour == -1 || minute == -1){
+                this.defaultHour = 9;
+                this.defaultMinute = 30;
+            }
             this.defaultHour = hour;
             this.defaultMinute = minute;
         }
@@ -128,6 +148,12 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
             }, defaultHour, defaultMinute, true).show();
         }
     }
+
+    /**
+     * Enables / disables the alarm by setting the Hour-Minute pair of a weekday to:
+     * -1,-1 (disabled)
+     * else: (enabled)
+     */
 
     private class AlarmActivatedListener implements View.OnClickListener{
         private final int position;

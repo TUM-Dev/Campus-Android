@@ -18,6 +18,14 @@ public class CafeteriaNotificationSettings {
     private final String HOUR = "_HOUR";
     private CafeteriaMenuManager cafeteriaMenuManager;
 
+    //Used for initializing preferred hour for every weekday
+    private static final int DEFAULT_HOUR = 9;
+    //Used for initializing preferred minute for every weekday
+    private static final int DEFAULT_MINUTE = 30;
+
+    /** Checks if there's already a preferred notification time for every weekday(Monday-Friday)
+     * and for every day missing it defaults to DEFAULT_HOUR:DEFAULT_MINUTE
+     */
     public CafeteriaNotificationSettings(Context context){
         cafeteriaMenuManager = new CafeteriaMenuManager(context);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -35,6 +43,13 @@ public class CafeteriaNotificationSettings {
         }
     }
 
+    /**
+     * If weekday is in range [Monday, Friday], set the preferred notification time for weekday
+     * to hour:minute
+     * @param weekday
+     * @param hour
+     * @param minute
+     */
     private void writeDayToSettings(Calendar weekday, int hour, int minute){
         int dayOfWeek = weekday.get(Calendar.DAY_OF_WEEK);
         if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY){
@@ -45,6 +60,14 @@ public class CafeteriaNotificationSettings {
         }
     }
 
+
+    /**
+     * If weekday is in range [Monday, Friday], set the preferred notification time for weekday,
+     * but only if, its either not set yet, or overwrite is set to true and the new hour:minute pair
+     * differs from the one currently set
+     * @param hour
+     * @param minute
+     */
     private boolean writeDayToSettings(Calendar weekday, int hour, int minute, boolean overwrite){
         Pair<Integer, Integer> hourMinuteStored = retrieveHourMinute(weekday);
         if (hourMinuteStored == null) {

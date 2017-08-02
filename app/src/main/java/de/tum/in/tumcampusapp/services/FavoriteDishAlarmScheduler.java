@@ -113,7 +113,7 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
             Intent intent = new Intent(context, CafeteriaActivity.class);
             intent.putExtra(Const.MENSA_FOR_FAVORITEDISH, mensaId);
             PendingIntent pi = PendingIntent.getActivity(context, mensaId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(mensaName + ((menuCount > 1)?" ("+menuCount+")":""))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))

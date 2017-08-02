@@ -16,22 +16,33 @@ import android.view.MenuItem;
 import com.google.common.base.Optional;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.api.Helper;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.fragments.WeekViewFragment;
+import de.tum.in.tumcampusapp.managers.LocationManager;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
+import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
-import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Displays the map regarding the searched room.
  */
-public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Void, Optional<File>> implements DialogInterface.OnClickListener {
+public class RoomFinderDetailsActivity
+        extends ActivityForLoadingInBackground<Void, Optional<File>>
+        implements DialogInterface.OnClickListener {
 
     public static final String EXTRA_ROOM_INFO = "roomInfo";
     public static final String EXTRA_LOCATION = "location";
@@ -39,12 +50,11 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     private ImageViewTouchFragment mImage;
 
     private boolean mapsLoaded;
-    private TUMRoomFinderRequest request;
     private NetUtils net;
 
-    private Bundle roomInfo;
+    private RoomFinderRoom room;
     private String mapId = "";
-    private List<Map<String, String>> mapsList;
+    private List<RoomFinderMap> mapsList;
     private boolean infoLoaded;
     private Fragment fragment;
 
@@ -61,14 +71,12 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         mImage = ImageViewTouchFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mImage).commit();
 
-        roomInfo = getIntent().getExtras().getBundle(EXTRA_ROOM_INFO);
-        if (roomInfo == null) {
+        room = (RoomFinderRoom) getIntent().getExtras().getSerializable(EXTRA_ROOM_INFO);
+        if (room == null) {
             Utils.showToast(this, "No room information passed");
             this.finish();
             return;
         }
-
-        request = new TUMRoomFinderRequest(this);
 
         startLoading();
     }
@@ -93,7 +101,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             supportInvalidateOptionsMenu();
             return true;
         } else if (i == R.id.action_directions) {
-            getDirections();
+            loadGeo();
             return true;
         } else if (i == R.id.action_switch_map) {
             showMapSwitch();
@@ -124,7 +132,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             fragment = null;
             return;
         }
-        String roomApiCode = roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_ID);
+        String roomApiCode = room.getRoom_id();
         fragment = WeekViewFragment.newInstance(roomApiCode);
         ft.replace(R.id.fragment_container, fragment);
         ft.commit();
@@ -134,8 +142,8 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         CharSequence[] list = new CharSequence[mapsList.size()];
         int curPos = 0;
         for (int i = 0; i < mapsList.size(); i++) {
-            list[i] = mapsList.get(i).get(TUMRoomFinderRequest.KEY_DESCRIPTION);
-            if (mapsList.get(i).get(TUMRoomFinderRequest.KEY_MAP_ID).equals(mapId)) {
+            list[i] = mapsList.get(i).getDescription();
+            if (mapsList.get(i).getMap_id().equals(mapId)) {
                 curPos = i;
             }
         }
@@ -146,59 +154,23 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     public void onClick(DialogInterface dialog, int whichButton) {
         dialog.dismiss();
         int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-        mapId = mapsList.get(selectedPosition).get(TUMRoomFinderRequest.KEY_MAP_ID);
+        mapId = mapsList.get(selectedPosition).getMap_id();
         startLoading();
-    }
-
-    private void getDirections() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Optional<Geo> geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
-                if (!geo.isPresent()) {
-                    Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
-                    return;
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Build get directions intent and see if some app can handle it
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + geo.get().getLatitude() + ',' + geo.get().getLongitude()));
-                        List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
-
-                        // If some app can handle this intent start it
-                        if (!pkgAppsList.isEmpty()) {
-                            startActivity(intent);
-                            return;
-                        }
-
-                        // If no app is capable of opening it link to google maps market entry
-                        try {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps")));
-                        } catch (ActivityNotFoundException e) {
-                            Utils.log(e);
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
-                        }
-                    }
-                });
-            }
-        }).start();
     }
 
     @Override
     protected Optional<File> onLoadInBackground(Void... arg) {
-        String archId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID);
+        String archId = room.getArch_id();
         String url;
 
         if (mapId == null || mapId.isEmpty()) {
-            url = TUMRoomFinderRequest.fetchDefaultMap(archId);
+            url = Const.URL_DEFAULT_MAP_IMAGE + Helper.encodeUrl(archId);
         } else {
-            url = TUMRoomFinderRequest.fetchMap(archId, mapId);
+            url = Const.URL_MAP_IMAGE + Helper.encodeUrl(archId) + '/' + Helper.encodeUrl(mapId);
         }
 
         return net.downloadImage(url);
     }
-
 
     @Override
     protected void onLoadFinished(Optional<File> result) {
@@ -218,24 +190,115 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mImage).commit();
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_TITLE));
-            getSupportActionBar().setSubtitle(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_TITLE));
+            getSupportActionBar().setTitle(room.getInfo());
+            getSupportActionBar().setSubtitle(room.getAddress());
         }
+
         showLoadingEnded();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mapsList = request.fetchAvailableMaps(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
-                if (mapsList.size() > 1) {
-                    mapsLoaded = true;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            supportInvalidateOptionsMenu();
-                        }
-                    });
+
+        loadMapList();
+    }
+
+    private void loadMapList() {
+        showLoadingStart();
+        try {
+            TUMCabeClient.getInstance(this).fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
+                @Override
+                public void onResponse(Call<List<RoomFinderMap>> call, Response<List<RoomFinderMap>> response) {
+                    try {
+                        onMapListLoadFinished(Optional.of(response.body()));
+                    } catch (NullPointerException e) {
+                        Utils.log(e);
+                        onMapListLoadFailed();
+                    }
                 }
+
+                @Override
+                public void onFailure(Call<List<RoomFinderMap>> call, Throwable throwable) {
+                    onMapListLoadFailed();
+                }
+            });
+        } catch (IOException e) {
+            Utils.log(e);
+            onMapListLoadFailed();
+        }
+    }
+
+    private void onMapListLoadFailed() {
+        onMapListLoadFinished(Optional.<List<RoomFinderMap>>absent());
+    }
+
+    private void onMapListLoadFinished(Optional<List<RoomFinderMap>> result) {
+        showLoadingEnded();
+        if (!result.isPresent()) {
+            if (NetUtils.isConnected(this)) {
+                showErrorLayout();
+            } else {
+                showNoInternetLayout();
             }
-        }).start();
+            return;
+        }
+        mapsList = result.get();
+        if (mapsList.size() > 1) {
+            mapsLoaded = true;
+        }
+
+        supportInvalidateOptionsMenu();
+    }
+
+    private void loadGeo() {
+        showLoadingStart();
+        try {
+            TUMCabeClient.getInstance(this).fetchCoordinates(room.getArch_id(), new Callback<RoomFinderCoordinate>() {
+                @Override
+                public void onResponse(Call<RoomFinderCoordinate> call, Response<RoomFinderCoordinate> response) {
+                    try {
+                        Optional<Geo> result = LocationManager.convertRoomFinderCoordinateToGeo(response.body());
+                        onGeoLoadFinished(result);
+                    } catch (NullPointerException e) {
+                        Utils.log(e);
+                        onLoadGeoFailed();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RoomFinderCoordinate> call, Throwable throwable) {
+                    onLoadGeoFailed();
+                }
+            });
+        } catch (IOException e) {
+            Utils.log(e);
+            onLoadGeoFailed();
+        }
+    }
+
+    private void onLoadGeoFailed() {
+        onGeoLoadFinished(Optional.<Geo>absent());
+    }
+
+    private void onGeoLoadFinished(Optional<Geo> result) {
+        showLoadingEnded();
+        if (!result.isPresent()) {
+            Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
+            return;
+        }
+
+        // Build get directions intent and see if some app can handle it
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + result.get().getLatitude() + ',' + result.get().getLongitude()));
+        List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+
+        // If some app can handle this intent start it
+        if (!pkgAppsList.isEmpty()) {
+            startActivity(intent);
+            return;
+        }
+
+        // If no app is capable of opening it link to google maps market entry
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps")));
+        } catch (ActivityNotFoundException e) {
+            Utils.log(e);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
+        }
     }
 }

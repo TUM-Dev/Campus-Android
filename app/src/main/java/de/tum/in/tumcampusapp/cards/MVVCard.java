@@ -22,6 +22,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.TransportationDetailsActivity;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.DepartureView;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
@@ -122,7 +123,7 @@ public class MVVCard extends NotificationAwareCard {
             }
 
             NotificationCompat.Builder pageNotification =
-                    new NotificationCompat.Builder(mContext)
+                    new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT)
                             .setContentTitle(d.countDown + "min")
                             .setContentText(d.servingLine + " " + d.direction);
             morePageNotification.addPage(pageNotification.build());
