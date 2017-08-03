@@ -120,6 +120,8 @@ public final class Const {
     public static final String URL_MAP_IMAGE = "https://" + API_HOSTNAME+ URL_ROOM_FINDER_API + "map/";
     public static final String ROOM_ID = "room_id";
 
+    public static final String NOTIFICATION_CHANNEL_DEFAULT = "default";
+
     private Const() {
         // Const is a utility class
     }

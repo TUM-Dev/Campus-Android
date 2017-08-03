@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -41,7 +44,6 @@ public class DownloadService extends IntentService {
     private static final String DOWNLOAD_SERVICE = "DownloadService";
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
-
     private LocalBroadcastManager broadcastManager;
 
     /**
@@ -224,7 +226,6 @@ public class DownloadService extends IntentService {
             return false;
         }
     }
-
     private boolean downLoadKino(boolean force) {
         try {
             KinoManager km = new KinoManager(this);

@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -11,8 +12,10 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
@@ -190,13 +193,23 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 mediaPlayer.start();
             } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(500);
+                vibrate(v);
             }
         }
 
         //Update the history
         chatHistoryAdapter.changeCursor(chatManager.getAll());
 
+    }
+
+    @SuppressWarnings("deprecation")
+    @TargetApi(android.os.Build.VERSION_CODES.O)
+    private static void vibrate(Vibrator v) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            v.vibrate(500);
+        }
     }
 
     @Override

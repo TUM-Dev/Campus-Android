@@ -3,6 +3,9 @@ package de.tum.in.tumcampusapp.activities;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -136,6 +140,8 @@ public class StartupActivity extends AppCompatActivity {
 
         //Request Permissions for Android 6.0
         requestLocationPermission();
+
+        setupNotificationChannels();
     }
 
     @Override
@@ -304,6 +310,19 @@ public class StartupActivity extends AppCompatActivity {
             e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
             e.remove("hide_wizzard_on_startup");
             e.apply();
+        }
+    }
+
+    /**
+     * implement proper NotificationChannels? This just creates a default one, so Notifications get shown at all on Android O
+     */
+    @TargetApi(Build.VERSION_CODES.O)
+    private void setupNotificationChannels() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(
+                    new NotificationChannel(Const.NOTIFICATION_CHANNEL_DEFAULT, Const.NOTIFICATION_CHANNEL_DEFAULT, NotificationManager.IMPORTANCE_DEFAULT));
         }
     }
 }
