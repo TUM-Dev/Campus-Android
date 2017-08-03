@@ -75,7 +75,8 @@
         android:logo="@drawable/tum_logo"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -310,6 +311,16 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.CafeteriaNotificationSettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/cafeteria_notification_settings"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.CafeteriaActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.CafeteriaActivity" />
         </activity>
         <activity
             android:name=".activities.KinoActivity"
@@ -637,18 +648,20 @@
         <receiver android:name=".services.StartSyncReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.SCAN_RESULTS" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
 
-        <!-- Used to set Notification for favoriteDish -->
-        <receiver android:name="de.tum.in.tumcampusapp.services.FavoriteDishReceiver" />
+        <!-- Used for generating the wifi-heatmap data -->
+        <receiver android:name=".services.NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>intent-filter>
+        </receiver>
 
-        <service
-            android:name="de.tum.in.tumcampusapp.services.FavoriteDishService"
-            android:enabled="true" />
+        <!-- Used to set Notification for favoriteDish -->
+        <receiver android:name="de.tum.in.tumcampusapp.services.FavoriteDishAlarmScheduler"/>
 
         <service
             android:name=".services.DownloadService"
@@ -658,6 +671,9 @@
             android:exported="false" />
         <service
             android:name=".services.SendMessageService"
+            android:exported="false" />
+        <service
+            android:name=".services.SendWifiMeasurementService"
             android:exported="false" />
         <service
             android:name=".services.BackgroundService"

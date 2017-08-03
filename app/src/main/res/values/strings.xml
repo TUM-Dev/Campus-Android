@@ -11,6 +11,7 @@
     <string name="loading">Loading …</string>
     <string name="settings">Settings</string>
     <string name="yes">Yes</string>
+    <string name="save">Save</string>
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
     <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
@@ -263,6 +264,10 @@
         \n10 contains a source of phenylalanine
         \n11 with sugar and sweeteners</string>
     <string name="action_ingredients">Ingredients</string>
+    <string name="cafeteria_notification_settings">Cafeteria Notification Settings</string>
+
+    <!-- Cafeteria Notification Settings -->
+    <string name="invalid_notification_time">Invalid time. Please pick a time ranging from:</string>
 
     <!-- Information -->
     <string name="version">Version</string>

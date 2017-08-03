@@ -8,6 +8,7 @@ import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.google.common.net.UrlEscapers;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -100,6 +101,16 @@ public final class Helper {
                 return chain.proceed(newRequest.build());
             }
         };
+    }
+
+    /**
+     * encodes an url
+     *
+     * @param pUrl input url
+     * @return encoded url
+     */
+    public static String encodeUrl(String pUrl) {
+        return UrlEscapers.urlPathSegmentEscaper().escape(pUrl);
     }
 
     private Helper() {

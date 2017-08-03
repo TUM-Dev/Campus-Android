@@ -130,6 +130,14 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
                 new String[]{String.valueOf(c.id), c.name, c.address, Double.toString(c.latitude), Double.toString(c.longitude)});
     }
 
+    public String getMensaNameFromId(int mensaId){
+        Cursor c = db.rawQuery("SELECT name FROM cafeterias WHERE id = ?", new String[]{""+mensaId});
+        if(c.moveToNext()){
+            return c.getString(0);
+        }
+        return null;
+    }
+
     /**
      * Shows card for the best matching cafeteria.
      *

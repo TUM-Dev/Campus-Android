@@ -76,4 +76,38 @@ public class CafeteriaMenu {
 				+ this.typeShort + " typeLong=" + this.typeLong + " typeNr="
 				+ this.typeNr + " name=" + this.name;
 	}
+
+	public String getName(){
+		return name;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		CafeteriaMenu that = (CafeteriaMenu) o;
+
+		if (cafeteriaId != that.cafeteriaId) return false;
+		if (id != that.id) return false;
+		if (typeNr != that.typeNr) return false;
+		if (date != null ? !date.equals(that.date) : that.date != null) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (typeLong != null ? !typeLong.equals(that.typeLong) : that.typeLong != null)
+			return false;
+		return typeShort != null ? typeShort.equals(that.typeShort) : that.typeShort == null;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = cafeteriaId;
+		result = 31 * result + (date != null ? date.hashCode() : 0);
+		result = 31 * result + id;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (typeLong != null ? typeLong.hashCode() : 0);
+		result = 31 * result + typeNr;
+		result = 31 * result + (typeShort != null ? typeShort.hashCode() : 0);
+		return result;
+	}
 }

@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.services.FavoriteDishAlarmScheduler;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
@@ -75,6 +76,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             new AlertDialog.Builder(this).setTitle(R.string.action_ingredients)
                     .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
                     .setPositiveButton(android.R.string.ok, null).create().show();
+            return true;
+        }
+        if (item.getItemId() == R.id.action_settings){
+            startActivity(new Intent(this, CafeteriaNotificationSettingsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
