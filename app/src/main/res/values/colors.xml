@@ -34,4 +34,6 @@
 
     <color name="chat_border">#E0E0E0</color>
     <color name="chat_outgoing">#D1EAFF</color>
+
+    <color name="launcher_background">#0064BB</color>
 </resources>
