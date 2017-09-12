@@ -7,8 +7,6 @@ import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
 import de.tum.in.tumcampusapp.cards.EduroamFixCard;
-import de.tum.in.tumcampusapp.cards.FirstUseCard1;
-import de.tum.in.tumcampusapp.cards.FirstUseCard2;
 import de.tum.in.tumcampusapp.cards.MVVCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.NextLectureCard;
@@ -40,10 +38,6 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
                 return NextLectureCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_RESTORE:
                 return RestoreCard.inflateViewHolder(viewGroup);
-            case CardManager.CARD_FIRST_USE_1:
-                return FirstUseCard1.inflateViewHolder(viewGroup);
-            case CardManager.CARD_FIRST_USE_2:
-                return FirstUseCard2.inflateViewHolder(viewGroup);
             case CardManager.CARD_NO_INTERNET:
                 return NoInternetCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_MVV:

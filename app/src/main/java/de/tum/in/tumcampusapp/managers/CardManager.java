@@ -10,8 +10,6 @@ import java.util.List;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
 import de.tum.in.tumcampusapp.cards.EduroamFixCard;
-import de.tum.in.tumcampusapp.cards.FirstUseCard1;
-import de.tum.in.tumcampusapp.cards.FirstUseCard2;
 import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
@@ -95,16 +93,10 @@ public final class CardManager {
      * 6. Add an instance of the manager class to the managers list below
      */
     public static synchronized void update(Context context) {
-        // Use temporary array to avoid that the main thread is
-        // trying to access an empty array
+        // Use temporary array to avoid that the main thread is trying to access an empty array
         newCards = new ArrayList<>();
 
-        // Add no internet card
         new NoInternetCard(context).apply();
-
-        // Add first use tutorial
-        new FirstUseCard1(context).apply();
-        new FirstUseCard2(context).apply();
         new Support(context).apply();
 
         new EduroamCard(context).apply();
