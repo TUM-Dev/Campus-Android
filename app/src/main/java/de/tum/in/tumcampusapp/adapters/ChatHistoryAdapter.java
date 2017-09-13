@@ -156,7 +156,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         if (holder.ivSent == null) {
             holder.tvUser.setText(chatMessage.getMember().getDisplayName());
         } else {// Set status for outgoing messages (ivSent is not null)
-            boolean sending = chatMessage.getStatus() == ChatMessage.STATUS_SENDING;
+            boolean sending = chatMessage.getStatus() == ChatMessage.Companion.getSTATUS_SENDING();
             holder.ivSent.setVisibility(sending ? View.GONE : View.VISIBLE);
             holder.pbSending.setVisibility(sending ? View.VISIBLE : View.GONE);
         }

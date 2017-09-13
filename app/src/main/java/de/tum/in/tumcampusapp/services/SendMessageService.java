@@ -64,7 +64,7 @@ public class SendMessageService extends IntentService {
                     }
 
                     //Update the status on the ui
-                    createdMessage.setStatus(ChatMessage.STATUS_SENT);
+                    createdMessage.setStatus(ChatMessage.Companion.getSTATUS_SENT());
                     ChatMessageManager messageManager = new ChatMessageManager(this, message.getRoom());
                     messageManager.replaceInto(createdMessage, message.getMember().getId());
                     messageManager.removeFromUnsent(message);

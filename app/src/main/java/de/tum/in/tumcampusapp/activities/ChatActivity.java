@@ -117,7 +117,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             ChatMessage msg = chatHistoryAdapter.mCheckedItem;
             int i = item.getItemId();
             if (i == R.id.action_edit) {// If item is not sent at the moment, stop sending
-                if (msg.getStatus() == ChatMessage.STATUS_SENDING) {
+                if (msg.getStatus() == ChatMessage.Companion.getSTATUS_SENDING()) {
                     chatManager.removeFromUnsent(msg);
                     chatHistoryAdapter.removeUnsent(msg);
                 } else { // set editing item
@@ -344,7 +344,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         } else {
             chatHistoryAdapter.mEditedItem.setText(etMessage.getText().toString());
             chatManager.addToUnsent(chatHistoryAdapter.mEditedItem);
-            chatHistoryAdapter.mEditedItem.setStatus(ChatMessage.STATUS_SENDING);
+            chatHistoryAdapter.mEditedItem.setStatus(ChatMessage.Companion.getSTATUS_SENDING());
             chatManager.replaceMessage(chatHistoryAdapter.mEditedItem);
             chatHistoryAdapter.mEditedItem = null;
             chatHistoryAdapter.changeCursor(chatManager.getAll());
