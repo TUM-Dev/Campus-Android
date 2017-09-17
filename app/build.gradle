@@ -84,3 +84,5 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-core:$espressoVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-contrib:$espressoVersion"
 }
+
+apply plugin: 'com.google.gms.google-services'
