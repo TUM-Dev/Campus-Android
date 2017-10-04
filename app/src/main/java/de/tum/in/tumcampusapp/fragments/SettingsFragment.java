@@ -48,7 +48,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
     private static final String FACEBOOK = "facebook";
     private static final String GITHUB = "github";
-    private static final String FIRST_RUN = "first_run";
     private static final String LICENSES = "licenses";
     private static final String FEEDBACK = "feedback";
     private static final String PRIVACY = "privacy";
@@ -74,7 +73,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             findPreference(BUTTON_CLEAR_CACHE).setOnPreferenceClickListener(this);
             findPreference(FACEBOOK).setOnPreferenceClickListener(this);
             findPreference(GITHUB).setOnPreferenceClickListener(this);
-            findPreference(FIRST_RUN).setOnPreferenceClickListener(this);
             findPreference(LICENSES).setOnPreferenceClickListener(this);
             findPreference(FEEDBACK).setOnPreferenceClickListener(this);
             findPreference(PRIVACY).setOnPreferenceClickListener(this);
