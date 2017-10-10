@@ -27,7 +27,6 @@ import com.google.common.base.Optional;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.MainActivity;
 import de.tum.in.tumcampusapp.activities.StartupActivity;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
@@ -256,16 +255,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             case GITHUB:
                 // Open TCA-github web page
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
-                break;
-            case FIRST_RUN:
-                // Show first use tutorial
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                SharedPreferences.Editor e = prefs.edit();
-                e.putBoolean(CardManager.SHOW_TUTORIAL_1, true);
-                e.putBoolean(CardManager.SHOW_TUTORIAL_2, true);
-                e.apply();
-                CardManager.update(mContext);
-                startActivity(new Intent(mContext, MainActivity.class));
                 break;
             case LICENSES:
                 // Show licences

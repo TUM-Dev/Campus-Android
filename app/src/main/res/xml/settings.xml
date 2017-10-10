@@ -324,10 +324,6 @@
             android:key="button_clear_cache"
             android:summary="@string/clear_cache_detail"
             android:title="@string/clear_cache" />
-        <Preference
-            android:key="first_run"
-            android:summary="@string/demo_info"
-            android:title="@string/demo_mode" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/about_tca">
