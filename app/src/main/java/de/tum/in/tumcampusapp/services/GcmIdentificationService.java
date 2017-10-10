@@ -6,9 +6,9 @@ import android.os.AsyncTask;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
-import com.google.android.gms.iid.InstanceIDListenerService;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.io.IOException;
 import java.util.Date;
@@ -23,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GcmIdentificationService extends InstanceIDListenerService {
+public class GcmIdentificationService extends FirebaseInstanceIdService {
 
     private static final String SENDER_ID = "944892355389";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -43,18 +43,12 @@ public class GcmIdentificationService extends InstanceIDListenerService {
      * @return String token that can be used to transmit messages to this client
      */
     public String register() throws IOException {
-        String iid = InstanceID.getInstance(mContext).getId();
-        String token = InstanceID.getInstance(mContext).getToken(SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
-        Utils.setInternalSetting(mContext, Const.GCM_INSTANCE_ID, iid);
+        FirebaseInstanceId iid = FirebaseInstanceId.getInstance();
+        String token = iid.getToken();
+        Utils.setInternalSetting(mContext, Const.GCM_INSTANCE_ID, iid.getId());
         Utils.setInternalSetting(mContext, Const.GCM_TOKEN_ID, token);
 
         return token;
-    }
-
-    public void unregister() throws IOException {
-        InstanceID.getInstance(mContext).deleteInstanceID();
-        Utils.setInternalSetting(mContext, Const.GCM_INSTANCE_ID, "");
-        Utils.setInternalSetting(mContext, Const.GCM_TOKEN_ID, "");
     }
 
     /**
@@ -62,16 +56,8 @@ public class GcmIdentificationService extends InstanceIDListenerService {
      */
     @Override
     public void onTokenRefresh() {
-        InstanceID iid = InstanceID.getInstance(this);
-
-        try {
-            String token = iid.getToken(GcmIdentificationService.SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
-            Utils.setInternalSetting(this, Const.GCM_TOKEN_ID, token);
-        } catch (IOException e) {
-            Utils.log(e, "Failed to refresh token");
-        }
-        // send this tokenItem.token to your server
-
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Utils.setInternalSetting(this, Const.GCM_TOKEN_ID, refreshedToken);
     }
 
     public String getCurrentToken() {
