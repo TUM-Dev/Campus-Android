@@ -79,6 +79,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
                     if (checkSilentMode.isChecked() &&
                         !SilenceService.hasPermissions(WizNavExtrasActivity.this)) {
                         SilenceService.requestPermissions(WizNavExtrasActivity.this);
+                        checkSilentMode.setChecked(false);
                     }
                 }
             });

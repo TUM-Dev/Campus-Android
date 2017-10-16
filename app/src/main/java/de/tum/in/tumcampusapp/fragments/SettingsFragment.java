@@ -190,9 +190,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             if (sharedPreferences.getBoolean(key, false)) {
                 if (!SilenceService.hasPermissions(mContext)) {
                     SilenceService.requestPermissions(mContext);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean(key, false);
-                    editor.apply();
+
+                    // disable until silence service permission is resolved
+                    CheckBoxPreference silenceCheckbox = (CheckBoxPreference) findPreference(Const.SILENCE_SERVICE);
+                    silenceCheckbox.setChecked(false);
+                    sharedPreferences.edit().putBoolean(Const.SILENCE_SERVICE, false).apply();
                 } else {
                     mContext.startService(service);
                 }
