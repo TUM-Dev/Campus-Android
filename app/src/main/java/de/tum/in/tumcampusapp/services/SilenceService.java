@@ -68,6 +68,11 @@ public class SilenceService extends IntentService {
             return;
         }
 
+        if (!hasPermissions(this)) {
+            Utils.setSetting(this, Const.SILENCE_SERVICE, false);
+            return;
+        }
+
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         Intent newIntent = new Intent(this, SilenceService.class);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
