@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.BarrierFreeInfoActivity;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
 import de.tum.in.tumcampusapp.activities.ChatRoomsActivity;
@@ -48,7 +49,8 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.quiz_title, R.drawable.ic_pie_chart, SurveyActivity.class, true, false),
             new SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity.class, true, false),
             new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, OrganisationActivity.class, true, false),
-            new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)
+            new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false),
+            new SideNavigationItem(R.string.barrier_free, R.drawable.ic_place, BarrierFreeInfoActivity.class, false, false)
     };
 
     private final Context mContext;
