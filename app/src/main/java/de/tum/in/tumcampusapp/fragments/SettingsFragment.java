@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.activities.StartupActivity;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
@@ -48,10 +49,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
     private static final String FACEBOOK = "facebook";
     private static final String GITHUB = "github";
-    private static final String FIRST_RUN = "first_run";
     private static final String LICENSES = "licenses";
     private static final String FEEDBACK = "feedback";
     private static final String PRIVACY = "privacy";
+    private static final String SETUP_EDUROAM = "card_eduroam_setup";
     private FragmentActivity mContext;
 
     @Override
@@ -74,7 +75,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             findPreference(BUTTON_CLEAR_CACHE).setOnPreferenceClickListener(this);
             findPreference(FACEBOOK).setOnPreferenceClickListener(this);
             findPreference(GITHUB).setOnPreferenceClickListener(this);
-            findPreference(FIRST_RUN).setOnPreferenceClickListener(this);
             findPreference(LICENSES).setOnPreferenceClickListener(this);
             findPreference(FEEDBACK).setOnPreferenceClickListener(this);
             findPreference(PRIVACY).setOnPreferenceClickListener(this);
@@ -90,6 +90,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             setSummary("card_default_campus");
             setSummary("silent_mode_set_to");
             setSummary("background_mode_set_to");
+
+        } else if(rootKey.equals("card_eduroam")){
+            findPreference(SETUP_EDUROAM).setOnPreferenceClickListener(this);
         }
 
         // Register the change listener to react immediately on changes
@@ -222,6 +225,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         final String key = preference.getKey();
 
         switch (key) {
+            case SETUP_EDUROAM:
+                startActivity(new Intent(getContext(), SetupEduroamActivity.class));
+                break;
             case BUTTON_WIZARD:
                 mContext.finish();
                 startActivity(new Intent(mContext, WizNavStartActivity.class));
