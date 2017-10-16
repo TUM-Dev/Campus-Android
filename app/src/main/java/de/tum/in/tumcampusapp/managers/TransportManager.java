@@ -72,7 +72,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     private static final String STATELESS = "stateless=1";
     private static final String COORD_OUTPUT_FORMAT = "coordOutputFormat=WGS84";
     private static final String LOCATION_SERVER = "locationServerActive=1";
-    private static final String STATION_SEARCH_TYPE = "type_sf=any";
+    private static final String STATION_SEARCH_TYPE = "type_sf=stop";
     private static final String STATION_SEARCH_TYPE_COORD = "type_sf=coord";
     private static final String STATION_SEARCH_COMMON = "anyObjFilter_sf=126&reducedAnyPostcodeObjFilter_sf=64&reducedAnyTooManyObjFilter_sf=2&useHouseNumberList=true";
     private static final String STATION_SEARCH_HITLIST_SIZE = "anyMaxSizeHitList=10"; // 10 <=> what we can display on one page
