@@ -4,11 +4,15 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
+import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
@@ -61,6 +65,13 @@ public class TUMCabeClient {
     private static final String API_OWN_QUESTIONS = "question/my/";
     private static final String API_FACULTY = "faculty/";
     private static final String API_WIFI_HEATMAP = "wifimap/";
+    private static final String API_BARRIER_FREE = "barrierfree/";
+    private static final String API_BARRIER_FREE_CONTACT = "contacts/";
+    private static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
+    private static final String API_BARRIER_FREE_NERBY_FACILITIES = "nerby/";
+    private static final String API_BARRIER_FREE_LIST_OF_TOILETS = "listOfToilets/";
+    private static final String API_BARRIER_FREE_LIST_OF_ELEVATORS = "listOfElevators/";
+    private static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
     private static final String API_ROOM_FINDER = "roomfinder/room/";
     private static final String API_ROOM_FINDER_SEARCH = "search/";
     private static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
@@ -280,6 +291,31 @@ public class TUMCabeClient {
                .enqueue(cb);
     }
 
+    public List<BarrierfreeContact> getBarrierfreeContactList() throws IOException {
+        return service.getBarrierfreeContactList().execute().body();
+    }
+
+    public List<BarrierfreeMoreInfo> getMoreInfoList() throws IOException {
+        return service.getMoreInfoList().execute().body();
+    }
+
+    public List<RoomFinderRoom> getListOfToilets() throws IOException {
+        return service.getListOfToilets().execute().body();
+    }
+
+    public List<RoomFinderRoom> getListOfElevators() throws IOException {
+        return service.getListOfElevators().execute().body();
+    }
+
+    public List<RoomFinderRoom> getListOfNearbyFacilities(String buildingId) throws IOException {
+        return service.getListOfNearbyFacilities(buildingId).execute().body();
+    }
+
+    public List<BuildingsToGps> getBuilding2Gps() throws IOException {
+        return service.getBuilding2Gps().execute().body();
+    }
+
+
     public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException {
         service.fetchAvailableMaps(Helper.encodeUrl(archId))
                .enqueue(cb);
@@ -405,6 +441,31 @@ public class TUMCabeClient {
         //WifiHeatmap
         @POST(API_WIFI_HEATMAP + "create_measurements/")
         Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
+
+
+        // Barrier free contacts
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)
+        Call<List<BarrierfreeContact>> getBarrierfreeContactList();
+
+        // Barrier free More Info
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_MORE_INFO)
+        Call<List<BarrierfreeMoreInfo>> getMoreInfoList();
+
+        // Barrier free toilets list
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_TOILETS)
+        Call<List<RoomFinderRoom>> getListOfToilets();
+
+        // Barrier free elevator list
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_ELEVATORS)
+        Call<List<RoomFinderRoom>> getListOfElevators();
+
+        // Barrier free nearby list
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_NERBY_FACILITIES + "{buildingId}/")
+        Call<List<RoomFinderRoom>> getListOfNearbyFacilities(@Path("buildingId") String buildingId);
+
+        // building to gps information
+        @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
+        Call<List<BuildingsToGps>> getBuilding2Gps();
 
         //RoomFinder maps
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")
