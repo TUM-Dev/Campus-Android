@@ -37,7 +37,9 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        if (transportManager == null) transportManager = new TransportManager(context);
+        if (transportManager == null) {
+            transportManager = new TransportManager(context);
+        }
         updateAppWidgets(context, appWidgetManager, appWidgetIds);
         setAlarm(context);
         super.onUpdate(context, appWidgetManager, appWidgetIds);
@@ -45,7 +47,9 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        if (transportManager == null) transportManager = new TransportManager(context);
+        if (transportManager == null) {
+            transportManager = new TransportManager(context);
+        }
         // When the user deletes the widget, delete the associated setting from the database.
         for (int appWidgetId : appWidgetIds) {
             transportManager.deleteWidget(appWidgetId);
@@ -56,7 +60,9 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        if (transportManager == null) transportManager = new TransportManager(context);
+        if (transportManager == null) {
+            transportManager = new TransportManager(context);
+        }
         // Enter relevant functionality for when the first widget is created
         setAlarm(context);
     }
@@ -74,7 +80,8 @@ public class MVVWidget extends AppWidgetProvider {
     public static void setAlarm(Context context) {
         boolean autoReload = false;
         for (int appWidgetId : getActiveWidgetIds(context)) {
-            if (transportManager.getWidget(appWidgetId).autoReload()) {
+            WidgetDepartures widgetDepartures = transportManager.getWidget(appWidgetId);
+            if (widgetDepartures != null && widgetDepartures.autoReload()) {
                 autoReload = true;
                 break;
             }
@@ -170,6 +177,10 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
+        if (transportManager == null) {
+            transportManager = new TransportManager(context);
+        }
+
         String action = intent.getAction();
         if (action == null || action.equals(MVVWidget.BROADCAST_RELOAD_ALL)) {
             updateAppWidgets(context, AppWidgetManager.getInstance(context), getActiveWidgetIds(context));
