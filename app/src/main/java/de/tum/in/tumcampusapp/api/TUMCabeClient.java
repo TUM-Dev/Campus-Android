@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 
-import com.google.common.base.Optional;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -17,6 +15,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRegistrationId;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
@@ -50,7 +49,7 @@ public class TUMCabeClient {
     //private static final String API_SESSION = "session/";
     //private static final String API_NEWS = "news/";
     //private static final String API_MENSA = "mensen/";
-    //private static final String API_CURRICULA = "curricula/";
+    private static final String API_CURRICULA = "curricula/";
     private static final String API_REPORT = "report/";
     private static final String API_STATISTICS = "statistics/";
     //private static final String API_CINEMA = "kino/";
@@ -63,11 +62,10 @@ public class TUMCabeClient {
     private static final String API_FACULTY = "faculty/";
     private static final String API_WIFI_HEATMAP = "wifimap/";
     private static final String API_ROOM_FINDER = "roomfinder/room/";
-    private static final String API_ROOM_FINDER_SEARCH= "search/";
+    private static final String API_ROOM_FINDER_SEARCH = "search/";
     private static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
     private static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     private static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
-
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -78,7 +76,8 @@ public class TUMCabeClient {
                 .addConverterFactory(GsonConverterFactory.create());
 
         builder.client(Helper.getOkClient(c));
-        service = builder.build().create(TUMCabeAPIService.class);
+        service = builder.build()
+                         .create(TUMCabeAPIService.class);
 
         /*
         TODO port the error handler to Retrofit 2
@@ -107,151 +106,208 @@ public class TUMCabeClient {
 
     // Fetches faculty data (facname, id).Relevant for the user to select own major in majorSpinner in WizNavStartActivity
     public List<Faculty> getFaculties() throws IOException {
-        return service.getFaculties().execute().body();
+        return service.getFaculties()
+                      .execute()
+                      .body();
     }
 
     // Deletes ownQuestion..Relevant for allowing the user to delete own questions under responses in SurveyActivity
     public void deleteOwnQuestion(int question, Callback<Question> cb) {
-        service.deleteOwnQuestion(question).enqueue(cb);
+        service.deleteOwnQuestion(question)
+               .enqueue(cb);
     }
 
     // Fetches users ownQuestions and responses.Relevant for displaying results on ownQuestion under responses in SurveyActivity
     public List<Question> getOwnQuestions() throws IOException {
-        return service.getOwnQuestions().execute().body();
+        return service.getOwnQuestions()
+                      .execute()
+                      .body();
     }
 
     // Submits user's answer on a given question.Gets triggered through in the survey card.
     public void submitAnswer(Question question, Callback<Question> cb) {
-        service.answerQuestion(question).enqueue(cb);
+        service.answerQuestion(question)
+               .enqueue(cb);
     }
 
     // Fetches openQuestions which are relevant for the surveyCard.
     public List<Question> getOpenQuestions() throws IOException {
-        return service.getOpenQuestions().execute().body();
+        return service.getOpenQuestions()
+                      .execute()
+                      .body();
     }
 
     // Submits user's own question. Gets triggered from the SurveyActivity
     public void createQuestion(Question question, Callback<Question> cb) {
-        service.createQuestion(question).enqueue(cb);
+        service.createQuestion(question)
+               .enqueue(cb);
     }
 
     public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
         verification.setData(chatRoom);
-        service.createRoom(verification).enqueue(cb);
+        service.createRoom(verification)
+               .enqueue(cb);
     }
 
     public ChatRoom createRoom(ChatRoom chatRoom, ChatVerification verification) throws IOException {
         verification.setData(chatRoom);
-        return service.createRoom(verification).execute().body();
+        return service.createRoom(verification)
+                      .execute()
+                      .body();
     }
 
     public ChatRoom getChatRoom(int id) throws IOException {
-        return service.getChatRoom(id).execute().body();
+        return service.getChatRoom(id)
+                      .execute()
+                      .body();
     }
 
     public ChatMember createMember(ChatMember chatMember) throws IOException {
-        return service.createMember(chatMember).execute().body();
+        return service.createMember(chatMember)
+                      .execute()
+                      .body();
     }
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
-        service.leaveChatRoom(chatRoom.getId(), verification).enqueue(cb);
+        service.leaveChatRoom(chatRoom.getId(), verification)
+               .enqueue(cb);
     }
 
     public ChatMessage sendMessage(int roomId, ChatMessage chatMessageCreate) throws IOException {
-        return service.sendMessage(roomId, chatMessageCreate).execute().body();
+        return service.sendMessage(roomId, chatMessageCreate)
+                      .execute()
+                      .body();
     }
 
     public ChatMessage updateMessage(int roomId, ChatMessage message) throws IOException {
-        return service.updateMessage(roomId, message.getId(), message).execute().body();
+        return service.updateMessage(roomId, message.getId(), message)
+                      .execute()
+                      .body();
     }
 
     public List<ChatMessage> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
-        return service.getMessages(roomId, messageId, verification).execute().body();
+        return service.getMessages(roomId, messageId, verification)
+                      .execute()
+                      .body();
     }
 
     public List<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
-        return service.getNewMessages(roomId, verification).execute().body();
+        return service.getNewMessages(roomId, verification)
+                      .execute()
+                      .body();
     }
 
     public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) throws IOException {
-        return service.getMemberRooms(memberId, verification).execute().body();
+        return service.getMemberRooms(memberId, verification)
+                      .execute()
+                      .body();
     }
 
     public void getPublicKeysForMember(ChatMember member, Callback<List<ChatPublicKey>> cb) {
-        service.getPublicKeysForMember(member.getId()).enqueue(cb);
+        service.getPublicKeysForMember(member.getId())
+               .enqueue(cb);
     }
 
     public void uploadRegistrationId(int memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
-        service.uploadRegistrationId(memberId, regId).enqueue(cb);
+        service.uploadRegistrationId(memberId, regId)
+               .enqueue(cb);
     }
 
     public GCMNotification getNotification(int notification) throws IOException {
-        return service.getNotification(notification).execute().body();
+        return service.getNotification(notification)
+                      .execute()
+                      .body();
+    }
+
+    public List<Curriculum> getAllCurriculas() throws IOException {
+        return service.getAllCurriculas()
+                      .execute()
+                      .body();
     }
 
     public void confirm(int notification) throws IOException {
-        service.confirm(notification).execute().body();
+        service.confirm(notification)
+               .execute()
+               .body();
     }
 
     public List<GCMNotificationLocation> getAllLocations() throws IOException {
-        return service.getAllLocations().execute().body();
+        return service.getAllLocations()
+                      .execute()
+                      .body();
     }
 
     public GCMNotificationLocation getLocation(int locationId) throws IOException {
-        return service.getLocation(locationId).execute().body();
+        return service.getLocation(locationId)
+                      .execute()
+                      .body();
     }
 
     public void putBugReport(BugReport r) throws IOException {
-        service.putBugReport(r).execute().body();
+        service.putBugReport(r)
+               .execute()
+               .body();
     }
 
     public void putStatistics(Statistics s) {
-        service.putStatistics(s).enqueue(new Callback<List<String>>() {
-            @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                //We don't care about any responses
-            }
+        service.putStatistics(s)
+               .enqueue(new Callback<List<String>>() {
+                   @Override
+                   public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                       //We don't care about any responses
+                   }
 
-            @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
-                //Or if this fails
-            }
-        });
+                   @Override
+                   public void onFailure(Call<List<String>> call, Throwable t) {
+                       //Or if this fails
+                   }
+               });
 
     }
 
     public void deviceRegister(DeviceRegister verification, Callback<TUMCabeStatus> cb) {
-        service.deviceRegister(verification).enqueue(cb);
+        service.deviceRegister(verification)
+               .enqueue(cb);
     }
 
     public void deviceUploadGcmToken(DeviceUploadGcmToken verification, Callback<TUMCabeStatus> cb) {
-        service.deviceUploadGcmToken(verification).enqueue(cb);
+        service.deviceUploadGcmToken(verification)
+               .enqueue(cb);
     }
 
-    public void createMeasurements(WifiMeasurement[] wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException{
-        service.createMeasurements(wifiMeasurementList).enqueue(cb);
+    public void createMeasurements(WifiMeasurement[] wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
+        service.createMeasurements(wifiMeasurementList)
+               .enqueue(cb);
     }
 
-    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException{
-        service.fetchAvailableMaps(Helper.encodeUrl(archId)).enqueue(cb);
+    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException {
+        service.fetchAvailableMaps(Helper.encodeUrl(archId))
+               .enqueue(cb);
     }
 
     public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
-        return service.fetchRooms(Helper.encodeUrl(searchStrings)).execute().body();
+        return service.fetchRooms(Helper.encodeUrl(searchStrings))
+                      .execute()
+                      .body();
     }
 
     public RoomFinderCoordinate fetchCoordinates(String archId)
             throws IOException {
-        return service.fetchCoordinates(Helper.encodeUrl(archId)).execute().body();
+        return service.fetchCoordinates(Helper.encodeUrl(archId))
+                      .execute()
+                      .body();
     }
 
     public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) throws IOException {
-        service.fetchCoordinates(Helper.encodeUrl(archId)).enqueue(cb);
+        service.fetchCoordinates(Helper.encodeUrl(archId))
+               .enqueue(cb);
     }
 
-    public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException{
+    public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException {
         return service.fetchSchedule(Helper.encodeUrl(roomId),
-                Helper.encodeUrl(start), Helper.encodeUrl(end)).execute().body();
+                                     Helper.encodeUrl(start), Helper.encodeUrl(end))
+                      .execute()
+                      .body();
     }
 
     private interface TUMCabeAPIService {
@@ -314,6 +370,10 @@ public class TUMCabeClient {
         @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
         Call<ChatRegistrationId> uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId);
 
+        //Curricula
+        @GET(API_CURRICULA)
+        Call<List<Curriculum>> getAllCurriculas();
+
         @GET(API_NOTIFICATIONS + "{notification}/")
         Call<GCMNotification> getNotification(@Path("notification") int notification);
 
@@ -343,7 +403,7 @@ public class TUMCabeClient {
         Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadGcmToken verification);
 
         //WifiHeatmap
-        @POST(API_WIFI_HEATMAP+"create_measurements/")
+        @POST(API_WIFI_HEATMAP + "create_measurements/")
         Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
 
         //RoomFinder maps
@@ -361,6 +421,6 @@ public class TUMCabeClient {
         //RoomFinder schedule
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
         Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
-                                               @Path("start") String start, @Path("end") String end);
+                                                     @Path("start") String start, @Path("end") String end);
     }
 }
