@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.activities.StartupActivity;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
@@ -51,6 +52,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     private static final String LICENSES = "licenses";
     private static final String FEEDBACK = "feedback";
     private static final String PRIVACY = "privacy";
+    private static final String SETUP_EDUROAM = "card_eduroam_setup";
     private FragmentActivity mContext;
 
     @Override
@@ -88,6 +90,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             setSummary("card_default_campus");
             setSummary("silent_mode_set_to");
             setSummary("background_mode_set_to");
+
+        } else if(rootKey.equals("card_eduroam")){
+            findPreference(SETUP_EDUROAM).setOnPreferenceClickListener(this);
         }
 
         // Register the change listener to react immediately on changes
@@ -220,6 +225,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         final String key = preference.getKey();
 
         switch (key) {
+            case SETUP_EDUROAM:
+                startActivity(new Intent(getContext(), SetupEduroamActivity.class));
+                break;
             case BUTTON_WIZARD:
                 mContext.finish();
                 startActivity(new Intent(mContext, WizNavStartActivity.class));

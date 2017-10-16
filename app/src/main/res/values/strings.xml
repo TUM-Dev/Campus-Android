@@ -359,6 +359,7 @@
     <string name="eduroam" translatable="false">Eduroam</string>
     <string name="setup">Setup</string>
     <string name="setup_eduroam">Setup eduroam</string>
+    <string name="setup_eduroam_now">Setup Eduroam now</string>
     <string name="password">Password</string>
     <string name="not_ask_again">Don’t ask again</string>
     <string name="eduroam_setup_question">Do you want to connect to eduroam now?</string>
