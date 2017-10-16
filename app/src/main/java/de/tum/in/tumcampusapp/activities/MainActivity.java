@@ -123,11 +123,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         } else {
             initAdapter();
         }
-
-        // request notification state change permission for existing devices
-        if (Utils.getSettingBool(this, Const.SILENCE_SERVICE, false) && !SilenceService.hasPermissions(this)) {
-            SilenceService.requestPermissions(this);
-        }
     }
 
     @Override
