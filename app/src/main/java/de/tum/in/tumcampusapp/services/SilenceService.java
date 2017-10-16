@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.services;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -67,6 +68,11 @@ public class SilenceService extends IntentService {
             return;
         }
 
+        if (!hasPermissions(this)) {
+            Utils.setSetting(this, Const.SILENCE_SERVICE, false);
+            return;
+        }
+
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         Intent newIntent = new Intent(this, SilenceService.class);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -94,7 +100,6 @@ public class SilenceService extends IntentService {
                         Utils.getSetting(this, Const.SILENCE_OLD_STATE,
                                 Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
                 Utils.setInternalSetting(this, Const.SILENCE_ON, false);
-
 
                 Cursor cursor2 = calendarManager.getNextCalendarItem();
                 if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
@@ -149,5 +154,26 @@ public class SilenceService extends IntentService {
             }
         }
         return false;
+    }
+
+    /**
+     * Check if the app has the permissions to enable "Do Not Disturb".
+     */
+    public static boolean hasPermissions(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+            && !notificationManager.isNotificationPolicyAccessGranted()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Request the "Do Not Disturb" permissions for android version >= N.
+     */
+    public static void requestPermissions(Context context) {
+        if (hasPermissions(context)) return;
+        Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        context.startActivity(intent);
     }
 }

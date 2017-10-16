@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,6 +28,7 @@ import de.tum.in.tumcampusapp.managers.ChatRoomManager;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.services.SilenceService;
 
 public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
@@ -71,6 +73,16 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // Otherwise the app cannot load lectures so silence service makes no sense
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, true));
+            checkSilentMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (checkSilentMode.isChecked() &&
+                        !SilenceService.hasPermissions(WizNavExtrasActivity.this)) {
+                        SilenceService.requestPermissions(WizNavExtrasActivity.this);
+                        checkSilentMode.setChecked(false);
+                    }
+                }
+            });
         } else {
             checkSilentMode.setChecked(false);
             checkSilentMode.setEnabled(false);
