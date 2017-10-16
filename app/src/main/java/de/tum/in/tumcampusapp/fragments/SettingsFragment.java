@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.fragments;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +13,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.CheckBoxPreference;
@@ -38,6 +41,7 @@ import de.tum.in.tumcampusapp.managers.AbstractManager;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.NewsManager;
+import android.app.NotificationManager;
 import de.tum.in.tumcampusapp.services.BackgroundService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
@@ -188,7 +192,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         if (key.equals(Const.SILENCE_SERVICE)) {
             Intent service = new Intent(mContext, SilenceService.class);
             if (sharedPreferences.getBoolean(key, false)) {
-                mContext.startService(service);
+                if (!SilenceService.hasPermissions(mContext)) {
+                    SilenceService.requestPermissions(mContext);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean(key, false);
+                    editor.apply();
+                } else {
+                    mContext.startService(service);
+                }
             } else {
                 mContext.stopService(service);
             }

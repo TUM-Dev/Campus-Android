@@ -27,6 +27,7 @@ import de.tum.in.tumcampusapp.managers.ChatRoomManager;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.services.SilenceService;
 
 public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
@@ -84,6 +85,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             groupChatMode.setChecked(false);
             groupChatMode.setEnabled(false);
         }
+
+        if (checkSilentMode.isChecked()) SilenceService.requestPermissions(getApplicationContext());
     }
 
     public void onClickTerms(View view) {

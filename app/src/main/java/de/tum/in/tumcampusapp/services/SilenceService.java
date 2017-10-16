@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.services;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -95,7 +96,6 @@ public class SilenceService extends IntentService {
                                 Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
                 Utils.setInternalSetting(this, Const.SILENCE_ON, false);
 
-
                 Cursor cursor2 = calendarManager.getNextCalendarItem();
                 if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
                     // refresh when next event has started
@@ -149,5 +149,26 @@ public class SilenceService extends IntentService {
             }
         }
         return false;
+    }
+
+    /**
+     * Check if the app has the permissions to enable "Do Not Disturb".
+     */
+    public static boolean hasPermissions(Context ctx) {
+        NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+            && !notificationManager.isNotificationPolicyAccessGranted()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Request the "Do Not Disturb" permissions for android version >= N.
+     */
+    public static void requestPermissions(Context ctx) {
+        if (hasPermissions(ctx)) return;
+        Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        ctx.startActivity(intent);
     }
 }
