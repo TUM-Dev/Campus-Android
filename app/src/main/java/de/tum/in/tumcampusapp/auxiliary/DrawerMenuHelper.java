@@ -50,7 +50,7 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity.class, true, false),
             new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, OrganisationActivity.class, true, false),
             new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false),
-            new SideNavigationItem(R.string.barrier_free, R.drawable.ic_place, BarrierFreeInfoActivity.class, false, false)
+            new SideNavigationItem(R.string.barrier_free, R.drawable.ic_accessible, BarrierFreeInfoActivity.class, false, false)
     };
 
     private final Context mContext;
