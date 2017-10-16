@@ -139,6 +139,7 @@
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
+    <string name="barrier_free">Barrier-free Information</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
@@ -516,6 +517,12 @@ Signature: %5$s</string>
     <string name="timetable_widget_no_lectures">No lectures planned :)</string>
     <string name="eduroam_not_valid_id">Not a valid TUM-ID.</string>
     <string name="eduroam_please_enter_password">Please enter your password. It will not be saved.</string>
+
+    <!-- Barrier-free  -->
+    <string name="facilities">Facilities</string>
+    <string name="nerby_facilities">Nearby Facilities</string>
+    <string name="barrierfree_toilets">Barrier-free Toilets</string>
+    <string name="elevators">Elevators</string>
 </resources>
 
 
