@@ -86,7 +86,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             groupChatMode.setEnabled(false);
         }
 
-        if (checkSilentMode.isChecked()) SilenceService.requestPermissions(getApplicationContext());
+        if (checkSilentMode.isChecked() && !SilenceService.hasPermissions(this)) SilenceService.requestPermissions(this);
     }
 
     public void onClickTerms(View view) {
