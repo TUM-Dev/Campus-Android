@@ -255,6 +255,12 @@
                     android:key="card_eduroam_phone"
                     android:title="@string/phone" />
             </PreferenceCategory>
+
+            <PreferenceCategory android:title="@string/extra">
+                <Preference
+                    android:key="card_eduroam_setup"
+                    android:title="@string/setup_eduroam_now" />
+            </PreferenceCategory>
         </PreferenceScreen>
 
         <!-- Survey fee card -->
