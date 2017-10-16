@@ -91,7 +91,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // Get handles to all UI elements
         groupChatMode = (CheckBox) findViewById(R.id.chk_group_chat);
         if (new AccessTokenManager(this).hasValidAccessToken()) {
-            groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, false));
+            groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
         } else {
             groupChatMode.setChecked(false);
             groupChatMode.setEnabled(false);
