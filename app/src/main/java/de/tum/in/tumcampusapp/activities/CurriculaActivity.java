@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +16,11 @@ import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.adapters.CurriculumAdapter;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Activity to fetch and display the curricula of different study programs.
@@ -31,7 +32,8 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void, List
     public static final String CURRICULA_URL = "https://tumcabe.in.tum.de/Api/curricula";
 
     private final Map<String, String> options = new HashMap<>();
-    private ArrayAdapter<String> arrayAdapter;
+    private ArrayList<Curriculum> curriculumList;
+    private StickyListHeadersListView list;
 
     public CurriculaActivity() {
         super(R.layout.activity_curricula);
@@ -40,11 +42,9 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void, List
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        curriculumList = new ArrayList<>();
 
-        // Sets the adapter
-        ListView list = this.findViewById(R.id.activity_curricula_list_view);
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        list.setAdapter(arrayAdapter);
+        list = this.findViewById(R.id.activity_curricula_list_view);
         list.setOnItemClickListener(this);
 
         // Fetch all curricula from webservice via parent async class
@@ -74,9 +74,12 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void, List
 
         options.clear();
         for (Curriculum curriculum : curricula) {
-            arrayAdapter.add(curriculum.getName());
+            curriculumList.add(curriculum);
             options.put(curriculum.getName(), curriculum.getUrl());
         }
+
+        Collections.sort(curriculumList);
+        list.setAdapter(new CurriculumAdapter(this, curriculumList));
 
         showLoadingEnded();
     }
