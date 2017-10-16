@@ -95,6 +95,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
         </provider>
+        <provider
+            android:name=".auxiliary.FacilityLocatorSuggestionProvider"
+            android:authorities="de.tum.in.tumcampusapp.auxiliary.FacilityLocatorSuggestionProvider"
+            android:exported="false" />
 
         <activity
             android:name=".activities.StartupActivity"
@@ -480,6 +484,60 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.FacilityMainActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/facility_locator"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_facilities" />
+        </activity>
+        <activity
+            android:name=".activities.FacilityActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/facility_locator"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.FacilityMainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.FacilityMainActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_facilities" />
+        </activity>
+        <activity
+            android:name=".activities.FacilityTaggingActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/facility_locator"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.FacilityMainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.FacilityMainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.FacilityDisplayActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/facility_locator"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.FacilityActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.FacilityActivity" />
+        </activity>
+
 
         <!-- receiver for the mensaWidget -->
         <receiver

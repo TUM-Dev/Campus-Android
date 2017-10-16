@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Base64;
 import android.widget.ImageView;
 
 import com.google.common.base.Optional;
@@ -15,12 +16,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.Helper;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.models.tumcabe.FacilityMap;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -201,6 +205,28 @@ public class NetUtils {
             return Optional.absent();
         }
     }
+
+    public Optional<File> getFacilityMapImage(Optional<String> map){
+        try{
+            if(!map.isPresent()){
+                return Optional.absent();
+            }
+
+            Optional<String> file=Optional.of(mContext.getCacheDir().getAbsolutePath() + "/current_location_map.jpg");
+            File f = new File(file.get());
+            byte[] imageData= Base64.decode(map.get(),Base64.DEFAULT);
+            BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(f));
+            writer.write(imageData);
+            writer.flush();
+            writer.close();
+            return Optional.of(f);
+        }
+        catch (IOException e){
+            Utils.log(e, "Could not save the current location map image");
+            return Optional.absent();
+        }
+    }
+
 
     /**
      * Downloads an image synchronously from the given url

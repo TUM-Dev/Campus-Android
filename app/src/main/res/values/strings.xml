@@ -139,6 +139,7 @@
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
+    <string name="facility_locator" translatable="false">Facility Locator</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
@@ -505,6 +506,32 @@ Signature: %5$s</string>
 
     <string name="transport_action_usage">Usage</string>
     <string name="transport_help_text">Tap your favorite transportation lines to highlight them. Tap again to revert them back to normal.</string>
+
+    <!--Facility Locator-->
+    <string name="tag_facility" translatable="false">Tag Facility</string>
+    <string name="delete_facility" translatable="false">Delete Facility</string>
+    <string name="facility_name" translatable="false">Facility Name</string>
+    <string name="save" translatable="false">Save</string>
+    <string name="add_facility" translatable="false">Add Facility</string>
+
+    <string name="facility_save_success" translatable="false">Facility saved successfully</string>
+    <string name="facility_vote_save_success" translatable="false">Vote saved successfully</string>
+    <string name="facility_delete_success" translatable="false">Facility deleted successfully</string>
+
+
+    <string name="facility_log_in_error" translatable="false">You need to log in in order to add</string>
+    <string name="facility_tab_categories" translatable="false">Facility Categories</string>
+    <string name="facility_tab_my" translatable="false">My Facilities</string>
+    <string name="search_facilities" translatable="false">Search by name</string>
+
+    <string name="facility_save_failure" translatable="false">Facility could not be saved</string>
+    <string name="facility_delete_failure" translatable="false">Facility could not be deleted</string>
+    <string name="facility_map_failure" translatable="false">Facility map could not be downloaded</string>
+    <string name="facility_votes_failure" translatable="false">Error while getting votes</string>
+    <string name="facility_categories_failure" translatable="false">An unexpected error occured while getting facility categories</string>
+    <string name="facility_name_empty_error" translatable="false">Name cannot be empty</string>
+    <string name="facility_my_facilities_error" translatable="false">Error while getting your facilities</string>
+
     <string name="mvv_widget" translatable="false">MVV Widget TUM</string>
     <string name="mvv_widget_select_station">Select station</string>
     <string name="mvv_widget_no_station">No station selected</string>

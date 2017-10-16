@@ -19,6 +19,10 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.models.tumcabe.Facility;
+import de.tum.in.tumcampusapp.models.tumcabe.FacilityCategory;
+import de.tum.in.tumcampusapp.models.tumcabe.FacilityMap;
+import de.tum.in.tumcampusapp.models.tumcabe.FacilityVote;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
@@ -68,13 +72,18 @@ public class TUMCabeClient {
     private static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     private static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
 
+    private static final String API_FACILITY = "facility/";
+
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
 
+
+
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
+                .baseUrl("http://" + "192.168.2.183" + API_BASEURL)
+//                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addConverterFactory(GsonConverterFactory.create());
 
         builder.client(Helper.getOkClient(c));
@@ -254,6 +263,48 @@ public class TUMCabeClient {
                 Helper.encodeUrl(start), Helper.encodeUrl(end)).execute().body();
     }
 
+
+
+    //Facilities
+    public void getFacilityCategories(Callback<List<FacilityCategory>> cb) throws IOException {
+        service.getFacilityCategories().enqueue(cb);
+    }
+
+    public void getFacilitiesByCategory(int categoryId,Callback<List<Facility>> cb) throws IOException {
+        service.getFacilitiesByCategory(categoryId).enqueue(cb);
+    }
+
+    public void getFacilitiesByQuery(String query,Callback<List<Facility>> cb) throws IOException {
+        service.getFacilitiesByQuery(query).enqueue(cb);
+    }
+
+    public Facility getFacilityById(Integer id) throws IOException {
+        return service.getFacilityById(id).execute().body();
+    }
+
+    public void getMyFacilities(ChatVerification chatVerification,Callback<List<Facility>> cb) throws IOException {
+        service.getMyFacilities(chatVerification).enqueue(cb);
+    }
+
+    public void saveFacility(Facility facility,ChatVerification chatVerification, Callback<Void> cb) throws IOException {
+        chatVerification.setData(facility);
+        service.saveFacility(chatVerification).enqueue(cb);
+    }
+
+    public void deleteFacility(Integer id,ChatVerification verification, Callback<Void> cb) throws IOException {
+        service.deleteFacility(id,verification).enqueue(cb);
+    }
+
+
+    public void saveFacilityVote(Integer id,Integer vote,ChatVerification cv, Callback<Facility> cb) throws IOException {
+        cv.setData(vote);
+        service.saveFacilityVote(id,cv).enqueue(cb);
+    }
+
+    public FacilityMap getMapWithLocation(Double lon,Double lat) throws IOException {
+        return service.getMapWithLocation(lon,lat).execute().body();
+    }
+
     private interface TUMCabeAPIService {
 
         @GET(API_FACULTY)
@@ -362,5 +413,34 @@ public class TUMCabeClient {
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
         Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
                                                @Path("start") String start, @Path("end") String end);
+
+
+        //        Facilities
+        @GET(API_FACILITY+"category")
+        Call<List<FacilityCategory>> getFacilityCategories();
+
+        @GET(API_FACILITY+"category/"+"{categoryId}")
+        Call<List<Facility>> getFacilitiesByCategory(@Path("categoryId") int categoryId);
+
+        @GET(API_FACILITY+"search/"+"{query}")
+        Call<List<Facility>> getFacilitiesByQuery(@Path("query") String query);
+
+        @GET(API_FACILITY+"{id}")
+        Call<Facility> getFacilityById(@Path("id") Integer id);
+
+        @POST(API_FACILITY+"user/")
+        Call<List<Facility>> getMyFacilities(@Body ChatVerification verification);
+
+        @POST(API_FACILITY+"delete/"+"{id}")
+        Call<Void> deleteFacility(@Path("id") Integer id,@Body ChatVerification verification);
+
+        @POST(API_FACILITY)
+        Call<Void> saveFacility(@Body ChatVerification chatVerification);
+
+        @POST(API_FACILITY+"{id}"+"/votes/")
+        Call<Facility> saveFacilityVote(@Path("id") Integer id,@Body ChatVerification chatVerification);
+
+        @GET(API_FACILITY+"map/{longitude}/{latitude}")
+        Call<FacilityMap> getMapWithLocation(@Path("longitude") Double longitude, @Path("latitude") Double latitude);
     }
 }
