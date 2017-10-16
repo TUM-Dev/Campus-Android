@@ -159,8 +159,8 @@ public class SilenceService extends IntentService {
     /**
      * Check if the app has the permissions to enable "Do Not Disturb".
      */
-    public static boolean hasPermissions(Context ctx) {
-        NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+    public static boolean hasPermissions(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
             && !notificationManager.isNotificationPolicyAccessGranted()) {
             return false;
@@ -171,9 +171,9 @@ public class SilenceService extends IntentService {
     /**
      * Request the "Do Not Disturb" permissions for android version >= N.
      */
-    public static void requestPermissions(Context ctx) {
-        if (hasPermissions(ctx)) return;
+    public static void requestPermissions(Context context) {
+        if (hasPermissions(context)) return;
         Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-        ctx.startActivity(intent);
+        context.startActivity(intent);
     }
 }
