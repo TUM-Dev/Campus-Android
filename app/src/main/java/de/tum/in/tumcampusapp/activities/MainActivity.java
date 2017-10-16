@@ -22,7 +22,9 @@ import android.view.View;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.CardsAdapter;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.services.SilenceService;
@@ -120,6 +122,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             refreshCards();
         } else {
             initAdapter();
+        }
+
+        // request notification state change permission for existing devices
+        if (Utils.getSettingBool(this, Const.SILENCE_SERVICE, false) && !SilenceService.hasPermissions(this)) {
+            SilenceService.requestPermissions(this);
         }
     }
 
