@@ -220,10 +220,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-        }
 
         this.getIntentData();
         this.bindUIElements();

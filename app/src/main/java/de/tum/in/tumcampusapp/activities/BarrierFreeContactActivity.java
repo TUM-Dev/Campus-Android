@@ -27,15 +27,7 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // action bar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-        }
-
         listview = (StickyListHeadersListView) findViewById(R.id.activity_barrier_info_list_view);
-
         startLoading();
     }
 

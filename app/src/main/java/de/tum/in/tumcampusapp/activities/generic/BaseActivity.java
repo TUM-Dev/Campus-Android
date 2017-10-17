@@ -88,16 +88,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null && (
-                (parent != null && parent.equals(MainActivity.class.getName()))
-                        || this instanceof MainActivity
-                        || this instanceof UserPreferencesActivity
-        )) {
+        if (getSupportActionBar() != null && (parent != null || this instanceof MainActivity)) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
