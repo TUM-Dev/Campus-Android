@@ -46,12 +46,6 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Activate action bar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-        }
-
         // set spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinnerToolbar);
         spinner.setOnItemSelectedListener(this);

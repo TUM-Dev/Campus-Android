@@ -33,11 +33,6 @@ public class BarrierFreeMoreInfoActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-        }
-
         listview = (StickyListHeadersListView) findViewById(R.id.activity_barrier_info_list_view);
 
         startLoading();
