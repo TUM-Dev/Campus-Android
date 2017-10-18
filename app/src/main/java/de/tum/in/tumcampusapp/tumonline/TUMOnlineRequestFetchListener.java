@@ -34,4 +34,9 @@ public interface TUMOnlineRequestFetchListener<T> {
 	 */
 	void onFetchError(String errorReason);
 
+	/**
+	 * Called if there was no error accessing tum online but there are no results to show (no entries)
+	 */
+	void onNoDataToShow();
+
 }
