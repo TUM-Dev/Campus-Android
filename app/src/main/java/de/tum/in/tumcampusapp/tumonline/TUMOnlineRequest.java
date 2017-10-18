@@ -39,6 +39,11 @@ public final class TUMOnlineRequest<T> {
     private static final String NO_FUNCTION_RIGHTS = "Keine Rechte für Funktion";
 
     /**
+     * Valid response (no TUMOnline error) but no data available (e.g. no grades yet)
+     * */
+    public static final String NO_ENTRIES = "<rowset>\n</rowset>";
+
+    /**
      * String possibly contained in response from server
      */
     private static final String TOKEN_NOT_CONFIRMED = "Token ist nicht bestätigt oder ungültig!";
@@ -222,6 +227,11 @@ public final class TUMOnlineRequest<T> {
 
                 //Check for common errors
                 if (!result.isPresent()) {
+                    if(lastError.contains(NO_ENTRIES)){
+                        listener.onNoDataToShow();
+                        return;
+                    }
+
                     String error;
                     if (lastError.contains(TOKEN_NOT_CONFIRMED)) {
                         error = context.getString(R.string.dialog_access_token_invalid);
