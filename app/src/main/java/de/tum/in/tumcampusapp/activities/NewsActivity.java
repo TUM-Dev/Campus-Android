@@ -1,11 +1,19 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.common.collect.Iterables;
+import com.google.common.primitives.Booleans;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
@@ -18,7 +26,7 @@ import de.tum.in.tumcampusapp.managers.NewsManager;
 /**
  * Activity to show News (message, image, date)
  */
-public class NewsActivity extends ActivityForDownloadingExternal {
+public class NewsActivity extends ActivityForDownloadingExternal implements DialogInterface.OnMultiChoiceClickListener {
 
     private RecyclerView lv;
     private int state = -1;
@@ -44,17 +52,16 @@ public class NewsActivity extends ActivityForDownloadingExternal {
         if (cursor.getCount() > 0) {
             NewsAdapter adapter = new NewsAdapter(this, cursor);
 
-            lv = (RecyclerView) findViewById(R.id.activity_news_list_view);
+            lv = findViewById(R.id.activity_news_list_view);
             lv.setLayoutManager(new LinearLayoutManager(this));
             lv.setAdapter(adapter);
 
-            /** Restore previous state (including selected item index and scroll position) */
+            /* Restore previous state (including selected item index and scroll position) */
             if (state == -1) {
                 lv.scrollToPosition(nm.getTodayIndex());
             } else {
                 lv.scrollToPosition(state);
             }
-
 
         } else if (NetUtils.isConnected(this)) {
             showErrorLayout();
@@ -75,28 +82,45 @@ public class NewsActivity extends ActivityForDownloadingExternal {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Cursor cur = nm.getNewsSources();
-        int i = 0;
-        if (cur.moveToFirst()) {
-            do {
-                MenuItem item = menu.add(Menu.NONE, i, Menu.NONE, cur.getString(2));
-                item.setCheckable(true);
-                boolean checked = Utils.getSettingBool(this, "news_source_" + cur.getString(0), true);
-                item.setChecked(checked);
-                i++;
-            } while (cur.moveToNext());
-        }
-        cur.close();
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_activity_news, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_disable_sources) {
+            Collection<CharSequence> itemsList = new ArrayList<>();
+            Collection<Boolean> checkedList = new ArrayList<>();
+
+            // Populate the settings dialog from the NewsManager sources
+            Cursor cur = nm.getNewsSources();
+            if (cur.moveToFirst()) {
+                do {
+                    itemsList.add(cur.getString(2));
+                    checkedList.add(Utils.getSettingBool(this, "news_source_" + cur.getString(0), true));
+                } while (cur.moveToNext());
+            }
+            cur.close();
+
+            CharSequence[] items = Iterables.toArray(itemsList, CharSequence.class);
+            boolean[] checkedItems = Booleans.toArray(checkedList);
+
+            new AlertDialog.Builder(this)
+                    .setMultiChoiceItems(items, checkedItems, this)
+                    .create()
+                    .show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
         Cursor cur = nm.getNewsSources();
-        if (item.getItemId() < cur.getCount() && cur.moveToPosition(item.getItemId())) {
-            boolean checked = !item.isChecked();
-            Utils.setSetting(this, "news_source_" + cur.getString(0), checked);
-            item.setChecked(checked);
+        if (which < cur.getCount() && cur.moveToPosition(which)) {
+            Utils.setSetting(this, "news_source_" + cur.getString(0), isChecked);
 
             if(lv != null) { //We really don't care if the lv is null, if the position can't be saved. Rather not have the app crash here
                 LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
@@ -104,8 +128,6 @@ public class NewsActivity extends ActivityForDownloadingExternal {
             }
 
             requestDownload(false);
-            return true;
         }
-        return super.onOptionsItemSelected(item);
     }
 }
