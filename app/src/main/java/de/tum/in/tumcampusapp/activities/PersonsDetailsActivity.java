@@ -168,7 +168,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         Bitmap image = employee.getImage();
         if (image == null) {
             image = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.photo_not_available);
+                    R.drawable.photo_not_available_rectangular);
         }
         imageView.setImageBitmap(image);
 
