@@ -45,6 +45,7 @@
     <string name="dialog_access_token_invalid">TUMonline-Access-Token not enabled</string>
     <string name="dialog_no_rights_function">No rights to access this function</string>
     <string name="empty_result">The operation delivered a faulty result</string>
+    <string name="no_data_to_show">There is no data to show.</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Average grade</string>
@@ -57,6 +58,7 @@
     <string name="all_programs">All programs</string>
     <string name="date">Date</string>
     <string name="credits" translatable="false">ECTS</string>
+    <string name="no_grades">You don\'t have any grades yet.</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>
