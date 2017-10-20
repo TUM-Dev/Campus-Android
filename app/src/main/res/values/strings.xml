@@ -455,8 +455,11 @@ Signature: %5$s</string>
     <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
     <string name="support_email" translatable="false">tca-support.os.in@tum.de</string>
     <string name="support_us_title">Support us!</string>
-    <string name="permission_location_explanation">This App needs permission to access your calendar to be able to sync it with your TUM calendar.</string>
-    <string name="permission_calendar_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
+    <string name="permission_calendar_explanation">This App needs permission to access your calendar to be able to sync it with your TUM calendar.</string>
+    <string name="permission_location_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
+    <string name="permission_contacts_explanation">The App needs permission to access your contacts to be able to add this person to your contacts.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>

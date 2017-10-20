@@ -407,7 +407,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
      * @param id the request id
      * @return If the contacts permission was granted
      */
-    private boolean isPermissionGranted(int id) {
+    private boolean isPermissionGranted(final int id) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
@@ -418,15 +418,16 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
                 // Display an AlertDialog with an explanation and a button to trigger the request.
                 new AlertDialog.Builder(this)
-                        //.setMessage(getString(R.string.permission_calendar_explanation))
-                        .setMessage("Lorem Ipsum")
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        .setMessage(R.string.permission_contacts_explanation)
+                        .setPositiveButton(R.string.grant_permission, new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int id) {
+                            public void onClick(DialogInterface dialog, int onClickId) {
                                 ActivityCompat
                                         .requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id);
                             }
-                        }).show();
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
             } else {
                 ActivityCompat.requestPermissions(this, PERMISSIONS_CONTACTS, id);
             }
