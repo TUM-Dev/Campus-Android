@@ -29,8 +29,6 @@ public class CafeteriaNotificationSettingsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle b){
         super.onCreate(b);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
         cafeteriaNotificationSettings = new CafeteriaNotificationSettings(this);
         setupList();
         ListView listView = (ListView)findViewById(R.id.activity_notification_settings_listview);

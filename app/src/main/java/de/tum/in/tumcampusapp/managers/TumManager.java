@@ -11,6 +11,7 @@ import java.util.Date;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumo.Error;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
 /**
  * TUMOnline lock manager: prevent too many requests send to TUMO
@@ -110,14 +111,16 @@ public class TumManager extends AbstractManager {
         //Try to parse the error
         String msg = "";
         try {
-
+            if(data.contains(TUMOnlineRequest.NO_ENTRIES)){
+                return data;
+            }
             Error res = new Persister().read(Error.class, data);
             msg = res.getMessage();
         } catch (Exception e) {
             Utils.log(e);
         }
 
-        //Enter it into the Databse
+        //Enter it into the Database
         db.execSQL("REPLACE INTO tumLocks (url, error, timestamp, lockedFor, active) VALUES (?, ?, datetime('now'), ?, 1)", new String[]{url, msg, String.valueOf(lockTime)});
 
         return msg;

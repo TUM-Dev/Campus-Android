@@ -37,6 +37,7 @@
     <string name="dialog_access_token_invalid">TUMonline-Access-Token nicht aktiviert</string>
     <string name="dialog_no_rights_function">Keine Rechte für diese Funktion</string>
     <string name="empty_result">Die Anfrage lieferte ein fehlerhaftes Ergebnis</string>
+    <string name="no_data_to_show">Es sind keine Daten vorhanden.</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Durchschnittsnote</string>
@@ -48,6 +49,7 @@
     <string name="mode">Modus</string>
     <string name="all_programs">Alle Programme</string>
     <string name="date">Datum</string>
+    <string name="no_grades">Du hast noch keine Noten, die angezeigt werden könnten.</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Kennung</string>
@@ -374,6 +376,9 @@ Signatur: %5$s</string>
     <string name="support_us_title">Unterstütze uns!</string>
     <string name="permission_calendar_explanation">Diese App braucht die Erlaubnis auf deinen Standort zugreifen zu können um nützliche Informationen, zum Beispiel zum Anzeigen der Mensa Speisepläne in deiner nähe oder von Fahrplänen der nächstgelegenen MVV Station. \n Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
     <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zuzugreifen, um sie diesen mit deinem TUM-Kalender abzugleichen.</string>
+    <string name="permission_contacts_explanation">Diese App braucht die Erlaubnis auf deine Kontakte zuzugreifen, um diese Person hizufügen zu können.</string>
+    <string name="cancel">Abbruch</string>
+    <string name="grant_permission">Erlauben</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Veröffentlicht am:</string>
     <string name="free">Frei</string>

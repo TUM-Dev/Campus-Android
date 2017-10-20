@@ -346,6 +346,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     }
 
     @Override
+    public void onNoDataToShow(){
+        showError(R.string.no_grades);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
 
