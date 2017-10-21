@@ -175,11 +175,11 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     /**
      * Deletes the settings of a widget to the widget list
      *
-     * @param widget_id The id of the widget
+     * @param widgetId The id of the widget
      */
-    public void deleteWidget(int widget_id) {
-        db.delete("widgets_transport", "id = ?", new String[]{String.valueOf(widget_id)});
-        TransportManager.widgetDeparturesList.remove(widget_id);
+    public void deleteWidget(int widgetId) {
+        db.delete("widgets_transport", "id = ?", new String[]{String.valueOf(widgetId)});
+        TransportManager.widgetDeparturesList.remove(widgetId);
     }
 
     /**
@@ -189,14 +189,14 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * If there is no widget with this id saved (in cache and the database) a new WidgetDepartures Object is generated
      * containing a NULL for the station and an empty string for the station id. This is not cached or saved to the database.
      *
-     * @param widget_id The id of the widget
+     * @param widgetId The id of the widget
      * @return The WidgetDepartures Object
      */
-    public WidgetDepartures getWidget(int widget_id) {
-        if(TransportManager.widgetDeparturesList.indexOfKey(widget_id) >= 0){
-            return TransportManager.widgetDeparturesList.get(widget_id);
+    public WidgetDepartures getWidget(int widgetId) {
+        if (TransportManager.widgetDeparturesList.indexOfKey(widgetId) >= 0) {
+            return TransportManager.widgetDeparturesList.get(widgetId);
         }
-        Cursor c = db.rawQuery("SELECT * FROM widgets_transport WHERE id = ?", new String[]{String.valueOf(widget_id)});
+        Cursor c = db.rawQuery("SELECT * FROM widgets_transport WHERE id = ?", new String[]{String.valueOf(widgetId)});
         WidgetDepartures widgetDepartures = new WidgetDepartures();
         if (c.getCount() >= 1) {
             c.moveToFirst();
@@ -206,7 +206,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             widgetDepartures.setAutoReload(c.getInt(c.getColumnIndex("reload")) != 0);
             c.close();
         }
-        TransportManager.widgetDeparturesList.put(widget_id, widgetDepartures);
+        TransportManager.widgetDeparturesList.put(widgetId, widgetDepartures);
         return widgetDepartures;
     }
 
@@ -274,6 +274,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @return Database Cursor (name, _id)
      */
     public static Optional<Cursor> getStationsFromExternal(Context context, String prefix) {
+        prefix = Utils.escapeUmlauts(prefix);
         try {
             String language = LANGUAGE + Locale.getDefault().getLanguage();
             // ISO-8859-1 is needed for mvv
