@@ -9,6 +9,7 @@ import android.util.SparseArray;
 
 import com.google.common.base.Optional;
 import com.google.common.net.UrlEscapers;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +36,7 @@ import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
 /**
  * Transport Manager, handles querying data from mvv and card creation
  */
+@SuppressWarnings("StringConcatenationMissingWhitespace")
 public class TransportManager extends AbstractManager implements Card.ProvidesCard {
 
     /*  Documentation for using efa.mvv-muenchen.de
@@ -101,19 +103,24 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
     private static SparseArray<WidgetDepartures> widgetDeparturesList;
+    private static final Gson gson = new Gson();
 
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
-        stationSearch.append(STATION_SEARCH).append('?');
+        stationSearch.append(STATION_SEARCH)
+                     .append('?');
         for (String param : STATION_SEARCH_CONST_PARAMS) {
-            stationSearch.append(param).append('&');
+            stationSearch.append(param)
+                         .append('&');
         }
         STATION_SEARCH_CONST = stationSearch.toString();
 
         StringBuilder departureQuery = new StringBuilder(MVV_API_BASE);
-        departureQuery.append(DEPARTURE_QUERY).append('?');
+        departureQuery.append(DEPARTURE_QUERY)
+                      .append('?');
         for (String param : DEPARTURE_QUERY_CONST_PARAMS) {
-            departureQuery.append(param).append('&');
+            departureQuery.append(param)
+                          .append('&');
         }
         DEPARTURE_QUERY_CONST = departureQuery.toString();
     }
@@ -123,27 +130,30 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
 
         // Create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS transport_favorites (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, symbol VARCHAR)");
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT, symbol VARCHAR)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS widgets_transport (" +
-                "id INTEGER PRIMARY KEY, station VARCHAR, station_id VARCHAR, location BOOLEAN, reload BOOLEAN)");
+                   "id INTEGER PRIMARY KEY, station VARCHAR, station_id VARCHAR, location BOOLEAN, reload BOOLEAN)");
 
-        if(TransportManager.widgetDeparturesList == null) {
+        if (TransportManager.widgetDeparturesList == null) {
             TransportManager.widgetDeparturesList = new SparseArray<>();
         }
     }
 
     /**
      * Check if the transport symbol is one of the user's favorites.
+     *
      * @param symbol The transport symbol
      * @return True, if favorite
      */
     public boolean isFavorite(String symbol) {
-        return db.rawQuery("SELECT * FROM transport_favorites WHERE symbol = ?", new String[]{symbol}).getCount() > 0;
+        return db.rawQuery("SELECT * FROM transport_favorites WHERE symbol = ?", new String[]{symbol})
+                 .getCount() > 0;
     }
 
     /**
      * Adds a transport symbol to the list of the user's favorites.
+     *
      * @param symbol The transport symbol
      */
     public void addFavorite(String symbol) {
@@ -152,6 +162,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
 
     /**
      * Delete a user's favorite transport symbol.
+     *
      * @param symbol The transport symbol
      */
     public void deleteFavorite(String symbol) {
@@ -220,9 +231,11 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     public static List<Departure> getDeparturesFromExternal(Context context, String stationID) {
         List<Departure> result = new ArrayList<>();
         try {
-            String language = LANGUAGE + Locale.getDefault().getLanguage();
+            String language = LANGUAGE + Locale.getDefault()
+                                               .getLanguage();
             // ISO-8859-1 is needed for mvv
-            String departureQuery = DEPARTURE_QUERY_STATION + UrlEscapers.urlPathSegmentEscaper().escape(stationID);
+            String departureQuery = DEPARTURE_QUERY_STATION + UrlEscapers.urlPathSegmentEscaper()
+                                                                         .escape(stationID);
 
             String query = DEPARTURE_QUERY_CONST + language + '&' + departureQuery;
             Utils.logv(query);
@@ -234,11 +247,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                 return result;
             }
 
-            if (departures.get().isNull("departureList")) {
+            if (departures.get()
+                          .isNull("departureList")) {
                 return result;
             }
 
-            JSONArray arr = departures.get().getJSONArray("departureList");
+            JSONArray arr = departures.get()
+                                      .getJSONArray("departureList");
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
@@ -248,7 +263,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                         servingLine.getString("name"),
                         servingLine.getString("direction"),
                         // Limit symbol length to 3, longer symbols are pointless
-                        String.format("%3.3s", servingLine.getString("symbol")).trim(),
+                        String.format("%3.3s", servingLine.getString("symbol"))
+                              .trim(),
                         departure.getInt("countdown"),
                         date.getTime()
                 ));
@@ -276,9 +292,11 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     public static Optional<Cursor> getStationsFromExternal(Context context, String prefix) {
         prefix = Utils.escapeUmlauts(prefix);
         try {
-            String language = LANGUAGE + Locale.getDefault().getLanguage();
+            String language = LANGUAGE + Locale.getDefault()
+                                               .getLanguage();
             // ISO-8859-1 is needed for mvv
-            String stationQuery = STATION_SEARCH_QUERY + UrlEscapers.urlPathSegmentEscaper().escape(prefix);
+            String stationQuery = STATION_SEARCH_QUERY + UrlEscapers.urlPathSegmentEscaper()
+                                                                    .escape(prefix);
 
             String query = STATION_SEARCH_CONST + language + '&' + stationQuery;
             Utils.log(query);
@@ -291,7 +309,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             }
 
             List<StationResult> results = new ArrayList<>();
-            JSONObject stopfinder = jsonObj.get().getJSONObject("stopFinder");
+            JSONObject stopfinder = jsonObj.get()
+                                           .getJSONObject("stopFinder");
 
             // Possible values for points: Object, Array or null
             JSONArray pointsArray = stopfinder.optJSONArray(POINTS);
@@ -319,7 +338,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
 
             MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
             for (StationResult result : results) {
-                mc.addRow(new String[]{result.station, result.id});
+                String jsonStationResult = gson.toJson(result, StationResult.class);
+                mc.addRow(new String[]{jsonStationResult, String.valueOf(RecentsManager.STATIONS)});
             }
             return Optional.of((Cursor) mc);
         } catch (JSONException e) {
@@ -329,11 +349,11 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     }
 
     private static void addStationResult(Collection<StationResult> results, JSONObject point) throws JSONException {
-        results.add(new StationResult(
-                point.getString("name"),
-                point.getJSONObject("ref").getString("id"),
-                point.getInt("quality")
-        ));
+        String name = point.getString("name");
+        String id = point.getJSONObject("ref")
+                         .getString("id");
+        int quality = point.getInt("quality");
+        results.add(new StationResult(name, id, quality));
     }
 
     /**

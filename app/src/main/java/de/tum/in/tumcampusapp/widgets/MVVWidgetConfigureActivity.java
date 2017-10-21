@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -16,19 +16,20 @@ import android.widget.Switch;
 import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.MVVStationSuggestionProvider;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
+import de.tum.in.tumcampusapp.models.efa.StationResult;
 import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
 
 public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<Cursor> implements AdapterView.OnItemClickListener {
 
     private int appWidgetId;
     private ListView listViewResults;
-    private SimpleCursorAdapter adapterStations;
+    private ArrayAdapter<StationResult> adapterStations;
     private RecentsManager recentsManager;
 
     private WidgetDepartures widgetDepartures;
@@ -70,13 +71,12 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         // Det all stations from db
         recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
 
-        listViewResults = (ListView) findViewById(R.id.activity_transport_listview_result);
+        listViewResults = findViewById(R.id.activity_transport_listview_result);
         listViewResults.setOnItemClickListener(this);
 
         // Initialize stations adapter
         Cursor stationCursor = recentsManager.getAllFromDb();
-        adapterStations = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
-                stationCursor.getColumnNames(), new int[]{android.R.id.text1}, 0);
+        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportationActivity.getAllStationResults(stationCursor));
 
         if (adapterStations.getCount() == 0) {
             openSearch();
@@ -91,12 +91,12 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      */
     @Override
     public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
-        Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
-        widgetDepartures.setStation(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)));
-        widgetDepartures.setStationId(departureCursor.getString(departureCursor.getColumnIndex(Const.ID_COLUMN)));
+        StationResult stationResult = (StationResult) av.getAdapter()
+                                                        .getItem(position);
+        widgetDepartures.setStation(stationResult.station);
+        widgetDepartures.setStationId(stationResult.id);
         saveAndReturn();
     }
-
 
     /**
      * Shows all recently used stations
@@ -135,6 +135,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      *
      * @param possibleStationCursor Cursor with stations (name, _id)
      */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Override
     protected void onSearchFinished(Optional<Cursor> possibleStationCursor) {
         if (!possibleStationCursor.isPresent()) {
@@ -159,7 +160,9 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
             return;
         }
 
-        adapterStations.changeCursor(stationCursor);
+        adapterStations.clear();
+        adapterStations.addAll(TransportationActivity.getAllStationResults(stationCursor));
+        adapterStations.notifyDataSetChanged();
         listViewResults.setAdapter(adapterStations);
         listViewResults.requestFocus();
     }
@@ -208,7 +211,9 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      */
     private void cancelAndReturn() {
         Intent resultValue = new Intent();
-        if (!widgetDepartures.getStation().isEmpty() && !widgetDepartures.getStationId().isEmpty()) {
+        if (!widgetDepartures.getStation()
+                             .isEmpty() && !widgetDepartures.getStationId()
+                                                            .isEmpty()) {
             saveAndReturn();
         } else {
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

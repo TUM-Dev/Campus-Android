@@ -17,11 +17,8 @@ import com.google.common.base.Optional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -30,10 +27,6 @@ import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
-import de.tum.in.tumcampusapp.trace.Util;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -60,15 +53,15 @@ public class LocationManager extends AbstractManager{
             "L", // Leopoldstraße
             "S" // Geschwister Schollplatz/Adalbertstraße
     };
-    private static final String[] DEFAULT_CAMPUS_STATION = {
-            "Garching-Forschungszentrum",
-            "Garching-Hochbrück",
-            "Weihenstephan",
-            "Theresienstraße",//TODO need to use id instead of name, otherwise it does not work = 1000120
-            "Klinikum Großhadern",
-            "Max-Weber-Platz",
-            "Giselastraße",
-            "Universität"
+    private static final String[] DEFAULT_CAMPUS_STATION = { // TODO: replace Strings with StationResults
+                                                             "Garching-Forschungszentrum",
+                                                             "Garching-Hochbrück",
+                                                             "Weihenstephan",
+                                                             "Theresienstraße",
+                                                             "Klinikum Großhadern",
+                                                             "Max-Weber-Platz",
+                                                             "Giselastraße",
+                                                             "Universität"
     };
 
     private static final String[] DEFAULT_CAMPUS_CAFETERIA = {"422", null, "423", "421", "414", null, "411", null};
@@ -241,7 +234,7 @@ public class LocationManager extends AbstractManager{
      *
      * @return Name of the station or null if the user is not near any campus
      */
-    public String getStation() {
+    public String getStation() { // TODO: return a StationResult
         int campus = getCurrentCampus();
         if (campus == -1) {
             return null;
