@@ -91,6 +91,15 @@
 
                             </LinearLayout>
 
+                            <CheckBox
+                                android:id="@+id/publicSurveyCheckbox"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:checked="false"
+                                android:text="@string/make_public_survey"
+                                android:textStyle="bold" />
+
                             <Button
                                 android:id="@+id/submitSurveyButton"
                                 android:layout_width="wrap_content"
@@ -106,23 +115,37 @@
                         </LinearLayout>
                     </ScrollView>
 
-                    <ScrollView
+                    <LinearLayout
                         android:id="@+id/tabSeeResponses"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        <LinearLayout
-                            android:id="@+id/mainRes"
+                        <Button
+                            android:id="@+id/togglePublicSurveyResultsButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:orientation="vertical">
+                            android:layout_marginTop="10dp"
+                            android:background="@color/color_primary"
+                            android:text="@string/show_public_survey_results"
+                            android:textColor="#FFFFFF" />
 
+                        <ScrollView
+                            android:id="@+id/responses"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
 
-                        </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/mainRes"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:orientation="vertical">
 
+                            </LinearLayout>
 
-                    </ScrollView>
+                        </ScrollView>
+                    </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
         </TabHost>

@@ -35,9 +35,18 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      */
     public SurveyManager(Context context) {
         super(context);
-        db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)"); // for facultyData
-        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)"); // for SurveyCard
-        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
+        db.execSQL("CREATE TABLE IF NOT EXISTS faculties " +
+                "(faculty INTEGER, name VARCHAR)"); // for facultyData
+        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions " +
+                "(question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, " +
+                "answerid INTEGER, answered BOOLEAN, synced BOOLEAN)"); // for SurveyCard
+        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions " +
+                "(question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, " +
+                "end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
+        db.execSQL("CREATE TABLE IF NOT EXISTS publicQuestions " +
+                "(question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, " +
+                "end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on publicQuestions
+
     }
 
     /**
@@ -174,10 +183,21 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param date: is usually today's date
      * @return relevant ownQuestions
      */
-    public Cursor getMyRelevantOwnQuestionsSince(String date) {
+    public Cursor getRelevantOwnQuestionsSince(String date) {
         return db.rawQuery("SELECT * FROM ownQuestions where deleted = 0 AND end >= '" + date + "'", null);
     }
 
+    /**
+     * Collects relevant publicQuestions to be shown in the responses tab in the surveyActivity. A question is relevant when:
+     * 1. Is not deleted
+     * 2. its end date is still in the future
+     *
+     * @param date: is usually today's date
+     * @return relevant publicQuestions
+     */
+    public Cursor getRelevantPublicQuestionsSince(String date) {
+        return db.rawQuery("SELECT * FROM publicQuestions where deleted = 0 AND end >= '" + date + "'", null);
+    }
     /**
      * Handles deleting ownQuestions that are shown in the response tab in SurveyActivity
      *
@@ -241,7 +261,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         try {
             // In case there are answered but not yet synced questions in local db
             while (cursor.moveToNext()) {
-                Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")), cursor.getInt(cursor.getColumnIndex("answerid")));
+                Question answeredQuestion = new Question(
+                        cursor.getString(cursor.getColumnIndex("question")),
+                        cursor.getInt(cursor.getColumnIndex("answerid")));
 
                 // Submit Answer to Serve
                 TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
@@ -361,29 +383,50 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         if (ownQuestions.isEmpty()) {
             return;
         }
-        for (int i = 0; i < ownQuestions.size(); i++) {
-            replaceIntoDbOwnQuestions(ownQuestions.get(i));
+        for (Question q : ownQuestions) {
+            replaceIntoDbQuestions(q, "ownQuestions");
         }
     }
 
     /**
-     * Help function for downLoadOwnQuestions to write questions in db
+     * Downloads publicQuestions from server via TUMCabeClient and
+     * saves them in local db if they don't exist
+     */
+    public void downLoadPublicQuestions() {
+        List<Question> publicQuestions = new ArrayList<>();
+        try {
+            publicQuestions = TUMCabeClient.getInstance(mContext).getPublicQuestions();
+        } catch (IOException e) {
+            Utils.log(e);
+        }
+        if (publicQuestions.isEmpty()) {
+            return;
+        }
+        for (Question q : publicQuestions) {
+            replaceIntoDbQuestions(q, "publicQuestions");
+        }
+    }
+
+    /**
+     * Help function for downLoad<...>Questions to write questions in db
      *
      * @param q
      */
-    void replaceIntoDbOwnQuestions(Question q) {
-        Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()});
+    void replaceIntoDbQuestions(Question q, String dbName) {
+        Cursor c = db.rawQuery(
+                "SELECT question FROM " + dbName + " WHERE question = ?",
+                new String[]{q.getQuestion()});
 
         try {
             db.beginTransaction();
 
 
             if (c.moveToFirst()) {// update non-exsisting question fields in the db (false means don't update 'delete' and 'synced' fields
-                ContentValues cv = setOwnQuestionFields(q, false);
-                db.update("ownQuestions", cv, "question=" + q.getQuestion(), null);
+                ContentValues cv = setQuestionFields(q, false);
+                db.update(dbName, cv, "question=" + q.getQuestion(), null);
             } else { // if question doesn't exist -> insert into DB
-                ContentValues cv = setOwnQuestionFields(q, true);
-                db.insert("ownQuestions", null, cv);
+                ContentValues cv = setQuestionFields(q, true);
+                db.insert(dbName, null, cv);
             }
 
             db.setTransactionSuccessful();
@@ -394,13 +437,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     /**
-     * Help function for replaceIntoDBOwnQuestions
+     * Help function for replaceIntoDBQuestions
      *
      * @param q:               question
      * @param setDeletedSynced a flag whether fields 'deleted' and 'synced' in db should be synced
      * @return Contentvalues that updates all respective fields of the question in db
      */
-    public ContentValues setOwnQuestionFields(Question q, boolean setDeletedSynced) {
+    public ContentValues setQuestionFields(Question q, boolean setDeletedSynced) {
         Question.Answer[] answers = q.getResults();
         ContentValues cv = new ContentValues();
 
