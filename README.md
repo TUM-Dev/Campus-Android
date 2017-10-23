@@ -17,6 +17,8 @@ The TUM Campus App (TCA) is a open source project, mainly developed by volunteer
 Special thanks to everybody that has contributed to this project. If you also want to contribute to the TCA, don't hesitate to ask us about anything, open an issue or just correct our spelling mistakes. We've also collected a bunch of guidelines in the [Wiki](https://github.com/TCA-Team/TumCampusApp/wiki).  
 Just don't forget: Be excellent to each other :heart:
 
+Join us on [WhatsApp](https://chat.whatsapp.com/invite/BPXZYBLyFIN8oHlA2va1fw) for discussions! 
+
 ## Used Permissions:
 + Location services: So we can show you the nearest Cafeteria / MVV departures
 + Access calendar: To sync your lecture calendar with your local calendar
