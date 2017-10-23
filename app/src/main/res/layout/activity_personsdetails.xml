@@ -28,6 +28,7 @@
                 android:layout_width="150dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:contentDescription="@string/tum_logo"
                 android:paddingBottom="10dp"
                 android:scaleType="fitXY"
@@ -39,7 +40,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_light_blue"
                 android:textSize="@dimen/large_text_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:gravity="center_horizontal"/>
 
             <TextView
                 android:id="@+id/tvDetails2"

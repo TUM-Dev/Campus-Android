@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -105,9 +104,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 if (rolePrices.containsKey(typeLong)) {
                     // If price is available
                     View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line, rootView, false);
-                    textview = (TextView) view.findViewById(R.id.line_name);
-                    TextView priceView = (TextView) view.findViewById(R.id.line_price);
-                    final ToggleButton favDish = (ToggleButton) view.findViewById(R.id.favortieDish);
+                    textview = view.findViewById(R.id.line_name);
+                    TextView priceView = view.findViewById(R.id.line_price);
+                    final View favDish = view.findViewById(R.id.favoriteDish);
                     favDish.setTag(menu + "__" + cafeteriaId);
                     /**
                      * saved dish id in the favoriteDishButton tag.
@@ -120,34 +119,30 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
                     Cursor c = cmm.checkIfFavoriteDish(favDish.getTag().toString());
                     if (c.getCount() > 0) {
-                        if (!favDish.isChecked()) {
-                            favDish.setChecked(true);
-                        }
+                        favDish.setSelected(true);
                     } else {
-                        if (favDish.isChecked()) {
-                            favDish.setChecked(false);
-                        }
+                        favDish.setSelected(false);
                     }
 
-                    View.OnClickListener favoriteToggleButtonListener = new View.OnClickListener() {
+                    favDish.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             String id = view.getTag().toString();
                             String[] data = id.split("__");
-                            String dishname = data[0];
+                            String dishName = data[0];
                             int mensaId = Integer.parseInt(data[1]);
 
-                            if (((ToggleButton) view).isChecked()) {
+                            if (!view.isSelected()) {
                                 DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
                                 String currentDate = DateTime.now().toString(formatter);
-                                cmm.insertFavoriteDish(mensaId, dishname, currentDate, favDish.getTag().toString());
+                                cmm.insertFavoriteDish(mensaId, dishName, currentDate, favDish.getTag().toString());
+                                view.setSelected(true);
                             } else {
-                                cmm.deleteFavoriteDish(mensaId, dishname);
+                                cmm.deleteFavoriteDish(mensaId, dishName);
+                                view.setSelected(false);
                             }
                         }
-                    };
-
-                    favDish.setOnClickListener(favoriteToggleButtonListener);
+                    });
 
                 } else {
                     // Without price

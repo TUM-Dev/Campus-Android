@@ -36,4 +36,7 @@
     <color name="chat_outgoing">#D1EAFF</color>
 
     <color name="launcher_background">#0064BB</color>
+
+    <color name="star_selected">#ffd600</color>
+    <color name="star_unselected">@color/text_light_gray</color>
 </resources>

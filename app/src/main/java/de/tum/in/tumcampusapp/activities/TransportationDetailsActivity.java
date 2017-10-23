@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -17,6 +19,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
 import de.tum.in.tumcampusapp.models.efa.Departure;
+import de.tum.in.tumcampusapp.models.efa.StationResult;
 
 /**
  * Activity to show transport departures for a specified station
@@ -30,6 +33,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     private LinearLayout mViewResults;
     private RecentsManager recentsManager;
     private TransportManager transportManager;
+    private Gson gson;
 
     public TransportationDetailsActivity() {
         super(R.layout.activity_transportation_detail);
@@ -42,7 +46,8 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         // get all stations from db
         recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
         transportManager = new TransportManager(this);
-        mViewResults = (LinearLayout) this.findViewById(R.id.activity_transport_result);
+        gson = new Gson();
+        mViewResults = this.findViewById(R.id.activity_transport_result);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -84,9 +89,12 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     @Override
     protected List<Departure> onLoadInBackground(String... arg) {
         final String location = arg[0];
+        final String locationID = arg[1];
+        final StationResult stationResult = new StationResult(location, locationID, Integer.MAX_VALUE); // Quality is always 100% hit
+        final String jsonStationResult = gson.toJson(stationResult);
 
         // save clicked station into db
-        recentsManager.replaceIntoDb(location);
+        recentsManager.replaceIntoDb(jsonStationResult);
 
         // Check for internet connectivity
         if (!NetUtils.isConnected(this)) {
@@ -95,7 +103,6 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
 
         // get departures from website
-        final String locationID = arg[1];
         List<Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, locationID);
         if (departureCursor.isEmpty()) {
             showError(R.string.no_departures_found);
