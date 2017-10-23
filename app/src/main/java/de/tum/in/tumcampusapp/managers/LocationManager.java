@@ -17,29 +17,23 @@ import com.google.common.base.Optional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.models.efa.StationResult;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
-import de.tum.in.tumcampusapp.trace.Util;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
  * the users current location, campus, next public transfer station and best cafeteria
  */
-public class LocationManager extends AbstractManager{
+public class LocationManager extends AbstractManager {
     private static final double[][] CAMPUS_LOCATIONS = {
             {48.2648424, 11.6709511}, // Garching Forschungszentrum
             {48.249432, 11.633905}, // Garching Hochbrück
@@ -60,15 +54,14 @@ public class LocationManager extends AbstractManager{
             "L", // Leopoldstraße
             "S" // Geschwister Schollplatz/Adalbertstraße
     };
-    private static final String[] DEFAULT_CAMPUS_STATION = {
-            "Garching-Forschungszentrum",
-            "Garching-Hochbrück",
-            "Weihenstephan",
-            "Theresienstraße",//TODO need to use id instead of name, otherwise it does not work = 1000120
-            "Klinikum Großhadern",
-            "Max-Weber-Platz",
-            "Giselastraße",
-            "Universität"
+    private static final StationResult[] DEFAULT_CAMPUS_STATION = {new StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE),
+                                                                   new StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE),
+                                                                   new StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE),
+                                                                   new StationResult("Theresienstraße", "1000120", Integer.MAX_VALUE),
+                                                                   new StationResult("Klinikum Großhadern", "1001540", Integer.MAX_VALUE),
+                                                                   new StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE),
+                                                                   new StationResult("Giselastraße", "1000080", Integer.MAX_VALUE),
+                                                                   new StationResult("Universität", "1000070", Integer.MAX_VALUE)
     };
 
     private static final String[] DEFAULT_CAMPUS_CAFETERIA = {"422", null, "423", "421", "414", null, "411", null};
@@ -85,7 +78,7 @@ public class LocationManager extends AbstractManager{
      *
      * @return Returns the more or less current position or null on failure
      */
-    Location getCurrentLocation() {
+    private Location getCurrentLocation() {
         if (servicesConnected()) {
             Location loc = getLastLocation();
             if (loc != null) {
@@ -113,7 +106,7 @@ public class LocationManager extends AbstractManager{
      *
      * @return Campus id
      */
-    int getCurrentCampus() {
+    private int getCurrentCampus() {
         Location loc = getCurrentLocation();
         if (loc == null) {
             return -1;
@@ -169,7 +162,7 @@ public class LocationManager extends AbstractManager{
         if (cur.moveToFirst()) {
             do {
                 Cafeteria cafe = new Cafeteria(cur.getInt(0), cur.getString(1),
-                        cur.getString(2), cur.getDouble(3), cur.getDouble(4));
+                                               cur.getString(2), cur.getDouble(3), cur.getDouble(4));
                 Location.distanceBetween(cur.getDouble(3), cur.getDouble(4), lat, lng, results);
                 cafe.distance = results[0];
                 list.add(cafe);
@@ -201,10 +194,10 @@ public class LocationManager extends AbstractManager{
      *
      * @return The last location
      */
-    Location getLastLocation() {
+    private Location getLastLocation() {
         //Check Location permission for Android 6.0
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
 
@@ -227,7 +220,7 @@ public class LocationManager extends AbstractManager{
                     bestAccuracy = accuracy;
                     bestTime = time;
                 } else if (time < minTime &&
-                        bestAccuracy == Float.MAX_VALUE && time > bestTime) {
+                           bestAccuracy == Float.MAX_VALUE && time > bestTime) {
                     bestResult = location;
                     bestTime = time;
                 }
@@ -241,14 +234,14 @@ public class LocationManager extends AbstractManager{
      *
      * @return Name of the station or null if the user is not near any campus
      */
-    public String getStation() {
+    public String getStation() { // TODO: return a StationResult, so we can query the MVV for IDs instead of station names
         int campus = getCurrentCampus();
         if (campus == -1) {
             return null;
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final String defaultVal = DEFAULT_CAMPUS_STATION[campus];
+        final String defaultVal = DEFAULT_CAMPUS_STATION[campus].station;
         return prefs.getString("card_stations_default_" + CAMPUS_SHORT[campus], defaultVal);
     }
 
@@ -256,7 +249,8 @@ public class LocationManager extends AbstractManager{
      * Checks that Google Play services are available
      */
     private boolean servicesConnected() {
-        int resultCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext);
+        int resultCode = GoogleApiAvailability.getInstance()
+                                              .isGooglePlayServicesAvailable(mContext);
         if (ConnectionResult.SUCCESS == resultCode) {
             return true;
         } else {
@@ -269,7 +263,7 @@ public class LocationManager extends AbstractManager{
      * Gets the campus you are currently on or if you are at home or wherever
      * query for your next lecture and find out at which campus it takes place
      */
-    int getCurrentOrNextCampus() {
+    private int getCurrentOrNextCampus() {
         int campus = getCurrentCampus();
         if (campus != -1) {
             return campus;
@@ -302,7 +296,7 @@ public class LocationManager extends AbstractManager{
     /**
      * Queries your calender and gets the campus at which your next lecture takes place
      */
-    int getNextCampus() {
+    private int getNextCampus() {
         return getCampusFromLocation(getNextLocation());
     }
 
@@ -352,13 +346,12 @@ public class LocationManager extends AbstractManager{
         return new Geo(d17, d18);
     }
 
-    public static Optional<Geo> convertRoomFinderCoordinateToGeo(RoomFinderCoordinate roomFinderCoordinate){
+    public static Optional<Geo> convertRoomFinderCoordinateToGeo(RoomFinderCoordinate roomFinderCoordinate) {
         Geo result;
         try {
-            Optional<RoomFinderCoordinate> coordinate = Optional.of(roomFinderCoordinate);
-            double zone = Double.parseDouble(coordinate.get().getUtm_zone());
-            double easting = Double.parseDouble(coordinate.get().getUtm_easting());
-            double northing = Double.parseDouble(coordinate.get().getUtm_northing());
+            double zone = Double.parseDouble(roomFinderCoordinate.getUtm_zone());
+            double easting = Double.parseDouble(roomFinderCoordinate.getUtm_easting());
+            double northing = Double.parseDouble(roomFinderCoordinate.getUtm_northing());
             result = convertUTMtoLL(northing, easting, zone);
 
             return Optional.of(result);
@@ -371,12 +364,14 @@ public class LocationManager extends AbstractManager{
 
     /**
      * Get the geo information for a room
+     *
      * @param archId arch_id of the room
      * @return Location or null on failure
      */
-    public Optional<Geo> fetchRoomGeo(String archId){
+    private Optional<Geo> fetchRoomGeo(String archId) {
         try {
-            RoomFinderCoordinate coordinate = TUMCabeClient.getInstance(mContext).fetchCoordinates(archId);
+            RoomFinderCoordinate coordinate = TUMCabeClient.getInstance(mContext)
+                                                           .fetchCoordinates(archId);
             return convertRoomFinderCoordinateToGeo(coordinate);
         } catch (IOException e) {
             Utils.log(e);
@@ -392,17 +387,22 @@ public class LocationManager extends AbstractManager{
      * @param roomTitle Room title
      * @return Location or null on failure
      */
-    public Optional<Geo> roomLocationStringToGeo(String roomTitle) {
+    Optional<Geo> roomLocationStringToGeo(String roomTitle) {
         String loc = roomTitle;
         if (loc.contains("(")) {
-            loc = loc.substring(0, loc.indexOf('(')).trim();
+            loc = loc.substring(0, loc.indexOf('('))
+                     .trim();
         }
 
         try {
-            Optional<List<RoomFinderRoom>> rooms = Optional.of(TUMCabeClient.getInstance(mContext).fetchRooms(loc));
+            Optional<List<RoomFinderRoom>> rooms = Optional.of(TUMCabeClient.getInstance(mContext)
+                                                                            .fetchRooms(loc));
 
-            if(rooms.isPresent() && !rooms.get().isEmpty()){
-                String room = rooms.get().get(0).getArch_id();
+            if (rooms.isPresent() && !rooms.get()
+                                           .isEmpty()) {
+                String room = rooms.get()
+                                   .get(0)
+                                   .getArch_id();
                 return fetchRoomGeo(room);
             }
 
@@ -413,13 +413,13 @@ public class LocationManager extends AbstractManager{
         return Optional.absent();
     }
 
-    private final void createBuildingsToGpsTable(){
+    private void createBuildingsToGpsTable() {
         db.execSQL("CREATE TABLE IF NOT EXISTS buildings2gps ("
-                + "id VARCHAR PRIMARY KEY, latitude VARCHAR, longitude VARCHAR)");
+                   + "id VARCHAR PRIMARY KEY, latitude VARCHAR, longitude VARCHAR)");
     }
 
-    private void insertInBuildingsToGps(BuildingsToGps map){
-        String[] params = new String[]{
+    private void insertInBuildingsToGps(BuildingsToGps map) {
+        String[] params = {
                 map.getId(),
                 map.getLatitude(),
                 map.getLongitude()
@@ -430,14 +430,15 @@ public class LocationManager extends AbstractManager{
     /**
      * This method tries to get the list of BuildingsToGps by querying database or requesting the server.
      * If both two ways fail, it returns Optional.absent().
+     *
      * @return The list of BuildingsToGps
      */
     private List<BuildingsToGps> getOrFetchBuildingsToGps() {
         Cursor cursor = db.rawQuery("SELECT * FROM buildings2gps", null);
         List<BuildingsToGps> result = new ArrayList<>();
 
-        while (cursor.moveToNext()){
-            if(cursor.isAfterLast()){
+        while (cursor.moveToNext()) {
+            if (cursor.isAfterLast()) {
                 continue;
             }
 
@@ -455,8 +456,9 @@ public class LocationManager extends AbstractManager{
             // we have to fetch buildings to gps mapping first.
 
             try {
-                result = TUMCabeClient.getInstance(mContext).getBuilding2Gps();
-                if(result == null){
+                result = TUMCabeClient.getInstance(mContext)
+                                      .getBuilding2Gps();
+                if (result == null) {
                     return new ArrayList<>();
                 }
 
@@ -476,25 +478,26 @@ public class LocationManager extends AbstractManager{
     /**
      * Get Building ID accroding to the current location
      * Do not call on UI thread.
+     *
      * @return the id of current building
      */
-    public Optional<String> getBuildingIDFromCurrentLocation(){
+    public Optional<String> getBuildingIDFromCurrentLocation() {
         return getBuildingIDFromLocation(getCurrentLocation());
     }
 
     /**
      * Get Building ID accroding to the given location.
      * Do not call on UI thread.
+     *
      * @param location the give location
      * @return the id of current building
      */
     private Optional<String> getBuildingIDFromLocation(Location location) {
         List<BuildingsToGps> buildingsToGpsList = getOrFetchBuildingsToGps();
 
-        if (buildingsToGpsList.isEmpty()){
+        if (buildingsToGpsList.isEmpty()) {
             return Optional.absent();
         }
-
 
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
