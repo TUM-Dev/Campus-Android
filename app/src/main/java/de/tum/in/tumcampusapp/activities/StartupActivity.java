@@ -55,7 +55,7 @@ public class StartupActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 0;
     private static final String[] PERMISSIONS_LOCATION = {ACCESS_COARSE_LOCATION,
-            ACCESS_FINE_LOCATION};
+                                                          ACCESS_FINE_LOCATION};
     final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     /**
      * Broadcast receiver gets notified if {@link de.tum.in.tumcampusapp.services.BackgroundService}
@@ -126,7 +126,8 @@ public class StartupActivity extends AppCompatActivity {
 
         // Register receiver for background service
         IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+        LocalBroadcastManager.getInstance(this)
+                             .registerReceiver(receiver, filter);
 
         // Start background service and ensure cards are set
         Intent i = new Intent(this, StartSyncReceiver.class);
@@ -152,7 +153,8 @@ public class StartupActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this)
+                             .unregisterReceiver(receiver);
     }
 
     /**
@@ -169,11 +171,10 @@ public class StartupActivity extends AppCompatActivity {
             }
             startApp();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_COARSE_LOCATION) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
+                   ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
             // For example, if the request has been denied previously.
-
 
             // Display an AlertDialog with an explanation and a button to trigger the request.
             runOnUiThread(() -> new AlertDialog.Builder(StartupActivity.this).setMessage(getString(R.string.permission_location_explanation))
@@ -277,7 +278,8 @@ public class StartupActivity extends AppCompatActivity {
         AbstractManager.resetDb(this);
 
         // delete tumcampus directory
-        File f = new File(Environment.getExternalStorageDirectory().getPath() + "/tumcampus");
+        File f = new File(Environment.getExternalStorageDirectory()
+                                     .getPath() + "/tumcampus");
         FileUtils.deleteRecursive(f);
 
         // Load all on start

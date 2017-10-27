@@ -14,17 +14,17 @@ import java.util.List;
 @Root(name = "telefon_nebenstellen")
 public class TelSubstationList implements Serializable {
 
-	private static final long serialVersionUID = -3790189526859194869L;
+    private static final long serialVersionUID = -3790189526859194869L;
 
-	@ElementList(inline = true, required = false)
-	private List<TelSubstation> substations;
+    @ElementList(inline = true, required = false)
+    private List<TelSubstation> substations;
 
-	public List<TelSubstation> getSubstations() {
-		return substations;
-	}
+    public List<TelSubstation> getSubstations() {
+        return substations;
+    }
 
-	public void setSubstations(List<TelSubstation> substations) {
-		this.substations = substations;
-	}
+    public void setSubstations(List<TelSubstation> substations) {
+        this.substations = substations;
+    }
 
 }

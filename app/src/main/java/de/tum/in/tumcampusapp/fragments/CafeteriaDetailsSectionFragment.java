@@ -55,7 +55,8 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         // initialize a few often used things
         final Context context = rootView.getContext();
         final Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
-        final int padding = (int) context.getResources().getDimension(R.dimen.card_text_padding);
+        final int padding = (int) context.getResources()
+                                         .getDimension(R.dimen.card_text_padding);
         List<View> addedViews = new ArrayList<>(32);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
@@ -245,7 +246,8 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      */
     private static String prepare(String menu) {
         final String tmp = splitAnnotations(menu);
-        return NUMERICAL_ANNOTATIONS_PATTERN.matcher(tmp).replaceAll("");
+        return NUMERICAL_ANNOTATIONS_PATTERN.matcher(tmp)
+                                            .replaceAll("");
     }
 
     @NonNull
@@ -254,7 +256,8 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         String tmp = menu;
         do {
             len = tmp.length();
-            tmp = SPLIT_ANNOTATIONS_PATTERN.matcher(tmp).replaceFirst("($1)(");
+            tmp = SPLIT_ANNOTATIONS_PATTERN.matcher(tmp)
+                                           .replaceFirst("($1)(");
         } while (tmp.length() > len);
         return tmp;
     }

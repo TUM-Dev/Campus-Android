@@ -9,7 +9,6 @@ import android.widget.Spinner;
 import com.google.common.base.Optional;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -21,19 +20,19 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackground<Void, Optional<List<RoomFinderRoom>>>
-        implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener{
+        implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     private int selectedFacilityPage = -1;
-    private RoomFinderListAdapter adapter;
     private StickyListHeadersListView stickyList;
     private List<RoomFinderRoom> facilities;
 
     private RecentsManager recentsManager;
     private LocationManager locationManager;
 
-    public BarrierFreeFacilitiesActivity(){
+    public BarrierFreeFacilitiesActivity() {
         super(R.layout.activity_barrier_free_facilities);
     }
 
@@ -61,7 +60,7 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
     @Override
     protected Optional<List<RoomFinderRoom>> onLoadInBackground(Void... arg) {
         showLoadingStart();
-        List<RoomFinderRoom> result = new ArrayList<>();
+        List<RoomFinderRoom> result;
         TUMCabeClient cabeClient = TUMCabeClient.getInstance(this);
 
         try {
@@ -69,7 +68,7 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
                 case 0:
                     // Nearby staff - need to fetch building id first
                     Optional<String> buildingId = locationManager.getBuildingIDFromCurrentLocation();
-                    if(buildingId.isPresent()){
+                    if (buildingId.isPresent()) {
                         result = cabeClient.getListOfNearbyFacilities(buildingId.get());
                     } else {
                         return Optional.absent();
@@ -91,7 +90,7 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
             return Optional.absent();
         }
 
-        if(result == null){
+        if (result == null) {
             return Optional.absent();
         }
 
@@ -111,7 +110,7 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
         }
 
         facilities = result.get();
-        adapter = new RoomFinderListAdapter(this, facilities);
+        StickyListHeadersAdapter adapter = new RoomFinderListAdapter(this, facilities);
         stickyList.setAdapter(adapter);
         stickyList.setOnItemClickListener(this);
     }

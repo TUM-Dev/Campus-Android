@@ -24,7 +24,8 @@ public class Support extends Card {
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_support, parent, false);
+        final View view = LayoutInflater.from(parent.getContext())
+                                        .inflate(R.layout.card_support, parent, false);
         //Add links to imageviews
         view.findViewById(R.id.facebook)
             .setOnClickListener(v -> {
@@ -33,7 +34,7 @@ public class Support extends Card {
                                                     .getString(R.string.facebook_link)));
                 view.getContext()
                     .startActivity(browserIntent);
-        });
+            });
         view.findViewById(R.id.github)
             .setOnClickListener(v -> {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW);
@@ -41,7 +42,7 @@ public class Support extends Card {
                                                     .getString(R.string.github_link)));
                 view.getContext()
                     .startActivity(browserIntent);
-        });
+            });
         return new Card.CardViewHolder(view);
     }
 

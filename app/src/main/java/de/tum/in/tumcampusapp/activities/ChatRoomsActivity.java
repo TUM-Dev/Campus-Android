@@ -56,7 +56,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     private ChatRoomListAdapter adapter;
     private boolean firstLoad = true;
 
-
     public ChatRoomsActivity() {
         super(R.layout.activity_chat_rooms);
     }
@@ -96,8 +95,10 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             }
         });
 
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.joined));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.not_joined));
+        tabLayout.addTab(tabLayout.newTab()
+                                  .setText(R.string.joined));
+        tabLayout.addTab(tabLayout.newTab()
+                                  .setText(R.string.not_joined));
     }
 
     @Override
@@ -166,7 +167,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                     String randId = Integer.toHexString((int) (Math.random() * 4096));
                     createOrJoinChatRoom(randId + ':' + value);
                 })
-                .setNegativeButton(android.R.string.cancel, null).show();
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     /**
@@ -183,38 +185,39 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         currentChatRoom = new ChatRoom(name);
 
         try {
-            TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
-                @Override
-                public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
-                    if (!response.isSuccessful()) {
-                        Utils.logv("Error creating&joining chat room: " + response.message());
-                        return;
-                    }
+            TUMCabeClient.getInstance(this)
+                         .createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
+                             @Override
+                             public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
+                                 if (!response.isSuccessful()) {
+                                     Utils.logv("Error creating&joining chat room: " + response.message());
+                                     return;
+                                 }
 
-                    // The POST request is successful: go to room. API should have auto joined it
-                    Utils.logv("Success creating&joining chat room: " + response.body());
-                    currentChatRoom = response.body();
+                                 // The POST request is successful: go to room. API should have auto joined it
+                                 Utils.logv("Success creating&joining chat room: " + response.body());
+                                 currentChatRoom = response.body();
 
-                    manager.join(currentChatRoom);
+                                 manager.join(currentChatRoom);
 
-                    // When we show joined chat rooms open chat room directly
-                    if (mCurrentMode == 1) {
-                        moveToChatActivity();
-                    } else { //Otherwise show a nice information, that we added the room
-                        final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
-                        runOnUiThread(() -> {
-                            adapter.changeCursor(newCursor);
-                            Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
-                        });
-                    }
-                }
+                                 // When we show joined chat rooms open chat room directly
+                                 if (mCurrentMode == 1) {
+                                     moveToChatActivity();
+                                 } else { //Otherwise show a nice information, that we added the room
+                                     final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
+                                     runOnUiThread(() -> {
+                                         adapter.changeCursor(newCursor);
+                                         Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
+                                     });
+                                 }
+                             }
 
-                @Override
-                public void onFailure(Call<ChatRoom> call, Throwable t) {
-                    Utils.log(t, "Failure creating/joining chat room - trying to GET it from the server");
-                    Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
-                }
-            });
+                             @Override
+                             public void onFailure(Call<ChatRoom> call, Throwable t) {
+                                 Utils.log(t, "Failure creating/joining chat room - trying to GET it from the server");
+                                 Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
+                             }
+                         });
         } catch (NoPrivateKey noPrivateKey) {
             this.finish();
         }
@@ -225,7 +228,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         if (!firstLoad) {
             Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
             if (lecturesList.isPresent()) {
-                List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
+                List<LecturesSearchRow> lectures = lecturesList.get()
+                                                               .getLehrveranstaltungen();
                 manager.replaceInto(lectures);
             }
         }
@@ -235,7 +239,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         // Try to restore joined chat rooms from server
         if (!firstLoad && currentChatMember != null) {
             try {
-                List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(this, currentChatMember));
+                List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
+                                                    .getMemberRooms(currentChatMember.getId(), new ChatVerification(this, currentChatMember));
                 manager.replaceIntoRooms(rooms);
             } catch (NoPrivateKey e) {
                 this.finish();

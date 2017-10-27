@@ -58,7 +58,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
-            Manifest.permission.WRITE_CALENDAR};
+                                                          Manifest.permission.WRITE_CALENDAR};
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
     private CalendarManager calendarManager;
 
@@ -86,7 +86,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(this);
         mWeekView.setOnEventClickListener(this);
-
 
         // Get time to show e.g. a lectures starting time or 0 for now
         Intent i = getIntent();
@@ -249,8 +248,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 if (!CalendarActivity.this.isFinishing()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
                     builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
-                            .setPositiveButton(CalendarActivity.this.getString(R.string.yes), CalendarActivity.this)
-                            .setNegativeButton(CalendarActivity.this.getString(R.string.no), CalendarActivity.this).show();
+                           .setPositiveButton(CalendarActivity.this.getString(R.string.yes), CalendarActivity.this)
+                           .setNegativeButton(CalendarActivity.this.getString(R.string.no), CalendarActivity.this)
+                           .show();
                     showLoadingEnded();
                 }
             }
@@ -271,14 +271,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      */
     private boolean isPermissionGranted(int id) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
             // For example, if the request has been denied previously.
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CALENDAR) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
+                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
 
                 // Display an AlertDialog with an explanation and a button to trigger the request.
                 new AlertDialog.Builder(this)
@@ -349,8 +349,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                        Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
                    } else {
                        Utils.showToast(CalendarActivity.this, R.string.calendar_not_existing_toast);
-            }
-        }).setNegativeButton(getString(R.string.no), null).show();
+                   }
+               })
+               .setNegativeButton(getString(R.string.no), null)
+               .show();
     }
 
     @Override
@@ -397,7 +399,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat(weekDayFormat, Locale.getDefault());
                 String weekday = weekdayNameFormat.format(date.getTime());
                 String dateString = DateUtils.formatDateTime(getApplicationContext(),
-                        date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
+                                                             date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
 
                 return weekday.toUpperCase(Locale.getDefault()) + ' ' + dateString;
             }

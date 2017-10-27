@@ -83,7 +83,8 @@ public class CardsWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        if (intent.getAction().equals(BROADCAST_NAME)) {
+        if (intent.getAction()
+                  .equals(BROADCAST_NAME)) {
             String targetIntent = intent.getStringExtra(TARGET_INTENT);
             if (targetIntent != null) {
                 try {

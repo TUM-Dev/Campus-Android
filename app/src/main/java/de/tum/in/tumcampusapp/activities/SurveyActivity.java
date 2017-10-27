@@ -106,7 +106,8 @@ public class SurveyActivity extends ProgressActivity {
                 int tag = (int) v.getTag();
                 surveyManager.deleteMyOwnQuestion(tag);
                 zoomOutanimation(v); // provides a smoth delete animation of the question
-                Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG)
+                        .show();
             } else {
                 restartActivity();
             }
@@ -289,7 +290,9 @@ public class SurveyActivity extends ProgressActivity {
         ScaleAnimation zoomOut = new ScaleAnimation(1f, 0f, 1, 0f, Animation.RELATIVE_TO_SELF, (float) 0.5, Animation.RELATIVE_TO_SELF, (float) 0.5);
         zoomOut.setDuration(500);
         zoomOut.setFillAfter(true);
-        final ViewGroup parentView = (ViewGroup) v.getParent().getParent().getParent();
+        final ViewGroup parentView = (ViewGroup) v.getParent()
+                                                  .getParent()
+                                                  .getParent();
         parentView.startAnimation(zoomOut);
         //Zooming out upon deleting question.
         zoomOut.setAnimationListener(new Animation.AnimationListener() {
@@ -309,7 +312,6 @@ public class SurveyActivity extends ProgressActivity {
             }
         });
     }
-
 
     /**
      * For restarting SurveyAcitivity. Used upon reconnecting to internet after no connection, or when submitting question(s)
@@ -484,18 +486,22 @@ public class SurveyActivity extends ProgressActivity {
         boolean done = true;
         for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) { // Iterates on each questionEditText
             EditText v = questionsLayout.findViewWithTag("question" + (i + 1));
-            if (v.getText().toString().isEmpty()) { // plausibility check failed
+            if (v.getText()
+                 .toString()
+                 .isEmpty()) { // plausibility check failed
                 done = false;
                 questions.clear();
                 break;
             } else { // textfield is not empty, add to questions
-                questions.add(v.getText().toString());
+                questions.add(v.getText()
+                               .toString());
             }
         }
         if (done) { // if plausibility passed, then save selected faculties as they will be needed upon submitting question
             return questions;
         } else { // else notify the user with a snackbar to complete the question form
-            Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.complete_question_form), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.complete_question_form), Snackbar.LENGTH_LONG)
+                    .show();
             return questions;
         }
     }
@@ -561,7 +567,6 @@ public class SurveyActivity extends ProgressActivity {
             }
         });
     }
-
 
     /**
      * check if user is allowed to submit survey depending on the last survey date and number of question he submitted in the last week
@@ -630,7 +635,6 @@ public class SurveyActivity extends ProgressActivity {
         });
     }
 
-
     /**
      * Help function for get Date before 1 week to check if user allowed to submit survey
      *
@@ -662,7 +666,8 @@ public class SurveyActivity extends ProgressActivity {
 
         for (int i = 0; i < dates.size(); i++) {
             for (int z = 0; z < nextPossibleDate.length(); z++) {
-                if (dates.get(i).charAt(z) < nextPossibleDate.charAt(z)) {
+                if (dates.get(i)
+                         .charAt(z) < nextPossibleDate.charAt(z)) {
                     nextPossibleDate = dates.get(i);
                 }
             }

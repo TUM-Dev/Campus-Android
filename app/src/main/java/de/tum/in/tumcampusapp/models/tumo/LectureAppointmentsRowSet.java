@@ -15,15 +15,14 @@ import java.util.List;
 @Root(name = "rowset")
 public class LectureAppointmentsRowSet {
 
-	@ElementList(inline = true, required = false)
-	private List<LectureAppointmentsRow> lehrveranstaltungenTermine;
+    @ElementList(inline = true, required = false)
+    private List<LectureAppointmentsRow> lehrveranstaltungenTermine;
 
-	public List<LectureAppointmentsRow> getLehrveranstaltungenTermine() {
-		return lehrveranstaltungenTermine;
-	}
+    public List<LectureAppointmentsRow> getLehrveranstaltungenTermine() {
+        return lehrveranstaltungenTermine;
+    }
 
-	public void setLehrveranstaltungenTermine(
-			List<LectureAppointmentsRow> lehrveranstaltungenTermine) {
-		this.lehrveranstaltungenTermine = lehrveranstaltungenTermine;
-	}
+    public void setLehrveranstaltungenTermine(List<LectureAppointmentsRow> lehrveranstaltungenTermine) {
+        this.lehrveranstaltungenTermine = lehrveranstaltungenTermine;
+    }
 }

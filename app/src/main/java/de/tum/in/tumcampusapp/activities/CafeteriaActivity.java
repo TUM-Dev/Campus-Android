@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -47,8 +48,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         super.onCreate(savedInstanceState);
         // Get id from intent if specified
         final Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.CAFETERIA_ID)) {
-            mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
+        if (intent != null && intent.getExtras() != null && intent.getExtras()
+                                                                  .containsKey(Const.CAFETERIA_ID)) {
+            mCafeteriaId = intent.getExtras()
+                                 .getInt(Const.CAFETERIA_ID);
         }
 
         mViewPager = findViewById(R.id.pager);
@@ -73,17 +76,18 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         if (item.getItemId() == R.id.action_ingredients) {
             // Build a alert dialog containing the mapping of ingredients to the numbers
             new AlertDialog.Builder(this).setTitle(R.string.action_ingredients)
-                    .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
-                    .setPositiveButton(android.R.string.ok, null).create().show();
+                                         .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
+                                         .setPositiveButton(android.R.string.ok, null)
+                                         .create()
+                                         .show();
             return true;
         }
-        if (item.getItemId() == R.id.action_settings){
+        if (item.getItemId() == R.id.action_settings) {
             startActivity(new Intent(this, CafeteriaNotificationSettingsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     /**
      * Setup action bar navigation (to switch between cafeterias)
@@ -116,7 +120,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         }
 
         // Adapter for drop-down navigation
-        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
+        SpinnerAdapter adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
             @Override
@@ -158,10 +162,12 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         Intent intent = getIntent();
         //check if Activity triggered from favoriteDish Notification
-        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.MENSA_FOR_FAVORITEDISH)) {
+        if (intent != null && intent.getExtras() != null && intent.getExtras()
+                                                                  .containsKey(Const.MENSA_FOR_FAVORITEDISH)) {
             for (int i = 0; i < parent.getCount(); i++) {
                 //get mensaId from extra to redirct the user to it.
-                if (intent.getExtras().getInt(Const.MENSA_FOR_FAVORITEDISH) == mCafeterias.get(i).id) {
+                if (intent.getExtras()
+                          .getInt(Const.MENSA_FOR_FAVORITEDISH) == mCafeterias.get(i).id) {
                     mCafeteriaId = mCafeterias.get(i).id;
                     parent.setSelection(i);
                     intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH);
@@ -171,7 +177,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         } else {
             mCafeteriaId = mCafeterias.get(pos).id;
         }
-
 
         CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter
                 = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());

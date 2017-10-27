@@ -68,7 +68,8 @@ public final class ExceptionHandler {
         Log.i(G.TAG, "Registering default exceptions handler");
 
         // Files dir for storing the stack traces
-        G.filesPath = context.getFilesDir().getAbsolutePath();
+        G.filesPath = context.getFilesDir()
+                             .getAbsolutePath();
 
         // Device model
         G.phoneModel = Build.MODEL;
@@ -276,7 +277,6 @@ public final class ExceptionHandler {
             return;
         }
 
-
         //If nothing passed we have nothing to submit
         if (list == null) {
             return;
@@ -284,7 +284,6 @@ public final class ExceptionHandler {
 
         //Otherwise do some hard work and submit all of them after eachother
         try {
-
 
             for (int i = 0; i < list.size(); i++) {
                 String stacktrace = list.get(i)[0];

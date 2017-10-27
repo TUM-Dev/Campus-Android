@@ -100,7 +100,6 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         startActivity(intent);
     }
 
-
     @Override
     protected ChatMember onLoadInBackground(Void... arg) {
         if (!NetUtils.isConnected(this)) {
@@ -112,7 +111,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         ChatMember currentChatMember = new ChatMember(Utils.getSetting(this, Const.LRZ_ID, ""));
         currentChatMember.setDisplayName(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, ""));
 
-        if (currentChatMember.getLrzId().equals("")) {
+        if (currentChatMember.getLrzId()
+                             .equals("")) {
             return currentChatMember;
         }
 
@@ -120,7 +120,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         ChatMember member;
         try {
             // After the user has entered their display name, send a request to the server to create the new member
-            member = TUMCabeClient.getInstance(this).createMember(currentChatMember);
+            member = TUMCabeClient.getInstance(this)
+                                  .createMember(currentChatMember);
         } catch (IOException e) {
             Utils.log(e);
             Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
@@ -142,7 +143,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Try to restore already joined chat rooms from server
         try {
-            List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(this, member));
+            List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
+                                                .getMemberRooms(member.getId(), new ChatVerification(this, member));
             new ChatRoomManager(this).replaceIntoRooms(rooms);
 
             //Store that this key was activated
@@ -170,7 +172,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         editor.putBoolean(Const.BUG_REPORTS, bugReport.isChecked());
         editor.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, true);
 
-        if (!member.getLrzId().equals("")) {
+        if (!member.getLrzId()
+                   .equals("")) {
             Utils.setSetting(this, Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
             Utils.setSetting(this, Const.AUTO_JOIN_NEW_ROOMS, groupChatMode.isChecked());
             Utils.setSetting(this, Const.CHAT_MEMBER, member);

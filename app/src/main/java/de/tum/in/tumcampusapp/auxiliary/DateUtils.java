@@ -19,7 +19,6 @@ public final class DateUtils {
     private static final String FORMAT_SQL = "yyyy-MM-dd HH:mm:ss"; // 2014-06-30 16:31:57
     private static final String FORMAT_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57.878Z
 
-
     /*
      * Format an upcoming string nicely by being more precise as time comes closer
      */
@@ -29,7 +28,8 @@ public final class DateUtils {
         }
 
         long timeInMillis = time.getTime();
-        long now = Calendar.getInstance().getTimeInMillis();
+        long now = Calendar.getInstance()
+                           .getTimeInMillis();
 
         //Catch future dates: current clock might be running behind
         if (timeInMillis < now || timeInMillis <= 0) {
@@ -44,7 +44,8 @@ public final class DateUtils {
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
             return context.getString(R.string.AT) + ' ' + formatter.format(time);
         } else {
-            return android.text.format.DateUtils.getRelativeTimeSpanString(timeInMillis, now, android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE).toString();
+            return android.text.format.DateUtils.getRelativeTimeSpanString(timeInMillis, now, android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE)
+                                                .toString();
         }
     }
 
@@ -60,7 +61,8 @@ public final class DateUtils {
             return "";
         }
 
-        return android.text.format.DateUtils.getRelativeDateTimeString(context, date.getTime(), MINUTE_MILLIS, DAY_MILLIS * 2L, 0).toString();
+        return android.text.format.DateUtils.getRelativeDateTimeString(context, date.getTime(), MINUTE_MILLIS, DAY_MILLIS * 2L, 0)
+                                            .toString();
     }
 
     /*
@@ -80,7 +82,8 @@ public final class DateUtils {
         }
 
         long timeInMillis = time.getTime();
-        long now = Calendar.getInstance().getTimeInMillis();
+        long now = Calendar.getInstance()
+                           .getTimeInMillis();
 
         //Catch future dates: current clock might be running behind
         if (timeInMillis > now || timeInMillis <= 0) {
@@ -137,7 +140,7 @@ public final class DateUtils {
      */
     public static boolean isSameDay(Calendar first, Calendar second) {
         return first.get(Calendar.YEAR) == second.get(Calendar.YEAR)
-                && first.get(Calendar.DAY_OF_YEAR) == second.get(Calendar.DAY_OF_YEAR);
+               && first.get(Calendar.DAY_OF_YEAR) == second.get(Calendar.DAY_OF_YEAR);
     }
 
     private DateUtils() {

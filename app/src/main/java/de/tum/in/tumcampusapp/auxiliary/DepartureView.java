@@ -72,7 +72,8 @@ public class DepartureView extends LinearLayout {
         mHandler = new Handler();
 
         // Set up the ValueAnimator for animateOut()
-        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0).setDuration(500);
+        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0)
+                                      .setDuration(500);
         mValueAnimator.addUpdateListener(animation -> {
             int value = (Integer) animation.getAnimatedValue();
             if (getLayoutParams() != null) {
@@ -105,7 +106,8 @@ public class DepartureView extends LinearLayout {
     }
 
     public String getSymbol() {
-        return mSymbolView.getText().toString();
+        return mSymbolView.getText()
+                          .toString();
     }
 
     /**

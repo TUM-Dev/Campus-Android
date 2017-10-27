@@ -49,7 +49,8 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_item, parent, false);
         return new CardViewHolder(view);
     }
 
@@ -136,23 +137,34 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                 continue;
             }
 
-            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.typeLong).replaceAll("").trim());
+            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.typeLong)
+                                                                                                                                                              .replaceAll("")
+                                                                                                                                                              .trim());
 
             StringBuilder content = new StringBuilder(menu.name);
             if (rolePrices.containsKey(menu.typeLong)) {
-                content.append('\n').append(rolePrices.get(menu.typeLong)).append(" €");
+                content.append('\n')
+                       .append(rolePrices.get(menu.typeLong))
+                       .append(" €");
             }
 
-            String contentString = COMPILE.matcher(content.toString()).replaceAll("").trim();
+            String contentString = COMPILE.matcher(content.toString())
+                                          .replaceAll("")
+                                          .trim();
             pageNotification.setContentText(contentString);
             if ("tg".equals(menu.typeShort)) {
-                if (!allContent.toString().isEmpty()) {
+                if (!allContent.toString()
+                               .isEmpty()) {
                     allContent.append('\n');
                 }
                 allContent.append(contentString);
             }
-            if (firstContent.toString().isEmpty()) {
-                firstContent.append(COMPILE.matcher(menu.name).replaceAll("").trim()).append('…');
+            if (firstContent.toString()
+                            .isEmpty()) {
+                firstContent.append(COMPILE.matcher(menu.name)
+                                           .replaceAll("")
+                                           .trim())
+                            .append('…');
             } else {
                 morePageNotification.addPage(pageNotification.build());
             }
@@ -163,7 +175,8 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(allContent));
         Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_cafeteria);
         morePageNotification.setBackground(bm);
-        return morePageNotification.extend(notificationBuilder).build();
+        return morePageNotification.extend(notificationBuilder)
+                                   .build();
     }
 
     @Override

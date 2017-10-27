@@ -1,4 +1,5 @@
 package de.tum.in.tumcampusapp.services;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +14,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = conManager.getActiveNetworkInfo();
-        if (info == null) return;
+        if (info == null) {
+            return;
+        }
         if (info.isConnected()) {
             Utils.log("WifiStateChange");
             WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);

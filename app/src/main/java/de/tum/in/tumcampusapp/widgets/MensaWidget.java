@@ -14,7 +14,6 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.services.MensaWidgetService;
 
-
 /**
  * Implementation of Mensa Widget functionality.
  * The Update intervals is set to 10 hours in mensa_widget_info.xml
@@ -22,7 +21,6 @@ import de.tum.in.tumcampusapp.services.MensaWidgetService;
 public class MensaWidget extends AppWidgetProvider {
 
     AppWidgetManager appWidgetManager;
-
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

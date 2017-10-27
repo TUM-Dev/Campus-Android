@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.models.tumcabe;
 
-
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -49,7 +48,6 @@ public class Question {
         this.question = question;
         this.answer = answer;
     }
-
 
     /**
      * Used for submitting ownQuestions to the server
@@ -104,8 +102,8 @@ public class Question {
      * Presents answers structure for the questions used in receiving the answers on ownQuesitons from server
      */
     public static class Answer {
-        private String answer;
-        private int votes;
+        private final String answer;
+        private final int votes;
 
         public Answer(String answer, int votes) {
             this.answer = answer;

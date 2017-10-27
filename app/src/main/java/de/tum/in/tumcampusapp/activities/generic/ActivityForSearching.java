@@ -102,7 +102,8 @@ public abstract class ActivityForSearching extends ProgressActivity {
             }
 
             private String getSuggestion(int position) {
-                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
+                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter()
+                                                    .getItem(position);
                 return cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
             }
         });

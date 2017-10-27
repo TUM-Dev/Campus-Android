@@ -24,7 +24,8 @@ public final class CalendarHelper {
      */
     public static Uri addCalendar(Context c) {
         final ContentValues cv = buildContentValues();
-        return c.getContentResolver().insert(buildCalUri(), cv);
+        return c.getContentResolver()
+                .insert(buildCalUri(), cv);
     }
 
     /**
@@ -38,14 +39,16 @@ public final class CalendarHelper {
             return 0;
         }
         final Uri uri = CalendarContract.Calendars.CONTENT_URI;
-        return c.getContentResolver().delete(uri, " account_name = '" + ACCOUNT_NAME + '\'', null);
+        return c.getContentResolver()
+                .delete(uri, " account_name = '" + ACCOUNT_NAME + '\'', null);
     }
 
     private static Uri buildCalUri() {
         return CalendarContract.Calendars.CONTENT_URI.buildUpon()
-                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
-                .appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL).build();
+                                                     .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+                                                     .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
+                                                     .appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
+                                                     .build();
     }
 
     private static ContentValues buildContentValues() {

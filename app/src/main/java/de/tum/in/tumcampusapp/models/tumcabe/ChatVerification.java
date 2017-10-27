@@ -12,9 +12,9 @@ import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 public class ChatVerification {
 
     private String signature;
-    private String date;
-    private String rand;
-    private int member;
+    private final String date;
+    private final String rand;
+    private final int member;
     private Object data;
 
     public ChatVerification(Context c, ChatMember member) throws NoPrivateKey {
@@ -36,7 +36,7 @@ public class ChatVerification {
         this.signature = signature;
     }
 
-    public void setData(Object o){
-        this.data=o;
+    public void setData(Object o) {
+        this.data = o;
     }
 }

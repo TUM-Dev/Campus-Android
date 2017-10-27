@@ -23,7 +23,7 @@ public class TimetableWidget extends AppWidgetProvider {
 
     public final static int UPDATE_ALARM_DELAY = 30 * 60 * 1000;
     public static final String BROADCAST_UPDATE_TIMETABLE_WIDGETS = "de.tum.in.tumcampusapp.intent.action.BROADCAST_UPDATE_TIMETABLE_WIDGETS";
-    private static boolean alarmIsSet = false;
+    private static boolean alarmIsSet;
 
     /**
      * If no alarm is running yet a new alarm is started which repeats every minute
@@ -133,7 +133,8 @@ public class TimetableWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        if (intent.getAction().equals(TimetableWidget.BROADCAST_UPDATE_TIMETABLE_WIDGETS)) {
+        if (intent.getAction()
+                  .equals(TimetableWidget.BROADCAST_UPDATE_TIMETABLE_WIDGETS)) {
             // There may be multiple widgets active, so update all of them
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName thisWidget = new ComponentName(context, TimetableWidget.class);

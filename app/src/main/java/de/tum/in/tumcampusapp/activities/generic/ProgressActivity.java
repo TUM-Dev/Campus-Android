@@ -131,7 +131,8 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         showLoadingEnded();
         failedTokenLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, error, Toast.LENGTH_LONG)
+             .show();
     }
 
     /**
@@ -151,12 +152,13 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         showLoadingEnded();
         noInternetLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
-        noInternetLayout.findViewById(R.id.progressWifi).setVisibility(View.INVISIBLE);
+        noInternetLayout.findViewById(R.id.progressWifi)
+                        .setVisibility(View.INVISIBLE);
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Button but = findViewById(R.id.button_enable_wifi);
         but.setVisibility(wifi.isWifiEnabled() ? View.GONE : View.VISIBLE);
         registerReceiver(connectivityChangeReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+                         new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         registered = true;
     }
 
@@ -254,7 +256,8 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     public void onEnableWifi(View view) {
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifi.setWifiEnabled(true);
-        noInternetLayout.findViewById(R.id.progressWifi).setVisibility(View.VISIBLE);
+        noInternetLayout.findViewById(R.id.progressWifi)
+                        .setVisibility(View.VISIBLE);
     }
 
     final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {

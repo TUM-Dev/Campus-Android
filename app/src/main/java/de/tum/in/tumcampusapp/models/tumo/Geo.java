@@ -11,7 +11,8 @@ public class Geo {
     @Element(required = false)
     private String longitude = "0";
 
-    public Geo() {}
+    public Geo() {
+    }
 
     public Geo(double latitude, double longitude) {
         this.latitude = Double.toString(latitude);
@@ -28,6 +29,6 @@ public class Geo {
 
     @Override
     public String toString() {
-        return "latitude="+latitude+" longitude="+longitude;
+        return "latitude=" + latitude + " longitude=" + longitude;
     }
 }

@@ -130,7 +130,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
                 // Set text and set cursor to end of the text
                 etMessage.setText(msg.getText());
-                int position = msg.getText().length();
+                int position = msg.getText()
+                                  .length();
                 etMessage.setSelection(position);
                 mode.finish();
                 return true;
@@ -232,14 +233,16 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         mCurrentOpenChatRoom = currentChatRoom;
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel((currentChatRoom.getId() << 4) + CardManager.CARD_CHAT);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("chat-message-received"));
+        LocalBroadcastManager.getInstance(this)
+                             .registerReceiver(receiver, new IntentFilter("chat-message-received"));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mCurrentOpenChatRoom = null;
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this)
+                             .unregisterReceiver(receiver);
     }
 
     /**
@@ -252,14 +255,16 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         super.onNewIntent(intent);
 
         //Try to get the room from the extras
-        final ChatRoom room = new Gson().fromJson(intent.getExtras().getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
+        final ChatRoom room = new Gson().fromJson(intent.getExtras()
+                                                        .getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
 
         //Check, maybe it wasn't there
         if (room != null && room.getId() != currentChatRoom.getId()) {
             //If currently in a room which does not match the one from the notification --> Switch
             currentChatRoom = room;
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
+                getSupportActionBar().setSubtitle(currentChatRoom.getName()
+                                                                 .substring(4));
             }
             chatHistoryAdapter = null;
             chatManager = new ChatMessageManager(this, currentChatRoom.getId());
@@ -296,7 +301,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
     private void showQRCode() {
         String url = "http://chart.apis.google.com/chart?cht=qr&chs=500x500&chld=M&choe=UTF-8&chl=" +
-                UrlEscapers.urlPathSegmentEscaper().escape(currentChatRoom.getName());
+                     UrlEscapers.urlPathSegmentEscaper()
+                                .escape(currentChatRoom.getName());
 
         final ImageView qrCode = new ImageView(this);
         new NetUtils(this).loadAndSetImage(url, qrCode);
@@ -304,7 +310,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         new AlertDialog.Builder(this)
                 .setTitle(R.string.add_chat_member)
                 .setView(qrCode)
-                .setPositiveButton(android.R.string.ok, null).show();
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 
     /**
@@ -318,11 +325,14 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         if (view.getId() == btnSend.getId()) {
 
             //Check if something was entered
-            if (etMessage.getText().toString().isEmpty()) {
+            if (etMessage.getText()
+                         .toString()
+                         .isEmpty()) {
                 return;
             }
 
-            this.sendMessage(etMessage.getText().toString());
+            this.sendMessage(etMessage.getText()
+                                      .toString());
 
             //Set TextField to empty, when done
             etMessage.setText("");
@@ -335,7 +345,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             chatHistoryAdapter.add(message);
             chatManager.addToUnsent(message);
         } else {
-            chatHistoryAdapter.mEditedItem.setText(etMessage.getText().toString());
+            chatHistoryAdapter.mEditedItem.setText(etMessage.getText()
+                                                            .toString());
             chatManager.addToUnsent(chatHistoryAdapter.mEditedItem);
             chatHistoryAdapter.mEditedItem.setStatus(ChatMessage.STATUS_SENDING);
             chatManager.replaceMessage(chatHistoryAdapter.mEditedItem);
@@ -355,7 +366,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
         currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
+            getSupportActionBar().setTitle(currentChatRoom.getName()
+                                                          .substring(4));
         }
         chatManager = new ChatMessageManager(this, currentChatRoom.getId());
 
@@ -472,22 +484,24 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             return;
         }
 
-        TUMCabeClient.getInstance(this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
-            @Override
-            public void onResponse(Call<ChatRoom> call, Response<ChatRoom> room) {
-                Utils.logv("Success leaving chat room: " + room.body().getName());
-                new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
+        TUMCabeClient.getInstance(this)
+                     .leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
+                         @Override
+                         public void onResponse(Call<ChatRoom> call, Response<ChatRoom> room) {
+                             Utils.logv("Success leaving chat room: " + room.body()
+                                                                            .getName());
+                             new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
 
-                // Move back to ChatRoomsActivity
-                Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
-                startActivity(intent);
-            }
+                             // Move back to ChatRoomsActivity
+                             Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
+                             startActivity(intent);
+                         }
 
-            @Override
-            public void onFailure(Call<ChatRoom> call, Throwable t) {
-                Utils.log(t, "Failure leaving chat room");
-            }
-        });
+                         @Override
+                         public void onFailure(Call<ChatRoom> call, Throwable t) {
+                             Utils.log(t, "Failure leaving chat room");
+                         }
+                     });
     }
 
     /**
@@ -511,7 +525,9 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(positionActual);
 
         // If we are in a certain timespan and its the users own message allow editing
-        if ((System.currentTimeMillis() - message.getTimestampDate().getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember().getId() == currentChatMember.getId()) {
+        if ((System.currentTimeMillis() - message.getTimestampDate()
+                                                 .getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember()
+                                                                                                        .getId() == currentChatMember.getId()) {
 
             // Hide keyboard if opened
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -529,33 +545,37 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
     private void showInfo(final ChatMessage message) {
         //Verify the message with RSA
-        TUMCabeClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
-            @Override
-            public void onResponse(Call<List<ChatPublicKey>> call, Response<List<ChatPublicKey>> response) {
-                ChatMessageValidator validator = new ChatMessageValidator(response.body());
-                final boolean result = validator.validate(message);
+        TUMCabeClient.getInstance(ChatActivity.this)
+                     .getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
+                         @Override
+                         public void onResponse(Call<List<ChatPublicKey>> call, Response<List<ChatPublicKey>> response) {
+                             ChatMessageValidator validator = new ChatMessageValidator(response.body());
+                             final boolean result = validator.validate(message);
 
-                //Show a nice dialog with more information about the message
-                String messageStr = String.format(getString(R.string.message_detail_text),
-                        message.getMember().getDisplayName(),
-                        message.getMember().getLrzId(),
-                        DateFormat.getDateTimeInstance().format(message.getTimestampDate()),
-                        getString(message.getStatusStringRes()),
-                        getString(result ? R.string.valid : R.string.not_valid));
+                             //Show a nice dialog with more information about the message
+                             String messageStr = String.format(getString(R.string.message_detail_text),
+                                                               message.getMember()
+                                                                      .getDisplayName(),
+                                                               message.getMember()
+                                                                      .getLrzId(),
+                                                               DateFormat.getDateTimeInstance()
+                                                                         .format(message.getTimestampDate()),
+                                                               getString(message.getStatusStringRes()),
+                                                               getString(result ? R.string.valid : R.string.not_valid));
 
-                new AlertDialog.Builder(ChatActivity.this)
-                        .setTitle(R.string.message_details)
-                        .setMessage(Utils.fromHtml(messageStr))
-                        .create().show();
-            }
+                             new AlertDialog.Builder(ChatActivity.this)
+                                     .setTitle(R.string.message_details)
+                                     .setMessage(Utils.fromHtml(messageStr))
+                                     .create()
+                                     .show();
+                         }
 
+                         @Override
+                         public void onFailure(Call<List<ChatPublicKey>> call, Throwable t) {
+                             Utils.log(t, "Failure verifying message");
+                         }
 
-            @Override
-            public void onFailure(Call<List<ChatPublicKey>> call, Throwable t) {
-                Utils.log(t, "Failure verifying message");
-            }
-
-        });
+                     });
     }
 
     @Override

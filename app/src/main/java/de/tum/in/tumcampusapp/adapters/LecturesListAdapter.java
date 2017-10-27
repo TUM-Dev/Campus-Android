@@ -45,12 +45,9 @@ public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<Lectures
             holder = new ViewHolder();
 
             // set UI elements
-            holder.tvLectureName = convertView
-                    .findViewById(R.id.tvLectureName);
-            holder.tvTypeSWSSemester = convertView
-                    .findViewById(R.id.tvTypeSWSSemester);
-            holder.tvDozent = convertView
-                    .findViewById(R.id.tvDozent);
+            holder.tvLectureName = convertView.findViewById(R.id.tvLectureName);
+            holder.tvTypeSWSSemester = convertView.findViewById(R.id.tvTypeSWSSemester);
+            holder.tvDozent = convertView.findViewById(R.id.tvDozent);
 
             convertView.setTag(holder);
         } else {

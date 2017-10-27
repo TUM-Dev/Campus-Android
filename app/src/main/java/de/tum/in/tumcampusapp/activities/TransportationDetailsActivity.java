@@ -74,7 +74,8 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
                     .setTitle(R.string.transport_action_usage)
                     .setMessage(R.string.transport_help_text)
                     .setPositiveButton(android.R.string.ok, null)
-                    .create().show();
+                    .create()
+                    .show();
             return true;
         }
         return super.onOptionsItemSelected(item);

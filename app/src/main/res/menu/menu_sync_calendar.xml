@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+      xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_switch_view_mode"
         android:icon="@drawable/ic_action_week_view"
         android:title="@string/view_mode"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_export_calendar"
         android:icon="@drawable/ic_sync_cloud"
         android:title="@string/export_to_google"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_delete_calendar"
         android:icon="@drawable/ic_stop_sync_cloud"
         android:title="@string/delete_from_google"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
 
 </menu>

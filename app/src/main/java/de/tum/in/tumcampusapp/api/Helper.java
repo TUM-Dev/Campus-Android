@@ -71,9 +71,11 @@ public final class Helper {
         //Clearly identify all requests from this app
         final StringBuilder userAgent = new StringBuilder("TCA Client");
         if (G.appVersion != null && !G.appVersion.equals(G.UNKNOWN)) {
-            userAgent.append(' ').append(G.appVersion);
+            userAgent.append(' ')
+                     .append(G.appVersion);
             if (G.appVersionCode != -1) {
-                userAgent.append('/').append(G.appVersionCode);
+                userAgent.append('/')
+                         .append(G.appVersionCode);
             }
         }
 
@@ -104,7 +106,8 @@ public final class Helper {
      * @return encoded url
      */
     public static String encodeUrl(String pUrl) {
-        return UrlEscapers.urlPathSegmentEscaper().escape(pUrl);
+        return UrlEscapers.urlPathSegmentEscaper()
+                          .escape(pUrl);
     }
 
     private Helper() {

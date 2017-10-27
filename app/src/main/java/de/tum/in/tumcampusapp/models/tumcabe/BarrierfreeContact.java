@@ -5,14 +5,14 @@ import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
 /**
  * The model used to display contact infromation in barrier free page
  */
-public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.SimpleStickyListItem{
-    private String name;
-    private String telephone;
-    private String email;
-    private String faculty;
+public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.SimpleStickyListItem {
+    private final String name;
+    private final String telephone;
+    private final String email;
+    private final String faculty;
     private String tumID = "";
 
-    public BarrierfreeContact(String name, String phone, String email, String faculty, String tumonlineID){
+    public BarrierfreeContact(String name, String phone, String email, String faculty, String tumonlineID) {
         this.name = name;
         this.telephone = phone;
         this.email = email;
@@ -20,11 +20,11 @@ public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.Simple
         this.tumID = tumonlineID;
     }
 
-    public boolean isValid(){
+    public boolean isValid() {
         return name != null && !name.equals("null");
     }
 
-    public boolean isHavingTumID(){
+    public boolean isHavingTumID() {
         return !(tumID.equals("null") || tumID.equals(""));
     }
 
@@ -61,11 +61,11 @@ public class BarrierfreeContact implements SimpleStickyListHeadersAdapter.Simple
     @Override
     public String toString() {
         return "BarrierfreeContact{" +
-                "name='" + name + '\'' +
-                ", phone='" + telephone + '\'' +
-                ", email='" + email + '\'' +
-                ", faculty='" + faculty + '\'' +
-                ", tumonlineID='" + tumID + '\'' +
-                '}';
+               "name='" + name + '\'' +
+               ", phone='" + telephone + '\'' +
+               ", email='" + email + '\'' +
+               ", faculty='" + faculty + '\'' +
+               ", tumonlineID='" + tumID + '\'' +
+               '}';
     }
 }

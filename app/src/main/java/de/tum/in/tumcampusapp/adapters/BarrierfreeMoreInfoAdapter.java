@@ -10,7 +10,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 
-public class BarrierfreeMoreInfoAdapter extends SimpleStickyListHeadersAdapter<BarrierfreeMoreInfo>{
+public class BarrierfreeMoreInfoAdapter extends SimpleStickyListHeadersAdapter<BarrierfreeMoreInfo> {
 
     public BarrierfreeMoreInfoAdapter(Context context, List<BarrierfreeMoreInfo> infos) {
         super(context, infos);
@@ -20,13 +20,12 @@ public class BarrierfreeMoreInfoAdapter extends SimpleStickyListHeadersAdapter<B
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         View view = convertView;
-        if(view == null){
+        if (view == null) {
             view = getInflater().inflate(R.layout.activity_barrier_free_more_info_listview, parent, false);
 
             // Crate UI element
             holder = new ViewHolder();
-            holder.title = (TextView) view
-                    .findViewById(R.id.barrierfreeMoreInfoTitle);
+            holder.title = view.findViewById(R.id.barrierfreeMoreInfoTitle);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -34,7 +33,7 @@ public class BarrierfreeMoreInfoAdapter extends SimpleStickyListHeadersAdapter<B
 
         // set title
         final BarrierfreeMoreInfo info = getInfoList().get(position);
-        if (info != null){
+        if (info != null) {
             holder.title.setText(info.getTitle());
         }
 

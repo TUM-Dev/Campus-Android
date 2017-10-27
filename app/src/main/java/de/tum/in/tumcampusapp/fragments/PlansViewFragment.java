@@ -33,7 +33,7 @@ public class PlansViewFragment extends Fragment {
     /**
      * An enum to map urls to local filenames
      */
-    private enum PlanFile{
+    private enum PlanFile {
         SCHNELLBAHNNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Netz_2017_Version_EFA-2.PDF", "Schnellbahnnetz2017.pdf"),
         NACHTLINIENNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Nachtnetz_2017.pdf", "Nachtliniennetz2017.pdf"),
         TRAMNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Tramnetz_2017.pdf", "Tramnetz2017.pdf"),
@@ -41,14 +41,17 @@ public class PlansViewFragment extends Fragment {
 
         private final String localName;
         private final String url;
-        PlanFile(String url, String localName){
+
+        PlanFile(String url, String localName) {
             this.url = url;
             this.localName = localName;
         }
-        public String getLocalName(){
-           return this.localName;
+
+        public String getLocalName() {
+            return this.localName;
         }
-        public String getUrl(){
+
+        public String getUrl() {
             return this.url;
         }
     }
@@ -68,13 +71,13 @@ public class PlansViewFragment extends Fragment {
         protected Void doInBackground(PlanFile... files) {
             Utils.log("Starting download.");
             NetUtils netUtils = new NetUtils(getContext().getApplicationContext());
-            int progressPerFile = 100/files.length;
-            int i=0;
+            int progressPerFile = 100 / files.length;
+            int i = 0;
             for (PlanFile file : files) {
                 try {
                     String localFile = fileDirectory + '/' + file.getLocalName();
                     netUtils.downloadToFile(file.getUrl(), localFile);
-                    publishProgress((++i)*progressPerFile);
+                    publishProgress((++i) * progressPerFile);
                     Utils.log(localFile);
                 } catch (IOException e) {
                     Utils.log(e);
@@ -99,7 +102,9 @@ public class PlansViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fileDirectory = getContext().getApplicationContext().getFilesDir().getPath();
+        fileDirectory = getContext().getApplicationContext()
+                                    .getFilesDir()
+                                    .getPath();
     }
 
     @Override
@@ -152,17 +157,17 @@ public class PlansViewFragment extends Fragment {
         return fragmentView;
     }
 
-    private void downloadFiles(){
-        for (PlanFile file : PlanFile.values()){
-            Utils.log(fileDirectory+"/"+file.getLocalName());
-            if (!(new File(fileDirectory+"/"+file.getLocalName())).exists()){
+    private void downloadFiles() {
+        for (PlanFile file : PlanFile.values()) {
+            Utils.log(fileDirectory + "/" + file.getLocalName());
+            if (!(new File(fileDirectory + "/" + file.getLocalName())).exists()) {
                 displayDownloadDialog();
                 break;
             }
         }
     }
 
-    private void displayDownloadDialog(){
+    private void displayDownloadDialog() {
         final Intent back_intent = new Intent(getContext(), MainActivity.class);
         new AlertDialog.Builder(getContext())
                 .setTitle("MVV plans")
@@ -181,20 +186,21 @@ public class PlansViewFragment extends Fragment {
      * Either creates a new one or uses a existing PdfViewFragment. Then the method tries to open
      * a given file in the acquired pdf fragment. If that's successful, the current fragment gets
      * added to the backstack and is being replaced by the pdf fragment.
-     * @param pdf
-     * The file to be opened
-     * @return
-     * True, if opening the Pdf was successful, False otherwise. (e.g. file was not pdf but 404 html instead)
+     *
+     * @param pdf The file to be opened
+     * @return True, if opening the Pdf was successful, False otherwise. (e.g. file was not pdf but 404 html instead)
      */
-    public boolean openPdfViewer(File pdf){
-        PdfViewFragment pdfFragment = (PdfViewFragment)getActivity().getSupportFragmentManager().findFragmentByTag("PDF_FRAGMENT");
+    public boolean openPdfViewer(File pdf) {
+        PdfViewFragment pdfFragment = (PdfViewFragment) getActivity().getSupportFragmentManager()
+                                                                     .findFragmentByTag("PDF_FRAGMENT");
         if (pdfFragment == null) {
             pdfFragment = new PdfViewFragment();
         }
         if (!pdfFragment.setPdf(pdf)) {
             return false;
         }
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                                                       .beginTransaction();
         transaction.replace(R.id.activity_plans_fragment_frame, pdfFragment, "PDF_FRAGMENT");
         transaction.addToBackStack(null);
         transaction.commit();

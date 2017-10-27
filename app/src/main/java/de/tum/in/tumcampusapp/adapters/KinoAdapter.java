@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.adapters;
 
-
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -58,7 +57,8 @@ public class KinoAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         // returns the titles for the pagerStrip
         String title = titles.get(position);
-        return title.substring(title.indexOf(':') + 1).trim();
+        return title.substring(title.indexOf(':') + 1)
+                    .trim();
     }
 
 }

@@ -30,7 +30,8 @@ public class EduroamCard extends NotificationAwareCard {
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_eduroam, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_eduroam, parent, false);
         return new Card.CardViewHolder(view);
     }
 
@@ -42,8 +43,9 @@ public class EduroamCard extends NotificationAwareCard {
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         //Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        WifiManager wifi = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if(!wifi.isWifiEnabled()) {
+        WifiManager wifi = (WifiManager) mContext.getApplicationContext()
+                                                 .getSystemService(Context.WIFI_SERVICE);
+        if (!wifi.isWifiEnabled()) {
             return false;
         }
 
@@ -53,7 +55,9 @@ public class EduroamCard extends NotificationAwareCard {
     @Override
     protected void discard(SharedPreferences.Editor editor) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        prefs.edit().putBoolean("card_eduroam_start", false).apply();
+        prefs.edit()
+             .putBoolean("card_eduroam_start", false)
+             .apply();
     }
 
     @Override

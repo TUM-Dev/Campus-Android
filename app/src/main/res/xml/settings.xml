@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:key="cards_pref_container">
+                  android:key="cards_pref_container">
 
     <PreferenceCategory android:title="@string/cards_settings">
 
@@ -14,17 +14,17 @@
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_start"
-                    android:title="@string/startpage" />
+                    android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_wear"
-                    android:title="@string/wear" />
+                    android:title="@string/wear"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:dependency="card_cafeteria_wear"
                     android:key="card_cafeteria_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone" />
+                    android:title="@string/phone"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/default_cafeteria">
                 <ListPreference
@@ -32,45 +32,45 @@
                     android:entries="@array/cafeterias_G"
                     android:entryValues="@array/cafeterias_G_val"
                     android:key="card_cafeteria_default_G"
-                    android:title="@string/campus_garching" />
+                    android:title="@string/campus_garching"/>
                 <ListPreference
                     android:defaultValue="414"
                     android:entries="@array/cafeterias_K"
                     android:entryValues="@array/cafeterias_K_val"
                     android:key="card_cafeteria_default_K"
-                    android:title="@string/campus_klinikum" />
+                    android:title="@string/campus_klinikum"/>
                 <ListPreference
                     android:defaultValue="423"
                     android:entries="@array/cafeterias_W"
                     android:entryValues="@array/cafeterias_W_val"
                     android:key="card_cafeteria_default_W"
-                    android:title="@string/campus_weihenstephan" />
+                    android:title="@string/campus_weihenstephan"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/categories_to_show">
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_tg"
-                    android:title="Tagesgerichte" />
+                    android:title="Tagesgerichte"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_ae"
-                    android:title="Aktionsessen" />
+                    android:title="Aktionsessen"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_akt"
-                    android:title="Aktion" />
+                    android:title="Aktion"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_bei"
-                    android:title="Beilagen" />
+                    android:title="Beilagen"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_bg"
-                    android:title="Biogericht" />
+                    android:title="Biogericht"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_bio"
-                    android:title="Bio" />
+                    android:title="Bio"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/extra">
                 <ListPreference
@@ -79,7 +79,7 @@
                     android:entryValues="@array/roles_values"
                     android:key="card_role"
                     android:summary="@string/role_summary"
-                    android:title="@string/role" />
+                    android:title="@string/role"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -93,17 +93,17 @@
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_mvv_start"
-                    android:title="@string/startpage" />
+                    android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_mvv_wear"
-                    android:title="@string/wear" />
+                    android:title="@string/wear"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:dependency="card_mvv_wear"
                     android:key="card_mvv_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone" />
+                    android:title="@string/phone"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/default_station">
                 <ListPreference
@@ -111,19 +111,19 @@
                     android:entries="@array/stations_G"
                     android:entryValues="@array/stations_G"
                     android:key="card_stations_default_G"
-                    android:title="@string/campus_garching" />
+                    android:title="@string/campus_garching"/>
                 <ListPreference
                     android:defaultValue="Theresienstraße"
                     android:entries="@array/stations_C"
                     android:entryValues="@array/stations_C"
                     android:key="card_stations_default_C"
-                    android:title="@string/campus_main" />
+                    android:title="@string/campus_main"/>
                 <ListPreference
                     android:defaultValue="Klinikum Großhadern"
                     android:entries="@array/stations_K"
                     android:entryValues="@array/stations_K"
                     android:key="card_stations_default_K"
-                    android:title="@string/campus_klinikum_großhadern" />
+                    android:title="@string/campus_klinikum_großhadern"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -137,17 +137,17 @@
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_next_lecture_start"
-                    android:title="@string/startpage" />
+                    android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_next_lecture_wear"
-                    android:title="@string/wear" />
+                    android:title="@string/wear"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:dependency="card_next_lecture_wear"
                     android:key="card_next_lecture_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone" />
+                    android:title="@string/phone"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -160,17 +160,17 @@
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_tuition_fee_start"
-                    android:title="@string/startpage" />
+                    android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_tuition_fee_wear"
-                    android:title="@string/wear" />
+                    android:title="@string/wear"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:dependency="card_tuition_fee_wear"
                     android:key="card_tuition_fee_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone" />
+                    android:title="@string/phone"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -183,17 +183,17 @@
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_news_start"
-                    android:title="@string/startpage" />
+                    android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_news_wear"
-                    android:title="@string/wear" />
+                    android:title="@string/wear"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:dependency="card_news_wear"
                     android:key="card_news_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone" />
+                    android:title="@string/phone"/>
             </PreferenceCategory>
             <PreferenceCategory
                 android:key="card_news_sources"
@@ -205,14 +205,14 @@
                     android:defaultValue="true"
                     android:key="card_news_latest_only"
                     android:summary="@string/only_latest_article_summary"
-                    android:title="@string/only_latest_article" />
+                    android:title="@string/only_latest_article"/>
                 <ListPreference
                     android:defaultValue="7"
                     android:entries="@array/newspread_entries"
                     android:entryValues="@array/newspread_values"
                     android:key="news_newspread"
                     android:summary="@string/newspread_summary"
-                    android:title="@string/newspread" />
+                    android:title="@string/newspread"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -225,17 +225,17 @@
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_chat_start"
-                    android:title="@string/startpage" />
+                    android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_chat_wear"
-                    android:title="@string/wear" />
+                    android:title="@string/wear"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:dependency="card_chat_wear"
                     android:key="card_chat_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone" />
+                    android:title="@string/phone"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -249,17 +249,17 @@
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_eduroam_start"
-                    android:title="@string/startpage" />
+                    android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_eduroam_phone"
-                    android:title="@string/phone" />
+                    android:title="@string/phone"/>
             </PreferenceCategory>
 
             <PreferenceCategory android:title="@string/extra">
                 <Preference
                     android:key="card_eduroam_setup"
-                    android:title="@string/setup_eduroam_now" />
+                    android:title="@string/setup_eduroam_now"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -272,17 +272,17 @@
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_survey_start"
-                    android:title="@string/startpage" />
+                    android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_survey_wear"
-                    android:title="@string/wear" />
+                    android:title="@string/wear"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:dependency="card_survey_wear"
                     android:key="card_survey_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone" />
+                    android:title="@string/phone"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -291,74 +291,74 @@
             android:entries="@array/default_campus_entries"
             android:entryValues="@array/default_campus_values"
             android:key="card_default_campus"
-            android:title="@string/default_campus" />
+            android:title="@string/default_campus"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/services">
         <CheckBoxPreference
             android:key="silent_mode"
             android:summary="@string/silence_phone_info"
-            android:title="@string/silence_phone" />
+            android:title="@string/silence_phone"/>
         <ListPreference
             android:defaultValue="0"
             android:dependency="silent_mode"
             android:entries="@array/silent_entries"
             android:entryValues="@array/silent_mode_values"
             android:key="silent_mode_set_to"
-            android:title="@string/mode_silent_mode" />
+            android:title="@string/mode_silent_mode"/>
         <CheckBoxPreference
             android:key="background_mode"
             android:summary="@string/background_info"
-            android:title="@string/background_mode" />
+            android:title="@string/background_mode"/>
         <ListPreference
             android:defaultValue="0"
             android:dependency="background_mode"
             android:entries="@array/background_entries"
             android:entryValues="@array/background_mode_values"
             android:key="background_mode_set_to"
-            android:title="@string/mode_background_mode" />
+            android:title="@string/mode_background_mode"/>
         <CheckBoxPreference
             android:key="auto_join_new_rooms"
             android:summary="@string/set_auto_join_chat"
-            android:title="@string/auto_join_chat" />
+            android:title="@string/auto_join_chat"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/extras">
         <Preference
             android:key="button_wizard"
             android:summary="@string/open_wizard_detail"
-            android:title="@string/open_wizard" />
+            android:title="@string/open_wizard"/>
         <Preference
             android:key="button_clear_cache"
             android:summary="@string/clear_cache_detail"
-            android:title="@string/clear_cache" />
+            android:title="@string/clear_cache"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/about_tca">
         <Preference
             android:icon="@drawable/ic_facebook"
             android:key="facebook"
-            android:title="@string/facebook" />
+            android:title="@string/facebook"/>
         <Preference
             android:icon="@drawable/ic_github"
             android:key="github"
-            android:title="@string/github" />
+            android:title="@string/github"/>
         <Preference
             android:key="feedback"
-            android:title="@string/show_feedback" />
+            android:title="@string/show_feedback"/>
         <Preference
             android:key="about"
             android:title="@string/information">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetPackage="de.tum.in.tumcampus"
-                android:targetClass="de.tum.in.tumcampusapp.activities.InformationActivity" />
+                android:targetClass="de.tum.in.tumcampusapp.activities.InformationActivity"/>
         </Preference>
         <Preference
             android:key="privacy"
-            android:title="@string/privacy_policy" />
+            android:title="@string/privacy_policy"/>
         <Preference
             android:key="licenses"
             android:summary="@string/licences_summary"
-            android:title="@string/licences" />
+            android:title="@string/licences"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

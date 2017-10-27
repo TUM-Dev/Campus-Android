@@ -74,17 +74,17 @@ public class ExamListAdapter extends BaseAdapter {
             holder.tvGrade.setText(exam.getGrade());
             holder.tvDetails1.setText(
                     String.format("%s: %s, " +
-                                    "%s: %s, " +
-                                    "%s: %s",
-                            context.getString(R.string.date), DF.format(exam.getDate()),
-                            context.getString(R.string.semester), exam.getSemester(),
-                            context.getString(R.string.credits), exam.getCredits()));
+                                  "%s: %s, " +
+                                  "%s: %s",
+                                  context.getString(R.string.date), DF.format(exam.getDate()),
+                                  context.getString(R.string.semester), exam.getSemester(),
+                                  context.getString(R.string.credits), exam.getCredits()));
 
             holder.tvDetails2
                     .setText(String.format("%s: %s, " +
-                                    "%s: %s",
-                            context.getString(R.string.examiner), exam.getExaminer(),
-                            context.getString(R.string.mode), exam.getModus()));
+                                           "%s: %s",
+                                           context.getString(R.string.examiner), exam.getExaminer(),
+                                           context.getString(R.string.mode), exam.getModus()));
         }
 
         return view;

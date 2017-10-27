@@ -32,8 +32,8 @@ public class RoomFinderListAdapter extends SimpleStickyListHeadersAdapter<RoomFi
             convertView = mInflater.inflate(R.layout.list_roomfinder_item, parent, false);
 
             holder = new ViewHolder();
-            holder.tvRoomTitle = (TextView) convertView.findViewById(R.id.startup_actionbar_title);
-            holder.tvBuildingTitle = (TextView) convertView.findViewById(R.id.building);
+            holder.tvRoomTitle = convertView.findViewById(R.id.startup_actionbar_title);
+            holder.tvBuildingTitle = convertView.findViewById(R.id.building);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

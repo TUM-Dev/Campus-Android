@@ -36,8 +36,8 @@ public class CardsWidgetConfigureActivity extends Activity {
 
             // When the button is clicked, store the settings locally
             saveTitlePref(context, mAppWidgetId, mCafeteriaCheck.isChecked(), mChatCheck.isChecked(),
-                    mEduroamCheck.isChecked(), mMVVCheck.isChecked(), mNewsCheck.isChecked(),
-                    mLectureCheck.isChecked(), mTutionFeesCheck.isChecked());
+                          mEduroamCheck.isChecked(), mMVVCheck.isChecked(), mNewsCheck.isChecked(),
+                          mLectureCheck.isChecked(), mTutionFeesCheck.isChecked());
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -61,7 +61,8 @@ public class CardsWidgetConfigureActivity extends Activity {
                                       boolean showChat, boolean showEduroam, boolean showMVV,
                                       boolean showNews, boolean showLectures, boolean showTutionFees) {
         final String prefix = PREF_PREFIX_KEY + appWidgetId;
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0)
+                                                .edit();
         prefs.putBoolean(prefix + CardManager.CARD_CAFETERIA, showCafeteria);
         prefs.putBoolean(prefix + CardManager.CARD_CHAT, showChat);
         prefs.putBoolean(prefix + CardManager.CARD_EDUROAM, showEduroam);
@@ -74,7 +75,8 @@ public class CardsWidgetConfigureActivity extends Activity {
 
     static void deleteTitlePref(Context context, int appWidgetId) {
         final String prefix = PREF_PREFIX_KEY + appWidgetId;
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0)
+                                                .edit();
         prefs.remove(prefix + CardManager.CARD_CAFETERIA);
         prefs.remove(prefix + CardManager.CARD_CHAT);
         prefs.remove(prefix + CardManager.CARD_EDUROAM);
@@ -95,13 +97,13 @@ public class CardsWidgetConfigureActivity extends Activity {
 
         setContentView(R.layout.cards_widget_configure);
 
-        mCafeteriaCheck = (CheckBox) findViewById(R.id.chk_cafeteria);
-        mChatCheck = (CheckBox) findViewById(R.id.chk_chatmessages);
-        mEduroamCheck = (CheckBox) findViewById(R.id.chk_eduroam);
-        mMVVCheck = (CheckBox) findViewById(R.id.chk_mvv);
-        mNewsCheck = (CheckBox) findViewById(R.id.chk_newspread);
-        mLectureCheck = (CheckBox) findViewById(R.id.chk_lecture);
-        mTutionFeesCheck = (CheckBox) findViewById(R.id.chk_tutionFee);
+        mCafeteriaCheck = findViewById(R.id.chk_cafeteria);
+        mChatCheck = findViewById(R.id.chk_chatmessages);
+        mEduroamCheck = findViewById(R.id.chk_eduroam);
+        mMVVCheck = findViewById(R.id.chk_mvv);
+        mNewsCheck = findViewById(R.id.chk_newspread);
+        mLectureCheck = findViewById(R.id.chk_lecture);
+        mTutionFeesCheck = findViewById(R.id.chk_tutionFee);
 
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
 

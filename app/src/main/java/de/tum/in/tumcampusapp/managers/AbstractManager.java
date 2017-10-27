@@ -33,7 +33,8 @@ public class AbstractManager {
         synchronized (GLOBAL_DB_LOCK) {
             if (globalDb == null) {
                 File f = c.getDatabasePath(Const.DATABASE_NAME);
-                f.getParentFile().mkdirs();
+                f.getParentFile()
+                 .mkdirs();
                 globalDb = SQLiteDatabase.openOrCreateDatabase(f, null);
             }
             return globalDb;

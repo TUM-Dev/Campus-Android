@@ -35,16 +35,18 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     public static NewsViewHolder newNewsView(ViewGroup parent, boolean isFilm) {
         View card;
         if (isFilm) {
-            card = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_news_film_item, parent, false);
+            card = LayoutInflater.from(parent.getContext())
+                                 .inflate(R.layout.card_news_film_item, parent, false);
         } else {
-            card = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_news_item, parent, false);
+            card = LayoutInflater.from(parent.getContext())
+                                 .inflate(R.layout.card_news_item, parent, false);
         }
         NewsViewHolder holder = new NewsViewHolder(card);
-        holder.title = (TextView) card.findViewById(R.id.news_title);
-        holder.img = (ImageView) card.findViewById(R.id.news_img);
-        holder.srcDate = (TextView) card.findViewById(R.id.news_src_date);
-        holder.srcIcon = (ImageView) card.findViewById(R.id.news_src_icon);
-        holder.srcTitle = (TextView) card.findViewById(R.id.news_src_title);
+        holder.title = card.findViewById(R.id.news_title);
+        holder.img = card.findViewById(R.id.news_img);
+        holder.srcDate = card.findViewById(R.id.news_src_date);
+        holder.srcIcon = card.findViewById(R.id.news_src_icon);
+        holder.srcTitle = card.findViewById(R.id.news_src_title);
         card.setTag(holder);
         return holder;
     }
@@ -63,7 +65,8 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
 
         String title = cursor.getString(2);
         if (cursor.getInt(1) == 2) {
-            title = COMPILE.matcher(title).replaceAll("");
+            title = COMPILE.matcher(title)
+                           .replaceAll("");
         }
         holder.title.setText(title);
 

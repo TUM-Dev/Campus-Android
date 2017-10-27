@@ -71,7 +71,8 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
     @Override
     protected Optional<List<RoomFinderRoom>> onSearchInBackground(String query) {
         try {
-            List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this).fetchRooms(query);
+            List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this)
+                                                      .fetchRooms(query);
             return Optional.of(rooms);
         } catch (IOException e) {
             Utils.log(e);
@@ -81,7 +82,7 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
 
     @Override
     protected void onSearchFinished(Optional<List<RoomFinderRoom>> result) {
-        if(!result.isPresent()){
+        if (!result.isPresent()) {
             if (NetUtils.isConnected(this)) {
                 showErrorLayout();
             } else {
@@ -102,7 +103,8 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        RoomFinderRoom room = (RoomFinderRoom) list.getAdapter().getItem(position);
+        RoomFinderRoom room = (RoomFinderRoom) list.getAdapter()
+                                                   .getItem(position);
         openRoomDetails(room);
     }
 

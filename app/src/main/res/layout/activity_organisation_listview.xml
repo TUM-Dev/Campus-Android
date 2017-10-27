@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/padding_default" >
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:padding="@dimen/padding_default">
 
     <TextView
         android:id="@+id/name"
@@ -12,13 +12,13 @@
         android:text=""
         android:textColor="#0065BD"
         android:textSize="@dimen/large_text_size"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/tv1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text=""
-        android:textSize="@dimen/mid_text_size" />
+        android:textSize="@dimen/mid_text_size"/>
 
 </LinearLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
     <TextView
         android:id="@+id/line_name"
@@ -19,6 +19,6 @@
         android:paddingRight="3dp"
         android:paddingTop="10dp"
         android:scrollHorizontally="false"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
 </RelativeLayout>

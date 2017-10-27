@@ -5,10 +5,10 @@ import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
 /**
  * The model used to display more infromation in barrier free page
  */
-public class BarrierfreeMoreInfo implements SimpleStickyListHeadersAdapter.SimpleStickyListItem{
-    private String title;
-    private String category;
-    private String url;
+public class BarrierfreeMoreInfo implements SimpleStickyListHeadersAdapter.SimpleStickyListItem {
+    private final String title;
+    private final String category;
+    private final String url;
 
     public BarrierfreeMoreInfo(String title, String category, String url) {
         this.title = title;

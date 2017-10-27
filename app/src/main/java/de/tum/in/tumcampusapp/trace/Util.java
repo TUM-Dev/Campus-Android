@@ -23,7 +23,8 @@ public final class Util {
 
     public static String getLog() {
         try {
-            Process process = Runtime.getRuntime().exec("logcat -d");
+            Process process = Runtime.getRuntime()
+                                     .exec("logcat -d");
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset()))) {
                 StringBuilder log = new StringBuilder();
                 String line;

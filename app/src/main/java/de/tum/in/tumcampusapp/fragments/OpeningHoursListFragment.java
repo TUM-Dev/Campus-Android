@@ -90,12 +90,12 @@ public class OpeningHoursListFragment extends ListFragment {
         int layout = android.R.layout.simple_list_item_activated_1;
 
         String[] names = {getString(R.string.libraries),
-                getString(R.string.information),
-                getString(R.string.mensa_garching),
-                getString(R.string.mensa_grosshadern),
-                getString(R.string.mensa_city),
-                getString(R.string.mensa_pasing),
-                getString(R.string.mensa_weihenstephan)};
+                          getString(R.string.information),
+                          getString(R.string.mensa_garching),
+                          getString(R.string.mensa_grosshadern),
+                          getString(R.string.mensa_city),
+                          getString(R.string.mensa_pasing),
+                          getString(R.string.mensa_weihenstephan)};
 
         setListAdapter(new ArrayAdapter<>(getActivity(), layout, android.R.id.text1, names));
     }
@@ -115,7 +115,8 @@ public class OpeningHoursListFragment extends ListFragment {
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         final ListAdapter adapter = getListAdapter();
-        mCallbacks.onItemSelected(position, adapter.getItem(position).toString());
+        mCallbacks.onItemSelected(position, adapter.getItem(position)
+                                                   .toString());
     }
 
     @Override
@@ -156,6 +157,6 @@ public class OpeningHoursListFragment extends ListFragment {
         // give items the 'activated' state when touched.
         getListView().setChoiceMode(
                 activateOnItemClick ? AbsListView.CHOICE_MODE_SINGLE
-                        : AbsListView.CHOICE_MODE_NONE);
+                                    : AbsListView.CHOICE_MODE_NONE);
     }
 }

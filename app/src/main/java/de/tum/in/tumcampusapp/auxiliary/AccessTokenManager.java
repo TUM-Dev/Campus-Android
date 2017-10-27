@@ -45,7 +45,8 @@ public class AccessTokenManager {
             throw new TUMOException(request.getLastError());
         }
 
-        return token.get().getToken();
+        return token.get()
+                    .getToken();
     }
 
     /**

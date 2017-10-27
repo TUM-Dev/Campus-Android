@@ -32,7 +32,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
  * Shows information about reservable study rooms.
  */
 public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Void> implements AdapterView
-        .OnItemSelectedListener {
+                                                                                                      .OnItemSelectedListener {
 
     private List<StudyRoomGroup> mStudyRoomGroupList;
     private int mSelectedStudyRoomGroupId = -1;
@@ -48,7 +48,6 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         super.onCreate(savedInstanceState);
         mViewPager = findViewById(R.id.pager);
     }
-
 
     /**
      * Setup for switching study room locations via action bar
@@ -78,14 +77,14 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         // Adapter for drop-down navigation
         SpinnerAdapter adapterCafeterias =
                 new ArrayAdapter<StudyRoomGroup>(this, R.layout.simple_spinner_item_actionbar,
-                        android.R.id.text1, mStudyRoomGroupList) {
+                                                 android.R.id.text1, mStudyRoomGroupList) {
                     final LayoutInflater inflater = (LayoutInflater) getContext()
                             .getSystemService(LAYOUT_INFLATER_SERVICE);
 
                     @Override
                     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                         View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar,
-                                parent, false);
+                                                  parent, false);
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
                         TextView name = v.findViewById(android.R.id.text1); // Set name
@@ -153,7 +152,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     }
 
     public void goToRoomFinder(View view) {
-        String link = ((TextView) view).getText().toString();
+        String link = ((TextView) view).getText()
+                                       .toString();
         String roomCode = link.substring(link.indexOf(' ') + 1, link.length());
 
         Intent findStudyRoomIntent = new Intent();

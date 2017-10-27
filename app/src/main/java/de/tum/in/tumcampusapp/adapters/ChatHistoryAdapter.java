@@ -93,7 +93,8 @@ public class ChatHistoryAdapter extends CursorAdapter {
             return 0;
         }
         ChatMessage msg = (ChatMessage) getItem(position);
-        return currentChatMember.getId() == msg.getMember().getId() ? 0 : 1;
+        return currentChatMember.getId() == msg.getMember()
+                                               .getId() ? 0 : 1;
     }
 
     @Override
@@ -115,7 +116,8 @@ public class ChatHistoryAdapter extends CursorAdapter {
         boolean outgoing = true;
         if (cursor != null) {
             ChatMessage msg = ChatMessageManager.toObject(cursor);
-            outgoing = currentChatMember.getId() == msg.getMember().getId();
+            outgoing = currentChatMember.getId() == msg.getMember()
+                                                       .getId();
         }
 
         int layout = outgoing ? R.layout.activity_chat_history_row_outgoing : R.layout.activity_chat_history_row_incoming;
@@ -148,27 +150,29 @@ public class ChatHistoryAdapter extends CursorAdapter {
     private void bindViewChatMessage(View view, ChatMessage chatMessage) {
         ViewHolder holder = (ViewHolder) view.getTag();
 
-
         holder.tvMessage.setText(chatMessage.getText());
         holder.tvTimestamp.setText(DateUtils.getTimeOrDayISO(chatMessage.getTimestamp(), mContext));
 
         if (holder.ivSent == null) {
-            holder.tvUser.setText(chatMessage.getMember().getDisplayName());
+            holder.tvUser.setText(chatMessage.getMember()
+                                             .getDisplayName());
         } else {// Set status for outgoing messages (ivSent is not null)
             boolean sending = chatMessage.getStatus() == ChatMessage.STATUS_SENDING;
             holder.ivSent.setVisibility(sending ? View.GONE : View.VISIBLE);
             holder.pbSending.setVisibility(sending ? View.VISIBLE : View.GONE);
         }
 
-        if (chatMessage.getMember().getLrzId().equals("bot")) {
+        if (chatMessage.getMember()
+                       .getLrzId()
+                       .equals("bot")) {
             holder.tvUser.setText("");
             holder.tvTimestamp.setText("");
         }
 
         if ((mCheckedItem != null
-                && mCheckedItem.getId() == chatMessage.getId()
-                && (mCheckedItem.getStatus() == chatMessage.getStatus()))
-                || (mEditedItem != null
+             && mCheckedItem.getId() == chatMessage.getId()
+             && (mCheckedItem.getStatus() == chatMessage.getStatus()))
+            || (mEditedItem != null
                 && mEditedItem.getId() == chatMessage.getId()
                 && mEditedItem.getStatus() == chatMessage.getStatus())) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing_selected);

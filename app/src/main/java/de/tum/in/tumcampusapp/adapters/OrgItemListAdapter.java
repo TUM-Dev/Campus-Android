@@ -74,20 +74,25 @@ public class OrgItemListAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.activity_organisation_listview, parent, false);
 
             holder = new ViewHolder();
-            holder.tvMainField = (TextView) convertView.findViewById(R.id.name);
-            holder.tvSubField1 = (TextView) convertView.findViewById(R.id.tv1);
+            holder.tvMainField = convertView.findViewById(R.id.name);
+            holder.tvSubField1 = convertView.findViewById(R.id.tv1);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         // get the name depending on the own language
         if (organisationList.get(position) != null) {
-            if (System.getProperty("user.language").equals("de")) {
-                holder.tvMainField.setText(organisationList.get(position).getNameDe());
-                holder.tvSubField1.setText(organisationList.get(position).getNameEn());
+            if (System.getProperty("user.language")
+                      .equals("de")) {
+                holder.tvMainField.setText(organisationList.get(position)
+                                                           .getNameDe());
+                holder.tvSubField1.setText(organisationList.get(position)
+                                                           .getNameEn());
             } else {
-                holder.tvMainField.setText(organisationList.get(position).getNameEn());
-                holder.tvSubField1.setText(organisationList.get(position).getNameDe());
+                holder.tvMainField.setText(organisationList.get(position)
+                                                           .getNameEn());
+                holder.tvSubField1.setText(organisationList.get(position)
+                                                           .getNameDe());
             }
         }
 

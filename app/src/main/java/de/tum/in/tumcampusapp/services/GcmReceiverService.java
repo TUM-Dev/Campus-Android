@@ -47,7 +47,6 @@ public class GcmReceiverService extends FirebaseMessagingService {
 
     /**
      * Called when message is received.
-     *
      */
     // [START receive_message]
     @Override
@@ -79,7 +78,8 @@ public class GcmReceiverService extends FirebaseMessagingService {
                 case 0: //Nothing to do, just confirm the retrieved notification
                 default:
                     try {
-                        TUMCabeClient.getInstance(this).confirm(notification);
+                        TUMCabeClient.getInstance(this)
+                                     .confirm(notification);
                     } catch (IOException e) {
                         Utils.log(e);
                     }
@@ -127,6 +127,5 @@ public class GcmReceiverService extends FirebaseMessagingService {
             }
         }
     }
-
 
 }

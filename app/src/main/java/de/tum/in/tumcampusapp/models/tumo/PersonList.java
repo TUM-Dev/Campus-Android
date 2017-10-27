@@ -13,15 +13,15 @@ import java.util.List;
 @Root(name = "rowset")
 public class PersonList {
 
-	@ElementList(inline = true, required = false)
-	private List<Person> persons;
+    @ElementList(inline = true, required = false)
+    private List<Person> persons;
 
-	public List<Person> getPersons() {
-		return persons;
-	}
+    public List<Person> getPersons() {
+        return persons;
+    }
 
-	public void setPersons(List<Person> persons) {
-		this.persons = persons;
-	}
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+    }
 
 }

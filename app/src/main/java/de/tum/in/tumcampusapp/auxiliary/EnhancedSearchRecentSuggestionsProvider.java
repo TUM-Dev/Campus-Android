@@ -84,8 +84,8 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
             mSuggestionProjection = new String[]{
                     "0 AS " + SearchManager.SUGGEST_COLUMN_FORMAT,
                     "'android.resource://system/"
-                            + android.R.drawable.ic_menu_recent_history + "' AS "
-                            + SearchManager.SUGGEST_COLUMN_ICON_1,
+                    + android.R.drawable.ic_menu_recent_history + "' AS "
+                    + SearchManager.SUGGEST_COLUMN_ICON_1,
                     "display1 AS " + SearchManager.SUGGEST_COLUMN_TEXT_1,
                     "display2 AS " + SearchManager.SUGGEST_COLUMN_TEXT_2,
                     "query AS " + SearchManager.SUGGEST_COLUMN_QUERY,
@@ -97,8 +97,8 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
             mSuggestionProjection = new String[]{
                     "0 AS " + SearchManager.SUGGEST_COLUMN_FORMAT,
                     "'android.resource://system/"
-                            + android.R.drawable.ic_menu_recent_history + "' AS "
-                            + SearchManager.SUGGEST_COLUMN_ICON_1,
+                    + android.R.drawable.ic_menu_recent_history + "' AS "
+                    + SearchManager.SUGGEST_COLUMN_ICON_1,
                     "display1 AS " + SearchManager.SUGGEST_COLUMN_TEXT_1,
                     "query AS " + SearchManager.SUGGEST_COLUMN_QUERY,
                     "_id"
@@ -112,12 +112,14 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
      */
     @Override
     public int delete(Uri uri, String select, String[] selectionArgs) {
-        final int length = uri.getPathSegments().size();
+        final int length = uri.getPathSegments()
+                              .size();
         if (length != 1) {
             throw new IllegalArgumentException("Unknown Uri");
         }
 
-        final String base = uri.getPathSegments().get(0);
+        final String base = uri.getPathSegments()
+                               .get(0);
         int count;
         if (base.equals(S_SUGGESTIONS)) {
             String selection = select.replace(S_SUGGESTIONS, S_SUGGESTIONS + mId);
@@ -125,7 +127,8 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         } else {
             throw new IllegalArgumentException("Unknown Uri");
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        getContext().getContentResolver()
+                    .notifyChange(uri, null);
         return count;
     }
 
@@ -138,9 +141,11 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         if (mUriMatcher.match(uri) == URI_MATCH_SUGGEST) {
             return SearchManager.SUGGEST_MIME_TYPE;
         }
-        int length = uri.getPathSegments().size();
+        int length = uri.getPathSegments()
+                        .size();
         if (length >= 1) {
-            String base = uri.getPathSegments().get(0);
+            String base = uri.getPathSegments()
+                             .get(0);
             if (base.equals(S_SUGGESTIONS)) {
                 if (length == 1) {
                     return "vnd.android.cursor.dir/suggestion";
@@ -158,13 +163,15 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
      */
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        int length = uri.getPathSegments().size();
+        int length = uri.getPathSegments()
+                        .size();
         if (length < 1) {
             throw new IllegalArgumentException("Unknown Uri");
         }
         // Note:  This table has on-conflict-replace semantics, so insert() may actually replace()
         long rowID = -1;
-        String base = uri.getPathSegments().get(0);
+        String base = uri.getPathSegments()
+                         .get(0);
         Uri newUri = null;
         if (base.equals(S_SUGGESTIONS) && length == 1) {
             rowID = db.insert(S_SUGGESTIONS + mId, NULL_COLUMN, values);
@@ -175,7 +182,8 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         if (rowID < 0) {
             throw new IllegalArgumentException("Unknown Uri");
         }
-        getContext().getContentResolver().notifyChange(newUri, null);
+        getContext().getContentResolver()
+                    .notifyChange(newUri, null);
         return newUri;
     }
 
@@ -190,10 +198,10 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         }
         db = AbstractManager.getDb(getContext());
         final String create_table = "CREATE TABLE IF NOT EXISTS suggestions" + mId + " (" +
-                "_id INTEGER PRIMARY KEY" +
-                ",display1 TEXT UNIQUE ON CONFLICT REPLACE" +
-                ",query TEXT" +
-                ",date LONG );";
+                                    "_id INTEGER PRIMARY KEY" +
+                                    ",display1 TEXT UNIQUE ON CONFLICT REPLACE" +
+                                    ",query TEXT" +
+                                    ",date LONG );";
         db.execSQL(create_table);
         return true;
     }
@@ -223,18 +231,20 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
             }
             // Suggestions are always performed with the default sort order
             Cursor c = db.query(S_SUGGESTIONS + mId, mSuggestionProjection,
-                    suggestSelection, myArgs, null, null, ORDER_BY, null);
+                                suggestSelection, myArgs, null, null, ORDER_BY, null);
             c.setNotificationUri(getContext().getContentResolver(), uri);
             return c;
         }
 
         // otherwise process arguments and perform a standard query
-        int length = uri.getPathSegments().size();
+        int length = uri.getPathSegments()
+                        .size();
         if (length != 1 && length != 2) {
             throw new IllegalArgumentException("Unknown Uri");
         }
 
-        String base = uri.getPathSegments().get(0);
+        String base = uri.getPathSegments()
+                         .get(0);
         if (!base.equals(S_SUGGESTIONS)) {
             throw new IllegalArgumentException("Unknown Uri");
         }
@@ -248,7 +258,10 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
 
         StringBuilder whereClause = new StringBuilder(256);
         if (length == 2) {
-            whereClause.append("(_id = ").append(uri.getPathSegments().get(1)).append(')');
+            whereClause.append("(_id = ")
+                       .append(uri.getPathSegments()
+                                  .get(1))
+                       .append(')');
         }
 
         // Tack on the user's selection, if present
@@ -264,8 +277,8 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
 
         // And perform the generic query as requested
         Cursor c = db.query(base + mId, useProjection, whereClause.toString(),
-                selectionArgs, null, null, sortOrder,
-                null);
+                            selectionArgs, null, null, sortOrder,
+                            null);
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
     }

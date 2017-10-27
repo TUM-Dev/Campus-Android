@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.models.gcm;
 
-
 import java.io.Serializable;
 
 /**

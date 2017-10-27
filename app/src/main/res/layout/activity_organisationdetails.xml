@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
 
     <!-- The toolbar aka SupportActionBar -->
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
     <include
         layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"/>
 
     <TextView
         android:id="@+id/tvCaption"
-        style="@style/SectionHeadline" />
+        style="@style/SectionHeadline"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,14 +33,14 @@
                     android:layout_weight="2"
                     android:text="@string/identifier"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/identifier"
                     android:layout_width="0dp"
                     android:layout_weight="3"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow android:paddingTop="@dimen/padding_default">
@@ -50,14 +50,14 @@
                     android:layout_weight="2"
                     android:text="@string/name"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="0dp"
                     android:layout_weight="3"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow android:paddingTop="@dimen/padding_default">
@@ -67,14 +67,14 @@
                     android:layout_weight="2"
                     android:text="@string/contact_person"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/contact"
                     android:layout_width="0dp"
                     android:layout_weight="3"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow>
@@ -84,14 +84,14 @@
                     android:layout_weight="2"
                     android:text="@string/adress"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/adress"
                     android:layout_width="0dp"
                     android:layout_weight="3"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow android:paddingTop="@dimen/padding_default">
@@ -101,7 +101,7 @@
                     android:layout_weight="2"
                     android:text="@string/homepage"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/homepage"
@@ -109,7 +109,7 @@
                     android:layout_weight="3"
                     android:autoLink="web"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow>
@@ -119,7 +119,7 @@
                     android:layout_weight="2"
                     android:text="@string/email"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/email"
@@ -127,7 +127,7 @@
                     android:layout_weight="3"
                     android:autoLink="email"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow>
@@ -137,7 +137,7 @@
                     android:layout_weight="2"
                     android:text="@string/phone"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/phone"
@@ -145,7 +145,7 @@
                     android:layout_weight="3"
                     android:autoLink="phone"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow>
@@ -155,7 +155,7 @@
                     android:layout_weight="2"
                     android:text="@string/fax"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/fax"
@@ -163,7 +163,7 @@
                     android:layout_weight="3"
                     android:autoLink="phone"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow>
@@ -173,7 +173,7 @@
                     android:layout_weight="2"
                     android:text="@string/secretary"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/secretary"
@@ -181,7 +181,7 @@
                     android:layout_weight="3"
                     android:autoLink="phone"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow android:paddingTop="@dimen/padding_default">
@@ -191,7 +191,7 @@
                     android:layout_weight="2"
                     android:text="@string/extra_name"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/extra_name"
@@ -199,7 +199,7 @@
                     android:layout_weight="3"
                     android:autoLink="phone"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow>
@@ -209,14 +209,14 @@
                     android:layout_weight="2"
                     android:text="@string/extra"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/extra"
                     android:layout_width="0dp"
                     android:layout_weight="3"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
 
             <TableRow>
@@ -226,14 +226,14 @@
                     android:layout_weight="2"
                     android:text="@string/bib"
                     android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/bib"
                     android:layout_width="0dp"
                     android:layout_weight="3"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/semilarge_text_size" />
+                    android:textSize="@dimen/semilarge_text_size"/>
             </TableRow>
         </TableLayout>
     </ScrollView>

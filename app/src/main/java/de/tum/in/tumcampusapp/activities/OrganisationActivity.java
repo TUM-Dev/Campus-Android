@@ -65,7 +65,8 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
         lvOrg = findViewById(R.id.lstOrganisations);
 
         // set language = German if system language is German else set English
-        languageGerman = System.getProperty("user.language").compareTo(Const.DE) == 0;
+        languageGerman = System.getProperty("user.language")
+                               .compareTo(Const.DE) == 0;
 
         // get all organisations information
         requestFetch();
@@ -92,7 +93,8 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
      */
     private boolean existSubOrganisation(String organisationId) {
         for (OrgItem item : result.getGroups()) {
-            if (item.getParentId().equals(organisationId)) {
+            if (item.getParentId()
+                    .equals(organisationId)) {
                 return true;
             }
         }
@@ -110,7 +112,8 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
         for (OrgItem item : result.getGroups()) {
             // if there is an organisation that has the given parentId as organisationId
             // make a parent element and return it
-            if (item.getId().equals(parentId)) {
+            if (item.getId()
+                    .equals(parentId)) {
                 parentObject.setId(item.getParentId());
                 parentObject.setNameDe(languageGerman ? item.getNameDe() : item.getNameEn());
                 return parentObject;
@@ -131,7 +134,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
         if (orgId.equals(TOP_LEVEL_ORG)) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             return;
         }
@@ -174,7 +177,8 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
         // go through the XML file and give each organisation its Id, German
         // name, English name and parent-Id
         for (OrgItem item : result.getGroups()) {
-            if (item.getParentId().equals(orgItem)) {
+            if (item.getParentId()
+                    .equals(orgItem)) {
                 organisationList.add(item);
             }
         }

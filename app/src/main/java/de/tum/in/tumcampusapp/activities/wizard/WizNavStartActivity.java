@@ -132,7 +132,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     public void onClickSkip(View skip) {
         // Upon clicking on the skip button and there is no internet connection -> toast to the user
         if (!NetUtils.isConnected(getApplicationContext())) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
+                 .show();
             return;
         }
 
@@ -150,11 +151,13 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     public void onClickNext(View next) {
         // Upon clicking on next button and there is no internet connection -> toast to the user.
         if (!NetUtils.isConnected(getApplicationContext())) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
+                 .show();
             return;
         }
 
-        lrzId = editTxtLrzId.getText().toString();
+        lrzId = editTxtLrzId.getText()
+                            .toString();
         Utils.setSetting(this, Const.LRZ_ID, lrzId);
 
         // check if lrz could be valid?

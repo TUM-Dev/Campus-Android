@@ -4,7 +4,7 @@ public class TUMCabeStatus {
 
     private String status;
 
-    public String getStatus(){
+    public String getStatus() {
         return this.status;
     }
 

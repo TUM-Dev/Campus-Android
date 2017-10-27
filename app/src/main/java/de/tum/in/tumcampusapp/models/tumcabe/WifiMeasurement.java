@@ -1,15 +1,15 @@
 package de.tum.in.tumcampusapp.models.tumcabe;
 
 public class WifiMeasurement {
-    private String date;
-    private String SSID;
-    private String BSSID;
-    private int dBm;
+    private final String date;
+    private final String SSID;
+    private final String BSSID;
+    private final int dBm;
     private float accuracyInMeters;
     private double latitude;
     private double longitude;
 
-    public WifiMeasurement(String date, String SSID, String BSSID, int dBm, float accuracyInMeters, double latitude, double longitude){
+    public WifiMeasurement(String date, String SSID, String BSSID, int dBm, float accuracyInMeters, double latitude, double longitude) {
         this.date = date;
         this.SSID = SSID;
         this.BSSID = BSSID;
@@ -47,24 +47,28 @@ public class WifiMeasurement {
         return accuracyInMeters;
     }
 
-    public void setLatitude(double latitude){this.latitude = latitude;}
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
     public void setAccuracyInMeters(float accuracyInMeters) {
         this.accuracyInMeters = accuracyInMeters;
     }
 
-    public void setLongitude(double longitude){this.longitude = longitude;}
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     @Override
     public String toString() {
         return "WifiMeasurement{" +
-                "date='" + date + '\'' +
-                ", SSID='" + SSID + '\'' +
-                ", BSSID='" + BSSID + '\'' +
-                ", dBm=" + dBm +
-                ", accuracyInMeters=" + accuracyInMeters +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
+               "date='" + date + '\'' +
+               ", SSID='" + SSID + '\'' +
+               ", BSSID='" + BSSID + '\'' +
+               ", dBm=" + dBm +
+               ", accuracyInMeters=" + accuracyInMeters +
+               ", latitude=" + latitude +
+               ", longitude=" + longitude +
+               '}';
     }
 }

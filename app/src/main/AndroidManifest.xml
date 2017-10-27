@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="de.tum.in.tumcampusapp"
-    android:installLocation="auto"
-    tools:ignore="UnusedAttribute">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="de.tum.in.tumcampusapp"
+          android:installLocation="auto"
+          tools:ignore="UnusedAttribute">
 
     <!-- Standard access rights -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- For google calendar synchronisation -->
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <!-- To add searched person to contact list -->
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 
     <!-- For location services -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <!-- For automatically setting up eduroam -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
     <!-- GCM requires a Google account. -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
     <!-- Allow vibration for chat messages -->
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <!-- As AndroidLint suggests: We do not necessarily need camera access -->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false" />
+        android:required="false"/>
     <!-- For QR code scanner -->
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <!-- To start the Silence and Background service on Boot -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <!-- To potentially change the Do Not Disturb mode -->
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
     <application
         android:allowBackup="true"
@@ -60,32 +60,32 @@
         >
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
-        <uses-library android:name="android.test.runner" />
+        <uses-library android:name="android.test.runner"/>
 
         <receiver android:name=".services.ScanResultsAvailableReceiver">
             <intent-filter>
-                <action android:name="android.net.wifi.SCAN_RESULTS" />
+                <action android:name="android.net.wifi.SCAN_RESULTS"/>
             </intent-filter>
         </receiver>
 
         <provider
             android:name=".auxiliary.RoomFinderSuggestionProvider"
             android:authorities="de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider"
-            android:exported="false" />
+            android:exported="false"/>
         <provider
             android:name=".auxiliary.PersonSearchSuggestionProvider"
             android:authorities="de.tum.in.tumcampusapp.auxiliary.PersonSearchSuggestionProvider"
-            android:exported="false" />
+            android:exported="false"/>
         <provider
             android:name=".auxiliary.MVVStationSuggestionProvider"
             android:authorities="de.tum.in.tumcampusapp.auxiliary.MVVStationSuggestionProvider"
-            android:exported="false" />
+            android:exported="false"/>
         <provider
             android:name=".auxiliary.LectureSearchSuggestionProvider"
             android:authorities="de.tum.in.tumcampusapp.auxiliary.LectureSearchSuggestionProvider"
-            android:exported="false" />
+            android:exported="false"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="de.tum.in.tumcampusapp.fileprovider"
@@ -93,7 +93,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fileprovider" />
+                android:resource="@xml/fileprovider"/>
         </provider>
 
         <activity
@@ -102,18 +102,18 @@
             android:label="@string/app_name"
             android:theme="@style/AppThemeStartup">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
+                android:resource="@xml/shortcuts"/>
         </activity>
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"/>
         <activity
             android:name=".activities.NewsActivity"
             android:configChanges="orientation|screenSize"
@@ -122,7 +122,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.PlansActivity"
@@ -132,7 +132,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.PlansDetailsActivity"
@@ -141,7 +141,7 @@
             android:parentActivityName=".activities.PlansActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.PlansActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.PlansActivity"/>
         </activity>
         <activity
             android:name=".activities.GradeChartActivity"
@@ -150,7 +150,7 @@
             android:parentActivityName=".activities.GradesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.GradesActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.GradesActivity"/>
         </activity>
         <activity
             android:name=".activities.GradesActivity"
@@ -160,7 +160,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.UserPreferencesActivity"
@@ -169,7 +169,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.CurriculaActivity"
@@ -179,7 +179,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.CurriculaDetailsActivity"
@@ -188,7 +188,7 @@
             android:parentActivityName=".activities.CurriculaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.CurriculaActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.CurriculaActivity"/>
         </activity>
         <activity
             android:name=".activities.OpeningHoursDetailActivity"
@@ -197,7 +197,7 @@
             android:parentActivityName=".activities.OpeningHoursListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.OpeningHoursListActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.OpeningHoursListActivity"/>
         </activity>
         <activity
             android:name=".activities.SurveyActivity"
@@ -206,7 +206,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SurveyActivity" />
+                android:value=".activities.SurveyActivity"/>
         </activity>
         <activity
             android:name=".activities.OpeningHoursListActivity"
@@ -216,7 +216,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.TransportationActivity"
@@ -225,15 +225,15 @@
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_mvv" />
+                android:resource="@xml/searchable_mvv"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.TransportationDetailsActivity"
@@ -242,12 +242,12 @@
             android:parentActivityName=".activities.TransportationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.TransportationActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.TransportationActivity"/>
         </activity>
         <activity
             android:name=".activities.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures_appointments" />
+            android:label="@string/lectures_appointments"/>
         <activity
             android:name=".activities.LecturesDetailsActivity"
             android:configChanges="orientation|screenSize"
@@ -255,7 +255,7 @@
             android:parentActivityName=".activities.LecturesPersonalActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.LecturesPersonalActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.LecturesPersonalActivity"/>
         </activity>
         <activity
             android:name=".activities.LecturesPersonalActivity"
@@ -264,15 +264,15 @@
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_lectures" />
+                android:resource="@xml/searchable_lectures"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.CafeteriaActivity"
@@ -282,7 +282,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.CafeteriaNotificationSettingsActivity"
@@ -292,7 +292,7 @@
             android:parentActivityName=".activities.CafeteriaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.CafeteriaActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.CafeteriaActivity"/>
         </activity>
         <activity
             android:name=".activities.KinoActivity"
@@ -302,7 +302,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.PersonsSearchActivity"
@@ -311,15 +311,15 @@
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_persons" />
+                android:resource="@xml/searchable_persons"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.PersonsDetailsActivity"
@@ -328,7 +328,7 @@
             android:parentActivityName=".activities.PersonsSearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.PersonsSearchActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.PersonsSearchActivity"/>
         </activity>
         <activity
             android:name=".activities.RoomFinderActivity"
@@ -338,15 +338,15 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
 
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_rooms" />
+                android:resource="@xml/searchable_rooms"/>
         </activity>
         <activity
             android:name=".activities.RoomFinderDetailsActivity"
@@ -355,7 +355,7 @@
             android:parentActivityName=".activities.RoomFinderActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.RoomFinderActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.RoomFinderActivity"/>
         </activity>
         <activity
             android:name=".activities.StudyRoomsActivity"
@@ -364,7 +364,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.TuitionFeesActivity"
@@ -374,7 +374,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.InformationActivity"
@@ -384,7 +384,7 @@
             android:parentActivityName=".activities.UserPreferencesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.UserPreferencesActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.UserPreferencesActivity"/>
         </activity>
         <activity
             android:name=".activities.OrganisationActivity"
@@ -394,7 +394,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.OrganisationDetailsActivity"
@@ -403,7 +403,7 @@
             android:parentActivityName=".activities.OrganisationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.OrganisationActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.OrganisationActivity"/>
         </activity>
         <activity
             android:name=".activities.SetupEduroamActivity"
@@ -413,21 +413,21 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.wizard.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"/>
         <activity
             android:name=".activities.wizard.WizNavCheckTokenActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"/>
         <activity
             android:name=".activities.wizard.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".activities.CalendarActivity"
             android:configChanges="orientation|screenSize"
@@ -436,7 +436,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.ChatRoomsActivity"
@@ -446,7 +446,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.ChatActivity"
@@ -456,7 +456,7 @@
             android:parentActivityName=".activities.ChatRoomsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.ChatRoomsActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.ChatRoomsActivity"/>
         </activity>
         <activity
             android:name=".activities.JoinRoomScanActivity"
@@ -467,7 +467,7 @@
             android:theme="@style/AppThemeFullscreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.ChatRoomsActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.ChatRoomsActivity"/>
         </activity>
         <activity
             android:name=".activities.AlarmActivity"
@@ -478,7 +478,7 @@
             android:theme="@style/AppThemeFullscreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.BarrierFreeInfoActivity"
@@ -515,51 +515,53 @@
             android:name=".widgets.MensaWidget"
             android:label="@string/mensa_widget">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/mensa_widget_info" />
+                android:resource="@xml/mensa_widget_info"/>
         </receiver>
 
         <service
             android:name=".services.MensaWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <!-- receiver for the MVVWidget -->
 
-        <receiver android:name=".widgets.MVVWidget"
+        <receiver
+            android:name=".widgets.MVVWidget"
             android:label="@string/mvv_widget">>
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/mvv_widget_info" />
+                android:resource="@xml/mvv_widget_info"/>
         </receiver>
 
         <service
             android:name=".widgets.MVVWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <activity android:name=".widgets.MVVWidgetConfigureActivity"
+        <activity
+            android:name=".widgets.MVVWidgetConfigureActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
             android:allowTaskReparenting="false"
             android:taskAffinity="">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_mvv" />
+                android:resource="@xml/searchable_mvv"/>
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
@@ -567,21 +569,21 @@
 
         <receiver android:name=".widgets.CardsWidget">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/cards_widget_info" />
+                android:resource="@xml/cards_widget_info"/>
         </receiver>
 
         <service
             android:name=".widgets.CardsWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <activity android:name=".widgets.CardsWidgetConfigureActivity">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
@@ -591,16 +593,16 @@
             android:name=".widgets.TimetableWidget"
             android:label="@string/timetable_widget">>
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/timetable_widget_info" />
+                android:resource="@xml/timetable_widget_info"/>
         </receiver>
 
         <service
             android:name=".widgets.TimetableWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <activity
             android:name=".widgets.TimetableWidgetConfigureActivity"
@@ -610,24 +612,25 @@
             android:launchMode="singleTop"
             android:taskAffinity="">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
         <!-- Used to reset Alarm when device has been restarted -->
         <receiver android:name=".services.StartSyncReceiver">
             <intent-filter>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
         </receiver>
 
         <!-- Used for generating the wifi-heatmap data -->
         <receiver android:name=".services.NetworkChangeReceiver">
             <intent-filter>
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-            </intent-filter>intent-filter>
+                <action android:name="android.net.wifi.STATE_CHANGE"/>
+            </intent-filter>
+            intent-filter>
         </receiver>
 
         <!-- Used to set Notification for favoriteDish -->
@@ -635,40 +638,40 @@
 
         <service
             android:name=".services.DownloadService"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".services.SilenceService"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".services.SendMessageService"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".services.SendWifiMeasurementService"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".services.BackgroundService"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".services.FillCacheService"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".services.ScanResultsAvailableReceiver$NeverShowAgain"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".managers.CalendarManager$QueryLocationsService"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".services.GcmReceiverService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service
             android:name=".services.GcmIdentificationService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
     </application>

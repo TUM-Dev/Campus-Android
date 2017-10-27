@@ -34,7 +34,6 @@ import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.CardManager;
 
-
 public class NextLectureCard extends NotificationAwareCard {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
@@ -55,7 +54,8 @@ public class NextLectureCard extends NotificationAwareCard {
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_next_lecture_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_next_lecture_item, parent, false);
         return new Card.CardViewHolder(view);
     }
 
@@ -94,7 +94,8 @@ public class NextLectureCard extends NotificationAwareCard {
         // Set selection on the buttons
         mSelected = sel;
         for (int i = 0; i < 4; i++) {
-            mCard.findViewById(IDS[i]).setSelected(i == sel);
+            mCard.findViewById(IDS[i])
+                 .setSelected(i == sel);
         }
 
         final CalendarItem item = lectures.get(sel);
@@ -177,7 +178,8 @@ public class NextLectureCard extends NotificationAwareCard {
             // Handle location
             item.location = cur.getString(3);
             if (item.location != null) {
-                item.location = item.location.replaceAll("\\([A-Z0-9\\.]+\\)", "").trim();
+                item.location = item.location.replaceAll("\\([A-Z0-9\\.]+\\)", "")
+                                             .trim();
             }
             lectures.add(item);
         } while (cur.moveToNext());

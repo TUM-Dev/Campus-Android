@@ -14,6 +14,7 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
     /**
      * Called in separate thread after {@link #startLoading(Object[])} gets called.
      * Should do all loading and return the result.
+     *
      * @param arg Parameters given to {@link #startLoading(Object[])}
      * @return Result of the loading task
      */
@@ -22,6 +23,7 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
 
     /**
      * Gets called from the UI thread after background task has finished.
+     *
      * @param result Result returned by {@link #onLoadInBackground(Object[])}
      */
     protected abstract void onLoadFinished(T result);
@@ -35,12 +37,13 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      */
     public ActivityForLoadingInBackground(int layoutId) {
-		super(layoutId);
-	}
+        super(layoutId);
+    }
 
     /**
      * Starts a new background task.
      * The work that should be done in background must be specified in the {@link #onLoadInBackground(Object[])} method.
+     *
      * @param arg Arguments passed to {@link #onLoadInBackground(Object[])}
      */
     @SafeVarargs
@@ -72,12 +75,12 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
             }
         };
         asyncTask.execute(arg);
-	}
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (asyncTask!=null) {
+        if (asyncTask != null) {
             asyncTask.cancel(true);
         }
     }
@@ -120,6 +123,7 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
 
     /**
      * Shows failed layout
+     *
      * @param error Error Text to be toasted
      */
     @Override

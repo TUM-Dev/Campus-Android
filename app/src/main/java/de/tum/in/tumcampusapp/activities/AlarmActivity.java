@@ -24,14 +24,13 @@ public class AlarmActivity extends BaseActivity {
         super(R.layout.activity_alarmdetails);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.mTitle = (TextView) findViewById(R.id.alarm_title);
-        this.mDescription = (WebView) findViewById(R.id.alarm_description);
-        this.mDate = (TextView) findViewById(R.id.alarm_date);
+        this.mTitle = findViewById(R.id.alarm_title);
+        this.mDescription = findViewById(R.id.alarm_description);
+        this.mDate = findViewById(R.id.alarm_date);
 
         this.processIntent(getIntent());
     }

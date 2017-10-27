@@ -49,7 +49,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (room INTEGER, name VARCHAR, " +
-                "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id))");
+                   "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id))");
     }
 
     /**
@@ -65,11 +65,11 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
         }
 
         return db.rawQuery("SELECT r.*, m.ts, m.text " +
-                "FROM chat_room r " +
-                "LEFT JOIN (SELECT MAX(timestamp) ts, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
-                "WHERE " + condition + " " +
-                " " +
-                "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.ts) DESC, r.name", null);
+                           "FROM chat_room r " +
+                           "LEFT JOIN (SELECT MAX(timestamp) ts, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
+                           "WHERE " + condition + " " +
+                           " " +
+                           "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.ts) DESC, r.name", null);
     }
 
     /**
@@ -120,7 +120,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      * Saves the given chat rooms into database
      */
     public void replaceIntoRooms(List<ChatRoom> rooms) {
-        if(rooms == null) {
+        if (rooms == null) {
             Utils.log("No rooms passed, can't insert anything.");
             return;
         }
@@ -154,12 +154,12 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
 
     public void join(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET room=?, joined=1 WHERE name=? AND semester_id=?",
-                new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                   new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
     public void leave(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET room=?, joined=0 WHERE name=? AND semester_id=?",
-                new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                   new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
     @Override
@@ -172,8 +172,10 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
         // Get all of the users lectures and save them as possible chat rooms
         TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, context, true);
         Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
-        if (lecturesList.isPresent() && lecturesList.get().getLehrveranstaltungen() != null) {
-            List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
+        if (lecturesList.isPresent() && lecturesList.get()
+                                                    .getLehrveranstaltungen() != null) {
+            List<LecturesSearchRow> lectures = lecturesList.get()
+                                                           .getLehrveranstaltungen();
             manager.replaceInto(lectures);
         }
 
@@ -185,7 +187,8 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                 // Join chat room
                 try {
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
-                    currentChatRoom = TUMCabeClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(context, currentChatMember));
+                    currentChatRoom = TUMCabeClient.getInstance(context)
+                                                   .createRoom(currentChatRoom, new ChatVerification(context, currentChatMember));
                     if (currentChatRoom != null) {
                         manager.join(currentChatRoom);
                     }
@@ -228,9 +231,9 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
 
     private Cursor getUnreadRooms() {
         return db.rawQuery("SELECT r.name,r.room,r.semester_id " +
-                "FROM chat_room r, (SELECT room FROM chat_message " +
-                "WHERE read=0 GROUP BY room) AS c " +
-                "WHERE r.room=c.room " +
-                "ORDER BY r.semester_id DESC, r.name", null);
+                           "FROM chat_room r, (SELECT room FROM chat_message " +
+                           "WHERE read=0 GROUP BY room) AS c " +
+                           "WHERE r.room=c.room " +
+                           "ORDER BY r.semester_id DESC, r.name", null);
     }
 }

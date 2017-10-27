@@ -7,7 +7,6 @@ import org.simpleframework.xml.Root;
  * An Element of the Organisation Tree. In the App a List of those Elements is
  * showed ({@link OrgItemList}). The shown Elements are for Navigation to an
  * Element without child-Element, whose details are then shown.
- *
  */
 
 @Root(name = "row")
@@ -41,22 +40,22 @@ public class OrgItem {
      * Organisation ID of the parent Organisation
      */
     @Element(required = false)
-    private String ebene = "";
+    private final String ebene = "";
 
     @Element(required = false)
-    private String org_gruppe_name = "";
+    private final String org_gruppe_name = "";
 
     @Element(required = false)
-    private String child_cnt = "";
+    private final String child_cnt = "";
 
     @Element(required = false)
-    private String sort_hierarchie = "";
+    private final String sort_hierarchie = "";
 
     @Element(required = false)
-    private String kennung = "";
+    private final String kennung = "";
 
     @Element(required = false)
-    private String org_typ_name = "";
+    private final String org_typ_name = "";
 
     // Getter and Setter Functions
     public String getId() {

@@ -10,25 +10,24 @@ import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
 /**
  * This class is dealing with the deserialization of the output of TUMOnline to
  * the method "sucheLehrveranstaltungen".
- *
  */
 
 @Root(name = "row")
 public class LecturesSearchRow
-        implements Comparable<LecturesSearchRow>, SimpleStickyListHeadersAdapter.SimpleStickyListItem{
+        implements Comparable<LecturesSearchRow>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     public static final String STP_SP_NR = "stp_sp_nr";
 
     @Element
-    private String dauer_info = "";
+    private final String dauer_info = "";
     // <dauer_info>4</dauer_info>
 
     @Element(required = false)
-    private String org_kennung_betreut = "";
+    private final String org_kennung_betreut = "";
     // <org_kennung_betreut>TUEIEDA</org_kennung_betreut>
 
     @Element(required = false)
-    private String org_name_betreut = "";
+    private final String org_name_betreut = "";
     // <org_name_betreut>Lehrstuhl für Entwurfsautomatisierung (Prof.
     // Schlichtmann)</org_name_betreut>
 
@@ -37,48 +36,48 @@ public class LecturesSearchRow
     // <org_nr_betreut>15393</org_nr_betreut>
 
     @Element
-    private String semester = "";
+    private final String semester = "";
     // <semester>S</semester>
 
     @Element
-    private String semester_id = "";
+    private final String semester_id = "";
     // <semester_id>11S</semester_id>
 
     @Element
-    private String semester_name = "";
+    private final String semester_name = "";
     // <semester_name>Sommersemester>2011</semester_name>
 
     @Element
-    private String sj_name = "";
+    private final String sj_name = "";
     // <sj_name>2010/11</sj_name>
 
     @Element
-    private String stp_lv_art_kurz = "";
+    private final String stp_lv_art_kurz = "";
     // <stp_lv_art_kurz>PR</stp_lv_art_kurz>
 
     @Element
-    private String stp_lv_art_name = "";
+    private final String stp_lv_art_name = "";
     // <stp_lv_art_name>Praktikum</stp_lv_art_name>
 
     @Element(name = "stp_lv_nr")
-    private String stp_lv_nr = "";
+    private final String stp_lv_nr = "";
     // lehrveranstaltungsnummer
 
     @Element
-    private String stp_sp_nr = "";
+    private final String stp_sp_nr = "";
     // <stp_sp_nr>950006549</stp_sp_nr>
 
     @Element
-    private String stp_sp_sst = "";
+    private final String stp_sp_sst = "";
     // <stp_sp_sst>4</stp_sp_sst>
 
     @Element(name = "stp_sp_titel")
-    private String titel = "";
+    private final String titel = "";
     // <stp_sp_titel>Praktikum (Rechnergestützte)
     // Schaltungssimulation</stp_sp_titel>
 
     @Element(required = false)
-    private String vortragende_mitwirkende = "";
+    private final String vortragende_mitwirkende = "";
 
     // <vortragende_mitwirkende>Schlichtmann U, Pehl M
     // [L]</vortragende_mitwirkende>
@@ -145,7 +144,8 @@ public class LecturesSearchRow
 
     @Override
     public int compareTo(@NonNull LecturesSearchRow lecturesSearchRow) {
-        return lecturesSearchRow.getSemester_id().compareTo(semester_id);
+        return lecturesSearchRow.getSemester_id()
+                                .compareTo(semester_id);
     }
 
     @Override

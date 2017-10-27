@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="fill_horizontal"
-    android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal"
+                android:orientation="vertical">
 
     <TextView
         android:id="@android:id/text1"
@@ -12,6 +12,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:textColor="#fff"
-        android:maxLines="1" />
+        android:maxLines="1"/>
 
 </RelativeLayout>

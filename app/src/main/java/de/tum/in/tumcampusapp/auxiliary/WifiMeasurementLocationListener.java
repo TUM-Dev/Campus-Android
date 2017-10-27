@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
  * the measurement location data needs to fulfill the MINIMUM_ACCURACY_IN_METERS.
  */
 
-public class WifiMeasurementLocationListener implements LocationListener{
+public class WifiMeasurementLocationListener implements LocationListener {
     private final Context context;
     private final WifiMeasurement wifiMeasurement;
     //MAX_MILLISECONDS_PASSED defines the maximum time we wait until a location was found before throwing
@@ -29,7 +29,8 @@ public class WifiMeasurementLocationListener implements LocationListener{
     //The Calendar-time we filled the measurement with wifi information, meaning that location information
     //is not yet generated
     private final long measurementTakenInMillis;
-    public WifiMeasurementLocationListener(Context context, WifiMeasurement wifiMeasurement, long measurementTakenInMillis){
+
+    public WifiMeasurementLocationListener(Context context, WifiMeasurement wifiMeasurement, long measurementTakenInMillis) {
         this.context = context;
         this.wifiMeasurement = wifiMeasurement;
         this.measurementTakenInMillis = measurementTakenInMillis;
@@ -38,30 +39,35 @@ public class WifiMeasurementLocationListener implements LocationListener{
     /**
      * This method modifies the measurement it's responsible for by adding location data to it.
      * If it fulfills the minimum requirements to be stored, it is then saved to the local database.
+     *
      * @param location
      */
-     @Override
-     public void onLocationChanged(Location location) {
-         //Since onLocationChanged can take time, this condition decides, whether the found location is
-         //already too old (MAX_MILLISECONDS_PASSED) for being used for the measurement data (dBm etc...),
-         //which were originally taken at measurementTakenInMillis
-         boolean locationFixTookTooLong = Calendar.getInstance().getTimeInMillis() - measurementTakenInMillis > MAX_MILLISECONDS_PASSED;
-         if (location.getAccuracy() >= MINIMUM_ACCURACY_IN_METERS || locationFixTookTooLong) {
-             return;
-         }
-         WifiMeasurementManager wifiMeasurementManager = new WifiMeasurementManager(context);
-         wifiMeasurement.setAccuracyInMeters(location.getAccuracy());
-         wifiMeasurement.setLatitude(location.getLatitude());
-         wifiMeasurement.setLongitude(location.getLongitude());
-         wifiMeasurementManager.insertWifiMeasurement(wifiMeasurement);
-     }
+    @Override
+    public void onLocationChanged(Location location) {
+        //Since onLocationChanged can take time, this condition decides, whether the found location is
+        //already too old (MAX_MILLISECONDS_PASSED) for being used for the measurement data (dBm etc...),
+        //which were originally taken at measurementTakenInMillis
+        boolean locationFixTookTooLong = Calendar.getInstance()
+                                                 .getTimeInMillis() - measurementTakenInMillis > MAX_MILLISECONDS_PASSED;
+        if (location.getAccuracy() >= MINIMUM_ACCURACY_IN_METERS || locationFixTookTooLong) {
+            return;
+        }
+        WifiMeasurementManager wifiMeasurementManager = new WifiMeasurementManager(context);
+        wifiMeasurement.setAccuracyInMeters(location.getAccuracy());
+        wifiMeasurement.setLatitude(location.getLatitude());
+        wifiMeasurement.setLongitude(location.getLongitude());
+        wifiMeasurementManager.insertWifiMeasurement(wifiMeasurement);
+    }
 
-     @Override
-     public void onStatusChanged(String status, int i, Bundle bundle) {}
+    @Override
+    public void onStatusChanged(String status, int i, Bundle bundle) {
+    }
 
-     @Override
-     public void onProviderEnabled(String status) {}
+    @Override
+    public void onProviderEnabled(String status) {
+    }
 
-     @Override
-     public void onProviderDisabled(String status) {}
+    @Override
+    public void onProviderDisabled(String status) {
+    }
 }

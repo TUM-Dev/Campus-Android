@@ -8,21 +8,20 @@ import de.tum.in.tumcampusapp.trace.Util;
 
 public class BugReport {
 
-    private String packageName;
-    private String packageVersion;
-    private String packageVersionCode;
-    private String phoneModel;
-    private String androidVersion;
-    private String networkWifi;
-    private String networkMobile;
-    private String gps;
-    private String screenWidth;
-    private String screenHeight;
-    private String screenOrientation;
-    private String screenDpi;
-    private String stacktrace;
-    private String log;
-
+    private final String packageName;
+    private final String packageVersion;
+    private final String packageVersionCode;
+    private final String phoneModel;
+    private final String androidVersion;
+    private final String networkWifi;
+    private final String networkMobile;
+    private final String gps;
+    private final String screenWidth;
+    private final String screenHeight;
+    private final String screenOrientation;
+    private final String screenDpi;
+    private final String stacktrace;
+    private final String log;
 
     public BugReport(Context c, String stacktrace, String log) {
         super();

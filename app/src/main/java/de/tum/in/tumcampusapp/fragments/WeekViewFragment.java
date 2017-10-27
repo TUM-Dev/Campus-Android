@@ -110,24 +110,24 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
         return (year * 16) | (month % 12);
     }
 
-    private List<WeekViewEvent> fetchEventList(String roomId, String startDate, String endDate){
+    private List<WeekViewEvent> fetchEventList(String roomId, String startDate, String endDate) {
         List<WeekViewEvent> events = new ArrayList<>();
         try {
-            Optional<List<RoomFinderSchedule>> result = Optional.of(TUMCabeClient.getInstance(context).fetchSchedule(roomId, startDate, endDate));
+            Optional<List<RoomFinderSchedule>> result = Optional.of(TUMCabeClient.getInstance(context)
+                                                                                 .fetchSchedule(roomId, startDate, endDate));
             List<RoomFinderSchedule> schedules = result.get();
 
             //Convert to the proper type
-            for(RoomFinderSchedule schedule : schedules){
+            for (RoomFinderSchedule schedule : schedules) {
                 Calendar startCal = Calendar.getInstance();
                 startCal.setTime(Utils.getISODateTime(schedule.getStart()));
-
 
                 Calendar endCal = Calendar.getInstance();
                 endCal.setTime(Utils.getISODateTime(schedule.getEnd()));
 
                 IntegratedCalendarEvent calendarEvent = new IntegratedCalendarEvent(schedule.getEvent_id(),
-                        schedule.getTitle(), startCal, endCal, "",
-                        IntegratedCalendarEvent.getDisplayColorFromColor(0xff28921f));
+                                                                                    schedule.getTitle(), startCal, endCal, "",
+                                                                                    IntegratedCalendarEvent.getDisplayColorFromColor(0xff28921f));
 
                 events.add(calendarEvent);
             }

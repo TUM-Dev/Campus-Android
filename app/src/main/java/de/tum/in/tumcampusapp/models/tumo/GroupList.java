@@ -15,17 +15,17 @@ import java.util.List;
 @Root(name = "gruppen")
 public class GroupList implements Serializable {
 
-	private static final long serialVersionUID = 2713473533623487005L;
+    private static final long serialVersionUID = 2713473533623487005L;
 
-	@ElementList(inline = true, required = false)
-	private List<Group> groups;
+    @ElementList(inline = true, required = false)
+    private List<Group> groups;
 
-	public List<Group> getGroups() {
-		return groups;
-	}
+    public List<Group> getGroups() {
+        return groups;
+    }
 
-	public void setGroups(List<Group> groups) {
-		this.groups = groups;
-	}
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
 
 }

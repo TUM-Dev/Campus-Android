@@ -20,8 +20,8 @@ public class NotificationManager extends AbstractManager {
     public NotificationManager(Context context) {
         super(context);
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATIONS +
-                " (notification INTEGER UNIQUE, typ INTEGER, location INTEGER, name TEXT, lon REAL, " +
-                "lat REAL, radius INTEGER, title TEXT, description TEXT, signature TEXT)");
+                   " (notification INTEGER UNIQUE, typ INTEGER, location INTEGER, name TEXT, lon REAL, " +
+                   "lat REAL, radius INTEGER, title TEXT, description TEXT, signature TEXT)");
     }
 
     public void replaceInto(GCMNotification note) {
@@ -29,9 +29,12 @@ public class NotificationManager extends AbstractManager {
         cvs.put("notification", note.getNotification());
         cvs.put("type", note.getType());
         cvs.put("location", note.getDescription());
-        cvs.put("name", note.getLocation().getName());
-        cvs.put("lon", note.getLocation().getLon());
-        cvs.put("lat", note.getLocation().getLat());
+        cvs.put("name", note.getLocation()
+                            .getName());
+        cvs.put("lon", note.getLocation()
+                           .getLon());
+        cvs.put("lat", note.getLocation()
+                           .getLat());
         cvs.put("title", note.getTitle());
         cvs.put("description", note.getDescription());
         cvs.put("signature", note.getSignature());

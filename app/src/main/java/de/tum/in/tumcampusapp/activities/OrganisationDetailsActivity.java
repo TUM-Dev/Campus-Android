@@ -39,7 +39,8 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
         super.onCreate(savedInstanceState);
 
         // get the submitted (bundle) data
-        Bundle bundle = this.getIntent().getExtras();
+        Bundle bundle = this.getIntent()
+                            .getExtras();
         orgId = bundle.getString(Const.ORG_ID);
         orgName = bundle.getString(Const.ORG_NAME);
     }
@@ -57,8 +58,10 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
         // set the name of the organisation as heading (TextView tvCaption)
         // only load the details if the details page is new and it isn't a
         // return from a link
-        TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
-        if (tvCaption.getText().toString().compareTo(orgName) != 0) {
+        TextView tvCaption = findViewById(R.id.tvCaption);
+        if (tvCaption.getText()
+                     .toString()
+                     .compareTo(orgName) != 0) {
 
             // set the new organisation name in the heading
             tvCaption.setText(orgName.toUpperCase(Locale.getDefault()));
@@ -98,7 +101,8 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
      */
     @Override
     public void onFetch(OrgDetailItemList result) {
-        updateUI(result.getGroups().get(0));
+        updateUI(result.getGroups()
+                       .get(0));
         showLoadingEnded();
     }
 
@@ -113,18 +117,18 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
             return;
         }
 
-        TextView identifier = (TextView) findViewById(R.id.identifier);
-        TextView name = (TextView) findViewById(R.id.name);
-        TextView contact = (TextView) findViewById(R.id.contact);
-        TextView address = (TextView) findViewById(R.id.adress);
-        TextView homepage = (TextView) findViewById(R.id.homepage);
-        TextView email = (TextView) findViewById(R.id.email);
-        TextView phone = (TextView) findViewById(R.id.phone);
-        TextView fax = (TextView) findViewById(R.id.fax);
-        TextView secretary = (TextView) findViewById(R.id.secretary);
-        TextView extraCaption = (TextView) findViewById(R.id.extra_name);
-        TextView extra = (TextView) findViewById(R.id.extra);
-        TextView bib = (TextView) findViewById(R.id.bib);
+        TextView identifier = findViewById(R.id.identifier);
+        TextView name = findViewById(R.id.name);
+        TextView contact = findViewById(R.id.contact);
+        TextView address = findViewById(R.id.adress);
+        TextView homepage = findViewById(R.id.homepage);
+        TextView email = findViewById(R.id.email);
+        TextView phone = findViewById(R.id.phone);
+        TextView fax = findViewById(R.id.fax);
+        TextView secretary = findViewById(R.id.secretary);
+        TextView extraCaption = findViewById(R.id.extra_name);
+        TextView extra = findViewById(R.id.extra);
+        TextView bib = findViewById(R.id.bib);
 
         identifier.setText(organisation.getCode());
         name.setText(organisation.getName());
@@ -143,40 +147,52 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
         extra.setText(organisation.getAdditionalInfoText());
         bib.setText(organisation.getContactLocality());
 
-        if (identifier.getText().length() == 0) {
+        if (identifier.getText()
+                      .length() == 0) {
             ((View) identifier.getParent()).setVisibility(View.GONE);
         }
-        if (name.getText().length() == 0) {
+        if (name.getText()
+                .length() == 0) {
             ((View) name.getParent()).setVisibility(View.GONE);
         }
-        if (contact.getText().length() == 0) {
+        if (contact.getText()
+                   .length() == 0) {
             ((View) contact.getParent()).setVisibility(View.GONE);
         }
-        if (address.getText().length() == 0) {
+        if (address.getText()
+                   .length() == 0) {
             ((View) address.getParent()).setVisibility(View.GONE);
         }
-        if (homepage.getText().length() == 0) {
+        if (homepage.getText()
+                    .length() == 0) {
             ((View) homepage.getParent()).setVisibility(View.GONE);
         }
-        if (email.getText().length() == 0) {
+        if (email.getText()
+                 .length() == 0) {
             ((View) email.getParent()).setVisibility(View.GONE);
         }
-        if (phone.getText().length() == 0) {
+        if (phone.getText()
+                 .length() == 0) {
             ((View) phone.getParent()).setVisibility(View.GONE);
         }
-        if (fax.getText().length() == 0) {
+        if (fax.getText()
+               .length() == 0) {
             ((View) fax.getParent()).setVisibility(View.GONE);
         }
-        if (secretary.getText().length() == 0) {
+        if (secretary.getText()
+                     .length() == 0) {
             ((View) secretary.getParent()).setVisibility(View.GONE);
         }
-        if (extraCaption.getText().length() == 0) {
+        if (extraCaption.getText()
+                        .length() == 0) {
             ((View) extraCaption.getParent()).setVisibility(View.GONE);
         }
-        if (extra.getText().length() == 0) {
+        if (extra.getText()
+                 .length() == 0) {
             ((View) extra.getParent()).setVisibility(View.GONE);
         }
-        if (bib.getText().length() == 0) {
+        if (bib.getText()
+               .length() == 0) {
             ((View) bib.getParent()).setVisibility(View.GONE);
         }
     }

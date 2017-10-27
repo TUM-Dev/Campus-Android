@@ -30,7 +30,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         final ViewHolder holder;
         View view = convertView;
 
-        if(view == null){
+        if (view == null) {
             // Crate UI element
             view = getInflater().inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
             holder = new ViewHolder(view, parent);
@@ -42,7 +42,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         // display information of current person
         final BarrierfreeContact contact = getInfoList().get(position);
 
-        if(!contact.isValid()) {
+        if (!contact.isValid()) {
             view.setVisibility(View.GONE);
             return view;
         }
@@ -53,6 +53,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
 
         return view;
     }
+
     // the layout of the list
     class ViewHolder {
         TextView name;
@@ -62,24 +63,20 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
 
         ViewHolder(View view, ViewGroup parent) {
 
-            name = view
-                    .findViewById(R.id.barrierfreeContactListViewName);
-            phone = view
-                    .findViewById(R.id.barrierfreeContactListViewPhone);
-            email = view
-                    .findViewById(R.id.barrierfreeContactListViewEmail);
-            more = view
-                    .findViewById(R.id.barrierfreeContactListViewTumOnlineMore);
+            name = view.findViewById(R.id.barrierfreeContactListViewName);
+            phone = view.findViewById(R.id.barrierfreeContactListViewPhone);
+            email = view.findViewById(R.id.barrierfreeContactListViewEmail);
+            more = view.findViewById(R.id.barrierfreeContactListViewTumOnlineMore);
         }
 
-        void setContent(final BarrierfreeContact contact){
+        void setContent(final BarrierfreeContact contact) {
             name.setText(contact.getName());
             phone.setText(contact.getTelephone(), TextView.BufferType.SPANNABLE);
             Linkify.addLinks(phone, Linkify.ALL);
             email.setText(contact.getEmail());
 
             // Has information in tumonline
-            if (!contact.isHavingTumID()){
+            if (!contact.isHavingTumID()) {
                 more.setVisibility(View.GONE);
             } else {
                 // Jump to PersonDetail Activity

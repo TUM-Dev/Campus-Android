@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/AppTheme.GreyBackground"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+              style="@style/AppTheme.GreyBackground"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -16,20 +16,20 @@
             android:id="@+id/button_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"/>
 
         <Button
             android:id="@+id/button_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/kino_cover"
         android:layout_width="160dp"
         android:layout_height="240dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -42,19 +42,19 @@
             android:id="@+id/button_imdb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"/>
 
         <Button
             android:id="@+id/button_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"/>
 
         <Button
             android:id="@+id/button_runtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
 

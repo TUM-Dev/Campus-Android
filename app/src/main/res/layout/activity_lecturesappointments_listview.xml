@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/padding_default" >
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:padding="@dimen/padding_default">
 
     <TextView
         android:id="@+id/tvTerminZeit"
@@ -12,18 +12,18 @@
         android:text=""
         android:textColor="@color/text_light_blue"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/tvTerminOrt"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text=""/>
 
     <TextView
         android:id="@+id/tvTerminBetreff"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text=""/>
 
 </LinearLayout>

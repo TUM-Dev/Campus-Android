@@ -7,11 +7,10 @@ import android.widget.ListView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 
-
 public class BarrierFreeInfoActivity extends BaseActivity {
     ListView listView;
 
-    public BarrierFreeInfoActivity(){
+    public BarrierFreeInfoActivity() {
         super(R.layout.activity_barrier_free_info);
     }
 
