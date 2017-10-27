@@ -11,10 +11,8 @@ import com.google.common.base.Optional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
-
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
@@ -23,9 +21,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackground<Void, Optional<List<RoomFinderRoom>>>
@@ -47,14 +42,14 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
         super.onCreate(savedInstanceState);
 
         // set spinner
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerToolbar);
+        Spinner spinner = findViewById(R.id.spinnerToolbar);
         spinner.setOnItemSelectedListener(this);
 
         // manager
         recentsManager = new RecentsManager(this, RecentsManager.ROOMS);
         locationManager = new LocationManager(this);
 
-        stickyList = (StickyListHeadersListView) findViewById(R.id.activity_barrier_free_facilities_list_view);
+        stickyList = findViewById(R.id.activity_barrier_free_facilities_list_view);
     }
 
     @Override

@@ -127,26 +127,23 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                             favDish.setSelected(false);
                         }
 
-                        favDish.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String id = view.getTag()
-                                                .toString();
-                                String[] data = id.split("__");
-                                String dishName = data[0];
-                                int mensaId = Integer.parseInt(data[1]);
+                        favDish.setOnClickListener(view1 -> {
+                            String id = view1.getTag()
+                                             .toString();
+                            String[] data = id.split("__");
+                            String dishName = data[0];
+                            int mensaId = Integer.parseInt(data[1]);
 
-                                if (!view.isSelected()) {
-                                    DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
-                                    String currentDate = DateTime.now()
-                                                                 .toString(formatter);
-                                    cmm.insertFavoriteDish(mensaId, dishName, currentDate, favDish.getTag()
-                                                                                                  .toString());
-                                    view.setSelected(true);
-                                } else {
-                                    cmm.deleteFavoriteDish(mensaId, dishName);
-                                    view.setSelected(false);
-                                }
+                            if (!view1.isSelected()) {
+                                DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+                                String currentDate = DateTime.now()
+                                                             .toString(formatter);
+                                cmm.insertFavoriteDish(mensaId, dishName, currentDate, favDish.getTag()
+                                                                                              .toString());
+                                view1.setSelected(true);
+                            } else {
+                                cmm.deleteFavoriteDish(mensaId, dishName);
+                                view1.setSelected(false);
                             }
                         });
 

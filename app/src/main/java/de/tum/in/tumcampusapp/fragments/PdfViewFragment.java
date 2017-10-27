@@ -27,12 +27,7 @@ public class PdfViewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pdf_view, container, false);
         pdfView = view.findViewById(R.id.pdf_view);
-        pdfView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                pdfView.fitToWidth();
-            }
-        });
+        pdfView.addOnLayoutChangeListener((view1, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> pdfView.fitToWidth());
         return view;
     }
 

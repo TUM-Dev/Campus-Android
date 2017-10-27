@@ -108,14 +108,11 @@ public abstract class ActivityForSearching extends ProgressActivity {
         });
 
         // Handle search cancellation
-        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                mSearchItem.collapseActionView();
-                mQuery = null;
-                onStartSearch();
-                return false;
-            }
+        mSearchView.setOnCloseListener(() -> {
+            mSearchItem.collapseActionView();
+            mQuery = null;
+            onStartSearch();
+            return false;
         });
 
         mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {

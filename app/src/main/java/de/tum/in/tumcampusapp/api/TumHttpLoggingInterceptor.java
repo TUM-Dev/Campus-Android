@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.api;
 
+import android.support.annotation.NonNull;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -33,12 +35,8 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         /**
          * A {@link Logger} defaults output appropriate for the current platform.
          */
-        Logger DEFAULT = new Logger() {
-            @Override
-            public void log(String message) {
-                Platform.get().log(INFO, message, null);
-            }
-        };
+        Logger DEFAULT = message -> Platform.get()
+                                            .log(INFO, message, null);
     }
 
     public TumHttpLoggingInterceptor(Logger logger) {
@@ -47,7 +45,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
 
 
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
 
         Request request = chain.request();
 
@@ -210,4 +208,3 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
     }
 }
-

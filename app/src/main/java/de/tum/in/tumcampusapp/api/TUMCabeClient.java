@@ -4,13 +4,12 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
-import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;

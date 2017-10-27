@@ -1,22 +1,21 @@
 package de.tum.in.tumcampusapp.fragments;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.common.collect.ImmutableList;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -30,8 +29,6 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public class PlansViewFragment extends Fragment {
-
-    private View fragmentView;
 
     /**
      * An enum to map urls to local filenames
@@ -106,11 +103,11 @@ public class PlansViewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.fragmentView = inflater.inflate(R.layout.fragment_plans_view, container, false);
-        progressBar = (ProgressBar) fragmentView.findViewById(R.id.progressBar2);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View fragmentView = inflater.inflate(R.layout.fragment_plans_view, container, false);
+        progressBar = fragmentView.findViewById(R.id.progressBar2);
 
-        list = (ListView) fragmentView.findViewById(R.id.activity_plans_list_view);
+        list = fragmentView.findViewById(R.id.activity_plans_list_view);
         List<PlanListEntry> listMenuEntrySet = ImmutableList.<PlanListEntry>builder()
                 .add(new PlanListEntry(R.drawable.plan_mvv_icon, R.string.mvv_fast_train_net, R.string.empty_string, 0))
                 .add(new PlanListEntry(R.drawable.plan_mvv_night_icon, R.string.mvv_nightlines, R.string.empty_string, 0))
@@ -130,27 +127,26 @@ public class PlansViewFragment extends Fragment {
         //Add files/links to listview
         mListAdapter = new PlanListAdapter(getActivity(), listMenuEntrySet);
         list.setAdapter(mListAdapter);
-        list.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-                PlanListEntry entry = (PlanListEntry) mListAdapter.getItem(pos);
-                if (pos <= 3) {
-                    String currentLocalName = PlanFile.values()[pos].getLocalName();
-                    File pdfFile = new File(fileDirectory, currentLocalName);
-                    if (pdfFile.exists()){
-                        if (!openPdfViewer(pdfFile)){
-                            Toast.makeText(getContext(), "Invalid file format, please let us know of this bug - plans have probably been updated.", Toast.LENGTH_LONG).show();
-                        }
-                    }else{
-                        Toast.makeText(getContext(), "File doesn't exist yet...did you download it?", Toast.LENGTH_LONG).show();
-                        downloadFiles();
+        list.setOnItemClickListener((adapterView, view, pos, id) -> {
+            PlanListEntry entry = (PlanListEntry) mListAdapter.getItem(pos);
+            if (pos <= 3) {
+                String currentLocalName = PlanFile.values()[pos].getLocalName();
+                File pdfFile = new File(fileDirectory, currentLocalName);
+                if (pdfFile.exists()) {
+                    if (!openPdfViewer(pdfFile)) {
+                        Toast.makeText(getContext(), "Invalid file format, please let us know of this bug - plans have probably been updated.", Toast.LENGTH_LONG)
+                             .show();
                     }
                 } else {
-                    Intent intent = new Intent(getContext(), PlansDetailsActivity.class);
-                    intent.putExtra(PlansDetailsActivity.PLAN_TITLE_ID, entry.titleId);
-                    intent.putExtra(PlansDetailsActivity.PLAN_IMG_ID, entry.imgId);
-                    startActivity(intent);
+                    Toast.makeText(getContext(), "File doesn't exist yet...did you download it?", Toast.LENGTH_LONG)
+                         .show();
+                    downloadFiles();
                 }
+            } else {
+                Intent intent = new Intent(getContext(), PlansDetailsActivity.class);
+                intent.putExtra(PlansDetailsActivity.PLAN_TITLE_ID, entry.titleId);
+                intent.putExtra(PlansDetailsActivity.PLAN_IMG_ID, entry.imgId);
+                startActivity(intent);
             }
         });
         return fragmentView;
@@ -169,23 +165,16 @@ public class PlansViewFragment extends Fragment {
     private void displayDownloadDialog(){
         final Intent back_intent = new Intent(getContext(), MainActivity.class);
         new AlertDialog.Builder(getContext())
-            .setTitle("MVV plans")
-            .setMessage(getResources().getString(R.string.mvv_download))
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(back_intent);
-                }
-            })
-            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                .setTitle("MVV plans")
+                .setMessage(getResources().getString(R.string.mvv_download))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> startActivity(back_intent))
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     progressBar.setVisibility(View.VISIBLE);
                     pdfDownloader.execute(PlanFile.values());
                     list.setEnabled(false);
-                }
-            }).show();
+                })
+                .show();
     }
 
     /**
@@ -199,8 +188,12 @@ public class PlansViewFragment extends Fragment {
      */
     public boolean openPdfViewer(File pdf){
         PdfViewFragment pdfFragment = (PdfViewFragment)getActivity().getSupportFragmentManager().findFragmentByTag("PDF_FRAGMENT");
-        if (pdfFragment == null) pdfFragment = new PdfViewFragment();
-        if (!pdfFragment.setPdf(pdf)) return false;
+        if (pdfFragment == null) {
+            pdfFragment = new PdfViewFragment();
+        }
+        if (!pdfFragment.setPdf(pdf)) {
+            return false;
+        }
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.activity_plans_fragment_frame, pdfFragment, "PDF_FRAGMENT");
         transaction.addToBackStack(null);

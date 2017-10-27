@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -272,12 +271,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                 ));
             }
 
-            Collections.sort(result, new Comparator<Departure>() {
-                @Override
-                public int compare(Departure lhs, Departure rhs) {
-                    return lhs.countDown - rhs.countDown;
-                }
-            });
+            Collections.sort(result, (lhs, rhs) -> lhs.countDown - rhs.countDown);
         } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
@@ -331,12 +325,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             }
 
             //Sort by quality
-            Collections.sort(results, new Comparator<StationResult>() {
-                @Override
-                public int compare(StationResult lhs, StationResult rhs) {
-                    return rhs.quality - lhs.quality;
-                }
-            });
+            Collections.sort(results, (lhs, rhs) -> rhs.quality - lhs.quality);
 
             MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
             for (StationResult result : results) {

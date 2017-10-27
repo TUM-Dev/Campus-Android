@@ -109,12 +109,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      */
     @Override
     protected void showError(final String errorReason) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForSearchingInBackground.super.showError(errorReason);
-            }
-        });
+        runOnUiThread(() -> ActivityForSearchingInBackground.super.showError(errorReason));
     }
 
     /**
@@ -123,12 +118,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      */
     @Override
     protected void showErrorLayout() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForSearchingInBackground.super.showErrorLayout();
-            }
-        });
+        runOnUiThread(ActivityForSearchingInBackground.super::showErrorLayout);
     }
 
     /**
@@ -138,12 +128,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      */
     @Override
     protected void showFailedTokenLayout(final String error) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForSearchingInBackground.super.showFailedTokenLayout(error);
-            }
-        });
+        runOnUiThread(() -> ActivityForSearchingInBackground.super.showFailedTokenLayout(error));
     }
 
     /**
@@ -151,12 +136,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      */
     @Override
     protected void showNoTokenLayout() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForSearchingInBackground.super.showNoTokenLayout();
-            }
-        });
+        runOnUiThread(ActivityForSearchingInBackground.super::showNoTokenLayout);
     }
 
     /**
@@ -164,12 +144,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      */
     @Override
     protected void showNoInternetLayout() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForSearchingInBackground.super.showNoInternetLayout();
-            }
-        });
+        runOnUiThread(ActivityForSearchingInBackground.super::showNoInternetLayout);
     }
 
     private class BackgroundSearch extends AsyncTask<String, Void, Optional<T>> {

@@ -153,7 +153,7 @@ public class ChatMessageValidatorTestCase {
      */
     @Test
     public void testNoPublicKeys() {
-        validator = new ChatMessageValidator(new ArrayList<ChatPublicKey>());
+        validator = new ChatMessageValidator(new ArrayList<>());
 
         for (ChatMessage message : messageFixtures) {
             assertFalse(validator.validate(message));

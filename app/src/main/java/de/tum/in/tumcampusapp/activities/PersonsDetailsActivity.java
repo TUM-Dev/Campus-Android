@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
-import android.content.DialogInterface;
 import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -163,7 +162,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
      */
     private void displayResults(Employee employee) {
         // add the employee's counterfeit
-        ImageView imageView = (ImageView) this.findViewById(R.id.ivImage);
+        ImageView imageView = this.findViewById(R.id.ivImage);
 
         Bitmap image = employee.getImage();
         if (image == null) {
@@ -176,7 +175,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         // formatting
         HTMLStringBuffer contentText = new HTMLStringBuffer();
 
-        TextView tvDetails1 = (TextView) findViewById(R.id.tvDetails1);
+        TextView tvDetails1 = findViewById(R.id.tvDetails1);
 
         // get the right gender
         if (employee.getGender() != null
@@ -200,7 +199,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
         contentText.clear();
 
-        TextView tvDetails2 = (TextView) findViewById(R.id.tvDetails2);
+        TextView tvDetails2 = findViewById(R.id.tvDetails2);
 
         // add all groups the employee belongs to
         List<Group> groups = employee.getGroups();
@@ -223,7 +222,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
         contentText.clear();
 
-        TextView tvDetails3 = (TextView) findViewById(R.id.tvDetails3);
+        TextView tvDetails3 = findViewById(R.id.tvDetails3);
 
         // add contact information, if available
 
@@ -251,7 +250,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         // start new section
         contentText.clear();
 
-        TextView tvDetails4 = (TextView) findViewById(R.id.tvDetails4);
+        TextView tvDetails4 = findViewById(R.id.tvDetails4);
 
         contentText.appendField(getString(R.string.office_hours),
                 employee.getConsultationHours());
@@ -419,13 +418,8 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                 // Display an AlertDialog with an explanation and a button to trigger the request.
                 new AlertDialog.Builder(this)
                         .setMessage(R.string.permission_contacts_explanation)
-                        .setPositiveButton(R.string.grant_permission, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int onClickId) {
-                                ActivityCompat
-                                        .requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id);
-                            }
-                        })
+                        .setPositiveButton(R.string.grant_permission, (dialog, onClickId) -> ActivityCompat
+                                .requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id))
                         .setNegativeButton(R.string.cancel, null)
                         .show();
             } else {

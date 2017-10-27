@@ -10,17 +10,18 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import de.tum.in.tumcampusapp.R;
 
 public class NotificationSettingsListAdapter extends BaseAdapter{
-    private ArrayList<Pair<Integer, Integer>> dailySchedule;
-    private LayoutInflater inflater;
-    private Activity activity;
+    private final ArrayList<Pair<Integer, Integer>> dailySchedule;
+    private final LayoutInflater inflater;
+    private final Activity activity;
 
     //Earliest hour a user can pick in the time picker dialog
     private final int EARLIEST_HOUR = 6;
@@ -73,9 +74,9 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
         if (view == null) {
             viewHolder = new ViewHolder();
             view = inflater.inflate(R.layout.notification_schedule_listitem, null);
-            viewHolder.weekday = (TextView) view.findViewById(R.id.weekday);
-            viewHolder.time = (Button) view.findViewById(R.id.notification_time);
-            viewHolder.isActive = (CheckBox) view.findViewById(R.id.notification_active);
+            viewHolder.weekday = view.findViewById(R.id.weekday);
+            viewHolder.time = view.findViewById(R.id.notification_time);
+            viewHolder.isActive = view.findViewById(R.id.notification_active);
             view.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) view.getTag();
@@ -115,7 +116,7 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
      * It opens a time-picker dialog and sets the time to "defaultHour":"defaultMinute"
      */
     private class OnTimeClickListener implements View.OnClickListener{
-        private Context context;
+        private final Context context;
         private final int position;
         private int defaultHour;
         private int defaultMinute;
@@ -134,16 +135,14 @@ public class NotificationSettingsListAdapter extends BaseAdapter{
             showTimePicker();
         }
         private void showTimePicker(){
-             new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                    if(hour < EARLIEST_HOUR || hour > LATEST_HOUR) {
-                        Toast.makeText(context, context.getString(R.string.invalid_notification_time)
-                                +" "+EARLIEST_HOUR+" - "+LATEST_HOUR, Toast.LENGTH_SHORT).show();
-                    }else{
-                        dailySchedule.set(position, new Pair<>(hour, minute));
-                        notifyDataSetChanged();
-                    }
+            new TimePickerDialog(context, (timePicker, hour, minute) -> {
+                if (hour < EARLIEST_HOUR || hour > LATEST_HOUR) {
+                    Toast.makeText(context, context.getString(R.string.invalid_notification_time)
+                                            + " " + EARLIEST_HOUR + " - " + LATEST_HOUR, Toast.LENGTH_SHORT)
+                         .show();
+                } else {
+                    dailySchedule.set(position, new Pair<>(hour, minute));
+                    notifyDataSetChanged();
                 }
             }, defaultHour, defaultMinute, true).show();
         }

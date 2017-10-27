@@ -8,7 +8,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -19,6 +18,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -64,7 +64,7 @@ public class StartupActivity extends AppCompatActivity {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
+            if (DownloadService.BROADCAST_NAME.equals(intent.getAction())) {
 
                 //Only proceed to start the App, if initialization is finished
                 if (initializationFinished.compareAndSet(false, true)) {
@@ -121,12 +121,7 @@ public class StartupActivity extends AppCompatActivity {
         // On first setup show remark that loading could last longer than normally
         boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
         if (!isSetup) {
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE);
-                }
-            });
+            this.runOnUiThread(() -> findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE));
         }
 
         // Register receiver for background service
@@ -151,12 +146,7 @@ public class StartupActivity extends AppCompatActivity {
         //Show a loading screen during boot
         setContentView(R.layout.activity_startup);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                init();
-            }
-        }).start();
+        new Thread(this::init).start();
     }
 
     @Override
@@ -170,8 +160,8 @@ public class StartupActivity extends AppCompatActivity {
      */
     private void requestLocationPermission() {
         //Check, if we already have permission
-        if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             //We already got the permissions, to proceed normally
             //Only proceed to start the App, if initialization is finished
             if (initializationFinished.compareAndSet(false, true)) {
@@ -186,19 +176,9 @@ public class StartupActivity extends AppCompatActivity {
 
 
             // Display an AlertDialog with an explanation and a button to trigger the request.
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    new AlertDialog.Builder(StartupActivity.this).setMessage(getString(R.string.permission_location_explanation)).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-
-                            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
-
-                        }
-                    }).show();
-                }
-            });
+            runOnUiThread(() -> new AlertDialog.Builder(StartupActivity.this).setMessage(getString(R.string.permission_location_explanation))
+                                                                             .setPositiveButton(R.string.ok, (dialog, id) -> ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION, REQUEST_LOCATION))
+                                                                             .show());
         } else {
             ActivityCompat.requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
         }
@@ -226,9 +206,9 @@ public class StartupActivity extends AppCompatActivity {
     private void startApp() {
         // Get views to be moved
         final View background = findViewById(R.id.startup_background);
-        final ImageView tumLogo = (ImageView) findViewById(R.id.startup_tum_logo);
-        final TextView loadingText = (TextView) findViewById(R.id.startup_loading);
-        final TextView first = (TextView) findViewById(R.id.startup_loading_first);
+        final ImageView tumLogo = findViewById(R.id.startup_tum_logo);
+        final TextView loadingText = findViewById(R.id.startup_loading);
+        final TextView first = findViewById(R.id.startup_loading_first);
 
         // Make some position calculations
         final int actionBarHeight = getActionBarHeight();
@@ -318,7 +298,6 @@ public class StartupActivity extends AppCompatActivity {
      */
     @TargetApi(Build.VERSION_CODES.O)
     private void setupNotificationChannels() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(

@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
@@ -69,11 +68,11 @@ public class NextLectureCard extends NotificationAwareCard {
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
         mCard = viewHolder.itemView;
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
-        mTimeView = (TextView) mCard.findViewById(R.id.card_time);
-        mLocation = (TextView) mCard.findViewById(R.id.card_location_action);
-        mEvent = (TextView) mCard.findViewById(R.id.card_event_action);
+        mLinearLayout = mCard.findViewById(R.id.card_view);
+        mTitleView = mCard.findViewById(R.id.card_title);
+        mTimeView = mCard.findViewById(R.id.card_time);
+        mLocation = mCard.findViewById(R.id.card_location_action);
+        mEvent = mCard.findViewById(R.id.card_event_action);
 
         showItem(0);
 
@@ -81,13 +80,8 @@ public class NextLectureCard extends NotificationAwareCard {
         if (lectures.size() > 1) {
             for (; i < lectures.size(); i++) {
                 final int j = i;
-                Button text = (Button) mCard.findViewById(IDS[i]);
-                text.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showItem(j);
-                    }
-                });
+                Button text = mCard.findViewById(IDS[i]);
+                text.setOnClickListener(view -> showItem(j));
             }
         }
         for (; i < 4; i++) {
@@ -96,7 +90,7 @@ public class NextLectureCard extends NotificationAwareCard {
         }
     }
 
-    void showItem(int sel) {
+    private void showItem(int sel) {
         // Set selection on the buttons
         mSelected = sel;
         for (int i = 0; i < 4; i++) {
@@ -116,27 +110,21 @@ public class NextLectureCard extends NotificationAwareCard {
             mLocation.setVisibility(View.GONE);
         } else {
             mLocation.setText(item.location);
-            mLocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, RoomFinderActivity.class);
-                    i.putExtra(SearchManager.QUERY, item.location);
-                    mContext.startActivity(i);
-                }
+            mLocation.setOnClickListener(v -> {
+                Intent i = new Intent(mContext, RoomFinderActivity.class);
+                i.putExtra(SearchManager.QUERY, item.location);
+                mContext.startActivity(i);
             });
         }
 
         DateFormat week = new SimpleDateFormat("EEEE, ", Locale.getDefault());
-        DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
+        DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
         mEvent.setText(String.format("%s%s - %s", week.format(item.start), df.format(item.start), df.format(item.end)));
-        mEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(mContext, CalendarActivity.class);
-                CalendarItem item = lectures.get(mSelected);
-                i.putExtra(CalendarActivity.EVENT_TIME, item.start.getTime());
-                mContext.startActivity(i);
-            }
+        mEvent.setOnClickListener(view -> {
+            Intent i = new Intent(mContext, CalendarActivity.class);
+            CalendarItem item1 = lectures.get(mSelected);
+            i.putExtra(CalendarActivity.EVENT_TIME, item1.start.getTime());
+            mContext.startActivity(i);
         });
     }
 

@@ -62,6 +62,7 @@ public final class Utils {
         String resultCss = "<style type=\"text/css\">" + css + "</style>";
         String resultBody = "<body>" + body + "</body>";
         String footer = "</html>";
+        //noinspection StringConcatenationMissingWhitespace
         return header + resultCss + resultBody + footer;
     }
 
@@ -276,7 +277,7 @@ public final class Utils {
      * @param str String to hash
      * @return hash hash as string
      */
-    public static String hash(String str) {
+    static String hash(String str) {
         return Hashing.murmur3_128()
                       .hashBytes(str.getBytes(Charsets.UTF_8))
                       .toString();
@@ -400,6 +401,7 @@ public final class Utils {
      * @param meters Meters to represent
      * @return Formatted meters. e.g. 10m, 12.5km
      */
+    @SuppressWarnings("StringConcatenationMissingWhitespace")
     public static String formatDist(float meters) {
         if (meters < 1000) {
             return ((int) meters) + "m";
@@ -567,21 +569,11 @@ public final class Utils {
     }
 
     public static void showToastOnUIThread(final Activity activity, final int s) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.showToast(activity, s);
-            }
-        });
+        activity.runOnUiThread(() -> Utils.showToast(activity, s));
     }
 
-    public static void showToastOnUIThread(final Activity activity, final String s) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.showToast(activity, s);
-            }
-        });
+    public static void showToastOnUIThread(final Activity activity, final CharSequence s) {
+        activity.runOnUiThread(() -> Utils.showToast(activity, s));
     }
 
     /**

@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -216,17 +215,11 @@ public final class ExceptionHandler {
         }
 
         //Look into the files folder to see if there are any "*.stacktrace" files.
-        String[] list = dir.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(STACKTRACE_ENDING);
-            }
-        });
+        String[] list = dir.list((dir1, name) -> name.endsWith(STACKTRACE_ENDING));
         Utils.logv("Found " + list.length + " stacktrace(s)");
 
         //Try to read all of them
         try {
-
             sStackTraces = new ArrayList<>();
             for (String aList : list) {
 

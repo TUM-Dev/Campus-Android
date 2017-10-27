@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -131,19 +129,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 final String url = cur.getString(1);
 
                 if (url != null) { // Skip News that do not have a image
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (bmp.isPresent()) {
-                                        pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
-                                    }
-                                }
-                            });
-                        }
+                    new Thread(() -> {
+                        final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                        mContext.runOnUiThread(() -> {
+                            if (bmp.isPresent()) {
+                                pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
+                            }
+                        });
                     }).start();
                 }
 
@@ -248,12 +240,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 // This button invokes the clear cache method
                 new AlertDialog.Builder(mContext)
                         .setMessage(R.string.delete_chache_sure)
-                        .setPositiveButton(R.string.yes, new Dialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                clearCache();
-                            }
-                        })
+                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> clearCache())
                         .setNegativeButton(R.string.no, null)
                         .show();
 

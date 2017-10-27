@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,22 +64,19 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         }
 
         // Get handles to all UI elements
-        checkSilentMode = (CheckBox) findViewById(R.id.chk_silent_mode);
-        bugReport = (CheckBox) findViewById(R.id.chk_bug_reports);
+        checkSilentMode = findViewById(R.id.chk_silent_mode);
+        bugReport = findViewById(R.id.chk_bug_reports);
         bugReport.setChecked(preferences.getBoolean(Const.BUG_REPORTS, true));
 
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, true));
-            checkSilentMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (checkSilentMode.isChecked() &&
-                        !SilenceService.hasPermissions(WizNavExtrasActivity.this)) {
-                        SilenceService.requestPermissions(WizNavExtrasActivity.this);
-                        checkSilentMode.setChecked(false);
-                    }
+            checkSilentMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (checkSilentMode.isChecked() &&
+                    !SilenceService.hasPermissions(WizNavExtrasActivity.this)) {
+                    SilenceService.requestPermissions(WizNavExtrasActivity.this);
+                    checkSilentMode.setChecked(false);
                 }
             });
         } else {
@@ -89,7 +85,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         }
 
         // Get handles to all UI elements
-        groupChatMode = (CheckBox) findViewById(R.id.chk_group_chat);
+        groupChatMode = findViewById(R.id.chk_group_chat);
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
         } else {

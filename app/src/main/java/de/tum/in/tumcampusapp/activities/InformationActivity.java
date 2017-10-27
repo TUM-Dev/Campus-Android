@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class InformationActivity extends BaseActivity {
 
-    private final TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+    private final TableRow.LayoutParams rowParams = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private int debugOptionsCount;
 
     public InformationActivity() {
@@ -55,33 +56,29 @@ public class InformationActivity extends BaseActivity {
         }
 
         //Set it up on the ui
-        TextView tv = (TextView) findViewById(R.id.txt_version);
+        TextView tv = findViewById(R.id.txt_version);
         tv.setText(versionName);
 
         //Setup showing of debug information
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Lock it after five clicks
-                if (debugOptionsCount > 5) {
-                    return;
-                }
-
-                //Increase
-                debugOptionsCount++;
-
-                //Show at five clicks
-                if (debugOptionsCount == 5) {
-                    InformationActivity.this.displayDebugInfo();
-                }
+        tv.setOnClickListener(v -> {
+            //Lock it after five clicks
+            if (debugOptionsCount > 5) {
+                return;
             }
 
+            //Increase
+            debugOptionsCount++;
+
+            //Show at five clicks
+            if (debugOptionsCount == 5) {
+                InformationActivity.this.displayDebugInfo();
+            }
         });
     }
 
     private void displayDebugInfo() {
 
-        TableLayout table = (TableLayout) findViewById(R.id.debugInfos);
+        TableLayout table = findViewById(R.id.debugInfos);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         this.addDebugRow(table, "LRZ ID", sp.getString(Const.LRZ_ID, ""));
@@ -118,13 +115,10 @@ public class InformationActivity extends BaseActivity {
         v.setClickable(true);
 
         //Copy to clipboard
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText(label, value);
-                clipboard.setPrimaryClip(clip);
-            }
+        v.setOnClickListener(v1 -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText(label, value);
+            clipboard.setPrimaryClip(clip);
         });
         tableRow.addView(v);
 

@@ -380,12 +380,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
         @Override
         protected void onHandleIntent(Intent intent) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    loadGeo(QueryLocationsService.this);
-                }
-            }).start();
+            new Thread(() -> loadGeo(QueryLocationsService.this)).start();
         }
     }
 }

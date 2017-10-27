@@ -2,10 +2,7 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -65,7 +62,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
         super.onCreate(savedInstanceState);
 
         // list of organizations
-        lvOrg = (ListView) findViewById(R.id.lstOrganisations);
+        lvOrg = findViewById(R.id.lstOrganisations);
 
         // set language = German if system language is German else set English
         languageGerman = System.getProperty("user.language").compareTo(Const.DE) == 0;
@@ -162,7 +159,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
     void showItems(String orgItem) {
 
         // caption button gets caption
-        TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
+        TextView tvCaption = findViewById(R.id.tvCaption);
 
         // if no orgName -> highest level
         if (orgName == null) {
@@ -185,44 +182,40 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
         lvOrg.setAdapter(new OrgItemListAdapter(this, organisationList));
 
         // action for clicks on a list-item
-        lvOrg.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position,
-                                    long id) {
-                Object o = lvOrg.getItemAtPosition(position);
-                OrgItem org = (OrgItem) o;
+        lvOrg.setOnItemClickListener((a, v, position, id) -> {
+            Object o = lvOrg.getItemAtPosition(position);
+            OrgItem org = (OrgItem) o;
 
-                // look if no subOrganisation exists, and if not make bundle and
-                // start OrganisationDetails
-                if (existSubOrganisation(org.getId())) {
-                    // if subOrganisation exists, show subOrganisation structure
-                    parentId = orgId;
-                    orgId = org.getId();
-                    // switch correct language
-                    if (languageGerman) {
-                        orgName = org.getNameDe();
-                    } else {
-                        orgName = org.getNameEn();
-                    }
-                    showItems(orgId);
+            // look if no subOrganisation exists, and if not make bundle and
+            // start OrganisationDetails
+            if (existSubOrganisation(org.getId())) {
+                // if subOrganisation exists, show subOrganisation structure
+                parentId = orgId;
+                orgId = org.getId();
+                // switch correct language
+                if (languageGerman) {
+                    orgName = org.getNameDe();
                 } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(Const.ORG_PARENT_ID, org.getParentId());
-                    bundle.putString(Const.ORG_ID, org.getId());
-
-                    // set orgName depending on language
-                    if (languageGerman) {
-                        bundle.putString(Const.ORG_NAME, org.getNameDe());
-                    } else {
-                        bundle.putString(Const.ORG_NAME, org.getNameEn());
-                    }
-
-                    // show organisation details
-                    Intent i = new Intent(OrganisationActivity.this, OrganisationDetailsActivity.class);
-                    i.putExtras(bundle);
-                    startActivity(i);
-
+                    orgName = org.getNameEn();
                 }
+                showItems(orgId);
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putString(Const.ORG_PARENT_ID, org.getParentId());
+                bundle.putString(Const.ORG_ID, org.getId());
+
+                // set orgName depending on language
+                if (languageGerman) {
+                    bundle.putString(Const.ORG_NAME, org.getNameDe());
+                } else {
+                    bundle.putString(Const.ORG_NAME, org.getNameEn());
+                }
+
+                // show organisation details
+                Intent i = new Intent(OrganisationActivity.this, OrganisationDetailsActivity.class);
+                i.putExtras(bundle);
+                startActivity(i);
+
             }
         });
     }

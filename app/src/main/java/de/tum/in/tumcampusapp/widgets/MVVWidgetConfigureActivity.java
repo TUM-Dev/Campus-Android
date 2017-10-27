@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 
@@ -60,12 +59,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
 
         Switch autoReloadSwitch = findViewById(R.id.mvv_widget_auto_reload);
         autoReloadSwitch.setChecked(this.widgetDepartures.autoReload());
-        autoReloadSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                widgetDepartures.setAutoReload(checked);
-            }
-        });
+        autoReloadSwitch.setOnCheckedChangeListener((compoundButton, checked) -> widgetDepartures.setAutoReload(checked));
         // TODO add handling for use location
 
         // Det all stations from db

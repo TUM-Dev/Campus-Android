@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -67,7 +66,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         super.onCreate(savedInstanceState);
 
         // bind UI elements
-        lvMyChatRoomList = (StickyListHeadersListView) findViewById(R.id.lvMyChatRoomList);
+        lvMyChatRoomList = findViewById(R.id.lvMyChatRoomList);
         lvMyChatRoomList.setOnItemClickListener(this);
 
         manager = new ChatRoomManager(this);
@@ -75,7 +74,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         //Load the lectures list
         requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.chat_rooms_tabs);
+        TabLayout tabLayout = findViewById(R.id.chat_rooms_tabs);
         // Create a tab listener that is called when the user changes tabs.
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -161,13 +160,11 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 .setTitle(R.string.new_chat_room)
                 .setMessage(R.string.new_chat_room_desc)
                 .setView(input)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String value = input.getText().toString();
-                        String randId = Integer.toHexString((int) (Math.random() * 4096));
-                        createOrJoinChatRoom(randId + ':' + value);
-                    }
+                .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+                    String value = input.getText()
+                                        .toString();
+                    String randId = Integer.toHexString((int) (Math.random() * 4096));
+                    createOrJoinChatRoom(randId + ':' + value);
                 })
                 .setNegativeButton(android.R.string.cancel, null).show();
     }
@@ -205,12 +202,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                         moveToChatActivity();
                     } else { //Otherwise show a nice information, that we added the room
                         final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.changeCursor(newCursor);
-                                Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
-                            }
+                        runOnUiThread(() -> {
+                            adapter.changeCursor(newCursor);
+                            Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
                         });
                     }
                 }

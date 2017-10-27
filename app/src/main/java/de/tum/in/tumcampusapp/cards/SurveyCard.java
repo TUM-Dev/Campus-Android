@@ -86,38 +86,27 @@ public class SurveyCard extends Card {
             final Question ques = questions.get(0);
             mQuestion.setText(ques.getText()); // Sets the text of the question that should be shown first
 
+            // TODO: this can probably be replaced by a single OnClickListener
             // Listens on the yes button in the card
-            bYes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerYes); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
-                }
+            bYes.setOnClickListener(view -> {
+                Question updatedElement = questions.remove(0);
+                manager.updateQuestion(updatedElement, answerYes); // update the answerID in the local db.
+                showNextQuestions(); // handel showing next question(s)
             });
-            bNo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerNo); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
-                }
+            bNo.setOnClickListener(view -> {
+                Question updatedElement = questions.remove(0);
+                manager.updateQuestion(updatedElement, answerNo); // update the answerID in the local db.
+                showNextQuestions(); // handel showing next question(s)
             });
-            bSkip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerSkip); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
-                }
+            bSkip.setOnClickListener(view -> {
+                Question updatedElement = questions.remove(0);
+                manager.updateQuestion(updatedElement, answerSkip); // update the answerID in the local db.
+                showNextQuestions(); // handel showing next question(s)
             });
-            bFlagged.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerFlag); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
-                }
+            bFlagged.setOnClickListener(view -> {
+                Question updatedElement = questions.remove(0);
+                manager.updateQuestion(updatedElement, answerFlag); // update the answerID in the local db.
+                showNextQuestions(); // handel showing next question(s)
             });
         }
     }

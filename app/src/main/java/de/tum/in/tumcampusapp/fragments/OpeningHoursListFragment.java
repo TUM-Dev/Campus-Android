@@ -60,11 +60,8 @@ public class OpeningHoursListFragment extends ListFragment {
      * A dummy implementation of the {@link Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
      */
-    private static final Callbacks S_DUMMY_CALLBACKS = new Callbacks() {
-        @Override
-        public void onItemSelected(int id, String name) {
-            // Dummy callback
-        }
+    private static final Callbacks S_DUMMY_CALLBACKS = (id, name) -> {
+        // Dummy callback
     };
 
     public OpeningHoursListFragment() {

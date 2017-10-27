@@ -1,10 +1,12 @@
 package de.tum.in.tumcampusapp.auxiliary;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.widget.Toast;
+
 import java.util.Calendar;
+
 import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 
@@ -16,8 +18,8 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
  */
 
 public class WifiMeasurementLocationListener implements LocationListener{
-    private Context context;
-    private WifiMeasurement wifiMeasurement;
+    private final Context context;
+    private final WifiMeasurement wifiMeasurement;
     //MAX_MILLISECONDS_PASSED defines the maximum time we wait until a location was found before throwing
     //the measurement away
     private static final int MAX_MILLISECONDS_PASSED = 3000;
@@ -26,7 +28,7 @@ public class WifiMeasurementLocationListener implements LocationListener{
     private static final int MINIMUM_ACCURACY_IN_METERS = 25;
     //The Calendar-time we filled the measurement with wifi information, meaning that location information
     //is not yet generated
-    private long measurementTakenInMillis;
+    private final long measurementTakenInMillis;
     public WifiMeasurementLocationListener(Context context, WifiMeasurement wifiMeasurement, long measurementTakenInMillis){
         this.context = context;
         this.wifiMeasurement = wifiMeasurement;

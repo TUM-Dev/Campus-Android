@@ -62,13 +62,13 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
 
         ViewHolder(View view, ViewGroup parent) {
 
-            name = (TextView) view
+            name = view
                     .findViewById(R.id.barrierfreeContactListViewName);
-            phone = (TextView) view
+            phone = view
                     .findViewById(R.id.barrierfreeContactListViewPhone);
-            email = (TextView) view
+            email = view
                     .findViewById(R.id.barrierfreeContactListViewEmail);
-            more = (TextView) view
+            more = view
                     .findViewById(R.id.barrierfreeContactListViewTumOnlineMore);
         }
 
@@ -85,20 +85,17 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
                 // Jump to PersonDetail Activity
                 more.setVisibility(View.VISIBLE);
                 more.setText(context.getString(R.string.more_info));
-                more.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Person person = new Person();
-                        person.setName(contact.getName());
-                        person.setId(contact.getTumID());
+                more.setOnClickListener(v -> {
+                    Person person = new Person();
+                    person.setName(contact.getName());
+                    person.setId(contact.getTumID());
 
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("personObject", person);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("personObject", person);
 
-                        Intent intent = new Intent(context, PersonsDetailsActivity.class);
-                        intent.putExtras(bundle);
-                        context.startActivity(intent);
-                    }
+                    Intent intent = new Intent(context, PersonsDetailsActivity.class);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
                 });
             }
         }

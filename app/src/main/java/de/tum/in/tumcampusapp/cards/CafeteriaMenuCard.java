@@ -12,11 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -60,14 +59,15 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
         List<View> addedViews = cardsViewHolder.getAddedViews();
         mCard = viewHolder.itemView;
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
+        mLinearLayout = mCard.findViewById(R.id.card_view);
+        mTitleView = mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
 
         // Show date
-        TextView mDateView = (TextView) mCard.findViewById(R.id.card_date);
+        TextView mDateView = mCard.findViewById(R.id.card_date);
         mDateView.setVisibility(View.VISIBLE);
-        mDateView.setText(SimpleDateFormat.getDateInstance().format(mDate));
+        mDateView.setText(DateFormat.getDateInstance()
+                                    .format(mDate));
 
         //Remove additional views
         for (View view : addedViews) {

@@ -24,7 +24,6 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
-import de.tum.in.tumcampusapp.services.FavoriteDishAlarmScheduler;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
@@ -52,7 +51,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
         }
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = findViewById(R.id.pager);
 
         /*
          *set pagelimit to avoid losing toggle button state.
@@ -125,9 +124,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar, parent, false);
                 Cafeteria c = getItem(position);
 
-                TextView name = (TextView) v.findViewById(android.R.id.text1); // Set name
-                TextView address = (TextView) v.findViewById(android.R.id.text2); // Set address
-                TextView dist = (TextView) v.findViewById(R.id.distance); // Set distance
+                TextView name = v.findViewById(android.R.id.text1); // Set name
+                TextView address = v.findViewById(android.R.id.text2); // Set address
+                TextView dist = v.findViewById(R.id.distance); // Set distance
 
                 if (c != null) {
                     name.setText(c.name);
@@ -139,7 +138,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             }
         };
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerToolbar);
+        Spinner spinner = findViewById(R.id.spinnerToolbar);
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
         // Select item

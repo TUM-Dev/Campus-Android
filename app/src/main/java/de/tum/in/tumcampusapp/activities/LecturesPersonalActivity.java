@@ -2,9 +2,6 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,49 +20,47 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * This activity presents the users' lectures using the TUMOnline web service
  * the results can be filtered by the semester or all shown.
- * 
+ * <p>
  * This activity uses the same models as FindLectures.
- * 
+ * <p>
  * HINT: a TUMOnline access token is needed
  */
 public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<LecturesSearchRowSet> {
     private final static String P_SUCHE = "pSuche";
 
-	/** UI elements */
-	private StickyListHeadersListView lvMyLecturesList;
+    /**
+     * UI elements
+     */
+    private StickyListHeadersListView lvMyLecturesList;
 
     public LecturesPersonalActivity() {
-		super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
-	}
+        super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		// bind UI elements
-		lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList);
+        // bind UI elements
+        lvMyLecturesList = findViewById(R.id.lvMyLecturesList);
 
         // handle on click events by showing its LectureDetails
-        lvMyLecturesList.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position,
-                                    long id) {
-                Object o = lvMyLecturesList.getItemAtPosition(position);
-                LecturesSearchRow item = (LecturesSearchRow) o;
+        lvMyLecturesList.setOnItemClickListener((a, v, position, id) -> {
+            Object o = lvMyLecturesList.getItemAtPosition(position);
+            LecturesSearchRow item = (LecturesSearchRow) o;
 
-                // set bundle for LectureDetails and show it
-                Bundle bundle = new Bundle();
-                // we need the stp_sp_nr
-                bundle.putString(LecturesSearchRow.STP_SP_NR, item.getStp_sp_nr());
-                Intent intent = new Intent(LecturesPersonalActivity.this, LecturesDetailsActivity.class);
-                intent.putExtras(bundle);
-                // start LectureDetails for given stp_sp_nr
-                startActivity(intent);
-            }
+            // set bundle for LectureDetails and show it
+            Bundle bundle = new Bundle();
+            // we need the stp_sp_nr
+            bundle.putString(LecturesSearchRow.STP_SP_NR, item.getStp_sp_nr());
+            Intent intent = new Intent(LecturesPersonalActivity.this, LecturesDetailsActivity.class);
+            intent.putExtras(bundle);
+            // start LectureDetails for given stp_sp_nr
+            startActivity(intent);
         });
 
         onStartSearch();
-	}
+    }
 
     @Override
     protected void onStartSearch() {
