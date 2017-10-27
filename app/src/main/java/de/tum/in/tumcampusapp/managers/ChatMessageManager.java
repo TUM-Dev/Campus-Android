@@ -58,7 +58,8 @@ public class ChatMessageManager extends AbstractManager {
         db.execSQL("CREATE TABLE IF NOT EXISTS unsent_chat_message (_id INTEGER PRIMARY KEY AUTOINCREMENT, room INTEGER, text TEXT, member BLOB, msg_id INTEGER)");
 
         // Delete all entries that are too old
-        db.rawQuery("DELETE FROM chat_message WHERE timestamp<datetime('now','-1 month')", null);
+        db.rawQuery("DELETE FROM chat_message WHERE timestamp<datetime('now','-1 month')", null)
+          .close();
     }
 
     /**
@@ -67,19 +68,20 @@ public class ChatMessageManager extends AbstractManager {
     public static List<ChatMessage> getAllUnsentUpdated(Context context) {
         SQLiteDatabase db = AbstractManager.getDb(context);
         init(db);
-        Cursor cur = db.rawQuery("SELECT member, text, room, msg_id, _id FROM unsent_chat_message ORDER BY _id", null);
-        List<ChatMessage> list = new ArrayList<>(cur.getCount());
-        if (cur.moveToFirst()) {
-            do {
-                ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
-                ChatMessage msg = new ChatMessage(cur.getString(1), member);
-                msg.setRoom(cur.getInt(2));
-                msg.setId(cur.getInt(3));
-                msg.internalID = cur.getInt(4);
-                list.add(msg);
-            } while (cur.moveToNext());
+        List<ChatMessage> list;
+        try (Cursor cur = db.rawQuery("SELECT member, text, room, msg_id, _id FROM unsent_chat_message ORDER BY _id", null)) {
+            list = new ArrayList<>(cur.getCount());
+            if (cur.moveToFirst()) {
+                do {
+                    ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
+                    ChatMessage msg = new ChatMessage(cur.getString(1), member);
+                    msg.setRoom(cur.getInt(2));
+                    msg.setId(cur.getInt(3));
+                    msg.internalID = cur.getInt(4);
+                    list.add(msg);
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
         return list;
     }
 
@@ -122,18 +124,19 @@ public class ChatMessageManager extends AbstractManager {
      * Gets all unsent chat messages from the current room
      */
     public List<ChatMessage> getAllUnsent() {
-        Cursor cur = db.rawQuery("SELECT member, text, room, _id FROM unsent_chat_message WHERE msg_id=0 ORDER BY _id", null);
-        List<ChatMessage> list = new ArrayList<>(cur.getCount());
-        if (cur.moveToFirst()) {
-            do {
-                ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
-                ChatMessage msg = new ChatMessage(cur.getString(1), member);
-                msg.setRoom(cur.getInt(2));
-                msg.internalID = cur.getInt(3);
-                list.add(msg);
-            } while (cur.moveToNext());
+        List<ChatMessage> list;
+        try (Cursor cur = db.rawQuery("SELECT member, text, room, _id FROM unsent_chat_message WHERE msg_id=0 ORDER BY _id", null)) {
+            list = new ArrayList<>(cur.getCount());
+            if (cur.moveToFirst()) {
+                do {
+                    ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
+                    ChatMessage msg = new ChatMessage(cur.getString(1), member);
+                    msg.setRoom(cur.getInt(2));
+                    msg.internalID = cur.getInt(3);
+                    list.add(msg);
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
         return list;
     }
 
@@ -157,7 +160,7 @@ public class ChatMessageManager extends AbstractManager {
     /**
      * Gets all messages marked as unread
      */
-    public Cursor getUnread() {
+    private Cursor getUnread() {
         return db.rawQuery("SELECT c.* FROM chat_message c, (SELECT c1._id " +
                 "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
                 "WHERE (c2._id IS NULL OR c1.read=1) AND c1.room=? " +
@@ -171,23 +174,24 @@ public class ChatMessageManager extends AbstractManager {
      * Gets all unread chat messages
      */
     public List<ChatMessage> getLastUnread() {
-        Cursor cur = db.rawQuery("SELECT c.member, c.text FROM chat_message c, (SELECT c1._id " +
-                "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
-                "WHERE (c2._id IS NULL OR c1.read=1) AND c1.room=? " +
-                "ORDER BY c1._id DESC " +
-                "LIMIT 1) AS until " +
-                "WHERE c._id>until._id AND c.room=? " +
-                "ORDER BY c._id DESC " +
-                "LIMIT 5", new String[]{String.valueOf(mChatRoom), String.valueOf(mChatRoom)});
-        List<ChatMessage> list = new ArrayList<>(cur.getCount());
-        if (cur.moveToFirst()) {
-            do {
-                ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
-                ChatMessage msg = new ChatMessage(cur.getString(1), member);
-                list.add(msg);
-            } while (cur.moveToNext());
+        List<ChatMessage> list;
+        try (Cursor cur = db.rawQuery("SELECT c.member, c.text FROM chat_message c, (SELECT c1._id " +
+                                      "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
+                                      "WHERE (c2._id IS NULL OR c1.read=1) AND c1.room=? " +
+                                      "ORDER BY c1._id DESC " +
+                                      "LIMIT 1) AS until " +
+                                      "WHERE c._id>until._id AND c.room=? " +
+                                      "ORDER BY c._id DESC " +
+                                      "LIMIT 5", new String[]{String.valueOf(mChatRoom), String.valueOf(mChatRoom)})) {
+            list = new ArrayList<>(cur.getCount());
+            if (cur.moveToFirst()) {
+                do {
+                    ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
+                    ChatMessage msg = new ChatMessage(cur.getString(1), member);
+                    list.add(msg);
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
         return list;
     }
 
@@ -205,11 +209,11 @@ public class ChatMessageManager extends AbstractManager {
         db.beginTransaction();
         // Query read status from the previous message and use this read status as well if it is "0"
         boolean read = memberId == m.getMember().getId();
-        Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[]{String.valueOf(m.getId())});
-        if (cur.moveToFirst() && cur.getInt(0) == 1) {
-            read = true;
+        try (Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[]{String.valueOf(m.getId())})) {
+            if (cur.moveToFirst() && cur.getInt(0) == 1) {
+                read = true;
+            }
         }
-        cur.close();
         m.setStatus(ChatMessage.STATUS_SENT);
         m.setRead(read);
         replaceMessage(m);

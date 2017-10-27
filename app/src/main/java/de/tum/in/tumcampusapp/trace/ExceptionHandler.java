@@ -241,15 +241,12 @@ public final class ExceptionHandler {
                 try {
                     // Read contents of stacktrace
                     StringBuilder stacktrace = new StringBuilder();
-                    BufferedReader input = new BufferedReader(getFileReader(filePath));
-                    try {
+                    try (BufferedReader input = new BufferedReader(getFileReader(filePath))) {
                         String line;
                         while ((line = input.readLine()) != null) {
                             stacktrace.append(line);
                             stacktrace.append(System.getProperty(LINE_SEPARATOR));
                         }
-                    } finally {
-                        input.close();
                     }
 
                     //Create the array containing the trace and the log file

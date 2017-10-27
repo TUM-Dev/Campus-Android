@@ -36,14 +36,12 @@ public final class FileUtils {
      */
     public static String convertStreamToString(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line).append('\n');
+                sb.append(line)
+                  .append('\n');
             }
-        } finally {
-            reader.close();
         }
         return sb.toString();
     }

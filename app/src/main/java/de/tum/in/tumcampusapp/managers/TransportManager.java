@@ -147,8 +147,9 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @return True, if favorite
      */
     public boolean isFavorite(String symbol) {
-        return db.rawQuery("SELECT * FROM transport_favorites WHERE symbol = ?", new String[]{symbol})
-                 .getCount() > 0;
+        try (Cursor c = db.rawQuery("SELECT * FROM transport_favorites WHERE symbol = ?", new String[]{symbol})) {
+            return c.getCount() > 0;
+        }
     }
 
     /**
@@ -207,15 +208,16 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         if (TransportManager.widgetDeparturesList.indexOfKey(widgetId) >= 0) {
             return TransportManager.widgetDeparturesList.get(widgetId);
         }
-        Cursor c = db.rawQuery("SELECT * FROM widgets_transport WHERE id = ?", new String[]{String.valueOf(widgetId)});
-        WidgetDepartures widgetDepartures = new WidgetDepartures();
-        if (c.getCount() >= 1) {
-            c.moveToFirst();
-            widgetDepartures.setStation(c.getString(c.getColumnIndex("station")));
-            widgetDepartures.setStationId(c.getString(c.getColumnIndex("station_id")));
-            widgetDepartures.setUseLocation(c.getInt(c.getColumnIndex("location")) != 0);
-            widgetDepartures.setAutoReload(c.getInt(c.getColumnIndex("reload")) != 0);
-            c.close();
+        WidgetDepartures widgetDepartures;
+        try (Cursor c = db.rawQuery("SELECT * FROM widgets_transport WHERE id = ?", new String[]{String.valueOf(widgetId)})) {
+            widgetDepartures = new WidgetDepartures();
+            if (c.getCount() >= 1) {
+                c.moveToFirst();
+                widgetDepartures.setStation(c.getString(c.getColumnIndex("station")));
+                widgetDepartures.setStationId(c.getString(c.getColumnIndex("station_id")));
+                widgetDepartures.setUseLocation(c.getInt(c.getColumnIndex("location")) != 0);
+                widgetDepartures.setAutoReload(c.getInt(c.getColumnIndex("reload")) != 0);
+            }
         }
         TransportManager.widgetDeparturesList.put(widgetId, widgetDepartures);
         return widgetDepartures;
@@ -341,7 +343,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                 String jsonStationResult = gson.toJson(result, StationResult.class);
                 mc.addRow(new String[]{jsonStationResult, String.valueOf(RecentsManager.STATIONS)});
             }
-            return Optional.of((Cursor) mc);
+            return Optional.of(mc);
         } catch (JSONException e) {
             Utils.log(e, ERROR_INVALID_JSON + STATION_SEARCH);
         }

@@ -29,7 +29,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
  * Fragment for each study room group. Shows study room details in a list.
  */
 public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCursorAdapter
-        .ViewBinder {
+                                                                               .ViewBinder {
     private int mStudyRoomGroupId;
 
     @Override
@@ -42,16 +42,17 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
-        Cursor studyRoomCursor = new StudyRoomGroupManager(getActivity()).getStudyRoomsFromDb
-                (mStudyRoomGroupId);
-
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_item_detail_recyclerview);
-        recyclerView.setAdapter(new StudyRoomAdapter(studyRoomCursor));
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView recyclerView;
+        LinearLayoutManager layoutManager;
+        try (Cursor studyRoomCursor = new StudyRoomGroupManager(getActivity()).getStudyRoomsFromDb(mStudyRoomGroupId)) {
+            recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
+            recyclerView.setAdapter(new StudyRoomAdapter(studyRoomCursor));
+        }
+        layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -76,14 +77,17 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            mCursorAdapter.getCursor().moveToPosition(position);
+            mCursorAdapter.getCursor()
+                          .moveToPosition(position);
             mCursorAdapter.bindView(holder.itemView, getContext(), mCursorAdapter.getCursor());
 
-            CardView cardView = (CardView) holder.itemView.findViewById(R.id.card_view);
-            TextView text = (TextView) holder.itemView.findViewById(android.R.id.text2);
+            CardView cardView = holder.itemView.findViewById(R.id.card_view);
+            TextView text = holder.itemView.findViewById(android.R.id.text2);
 
             int color;
-            if (text.getText().toString().contains(getString(R.string.free))) {
+            if (text.getText()
+                    .toString()
+                    .contains(getString(R.string.free))) {
                 color = Color.rgb(200, 230, 201);
             } else {
                 color = Color.rgb(255, 205, 210);
@@ -102,8 +106,8 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
     @NonNull
     private SimpleCursorAdapter createStudyRoomCursorAdapter(final Cursor studyRoomCursor) {
         return new SimpleCursorAdapter(getActivity(),
-                R.layout.two_line_list_item, studyRoomCursor, studyRoomCursor.getColumnNames(),
-                new int[]{android.R.id.text1, android.R.id.text2, R.id.text3}, 0) {
+                                       R.layout.two_line_list_item, studyRoomCursor, studyRoomCursor.getColumnNames(),
+                                       new int[]{android.R.id.text1, android.R.id.text2, R.id.text3}, 0) {
 
             @Override
             public boolean isEnabled(int position) {
@@ -128,9 +132,9 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
                 stringBuilder.append(getString(R.string.free));
             } else {
                 stringBuilder.append(getString(R.string.occupied))
-                        .append(" <b>")
-                        .append(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(studyRoom.occupiedTill))
-                        .append("</b>");
+                             .append(" <b>")
+                             .append(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(studyRoom.occupiedTill))
+                             .append("</b>");
             }
 
             TextView tv = (TextView) view;

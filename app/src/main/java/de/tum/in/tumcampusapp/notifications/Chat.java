@@ -32,14 +32,13 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 
 public class Chat extends GenericNotification {
 
-    public static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
+    private static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
 
     private final GCMChat extras;
 
     private ChatRoom chatRoom;
     private String notificationText;
     private TaskStackBuilder sBuilder;
-
 
     public Chat(Bundle extras, Context context, int notfication) {
         super(context, 1, notfication, true);
@@ -88,40 +87,39 @@ public class Chat extends GenericNotification {
 
         // Get the data necessary for the ChatActivity
         ChatMember member = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
-        chatRoom = TUMCabeClient.getInstance(context).getChatRoom(this.extras.room);
+        chatRoom = TUMCabeClient.getInstance(context)
+                                .getChatRoom(this.extras.room);
 
         ChatMessageManager manager = new ChatMessageManager(context, chatRoom.getId());
-        Cursor messages = null;
-        try {
-            messages = manager.getNewMessages(member, this.extras.message);
+        try (Cursor messages = manager.getNewMessages(member, this.extras.message)) {
+            // Notify any open chat activity that a message has been received
+            Intent intent = new Intent("chat-message-received");
+            intent.putExtra("GCMChat", this.extras);
+            LocalBroadcastManager.getInstance(context)
+                                 .sendBroadcast(intent);
+
+            notificationText = null;
+            if (messages != null && messages.moveToFirst()) {
+                do {
+                    if (notificationText == null) {
+                        notificationText = messages.getString(3);
+                    } else {
+                        notificationText += "\n" + messages.getString(3);
+                    }
+                } while (messages.moveToNext());
+            }
+
+            // Put the data into the intent
+            Intent notificationIntent = new Intent(context, ChatActivity.class);
+            notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
+
+            sBuilder = TaskStackBuilder.create(context);
+            sBuilder.addNextIntent(new Intent(context, MainActivity.class));
+            sBuilder.addNextIntent(new Intent(context, ChatRoomsActivity.class));
+            sBuilder.addNextIntent(notificationIntent);
         } catch (NoPrivateKey noPrivateKey) {
             Utils.log(noPrivateKey);
         }
-
-        // Notify any open chat activity that a message has been received
-        Intent intent = new Intent("chat-message-received");
-        intent.putExtra("GCMChat", this.extras);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
-        notificationText = null;
-        if (messages != null && messages.moveToFirst()) {
-            do {
-                if (notificationText == null) {
-                    notificationText = messages.getString(3);
-                } else {
-                    notificationText += "\n" + messages.getString(3);
-                }
-            } while (messages.moveToNext());
-        }
-
-        // Put the data into the intent
-        Intent notificationIntent = new Intent(context, ChatActivity.class);
-        notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
-
-        sBuilder = TaskStackBuilder.create(context);
-        sBuilder.addNextIntent(new Intent(context, MainActivity.class));
-        sBuilder.addNextIntent(new Intent(context, ChatRoomsActivity.class));
-        sBuilder.addNextIntent(notificationIntent);
     }
 
     @Override
@@ -138,7 +136,8 @@ public class Chat extends GenericNotification {
             // GCMNotification sound
             Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
 
-            String replyLabel = context.getResources().getString(R.string.reply_label);
+            String replyLabel = context.getResources()
+                                       .getString(R.string.reply_label);
 
             RemoteInput remoteInput = new RemoteInput.Builder(ChatActivity.EXTRA_VOICE_REPLY)
                     .setLabel(replyLabel)
@@ -147,14 +146,15 @@ public class Chat extends GenericNotification {
             // Create the reply action and add the remote input
             NotificationCompat.Action action =
                     new NotificationCompat.Action.Builder(R.drawable.ic_reply,
-                            context.getString(R.string.reply_label), contentIntent)
+                                                          context.getString(R.string.reply_label), contentIntent)
                             .addRemoteInput(remoteInput)
                             .build();
 
             //Create a nice notification
             return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                     .setSmallIcon(this.icon)
-                    .setContentTitle(chatRoom.getName().substring(4))
+                    .setContentTitle(chatRoom.getName()
+                                             .substring(4))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
                     .setContentText(notificationText)
                     .setContentIntent(contentIntent)

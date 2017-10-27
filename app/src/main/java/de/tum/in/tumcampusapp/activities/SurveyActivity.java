@@ -147,135 +147,137 @@ public class SurveyActivity extends ProgressActivity {
     @SuppressLint("SetTextI18n")
     private void setUpResponseTab() {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // For converting Jade DateTime into String & vic versa (see show and discard functions)
-        Cursor c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
-        int numberofquestion = c.getCount();
-        //get response and question from database->set i<Number of question
-        for (int i = 0; i < numberofquestion; i++) {
-            c.moveToNext();
-            DateTime endDate = fmt.parseDateTime(c.getString(c.getColumnIndex("end")));
-            Duration tillDeleteDay = new Duration(DateTime.now(), endDate);
-            long autoDeleteIn = tillDeleteDay.getStandardDays();
+        try (Cursor c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()))) {
+            int numberofquestion = c.getCount();
+            //get response and question from database->set i<Number of question
+            for (int i = 0; i < numberofquestion; i++) {
+                c.moveToNext();
+                DateTime endDate = fmt.parseDateTime(c.getString(c.getColumnIndex("end")));
+                Duration tillDeleteDay = new Duration(DateTime.now(), endDate);
+                long autoDeleteIn = tillDeleteDay.getStandardDays();
 
-            String questionText = c.getString(c.getColumnIndex("text"));
-            String[] targetFacsIds = c.getString(c.getColumnIndex("targetFac")).split(",");
-            Utils.log("Selectedfacs Arrays.String: " + Arrays.toString(targetFacsIds));
+                String questionText = c.getString(c.getColumnIndex("text"));
+                String[] targetFacsIds = c.getString(c.getColumnIndex("targetFac"))
+                                          .split(",");
+                Utils.log("Selectedfacs Arrays.String: " + Arrays.toString(targetFacsIds));
 
-            final String[] targetFacsNames = new String[targetFacsIds.length];
-            for (int x = 0; x < targetFacsIds.length; x++) {
-                Cursor cursor = surveyManager.getFacultyName(targetFacsIds[x]);
-                if (cursor.moveToFirst()) {
-                    targetFacsNames[x] = cursor.getString(cursor.getColumnIndex("name"));
+                final String[] targetFacsNames = new String[targetFacsIds.length];
+                for (int x = 0; x < targetFacsIds.length; x++) {
+                    Cursor cursor = surveyManager.getFacultyName(targetFacsIds[x]);
+                    if (cursor.moveToFirst()) {
+                        targetFacsNames[x] = cursor.getString(cursor.getColumnIndex("name"));
+                    }
                 }
+
+                int yes = c.getInt(c.getColumnIndex("yes"));
+                int no = c.getInt(c.getColumnIndex("no"));
+                int total = yes + no;
+                int id = c.getInt(c.getColumnIndex("question"));
+                //linear layout for every question
+
+                // TODO: create a proper XML file for this and inflate it with a layoutinflater
+                LinearLayout ques = new LinearLayout(this);
+                LinearLayout.LayoutParams quesParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                ques.setOrientation(LinearLayout.VERTICAL);
+                ques.setWeightSum(5);
+                mainResponseLayout.addView(ques, quesParams);
+
+                LinearLayout l = new LinearLayout(this);
+                LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                l.setOrientation(LinearLayout.HORIZONTAL);
+                l.setWeightSum(5);
+                ques.addView(l, lParams);
+
+                LinearLayout l1 = new LinearLayout(this);
+                l1.setOrientation(LinearLayout.VERTICAL);
+                l1.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4.5f));
+                l.addView(l1);
+
+                LinearLayout l2 = new LinearLayout(this);
+                l2.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.3f));
+                l2.setOrientation(LinearLayout.VERTICAL);
+                l.addView(l2);
+
+                TextView endDateTV = new TextView(this);
+                LinearLayout.LayoutParams tvparams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                tvparams1.setMargins(50, 10, 0, 0);
+                endDateTV.setLayoutParams(tvparams1);
+                endDateTV.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
+                endDateTV.setTextSize(10);
+                endDateTV.setTypeface(null, Typeface.BOLD);
+                //setText(question)
+                if (autoDeleteIn <= 0) {
+                    endDateTV.setText("This question will be automatically deleted today");
+                } else {
+                    endDateTV.setText("This question will be automatically deleted in " + autoDeleteIn + " days");
+                }
+                l1.addView(endDateTV);
+
+                //adding quesion tv
+                TextView questionTv = new TextView(this);
+                LinearLayout.LayoutParams tvparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                tvparams.setMargins(50, 10, 0, 0);
+                questionTv.setLayoutParams(tvparams);
+                questionTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
+                questionTv.setTypeface(null, Typeface.BOLD);
+                //setText(question)
+                questionTv.setText(questionText);
+                l1.addView(questionTv);
+                //adding button delete
+                float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
+                Button deleteButton = new Button(this);
+                deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
+                deleteButton.setBackgroundResource(R.drawable.minusicon);
+                deleteButton.setOnClickListener(deleteQuestion);
+                deleteButton.setTag(id);
+                l2.addView(deleteButton);
+
+                Button infoButton = new Button(this);
+                LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels, (int) inPixels);
+                infoButtonParams.setMargins(0, 15, 0, 0);
+                infoButton.setLayoutParams(infoButtonParams);
+                infoButton.setBackgroundResource(R.drawable.ic_action_about_blue);
+                infoButton.setOnClickListener(showFaculties);
+                infoButton.setTag(targetFacsNames);
+                l2.addView(infoButton);
+
+                //adding progress bar with answers
+                RelativeLayout r = new RelativeLayout(this);
+                LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params2.setMargins(50, 10, 50, 50);
+                ques.addView(r, params2);
+
+                float inPixels2 = getResources().getDimension(R.dimen.dimen_progressHeight_in_dp);
+                ProgressBar progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+                progress.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) inPixels2));
+                progress.setMinimumHeight((int) inPixels2);
+                progress.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.progressbar, null));
+                progress.setProgress(yes);
+                progress.setMax(total);
+                progress.setId(R.id.p1);
+                r.addView(progress);
+                //add Yes asnwers inside progressbar
+                TextView yesAnswers = new TextView(this);
+                RelativeLayout.LayoutParams params =
+                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.ALIGN_LEFT, progress.getId());
+                params.addRule(RelativeLayout.CENTER_IN_PARENT);
+                yesAnswers.setPadding(15, 0, 0, 0);
+                //set number of yes answers
+                yesAnswers.setText("YES:" + yes);
+                r.addView(yesAnswers, params);
+                //add No asnwers inside progressbar
+                TextView noAnswers = new TextView(this);
+                RelativeLayout.LayoutParams params1 =
+                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params1.addRule(RelativeLayout.ALIGN_RIGHT, progress.getId());
+                params1.addRule(RelativeLayout.CENTER_IN_PARENT);
+                //set number of no answers
+                noAnswers.setText("NO:" + no);
+                noAnswers.setPadding(0, 0, 20, 0);
+                r.addView(noAnswers, params1);
             }
-
-
-            int yes = c.getInt(c.getColumnIndex("yes"));
-            int no = c.getInt(c.getColumnIndex("no"));
-            int total = yes + no;
-            int id = c.getInt(c.getColumnIndex("question"));
-            //linear layout for every question
-            LinearLayout ques = new LinearLayout(this);
-            LinearLayout.LayoutParams quesParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            ques.setOrientation(LinearLayout.VERTICAL);
-            ques.setWeightSum(5);
-            mainResponseLayout.addView(ques, quesParams);
-
-
-            LinearLayout l = new LinearLayout(this);
-            LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            l.setOrientation(LinearLayout.HORIZONTAL);
-            l.setWeightSum(5);
-            ques.addView(l, lParams);
-
-            LinearLayout l1 = new LinearLayout(this);
-            l1.setOrientation(LinearLayout.VERTICAL);
-            l1.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4.5f));
-            l.addView(l1);
-
-            LinearLayout l2 = new LinearLayout(this);
-            l2.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.3f));
-            l2.setOrientation(LinearLayout.VERTICAL);
-            l.addView(l2);
-
-            TextView endDateTV = new TextView(this);
-            LinearLayout.LayoutParams tvparams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            tvparams1.setMargins(50, 10, 0, 0);
-            endDateTV.setLayoutParams(tvparams1);
-            endDateTV.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
-            endDateTV.setTextSize(10);
-            endDateTV.setTypeface(null, Typeface.BOLD);
-            //setText(question)
-            if (autoDeleteIn <= 0) {
-                endDateTV.setText("This question will be automatically deleted today");
-            } else {
-                endDateTV.setText("This question will be automatically deleted in " + autoDeleteIn + " days");
-            }
-            l1.addView(endDateTV);
-
-            //adding quesion tv
-            TextView questionTv = new TextView(this);
-            LinearLayout.LayoutParams tvparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            tvparams.setMargins(50, 10, 0, 0);
-            questionTv.setLayoutParams(tvparams);
-            questionTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
-            questionTv.setTypeface(null, Typeface.BOLD);
-            //setText(question)
-            questionTv.setText(questionText);
-            l1.addView(questionTv);
-            //adding button delete
-            float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
-            Button deleteButton = new Button(this);
-            deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
-            deleteButton.setBackgroundResource(R.drawable.minusicon);
-            deleteButton.setOnClickListener(deleteQuestion);
-            deleteButton.setTag(id);
-            l2.addView(deleteButton);
-
-            Button infoButton = new Button(this);
-            LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels, (int) inPixels);
-            infoButtonParams.setMargins(0, 15, 0, 0);
-            infoButton.setLayoutParams(infoButtonParams);
-            infoButton.setBackgroundResource(R.drawable.ic_action_about_blue);
-            infoButton.setOnClickListener(showFaculties);
-            infoButton.setTag(targetFacsNames);
-            l2.addView(infoButton);
-
-            //adding progress bar with answers
-            RelativeLayout r = new RelativeLayout(this);
-            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params2.setMargins(50, 10, 50, 50);
-            ques.addView(r, params2);
-
-            float inPixels2 = getResources().getDimension(R.dimen.dimen_progressHeight_in_dp);
-            ProgressBar progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
-            progress.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) inPixels2));
-            progress.setMinimumHeight((int) inPixels2);
-            progress.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.progressbar, null));
-            progress.setProgress(yes);
-            progress.setMax(total);
-            progress.setId(R.id.p1);
-            r.addView(progress);
-            //add Yes asnwers inside progressbar
-            TextView yesAnswers = new TextView(this);
-            RelativeLayout.LayoutParams params =
-                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_LEFT, progress.getId());
-            params.addRule(RelativeLayout.CENTER_IN_PARENT);
-            yesAnswers.setPadding(15, 0, 0, 0);
-            //set number of yes answers
-            yesAnswers.setText("YES:" + yes);
-            r.addView(yesAnswers, params);
-            //add No asnwers inside progressbar
-            TextView noAnswers = new TextView(this);
-            RelativeLayout.LayoutParams params1 =
-                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params1.addRule(RelativeLayout.ALIGN_RIGHT, progress.getId());
-            params1.addRule(RelativeLayout.CENTER_IN_PARENT);
-            //set number of no answers
-            noAnswers.setText("NO:" + no);
-            noAnswers.setPadding(0, 0, 20, 0);
-            r.addView(noAnswers, params1);
         }
 
     }
@@ -325,10 +327,10 @@ public class SurveyActivity extends ProgressActivity {
      * get all views by IDs
      */
     private void findViewsById() {
-        mainResponseLayout = (LinearLayout) findViewById(R.id.mainRes);
-        numOfQuestionsSpinner = (Spinner) findViewById(R.id.spinner);
-        submitSurveyButton = (Button) findViewById(R.id.submitSurveyButton);
-        questionsLayout = (LinearLayout) findViewById(R.id.questionsEts);
+        mainResponseLayout = findViewById(R.id.mainRes);
+        numOfQuestionsSpinner = findViewById(R.id.spinner);
+        submitSurveyButton = findViewById(R.id.submitSurveyButton);
+        questionsLayout = findViewById(R.id.questionsEts);
     }
 
     /**
@@ -337,20 +339,20 @@ public class SurveyActivity extends ProgressActivity {
     private void setUpSelectedTargetFacultiesSpinner() {
 
         // fetch faulties from DB
-        Cursor cursor = surveyManager.getAllFaculties();
-        if (fetchedFaculties.isEmpty() && cursor.moveToFirst()) {
-            do {
-                fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
-            } while (cursor.moveToNext());
-
+        try (Cursor cursor = surveyManager.getAllFaculties()) {
+            if (fetchedFaculties.isEmpty() && cursor.moveToFirst()) {
+                do {
+                    fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
+                } while (cursor.moveToNext());
+            }
         }
 
         checkedFaculties = new boolean[fetchedFaculties.size()];
-        final String[] faculties = fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String[] faculties = fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.quiz_target_faculty));
 
-        facultiesButton = (Button) findViewById(R.id.button_faculties);
+        facultiesButton = findViewById(R.id.button_faculties);
 
         // Handls reserving chosen faculties in sponner
         facultiesButton.setOnClickListener(new View.OnClickListener() {
@@ -412,20 +414,22 @@ public class SurveyActivity extends ProgressActivity {
 
 
                 if (selectedFaculties.isEmpty()) { // if no faculty is selected, add faculties as target upon submitting question(s).
-                    Cursor c = surveyManager.getAllFaculties();
-                    if (c.moveToFirst()) {
-                        do {
-                            selectedFacIds.add(c.getString(c.getColumnIndex("faculty")));
-                        } while (c.moveToNext());
+                    try (Cursor c = surveyManager.getAllFaculties()) {
+                        if (c.moveToFirst()) {
+                            do {
+                                selectedFacIds.add(c.getString(c.getColumnIndex("faculty")));
+                            } while (c.moveToNext());
+                        }
                     }
                 } else { // In case at least one faculty is selected
                     // Adds the ids of selected faculties by match selected faculty names with fetched faculties names
                     for (int j = 0; j < selectedFaculties.size(); j++) {
                         for (int x = 0; x < fetchedFaculties.size(); x++) {
                             if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
-                                Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
-                                if (cursor.moveToFirst()) {
-                                    selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
+                                try (Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j))) {
+                                    if (cursor.moveToFirst()) {
+                                        selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
+                                    }
                                 }
                             }
                         }
@@ -493,7 +497,7 @@ public class SurveyActivity extends ProgressActivity {
     private List<String> getSurveyData() {
         boolean done = true;
         for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) { // Iterates on each questionEditText
-            EditText v = (EditText) questionsLayout.findViewWithTag("question" + (i + 1));
+            EditText v = questionsLayout.findViewWithTag("question" + (i + 1));
             if (v.getText().toString().isEmpty()) { // plausibility check failed
                 done = false;
                 questions.clear();
@@ -526,7 +530,7 @@ public class SurveyActivity extends ProgressActivity {
      * Sets up tabhost for submitting questions and reviewing responses
      */
     private void setUpTabHost() {
-        final TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+        final TabHost tabHost = findViewById(R.id.tabHost);
         tabHost.setup();
         // First Tab
         TabHost.TabSpec tabSpec = tabHost.newTabSpec(getResources().getString(R.string.tab_survey));
@@ -581,15 +585,18 @@ public class SurveyActivity extends ProgressActivity {
      */
     @SuppressLint("SetTextI18n")
     private void setUpSpinnerForQuestionsNumber() {
-        TextView selectNumberOfQuesionsTV = (TextView) findViewById(R.id.selectTv);
+        TextView selectNumberOfQuesionsTV = findViewById(R.id.selectTv);
 
-        String[] numQues = new String[]{"1", "2", "3"};
+        String[] numQues = {"1", "2", "3"};
         String weekAgo = getDateBefore1Week();
-        Cursor c = surveyManager.ownQuestionsSince(weekAgo); // gets number of questions submitted during last week
-        if (c.getCount() > 0) {
-            c.moveToFirst();
+        int x;
+        ArrayAdapter<String> adapter;
+        try (Cursor c = surveyManager.ownQuestionsSince(weekAgo)) {
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+            }
+            x = c.getCount();
         }
-        int x = c.getCount();
         if (x < 3) { // if below 3, then set the spinner with the numbers of questions user allowed to ask respectively
             numQues = new String[3 - x];
             for (int i = 0; i < numQues.length; i++) {
@@ -608,7 +615,7 @@ public class SurveyActivity extends ProgressActivity {
             numOfQuestionsSpinner.setVisibility(View.GONE);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numQues);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numQues);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         numOfQuestionsSpinner.setAdapter(adapter);
 
@@ -663,11 +670,11 @@ public class SurveyActivity extends ProgressActivity {
         String nextPossibleDate = "";
         ArrayList<String> dates = new ArrayList<>();
         String weekAgo = getDateBefore1Week();
-        Cursor c = surveyManager.ownQuestionsSince(weekAgo);
-
-        while (c.moveToNext()) {
-            dates.add(c.getString(0));
-            nextPossibleDate = c.getString(0);
+        try (Cursor c = surveyManager.ownQuestionsSince(weekAgo)) {
+            while (c.moveToNext()) {
+                dates.add(c.getString(0));
+                nextPossibleDate = c.getString(0);
+            }
         }
 
         for (int i = 0; i < dates.size(); i++) {

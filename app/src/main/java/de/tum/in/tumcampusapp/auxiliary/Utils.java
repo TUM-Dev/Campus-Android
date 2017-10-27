@@ -188,35 +188,41 @@ public final class Utils {
      * Logs an exception and additional information
      * Use this anywhere in the app when a fatal error occurred.
      * If you can give a better description of what went wrong
-     * use {@link #log(Exception, String)} instead.
+     * use {@link #log(Throwable, String)} instead.
      *
      * @param e Exception (source for message and stack trace)
      */
     public static void log(Throwable e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        String s = Thread.currentThread()
-                         .getStackTrace()[3].getClassName()
-                                            .replaceAll(LOGGING_REGEX, "");
-        Log.e(s, e + "\n" + sw);
+        try (StringWriter sw = new StringWriter()) {
+            e.printStackTrace(new PrintWriter(sw));
+            String s = Thread.currentThread()
+                             .getStackTrace()[3].getClassName()
+                                                .replaceAll(LOGGING_REGEX, "");
+            Log.e(s, e + "\n" + sw);
+        } catch (IOException e1) {
+            // there is a time to stop logging errors
+        }
     }
 
     /**
      * Logs an exception and additional information
      * Use this anywhere in the app when a fatal error occurred.
      * If you can't give an exact error description simply use
-     * {@link #log(Exception)} instead.
+     * {@link #log(Throwable)} instead.
      *
      * @param e       Exception (source for message and stack trace)
      * @param message Additional information for exception message
      */
     public static void log(Throwable e, String message) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        String s = Thread.currentThread()
-                         .getStackTrace()[3].getClassName()
-                                            .replaceAll(LOGGING_REGEX, "");
-        Log.e(s, e + " " + message + '\n' + sw);
+        try (StringWriter sw = new StringWriter()) {
+            e.printStackTrace(new PrintWriter(sw));
+            String s = Thread.currentThread()
+                             .getStackTrace()[3].getClassName()
+                                                .replaceAll(LOGGING_REGEX, "");
+            Log.e(s, e + " " + message + '\n' + sw);
+        } catch (IOException e1) {
+            // there is a time to stop logging errors
+        }
     }
 
     /**
@@ -285,14 +291,11 @@ public final class Utils {
     public static List<String[]> readCsv(InputStream fin) {
         List<String[]> list = new ArrayList<>(64);
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.UTF_8));
-            try {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.UTF_8))) {
                 String reader;
                 while ((reader = in.readLine()) != null) {
                     list.add(splitCsvLine(reader));
                 }
-            } finally {
-                in.close();
             }
         } catch (IOException e) {
             log(e);

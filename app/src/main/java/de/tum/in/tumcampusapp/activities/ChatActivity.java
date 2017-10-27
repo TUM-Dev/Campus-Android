@@ -218,7 +218,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         ImplicitCounter.count(this);
         this.setContentView(R.layout.activity_chat);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
         this.getIntentData();
@@ -372,7 +372,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
      * Sets UI elements listeners
      */
     private void bindUIElements() {
-        lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
+        lvMessageHistory = findViewById(R.id.lvMessageHistory);
         lvMessageHistory.setOnItemLongClickListener(this);
         lvMessageHistory.setOnScrollListener(this);
 
@@ -381,8 +381,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         lvMessageHistory.addHeaderView(bar);
         lvMessageHistory.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        etMessage = (EditText) findViewById(R.id.etMessage);
-        btnSend = (ImageButton) findViewById(R.id.btnSend);
+        etMessage = findViewById(R.id.etMessage);
+        btnSend = findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
     }
 
@@ -455,6 +455,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                         } else {
                             loadingMore = false;
                         }
+                        cur.close();
                     }
                 });
             }

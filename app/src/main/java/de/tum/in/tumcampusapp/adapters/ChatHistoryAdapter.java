@@ -42,8 +42,8 @@ public class ChatHistoryAdapter extends CursorAdapter {
         TextView tvUser;
         TextView tvMessage;
         TextView tvTimestamp;
-        public ProgressBar pbSending;
-        public ImageView ivSent;
+        ProgressBar pbSending;
+        ImageView ivSent;
         public LinearLayout layout;
     }
 
@@ -75,9 +75,8 @@ public class ChatHistoryAdapter extends CursorAdapter {
     public long getItemId(int position) {
         int count = super.getCount();
         if (position < count) {
-            Cursor cursor = getCursor();
-            cursor.moveToPosition(position);
-            return cursor.getLong(ChatMessageManager.COL_ID);
+            mCursor.moveToPosition(position);
+            return mCursor.getLong(ChatMessageManager.COL_ID);
         } else {
             return 0;
         }
@@ -124,16 +123,16 @@ public class ChatHistoryAdapter extends CursorAdapter {
         holder = new ViewHolder();
 
         // set UI elements
-        holder.layout = (LinearLayout) view.findViewById(R.id.chatMessageLayout);
+        holder.layout = view.findViewById(R.id.chatMessageLayout);
 
-        holder.tvMessage = (TextView) view.findViewById(R.id.tvMessage);
-        holder.tvTimestamp = (TextView) view.findViewById(R.id.tvTime);
+        holder.tvMessage = view.findViewById(R.id.tvMessage);
+        holder.tvTimestamp = view.findViewById(R.id.tvTime);
         if (outgoing) {
-            holder.pbSending = (ProgressBar) view.findViewById(R.id.progressBar);
-            holder.ivSent = (ImageView) view.findViewById(R.id.sentImage);
+            holder.pbSending = view.findViewById(R.id.progressBar);
+            holder.ivSent = view.findViewById(R.id.sentImage);
         } else {
             //We only got the user on receiving things
-            holder.tvUser = (TextView) view.findViewById(R.id.tvUser);
+            holder.tvUser = view.findViewById(R.id.tvUser);
         }
 
         view.setTag(holder);

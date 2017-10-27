@@ -68,7 +68,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     /**
      * Removes all old items (older than 3 months)
      */
-    void cleanupDb() {
+    private void cleanupDb() {
         db.execSQL("DELETE FROM news WHERE date < date('now','-3 month')");
     }
 
@@ -134,21 +134,24 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     public Cursor getAllFromDb(Context context) {
         String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
         StringBuilder and = new StringBuilder();
-        Cursor c = getNewsSources();
-        if (c.moveToFirst()) {
-            do {
-                int id = c.getInt(0);
-                boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
-                if (!show) {
-                    continue;
-                }
-                if (!and.toString().isEmpty()) {
-                    and.append(" OR ");
-                }
-                and.append("s.id=\"").append(id).append('\"');
-            } while (c.moveToNext());
+        try (Cursor c = getNewsSources()) {
+            if (c.moveToFirst()) {
+                do {
+                    int id = c.getInt(0);
+                    boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
+                    if (!show) {
+                        continue;
+                    }
+                    if (!and.toString()
+                            .isEmpty()) {
+                        and.append(" OR ");
+                    }
+                    and.append("s.id=\"")
+                       .append(id)
+                       .append('\"');
+                } while (c.moveToNext());
+            }
         }
-        c.close();
         return db.rawQuery("SELECT n.id AS _id, n.src, n.title, " +
                 "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
                 "(julianday('now') - julianday(date)) AS diff " +
@@ -165,23 +168,22 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     public int getTodayIndex() {
         String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
-        Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date(date)>date() AND (src < 7 OR src > 13 OR src=?)", new String[]{selectedNewspread});
-        if (c.moveToFirst()) {
-            int res = c.getInt(0);
-            c.close();
-            return res == 0 ? 0 : res - 1;
+        try (Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date(date)>date() AND (src < 7 OR src > 13 OR src=?)", new String[]{selectedNewspread})) {
+            if (c.moveToFirst()) {
+                int res = c.getInt(0);
+                return res == 0 ? 0 : res - 1;
+            }
         }
-        c.close();
         return 0;
     }
 
     private String getLastId() {
         String lastId = "";
-        Cursor c = db.rawQuery("SELECT id FROM news ORDER BY id DESC LIMIT 1", null);
-        if (c.moveToFirst()) {
-            lastId = c.getString(0);
+        try (Cursor c = db.rawQuery("SELECT id FROM news ORDER BY id DESC LIMIT 1", null)) {
+            if (c.moveToFirst()) {
+                lastId = c.getString(0);
+            }
         }
-        c.close();
         return lastId;
     }
 
@@ -228,21 +230,24 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
         StringBuilder and = new StringBuilder();
-        Cursor c = getNewsSources();
-        if (c.moveToFirst()) {
-            do {
-                int id = c.getInt(0);
-                boolean show = Utils.getSettingBool(context, "card_news_source_" + id, true);
-                if (!show) {
-                    continue;
-                }
-                if (!and.toString().isEmpty()) {
-                    and.append(" OR ");
-                }
-                and.append("s.id=\"").append(id).append('\"');
-            } while (c.moveToNext());
+        try (Cursor c = getNewsSources()) {
+            if (c.moveToFirst()) {
+                do {
+                    int id = c.getInt(0);
+                    boolean show = Utils.getSettingBool(context, "card_news_source_" + id, true);
+                    if (!show) {
+                        continue;
+                    }
+                    if (!and.toString()
+                            .isEmpty()) {
+                        and.append(" OR ");
+                    }
+                    and.append("s.id=\"")
+                       .append(id)
+                       .append('\"');
+                } while (c.moveToNext());
+            }
         }
-        c.close();
 
         //boolean showImportant = Utils.getSettingBool(context, "card_news_alert", true);
         if (!and.toString().isEmpty()) {

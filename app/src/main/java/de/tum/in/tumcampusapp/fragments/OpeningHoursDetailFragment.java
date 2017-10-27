@@ -67,11 +67,13 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
         // click on category in list
         OpenHoursManager lm = new OpenHoursManager(getActivity());
         String[] categories = {"library", "info", "cafeteria_gar", "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"};
-        Cursor c = lm.getAllHoursFromDb(categories[mItemId]);
-
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_item_detail_recyclerview);
-        recyclerView.setAdapter(new OpeningHoursDetailAdapter(c));
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView recyclerView;
+        LinearLayoutManager layoutManager;
+        try (Cursor c = lm.getAllHoursFromDb(categories[mItemId])) {
+            recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
+            recyclerView.setAdapter(new OpeningHoursDetailAdapter(c));
+        }
+        layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);

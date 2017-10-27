@@ -31,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,7 +80,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         super.onCreate(savedInstanceState);
 
         // Get a reference for the week view in the layout.
-        mWeekView = (WeekView) findViewById(R.id.weekView);
+        mWeekView = findViewById(R.id.weekView);
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
@@ -91,7 +90,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
         // Get time to show e.g. a lectures starting time or 0 for now
         Intent i = getIntent();
-        mShowDate = GregorianCalendar.getInstance();
+        mShowDate = Calendar.getInstance();
         if (i != null && i.hasExtra(EVENT_TIME)) {
             long time = i.getLongExtra(EVENT_TIME, 0);
             mShowDate.setTime(new Date(time));
@@ -376,10 +375,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         //Probably refactor this to a good SQL query
         for (int curDay = 1; curDay <= daysInMonth; curDay++) {
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
-            Cursor cEvents = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()));
-
-            while (cEvents.moveToNext()) {
-                events.add(new IntegratedCalendarEvent(cEvents));
+            try (Cursor cEvents = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()))) {
+                while (cEvents.moveToNext()) {
+                    events.add(new IntegratedCalendarEvent(cEvents));
+                }
             }
         }
 

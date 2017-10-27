@@ -94,14 +94,14 @@ public class NewsActivity extends ActivityForDownloadingExternal implements Dial
             Collection<Boolean> checkedList = new ArrayList<>();
 
             // Populate the settings dialog from the NewsManager sources
-            Cursor cur = nm.getNewsSources();
-            if (cur.moveToFirst()) {
-                do {
-                    itemsList.add(cur.getString(2));
-                    checkedList.add(Utils.getSettingBool(this, "news_source_" + cur.getString(0), true));
-                } while (cur.moveToNext());
+            try (Cursor cur = nm.getNewsSources()) {
+                if (cur.moveToFirst()) {
+                    do {
+                        itemsList.add(cur.getString(2));
+                        checkedList.add(Utils.getSettingBool(this, "news_source_" + cur.getString(0), true));
+                    } while (cur.moveToNext());
+                }
             }
-            cur.close();
 
             CharSequence[] items = Iterables.toArray(itemsList, CharSequence.class);
             boolean[] checkedItems = Booleans.toArray(checkedList);
@@ -118,16 +118,17 @@ public class NewsActivity extends ActivityForDownloadingExternal implements Dial
 
     @Override
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-        Cursor cur = nm.getNewsSources();
-        if (which < cur.getCount() && cur.moveToPosition(which)) {
-            Utils.setSetting(this, "news_source_" + cur.getString(0), isChecked);
+        try (Cursor cur = nm.getNewsSources()) {
+            if (which < cur.getCount() && cur.moveToPosition(which)) {
+                Utils.setSetting(this, "news_source_" + cur.getString(0), isChecked);
 
-            if(lv != null) { //We really don't care if the lv is null, if the position can't be saved. Rather not have the app crash here
-                LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
-                state = layoutManager.findFirstVisibleItemPosition();
+                if (lv != null) { //We really don't care if the lv is null, if the position can't be saved. Rather not have the app crash here
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
+                    state = layoutManager.findFirstVisibleItemPosition();
+                }
+
+                requestDownload(false);
             }
-
-            requestDownload(false);
         }
     }
 }

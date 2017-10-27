@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.google.common.base.Optional;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        list = (StickyListHeadersListView) findViewById(R.id.list);
+        list = findViewById(R.id.list);
         list.setOnItemClickListener(this);
         recentsManager = new RecentsManager(this, RecentsManager.ROOMS);
         adapter = new RoomFinderListAdapter(this, getRecents());
@@ -109,7 +110,7 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
      * Opens a {@link RoomFinderDetailsActivity} that displays details (e.g. location on a map) for
      * a given room. Also adds this room to the recent queries.
      */
-    private void openRoomDetails(RoomFinderRoom room) {
+    private void openRoomDetails(Serializable room) {
         recentsManager.replaceIntoDb(room.toString());
 
         // Start detail activity
@@ -122,20 +123,22 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
      * Reconstruct recents from String
      */
     private List<RoomFinderRoom> getRecents() {
-        Cursor recentStations = recentsManager.getAllFromDb();
-        List<RoomFinderRoom> roomList = new ArrayList<>(recentStations.getCount());
-        if (recentStations.moveToFirst()) {
-            do {
-                String[] values = recentStations.getString(0).split(";");
-                if(values.length != 6) {
-                    continue;
-                }
-                RoomFinderRoom room = new RoomFinderRoom(values[0], values[1],
-                        values[2], values[3], values[4], values[5]);
-                roomList.add(room);
-            } while (recentStations.moveToNext());
+        List<RoomFinderRoom> roomList;
+        try (Cursor recentStations = recentsManager.getAllFromDb()) {
+            roomList = new ArrayList<>(recentStations.getCount());
+            if (recentStations.moveToFirst()) {
+                do {
+                    String[] values = recentStations.getString(0)
+                                                    .split(";");
+                    if (values.length != 6) {
+                        continue;
+                    }
+                    RoomFinderRoom room = new RoomFinderRoom(values[0], values[1],
+                                                             values[2], values[3], values[4], values[5]);
+                    roomList.add(room);
+                } while (recentStations.moveToNext());
+            }
         }
-        recentStations.close();
         return roomList;
     }
 }

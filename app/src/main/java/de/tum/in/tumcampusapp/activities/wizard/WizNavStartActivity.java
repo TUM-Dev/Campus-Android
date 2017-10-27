@@ -49,12 +49,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
         setUpSpinner(); // Faculty selector
 
-        editTxtLrzId = (EditText) findViewById(R.id.lrd_id);
+        editTxtLrzId = findViewById(R.id.lrd_id);
         editTxtLrzId.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
     }
 
     public void setUpSpinner() {
-        final Spinner userMajorSpinner = (Spinner) findViewById(R.id.majorSpinner);
+        final Spinner userMajorSpinner = findViewById(R.id.majorSpinner);
 
         new AsyncTask<Void, Void, String[]>() {
 
@@ -65,12 +65,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                 SurveyManager sm = new SurveyManager(getApplicationContext());
                 sm.downloadFacultiesFromExternal();
 
-                Cursor cursor = sm.getAllFaculties();
-                if (cursor.moveToFirst()) {
-                    do {
-                        fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
-                    } while (cursor.moveToNext());
-
+                try (Cursor cursor = sm.getAllFaculties()) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
+                        } while (cursor.moveToNext());
+                    }
                 }
                 fetchedFaculties.add(0, getResources().getString(R.string.choose_own_faculty));
                 return fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
@@ -104,11 +104,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         SurveyManager sm = new SurveyManager(getApplicationContext());
 
-                        Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i)); // Get the faculty number from DB for the chosen faculty name
-
-                        if (c.moveToFirst()) {
-                            Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
-                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
+                        try (Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i))) {
+                            if (c.moveToFirst()) {
+                                Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
+                                Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
+                            }
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
                         if (selectedItem != null) {

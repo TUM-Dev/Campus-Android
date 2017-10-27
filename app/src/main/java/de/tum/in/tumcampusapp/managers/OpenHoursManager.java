@@ -40,11 +40,11 @@ public class OpenHoursManager extends AbstractManager {
      */
     public boolean empty() {
         boolean result = true;
-        Cursor c = db.rawQuery("SELECT id FROM locations LIMIT 1", null);
-        if (c.moveToNext()) {
-            result = false;
+        try (Cursor c = db.rawQuery("SELECT id FROM locations LIMIT 1", null)) {
+            if (c.moveToNext()) {
+                result = false;
+            }
         }
-        c.close();
         return result;
     }
 
@@ -70,13 +70,12 @@ public class OpenHoursManager extends AbstractManager {
      */
     String getHoursById(int id) {
         String result = "";
-        Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?",
-                new String[]{String.valueOf(id)});
-
-        if (c.moveToNext()) {
-            result = c.getString(0);
+        try (Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?",
+                                    new String[]{String.valueOf(id)})) {
+            if (c.moveToNext()) {
+                result = c.getString(0);
+            }
         }
-        c.close();
         return result;
     }
 

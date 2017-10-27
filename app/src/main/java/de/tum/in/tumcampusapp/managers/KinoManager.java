@@ -141,11 +141,11 @@ public class KinoManager extends AbstractManager {
     // returns the last id in the database
     private String getLastId() {
         String lastId = "";
-        Cursor c = db.rawQuery("SELECT id FROM kino ORDER BY id DESC LIMIT 1", null);
-        if (c.moveToFirst()) {
-            lastId = c.getString(0);
+        try (Cursor c = db.rawQuery("SELECT id FROM kino ORDER BY id DESC LIMIT 1", null)) {
+            if (c.moveToFirst()) {
+                lastId = c.getString(0);
+            }
         }
-        c.close();
         return lastId;
     }
 
