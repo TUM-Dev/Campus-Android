@@ -19,15 +19,15 @@ public class LecturesSearchRow
     public static final String STP_SP_NR = "stp_sp_nr";
 
     @Element
-    private final String dauer_info = "";
+    private String dauer_info = "";
     // <dauer_info>4</dauer_info>
 
     @Element(required = false)
-    private final String org_kennung_betreut = "";
+    private String org_kennung_betreut = "";
     // <org_kennung_betreut>TUEIEDA</org_kennung_betreut>
 
     @Element(required = false)
-    private final String org_name_betreut = "";
+    private String org_name_betreut = "";
     // <org_name_betreut>Lehrstuhl für Entwurfsautomatisierung (Prof.
     // Schlichtmann)</org_name_betreut>
 
@@ -36,48 +36,48 @@ public class LecturesSearchRow
     // <org_nr_betreut>15393</org_nr_betreut>
 
     @Element
-    private final String semester = "";
+    private String semester = "";
     // <semester>S</semester>
 
     @Element
-    private final String semester_id = "";
+    private String semester_id = "";
     // <semester_id>11S</semester_id>
 
     @Element
-    private final String semester_name = "";
+    private String semester_name = "";
     // <semester_name>Sommersemester>2011</semester_name>
 
     @Element
-    private final String sj_name = "";
+    private String sj_name = "";
     // <sj_name>2010/11</sj_name>
 
     @Element
-    private final String stp_lv_art_kurz = "";
+    private String stp_lv_art_kurz = "";
     // <stp_lv_art_kurz>PR</stp_lv_art_kurz>
 
     @Element
-    private final String stp_lv_art_name = "";
+    private String stp_lv_art_name = "";
     // <stp_lv_art_name>Praktikum</stp_lv_art_name>
 
     @Element(name = "stp_lv_nr")
-    private final String stp_lv_nr = "";
+    private String stp_lv_nr = "";
     // lehrveranstaltungsnummer
 
     @Element
-    private final String stp_sp_nr = "";
+    private String stp_sp_nr = "";
     // <stp_sp_nr>950006549</stp_sp_nr>
 
     @Element
-    private final String stp_sp_sst = "";
+    private String stp_sp_sst = "";
     // <stp_sp_sst>4</stp_sp_sst>
 
     @Element(name = "stp_sp_titel")
-    private final String titel = "";
+    private String titel = "";
     // <stp_sp_titel>Praktikum (Rechnergestützte)
     // Schaltungssimulation</stp_sp_titel>
 
     @Element(required = false)
-    private final String vortragende_mitwirkende = "";
+    private String vortragende_mitwirkende = "";
 
     // <vortragende_mitwirkende>Schlichtmann U, Pehl M
     // [L]</vortragende_mitwirkende>

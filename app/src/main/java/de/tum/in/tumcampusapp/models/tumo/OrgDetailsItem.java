@@ -25,42 +25,42 @@ public class OrgDetailsItem {
      */
     // Caption
     @Element(name = "zusatz_info_name", required = false)
-    private final String additionalInfoCaption = "";
+    private String additionalInfoCaption = "";
     // Information
     @Element(name = "zusatz_info", required = false)
-    private final String additionalInfoText = "";
+    private String additionalInfoText = "";
     // Organisation Code, e.g. "TUZESSB"
     @Element(name = "kennung")
     private String code = "";
 
     // Email Address
     @Element(name = "email_adresse", required = false)
-    private final String contactEmail = "";
+    private String contactEmail = "";
     // Fax Number
     @Element(name = "fax_nummer", required = false)
-    private final String contactFax = "";
+    private String contactFax = "";
     // Town, to which the organisation belongs to
     @Element(name = "sekretariat_info", required = false)
-    private final String contactLocality = "";
+    private String contactLocality = "";
     // URL to a Google Maps Site containing the
     @Element(name = "www_homepage", required = false)
-    private final String contactLocationURL = "";
+    private String contactLocationURL = "";
 
     /**
      * Information about how to get in contact with organisation
      */
     // Contact Name of Organisation, similar to Organisation name
     @Element(name = "ansprechpartner", required = false)
-    private final String contactName = "";
+    private String contactName = "";
     // Street and Street number of the Organisation
     @Element(name = "adresse_text", required = false)
-    private final String contactStreet = "";
+    private String contactStreet = "";
     // Phone Number, usually to the secretary of the organisation
     @Element(name = "telefon_nummer", required = false)
-    private final String contactTelephone = "";
+    private String contactTelephone = "";
 
     @Element(name = "bibliothek_info", required = false)
-    private final String contactAdditionalInfo = "";
+    private String contactAdditionalInfo = "";
 
     /**
      * @return the additionalInfoCaption

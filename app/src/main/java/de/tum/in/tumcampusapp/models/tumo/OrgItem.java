@@ -40,22 +40,22 @@ public class OrgItem {
      * Organisation ID of the parent Organisation
      */
     @Element(required = false)
-    private final String ebene = "";
+    private String ebene = "";
 
     @Element(required = false)
-    private final String org_gruppe_name = "";
+    private String org_gruppe_name = "";
 
     @Element(required = false)
-    private final String child_cnt = "";
+    private String child_cnt = "";
 
     @Element(required = false)
-    private final String sort_hierarchie = "";
+    private String sort_hierarchie = "";
 
     @Element(required = false)
-    private final String kennung = "";
+    private String kennung = "";
 
     @Element(required = false)
-    private final String org_typ_name = "";
+    private String org_typ_name = "";
 
     // Getter and Setter Functions
     public String getId() {

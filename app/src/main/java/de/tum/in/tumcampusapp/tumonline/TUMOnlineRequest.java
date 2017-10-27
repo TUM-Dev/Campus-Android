@@ -176,6 +176,7 @@ public final class TUMOnlineRequest<T> {
                 //Release any lock present in the database
                 tumManager.releaseLock(url);
             } catch (Exception e) {
+                Utils.log(e, "TUMonline request failed");
                 //Serialisation failed - lock for a specific time, save the error message
                 lastError = tumManager.addLock(url, result.get());
             }

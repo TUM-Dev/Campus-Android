@@ -95,10 +95,10 @@ public class NetUtils {
         Request.Builder builder = new Request.Builder().url(url);
 
         //Execute the request
-        try (Response res = client.newCall(builder.build())
-                                  .execute()) {
-            return Optional.fromNullable(res.body());
-        }
+        Response res = client.newCall(builder.build())
+                             .execute();
+        return Optional.fromNullable(res.body());
+
     }
 
     /**
@@ -111,9 +111,9 @@ public class NetUtils {
     public Optional<String> downloadStringHttp(String url) throws IOException {
         Optional<ResponseBody> response = getOkHttpResponse(url);
         if (response.isPresent()) {
-            try (ResponseBody b = response.get()) {
-                return Optional.of(b.string());
-            }
+            ResponseBody b = response.get();
+            return Optional.of(b.string());
+
         }
         return Optional.absent();
     }
@@ -163,10 +163,9 @@ public class NetUtils {
                 file.delete();
                 throw new IOException();
             }
-            byte[] buffer;
-            try (ResponseBody b = body.get()) {
-                buffer = b.bytes();
-            }
+            byte[] buffer = body.get()
+                                .bytes();
+
             out.write(buffer, 0, buffer.length);
             out.flush();
         }
