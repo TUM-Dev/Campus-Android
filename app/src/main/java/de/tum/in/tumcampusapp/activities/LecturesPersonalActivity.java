@@ -52,7 +52,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
             // set bundle for LectureDetails and show it
             Bundle bundle = new Bundle();
             // we need the stp_sp_nr
-            bundle.putString(LecturesSearchRow.STP_SP_NR, item.getStp_sp_nr());
+            bundle.putString(LecturesSearchRow.Companion.getSTP_SP_NR(), item.getStp_sp_nr());
             Intent intent = new Intent(LecturesPersonalActivity.this, LecturesDetailsActivity.class);
             intent.putExtras(bundle);
             // start LectureDetails for given stp_sp_nr

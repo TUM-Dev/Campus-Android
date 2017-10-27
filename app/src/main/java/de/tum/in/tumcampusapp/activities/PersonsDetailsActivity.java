@@ -180,11 +180,11 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         // get the right gender
         if (employee.getGender() != null
             && employee.getGender()
-                       .equals(Person.MALE)) {
+                       .equals(Person.Companion.getMALE())) {
             contentText.append(getString(R.string.mr) + ' ');
         } else if (employee.getGender() != null
                    && employee.getGender()
-                              .equals(Person.FEMALE)) {
+                              .equals(Person.Companion.getFEMALE())) {
             contentText.append(getString(R.string.mrs) + ' ');
         }
 

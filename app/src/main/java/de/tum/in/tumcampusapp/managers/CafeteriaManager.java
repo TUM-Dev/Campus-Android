@@ -118,15 +118,16 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
      * @param c Cafeteria object
      */
     void replaceIntoDb(Cafeteria c) {
-        if (c.id <= 0) {
+        if (c.getId() <= 0) {
             throw new IllegalArgumentException("Invalid id.");
         }
-        if (c.name.isEmpty()) {
+        if (c.getName()
+             .isEmpty()) {
             throw new IllegalArgumentException("Invalid name.");
         }
 
         db.execSQL("REPLACE INTO cafeterias (id, name, address, latitude, longitude) VALUES (?, ?, ?, ?, ?)",
-                   new String[]{String.valueOf(c.id), c.name, c.address, Double.toString(c.latitude), Double.toString(c.longitude)});
+                   new String[]{String.valueOf(c.getId()), c.getName(), c.getAddress(), Double.toString(c.getLatitude()), Double.toString(c.getLongitude())});
     }
 
     public String getMensaNameFromId(int mensaId) {

@@ -131,9 +131,9 @@ public class KinoManager extends AbstractManager {
 
         db.execSQL("REPLACE INTO kino (id, title, year, runtime, genre, director, actors, rating," +
                    "description, cover, trailer, date, created, link) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                   new String[]{k.id, k.title, k.year, k.runtime, k.genre, k.director, k.actors, k.rating,
-                                k.description, k.cover, k.trailer, Utils.getDateTimeString(k.date),
-                                Utils.getDateTimeString(k.created), k.link});
+                   new String[]{k.getId(), k.getTitle(), k.getYear(), k.getRuntime(), k.getGenre(), k.getDirector(), k.getActors(), k.getRating(),
+                                k.getDescription(), k.getCover(), k.getTrailer(), Utils.getDateTimeString(k.getDate()),
+                                Utils.getDateTimeString(k.getCreated()), k.getLink()});
     }
 
     // returns the last id in the database

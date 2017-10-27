@@ -108,7 +108,7 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
             String message = "";
             int menuCount = 0;
             for (CafeteriaMenu menu : scheduledNow.get(mensaId)) {
-                message += menu.name + '\n';
+                message += menu.getName() + '\n';
                 menuCount++;
             }
             activeNotifications.add(mensaId);

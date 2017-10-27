@@ -165,7 +165,7 @@ public class LocationManager extends AbstractManager {
                     Cafeteria cafe = new Cafeteria(cur.getInt(0), cur.getString(1),
                                                    cur.getString(2), cur.getDouble(3), cur.getDouble(4));
                     Location.distanceBetween(cur.getDouble(3), cur.getDouble(4), lat, lng, results);
-                    cafe.distance = results[0];
+                    cafe.setDistance(results[0]);
                     list.add(cafe);
                 } while (cur.moveToNext());
             }
@@ -242,7 +242,7 @@ public class LocationManager extends AbstractManager {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final String defaultVal = DEFAULT_CAMPUS_STATION[campus].station;
+        final String defaultVal = DEFAULT_CAMPUS_STATION[campus].getStation();
         return prefs.getString("card_stations_default_" + CAMPUS_SHORT[campus], defaultVal);
     }
 
@@ -291,7 +291,8 @@ public class LocationManager extends AbstractManager {
         if (list == null || list.isEmpty()) {
             return -1;
         }
-        return list.get(0).id;
+        return list.get(0)
+                   .getId();
     }
 
     /**

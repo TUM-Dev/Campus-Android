@@ -27,9 +27,9 @@ public class WifiMeasurementManager extends AbstractManager {
     }
 
     public void insertWifiMeasurement(WifiMeasurement wifiMeasurement) {
-        String[] params = {wifiMeasurement.getSSID(),
-                           wifiMeasurement.getBSSID(),
-                           String.valueOf(wifiMeasurement.getdBm()),
+        String[] params = {wifiMeasurement.getSsid(),
+                           wifiMeasurement.getBssid(),
+                           String.valueOf(wifiMeasurement.getDBm()),
                            String.valueOf(wifiMeasurement.getAccuracyInMeters()),
                            String.valueOf(wifiMeasurement.getLatitude()),
                            String.valueOf(wifiMeasurement.getLongitude())

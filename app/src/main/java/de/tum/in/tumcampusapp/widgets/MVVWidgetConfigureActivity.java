@@ -88,8 +88,8 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
     public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
         StationResult stationResult = (StationResult) av.getAdapter()
                                                         .getItem(position);
-        widgetDepartures.setStation(stationResult.station);
-        widgetDepartures.setStationId(stationResult.id);
+        widgetDepartures.setStation(stationResult.getStation());
+        widgetDepartures.setStationId(stationResult.getId());
         saveAndReturn();
     }
 

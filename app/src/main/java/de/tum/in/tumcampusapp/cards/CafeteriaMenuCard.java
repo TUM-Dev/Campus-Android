@@ -133,18 +133,18 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         StringBuilder allContent = new StringBuilder();
         StringBuilder firstContent = new StringBuilder();
         for (CafeteriaMenu menu : mMenus) {
-            if ("bei".equals(menu.typeShort)) {
+            if ("bei".equals(menu.getTypeShort())) {
                 continue;
             }
 
-            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.typeLong)
+            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.getTypeLong())
                                                                                                                                                               .replaceAll("")
                                                                                                                                                               .trim());
 
-            StringBuilder content = new StringBuilder(menu.name);
-            if (rolePrices.containsKey(menu.typeLong)) {
+            StringBuilder content = new StringBuilder(menu.getName());
+            if (rolePrices.containsKey(menu.getTypeLong())) {
                 content.append('\n')
-                       .append(rolePrices.get(menu.typeLong))
+                       .append(rolePrices.get(menu.getTypeLong()))
                        .append(" €");
             }
 
@@ -152,7 +152,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                                           .replaceAll("")
                                           .trim();
             pageNotification.setContentText(contentString);
-            if ("tg".equals(menu.typeShort)) {
+            if ("tg".equals(menu.getTypeShort())) {
                 if (!allContent.toString()
                                .isEmpty()) {
                     allContent.append('\n');
@@ -161,7 +161,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
             }
             if (firstContent.toString()
                             .isEmpty()) {
-                firstContent.append(COMPILE.matcher(menu.name)
+                firstContent.append(COMPILE.matcher(menu.getName())
                                            .replaceAll("")
                                            .trim())
                             .append('…');

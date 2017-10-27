@@ -290,7 +290,7 @@ public final class ExceptionHandler {
 
                 // Transmit stack trace with PUT request
                 TUMCabeClient client = TUMCabeClient.getInstance(context);
-                BugReport r = new BugReport(context, stacktrace, list.get(i)[1]);
+                BugReport r = BugReport.Companion.getBugReport(context, stacktrace, list.get(i)[1]);
                 client.putBugReport(r);
                 // We don't care about the response, so we just hope it went well and on with it.
             }

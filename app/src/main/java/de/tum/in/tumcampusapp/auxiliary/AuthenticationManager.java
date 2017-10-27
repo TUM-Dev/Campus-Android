@@ -184,7 +184,7 @@ public class AuthenticationManager {
         }
 
         try {
-            DeviceRegister dr = new DeviceRegister(mContext, publicKey, member);
+            DeviceRegister dr = DeviceRegister.Companion.getDeviceRegister(mContext, publicKey, member);
 
             // Upload public key to the server
             TUMCabeClient.getInstance(mContext)
