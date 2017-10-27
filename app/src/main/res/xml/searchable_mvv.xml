@@ -1,8 +1,8 @@
-<searchable 
-      	xmlns:android="http://schemas.android.com/apk/res/android" 
-   		android:label="@string/app_name"
-  	 	android:hint="@string/search_station"
-        android:includeInGlobalSearch="true"
-	android:searchSuggestAuthority="de.tum.in.tumcampusapp.auxiliary.MVVStationSuggestionProvider"
-    	android:searchSuggestSelection=" ?">
+<searchable
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="@string/search_station"
+    android:includeInGlobalSearch="true"
+    android:label="@string/app_name"
+    android:searchSuggestAuthority="de.tum.in.tumcampusapp.auxiliary.MVVStationSuggestionProvider"
+    android:searchSuggestSelection=" ?">
 </searchable>

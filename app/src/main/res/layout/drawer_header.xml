@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/AppTheme.DrawerHeaderBackground"
-    android:layout_width="match_parent"
-    android:layout_height="172dp"
-    android:orientation="vertical"
-    android:paddingTop="20dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+                xmlns:tools="http://schemas.android.com/tools"
+                style="@style/AppTheme.DrawerHeaderBackground"
+                android:layout_width="match_parent"
+                android:layout_height="172dp"
+                android:orientation="vertical"
+                android:paddingTop="20dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
@@ -15,7 +15,7 @@
         android:layout_margin="20dp"
         android:elevation="4dp"
         android:src="@drawable/photo_not_available"
-        tools:ignore="UnusedAttribute" />
+        tools:ignore="UnusedAttribute"/>
 
     <TextView
         android:id="@+id/name"
@@ -24,7 +24,7 @@
         android:layout_above="@+id/email"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
     <TextView
         android:id="@+id/email"
@@ -34,6 +34,6 @@
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
 </RelativeLayout>

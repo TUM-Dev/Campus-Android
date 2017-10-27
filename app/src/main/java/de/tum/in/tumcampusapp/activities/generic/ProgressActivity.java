@@ -56,13 +56,13 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         super.onCreate(savedInstanceState);
 
         // Get handles to all error layouts
-        allErrorsLayout = (LinearLayout) findViewById(R.id.errors_layout);
-        progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
-        errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
-        noInternetLayout = (RelativeLayout) findViewById(R.id.no_internet_layout);
-        failedTokenLayout = (RelativeLayout) findViewById(R.id.failed_layout);
-        noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
+        allErrorsLayout = findViewById(R.id.errors_layout);
+        progressLayout = findViewById(R.id.progress_layout);
+        errorLayout = findViewById(R.id.error_layout);
+        swipeRefreshLayout = findViewById(R.id.ptr_layout);
+        noInternetLayout = findViewById(R.id.no_internet_layout);
+        failedTokenLayout = findViewById(R.id.failed_layout);
+        noTokenLayout = findViewById(R.id.no_token_layout);
 
         // If content is refreshable setup the SwipeRefreshLayout
         if (swipeRefreshLayout != null) {
@@ -95,7 +95,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * @param errorReason Error text
      */
     protected void showError(String errorReason) {
-        TextView error = (TextView) errorLayout.findViewById(R.id.error_text);
+        TextView error = errorLayout.findViewById(R.id.error_text);
         error.setText(errorReason);
         showErrorLayout();
     }
@@ -131,7 +131,8 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         showLoadingEnded();
         failedTokenLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, error, Toast.LENGTH_LONG)
+             .show();
     }
 
     /**
@@ -151,12 +152,13 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         showLoadingEnded();
         noInternetLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
-        noInternetLayout.findViewById(R.id.progressWifi).setVisibility(View.INVISIBLE);
+        noInternetLayout.findViewById(R.id.progressWifi)
+                        .setVisibility(View.INVISIBLE);
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        Button but = (Button) findViewById(R.id.button_enable_wifi);
+        Button but = findViewById(R.id.button_enable_wifi);
         but.setVisibility(wifi.isWifiEnabled() ? View.GONE : View.VISIBLE);
         registerReceiver(connectivityChangeReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+                         new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         registered = true;
     }
 
@@ -186,12 +188,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
             progressLayout.setVisibility(View.VISIBLE);
             allErrorsLayout.setVisibility(View.VISIBLE);
         } else {
-            mLoadingHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                }
-            }, 1000);
+            mLoadingHandler.postDelayed(() -> swipeRefreshLayout.setRefreshing(true), 1000);
         }
     }
 
@@ -259,7 +256,8 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     public void onEnableWifi(View view) {
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifi.setWifiEnabled(true);
-        noInternetLayout.findViewById(R.id.progressWifi).setVisibility(View.VISIBLE);
+        noInternetLayout.findViewById(R.id.progressWifi)
+                        .setVisibility(View.VISIBLE);
     }
 
     final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {

@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 
@@ -58,14 +57,9 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         TransportManager tm = new TransportManager(this);
         this.widgetDepartures = tm.getWidget(appWidgetId);
 
-        Switch autoReloadSwitch = (Switch) findViewById(R.id.mvv_widget_auto_reload);
+        Switch autoReloadSwitch = findViewById(R.id.mvv_widget_auto_reload);
         autoReloadSwitch.setChecked(this.widgetDepartures.autoReload());
-        autoReloadSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                widgetDepartures.setAutoReload(checked);
-            }
-        });
+        autoReloadSwitch.setOnCheckedChangeListener((compoundButton, checked) -> widgetDepartures.setAutoReload(checked));
         // TODO add handling for use location
 
         // Det all stations from db
@@ -75,8 +69,9 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         listViewResults.setOnItemClickListener(this);
 
         // Initialize stations adapter
-        Cursor stationCursor = recentsManager.getAllFromDb();
-        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportationActivity.getAllStationResults(stationCursor));
+        try (Cursor stationCursor = recentsManager.getAllFromDb()) {
+            adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportationActivity.getAllStationResults(stationCursor));
+        }
 
         if (adapterStations.getCount() == 0) {
             openSearch();
@@ -141,27 +136,27 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         if (!possibleStationCursor.isPresent()) {
             return;
         }
-        Cursor stationCursor = possibleStationCursor.get();
+        try (Cursor stationCursor = possibleStationCursor.get()) {
+            showLoadingEnded();
 
-        showLoadingEnded();
-
-        // mQuery is not null if it was a real search
-        if (stationCursor.getCount() == 0) {
-            // When stationCursor is a MatrixCursor the result comes from querying a station name
-            if (stationCursor instanceof MatrixCursor) {
-                // So show no results found
-                listViewResults.setAdapter(new NoResultsAdapter(this));
-                listViewResults.requestFocus();
-            } else {
-                // if the loading came from the user canceling search
-                // and there are no recents to show close activity
-                cancelAndReturn();
+            // mQuery is not null if it was a real search
+            if (stationCursor.getCount() == 0) {
+                // When stationCursor is a MatrixCursor the result comes from querying a station name
+                if (stationCursor instanceof MatrixCursor) {
+                    // So show no results found
+                    listViewResults.setAdapter(new NoResultsAdapter(this));
+                    listViewResults.requestFocus();
+                } else {
+                    // if the loading came from the user canceling search
+                    // and there are no recents to show close activity
+                    cancelAndReturn();
+                }
+                return;
             }
-            return;
-        }
 
-        adapterStations.clear();
-        adapterStations.addAll(TransportationActivity.getAllStationResults(stationCursor));
+            adapterStations.clear();
+            adapterStations.addAll(TransportationActivity.getAllStationResults(stationCursor));
+        }
         adapterStations.notifyDataSetChanged();
         listViewResults.setAdapter(adapterStations);
         listViewResults.requestFocus();

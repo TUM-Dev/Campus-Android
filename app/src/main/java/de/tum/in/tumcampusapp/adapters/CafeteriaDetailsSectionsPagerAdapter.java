@@ -27,7 +27,9 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     private int mCafeteriaId;
     private Cursor cursorCafeteriaDates;
 
-    /** Current Date selected (ISO format) */
+    /**
+     * Current Date selected (ISO format)
+     */
     private final List<String> dates = new ArrayList<>();
 
     public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
@@ -72,8 +74,9 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     public CharSequence getPageTitle(int position) {
         Date date = Utils.getDate(dates.get(position));
 
-        DateFormat formatDate = SimpleDateFormat.getDateInstance(SimpleDateFormat.FULL);
-        return formatDate.format(date).toUpperCase(Locale.getDefault());
+        DateFormat formatDate = DateFormat.getDateInstance(SimpleDateFormat.FULL);
+        return formatDate.format(date)
+                         .toUpperCase(Locale.getDefault());
     }
 
     @Override

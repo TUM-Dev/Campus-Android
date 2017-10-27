@@ -67,7 +67,8 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
      * @param force Force reload of content
      */
     void requestFetch(boolean force) {
-        String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
+        String accessToken = PreferenceManager.getDefaultSharedPreferences(this)
+                                              .getString(Const.ACCESS_TOKEN, null);
         if (accessToken == null) {
             showNoTokenLayout();
         } else {
@@ -105,7 +106,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
     }
 
     @Override
-    public void onNoDataToShow(){
+    public void onNoDataToShow() {
         showError(R.string.no_data_to_show);
     }
 }

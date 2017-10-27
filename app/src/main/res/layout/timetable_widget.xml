@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/widget_margin"
-    android:theme="@style/AppTheme.WhiteBackground">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/widget_margin"
+                android:theme="@style/AppTheme.WhiteBackground">
 
     <RelativeLayout
         android:id="@+id/timetable_widget_header"
@@ -23,7 +23,7 @@
             android:background="@color/color_primary"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:typeface="sans" />
+            android:typeface="sans"/>
 
         <ImageView
             android:id="@+id/timetable_widget_setting"
@@ -33,7 +33,7 @@
             android:layout_alignParentRight="true"
             android:background="@color/color_primary"
             android:src="@drawable/ic_action_settings"
-            android:typeface="sans" />
+            android:typeface="sans"/>
     </RelativeLayout>
 
 
@@ -54,6 +54,6 @@
         android:layout_below="@+id/timetable_widget_header"
         android:gravity="center"
         android:text="@string/timetable_widget_no_lectures"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </RelativeLayout> 

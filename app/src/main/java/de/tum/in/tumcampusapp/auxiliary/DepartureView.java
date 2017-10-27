@@ -57,9 +57,9 @@ public class DepartureView extends LinearLayout {
             inflater.inflate(R.layout.departure_line_small, this, true);
         }
 
-        mSymbolView = (TextView) findViewById(R.id.line_symbol);
-        mLineView = (TextView) findViewById(R.id.line_name);
-        mTimeSwitcher = (TextSwitcher) findViewById(R.id.line_switcher);
+        mSymbolView = findViewById(R.id.line_symbol);
+        mLineView = findViewById(R.id.line_name);
+        mTimeSwitcher = findViewById(R.id.line_switcher);
 
         // Declare the in and out animations and initialize them
         Animation in = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_in_left);
@@ -72,17 +72,15 @@ public class DepartureView extends LinearLayout {
         mHandler = new Handler();
 
         // Set up the ValueAnimator for animateOut()
-        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0).setDuration(500);
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (Integer) animation.getAnimatedValue();
-                if (getLayoutParams() != null) {
-                    getLayoutParams().height = value;
-                    requestLayout();
-                    if (value == 0) {
-                        setVisibility(View.GONE);
-                    }
+        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0)
+                                      .setDuration(500);
+        mValueAnimator.addUpdateListener(animation -> {
+            int value = (Integer) animation.getAnimatedValue();
+            if (getLayoutParams() != null) {
+                getLayoutParams().height = value;
+                requestLayout();
+                if (value == 0) {
+                    setVisibility(View.GONE);
                 }
             }
         });
@@ -108,7 +106,8 @@ public class DepartureView extends LinearLayout {
     }
 
     public String getSymbol() {
-        return mSymbolView.getText().toString();
+        return mSymbolView.getText()
+                          .toString();
     }
 
     /**
@@ -140,12 +139,9 @@ public class DepartureView extends LinearLayout {
         }
         // Keep countDown approximately in sync.
         if (mHandler != null) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mCountDown--;
-                    updateDepartureTime();
-                }
+            mHandler.postDelayed(() -> {
+                mCountDown--;
+                updateDepartureTime();
             }, 60000);
         }
     }

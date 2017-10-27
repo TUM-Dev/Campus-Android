@@ -27,7 +27,7 @@ public class KinoActivity extends BaseActivity {
         cursor = km.getAllFromDb();
 
         // set up ViewPager and adapter
-        ViewPager mpager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mpager = findViewById(R.id.pager);
         KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
         mpager.setAdapter(kinoAdapter);
     }

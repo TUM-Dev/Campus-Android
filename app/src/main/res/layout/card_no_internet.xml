@@ -1,17 +1,17 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_marginBottom="@dimen/card_padding_vertical"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginTop="@dimen/card_padding_vertical"
-    android:elevation="@dimen/cardview_elevation"
-    card_view:cardBackgroundColor="#fff"
-    card_view:cardCornerRadius="3dp"
-    tools:ignore="UnusedAttribute">
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginBottom="@dimen/card_padding_vertical"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginRight="8dp"
+                                    android:layout_marginTop="@dimen/card_padding_vertical"
+                                    android:elevation="@dimen/cardview_elevation"
+                                    card_view:cardBackgroundColor="#fff"
+                                    card_view:cardCornerRadius="3dp"
+                                    tools:ignore="UnusedAttribute">
 
     <LinearLayout
         android:id="@+id/card_view"
@@ -28,7 +28,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/no_internet_connection"
             android:textSize="16sp"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"/>
 
         <TextView
             android:id="@+id/card_last_update"
@@ -36,6 +36,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@android:color/secondary_text_light"
-            android:textStyle="italic" />
+            android:textStyle="italic"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -34,7 +34,6 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
     // this is the template for the date in the xml file
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
 
-
     public LectureAppointmentsListAdapter(Context context, List<LectureAppointmentsRow> results) {
         appointmentList = results;
         mInflater = LayoutInflater.from(context);
@@ -64,9 +63,9 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 
             // save UI elements in view holder
             holder = new ViewHolder();
-            holder.tvTerminZeit = (TextView) convertView.findViewById(R.id.tvTerminZeit);
-            holder.tvTerminOrt = (TextView) convertView.findViewById(R.id.tvTerminOrt);
-            holder.tvTerminBetreff = (TextView) convertView.findViewById(R.id.tvTerminBetreff);
+            holder.tvTerminZeit = convertView.findViewById(R.id.tvTerminZeit);
+            holder.tvTerminOrt = convertView.findViewById(R.id.tvTerminOrt);
+            holder.tvTerminBetreff = convertView.findViewById(R.id.tvTerminBetreff);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -80,7 +79,8 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
             StringBuilder line2 = new StringBuilder(lvItem.getArt());
             // only show betreff if available
             if (lvItem.getTermin_betreff() != null) {
-                line2.append(" - ").append(lvItem.getTermin_betreff());
+                line2.append(" - ")
+                     .append(lvItem.getTermin_betreff());
             }
             holder.tvTerminBetreff.setText(line2.toString());
 
@@ -98,11 +98,15 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
                 // output if same day: we only show the date once
                 StringBuilder output = new StringBuilder();
                 if (start.get(Calendar.MONTH) == ende.get(Calendar.MONTH) &&
-                        start.get(Calendar.DATE) == ende.get(Calendar.DATE)) {
-                    output.append(startDateOutput.format(start.getTime())).append(" - ").append(endHoursOutput.format(ende.getTime()));
+                    start.get(Calendar.DATE) == ende.get(Calendar.DATE)) {
+                    output.append(startDateOutput.format(start.getTime()))
+                          .append(" - ")
+                          .append(endHoursOutput.format(ende.getTime()));
                 } else {
                     // show it normally
-                    output.append(startDateOutput.format(start.getTime())).append(" - ").append(endDateOutput.format(ende.getTime()));
+                    output.append(startDateOutput.format(start.getTime()))
+                          .append(" - ")
+                          .append(endDateOutput.format(ende.getTime()));
                 }
 
                 // grey it, if in past
@@ -115,7 +119,7 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 
             } catch (ParseException e) {
                 holder.tvTerminZeit.setText(String.format("%s - %s",
-                        lvItem.getBeginn_datum_zeitpunkt(), lvItem.getEnde_datum_zeitpunkt()));
+                                                          lvItem.getBeginn_datum_zeitpunkt(), lvItem.getEnde_datum_zeitpunkt()));
             }
 
         }

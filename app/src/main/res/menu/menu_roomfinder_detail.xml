@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+      xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_room_timetable"
         android:icon="@drawable/ic_room_timetable"
         android:title="@string/room_timetable"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_directions"
         android:icon="@drawable/ic_action_directions"
         android:title="@string/navigate"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_switch_map"
         android:icon="@drawable/ic_action_map"
         android:title="@string/switch_map"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
 
 </menu>

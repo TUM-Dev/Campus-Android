@@ -1,7 +1,7 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                                        android:id="@+id/drawer_layout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
     <LinearLayout
 
@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar" />
+        <include layout="@layout/toolbar"/>
 
         <TabHost
             android:id="@+id/tabHost"
@@ -51,7 +51,7 @@
                                 android:layout_marginTop="10dp"
                                 android:background="@color/color_primary"
                                 android:text="@string/select_target_faculties_survey"
-                                android:textColor="#FFFFFF" />
+                                android:textColor="#FFFFFF"/>
 
 
                             <LinearLayout
@@ -72,7 +72,7 @@
                                     android:textColor="@color/color_primary"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
-                                    android:visibility="visible" />
+                                    android:visibility="visible"/>
 
                                 <Spinner
                                     android:id="@+id/spinner"
@@ -80,7 +80,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:layout_weight="1"
-                                    android:visibility="visible" />
+                                    android:visibility="visible"/>
                             </LinearLayout>
 
                             <LinearLayout
@@ -101,7 +101,7 @@
                                 android:padding="@dimen/padding_default"
                                 android:text="@string/submit_question_survey"
                                 android:textColor="#FFFFFF"
-                                android:visibility="visible" />
+                                android:visibility="visible"/>
 
                         </LinearLayout>
                     </ScrollView>
@@ -128,7 +128,7 @@
         </TabHost>
     </LinearLayout>
 
-    <include layout="@layout/layout_all_errors" />
+    <include layout="@layout/layout_all_errors"/>
 
-    <include layout="@layout/navigation_drawer" />
+    <include layout="@layout/navigation_drawer"/>
 </android.support.v4.widget.DrawerLayout>

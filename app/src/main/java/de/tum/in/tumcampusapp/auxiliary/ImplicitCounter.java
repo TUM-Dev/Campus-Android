@@ -34,15 +34,19 @@ public final class ImplicitCounter {
      */
     public static void count(Activity c) {
         SharedPreferences sp = c.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
-        final String identifier = c.getClass().getSimpleName();
+        final String identifier = c.getClass()
+                                   .getSimpleName();
 
         final int currentUsages = sp.getInt(identifier, 0);
-        sp.edit().putInt(identifier, currentUsages + 1).apply();
+        sp.edit()
+          .putInt(identifier, currentUsages + 1)
+          .apply();
     }
 
     public static void countCard(Context c, Card card) {
         SharedPreferences sp = c.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
-        StringBuilder identifier = new StringBuilder(card.getClass().getSimpleName());
+        StringBuilder identifier = new StringBuilder(card.getClass()
+                                                         .getSimpleName());
 
         //Add the news id when showing a news card so we can check which feeds are used
         if (card instanceof NewsCard) {
@@ -50,9 +54,10 @@ public final class ImplicitCounter {
         }
 
         final int currentUsages = sp.getInt(identifier.toString(), 0);
-        sp.edit().putInt(identifier.toString(), currentUsages + 1).apply();
+        sp.edit()
+          .putInt(identifier.toString(), currentUsages + 1)
+          .apply();
     }
-
 
     public static void submitCounter(Context c) {
         //Check first: sync only every so often - in this case one hour
@@ -75,7 +80,8 @@ public final class ImplicitCounter {
         Map<String, ?> allEntries = sp.getAll();
 
         // Submit this to webservice via parent async class
-        TUMCabeClient.getInstance(c).putStatistics(new Statistics(new Gson().toJson(allEntries)));
+        TUMCabeClient.getInstance(c)
+                     .putStatistics(new Statistics(new Gson().toJson(allEntries)));
 
         // Delete / Reset
         SharedPreferences.Editor e = sp.edit();

@@ -15,15 +15,15 @@ import java.util.List;
 @Root(name = "events")
 public class CalendarRowSet {
 
-	@ElementList(inline = true, required = false)
-	private List<CalendarRow> kalendarList;
+    @ElementList(inline = true, required = false)
+    private List<CalendarRow> kalendarList;
 
-	public List<CalendarRow> getKalendarList() {
-		return kalendarList;
-	}
+    public List<CalendarRow> getKalendarList() {
+        return kalendarList;
+    }
 
-	public void setKalendarList(List<CalendarRow> kalendarList) {
-		this.kalendarList = kalendarList;
-	}
+    public void setKalendarList(List<CalendarRow> kalendarList) {
+        this.kalendarList = kalendarList;
+    }
 
 }

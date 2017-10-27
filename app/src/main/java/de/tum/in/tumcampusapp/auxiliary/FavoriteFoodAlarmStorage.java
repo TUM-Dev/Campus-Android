@@ -1,6 +1,8 @@
 package de.tum.in.tumcampusapp.auxiliary;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import de.tum.in.tumcampusapp.services.FavoriteDishAlarmScheduler;
 
 /**
@@ -17,7 +19,8 @@ public class FavoriteFoodAlarmStorage {
     private SharedPreferences.Editor editor;
     private Context context;
 
-    private FavoriteFoodAlarmStorage(){}
+    private FavoriteFoodAlarmStorage() {
+    }
 
     private static class FavoriteFoodAlarmStorageLazyHolder {
         static final FavoriteFoodAlarmStorage SINGLETON = new FavoriteFoodAlarmStorage();
@@ -29,10 +32,11 @@ public class FavoriteFoodAlarmStorage {
 
     /**
      * Called after using getInstance() to initialize correct variables
+     *
      * @param context
      * @return
      */
-    public synchronized FavoriteFoodAlarmStorage initialize(Context context){
+    public synchronized FavoriteFoodAlarmStorage initialize(Context context) {
         this.context = context;
         this.sharedPreferences = this.context.getSharedPreferences("FavoriteFoodAlarmStorage", Context.MODE_PRIVATE);
         this.editor = this.sharedPreferences.edit();
@@ -41,9 +45,10 @@ public class FavoriteFoodAlarmStorage {
 
     /**
      * Schedules an alarm at a given day, if there's not already an alarm scheduled for that day.
+     *
      * @param when
      */
-    public synchronized void scheduleAlarm(String when){
+    public synchronized void scheduleAlarm(String when) {
         if (sharedPreferences.getBoolean(when, false)) {
             return;
         }
@@ -55,10 +60,11 @@ public class FavoriteFoodAlarmStorage {
 
     /**
      * Does nothing if there's no alarm stored, otherwise cancels it
+     *
      * @param when
      */
 
-    public synchronized  void cancelAlarm(String when){
+    public synchronized void cancelAlarm(String when) {
         if (!sharedPreferences.getBoolean(when, false)) {
             return;
         }
@@ -71,8 +77,9 @@ public class FavoriteFoodAlarmStorage {
     /**
      * Goes through all scheduled alarms and cancels them by calling cancelAlarm() on each of them.
      */
-    public synchronized  void cancelOutstandingAlarms(){
-        for(String when : sharedPreferences.getAll().keySet()){
+    public synchronized void cancelOutstandingAlarms() {
+        for (String when : sharedPreferences.getAll()
+                                            .keySet()) {
             cancelAlarm(when);
         }
     }

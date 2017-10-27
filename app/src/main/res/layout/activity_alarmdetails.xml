@@ -1,7 +1,7 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                                        android:id="@+id/drawer_layout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
     <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -9,7 +9,7 @@
         android:orientation="vertical">
 
         <!-- The toolbar aka SupportActionBar -->
-        <include layout="@layout/toolbar" />
+        <include layout="@layout/toolbar"/>
 
         <LinearLayout
             android:orientation="vertical"
@@ -24,7 +24,7 @@
                 android:text=""
                 android:id="@+id/alarm_title"
                 android:textStyle="bold"
-                android:textSize="24sp" />
+                android:textSize="24sp"/>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -35,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/alarm_date_published_on"
-                    android:textStyle="italic" />
+                    android:textStyle="italic"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -43,18 +43,18 @@
                     android:text=""
                     android:id="@+id/alarm_date"
                     android:layout_marginLeft="@dimen/card_text_padding"
-                    android:textStyle="italic" />
+                    android:textStyle="italic"/>
             </LinearLayout>
 
             <WebView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/alarm_description" />
+                android:id="@+id/alarm_description"/>
         </LinearLayout>
 
 
     </LinearLayout>
     <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer" />
+    <include layout="@layout/navigation_drawer"/>
 </android.support.v4.widget.DrawerLayout>

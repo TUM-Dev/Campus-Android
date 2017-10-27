@@ -7,7 +7,7 @@ import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter.SimpleStic
 /**
  * This class is used as a model for rooms in Roomfinder retrofit request.
  */
-public class RoomFinderRoom implements SimpleStickyListItem, Serializable{
+public class RoomFinderRoom implements SimpleStickyListItem, Serializable {
     private static final long serialVersionUID = 6631656320611471476L;
 
     String campus;
@@ -47,7 +47,7 @@ public class RoomFinderRoom implements SimpleStickyListItem, Serializable{
     }
 
     public String getName() {
-        if (name != null && name.equals("null")){
+        if (name != null && name.equals("null")) {
             return "";
         }
         return name;
@@ -64,9 +64,9 @@ public class RoomFinderRoom implements SimpleStickyListItem, Serializable{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return getCampus() + ";" + getAddress() + ";"
-                + getInfo() + ";" + getArch_id() + ";"
-                + getRoom_id() + ";" + getName();
+               + getInfo() + ";" + getArch_id() + ";"
+               + getRoom_id() + ";" + getName();
     }
 }

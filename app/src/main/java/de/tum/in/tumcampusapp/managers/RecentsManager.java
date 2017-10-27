@@ -38,11 +38,11 @@ public class RecentsManager extends AbstractManager {
      */
     public boolean empty() {
         boolean result = true;
-        Cursor c = db.rawQuery("SELECT name FROM recents WHERE typ=? LIMIT 1", new String[]{String.valueOf(typ)});
-        if (c.moveToNext()) {
-            result = false;
+        try (Cursor c = db.rawQuery("SELECT name FROM recents WHERE typ=? LIMIT 1", new String[]{String.valueOf(typ)})) {
+            if (c.moveToNext()) {
+                result = false;
+            }
         }
-        c.close();
         return result;
     }
 

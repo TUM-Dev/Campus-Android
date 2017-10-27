@@ -69,7 +69,8 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return CardManager.getCard(position).getType();
+        return CardManager.getCard(position)
+                          .getType();
     }
 
     @Override

@@ -25,7 +25,7 @@ public class GradeChartActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
-        WebView webView = (WebView) findViewById(R.id.webView1);
+        WebView webView = findViewById(R.id.webView1);
 
         Bundle extras = getIntent().getExtras();
         String chartContent = extras.getString("chartContent");

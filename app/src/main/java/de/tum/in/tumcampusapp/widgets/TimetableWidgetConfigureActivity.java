@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
 
@@ -24,7 +23,7 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timetable_widget_configure);
 
         // Setup toolbar and save button
-        setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
+        setSupportActionBar(findViewById(R.id.main_toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_check);
 
@@ -37,12 +36,13 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        ListView listViewLectures = (ListView) findViewById(R.id.activity_timetable_lectures);
+        ListView listViewLectures = findViewById(R.id.activity_timetable_lectures);
 
         // Initialize stations adapter
         CalendarManager calendarManager = new CalendarManager(this);
-        Cursor lectureCursor = calendarManager.getLecturesFromWidget(this.appWidgetId);
-        listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectureCursor, true, this.appWidgetId));
+        try (Cursor lectureCursor = calendarManager.getLecturesFromWidget(this.appWidgetId)) {
+            listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectureCursor, true, this.appWidgetId));
+        }
         listViewLectures.requestFocus();
     }
 

@@ -168,8 +168,11 @@ public final class CardManager {
      */
     public static void restoreCards(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
-        prefs.edit().clear().apply();
-        AbstractManager.getDb(context).execSQL("UPDATE news SET dismissed=0");
+        prefs.edit()
+             .clear()
+             .apply();
+        AbstractManager.getDb(context)
+                       .execSQL("UPDATE news SET dismissed=0");
     }
 
     public static List<Card> getCards() {

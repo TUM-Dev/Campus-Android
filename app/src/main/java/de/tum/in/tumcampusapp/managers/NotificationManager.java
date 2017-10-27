@@ -13,15 +13,15 @@ import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 public class NotificationManager extends AbstractManager {
 
     private static final String TABLE_NOTIFICATIONS = "notification";
-    private static final String[] TABLE_NOTIFICATIONS_COLUMNS = new String[]{
+    private static final String[] TABLE_NOTIFICATIONS_COLUMNS = {
             "notification", "type", "location", "name", "lon", "lat", "rad", "title",
             "description", "signature"};
 
     public NotificationManager(Context context) {
         super(context);
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATIONS +
-                " (notification INTEGER UNIQUE, typ INTEGER, location INTEGER, name TEXT, lon REAL, " +
-                "lat REAL, radius INTEGER, title TEXT, description TEXT, signature TEXT)");
+                   " (notification INTEGER UNIQUE, typ INTEGER, location INTEGER, name TEXT, lon REAL, " +
+                   "lat REAL, radius INTEGER, title TEXT, description TEXT, signature TEXT)");
     }
 
     public void replaceInto(GCMNotification note) {
@@ -29,9 +29,12 @@ public class NotificationManager extends AbstractManager {
         cvs.put("notification", note.getNotification());
         cvs.put("type", note.getType());
         cvs.put("location", note.getDescription());
-        cvs.put("name", note.getLocation().getName());
-        cvs.put("lon", note.getLocation().getLon());
-        cvs.put("lat", note.getLocation().getLat());
+        cvs.put("name", note.getLocation()
+                            .getName());
+        cvs.put("lon", note.getLocation()
+                           .getLon());
+        cvs.put("lat", note.getLocation()
+                           .getLat());
         cvs.put("title", note.getTitle());
         cvs.put("description", note.getDescription());
         cvs.put("signature", note.getSignature());
@@ -45,23 +48,23 @@ public class NotificationManager extends AbstractManager {
     }
 
     public GCMNotification getNotification(int notificationId) {
-        Cursor c = db.query(TABLE_NOTIFICATIONS, TABLE_NOTIFICATIONS_COLUMNS, "notification = ?",
-                new String[]{Integer.toString(notificationId)}, null, null, null);
-        c.moveToFirst();
-        if (c.getCount() != 0) {
-            return new GCMNotification(c.getInt(alarmColumns.id.ordinal()),
-                    c.getInt(alarmColumns.type.ordinal()),
-                    new GCMNotificationLocation(
-                            c.getInt(alarmColumns.location.ordinal()),
-                            c.getString(alarmColumns.locationName.ordinal()),
-                            c.getDouble(alarmColumns.lon.ordinal()),
-                            c.getDouble(alarmColumns.lat.ordinal()),
-                            c.getInt(alarmColumns.rad.ordinal())),
-                    c.getString(alarmColumns.title.ordinal()),
-                    c.getString(alarmColumns.desc.ordinal()),
-                    c.getString(alarmColumns.signature.ordinal()));
+        try (Cursor c = db.query(TABLE_NOTIFICATIONS, TABLE_NOTIFICATIONS_COLUMNS, "notification = ?",
+                                 new String[]{Integer.toString(notificationId)}, null, null, null)) {
+            c.moveToFirst();
+            if (c.getCount() != 0) {
+                return new GCMNotification(c.getInt(alarmColumns.id.ordinal()),
+                                           c.getInt(alarmColumns.type.ordinal()),
+                                           new GCMNotificationLocation(
+                                                   c.getInt(alarmColumns.location.ordinal()),
+                                                   c.getString(alarmColumns.locationName.ordinal()),
+                                                   c.getDouble(alarmColumns.lon.ordinal()),
+                                                   c.getDouble(alarmColumns.lat.ordinal()),
+                                                   c.getInt(alarmColumns.rad.ordinal())),
+                                           c.getString(alarmColumns.title.ordinal()),
+                                           c.getString(alarmColumns.desc.ordinal()),
+                                           c.getString(alarmColumns.signature.ordinal()));
+            }
         }
-        c.close();
         return null;
     }
 

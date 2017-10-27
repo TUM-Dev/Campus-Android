@@ -39,7 +39,8 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(DownloadService.BROADCAST_NAME));
+        LocalBroadcastManager.getInstance(this)
+                             .registerReceiver(receiver, new IntentFilter(DownloadService.BROADCAST_NAME));
 
     }
 
@@ -50,7 +51,8 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (!intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
+            if (!intent.getAction()
+                       .equals(DownloadService.BROADCAST_NAME)) {
                 return;
             }
 
@@ -80,7 +82,8 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this)
+                             .unregisterReceiver(receiver);
     }
 
     /**

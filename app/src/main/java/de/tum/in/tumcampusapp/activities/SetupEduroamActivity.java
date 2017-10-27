@@ -51,14 +51,15 @@ public class SetupEduroamActivity extends BaseActivity {
             findViewById(R.id.certificate).setVisibility(View.GONE);
         }
 
-        lrz = (EditText) findViewById(R.id.wifi_lrz_id);
+        lrz = findViewById(R.id.wifi_lrz_id);
         lrz.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
-        password = (EditText) findViewById(R.id.wifi_password);
+        password = findViewById(R.id.wifi_password);
 
         //Set the focus for improved UX experience
-        if(lrz.getText().length() == 0) {
+        if (lrz.getText()
+               .length() == 0) {
             lrz.requestFocus();
-        }else{
+        } else {
             password.requestFocus();
         }
     }
@@ -72,20 +73,24 @@ public class SetupEduroamActivity extends BaseActivity {
     public void onClickSetup(View v) {
         //Verify that we have a valid LRZ / TUM ID
         final Pattern pattern = Pattern.compile("^[a-z]{2}[0-9]{2}[a-z]{3}$");
-        if (!pattern.matcher(lrz.getText()).matches()) {
+        if (!pattern.matcher(lrz.getText())
+                    .matches()) {
             Utils.showToast(this, getString(R.string.eduroam_not_valid_id));
             return;
         }
 
         //We need some sort of password
-        if(password.getText().length() == 0) {
+        if (password.getText()
+                    .length() == 0) {
             Utils.showToast(this, getString(R.string.eduroam_please_enter_password));
             return;
         }
 
         //Do Setup
         EduroamManager manager = new EduroamManager(getApplicationContext());
-        boolean success = manager.configureEduroam(lrz.getText().toString(), password.getText().toString());
+        boolean success = manager.configureEduroam(lrz.getText()
+                                                      .toString(), password.getText()
+                                                                           .toString());
         if (success) {
             Utils.showToast(this, R.string.eduroam_success);
             finish();

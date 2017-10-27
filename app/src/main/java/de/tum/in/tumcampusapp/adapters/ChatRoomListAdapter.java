@@ -57,12 +57,13 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         ViewHolder holder = new ViewHolder();
 
         // set UI elements
-        holder.tvLectureName = (TextView) convertView.findViewById(R.id.tvLectureName);
-        holder.tvDozent = (TextView) convertView.findViewById(R.id.tvDozent);
-        holder.tvMembers = (TextView) convertView.findViewById(R.id.tvMembers);
-        holder.tvLastmsg = (TextView) convertView.findViewById(R.id.tvLastmsg);
-        holder.llAdditionalInfo = (LinearLayout) convertView.findViewById(R.id.llAdditionalInfo);
-        convertView.findViewById(R.id.tvTypeSWSSemester).setVisibility(View.GONE);
+        holder.tvLectureName = convertView.findViewById(R.id.tvLectureName);
+        holder.tvDozent = convertView.findViewById(R.id.tvDozent);
+        holder.tvMembers = convertView.findViewById(R.id.tvMembers);
+        holder.tvLastmsg = convertView.findViewById(R.id.tvLastmsg);
+        holder.llAdditionalInfo = convertView.findViewById(R.id.llAdditionalInfo);
+        convertView.findViewById(R.id.tvTypeSWSSemester)
+                   .setVisibility(View.GONE);
 
         convertView.setTag(holder);
         return convertView;
@@ -93,7 +94,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         if (convertView == null) {
             holder = new HeaderViewHolder();
             convertView = mInflater.inflate(R.layout.header, parent, false);
-            holder.text = (TextView) convertView.findViewById(R.id.lecture_header);
+            holder.text = convertView.findViewById(R.id.lecture_header);
             convertView.setTag(holder);
         } else {
             holder = (HeaderViewHolder) convertView.getTag();

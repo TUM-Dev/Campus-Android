@@ -5,8 +5,8 @@ import android.content.Context;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public abstract class GenericNotification {
 
@@ -21,7 +21,7 @@ public abstract class GenericNotification {
         this.notification = notification;
         this.context = context;
         this.confirmation = confirmation;
-        this.type=type;
+        this.type = type;
     }
 
     public void sendConfirmation() throws IOException {
@@ -30,12 +30,12 @@ public abstract class GenericNotification {
             return;
         }
         Utils.logv("Confirmed notification " + this.notification);
-        TUMCabeClient.getInstance(this.context).confirm(this.notification);
+        TUMCabeClient.getInstance(this.context)
+                     .confirm(this.notification);
     }
 
     public abstract android.app.Notification getNotification();
 
     public abstract int getNotificationIdentification();
-
 
 }

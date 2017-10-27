@@ -1,4 +1,5 @@
 package de.tum.in.tumcampusapp.services;
+
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,12 +10,14 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.Pair;
+
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaNotificationSettings;
@@ -35,40 +38,40 @@ import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
  * either be triggered or the alarm will do nothing.
  */
 public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
-    private static Set<Integer> activeNotifications = Collections.synchronizedSet(new HashSet<Integer>());
+    private static final Set<Integer> activeNotifications = Collections.synchronizedSet(new HashSet<Integer>());
     private static final String IDENTIFIER_STRING = "TCA_FAV_FOOD";
     public static final String INTENT_CANCEL_ALL_NOTIFICATIONS = "cancelNotifications";
 
-    public FavoriteDishAlarmScheduler(){}
+    public FavoriteDishAlarmScheduler() {
+    }
 
-    public void setFoodAlarm(Context context, String dateString){
+    public void setFoodAlarm(Context context, String dateString) {
         Calendar scheduledAt = loadTriggerHourAndMinute(context, dateString);
         Calendar today = Calendar.getInstance();
-        if (scheduledAt == null){
+        if (scheduledAt == null) {
             return;
         }
-        if (today.after(scheduledAt)){
+        if (today.after(scheduledAt)) {
             return;
         }
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent schedule = constructAlarmIntent(context, dateString);
-        if ( Build.VERSION.SDK_INT < 19){
+        if (Build.VERSION.SDK_INT < 19) {
             alarmManager.set(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), schedule);
-        }
-        else{
+        } else {
             alarmManager.setWindow(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), 1000, schedule);
         }
     }
 
-    public void cancelFoodAlarm(Context context, String dateString){
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+    public void cancelFoodAlarm(Context context, String dateString) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(constructAlarmIntent(context, dateString));
     }
 
     /**
      * Generates a pending intent for a future alarm at a given date
      */
-    private PendingIntent constructAlarmIntent(Context context, String dateString){
+    private PendingIntent constructAlarmIntent(Context context, String dateString) {
         Intent intent = new Intent(context, FavoriteDishAlarmScheduler.class);
         intent.putExtra("triggeredAt", dateString);
         intent.setAction(IDENTIFIER_STRING);
@@ -79,33 +82,33 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
      * Can either receive a date or a boolean cancelNotifications value. This way other activities
      * can close the currently opened notifications and it is possible to schedule dates, where the
      * alarm has to check for favorite dishes.
+     *
      * @param context
-     * @param extra
-     * Extra can either be "cancelNotifications" or a date, when the alarm should check, if there are any
-     * favorite dishes at a given date.
+     * @param extra   Extra can either be "cancelNotifications" or a date, when the alarm should check, if there are any
+     *                favorite dishes at a given date.
      */
     @Override
     public void onReceive(Context context, Intent extra) {
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         cancelFoodNotifications(mNotificationManager);
-        if (extra.getBooleanExtra("cancelNotifications", false)){
+        if (extra.getBooleanExtra("cancelNotifications", false)) {
             return;
         }
         String triggeredAt = extra.getStringExtra("triggeredAt");
         Calendar triggeredCal = Calendar.getInstance();
         triggeredCal.setTime(Utils.getDate(triggeredAt));
         CafeteriaMenuManager cm = new CafeteriaMenuManager(context);
-        HashMap<Integer,HashSet<CafeteriaMenu>> scheduledNow = cm.getServedFavoritesAtDate(triggeredAt);
-        if (scheduledNow == null){
+        HashMap<Integer, HashSet<CafeteriaMenu>> scheduledNow = cm.getServedFavoritesAtDate(triggeredAt);
+        if (scheduledNow == null) {
             Utils.log("FavoriteDishAlarmScheduler: Scheduled now is null, onReceived aborted");
             return;
         }
         CafeteriaManager cmm = new CafeteriaManager(context);
-        for (Integer mensaId : scheduledNow.keySet()){
+        for (Integer mensaId : scheduledNow.keySet()) {
             String message = "";
             int menuCount = 0;
             for (CafeteriaMenu menu : scheduledNow.get(mensaId)) {
-                message += menu.name+ '\n';
+                message += menu.name + '\n';
                 menuCount++;
             }
             activeNotifications.add(mensaId);
@@ -115,21 +118,21 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
             PendingIntent pi = PendingIntent.getActivity(context, mensaId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(mensaName + ((menuCount > 1)?" ("+menuCount+")":""))
+                    .setContentTitle(mensaName + ((menuCount > 1) ? " (" + menuCount + ")" : ""))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setContentText(message)
                     .setAutoCancel(true);
             mBuilder.setContentIntent(pi);
             mBuilder.setDefaults(Notification.DEFAULT_SOUND);
             mBuilder.setAutoCancel(true);
-            mNotificationManager.notify(IDENTIFIER_STRING,mensaId, mBuilder.build());
+            mNotificationManager.notify(IDENTIFIER_STRING, mensaId, mBuilder.build());
         }
     }
 
-    private void cancelFoodNotifications(NotificationManager mNotificationManager){
-        synchronized (activeNotifications){
+    private void cancelFoodNotifications(NotificationManager mNotificationManager) {
+        synchronized (activeNotifications) {
             Iterator<Integer> it = activeNotifications.iterator();
-            while (it.hasNext()){
+            while (it.hasNext()) {
                 mNotificationManager.cancel(IDENTIFIER_STRING, it.next());
                 it.remove();
             }
@@ -139,12 +142,12 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
     /**
      * Checks if the user set / or disabled (hour =-1) an hour for a potential schedule.
      */
-    private Calendar loadTriggerHourAndMinute(Context context, String dateString){
+    private Calendar loadTriggerHourAndMinute(Context context, String dateString) {
         CafeteriaNotificationSettings cafeteriaNotificationSettings = new CafeteriaNotificationSettings(context);
         Calendar scheduledAt = Calendar.getInstance();
         scheduledAt.setTime(Utils.getDate(dateString));
         Pair<Integer, Integer> hourMinute = cafeteriaNotificationSettings.retrieveHourMinute(scheduledAt);
-        if (hourMinute == null || hourMinute.first == -1){
+        if (hourMinute == null || hourMinute.first == -1) {
             return null;
         }
         scheduledAt.set(Calendar.HOUR_OF_DAY, hourMinute.first);

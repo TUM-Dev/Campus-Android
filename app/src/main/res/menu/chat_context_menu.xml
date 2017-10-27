@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+      xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_edit"
         android:icon="@drawable/ic_action_edit"
         android:title="@string/edit"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_info"
         android:icon="@drawable/ic_action_about"
         android:title="@string/information"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
 </menu>

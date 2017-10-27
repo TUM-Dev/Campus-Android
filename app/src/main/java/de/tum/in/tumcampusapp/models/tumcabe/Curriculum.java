@@ -7,7 +7,7 @@ import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
 /**
  * Presents the faculty model that is used in fetching the facultyData from server
  */
-public class Curriculum implements Comparable<Curriculum>, SimpleStickyListHeadersAdapter.SimpleStickyListItem{
+public class Curriculum implements Comparable<Curriculum>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
     private String curriculum; // id
     private String category;
     private String name;
@@ -64,7 +64,7 @@ public class Curriculum implements Comparable<Curriculum>, SimpleStickyListHeade
 
     @Override
     public int compareTo(@NonNull Curriculum curriculum) {
-        if (category.equals(curriculum.getCategory())){
+        if (category.equals(curriculum.getCategory())) {
             return name.compareTo(curriculum.getName());
         } else {
             return category.compareTo(curriculum.getCategory());

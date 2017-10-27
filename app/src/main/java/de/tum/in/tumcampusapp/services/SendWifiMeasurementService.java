@@ -16,6 +16,7 @@ public class SendWifiMeasurementService extends IntentService {
     //Time between retries for trying again
     public static final int TIME_BETWEEN_MILIS = 300;
     private static final String SEND_WIFI_MEASUREMENT_SERVICE = "SendWifiMeasurementService";
+
     public SendWifiMeasurementService() {
         super(SEND_WIFI_MEASUREMENT_SERVICE);
     }

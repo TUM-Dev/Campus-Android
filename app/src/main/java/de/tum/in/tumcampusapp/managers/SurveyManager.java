@@ -27,7 +27,6 @@ import retrofit2.Response;
  */
 public class SurveyManager extends AbstractManager implements Card.ProvidesCard {
 
-
     /**
      * Constructor for creating tables if needed
      *
@@ -50,13 +49,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         if (NetUtils.isConnected(mContext)) {
             downLoadOpenQuestions();
         }
-        Cursor rows = getUnansweredQuestionsSince(Utils.getDateTimeString(new Date()));
-        if (rows.moveToFirst()) {
-            SurveyCard card = new SurveyCard(context);
-            card.setQuestions(rows);
-            card.apply();
+        try (Cursor rows = getUnansweredQuestionsSince(Utils.getDateTimeString(new Date()))) {
+            if (rows.moveToFirst()) {
+                SurveyCard card = new SurveyCard(context);
+                card.setQuestions(rows);
+                card.apply();
+            }
         }
-        rows.close();
     }
 
     /**
@@ -68,7 +67,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     public void downLoadOpenQuestions() {
         List<Question> openQuestions;
         try {
-            openQuestions = TUMCabeClient.getInstance(mContext).getOpenQuestions();
+            openQuestions = TUMCabeClient.getInstance(mContext)
+                                         .getOpenQuestions();
         } catch (IOException e) {
             Utils.log(e);
             return;
@@ -78,7 +78,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
         // filters the questions relevant for the user
         for (int i = 0; i < openQuestions.size(); i++) {
-            List<String> openQuestionFaculties = Arrays.asList(openQuestions.get(i).getFacultiesOfOpenQuestions());
+            List<String> openQuestionFaculties = Arrays.asList(openQuestions.get(i)
+                                                                            .getFacultiesOfOpenQuestions());
             String userMajor = Utils.getInternalSettingString(mContext, "user_major", "");
 
             // Incase  the user selected the major upon app start, then save the major related questions. Otherwise save all questions
@@ -97,20 +98,20 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     void deleteFlaggedQuestions(List<Question> fetchedOpenedQuestions) {
         List<Question> downloadedQuestionsID = new ArrayList<>(); // get the ids of all fetched openQuestions
         for (int x = 0; x < fetchedOpenedQuestions.size(); x++) {
-            downloadedQuestionsID.add(new Question(fetchedOpenedQuestions.get(x).getQuestion()));
+            downloadedQuestionsID.add(new Question(fetchedOpenedQuestions.get(x)
+                                                                         .getQuestion()));
         }
 
         // get all already existing openQuestions in db
-        Cursor c = db.rawQuery("SELECT question FROM openQuestions", null);
-
-        if (c != null) {
-            while (c.moveToNext()) { // iterates on each question in the db
-                // Incase the question from the database is not contained in the list with the downloaded questions, the question gets deleted from db
-                if (!downloadedQuestionsID.contains(new Question(c.getString(c.getColumnIndex("question"))))) {
-                    db.delete("openQuestions", "question = ?", new String[]{c.getString(c.getColumnIndex("question"))});
+        try (Cursor c = db.rawQuery("SELECT question FROM openQuestions", null)) {
+            if (c != null) {
+                while (c.moveToNext()) { // iterates on each question in the db
+                    // Incase the question from the database is not contained in the list with the downloaded questions, the question gets deleted from db
+                    if (!downloadedQuestionsID.contains(new Question(c.getString(c.getColumnIndex("question"))))) {
+                        db.delete("openQuestions", "question = ?", new String[]{c.getString(c.getColumnIndex("question"))});
+                    }
                 }
             }
-            c.close();
         }
     }
 
@@ -120,27 +121,26 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param q
      */
     void replaceIntoDBOpenQuestions(Question q) {
-        Cursor c = db.rawQuery("SELECT answerid FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()});
-
-        // if question doesn't exist, then insert it
-        if (!c.moveToFirst()) {
-            ContentValues cv = new ContentValues();
-            cv.put("question", q.getQuestion());
-            cv.put("text", q.getText());
-            cv.put("created", q.getCreated());
-            cv.put("end", q.getEnd());
-            cv.put("answerid", 0);
-            cv.put("answered", 0);
-            cv.put("synced", 0);
-            try {
-                db.beginTransaction();
-                db.insert("openQuestions", null, cv);
-                db.setTransactionSuccessful();
-            } finally {
-                db.endTransaction();
+        try (Cursor c = db.rawQuery("SELECT answerid FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()})) {
+            // if question doesn't exist, then insert it
+            if (!c.moveToFirst()) {
+                ContentValues cv = new ContentValues();
+                cv.put("question", q.getQuestion());
+                cv.put("text", q.getText());
+                cv.put("created", q.getCreated());
+                cv.put("end", q.getEnd());
+                cv.put("answerid", 0);
+                cv.put("answered", 0);
+                cv.put("synced", 0);
+                try {
+                    db.beginTransaction();
+                    db.insert("openQuestions", null, cv);
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
             }
         }
-        c.close();
     }
 
     /**
@@ -184,17 +184,18 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param id: QuestionID
      */
     public void deleteMyOwnQuestion(int id) {
-        TUMCabeClient.getInstance(mContext).deleteOwnQuestion(id, new Callback<Question>() {
-            @Override
-            public void onResponse(Call<Question> call, Response<Question> response) {
-                Utils.log("TUMCabeClient_delete_question_successeed");
-            }
+        TUMCabeClient.getInstance(mContext)
+                     .deleteOwnQuestion(id, new Callback<Question>() {
+                         @Override
+                         public void onResponse(Call<Question> call, Response<Question> response) {
+                             Utils.log("TUMCabeClient_delete_question_successeed");
+                         }
 
-            @Override
-            public void onFailure(Call<Question> call, Throwable t) {
-                Utils.log(t, "TUMCabeClient_delete_question_failed. ");
-            }
-        });
+                         @Override
+                         public void onFailure(Call<Question> call, Throwable t) {
+                             Utils.log(t, "TUMCabeClient_delete_question_failed. ");
+                         }
+                     });
         db.execSQL("UPDATE ownQuestions SET deleted=1 WHERE question=" + id); // Marks question as deleted in local db
     }
 
@@ -237,24 +238,24 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * Syncs answered but not yet synced responses with server
      */
     public void syncOpenQuestionsTable() {
-        Cursor cursor = db.rawQuery("SELECT question, answerid FROM openQuestions WHERE synced=0 AND answered=1", null);
-        try {
+        try (Cursor cursor = db.rawQuery("SELECT question, answerid FROM openQuestions WHERE synced=0 AND answered=1", null)) {
             // In case there are answered but not yet synced questions in local db
             while (cursor.moveToNext()) {
                 Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")), cursor.getInt(cursor.getColumnIndex("answerid")));
 
                 // Submit Answer to Serve
-                TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
-                    @Override
-                    public void onResponse(Call<Question> call, Response<Question> response) {
-                        Utils.log("Test_resp_submitQues Succeeded: " + response.body());
-                    }
+                TUMCabeClient.getInstance(mContext)
+                             .submitAnswer(answeredQuestion, new Callback<Question>() {
+                                 @Override
+                                 public void onResponse(Call<Question> call, Response<Question> response) {
+                                     Utils.log("Test_resp_submitQues Succeeded: " + response.body());
+                                 }
 
-                    @Override
-                    public void onFailure(Call<Question> call, Throwable t) {
-                        Utils.log(t, "Test_resp_submitQues Failure");
-                    }
-                });
+                                 @Override
+                                 public void onFailure(Call<Question> call, Throwable t) {
+                                     Utils.log(t, "Test_resp_submitQues Failure");
+                                 }
+                             });
 
                 // Mark as synced in local db
                 ContentValues cv = new ContentValues();
@@ -263,8 +264,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             }
         } catch (Exception e) {
             Utils.log(e.toString());
-        } finally {
-            cursor.close();
         }
     }
 
@@ -298,7 +297,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     public void downloadFacultiesFromExternal() {
         List<Faculty> faculties;
         try {
-            faculties = TUMCabeClient.getInstance(mContext).getFaculties();
+            faculties = TUMCabeClient.getInstance(mContext)
+                                     .getFaculties();
         } catch (IOException e) {
             Utils.log(e);
             return;
@@ -327,8 +327,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param f: a given faculty
      */
     void replaceIntoDb(Faculty f) {
-        Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?", new String[]{f.getId()});
-        try {
+        try (Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?", new String[]{f.getId()})) {
             db.beginTransaction();
             ContentValues cv = new ContentValues();
             if (c.moveToFirst()) { // if faculty exists, update name
@@ -342,7 +341,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 db.setTransactionSuccessful();
             }
         } finally {
-            c.close();
             db.endTransaction();
         }
     }
@@ -354,7 +352,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     public void downLoadOwnQuestions() {
         List<Question> ownQuestions = new ArrayList<>();
         try {
-            ownQuestions = TUMCabeClient.getInstance(mContext).getOwnQuestions();
+            ownQuestions = TUMCabeClient.getInstance(mContext)
+                                        .getOwnQuestions();
         } catch (IOException e) {
             Utils.log(e);
         }
@@ -372,11 +371,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param q
      */
     void replaceIntoDbOwnQuestions(Question q) {
-        Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()});
-
-        try {
+        try (Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()})) {
             db.beginTransaction();
-
 
             if (c.moveToFirst()) {// update non-exsisting question fields in the db (false means don't update 'delete' and 'synced' fields
                 ContentValues cv = setOwnQuestionFields(q, false);
@@ -389,7 +385,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
-            c.close();
+
         }
     }
 
@@ -410,13 +406,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         cv.put("end", q.getEnd());
         cv.put("targetFac", TextUtils.join(",", q.getFacultiesOfOpenQuestions()));
 
-
         // In case of no votes
         if (answers.length == 0) {
             cv.put("yes", 0);
             cv.put("no", 0);
         } else if (answers.length == 1) { // In case of one vote -> get whether it is yes or no
-            if (answers[0].getAnswer().equals("yes")) {
+            if (answers[0].getAnswer()
+                          .equals("yes")) {
                 cv.put("yes", answers[0].getVotes());
                 cv.put("no", 0);
             } else {
@@ -425,13 +421,15 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             }
             // In case there are two votes
         } else {
-            if (answers[0].getAnswer().equals("yes")) {
+            if (answers[0].getAnswer()
+                          .equals("yes")) {
                 cv.put("yes", answers[0].getVotes());
             } else {
                 cv.put("no", answers[0].getVotes());
             }
 
-            if (answers[1].getAnswer().equals("yes")) {
+            if (answers[1].getAnswer()
+                          .equals("yes")) {
                 cv.put("yes", answers[1].getVotes());
             } else {
                 cv.put("no", answers[1].getVotes());

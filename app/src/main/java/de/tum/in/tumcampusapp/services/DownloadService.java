@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.os.Handler;
-import android.os.HandlerThread;
+import android.content.res.AssetManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -134,7 +132,9 @@ public class DownloadService extends IntentService {
             }
             if (successful) {
                 SharedPreferences prefs = service.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-                prefs.edit().putLong(LAST_UPDATE, System.currentTimeMillis()).apply();
+                prefs.edit()
+                     .putLong(LAST_UPDATE, System.currentTimeMillis())
+                     .apply();
             }
             CardManager.update(service);
             successful = true;
@@ -145,7 +145,8 @@ public class DownloadService extends IntentService {
         if (successful) {
             service.broadcastDownloadCompleted();
         } else {
-            service.broadcastError(service.getResources().getString(R.string.exception_unknown));
+            service.broadcastError(service.getResources()
+                                          .getString(R.string.exception_unknown));
         }
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
@@ -172,12 +173,7 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(final Intent intent) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                download(intent, DownloadService.this);
-            }
-        }).start();
+        new Thread(() -> download(intent, DownloadService.this)).start();
     }
 
     private void broadcastDownloadCompleted() {
@@ -226,6 +222,7 @@ public class DownloadService extends IntentService {
             return false;
         }
     }
+
     private boolean downLoadKino(boolean force) {
         try {
             KinoManager km = new KinoManager(this);
@@ -256,18 +253,18 @@ public class DownloadService extends IntentService {
         return true;
     }
 
-
     /**
      * Import default location and opening hours from assets
      */
     private void importLocationsDefaults() throws IOException {
         OpenHoursManager lm = new OpenHoursManager(this);
         if (lm.empty()) {
-            List<String[]> rows = Utils.readCsv(getAssets().open(CSV_LOCATIONS));
-
-            for (String[] row : rows) {
-                lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1],
-                        row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
+            try (AssetManager assetManager = getAssets()) {
+                List<String[]> rows = Utils.readCsv(assetManager.open(CSV_LOCATIONS));
+                for (String[] row : rows) {
+                    lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1],
+                                                  row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
+                }
             }
         }
     }

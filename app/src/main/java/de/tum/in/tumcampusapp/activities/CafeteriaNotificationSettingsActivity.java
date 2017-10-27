@@ -1,4 +1,5 @@
 package de.tum.in.tumcampusapp.activities;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.NotificationSettingsListAdapter;
@@ -20,33 +22,36 @@ import de.tum.in.tumcampusapp.auxiliary.CafeteriaNotificationSettings;
  */
 
 public class CafeteriaNotificationSettingsActivity extends BaseActivity {
-    private ArrayList<Pair<Integer,Integer>> dailySchedule = new ArrayList<>();
+    private final ArrayList<Pair<Integer, Integer>> dailySchedule = new ArrayList<>();
     private CafeteriaNotificationSettings cafeteriaNotificationSettings;
-    public CafeteriaNotificationSettingsActivity(){
+
+    public CafeteriaNotificationSettingsActivity() {
         super(R.layout.activity_cafeteria_notification_settings);
     }
 
     @Override
-    protected void onCreate(Bundle b){
+    protected void onCreate(Bundle b) {
         super.onCreate(b);
         cafeteriaNotificationSettings = new CafeteriaNotificationSettings(this);
         setupList();
-        ListView listView = (ListView)findViewById(R.id.activity_notification_settings_listview);
-        listView.setAdapter(new NotificationSettingsListAdapter(this,dailySchedule));
-        Button save = (Button) findViewById(R.id.notification_settings_save);
+        ListView listView = findViewById(R.id.activity_notification_settings_listview);
+        listView.setAdapter(new NotificationSettingsListAdapter(this, dailySchedule));
+        Button save = findViewById(R.id.notification_settings_save);
         save.setOnClickListener(new SaveButtonListener(this));
     }
 
-    private class SaveButtonListener implements View.OnClickListener{
-        private Context context;
-        public SaveButtonListener(Context context){
+    private class SaveButtonListener implements View.OnClickListener {
+        private final Context context;
+
+        public SaveButtonListener(Context context) {
             this.context = context;
         }
 
         @Override
         public void onClick(View view) {
             cafeteriaNotificationSettings.saveWholeSchedule(dailySchedule);
-            Toast.makeText(context, context.getString(R.string.ok), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.ok), Toast.LENGTH_SHORT)
+                 .show();
         }
     }
 
@@ -59,14 +64,14 @@ public class CafeteriaNotificationSettingsActivity extends BaseActivity {
     /**
      * Reloads the settings into the dailySchedule list.
      */
-    public void setupList(){
+    public void setupList() {
         Calendar it = Calendar.getInstance();
         it.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        for (int i = 0; it.get(Calendar.DAY_OF_WEEK) < Calendar.SATURDAY; i++, it.add(Calendar.DAY_OF_WEEK, 1)){
-            if (i < dailySchedule.size()){
-                dailySchedule.set(i,cafeteriaNotificationSettings.retrieveHourMinute(it));
-            }else{
-                dailySchedule.add(i,cafeteriaNotificationSettings.retrieveHourMinute(it));
+        for (int i = 0; it.get(Calendar.DAY_OF_WEEK) < Calendar.SATURDAY; i++, it.add(Calendar.DAY_OF_WEEK, 1)) {
+            if (i < dailySchedule.size()) {
+                dailySchedule.set(i, cafeteriaNotificationSettings.retrieveHourMinute(it));
+            } else {
+                dailySchedule.add(i, cafeteriaNotificationSettings.retrieveHourMinute(it));
             }
         }
     }

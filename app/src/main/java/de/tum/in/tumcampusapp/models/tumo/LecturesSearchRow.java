@@ -10,12 +10,11 @@ import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
 /**
  * This class is dealing with the deserialization of the output of TUMOnline to
  * the method "sucheLehrveranstaltungen".
- *
  */
 
 @Root(name = "row")
 public class LecturesSearchRow
-        implements Comparable<LecturesSearchRow>, SimpleStickyListHeadersAdapter.SimpleStickyListItem{
+        implements Comparable<LecturesSearchRow>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     public static final String STP_SP_NR = "stp_sp_nr";
 
@@ -145,7 +144,8 @@ public class LecturesSearchRow
 
     @Override
     public int compareTo(@NonNull LecturesSearchRow lecturesSearchRow) {
-        return lecturesSearchRow.getSemester_id().compareTo(semester_id);
+        return lecturesSearchRow.getSemester_id()
+                                .compareTo(semester_id);
     }
 
     @Override

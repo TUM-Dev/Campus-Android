@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (room INTEGER, name VARCHAR, " +
-                "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id))");
+                   "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id))");
     }
 
     /**
@@ -64,32 +65,31 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
         }
 
         return db.rawQuery("SELECT r.*, m.ts, m.text " +
-                "FROM chat_room r " +
-                "LEFT JOIN (SELECT MAX(timestamp) ts, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
-                "WHERE " + condition + " " +
-                " " +
-                "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.ts) DESC, r.name", null);
+                           "FROM chat_room r " +
+                           "LEFT JOIN (SELECT MAX(timestamp) ts, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
+                           "WHERE " + condition + " " +
+                           " " +
+                           "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.ts) DESC, r.name", null);
     }
 
     /**
      * Saves the given lecture into database
      */
     public void replaceInto(LecturesSearchRow lecture) {
-
-        Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?",
-                new String[]{lecture.getTitel(), lecture.getSemester_id()});
-        cur.moveToFirst();
-        if (cur.getCount() >= 1) {
-            db.execSQL("UPDATE chat_room SET semester=?, _id=?, contributor=? WHERE name=? AND semester_id=?",
-                    new String[]{lecture.getSemester_name(), lecture.getStp_lv_nr(),
-                            lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id()});
-        } else {
-            db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
-                            "VALUES (-1,?,?,?,-1,?,?,0)",
-                    new String[]{lecture.getTitel(), lecture.getSemester_id(),
-                            lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
+        try (Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?",
+                                      new String[]{lecture.getTitel(), lecture.getSemester_id()})) {
+            cur.moveToFirst();
+            if (cur.getCount() >= 1) {
+                db.execSQL("UPDATE chat_room SET semester=?, _id=?, contributor=? WHERE name=? AND semester_id=?",
+                           new String[]{lecture.getSemester_name(), lecture.getStp_lv_nr(),
+                                        lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id()});
+            } else {
+                db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
+                           "VALUES (-1,?,?,?,-1,?,?,0)",
+                           new String[]{lecture.getTitel(), lecture.getSemester_id(),
+                                        lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
+            }
         }
-        cur.close();
     }
 
     /**
@@ -97,14 +97,15 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      */
     public void replaceInto(List<LecturesSearchRow> lectures) {
         db.beginTransaction();
-        Cursor cur = db.rawQuery("SELECT _id FROM chat_room", null);
-        HashSet<String> set = new HashSet<>();
-        if (cur.moveToFirst()) {
-            do {
-                set.add(cur.getString(COL_ROOM));
-            } while (cur.moveToNext());
+        Collection<String> set;
+        try (Cursor cur = db.rawQuery("SELECT _id FROM chat_room", null)) {
+            set = new HashSet<>();
+            if (cur.moveToFirst()) {
+                do {
+                    set.add(cur.getString(COL_ROOM));
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
 
         for (LecturesSearchRow lecture : lectures) {
             if (!set.contains(lecture.getStp_lv_nr())) {
@@ -119,7 +120,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      * Saves the given chat rooms into database
      */
     public void replaceIntoRooms(List<ChatRoom> rooms) {
-        if(rooms == null) {
+        if (rooms == null) {
             Utils.log("No rooms passed, can't insert anything.");
             return;
         }
@@ -136,16 +137,16 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                 roomName = roomName.substring(4);
             }
             Utils.logv("members2 " + room.getMembers());
-            Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?", new String[]{roomName, semester});
-            cur.moveToFirst();
-            if (cur.getCount() >= 1) {
-                db.execSQL("UPDATE chat_room SET room=?, joined=1, members=? WHERE name=? AND semester_id=?",
-                        new String[]{String.valueOf(room.getId()), String.valueOf(room.getMembers()), roomName, semester});
-            } else {
-                db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
-                        "VALUES (?,?,?,'',1,0,'',?)", new String[]{String.valueOf(room.getId()), roomName, semester, String.valueOf(room.getMembers())});
+            try (Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?", new String[]{roomName, semester})) {
+                cur.moveToFirst();
+                if (cur.getCount() >= 1) {
+                    db.execSQL("UPDATE chat_room SET room=?, joined=1, members=? WHERE name=? AND semester_id=?",
+                               new String[]{String.valueOf(room.getId()), String.valueOf(room.getMembers()), roomName, semester});
+                } else {
+                    db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
+                               "VALUES (?,?,?,'',1,0,'',?)", new String[]{String.valueOf(room.getId()), roomName, semester, String.valueOf(room.getMembers())});
+                }
             }
-            cur.close();
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -153,12 +154,12 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
 
     public void join(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET room=?, joined=1 WHERE name=? AND semester_id=?",
-                new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                   new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
     public void leave(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET room=?, joined=0 WHERE name=? AND semester_id=?",
-                new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                   new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
     @Override
@@ -171,8 +172,10 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
         // Get all of the users lectures and save them as possible chat rooms
         TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, context, true);
         Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
-        if (lecturesList.isPresent() && lecturesList.get().getLehrveranstaltungen() != null) {
-            List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
+        if (lecturesList.isPresent() && lecturesList.get()
+                                                    .getLehrveranstaltungen() != null) {
+            List<LecturesSearchRow> lectures = lecturesList.get()
+                                                           .getLehrveranstaltungen();
             manager.replaceInto(lectures);
         }
 
@@ -184,7 +187,8 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                 // Join chat room
                 try {
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
-                    currentChatRoom = TUMCabeClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(context, currentChatMember));
+                    currentChatRoom = TUMCabeClient.getInstance(context)
+                                                   .createRoom(currentChatRoom, new ChatVerification(context, currentChatMember));
                     if (currentChatRoom != null) {
                         manager.join(currentChatRoom);
                     }
@@ -197,38 +201,39 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
         }
 
         // Get all rooms that have unread messages
-        Cursor cur = manager.getUnreadRooms();
-        if (cur.moveToFirst()) {
-            do {
-                ChatMessagesCard card = new ChatMessagesCard(context);
-                card.setChatRoom(cur.getString(0), cur.getInt(1), cur.getString(2) + ':' + cur.getString(0));
-                card.apply();
-            } while (cur.moveToNext());
+        try (Cursor cur = manager.getUnreadRooms()) {
+            if (cur.moveToFirst()) {
+                do {
+                    ChatMessagesCard card = new ChatMessagesCard(context);
+                    card.setChatRoom(cur.getString(0), cur.getInt(1), cur.getString(2) + ':' + cur.getString(0));
+                    card.apply();
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
     }
 
     private List<String> getNewUnjoined() {
-        Cursor cursor = db.rawQuery("SELECT r.semester_id, r.name " +
-                "FROM chat_room r, (SELECT semester_id FROM chat_room " +
-                "WHERE (NOT semester_id IS NULL) AND semester_id!='' AND semester!='' " +
-                "ORDER BY semester_id DESC LIMIT 1) AS new " +
-                "WHERE r.semester_id=new.semester_id AND r.joined=-1", null);
-        List<String> list = new ArrayList<>(cursor.getCount());
-        if (cursor.moveToFirst()) {
-            do {
-                list.add(cursor.getString(0) + ':' + cursor.getString(1));
-            } while (cursor.moveToNext());
+        List<String> list;
+        try (Cursor cursor = db.rawQuery("SELECT r.semester_id, r.name " +
+                                         "FROM chat_room r, (SELECT semester_id FROM chat_room " +
+                                         "WHERE (NOT semester_id IS NULL) AND semester_id!='' AND semester!='' " +
+                                         "ORDER BY semester_id DESC LIMIT 1) AS new " +
+                                         "WHERE r.semester_id=new.semester_id AND r.joined=-1", null)) {
+            list = new ArrayList<>(cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    list.add(cursor.getString(0) + ':' + cursor.getString(1));
+                } while (cursor.moveToNext());
+            }
         }
-        cursor.close();
         return list;
     }
 
     private Cursor getUnreadRooms() {
         return db.rawQuery("SELECT r.name,r.room,r.semester_id " +
-                "FROM chat_room r, (SELECT room FROM chat_message " +
-                "WHERE read=0 GROUP BY room) AS c " +
-                "WHERE r.room=c.room " +
-                "ORDER BY r.semester_id DESC, r.name", null);
+                           "FROM chat_room r, (SELECT room FROM chat_message " +
+                           "WHERE read=0 GROUP BY room) AS c " +
+                           "WHERE r.room=c.room " +
+                           "ORDER BY r.semester_id DESC, r.name", null);
     }
 }

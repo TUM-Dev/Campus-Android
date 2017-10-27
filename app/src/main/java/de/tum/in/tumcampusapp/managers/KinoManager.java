@@ -34,13 +34,12 @@ public class KinoManager extends AbstractManager {
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS kino (id INTEGER PRIMARY KEY, title TEXT, year VARCHAR, runtime VARCHAR," +
-                "genre VARCHAR, director TEXT, actors TEXT, rating VARCHAR, description TEXT, cover TEXT, trailer TEXT, date VARCHAR, created VARCHAR," +
-                "link TEXT)");
+                   "genre VARCHAR, director TEXT, actors TEXT, rating VARCHAR, description TEXT, cover TEXT, trailer TEXT, date VARCHAR, created VARCHAR," +
+                   "link TEXT)");
 
         // remove old items
         cleanupDb();
     }
-
 
     /**
      * Removes all old items
@@ -48,7 +47,6 @@ public class KinoManager extends AbstractManager {
     final void cleanupDb() {
         db.execSQL("DELETE FROM kino WHERE date < date('now')");
     }
-
 
     /**
      * download kino from external interface (JSON)
@@ -102,7 +100,9 @@ public class KinoManager extends AbstractManager {
         String director = json.getString(Const.JSON_DIRECTOR);
         String actors = json.getString(Const.JSON_ACTORS);
         String rating = json.getString(Const.JSON_RATING);
-        String description = json.getString(Const.JSON_DESCRIPTION).replaceAll("\n", "").trim();
+        String description = json.getString(Const.JSON_DESCRIPTION)
+                                 .replaceAll("\n", "")
+                                 .trim();
         String cover = json.getString(Const.JSON_COVER);
         String trailer = json.getString(Const.JSON_TRAILER);
         Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
@@ -111,7 +111,6 @@ public class KinoManager extends AbstractManager {
 
         return new Kino(id, title, year, runtime, genre, director, actors, rating, description, cover, trailer, date, created, link);
     }
-
 
     /**
      * get everything from the database
@@ -131,21 +130,20 @@ public class KinoManager extends AbstractManager {
         Utils.logv(k.toString());
 
         db.execSQL("REPLACE INTO kino (id, title, year, runtime, genre, director, actors, rating," +
-                        "description, cover, trailer, date, created, link) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                new String[]{k.id, k.title, k.year, k.runtime, k.genre, k.director, k.actors, k.rating,
-                        k.description, k.cover, k.trailer, Utils.getDateTimeString(k.date),
-                        Utils.getDateTimeString(k.created), k.link});
+                   "description, cover, trailer, date, created, link) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                   new String[]{k.id, k.title, k.year, k.runtime, k.genre, k.director, k.actors, k.rating,
+                                k.description, k.cover, k.trailer, Utils.getDateTimeString(k.date),
+                                Utils.getDateTimeString(k.created), k.link});
     }
-
 
     // returns the last id in the database
     private String getLastId() {
         String lastId = "";
-        Cursor c = db.rawQuery("SELECT id FROM kino ORDER BY id DESC LIMIT 1", null);
-        if (c.moveToFirst()) {
-            lastId = c.getString(0);
+        try (Cursor c = db.rawQuery("SELECT id FROM kino ORDER BY id DESC LIMIT 1", null)) {
+            if (c.moveToFirst()) {
+                lastId = c.getString(0);
+            }
         }
-        c.close();
         return lastId;
     }
 

@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
-
 /**
  * A class to represent events for the integrated WeekView calendar
  */
@@ -22,13 +21,13 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private static final Pattern PATTERN = Pattern.compile("\\([A-Z]+[0-9]+\\)");
     private static final Pattern COMPILE1 = Pattern.compile("\\([A-Z0-9\\.]+\\)");
     private final String location;
-    private boolean isFirstOnDay = false;
+    private boolean isFirstOnDay;
 
     public IntegratedCalendarEvent(Cursor cEvents) {
         super(getEventIdFromCursor(cEvents),
-                getEventTitleFromCursor(cEvents),
-                getEventStartFromCursor(cEvents),
-                getEventEndFromCursor(cEvents));
+              getEventTitleFromCursor(cEvents),
+              getEventStartFromCursor(cEvents),
+              getEventEndFromCursor(cEvents));
 
         this.location = getEventLocationFromCursor(cEvents);
         this.setColor(getEventColorFromCursor(cEvents));
@@ -45,9 +44,12 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         if (eventTitle == null) {
             eventTitle = "";
         }
-        eventTitle = COMPILE.matcher(eventTitle).replaceAll("");
-        eventTitle = PATTERN.matcher(eventTitle).replaceAll("");
-        eventTitle = PATTERN.matcher(eventTitle).replaceAll("");
+        eventTitle = COMPILE.matcher(eventTitle)
+                            .replaceAll("");
+        eventTitle = PATTERN.matcher(eventTitle)
+                            .replaceAll("");
+        eventTitle = PATTERN.matcher(eventTitle)
+                            .replaceAll("");
         return eventTitle;
     }
 
@@ -70,7 +72,8 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         if (eventLocation == null) {
             eventLocation = "";
         }
-        eventLocation = COMPILE1.matcher(eventLocation).replaceAll("");
+        eventLocation = COMPILE1.matcher(eventLocation)
+                                .replaceAll("");
         return eventLocation.trim();
     }
 

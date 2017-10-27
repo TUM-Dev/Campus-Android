@@ -34,7 +34,9 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
         if (currentMensa == null) {
             Utils.log("Error! Could not get list of menus for the mensa widget ");
         } else {
-            String mensaName = currentMensa.keySet().iterator().next();
+            String mensaName = currentMensa.keySet()
+                                           .iterator()
+                                           .next();
             mensaMenu = currentMensa.get(mensaName);
         }
     }
@@ -65,7 +67,9 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
         }
         RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mensa_widget_item);
 
-        String menuContent = COMPILE.matcher(currentItem.name).replaceAll("").trim();
+        String menuContent = COMPILE.matcher(currentItem.name)
+                                    .replaceAll("")
+                                    .trim();
         rv.setTextViewText(R.id.menu_content, menuContent + " (" + currentItem.typeShort + ")");
 
         String price = CafeteriaPrices.getPrice(applicationContext, currentItem.typeLong);
@@ -76,7 +80,6 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
         rv.setTextViewText(R.id.menu_price, price + " €");
         return rv;
     }
-
 
     @Override
     public RemoteViews getLoadingView() {

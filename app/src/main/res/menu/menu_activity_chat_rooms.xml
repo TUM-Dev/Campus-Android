@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+      xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_add_chat_room"
         android:title="@string/add_chat_room"
-        tumcampus:showAsAction="never" />
+        tumcampus:showAsAction="never"/>
     <item
         android:id="@+id/action_join_chat_room"
         android:title="@string/join_chat_room"
-        tumcampus:showAsAction="never" />
+        tumcampus:showAsAction="never"/>
 
 </menu>

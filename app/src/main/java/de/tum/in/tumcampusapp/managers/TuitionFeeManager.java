@@ -28,7 +28,9 @@ public class TuitionFeeManager implements Card.ProvidesCard {
             return;
         }
         TuitionFeesCard card = new TuitionFeesCard(context);
-        card.setTuition(tuitionList.get().getTuitions().get(0));
+        card.setTuition(tuitionList.get()
+                                   .getTuitions()
+                                   .get(0));
         card.apply();
     }
 }

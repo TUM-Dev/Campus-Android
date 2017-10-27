@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -32,7 +32,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
  * Shows information about reservable study rooms.
  */
 public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Void> implements AdapterView
-        .OnItemSelectedListener {
+                                                                                                      .OnItemSelectedListener {
 
     private List<StudyRoomGroup> mStudyRoomGroupList;
     private int mSelectedStudyRoomGroupId = -1;
@@ -46,13 +46,13 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = findViewById(R.id.pager);
     }
 
-    @Override
     /**
      * Setup for switching study room locations via action bar
      */
+    @Override
     protected void onStart() {
         super.onStart();
         startLoading();
@@ -70,30 +70,25 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     }
 
     private static void sortStudyRoomsByOccupation(List<StudyRoom> studyRooms) {
-        Collections.sort(studyRooms, new Comparator<StudyRoom>() {
-            @Override
-            public int compare(StudyRoom lhs, StudyRoom rhs) {
-                return lhs.occupiedTill.compareTo(rhs.occupiedTill);
-            }
-        });
+        Collections.sort(studyRooms, (lhs, rhs) -> lhs.occupiedTill.compareTo(rhs.occupiedTill));
     }
 
     private Spinner getStudyRoomGroupsSpinner() {
         // Adapter for drop-down navigation
         SpinnerAdapter adapterCafeterias =
                 new ArrayAdapter<StudyRoomGroup>(this, R.layout.simple_spinner_item_actionbar,
-                        android.R.id.text1, mStudyRoomGroupList) {
+                                                 android.R.id.text1, mStudyRoomGroupList) {
                     final LayoutInflater inflater = (LayoutInflater) getContext()
                             .getSystemService(LAYOUT_INFLATER_SERVICE);
 
                     @Override
-                    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                         View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar,
-                                parent, false);
+                                                  parent, false);
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
-                        TextView name = (TextView) v.findViewById(android.R.id.text1); // Set name
-                        TextView details = (TextView) v.findViewById(android.R.id.text2); // Set detail
+                        TextView name = v.findViewById(android.R.id.text1); // Set name
+                        TextView details = v.findViewById(android.R.id.text2); // Set detail
 
                         if (studyRoomGroup != null) {
                             name.setText(studyRoomGroup.name);
@@ -104,7 +99,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
                     }
                 };
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerToolbar);
+        Spinner spinner = findViewById(R.id.spinnerToolbar);
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
         return spinner;
@@ -157,7 +152,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     }
 
     public void goToRoomFinder(View view) {
-        String link = ((TextView) view).getText().toString();
+        String link = ((TextView) view).getText()
+                                       .toString();
         String roomCode = link.substring(link.indexOf(' ') + 1, link.length());
 
         Intent findStudyRoomIntent = new Intent();

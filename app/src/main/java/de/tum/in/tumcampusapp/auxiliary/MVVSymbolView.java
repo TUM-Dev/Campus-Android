@@ -46,7 +46,7 @@ public class MVVSymbolView extends Drawable {
             case 'S':
                 num = Optional.fromNullable(
                         Ints.tryParse(line.substring(1)))
-                        .or(0);
+                              .or(0);
                 rounded = true;
                 if (num <= 8) {
                     backgroundColor = S_LINE_COLOR[num - 1];
@@ -60,7 +60,7 @@ public class MVVSymbolView extends Drawable {
             case 'U':
                 num = Optional.fromNullable(
                         Ints.tryParse(line.substring(1)))
-                        .or(0);
+                              .or(0);
                 if (num == 7) {
                     triangle = 1;
                     backgroundColor = 0xffc10134;
@@ -82,7 +82,7 @@ public class MVVSymbolView extends Drawable {
             default:
                 num = Optional.fromNullable(
                         Ints.tryParse(line.substring(1)))
-                        .or(0);
+                              .or(0);
                 if (num < 50) {
                     backgroundColor = 0xffdc261c;
                     textColor = 0xfffcfefc;
@@ -111,7 +111,9 @@ public class MVVSymbolView extends Drawable {
         return mTextColor;
     }
 
-    public int getBackgroundColor() { return mBgPaint.getColor(); }
+    public int getBackgroundColor() {
+        return mBgPaint.getColor();
+    }
 
     @Override
     public void draw(Canvas canvas) {

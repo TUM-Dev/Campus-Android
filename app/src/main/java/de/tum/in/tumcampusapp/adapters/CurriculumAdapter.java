@@ -18,10 +18,11 @@ public class CurriculumAdapter extends SimpleStickyListHeadersAdapter<Curriculum
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if(convertView == null){
-            convertView =  mInflater.inflate(android.R.layout.simple_list_item_1, null);
+        if (convertView == null) {
+            convertView = mInflater.inflate(android.R.layout.simple_list_item_1, null);
         }
-        ((TextView) convertView.findViewById(android.R.id.text1)).setText(infoList.get(position).getName());
+        ((TextView) convertView.findViewById(android.R.id.text1)).setText(infoList.get(position)
+                                                                                  .getName());
 
         return convertView;
     }

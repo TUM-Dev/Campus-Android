@@ -37,17 +37,16 @@ public class StudyRoomGroupManager extends AbstractManager {
         createStudyRoomTable();
     }
 
-
     private final void createStudyRoomGroupTable() {
         db.execSQL("CREATE TABLE IF NOT EXISTS study_room_groups " +
-                "(id INTEGER PRIMARY KEY, name VARCHAR, details VARCHAR)");
+                   "(id INTEGER PRIMARY KEY, name VARCHAR, details VARCHAR)");
     }
 
     private final void createStudyRoomTable() {
         db.execSQL("CREATE TABLE IF NOT EXISTS study_rooms " +
-                "(id INTEGER PRIMARY KEY, code VARCHAR, name VARCHAR, location VARCHAR, " +
-                "occupied_till VARCHAR, " +
-                "group_id INTEGER)");
+                   "(id INTEGER PRIMARY KEY, code VARCHAR, name VARCHAR, location VARCHAR, " +
+                   "occupied_till VARCHAR, " +
+                   "group_id INTEGER)");
     }
 
     public void downloadFromExternal() throws JSONException {
@@ -78,21 +77,20 @@ public class StudyRoomGroupManager extends AbstractManager {
      */
     private void replaceIntoDb(StudyRoomGroup studyRoomGroup) {
         db.execSQL("REPLACE INTO study_room_groups(id, name, details) VALUES" +
-                        " (?, ?, ?)",
-                new String[]{String.valueOf(studyRoomGroup.id), studyRoomGroup.name,
-                        studyRoomGroup.details});
+                   " (?, ?, ?)",
+                   new String[]{String.valueOf(studyRoomGroup.id), studyRoomGroup.name,
+                                studyRoomGroup.details});
         SimpleDateFormat dateFormatter = new SimpleDateFormat(DATEFORMAT, Locale.US);
         for (StudyRoom studyRoom : studyRoomGroup.rooms) {
             db.execSQL("REPLACE INTO study_rooms(id, code, name, location, occupied_till, " +
-                            "group_id) VALUES " +
-                            "(?, ?, ?, ?, ?, ?)",
-                    new String[]{String.valueOf(studyRoom.id), studyRoom.code, studyRoom.name,
-                            studyRoom.location,
-                            dateFormatter.format(studyRoom.occupiedTill), String.valueOf
-                            (studyRoomGroup.id)});
+                       "group_id) VALUES " +
+                       "(?, ?, ?, ?, ?, ?)",
+                       new String[]{String.valueOf(studyRoom.id), studyRoom.code, studyRoom.name,
+                                    studyRoom.location,
+                                    dateFormatter.format(studyRoom.occupiedTill), String.valueOf
+                                            (studyRoomGroup.id)});
         }
     }
-
 
     public static List<StudyRoomGroup> getAllFromJson(JSONObject jsonObject) throws JSONException {
         JSONArray groupsJsonArray = jsonObject.getJSONArray("gruppen");
@@ -119,28 +117,35 @@ public class StudyRoomGroupManager extends AbstractManager {
         List<StudyRoom> studyRooms = new ArrayList<>();
 
         for (int i = 0; i < allRooms.length(); i++) {
-            int roomNumber = allRooms.getJSONObject(i).getInt("raum_nr");
+            int roomNumber = allRooms.getJSONObject(i)
+                                     .getInt("raum_nr");
             for (int j = 0; j < groupRoomList.length(); j++) {
                 if (groupRoomList.getInt(j) == roomNumber) {
                     StudyRoom studyRoom;
                     try {
                         studyRoom = new StudyRoom(
                                 roomNumber,
-                                allRooms.getJSONObject(i).getString("raum_code"),
-                                allRooms.getJSONObject(i).getString("raum_name"),
-                                allRooms.getJSONObject(i).getString("gebaeude_name"),
+                                allRooms.getJSONObject(i)
+                                        .getString("raum_code"),
+                                allRooms.getJSONObject(i)
+                                        .getString("raum_name"),
+                                allRooms.getJSONObject(i)
+                                        .getString("gebaeude_name"),
                                 new SimpleDateFormat(DATEFORMAT, Locale.US).parse(allRooms
-                                        .getJSONObject(i)
-                                        .getString("belegung_bis"))
+                                                                                          .getJSONObject(i)
+                                                                                          .getString("belegung_bis"))
                         );
                     } catch (ParseException e) {
                         //Room is not occupied
 
                         studyRoom = new StudyRoom(
                                 roomNumber,
-                                allRooms.getJSONObject(i).getString("raum_code"),
-                                allRooms.getJSONObject(i).getString("raum_name"),
-                                allRooms.getJSONObject(i).getString("gebaeude_name"),
+                                allRooms.getJSONObject(i)
+                                        .getString("raum_code"),
+                                allRooms.getJSONObject(i)
+                                        .getString("raum_name"),
+                                allRooms.getJSONObject(i)
+                                        .getString("gebaeude_name"),
                                 new Date()
                         );
                     }
@@ -174,8 +179,8 @@ public class StudyRoomGroupManager extends AbstractManager {
         if (cursor.moveToFirst()) {
             do {
                 studyRoomGroups.add(new StudyRoomGroup(cursor.getInt(0), cursor.getString(1),
-                        cursor.getString(2), getStudyRoomsFromCursor(getStudyRoomsFromDb(cursor
-                        .getInt(0)))));
+                                                       cursor.getString(2), getStudyRoomsFromCursor(getStudyRoomsFromDb(cursor
+                                                                                                                                .getInt(0)))));
             } while (cursor.moveToNext());
         }
         Collections.sort(studyRoomGroups);
@@ -188,8 +193,8 @@ public class StudyRoomGroupManager extends AbstractManager {
      */
     public Cursor getStudyRoomsFromDb(int studyRoomGroupId) {
         return db.rawQuery("SELECT id as _id, code, name, location, occupied_till, group_id FROM " +
-                "study_rooms WHERE group_id = ? ORDER BY occupied_till ASC", new String[]{String
-                .valueOf(studyRoomGroupId)});
+                           "study_rooms WHERE group_id = ? ORDER BY occupied_till ASC", new String[]{String
+                                                                                                             .valueOf(studyRoomGroupId)});
     }
 
     private static List<StudyRoom> getStudyRoomsFromCursor(Cursor cursor) {
@@ -217,7 +222,7 @@ public class StudyRoomGroupManager extends AbstractManager {
         try {
             studyRoom = new StudyRoom(cursor.getInt(0), cursor.getString(1), cursor.getString
                     (2), cursor.getString(3), new SimpleDateFormat(DATEFORMAT, Locale.US).parse(cursor
-                    .getString(4)));
+                                                                                                        .getString(4)));
         } catch (ParseException e) {
             Utils.log(e);
         }

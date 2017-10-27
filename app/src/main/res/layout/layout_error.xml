@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/error_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:onClick="onClick">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/error_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:onClick="onClick">
 
     <TextView
         android:id="@+id/error_text"
@@ -18,7 +18,7 @@
         android:gravity="center"
         android:text="@string/error_something_wrong"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp" />
+        android:textSize="12sp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
         android:gravity="center"
         android:text="@string/click_to_try_again"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp" />
+        android:textSize="12sp"/>
 
     <ImageView
         android:id="@id/error_image"
@@ -39,6 +39,6 @@
         android:layout_centerVertical="true"
         android:alpha="0.5"
         android:src="@drawable/error"
-        tools:ignore="UnusedAttribute" />
+        tools:ignore="UnusedAttribute"/>
 
 </RelativeLayout>

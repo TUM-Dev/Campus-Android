@@ -16,8 +16,8 @@ import de.tum.in.tumcampusapp.fragments.SettingsFragment;
 /**
  * Provides the preferences, encapsulated into an own activity.
  */
-public class UserPreferencesActivity extends BaseActivity  implements
-        PreferenceFragmentCompat.OnPreferenceStartScreenCallback{
+public class UserPreferencesActivity extends BaseActivity implements
+                                                          PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     public UserPreferencesActivity() {
         super(R.layout.activity_user_preferences);
@@ -31,8 +31,9 @@ public class UserPreferencesActivity extends BaseActivity  implements
         //Enable the direct access of a specific sub section, e.g.: cards
         Intent intent = getIntent();
         Bundle args = new Bundle();
-        if (intent != null &&  intent.getExtras() != null) {
-            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, intent.getExtras().getString(Const.PREFERENCE_SCREEN));
+        if (intent != null && intent.getExtras() != null) {
+            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, intent.getExtras()
+                                                                               .getString(Const.PREFERENCE_SCREEN));
         }
 
         if (savedInstanceState == null) {
@@ -41,7 +42,7 @@ public class UserPreferencesActivity extends BaseActivity  implements
             if (fragment == null) {
                 fragment = new SettingsFragment();
             }
-            
+
             fragment.setArguments(args);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.settings_frame, fragment, SettingsFragment.FRAGMENT_TAG);

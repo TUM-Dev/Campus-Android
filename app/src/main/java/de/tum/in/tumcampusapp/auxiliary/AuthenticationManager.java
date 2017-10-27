@@ -52,7 +52,8 @@ public class AuthenticationManager {
         if (uniqueID == null) {
             uniqueID = Utils.getInternalSettingString(context, Const.PREF_UNIQUE_ID, null);
             if (uniqueID == null) {
-                uniqueID = UUID.randomUUID().toString();
+                uniqueID = UUID.randomUUID()
+                               .toString();
                 Utils.setInternalSetting(context, Const.PREF_UNIQUE_ID, uniqueID);
             }
         }
@@ -159,8 +160,10 @@ public class AuthenticationManager {
         KeyPair keyPair = generateKeyPair();
 
         //In order to store the preferences we need to encode them as base64 string
-        String publicKeyString = keyToBase64(keyPair.getPublic().getEncoded());
-        String privateKeyString = keyToBase64(keyPair.getPrivate().getEncoded());
+        String publicKeyString = keyToBase64(keyPair.getPublic()
+                                                    .getEncoded());
+        String privateKeyString = keyToBase64(keyPair.getPrivate()
+                                                     .getEncoded());
         this.saveKeys(privateKeyString, publicKeyString);
 
         //New keys, need to re-upload
@@ -184,26 +187,28 @@ public class AuthenticationManager {
             DeviceRegister dr = new DeviceRegister(mContext, publicKey, member);
 
             // Upload public key to the server
-            TUMCabeClient.getInstance(mContext).deviceRegister(dr, new Callback<TUMCabeStatus>() {
+            TUMCabeClient.getInstance(mContext)
+                         .deviceRegister(dr, new Callback<TUMCabeStatus>() {
 
-                @Override
-                public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
-                    //Remember that we are done, only if we have submitted with the member information
-                    if (response.isSuccessful() && "ok".equals(response.body().getStatus())) {
-                        if (member != null) {
-                            Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
-                        }
+                             @Override
+                             public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
+                                 //Remember that we are done, only if we have submitted with the member information
+                                 if (response.isSuccessful() && "ok".equals(response.body()
+                                                                                    .getStatus())) {
+                                     if (member != null) {
+                                         Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
+                                     }
 
-                        AuthenticationManager.this.tryToUploadGcmToken();
-                    }
-                }
+                                     AuthenticationManager.this.tryToUploadGcmToken();
+                                 }
+                             }
 
-                @Override
-                public void onFailure(Call<TUMCabeStatus> call, Throwable t) {
-                    Utils.log(t, "Failure uploading public key");
-                    Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
-                }
-            });
+                             @Override
+                             public void onFailure(Call<TUMCabeStatus> call, Throwable t) {
+                                 Utils.log(t, "Failure uploading public key");
+                                 Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
+                             }
+                         });
         } catch (NoPrivateKey noPrivateKey) {
             this.clearKeys();
         }
@@ -227,7 +232,8 @@ public class AuthenticationManager {
     private void tryToUploadGcmToken() {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         // Can only be done after the public key has been uploaded
-        if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false) && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
+        if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false) && GoogleApiAvailability.getInstance()
+                                                                                                             .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
             GcmIdentificationService idService = new GcmIdentificationService(mContext);
             idService.checkSetup();
         }

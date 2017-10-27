@@ -5,7 +5,7 @@ package de.tum.in.tumcampusapp.auxiliary;
  */
 public final class Const {
 
-    public static final String MENSA_FOR_FAVORITEDISH ="FavoriteDishCafeteriaID";
+    public static final String MENSA_FOR_FAVORITEDISH = "FavoriteDishCafeteriaID";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String ACTION_EXTRA = "action";
     public static final String ADDRESS_COLUMN = "address";
@@ -117,7 +117,7 @@ public final class Const {
 
     public static final String URL_ROOM_FINDER_API = "/Api/roomfinder/room/";
     public static final String URL_DEFAULT_MAP_IMAGE = "https://" + API_HOSTNAME + URL_ROOM_FINDER_API + "defaultMap/";
-    public static final String URL_MAP_IMAGE = "https://" + API_HOSTNAME+ URL_ROOM_FINDER_API + "map/";
+    public static final String URL_MAP_IMAGE = "https://" + API_HOSTNAME + URL_ROOM_FINDER_API + "map/";
     public static final String ROOM_ID = "room_id";
 
     public static final String NOTIFICATION_CHANNEL_DEFAULT = "default";

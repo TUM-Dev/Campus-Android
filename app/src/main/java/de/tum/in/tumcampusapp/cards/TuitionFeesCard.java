@@ -12,11 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +40,8 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_item, parent, false);
         return new Card.CardViewHolder(view);
     }
 
@@ -58,8 +57,8 @@ public class TuitionFeesCard extends NotificationAwareCard {
         List<View> addedViews = cardsViewHolder.getAddedViews();
 
         mCard = viewHolder.itemView;
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
+        mLinearLayout = mCard.findViewById(R.id.card_view);
+        mTitleView = mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
 
         //Remove additional views
@@ -71,9 +70,11 @@ public class TuitionFeesCard extends NotificationAwareCard {
             addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez())));
         } else {
             Date d = Utils.getDate(mTuition.getFrist());
-            String date = SimpleDateFormat.getDateInstance().format(d);
+            String date = DateFormat.getDateInstance()
+                                    .format(d);
             addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_todo), date)));
-            addedViews.add(addTextView(viewHolder.itemView.getContext().getString(R.string.amount_dots) + ' ' + mTuition.getSoll() + '€'));
+            addedViews.add(addTextView(viewHolder.itemView.getContext()
+                                                          .getString(R.string.amount_dots) + ' ' + mTuition.getSoll() + '€'));
         }
     }
 
@@ -91,7 +92,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
         // If app gets started for the first time and fee is already paid don't annoy user
         // by showing him that he has been re-registered successfully
         return !(prevFrist.isEmpty() && "0".equals(mTuition.getSoll())) &&
-                (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
+               (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
     }
 
     @Override

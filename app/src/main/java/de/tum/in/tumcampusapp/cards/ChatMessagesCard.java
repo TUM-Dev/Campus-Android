@@ -9,9 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -43,7 +41,8 @@ public class ChatMessagesCard extends NotificationAwareCard {
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_item, parent, false);
         return new Card.CardViewHolder(view);
     }
 
@@ -58,8 +57,8 @@ public class ChatMessagesCard extends NotificationAwareCard {
         CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
         List<View> addedViews = cardsViewHolder.getAddedViews();
 
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
+        mLinearLayout = mCard.findViewById(R.id.card_view);
+        mTitleView = mCard.findViewById(R.id.card_title);
         mTitleView.setText(mRoomName);
 
         //Remove additional views
@@ -69,7 +68,8 @@ public class ChatMessagesCard extends NotificationAwareCard {
 
         // Show cafeteria menu
         for (ChatMessage message : mUnread) {
-            addedViews.add(addTextView(message.getMember().getDisplayName() + ": " + message.getText()));
+            addedViews.add(addTextView(message.getMember()
+                                              .getDisplayName() + ": " + message.getText()));
         }
     }
 

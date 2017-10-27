@@ -62,6 +62,7 @@ public final class Utils {
         String resultCss = "<style type=\"text/css\">" + css + "</style>";
         String resultBody = "<body>" + body + "</body>";
         String footer = "</html>";
+        //noinspection StringConcatenationMissingWhitespace
         return header + resultCss + resultBody + footer;
     }
 
@@ -188,35 +189,41 @@ public final class Utils {
      * Logs an exception and additional information
      * Use this anywhere in the app when a fatal error occurred.
      * If you can give a better description of what went wrong
-     * use {@link #log(Exception, String)} instead.
+     * use {@link #log(Throwable, String)} instead.
      *
      * @param e Exception (source for message and stack trace)
      */
     public static void log(Throwable e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        String s = Thread.currentThread()
-                         .getStackTrace()[3].getClassName()
-                                            .replaceAll(LOGGING_REGEX, "");
-        Log.e(s, e + "\n" + sw);
+        try (StringWriter sw = new StringWriter()) {
+            e.printStackTrace(new PrintWriter(sw));
+            String s = Thread.currentThread()
+                             .getStackTrace()[3].getClassName()
+                                                .replaceAll(LOGGING_REGEX, "");
+            Log.e(s, e + "\n" + sw);
+        } catch (IOException e1) {
+            // there is a time to stop logging errors
+        }
     }
 
     /**
      * Logs an exception and additional information
      * Use this anywhere in the app when a fatal error occurred.
      * If you can't give an exact error description simply use
-     * {@link #log(Exception)} instead.
+     * {@link #log(Throwable)} instead.
      *
      * @param e       Exception (source for message and stack trace)
      * @param message Additional information for exception message
      */
     public static void log(Throwable e, String message) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        String s = Thread.currentThread()
-                         .getStackTrace()[3].getClassName()
-                                            .replaceAll(LOGGING_REGEX, "");
-        Log.e(s, e + " " + message + '\n' + sw);
+        try (StringWriter sw = new StringWriter()) {
+            e.printStackTrace(new PrintWriter(sw));
+            String s = Thread.currentThread()
+                             .getStackTrace()[3].getClassName()
+                                                .replaceAll(LOGGING_REGEX, "");
+            Log.e(s, e + " " + message + '\n' + sw);
+        } catch (IOException e1) {
+            // there is a time to stop logging errors
+        }
     }
 
     /**
@@ -270,7 +277,7 @@ public final class Utils {
      * @param str String to hash
      * @return hash hash as string
      */
-    public static String hash(String str) {
+    static String hash(String str) {
         return Hashing.murmur3_128()
                       .hashBytes(str.getBytes(Charsets.UTF_8))
                       .toString();
@@ -285,14 +292,11 @@ public final class Utils {
     public static List<String[]> readCsv(InputStream fin) {
         List<String[]> list = new ArrayList<>(64);
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.UTF_8));
-            try {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.UTF_8))) {
                 String reader;
                 while ((reader = in.readLine()) != null) {
                     list.add(splitCsvLine(reader));
                 }
-            } finally {
-                in.close();
             }
         } catch (IOException e) {
             log(e);
@@ -397,6 +401,7 @@ public final class Utils {
      * @param meters Meters to represent
      * @return Formatted meters. e.g. 10m, 12.5km
      */
+    @SuppressWarnings("StringConcatenationMissingWhitespace")
     public static String formatDist(float meters) {
         if (meters < 1000) {
             return ((int) meters) + "m";
@@ -564,21 +569,11 @@ public final class Utils {
     }
 
     public static void showToastOnUIThread(final Activity activity, final int s) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.showToast(activity, s);
-            }
-        });
+        activity.runOnUiThread(() -> Utils.showToast(activity, s));
     }
 
-    public static void showToastOnUIThread(final Activity activity, final String s) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.showToast(activity, s);
-            }
-        });
+    public static void showToastOnUIThread(final Activity activity, final CharSequence s) {
+        activity.runOnUiThread(() -> Utils.showToast(activity, s));
     }
 
     /**
