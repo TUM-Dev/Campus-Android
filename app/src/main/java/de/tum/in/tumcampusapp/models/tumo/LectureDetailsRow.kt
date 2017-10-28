@@ -29,6 +29,6 @@ data class LectureDetailsRow(@field:Element(required = false) var dauer_info: St
                              @field:Element var stp_sp_nr: String = "",
                              @field:Element(required = false) var stp_sp_sst: String = "",
                              @field:Element var stp_sp_titel: String = "",
-                             @Element(required = false) var studienbehelfe: String = "",
-                             @Element(required = false) var voraussetzung_lv: String = "",
-                             @Element(required = false) var vortragende_mitwirkende: String = "")
+                             @field:Element(required = false) var studienbehelfe: String = "",
+                             @field:Element(required = false) var voraussetzung_lv: String = "",
+                             @field:Element(required = false) var vortragende_mitwirkende: String = "")
