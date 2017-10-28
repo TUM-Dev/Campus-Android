@@ -177,8 +177,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         values.put("id", appWidgetId);
         values.put("station", widgetDepartures.getStation());
         values.put("station_id", widgetDepartures.getStationId());
-        values.put("location", widgetDepartures.useLocation());
-        values.put("reload", widgetDepartures.autoReload());
+        values.put("location", widgetDepartures.getUseLocation());
+        values.put("reload", widgetDepartures.getAutoReload());
         db.replace("widgets_transport", null, values);
         TransportManager.widgetDeparturesList.put(appWidgetId, widgetDepartures);
     }

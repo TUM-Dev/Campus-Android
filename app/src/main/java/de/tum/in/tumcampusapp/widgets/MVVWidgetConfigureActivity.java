@@ -58,7 +58,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         this.widgetDepartures = tm.getWidget(appWidgetId);
 
         Switch autoReloadSwitch = findViewById(R.id.mvv_widget_auto_reload);
-        autoReloadSwitch.setChecked(this.widgetDepartures.autoReload());
+        autoReloadSwitch.setChecked(this.widgetDepartures.getAutoReload());
         autoReloadSwitch.setOnCheckedChangeListener((compoundButton, checked) -> widgetDepartures.setAutoReload(checked));
         // TODO add handling for use location
 

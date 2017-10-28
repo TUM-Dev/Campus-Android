@@ -62,7 +62,8 @@ public class NotificationManager extends AbstractManager {
                                                    c.getInt(alarmColumns.rad.ordinal())),
                                            c.getString(alarmColumns.title.ordinal()),
                                            c.getString(alarmColumns.desc.ordinal()),
-                                           c.getString(alarmColumns.signature.ordinal()));
+                                           c.getString(alarmColumns.signature.ordinal()),
+                                           "" /* TODO: actually set created */);
             }
         }
         return null;

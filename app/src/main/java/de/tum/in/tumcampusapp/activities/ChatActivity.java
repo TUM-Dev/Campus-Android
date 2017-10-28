@@ -160,7 +160,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             if (extras == null) {
                 return;
             }
-            Utils.log("Broadcast receiver got room=" + extras.room + " member=" + extras.member);
+            Utils.log("Broadcast receiver got room=" + extras.getRoom() + " member=" + extras.getMember());
             handleRoomBroadcast(extras);
         }
     };
@@ -178,13 +178,13 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
     private void handleRoomBroadcast(GCMChat extras) {
         //If same room just refresh
-        if (!(extras.room == currentChatRoom.getId() && chatHistoryAdapter != null)) {
+        if (!(extras.getRoom() == currentChatRoom.getId() && chatHistoryAdapter != null)) {
             return;
         }
-        if (extras.member == currentChatMember.getId()) {
+        if (extras.getMember() == currentChatMember.getId()) {
             // Remove this message from the adapter
             chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
-        } else if (extras.message == -1) {
+        } else if (extras.getMessage() == -1) {
             //Check first, if sounds are enabled
             AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
@@ -419,7 +419,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             // If currently nothing has been shown load newest messages from server
             ChatVerification verification;
             try {
-                verification = new ChatVerification(ChatActivity.this, currentChatMember);
+                verification = ChatVerification.Companion.getChatVerification(ChatActivity.this, currentChatMember);
             } catch (NoPrivateKey noPrivateKey) {
                 return; //In this case we simply cannot do anything
             }
@@ -479,7 +479,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         // Send request to the server to remove the user from this room
         ChatVerification verification;
         try {
-            verification = new ChatVerification(this, currentChatMember);
+            verification = ChatVerification.Companion.getChatVerification(this, currentChatMember);
         } catch (NoPrivateKey noPrivateKey) {
             return;
         }
