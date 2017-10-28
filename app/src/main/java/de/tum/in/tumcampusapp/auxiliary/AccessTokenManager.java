@@ -8,8 +8,8 @@ import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
+import de.tum.in.tumcampusapp.exceptions.TUMOException;
 import de.tum.in.tumcampusapp.models.tumo.AccessToken;
-import de.tum.in.tumcampusapp.tumonline.TUMOException;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
@@ -90,11 +90,11 @@ public class AccessTokenManager {
 
             return true;
         } catch (TUMOException ex) {
-            Utils.log(ex, context.getString(R.string.access_token_wasnt_generated) + ex.errorMessage);
+            Utils.log(ex, context.getString(R.string.access_token_wasnt_generated) + ex.getMessage());
             // set access token to null
             Utils.setSetting(context, Const.ACCESS_TOKEN, null);
 
-            Utils.showToastOnUIThread(activity, ex.errorMessage);
+            Utils.showToastOnUIThread(activity, ex.getMessage());
         } catch (Exception ex) { //NOPMD
             Utils.log(ex, context.getString(R.string.access_token_wasnt_generated));
             // set access token to null
