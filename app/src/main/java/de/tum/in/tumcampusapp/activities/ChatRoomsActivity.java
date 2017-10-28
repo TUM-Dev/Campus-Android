@@ -71,7 +71,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         manager = new ChatRoomManager(this);
 
         //Load the lectures list
-        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
+        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), this, true);
 
         TabLayout tabLayout = findViewById(R.id.chat_rooms_tabs);
         // Create a tab listener that is called when the user changes tabs.

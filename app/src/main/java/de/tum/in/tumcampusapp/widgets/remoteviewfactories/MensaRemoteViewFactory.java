@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaPrices;
 
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
@@ -72,7 +72,7 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
                                     .trim();
         rv.setTextViewText(R.id.menu_content, menuContent + " (" + currentItem.getTypeShort() + ")");
 
-        String price = CafeteriaPrices.getPrice(applicationContext, currentItem.getTypeLong());
+        String price = CafeteriaPrices.INSTANCE.getPrice(applicationContext, currentItem.getTypeLong());
         if (price == null) {
             price = "____";
         }

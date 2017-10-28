@@ -170,7 +170,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
         new ChatMessageManager(context, 0);
 
         // Get all of the users lectures and save them as possible chat rooms
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, context, true);
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), context, true);
         Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
         if (lecturesList.isPresent() && lecturesList.get()
                                                     .getLehrveranstaltungen() != null) {
