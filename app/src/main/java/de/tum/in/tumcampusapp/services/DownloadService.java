@@ -259,12 +259,11 @@ public class DownloadService extends IntentService {
     private void importLocationsDefaults() throws IOException {
         OpenHoursManager lm = new OpenHoursManager(this);
         if (lm.empty()) {
-            try (AssetManager assetManager = getAssets()) {
-                List<String[]> rows = Utils.readCsv(assetManager.open(CSV_LOCATIONS));
-                for (String[] row : rows) {
-                    lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1],
-                                                  row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
-                }
+            AssetManager assetManager = getAssets();
+            List<String[]> rows = Utils.readCsv(assetManager.open(CSV_LOCATIONS));
+            for (String[] row : rows) {
+                lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1],
+                                              row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
         }
     }
