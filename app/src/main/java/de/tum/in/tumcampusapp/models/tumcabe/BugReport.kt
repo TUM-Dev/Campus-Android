@@ -19,13 +19,13 @@ data class BugReport(val packageName: String, val packageVersion: String, val pa
                     packageVersionCode = G.appVersionCode.toString(),
                     phoneModel = G.phoneModel,
                     androidVersion = G.androidVersion,
-                    networkWifi = if (NetUtils.isConnectedWifi(c)) "true" else "false",
-                    networkMobile = if (NetUtils.isConnectedMobileData(c)) "true" else "false",
+                    networkWifi = NetUtils.isConnectedWifi(c).toString(),
+                    networkMobile = NetUtils.isConnectedMobileData(c).toString(),
                     gps = Util.isGPSOn(c),
                     screenWidth = screenProperties[0],
                     screenHeight = screenProperties[1],
                     screenOrientation = screenProperties[2],
-                    screenDpi = screenProperties[3] + ":" + screenProperties[4],
+                    screenDpi = "${screenProperties[3]}:${screenProperties[4]}",
                     stacktrace = stacktrace,
                     log = log
             )

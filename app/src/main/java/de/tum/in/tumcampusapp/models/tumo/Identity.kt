@@ -7,8 +7,5 @@ import org.simpleframework.xml.Root
 data class Identity(@field:Element var vorname: String = "",
                     @field:Element var familienname: String = "",
                     @field:Element var kennung: String = "") {
-
-    override fun toString(): String {
-        return vorname + " " + familienname
-    }
+    override fun toString(): String = "$vorname $familienname"
 }

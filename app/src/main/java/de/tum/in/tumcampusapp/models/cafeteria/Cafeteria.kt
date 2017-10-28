@@ -14,11 +14,7 @@ data class Cafeteria(val id: Int, val name: String, val address: String, val lat
     // Used for ordering cafeterias
     var distance: Float = 0.toFloat()
 
-    override fun toString(): String {
-        return name
-    }
+    override fun toString(): String = name
 
-    override fun compareTo(other: Cafeteria): Int {
-        return java.lang.Float.compare(distance, other.distance)
-    }
+    override fun compareTo(other: Cafeteria): Int = java.lang.Float.compare(distance, other.distance)
 }

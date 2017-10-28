@@ -10,12 +10,12 @@ import java.io.Serializable
 data class RoomFinderRoom(val campus: String, val address: String, val info: String, val arch_id: String, val room_id: String,
                           private val name: String?) : SimpleStickyListItem, Serializable {
 
-    fun getName(): String {
-        return if (name == null || name == "null")
-            ""
-        else
-            name
-    }
+    fun getName(): String =
+            if (name == null || name == "null")
+                ""
+            else
+                name
+
 
     override fun getHeadName() = getName()
 

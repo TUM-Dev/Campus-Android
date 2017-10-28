@@ -8,29 +8,29 @@ import de.tum.`in`.tumcampusapp.auxiliary.Utils
  * Hardcoded cafeteria prices
  */
 object CafeteriaPrices {
-    private val PRICE_100 = "1,00"
-    private val PRICE_155 = "1,55"
-    private val PRICE_190 = "1,90"
-    private val PRICE_220 = "2,20"
-    private val PRICE_240 = "2,40"
-    private val PRICE_260 = "2,60"
-    private val PRICE_270 = "2,70"
-    private val PRICE_280 = "2,80"
-    private val PRICE_290 = "2,90"
-    private val PRICE_300 = "3,00"
-    private val PRICE_320 = "3,20"
-    private val PRICE_330 = "3,30"
-    private val PRICE_340 = "3,40"
-    private val PRICE_350 = "3,50"
-    private val PRICE_360 = "3,60"
-    private val PRICE_370 = "3,70"
-    private val PRICE_390 = "3,90"
-    private val PRICE_400 = "4,00"
-    private val PRICE_410 = "4,10"
-    private val PRICE_440 = "4,40"
-    private val PRICE_450 = "4,50"
-    private val PRICE_490 = "4,90"
-    private val PRICE_540 = "5,40"
+    private const val PRICE_100 = "1,00"
+    private const val PRICE_155 = "1,55"
+    private const val PRICE_190 = "1,90"
+    private const val PRICE_220 = "2,20"
+    private const val PRICE_240 = "2,40"
+    private const val PRICE_260 = "2,60"
+    private const val PRICE_270 = "2,70"
+    private const val PRICE_280 = "2,80"
+    private const val PRICE_290 = "2,90"
+    private const val PRICE_300 = "3,00"
+    private const val PRICE_320 = "3,20"
+    private const val PRICE_330 = "3,30"
+    private const val PRICE_340 = "3,40"
+    private const val PRICE_350 = "3,50"
+    private const val PRICE_360 = "3,60"
+    private const val PRICE_370 = "3,70"
+    private const val PRICE_390 = "3,90"
+    private const val PRICE_400 = "4,00"
+    private const val PRICE_410 = "4,10"
+    private const val PRICE_440 = "4,40"
+    private const val PRICE_450 = "4,50"
+    private const val PRICE_490 = "4,90"
+    private const val PRICE_540 = "5,40"
 
     private val STUDENT_PRICES = mapOf(
             "Tagesgericht 1" to PRICE_100,
@@ -136,7 +136,5 @@ object CafeteriaPrices {
         }
     }
 
-    fun getPrice(context: Context, menuType: String): String? {
-        return getRolePrices(context)[menuType]
-    }
+    fun getPrice(context: Context, menuType: String): String? = getRolePrices(context)[menuType]
 }

@@ -5,5 +5,5 @@ data class ChatRoom(var name: String?) {
 
     var members = -1
 
-    override fun toString() = id.toString() + ": " + name
+    override fun toString() = "$id: $name"
 }

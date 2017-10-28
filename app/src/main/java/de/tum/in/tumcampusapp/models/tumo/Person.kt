@@ -23,7 +23,7 @@ data class Person(@field:Element(name = "geschlecht", required = false)
                   var surname: String = "") :
         Serializable {
 
-    override fun toString() = name + " " + surname
+    override fun toString() = "$name $surname"
 
     companion object {
         val FEMALE = "W"

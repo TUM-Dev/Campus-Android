@@ -7,9 +7,8 @@ import org.simpleframework.xml.Root
 data class IdentitySet(@field:ElementList(inline = true)
                        var ids: List<Identity> = mutableListOf()) {
 
-    override fun toString(): String {
-        return if (ids.isEmpty())
-            "null"
-        else ids[0].toString()
-    }
+    override fun toString(): String =
+            if (ids.isEmpty())
+                "null"
+            else ids[0].toString()
 }

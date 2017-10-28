@@ -12,7 +12,5 @@ data class Geo(@field:Element(required = false) var latitude: String = "0",
             longitude = java.lang.Double.toString(longitude)
     )
 
-    override fun toString(): String {
-        return "latitude=$latitude longitude=$longitude"
-    }
+    override fun toString(): String = "latitude=$latitude longitude=$longitude"
 }
