@@ -13,4 +13,4 @@ import org.simpleframework.xml.Root
  */
 @Root(name = "rowset")
 data class LectureAppointmentsRowSet(@field:ElementList(inline = true, required = false)
-                                     var lehrveranstaltungenTermine: List<LectureAppointmentsRow> = emptyList())
+                                     var lehrveranstaltungenTermine: List<LectureAppointmentsRow> = mutableListOf())

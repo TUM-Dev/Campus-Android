@@ -13,7 +13,7 @@ import java.io.Serializable
 
 @Root(name = "gruppen")
 data class GroupList(@field:ElementList(inline = true, required = false)
-                     var groups: List<Group> = emptyList()) : Serializable {
+                     var groups: List<Group> = mutableListOf()) : Serializable {
     companion object {
         private const val serialVersionUID = 2713473533623487005L
     }

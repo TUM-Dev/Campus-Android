@@ -12,7 +12,7 @@ import java.io.Serializable
  */
 @Root(name = "telefon_nebenstellen")
 data class TelSubstationList(@field:ElementList(inline = true, required = false)
-                             var substations: List<TelSubstation> = emptyList()) : Serializable {
+                             var substations: List<TelSubstation> = mutableListOf()) : Serializable {
     companion object {
         private const val serialVersionUID = -3790189526859194869L
     }

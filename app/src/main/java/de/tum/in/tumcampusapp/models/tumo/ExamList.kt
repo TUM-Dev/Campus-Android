@@ -11,4 +11,4 @@ import org.simpleframework.xml.Root
  */
 @Root(name = "rowset")
 data class ExamList(@field:ElementList(inline = true)
-                    var exams: List<Exam> = emptyList())
+                    var exams: List<Exam> = mutableListOf())

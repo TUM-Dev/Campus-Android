@@ -11,4 +11,4 @@ import org.simpleframework.xml.Root
  */
 @Root(name = "rowset")
 data class LecturesSearchRowSet(@field:ElementList(inline = true, required = false)
-                                var lehrveranstaltungen: List<LecturesSearchRow> = emptyList())
+                                var lehrveranstaltungen: List<LecturesSearchRow> = mutableListOf())

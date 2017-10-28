@@ -10,4 +10,4 @@ import org.simpleframework.xml.Root
 @Root(name = "rowset")
 data class OrgItemList(
         @field:ElementList(inline = true, required = false)
-        var groups: List<OrgItem> = emptyList())
+        var groups: List<OrgItem> = mutableListOf())

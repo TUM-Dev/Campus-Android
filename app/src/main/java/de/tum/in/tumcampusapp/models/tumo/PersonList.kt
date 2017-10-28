@@ -10,4 +10,4 @@ import org.simpleframework.xml.Root
 
 @Root(name = "rowset")
 data class PersonList(@field:ElementList(inline = true, required = false)
-                      var persons: List<Person> = emptyList())
+                      var persons: List<Person> = mutableListOf())

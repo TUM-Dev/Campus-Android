@@ -12,4 +12,4 @@ import org.simpleframework.xml.Root
  * @see [SimpleXML tutorial](http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php)
  */
 @Root(name = "events")
-data class CalendarRowSet(@field:ElementList(inline = true, required = false) var kalendarList: List<CalendarRow>? = emptyList())
+data class CalendarRowSet(@field:ElementList(inline = true, required = false) var kalendarList: List<CalendarRow> = mutableListOf())

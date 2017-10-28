@@ -11,7 +11,7 @@ import java.io.Serializable
  */
 @Root(name = "raeume")
 data class RoomList(@field:ElementList(inline = true, required = false)
-                    var rooms: List<Room> = emptyList()) : Serializable {
+                    var rooms: List<Room> = mutableListOf()) : Serializable {
     companion object {
         private const val serialVersionUID = 1115343203243361774L
     }

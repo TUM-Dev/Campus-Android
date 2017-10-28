@@ -13,4 +13,4 @@ data class OrgDetailItemList(
          * List of OrganisationItems
          */
         @field:ElementList(inline = true, required = false)
-        var groups: List<OrgDetailsItem> = emptyList())
+        var groups: List<OrgDetailsItem> = mutableListOf())

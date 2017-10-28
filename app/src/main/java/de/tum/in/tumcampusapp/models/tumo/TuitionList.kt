@@ -11,4 +11,4 @@ import org.simpleframework.xml.Root
  * corresponding request.
  */
 @Root(name = "rowset")
-data class TuitionList(@field:ElementList(inline = true) var tuitions: List<Tuition> = emptyList())
+data class TuitionList(@field:ElementList(inline = true) var tuitions: List<Tuition> = mutableListOf())
