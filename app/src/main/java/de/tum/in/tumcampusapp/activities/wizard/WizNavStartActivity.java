@@ -104,6 +104,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                         try (Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i))) {
                             if (c.moveToFirst()) {
                                 Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
+                                setDefaultCampus( c.getString(c.getColumnIndex("faculty")) );
                                 Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
                             }
                         }
@@ -194,6 +195,71 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             onLoadFinished(true);
         }
+    }
+
+    private void setDefaultCampus(String faculty_number) {
+
+        String Campus = "0";
+        switch (faculty_number) {
+            case "5":   // TUM School of Education
+                Campus = "C";
+                break;
+            case "6":   // Architektur
+                Campus = "C";
+                break;
+            case "7":   // Elektrotechnik und Informationstechnik
+                Campus = "C";
+                break;
+            case "8":   // Ingenieurfakultät Bau Geo Umwelt
+                Campus = "C";
+                break;
+            case "14":  // Wirtschaftswissenschaften
+                Campus = "C";
+                break;
+            case "17":  // Andere Einrichtungen
+
+                Campus = "C"; // Stammgelände
+                break;
+            case "16":  // TUM School of Governance
+                // Unklar, nicht weit vom Stammgelände, aber nicht Stammgelände ??
+                break;
+            case "1":   // Mathematik
+                Campus = "G";
+                break;
+            case "2":   // Physik
+                Campus = "G";
+                break;
+            case "3":   // Chemie
+                Campus = "G";
+                break;
+            case "4":   // Informatik
+                Campus = "G";
+                break;
+            case "11":  // Maschinenwesen
+
+                Campus = "G"; // Garching-FZ
+                break;
+            case "13":  // Sport-und Gesundheitswissenschaften
+
+                // Olympiapark, hat aber keine Zuordnung ??
+                break;
+            case "12":  // Medizin
+
+                Campus = "I"; // Klinikum rechts der Isar
+                break;
+            case "15":  // Wissenschaftszentrum Weihenstephan
+
+                Campus = "W"; // Weihenstephan
+                break;
+            default:
+                break;
+
+        }
+
+        if (Campus != "0") {
+            Utils.setSetting(getApplicationContext(), Const.DEFAULT_CAMPUS, Campus);
+        }
+        return;
     }
 
     /**
