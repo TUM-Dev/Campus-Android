@@ -197,11 +197,10 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         }
     }
 
-    private void setDefaultCampus ( String faculty_number ) {
+    private void setDefaultCampus(String faculty_number) {
 
         String Campus = "0";
-        switch (faculty_number)
-        {
+        switch (faculty_number) {
             case "5":   // TUM School of Education
                 Campus = "C";
                 break;
