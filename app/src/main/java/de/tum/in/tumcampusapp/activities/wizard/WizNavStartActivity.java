@@ -237,10 +237,9 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
         }
 
-        if (Campus != "0") {
+        if ( "0".equals(Campus) ) {
             Utils.setSetting(getApplicationContext(), Const.DEFAULT_CAMPUS, Campus);
         }
-        return;
     }
 
     /**
