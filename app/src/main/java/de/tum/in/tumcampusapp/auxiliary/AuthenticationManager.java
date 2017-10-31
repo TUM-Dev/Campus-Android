@@ -184,7 +184,7 @@ public class AuthenticationManager {
         }
 
         try {
-            DeviceRegister dr = new DeviceRegister(mContext, publicKey, member);
+            DeviceRegister dr = DeviceRegister.Companion.getDeviceRegister(mContext, publicKey, member);
 
             // Upload public key to the server
             TUMCabeClient.getInstance(mContext)
@@ -220,7 +220,7 @@ public class AuthenticationManager {
             @Override
             public void run() {
                 //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
-                TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.SECRET_UPLOAD, AuthenticationManager.this.mContext, false);
+                TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getSECRET_UPLOAD(), AuthenticationManager.this.mContext, false);
                 requestSavePublicKey.setParameter("pToken", Utils.getSetting(AuthenticationManager.this.mContext, Const.ACCESS_TOKEN, ""));
                 requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
                 requestSavePublicKey.fetch();

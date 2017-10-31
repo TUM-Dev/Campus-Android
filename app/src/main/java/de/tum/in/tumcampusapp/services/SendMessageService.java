@@ -75,7 +75,7 @@ public class SendMessageService extends IntentService {
                     Intent i = new Intent("chat-message-received");
                     Bundle extras = new Bundle();
                     extras.putSerializable("GCMChat", new GCMChat(message.getRoom(), message.getMember()
-                                                                                            .getId()));
+                                                                                            .getId(), 0));
                     i.putExtras(extras);
                     LocalBroadcastManager.getInstance(this)
                                          .sendBroadcast(i);

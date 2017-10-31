@@ -126,7 +126,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        final TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_DETAILS, this, true);
+        final TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getPERSON_DETAILS(), this, true);
         request.setParameter("pIdentNr", id);
 
         new Thread(() -> {

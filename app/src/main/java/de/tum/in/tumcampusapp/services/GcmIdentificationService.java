@@ -157,7 +157,7 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
         //Try to create the message
         DeviceUploadGcmToken dgcm;
         try {
-            dgcm = new DeviceUploadGcmToken(mContext, token);
+            dgcm = DeviceUploadGcmToken.Companion.getDeviceUploadGcmToken(mContext, token);
         } catch (NoPrivateKey noPrivateKey) {
             return;
         }

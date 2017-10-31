@@ -87,7 +87,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             }
         } else {
             // Get users full name
-            TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<>(TUMOnlineConst.IDENTITY, this, true);
+            TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getIDENTITY(), this, true);
             Optional<IdentitySet> id = request2.fetch();
             if (!id.isPresent()) {
                 return R.string.no_rights_to_access_id;
@@ -142,7 +142,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
      */
     @Nullable
     private String getUserPIdentNr(String name) {
-        TUMOnlineRequest<PersonList> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_SEARCH, this, true);
+        TUMOnlineRequest<PersonList> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getPERSON_SEARCH(), this, true);
         request.setParameter("pSuche", name);
 
         Optional<PersonList> result = request.fetch();

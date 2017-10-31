@@ -91,8 +91,8 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
      */
     void showStation(StationResult stationResult) {
         Intent intent = new Intent(this, TransportationDetailsActivity.class);
-        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION, stationResult.station);
-        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, stationResult.id);
+        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION, stationResult.getStation());
+        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, stationResult.getId());
         startActivity(intent);
     }
 

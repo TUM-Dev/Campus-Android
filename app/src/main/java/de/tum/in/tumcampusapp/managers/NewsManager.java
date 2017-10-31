@@ -203,8 +203,8 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     void replaceIntoDb(News n) {
         db.execSQL("REPLACE INTO news (id, src, title, link, image, date, " +
                    "created, dismissed) VALUES (?, ?, ?, ?, ?, ?, ?, 0)",
-                   new String[]{n.id, n.src, n.title, n.link, n.image,
-                                Utils.getDateTimeString(n.date), Utils.getDateTimeString(n.created)});
+                   new String[]{n.getId(), n.getSrc(), n.getTitle(), n.getLink(), n.getImage(),
+                                Utils.getDateTimeString(n.getDate()), Utils.getDateTimeString(n.getCreated())});
     }
 
     /**

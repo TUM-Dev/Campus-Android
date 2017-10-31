@@ -256,10 +256,10 @@ public class ChatMessageManager extends AbstractManager {
         List<ChatMessage> messages;
         if (messageId == -1) {
             messages = TUMCabeClient.getInstance(mContext)
-                                    .getNewMessages(mChatRoom, new ChatVerification(mContext, member));
+                                    .getNewMessages(mChatRoom, ChatVerification.Companion.getChatVerification(mContext, member));
         } else {
             messages = TUMCabeClient.getInstance(mContext)
-                                    .getMessages(mChatRoom, messageId, new ChatVerification(mContext, member));
+                                    .getMessages(mChatRoom, messageId, ChatVerification.Companion.getChatVerification(mContext, member));
         }
         replaceInto(messages);
         return getUnread();

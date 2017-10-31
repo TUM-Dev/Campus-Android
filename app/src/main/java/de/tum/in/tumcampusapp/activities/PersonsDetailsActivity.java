@@ -56,7 +56,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     private MenuItem mContact;
 
     public PersonsDetailsActivity() {
-        super(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_personsdetails);
+        super(TUMOnlineConst.Companion.getPERSON_DETAILS(), R.layout.activity_personsdetails);
     }
 
     private static void addContact(Collection<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
@@ -180,11 +180,11 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         // get the right gender
         if (employee.getGender() != null
             && employee.getGender()
-                       .equals(Person.MALE)) {
+                       .equals(Person.Companion.getMALE())) {
             contentText.append(getString(R.string.mr) + ' ');
         } else if (employee.getGender() != null
                    && employee.getGender()
-                              .equals(Person.FEMALE)) {
+                              .equals(Person.Companion.getFEMALE())) {
             contentText.append(getString(R.string.mrs) + ' ');
         }
 

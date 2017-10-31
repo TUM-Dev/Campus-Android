@@ -54,7 +54,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
     private OrgItemList result;
 
     public OrganisationActivity() {
-        super(TUMOnlineConst.ORG_TREE, R.layout.activity_organisation);
+        super(TUMOnlineConst.Companion.getORG_TREE(), R.layout.activity_organisation);
     }
 
     @Override

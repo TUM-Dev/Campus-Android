@@ -72,7 +72,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private WeekView mWeekView;
 
     public CalendarActivity() {
-        super(TUMOnlineConst.CALENDER, R.layout.activity_calendar);
+        super(TUMOnlineConst.Companion.getCALENDER(), R.layout.activity_calendar);
     }
 
     @Override
