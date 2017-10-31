@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.google.common.base.Optional;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +67,13 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         List<StationResult> stationResults = new ArrayList<>(stationCursor.getCount());
         if (stationCursor.moveToFirst()) {
             do {
-                String jsonStationResult = stationCursor.getString(stationCursor.getColumnIndex(Const.NAME_COLUMN));
-                StationResult stationResult = gson.fromJson(jsonStationResult, StationResult.class);
-                stationResults.add(stationResult);
+                try {
+                    String jsonStationResult = stationCursor.getString(stationCursor.getColumnIndex(Const.NAME_COLUMN));
+                    StationResult stationResult = gson.fromJson(jsonStationResult, StationResult.class);
+                    stationResults.add(stationResult);
+                }catch (JsonSyntaxException ignore) {
+                    //We don't care about deserialization errors
+                }
             } while (stationCursor.moveToNext());
         }
         return stationResults;
