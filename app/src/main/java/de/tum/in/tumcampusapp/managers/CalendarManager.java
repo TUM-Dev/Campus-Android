@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Optional;
@@ -48,15 +47,15 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS room_locations ("
-                + "title VARCHAR PRIMARY KEY, latitude VARCHAR, longitude VARCHAR)");
+                   + "title VARCHAR PRIMARY KEY, latitude VARCHAR, longitude VARCHAR)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS calendar ("
-                + "nr VARCHAR PRIMARY KEY, status VARCHAR, url VARCHAR, "
-                + "title VARCHAR, description VARCHAR, dtstart VARCHAR, dtend VARCHAR, "
-                + "location VARCHAR REFERENCES room_locations)");
+                   + "nr VARCHAR PRIMARY KEY, status VARCHAR, url VARCHAR, "
+                   + "title VARCHAR, description VARCHAR, dtstart VARCHAR, dtend VARCHAR, "
+                   + "location VARCHAR REFERENCES room_locations)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS widgets_timetable_blacklist ("
-                + "widget_id INTEGER, lecture_title VARCHAR, PRIMARY KEY (widget_id, lecture_title))");
+                   + "widget_id INTEGER, lecture_title VARCHAR, PRIMARY KEY (widget_id, lecture_title))");
     }
 
     /**
@@ -81,62 +80,63 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
     }
 
     private static void addEvents(Context c, Uri uri) {
-        if (ActivityCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         // Get ID
         ContentResolver contentResolver = c.getContentResolver();
-        Cursor cursor = contentResolver.query(uri, PROJECTION, null, null, null);
         String id = "0";
-        while (cursor.moveToNext()) {
-            id = cursor.getString(0);
+        try (Cursor cursor = contentResolver.query(uri, PROJECTION, null, null, null)) {
+            while (cursor.moveToNext()) {
+                id = cursor.getString(0);
+            }
         }
-        cursor.close();
 
         CalendarManager calendarManager = new CalendarManager(c);
         Date dtstart;
         Date dtend;
 
         // Get all calendar items from database
-        cursor = calendarManager.getAllFromDb();
-        while (cursor.moveToNext()) {
-            // Get each table row
-            //final String status = cursor.getString(1);
-            final String title = cursor.getString(3);
-            final String description = cursor.getString(4);
-            final String strStart = cursor.getString(5);
-            final String strEnd = cursor.getString(6);
-            final String location = cursor.getString(7);
+        try (Cursor cursor = calendarManager.getAllFromDb()) {
+            while (cursor.moveToNext()) {
+                // Get each table row
+                //final String status = cursor.getString(1);
+                final String title = cursor.getString(3);
+                final String description = cursor.getString(4);
+                final String strStart = cursor.getString(5);
+                final String strEnd = cursor.getString(6);
+                final String location = cursor.getString(7);
 
-            try {
-                // Get the correct date and time from database
-                dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strStart);
-                dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strEnd);
+                try {
+                    // Get the correct date and time from database
+                    dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strStart);
+                    dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strEnd);
 
-                Calendar beginTime = Calendar.getInstance();
-                beginTime.setTime(dtstart);
-                Calendar endTime = Calendar.getInstance();
-                endTime.setTime(dtend);
+                    Calendar beginTime = Calendar.getInstance();
+                    beginTime.setTime(dtstart);
+                    Calendar endTime = Calendar.getInstance();
+                    endTime.setTime(dtend);
 
-                // Get start and end time
-                long startMillis = beginTime.getTimeInMillis();
-                long endMillis = endTime.getTimeInMillis();
+                    // Get start and end time
+                    long startMillis = beginTime.getTimeInMillis();
+                    long endMillis = endTime.getTimeInMillis();
 
-                ContentValues values = new ContentValues();
+                    ContentValues values = new ContentValues();
 
-                // Put the received values into a contentResolver to
-                // transmit the to Google Calendar
-                values.put(CalendarContract.Events.DTSTART, startMillis);
-                values.put(CalendarContract.Events.DTEND, endMillis);
-                values.put(CalendarContract.Events.TITLE, title);
-                values.put(CalendarContract.Events.DESCRIPTION, description);
-                values.put(CalendarContract.Events.CALENDAR_ID, id);
-                values.put(CalendarContract.Events.EVENT_LOCATION, location);
-                values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
-                contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
+                    // Put the received values into a contentResolver to
+                    // transmit the to Google Calendar
+                    values.put(CalendarContract.Events.DTSTART, startMillis);
+                    values.put(CalendarContract.Events.DTEND, endMillis);
+                    values.put(CalendarContract.Events.TITLE, title);
+                    values.put(CalendarContract.Events.DESCRIPTION, description);
+                    values.put(CalendarContract.Events.CALENDAR_ID, id);
+                    values.put(CalendarContract.Events.EVENT_LOCATION, location);
+                    values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
+                    contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
 
-            } catch (ParseException e) {
-                Utils.log(e);
+                } catch (ParseException e) {
+                    Utils.log(e);
+                }
             }
         }
     }
@@ -147,7 +147,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @return Cursor with all calendar events. Columns are
      * (nr, status, url, title, description, dtstart, dtend, location)
      */
-    Cursor getAllFromDb() {
+    private Cursor getAllFromDb() {
         return db.rawQuery("SELECT * FROM calendar WHERE status!='CANCEL'", null);
     }
 
@@ -174,13 +174,13 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         String to = Utils.getDateTimeString(calendar.getTime());
 
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM calendar c WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' " +
-                "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title) " +
-                "ORDER BY dtstart ASC", new String[]{from, to, String.valueOf(widgetId)});
-        while (cursor.moveToNext()) {
-            calendarEvents.add(new IntegratedCalendarEvent(cursor));
+        try (Cursor cursor = db.rawQuery("SELECT * FROM calendar c WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' " +
+                                         "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title) " +
+                                         "ORDER BY dtstart ASC", new String[]{from, to, String.valueOf(widgetId)})) {
+            while (cursor.moveToNext()) {
+                calendarEvents.add(new IntegratedCalendarEvent(cursor));
+            }
         }
-        cursor.close();
         return calendarEvents;
     }
 
@@ -200,11 +200,11 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     public boolean hasLectures() {
         boolean result = false;
-        Cursor c = db.rawQuery("SELECT nr FROM calendar", null);
-        if (c.moveToNext()) {
-            result = true;
+        try (Cursor c = db.rawQuery("SELECT nr FROM calendar", null)) {
+            if (c.moveToNext()) {
+                result = true;
+            }
         }
-        c.close();
         return result;
     }
 
@@ -229,7 +229,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     public void deleteLectureFromBlacklist(int widgetId, String lecture) {
         db.delete("widgets_timetable_blacklist", "widget_id = ? AND lecture_title = ?",
-                new String[]{String.valueOf(widgetId), lecture});
+                  new String[]{String.valueOf(widgetId), lecture});
     }
 
     /**
@@ -240,8 +240,8 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     public Cursor getLecturesFromWidget(int widgetId) {
         return db.rawQuery("SELECT DISTINCT c.ROWID as _id, c.title, EXISTS (" +
-                "SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title" +
-                ") as is_on_blacklist from calendar c GROUP BY c.title", new String[]{String.valueOf(widgetId)});
+                           "SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title" +
+                           ") as is_on_blacklist from calendar c GROUP BY c.title", new String[]{String.valueOf(widgetId)});
     }
 
     public void importCalendar(CalendarRowSet myCalendarList) {
@@ -267,24 +267,26 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
     /**
      * Removes all cache items
      */
-    public void removeCache() {
+    private void removeCache() {
         db.execSQL("DELETE FROM calendar");
     }
 
     void replaceIntoDb(CalendarRow row) {
-        if (row.getNr().isEmpty()) {
+        if (row.getNr()
+               .isEmpty()) {
             throw new IllegalArgumentException("Invalid id.");
         }
 
-        if (row.getTitle().isEmpty()) {
+        if (row.getTitle()
+               .isEmpty()) {
             throw new IllegalArgumentException("Invalid lecture Title.");
         }
 
         db.execSQL("REPLACE INTO calendar (nr, status, url, title, "
-                        + "description, dtstart, dtend, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                new String[]{row.getNr(), row.getStatus(), row.getUrl(),
-                        row.getTitle(), row.getDescription(),
-                        row.getDtstart(), row.getDtend(), row.getLocation()});
+                   + "description, dtstart, dtend, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                   new String[]{row.getNr(), row.getStatus(), row.getUrl(),
+                                row.getTitle(), row.getDescription(),
+                                row.getDtstart(), row.getDtend(), row.getLocation()});
     }
 
     /**
@@ -292,27 +294,27 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     public Cursor getNextCalendarItem() {
         return db.rawQuery("SELECT title, dtstart, dtend, location FROM calendar JOIN " +
-                "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
-                "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
-                "ORDER BY dtend, dtstart LIMIT 4", null);
+                           "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
+                           "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
+                           "ORDER BY dtend, dtstart LIMIT 4", null);
     }
 
     /**
      * Gets the coordinates of the next lecture or the current running lecture,
      * if it started during the last 30 minutes
      */
-    public Geo getNextCalendarItemGeo() {
-        Cursor cur = db.rawQuery("SELECT r.latitude, r.longitude " +
-                "FROM calendar c, room_locations r " +
-                "WHERE datetime('now', 'localtime') < datetime(c.dtstart, '+1800 seconds') AND " +
-                "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!='CANCEL'" +
-                "ORDER BY dtstart LIMIT 1", null);
-
-        Geo geo = null;
-        if (cur.moveToFirst()) {
-            geo = new Geo(cur.getDouble(0), cur.getDouble(1));
+    Geo getNextCalendarItemGeo() {
+        Geo geo;
+        try (Cursor cur = db.rawQuery("SELECT r.latitude, r.longitude " +
+                                      "FROM calendar c, room_locations r " +
+                                      "WHERE datetime('now', 'localtime') < datetime(c.dtstart, '+1800 seconds') AND " +
+                                      "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!='CANCEL'" +
+                                      "ORDER BY dtstart LIMIT 1", null)) {
+            geo = null;
+            if (cur.moveToFirst()) {
+                geo = new Geo(cur.getDouble(0), cur.getDouble(1));
+            }
         }
-        cur.close();
         return geo;
     }
 
@@ -343,33 +345,33 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             LocationManager locationManager = new LocationManager(c);
             SQLiteDatabase db = getDb(c);
 
-            Cursor cur = db.rawQuery("SELECT c.location " +
-                    "FROM calendar c LEFT JOIN room_locations r ON " +
-                    "c.location=r.title " +
-                    "WHERE r.latitude IS NULL " +
-                    "GROUP BY c.location", null);
+            try (Cursor cur = db.rawQuery("SELECT c.location " +
+                                          "FROM calendar c LEFT JOIN room_locations r ON " +
+                                          "c.location=r.title " +
+                                          "WHERE r.latitude IS NULL " +
+                                          "GROUP BY c.location", null)) {
 
-            // Retrieve geo from room name
-            if (cur.moveToFirst()) {
-                do {
-                    String location = cur.getString(0);
-                    if (location == null || location.isEmpty()) {
-                        continue;
-                    }
-                    Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
-                    if (geo.isPresent()) {
-                        Utils.logv("inserted " + location + ' ' + geo);
-                        db.execSQL("REPLACE INTO room_locations (title, latitude, longitude) VALUES (?, ?, ?)",
-                                new String[]{location, geo.get().getLatitude(), geo.get().getLongitude()});
-                    }
+                // Retrieve geo from room name
+                if (cur.moveToFirst()) {
+                    do {
+                        String location = cur.getString(0);
+                        if (location == null || location.isEmpty()) {
+                            continue;
+                        }
+                        Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
+                        if (geo.isPresent()) {
+                            Utils.logv("inserted " + location + ' ' + geo);
+                            db.execSQL("REPLACE INTO room_locations (title, latitude, longitude) VALUES (?, ?, ?)",
+                                       new String[]{location, geo.get().getLatitude(), geo.get().getLongitude()});
+                        }
 
-                } while (cur.moveToNext());
+                    } while (cur.moveToNext());
+                }
             }
-            cur.close();
 
             // Do sync of google calendar if necessary
             boolean syncCalendar = Utils.getInternalSettingBool(c, Const.SYNC_CALENDAR, false)
-                    && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED;
+                                   && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED;
             if (syncCalendar && new SyncManager(c).needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
                 syncCalendar(c);
                 new SyncManager(c).replaceIntoDb(Const.SYNC_CALENDAR);
@@ -378,12 +380,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
         @Override
         protected void onHandleIntent(Intent intent) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    loadGeo(QueryLocationsService.this);
-                }
-            }).start();
+            new Thread(() -> loadGeo(QueryLocationsService.this)).start();
         }
     }
 }

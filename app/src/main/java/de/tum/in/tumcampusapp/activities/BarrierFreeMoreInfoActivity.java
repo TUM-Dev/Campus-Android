@@ -20,20 +20,20 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class BarrierFreeMoreInfoActivity
         extends ActivityForLoadingInBackground<Void, List<BarrierfreeMoreInfo>>
-        implements AdapterView.OnItemClickListener{
+        implements AdapterView.OnItemClickListener {
 
     public StickyListHeadersListView listview;
     public List<BarrierfreeMoreInfo> infos;
     public BarrierfreeMoreInfoAdapter adapter;
 
-    public BarrierFreeMoreInfoActivity(){
+    public BarrierFreeMoreInfoActivity() {
         super(R.layout.activity_barrier_free_list_info);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listview = (StickyListHeadersListView) findViewById(R.id.activity_barrier_info_list_view);
+        listview = findViewById(R.id.activity_barrier_info_list_view);
 
         startLoading();
     }
@@ -57,7 +57,8 @@ public class BarrierFreeMoreInfoActivity
         showLoadingStart();
         List<BarrierfreeMoreInfo> result = new ArrayList<>();
         try {
-            result = TUMCabeClient.getInstance(this).getMoreInfoList();
+            result = TUMCabeClient.getInstance(this)
+                                  .getMoreInfoList();
         } catch (IOException e) {
             Utils.log(e);
             return result;
@@ -67,7 +68,8 @@ public class BarrierFreeMoreInfoActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String url = infos.get(position).getUrl();
+        String url = infos.get(position)
+                          .getUrl();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         startActivity(intent);

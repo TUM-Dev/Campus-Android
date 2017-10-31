@@ -70,7 +70,8 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * @param force force reload
      */
     void requestFetch(boolean force) {
-        String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
+        String accessToken = PreferenceManager.getDefaultSharedPreferences(this)
+                                              .getString(Const.ACCESS_TOKEN, null);
         if (accessToken == null) {
             showNoTokenLayout();
             return;
@@ -123,7 +124,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     }
 
     @Override
-    public void onNoDataToShow(){
+    public void onNoDataToShow() {
         showError(R.string.no_data_to_show);
     }
 }

@@ -21,7 +21,6 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
  */
 public class SendMessageService extends IntentService {
 
-
     public static final int MAX_SEND_TRIES = 5;
     /**
      * Interval in milliseconds to check for current lectures
@@ -56,25 +55,30 @@ public class SendMessageService extends IntentService {
                     // Send the message to the server
                     ChatMessage createdMessage;
                     if (message.getId() == 0) { //If the id is zero then its an new entry otherwise try to update it
-                        createdMessage = TUMCabeClient.getInstance(this).sendMessage(message.getRoom(), message);
+                        createdMessage = TUMCabeClient.getInstance(this)
+                                                      .sendMessage(message.getRoom(), message);
                         Utils.logv("successfully sent message: " + createdMessage.getText());
                     } else {
-                        createdMessage = TUMCabeClient.getInstance(this).updateMessage(message.getRoom(), message);
+                        createdMessage = TUMCabeClient.getInstance(this)
+                                                      .updateMessage(message.getRoom(), message);
                         Utils.logv("successfully updated message: " + createdMessage.getText());
                     }
 
                     //Update the status on the ui
                     createdMessage.setStatus(ChatMessage.STATUS_SENT);
                     ChatMessageManager messageManager = new ChatMessageManager(this, message.getRoom());
-                    messageManager.replaceInto(createdMessage, message.getMember().getId());
+                    messageManager.replaceInto(createdMessage, message.getMember()
+                                                                      .getId());
                     messageManager.removeFromUnsent(message);
 
                     // Send broadcast to eventually open ChatActivity
                     Intent i = new Intent("chat-message-received");
                     Bundle extras = new Bundle();
-                    extras.putSerializable("GCMChat", new GCMChat(message.getRoom(), message.getMember().getId()));
+                    extras.putSerializable("GCMChat", new GCMChat(message.getRoom(), message.getMember()
+                                                                                            .getId(), 0));
                     i.putExtras(extras);
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(i);
+                    LocalBroadcastManager.getInstance(this)
+                                         .sendBroadcast(i);
                 }
 
                 //Exit the loop

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
 
     <!-- The toolbar aka SupportActionBar -->
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
     <include
         layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"/>
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/padding_default" >
+            android:padding="@dimen/padding_default">
 
             <ImageView
                 android:id="@+id/ivImage"
@@ -32,7 +32,7 @@
                 android:contentDescription="@string/tum_logo"
                 android:paddingBottom="10dp"
                 android:scaleType="fitXY"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher"/>
 
             <TextView
                 android:id="@+id/tvDetails1"
@@ -50,7 +50,7 @@
                 android:autoLink="all"
                 android:scrollHorizontally="false"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/semilarge_text_size" />
+                android:textSize="@dimen/semilarge_text_size"/>
 
             <TextView
                 android:id="@+id/tvDetails3"
@@ -59,7 +59,7 @@
                 android:autoLink="all"
                 android:scrollHorizontally="false"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/semilarge_text_size" />
+                android:textSize="@dimen/semilarge_text_size"/>
 
             <TextView
                 android:id="@+id/tvDetails4"
@@ -68,7 +68,7 @@
                 android:autoLink="none"
                 android:scrollHorizontally="false"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/semilarge_text_size" />
+                android:textSize="@dimen/semilarge_text_size"/>
         </LinearLayout>
     </ScrollView>
 

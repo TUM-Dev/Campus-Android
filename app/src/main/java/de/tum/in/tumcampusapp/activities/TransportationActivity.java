@@ -50,8 +50,9 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         listViewResults.setOnItemClickListener(this);
 
         // Initialize stations adapter
-        Cursor stationCursor = recentsManager.getAllFromDb();
-        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAllStationResults(stationCursor));
+        try (Cursor stationCursor = recentsManager.getAllFromDb()) {
+            adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAllStationResults(stationCursor));
+        }
 
         if (adapterStations.getCount() == 0) {
             openSearch();
@@ -90,8 +91,8 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
      */
     void showStation(StationResult stationResult) {
         Intent intent = new Intent(this, TransportationDetailsActivity.class);
-        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION, stationResult.station);
-        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, stationResult.id);
+        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION, stationResult.getStation());
+        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, stationResult.getId());
         startActivity(intent);
     }
 
@@ -137,32 +138,33 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         if (!possibleStationCursor.isPresent()) {
             return;
         }
-        Cursor stationCursor = possibleStationCursor.get();
+        try (Cursor stationCursor = possibleStationCursor.get()) {
 
-        showLoadingEnded();
+            showLoadingEnded();
 
-        // mQuery is not null if it was a real search
-        // If there is exactly one station, open results directly
-        if (stationCursor.getCount() == 1 && mQuery != null) {
-            StationResult stationResult = getAllStationResults(stationCursor).get(0);
-            showStation(stationResult);
-            return;
-        } else if (stationCursor.getCount() == 0) {
-            // When stationCursor is a MatrixCursor the result comes from querying a station name
-            if (stationCursor instanceof MatrixCursor) {
-                // So show no results found
-                listViewResults.setAdapter(new NoResultsAdapter(this));
-                listViewResults.requestFocus();
-            } else {
-                // if the loading came from the user canceling search
-                // and there are no recents to show close activity
-                finish();
+            // mQuery is not null if it was a real search
+            // If there is exactly one station, open results directly
+            if (stationCursor.getCount() == 1 && mQuery != null) {
+                StationResult stationResult = getAllStationResults(stationCursor).get(0);
+                showStation(stationResult);
+                return;
+            } else if (stationCursor.getCount() == 0) {
+                // When stationCursor is a MatrixCursor the result comes from querying a station name
+                if (stationCursor instanceof MatrixCursor) {
+                    // So show no results found
+                    listViewResults.setAdapter(new NoResultsAdapter(this));
+                    listViewResults.requestFocus();
+                } else {
+                    // if the loading came from the user canceling search
+                    // and there are no recents to show close activity
+                    finish();
+                }
+                return;
             }
-            return;
-        }
 
-        adapterStations.clear();
-        adapterStations.addAll(getAllStationResults(stationCursor));
+            adapterStations.clear();
+            adapterStations.addAll(getAllStationResults(stationCursor));
+        }
         adapterStations.notifyDataSetChanged();
         listViewResults.setAdapter(adapterStations);
         listViewResults.requestFocus();

@@ -16,10 +16,10 @@ import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.MainActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMUpdate;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 
 public class Update extends GenericNotification {
 
@@ -41,13 +41,14 @@ public class Update extends GenericNotification {
         this.info = getNotificationFromServer();
 
         //if (BuildConfig.VERSION_CODE < data.packageVersion) {
-            //TODO self deactivate
+        //TODO self deactivate
         //}
     }
 
     private GCMNotification getNotificationFromServer() {
         try {
-            return TUMCabeClient.getInstance(this.context).getNotification(this.notification);
+            return TUMCabeClient.getInstance(this.context)
+                                .getNotification(this.notification);
         } catch (IOException e) {
             Utils.log(e);
             return null;
@@ -56,7 +57,7 @@ public class Update extends GenericNotification {
 
     @Override
     public Notification getNotification() {
-        if (data.sdkVersion > Build.VERSION.SDK_INT || BuildConfig.VERSION_CODE >= data.packageVersion) {
+        if (data.getSdkVersion() > Build.VERSION.SDK_INT || BuildConfig.VERSION_CODE >= data.getPackageVersion()) {
             return null;
         }
 
@@ -67,7 +68,7 @@ public class Update extends GenericNotification {
 
         final String description;
         if (info.getDescription() == null || "".equals(info.getDescription())) {
-            description = String.format(context.getString(R.string.update_notification_description), data.releaseDate);
+            description = String.format(context.getString(R.string.update_notification_description), data.getReleaseDate());
         } else {
             description = info.getDescription();
         }

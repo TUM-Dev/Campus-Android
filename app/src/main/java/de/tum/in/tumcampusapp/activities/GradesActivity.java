@@ -52,7 +52,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     private boolean isFetched;
 
     public GradesActivity() {
-        super(TUMOnlineConst.EXAMS, R.layout.activity_grades);
+        super(TUMOnlineConst.Companion.getEXAMS(), R.layout.activity_grades);
     }
 
     /**
@@ -68,9 +68,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         // Build data string
         for (int i = 0; i < GRADES.length; i++) {
             datas.append("['")
-                    .append(GRADES[i]).append("', ")
-                    .append(gradeDistribution.get(GRADES[i]))
-                    .append(']');
+                 .append(GRADES[i])
+                 .append("', ")
+                 .append(gradeDistribution.get(GRADES[i]))
+                 .append(']');
 
             if (i != GRADES.length - 1) {
                 datas.append(',');
@@ -79,30 +80,31 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
         // Build content String
         return "<html>"
-                + "  <head>"
-                + "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
-                + "    <script type=\"text/javascript\">"
-                + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
-                + "      google.setOnLoadCallback(drawChart);"
-                + "      function drawChart() {"
-                + "        var data = google.visualization.arrayToDataTable(["
-                + "          ['Grade', 'Quantity'],"
-                + datas
-                + "        ]);"
-                + "        var options = {"
-                + "          title: 'Grades of "
-                + filteredExamList.get(0).getProgramID()
-                + "',"
-                // + " 	     legend: {position: 'none'}"
-                + "        };"
-                + "        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));"
-                + "        chart.draw(data, options);"
-                + "      }"
-                + "    </script>"
-                + "  </head>"
-                + "  <body>"
-                + "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
-                + "  </body>" + "</html>";
+               + "  <head>"
+               + "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
+               + "    <script type=\"text/javascript\">"
+               + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
+               + "      google.setOnLoadCallback(drawChart);"
+               + "      function drawChart() {"
+               + "        var data = google.visualization.arrayToDataTable(["
+               + "          ['Grade', 'Quantity'],"
+               + datas
+               + "        ]);"
+               + "        var options = {"
+               + "          title: 'Grades of "
+               + filteredExamList.get(0)
+                                 .getProgramID()
+               + "',"
+               // + " 	     legend: {position: 'none'}"
+               + "        };"
+               + "        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));"
+               + "        chart.draw(data, options);"
+               + "      }"
+               + "    </script>"
+               + "  </head>"
+               + "  <body>"
+               + "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
+               + "  </body>" + "</html>";
     }
 
     /**
@@ -118,9 +120,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         // build data String
         for (int i = 0; i < GRADES.length; i++) {
             datas.append("['")
-                    .append(GRADES[i]).append("', ")
-                    .append(gradeDistrubution.get(GRADES[i]))
-                    .append(']');
+                 .append(GRADES[i])
+                 .append("', ")
+                 .append(gradeDistrubution.get(GRADES[i]))
+                 .append(']');
             if (i != GRADES.length - 1) {
                 datas.append(',');
             }
@@ -129,32 +132,33 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         // build content String
 
         return "<html>"
-                + "  <head>"
-                + "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
-                + "    <script type=\"text/javascript\">"
-                + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
-                + "      google.setOnLoadCallback(drawChart);"
-                + "      function drawChart() {"
-                + "        var data = google.visualization.arrayToDataTable(["
-                + "          ['Grade', 'Quantity'],"
-                + datas
-                + "        ]);"
-                + "        var options = {"
-                + "          title: 'Grades of "
-                + filteredExamList.get(0).
+               + "  <head>"
+               + "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
+               + "    <script type=\"text/javascript\">"
+               + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
+               + "      google.setOnLoadCallback(drawChart);"
+               + "      function drawChart() {"
+               + "        var data = google.visualization.arrayToDataTable(["
+               + "          ['Grade', 'Quantity'],"
+               + datas
+               + "        ]);"
+               + "        var options = {"
+               + "          title: 'Grades of "
+               + filteredExamList.get(0)
+                                 .
 
-                getProgramID()
+                                         getProgramID()
 
-                + "'"
-                + "        };"
-                + "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
-                + "        chart.draw(data, options);"
-                + "      }"
-                + "    </script>"
-                + "  </head>"
-                + "  <body>"
-                + "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
-                + "  </body>" + "</html>";
+               + "'"
+               + "        };"
+               + "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
+               + "        chart.draw(data, options);"
+               + "      }"
+               + "    </script>"
+               + "  </head>"
+               + "  <body>"
+               + "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
+               + "  </body>" + "</html>";
     }
 
     /**
@@ -171,8 +175,9 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         for (Exam item : filteredExamList) {
             creditSum += Double.valueOf(item.getCredits());
             try {
-                weightedGrade += format.parse(item.getGrade()).doubleValue()
-                        * Double.valueOf(item.getCredits());
+                weightedGrade += format.parse(item.getGrade())
+                                       .doubleValue()
+                                 * Double.valueOf(item.getCredits());
             } catch (NumberFormatException | ParseException e) {
                 Utils.log(e);
             }
@@ -211,8 +216,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         filters.add(getString(R.string.all_programs));
 
         // get all program ids from the results
-        for (int i = 0; i < examList.getExams().size(); i++) {
-            String item = examList.getExams().get(i).getProgramID();
+        for (int i = 0; i < examList.getExams()
+                                    .size(); i++) {
+            String item = examList.getExams()
+                                  .get(i)
+                                  .getProgramID();
             if (filters.indexOf(item) == -1) {
                 filters.add(item);
             }
@@ -229,7 +237,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 
-                String filter = spFilter.getItemAtPosition(arg2).toString();
+                String filter = spFilter.getItemAtPosition(arg2)
+                                        .toString();
                 lastChoice = arg2;
 
                 if (filter.equals(getString(R.string.all_programs))) {
@@ -240,8 +249,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                     averageTx.setVisibility(View.GONE);
                     // convert exam list
                     List<Exam> convertedList = new ArrayList<>();
-                    for (int i = 0; i < examList.getExams().size(); i++) {
-                        Exam item = examList.getExams().get(i);
+                    for (int i = 0; i < examList.getExams()
+                                                .size(); i++) {
+                        Exam item = examList.getExams()
+                                            .get(i);
                         convertedList.add(item);
                     }
 
@@ -252,9 +263,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                 } else {
                     // do filtering according to selected program
                     List<Exam> filteredExamList = new ArrayList<>();
-                    for (int i = 0; i < examList.getExams().size(); i++) {
-                        Exam item = examList.getExams().get(i);
-                        if (item.getProgramID().equals(filter)) {
+                    for (int i = 0; i < examList.getExams()
+                                                .size(); i++) {
+                        Exam item = examList.getExams()
+                                            .get(i);
+                        if (item.getProgramID()
+                                .equals(filter)) {
                             filteredExamList.add(item);
                         }
 
@@ -269,7 +283,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                     averageGrade = Math.round(calculateAverageGrade(filteredExamList) * 1000.0) / 1000.0;
 
                     averageTx.setText(String.format("%s: %s",
-                            getResources().getString(R.string.average_grade), averageGrade));
+                                                    getResources().getString(R.string.average_grade), averageGrade));
                     averageTx.setVisibility(View.VISIBLE);
                 }
             }
@@ -279,7 +293,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                 // select ALL
                 spFilter.setSelection(0);
                 lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this,
-                        examList.getExams()));
+                                                        examList.getExams()));
             }
         });
     }
@@ -288,10 +302,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        lvGrades = (ListView) findViewById(R.id.lstGrades);
-        spFilter = (Spinner) findViewById(R.id.spFilter);
-        averageTx = (TextView) findViewById(R.id.avgGrade);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        lvGrades = findViewById(R.id.lstGrades);
+        spFilter = findViewById(R.id.spFilter);
+        averageTx = findViewById(R.id.avgGrade);
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.color_primary, R.color.tum_A100, R.color.tum_A200);
 
@@ -322,7 +336,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     public void onFetch(ExamList rawResponse) {
         examList = rawResponse;
 
-
         // initialize the program choice spinner
         initSpinner();
 
@@ -346,7 +359,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     }
 
     @Override
-    public void onNoDataToShow(){
+    public void onNoDataToShow() {
         showError(R.string.no_grades);
     }
 

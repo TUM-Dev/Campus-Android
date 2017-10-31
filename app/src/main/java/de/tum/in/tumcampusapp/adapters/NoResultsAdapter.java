@@ -13,10 +13,10 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  */
 public class NoResultsAdapter extends ArrayAdapter<String> implements StickyListHeadersAdapter {
 
-	// constructor
-	public NoResultsAdapter(Context context) {
+    // constructor
+    public NoResultsAdapter(Context context) {
         super(context, R.layout.listview_simple_item_center, new String[]{context.getString(R.string.no_search_result)});
-	}
+    }
 
     // Generate header view
     @Override

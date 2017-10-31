@@ -69,9 +69,12 @@ public class RoomFinderDetailsActivity
         net = new NetUtils(this);
 
         mImage = ImageViewTouchFragment.newInstance();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mImage).commit();
+        getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.fragment_container, mImage)
+                                   .commit();
 
-        room = (RoomFinderRoom) getIntent().getExtras().getSerializable(EXTRA_ROOM_INFO);
+        room = (RoomFinderRoom) getIntent().getExtras()
+                                           .getSerializable(EXTRA_ROOM_INFO);
         if (room == null) {
             Utils.showToast(this, "No room information passed");
             this.finish();
@@ -89,7 +92,8 @@ public class RoomFinderDetailsActivity
         MenuItem timetable = menu.findItem(R.id.action_room_timetable);
         timetable.setVisible(infoLoaded);
         timetable.setIcon(fragment == null ? R.drawable.ic_room_timetable : R.drawable.ic_action_map);
-        menu.findItem(R.id.action_directions).setVisible(infoLoaded && fragment == null);
+        menu.findItem(R.id.action_directions)
+            .setVisible(infoLoaded && fragment == null);
         return true;
     }
 
@@ -142,19 +146,25 @@ public class RoomFinderDetailsActivity
         CharSequence[] list = new CharSequence[mapsList.size()];
         int curPos = 0;
         for (int i = 0; i < mapsList.size(); i++) {
-            list[i] = mapsList.get(i).getDescription();
-            if (mapsList.get(i).getMap_id().equals(mapId)) {
+            list[i] = mapsList.get(i)
+                              .getDescription();
+            if (mapsList.get(i)
+                        .getMap_id()
+                        .equals(mapId)) {
                 curPos = i;
             }
         }
-        new AlertDialog.Builder(this).setSingleChoiceItems(list, curPos, this).show();
+        new AlertDialog.Builder(this).setSingleChoiceItems(list, curPos, this)
+                                     .show();
     }
 
     @Override
     public void onClick(DialogInterface dialog, int whichButton) {
         dialog.dismiss();
-        int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-        mapId = mapsList.get(selectedPosition).getMap_id();
+        int selectedPosition = ((AlertDialog) dialog).getListView()
+                                                     .getCheckedItemPosition();
+        mapId = mapsList.get(selectedPosition)
+                        .getMap_id();
         startLoading();
     }
 
@@ -187,7 +197,9 @@ public class RoomFinderDetailsActivity
 
         //Update the fragment
         mImage = ImageViewTouchFragment.newInstance(result.get());
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mImage).commit();
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.fragment_container, mImage)
+                                   .commit();
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(room.getInfo());
@@ -202,22 +214,23 @@ public class RoomFinderDetailsActivity
     private void loadMapList() {
         showLoadingStart();
         try {
-            TUMCabeClient.getInstance(this).fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
-                @Override
-                public void onResponse(Call<List<RoomFinderMap>> call, Response<List<RoomFinderMap>> response) {
-                    try {
-                        onMapListLoadFinished(Optional.of(response.body()));
-                    } catch (NullPointerException e) {
-                        Utils.log(e);
-                        onMapListLoadFailed();
-                    }
-                }
+            TUMCabeClient.getInstance(this)
+                         .fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
+                             @Override
+                             public void onResponse(Call<List<RoomFinderMap>> call, Response<List<RoomFinderMap>> response) {
+                                 try {
+                                     onMapListLoadFinished(Optional.of(response.body()));
+                                 } catch (NullPointerException e) {
+                                     Utils.log(e);
+                                     onMapListLoadFailed();
+                                 }
+                             }
 
-                @Override
-                public void onFailure(Call<List<RoomFinderMap>> call, Throwable throwable) {
-                    onMapListLoadFailed();
-                }
-            });
+                             @Override
+                             public void onFailure(Call<List<RoomFinderMap>> call, Throwable throwable) {
+                                 onMapListLoadFailed();
+                             }
+                         });
         } catch (IOException e) {
             Utils.log(e);
             onMapListLoadFailed();
@@ -225,7 +238,7 @@ public class RoomFinderDetailsActivity
     }
 
     private void onMapListLoadFailed() {
-        onMapListLoadFinished(Optional.<List<RoomFinderMap>>absent());
+        onMapListLoadFinished(Optional.absent());
     }
 
     private void onMapListLoadFinished(Optional<List<RoomFinderMap>> result) {
@@ -249,23 +262,24 @@ public class RoomFinderDetailsActivity
     private void loadGeo() {
         showLoadingStart();
         try {
-            TUMCabeClient.getInstance(this).fetchCoordinates(room.getArch_id(), new Callback<RoomFinderCoordinate>() {
-                @Override
-                public void onResponse(Call<RoomFinderCoordinate> call, Response<RoomFinderCoordinate> response) {
-                    try {
-                        Optional<Geo> result = LocationManager.convertRoomFinderCoordinateToGeo(response.body());
-                        onGeoLoadFinished(result);
-                    } catch (NullPointerException e) {
-                        Utils.log(e);
-                        onLoadGeoFailed();
-                    }
-                }
+            TUMCabeClient.getInstance(this)
+                         .fetchCoordinates(room.getArch_id(), new Callback<RoomFinderCoordinate>() {
+                             @Override
+                             public void onResponse(Call<RoomFinderCoordinate> call, Response<RoomFinderCoordinate> response) {
+                                 try {
+                                     Optional<Geo> result = LocationManager.convertRoomFinderCoordinateToGeo(response.body());
+                                     onGeoLoadFinished(result);
+                                 } catch (NullPointerException e) {
+                                     Utils.log(e);
+                                     onLoadGeoFailed();
+                                 }
+                             }
 
-                @Override
-                public void onFailure(Call<RoomFinderCoordinate> call, Throwable throwable) {
-                    onLoadGeoFailed();
-                }
-            });
+                             @Override
+                             public void onFailure(Call<RoomFinderCoordinate> call, Throwable throwable) {
+                                 onLoadGeoFailed();
+                             }
+                         });
         } catch (IOException e) {
             Utils.log(e);
             onLoadGeoFailed();
@@ -273,7 +287,7 @@ public class RoomFinderDetailsActivity
     }
 
     private void onLoadGeoFailed() {
-        onGeoLoadFinished(Optional.<Geo>absent());
+        onGeoLoadFinished(Optional.absent());
     }
 
     private void onGeoLoadFinished(Optional<Geo> result) {
@@ -284,8 +298,11 @@ public class RoomFinderDetailsActivity
         }
 
         // Build get directions intent and see if some app can handle it
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + result.get().getLatitude() + ',' + result.get().getLongitude()));
-        List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + result.get()
+                                                                                                .getLatitude() + ',' + result.get()
+                                                                                                                             .getLongitude()));
+        List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager()
+                                                               .queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
 
         // If some app can handle this intent start it
         if (!pkgAppsList.isEmpty()) {

@@ -4,9 +4,9 @@
 
     <item
         android:id="@+id/open_card_setting"
-        android:title="@string/open_card_settings" />
+        android:title="@string/open_card_settings"/>
 
     <item
         android:id="@+id/always_hide_card"
-        android:title="@string/always_hide_card" />
+        android:title="@string/always_hide_card"/>
 </menu>

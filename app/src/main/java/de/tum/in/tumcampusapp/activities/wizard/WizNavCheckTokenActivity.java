@@ -87,17 +87,19 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             }
         } else {
             // Get users full name
-            TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<>(TUMOnlineConst.IDENTITY, this, true);
+            TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getIDENTITY(), this, true);
             Optional<IdentitySet> id = request2.fetch();
             if (!id.isPresent()) {
                 return R.string.no_rights_to_access_id;
             }
 
             // Save the name to preferences
-            Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.get().toString());
+            Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.get()
+                                                                   .toString());
 
             // Save the TUMOnline id to preferences
-            String pID = getUserPIdentNr(id.get().toString());
+            String pID = getUserPIdentNr(id.get()
+                                           .toString());
             if (pID != null) {
                 Utils.setSetting(this, Const.TUMO_PIDENT_NR, pID);
             }
@@ -127,7 +129,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     @Override
     protected void onStart() {
         super.onStart();
-        TextView textView = (TextView) findViewById(R.id.tvBrowse);
+        TextView textView = findViewById(R.id.tvBrowse);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
@@ -140,19 +142,22 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
      */
     @Nullable
     private String getUserPIdentNr(String name) {
-        TUMOnlineRequest<PersonList> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_SEARCH, this, true);
+        TUMOnlineRequest<PersonList> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getPERSON_SEARCH(), this, true);
         request.setParameter("pSuche", name);
 
         Optional<PersonList> result = request.fetch();
 
-        if (result.isPresent() && result.get().getPersons() != null) {
-            List<Person> persons = result.get().getPersons();
+        if (result.isPresent() && result.get()
+                                        .getPersons() != null) {
+            List<Person> persons = result.get()
+                                         .getPersons();
 
             // Since we can't search by LRZ-Id, we can only search by name, which isn't necessarily
             // unique. We'll probably end up with ubiquitous "Anna Meier"s etc. Only if we are
             // completely certain, display the image rather than displaying a random image
             if (persons.size() == 1) {
-                return persons.get(0).getId();
+                return persons.get(0)
+                              .getId();
             }
         }
 

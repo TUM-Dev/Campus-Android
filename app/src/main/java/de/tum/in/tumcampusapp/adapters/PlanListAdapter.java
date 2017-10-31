@@ -59,9 +59,9 @@ public class PlanListAdapter extends BaseAdapter {
             vi = this.inflater.inflate(R.layout.activity_plans_listview, parent, false);
 
             holder = new ViewHolder();
-            holder.icon = (ImageView) vi.findViewById(R.id.list_menu_icon);
-            holder.title = (TextView) vi.findViewById(R.id.list_menu_title);
-            holder.detail = (TextView) vi.findViewById(R.id.list_menu_detail);
+            holder.icon = vi.findViewById(R.id.list_menu_icon);
+            holder.title = vi.findViewById(R.id.list_menu_title);
+            holder.detail = vi.findViewById(R.id.list_menu_detail);
             vi.setTag(holder);
         } else {
             holder = (ViewHolder) vi.getTag();
@@ -69,12 +69,14 @@ public class PlanListAdapter extends BaseAdapter {
 
         PlanListEntry item = planList.get(position);
         holder.icon.setImageResource(item.imageId);
-        holder.title.setText(activity.getResources().getText(item.titleId));
+        holder.title.setText(activity.getResources()
+                                     .getText(item.titleId));
         if (item.detailId == R.string.empty_string) {
             holder.detail.setVisibility(View.GONE);
         } else {
             holder.detail.setVisibility(View.VISIBLE);
-            holder.detail.setText(activity.getResources().getText(item.detailId));
+            holder.detail.setText(activity.getResources()
+                                          .getText(item.detailId));
         }
         return vi;
     }

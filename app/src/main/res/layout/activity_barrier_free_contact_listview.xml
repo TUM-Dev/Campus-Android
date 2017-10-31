@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="@dimen/padding_default"
-    android:baselineAligned="false">
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="@dimen/padding_default"
+              android:baselineAligned="false">
 
     <LinearLayout
         android:orientation="vertical"
@@ -19,7 +19,7 @@
             android:textSize="@dimen/large_text_size"
             android:textColor="@android:color/black"
             android:textStyle="bold"
-            android:text="" />
+            android:text=""/>
 
         <TextView
             android:id="@+id/barrierfreeContactListViewPhone"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/semilarge_text_size"
             android:autoLink="phone"
-            android:text="" />
+            android:text=""/>
 
         <TextView
             android:id="@+id/barrierfreeContactListViewEmail"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/semilarge_text_size"
             android:autoLink="email"
-            android:text="" />
+            android:text=""/>
 
         <TextView
             android:id="@+id/barrierfreeContactListViewTumOnlineMore"
@@ -45,6 +45,6 @@
             android:onClick="onClick"
             android:clickable="true"
             android:visibility="gone"
-            android:text="" />
+            android:text=""/>
     </LinearLayout>
 </LinearLayout>

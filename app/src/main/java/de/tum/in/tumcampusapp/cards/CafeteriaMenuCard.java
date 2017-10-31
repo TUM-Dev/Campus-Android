@@ -12,11 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +23,10 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
-import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaPrices;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.showMenu;
 import static de.tum.in.tumcampusapp.managers.CardManager.CARD_CAFETERIA;
@@ -50,7 +49,8 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_item, parent, false);
         return new CardViewHolder(view);
     }
 
@@ -60,14 +60,15 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
         List<View> addedViews = cardsViewHolder.getAddedViews();
         mCard = viewHolder.itemView;
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
+        mLinearLayout = mCard.findViewById(R.id.card_view);
+        mTitleView = mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
 
         // Show date
-        TextView mDateView = (TextView) mCard.findViewById(R.id.card_date);
+        TextView mDateView = mCard.findViewById(R.id.card_date);
         mDateView.setVisibility(View.VISIBLE);
-        mDateView.setText(SimpleDateFormat.getDateInstance().format(mDate));
+        mDateView.setText(DateFormat.getDateInstance()
+                                    .format(mDate));
 
         //Remove additional views
         for (View view : addedViews) {
@@ -125,34 +126,45 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(mContext);
+        Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(mContext);
 
         NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
 
         StringBuilder allContent = new StringBuilder();
         StringBuilder firstContent = new StringBuilder();
         for (CafeteriaMenu menu : mMenus) {
-            if ("bei".equals(menu.typeShort)) {
+            if ("bei".equals(menu.getTypeShort())) {
                 continue;
             }
 
-            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.typeLong).replaceAll("").trim());
+            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.getTypeLong())
+                                                                                                                                                              .replaceAll("")
+                                                                                                                                                              .trim());
 
-            StringBuilder content = new StringBuilder(menu.name);
-            if (rolePrices.containsKey(menu.typeLong)) {
-                content.append('\n').append(rolePrices.get(menu.typeLong)).append(" €");
+            StringBuilder content = new StringBuilder(menu.getName());
+            if (rolePrices.containsKey(menu.getTypeLong())) {
+                content.append('\n')
+                       .append(rolePrices.get(menu.getTypeLong()))
+                       .append(" €");
             }
 
-            String contentString = COMPILE.matcher(content.toString()).replaceAll("").trim();
+            String contentString = COMPILE.matcher(content.toString())
+                                          .replaceAll("")
+                                          .trim();
             pageNotification.setContentText(contentString);
-            if ("tg".equals(menu.typeShort)) {
-                if (!allContent.toString().isEmpty()) {
+            if ("tg".equals(menu.getTypeShort())) {
+                if (!allContent.toString()
+                               .isEmpty()) {
                     allContent.append('\n');
                 }
                 allContent.append(contentString);
             }
-            if (firstContent.toString().isEmpty()) {
-                firstContent.append(COMPILE.matcher(menu.name).replaceAll("").trim()).append('…');
+            if (firstContent.toString()
+                            .isEmpty()) {
+                firstContent.append(COMPILE.matcher(menu.getName())
+                                           .replaceAll("")
+                                           .trim())
+                            .append('…');
             } else {
                 morePageNotification.addPage(pageNotification.build());
             }
@@ -163,7 +175,8 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(allContent));
         Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_cafeteria);
         morePageNotification.setBackground(bm);
-        return morePageNotification.extend(notificationBuilder).build();
+        return morePageNotification.extend(notificationBuilder)
+                                   .build();
     }
 
     @Override

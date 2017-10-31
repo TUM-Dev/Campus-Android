@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin"
-    android:background="@android:color/transparent">
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:padding="@dimen/widget_margin"
+             android:background="@android:color/transparent">
 
     <ListView
         android:id="@+id/card_widget_listview"
@@ -11,6 +11,6 @@
         android:background="@android:color/transparent"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@android:color/transparent"
-        android:dividerHeight="3dp" />
+        android:dividerHeight="3dp"/>
 
 </FrameLayout>

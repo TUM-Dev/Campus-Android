@@ -1,17 +1,17 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_marginBottom="@dimen/card_padding_vertical"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginTop="@dimen/card_padding_vertical"
-    android:elevation="@dimen/cardview_elevation"
-    card_view:cardBackgroundColor="#fff"
-    card_view:cardCornerRadius="3dp"
-    tools:ignore="UnusedAttribute">
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginBottom="@dimen/card_padding_vertical"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginRight="8dp"
+                                    android:layout_marginTop="@dimen/card_padding_vertical"
+                                    android:elevation="@dimen/cardview_elevation"
+                                    card_view:cardBackgroundColor="#fff"
+                                    card_view:cardCornerRadius="3dp"
+                                    tools:ignore="UnusedAttribute">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:text="@string/research_quiz"
                 android:textSize="20sp"
-                android:typeface="sans" />
+                android:typeface="sans"/>
 
             <ImageButton
                 android:id="@+id/flagButton"
@@ -40,7 +40,7 @@
                 android:layout_height="27dp"
                 android:layout_weight="0.1"
                 android:contentDescription="@string/flag_inappropriate"
-                android:src="@drawable/flag" />
+                android:src="@drawable/flag"/>
         </LinearLayout>
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5sp"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <android.support.v7.widget.ButtonBarLayout
             android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                 android:background="@color/color_primary"
                 android:text="@string/survey_yes"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <Button
                 android:id="@+id/noAnswerCard"
@@ -81,7 +81,7 @@
                 android:background="@color/color_primary"
                 android:text="@string/survey_no"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <Button
                 android:id="@+id/ignoreAnswerCard"
@@ -93,7 +93,7 @@
                 android:background="@color/color_primary"
                 android:text="@string/survey_skip"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
         </android.support.v7.widget.ButtonBarLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

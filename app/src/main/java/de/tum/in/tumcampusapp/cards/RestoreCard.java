@@ -21,7 +21,8 @@ public class RestoreCard extends StickyCard {
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_restore, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_restore, parent, false);
         return new Card.CardViewHolder(view);
     }
 

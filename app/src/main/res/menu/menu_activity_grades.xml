@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+      xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/pieChart"
         android:icon="@drawable/ic_pie_chart"
         android:orderInCategory="100"
         android:title="@string/show_pie_chart"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
     <item
         android:id="@+id/columnChart"
         android:icon="@drawable/ic_column_chart"
         android:orderInCategory="100"
         android:title="@string/show_column_chart"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
 
 </menu>

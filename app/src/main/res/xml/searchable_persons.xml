@@ -1,7 +1,7 @@
 <searchable
-      	xmlns:android="http://schemas.android.com/apk/res/android" 
-   		android:label="@string/app_name"
-  	 	android:hint="@string/search"
-	android:searchSuggestAuthority="de.tum.in.tumcampusapp.auxiliary.PersonSearchSuggestionProvider"
-    	android:searchSuggestSelection=" ?">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="@string/search"
+    android:label="@string/app_name"
+    android:searchSuggestAuthority="de.tum.in.tumcampusapp.auxiliary.PersonSearchSuggestionProvider"
+    android:searchSuggestSelection=" ?">
 </searchable>

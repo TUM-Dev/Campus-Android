@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -49,12 +48,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
         setUpSpinner(); // Faculty selector
 
-        editTxtLrzId = (EditText) findViewById(R.id.lrd_id);
+        editTxtLrzId = findViewById(R.id.lrd_id);
         editTxtLrzId.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
     }
 
     public void setUpSpinner() {
-        final Spinner userMajorSpinner = (Spinner) findViewById(R.id.majorSpinner);
+        final Spinner userMajorSpinner = findViewById(R.id.majorSpinner);
 
         new AsyncTask<Void, Void, String[]>() {
 
@@ -65,12 +64,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                 SurveyManager sm = new SurveyManager(getApplicationContext());
                 sm.downloadFacultiesFromExternal();
 
-                Cursor cursor = sm.getAllFaculties();
-                if (cursor.moveToFirst()) {
-                    do {
-                        fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
-                    } while (cursor.moveToNext());
-
+                try (Cursor cursor = sm.getAllFaculties()) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
+                        } while (cursor.moveToNext());
+                    }
                 }
                 fetchedFaculties.add(0, getResources().getString(R.string.choose_own_faculty));
                 return fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
@@ -88,14 +87,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                 userMajorSpinner.setSelection(Integer.parseInt(Utils.getInternalSettingString(getApplicationContext(), "user_faculty_number", "0")));
 
                 // Upon clicking on the faculty spinner and there is no internet connection -> toast to the user.
-                userMajorSpinner.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if (!NetUtils.isConnected(getApplicationContext())) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
-                        }
-                        return view.performClick();
+                userMajorSpinner.setOnTouchListener((view, motionEvent) -> {
+                    if (!NetUtils.isConnected(getApplicationContext())) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
+                             .show();
                     }
+                    return view.performClick();
                 });
 
                 // When the user chooses a faculty
@@ -104,11 +101,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         SurveyManager sm = new SurveyManager(getApplicationContext());
 
-                        Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i)); // Get the faculty number from DB for the chosen faculty name
-
-                        if (c.moveToFirst()) {
-                            Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
-                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
+                        try (Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i))) {
+                            if (c.moveToFirst()) {
+                                Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
+                                setDefaultCampus( c.getString(c.getColumnIndex("faculty")) );
+                                Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
+                            }
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
                         if (selectedItem != null) {
@@ -135,7 +133,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     public void onClickSkip(View skip) {
         // Upon clicking on the skip button and there is no internet connection -> toast to the user
         if (!NetUtils.isConnected(getApplicationContext())) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
+                 .show();
             return;
         }
 
@@ -153,11 +152,13 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     public void onClickNext(View next) {
         // Upon clicking on next button and there is no internet connection -> toast to the user.
         if (!NetUtils.isConnected(getApplicationContext())) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
+                 .show();
             return;
         }
 
-        lrzId = editTxtLrzId.getText().toString();
+        lrzId = editTxtLrzId.getText()
+                            .toString();
         Utils.setSetting(this, Const.LRZ_ID, lrzId);
 
         // check if lrz could be valid?
@@ -194,6 +195,71 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             onLoadFinished(true);
         }
+    }
+
+    private void setDefaultCampus(String faculty_number) {
+
+        String Campus = "0";
+        switch (faculty_number) {
+            case "5":   // TUM School of Education
+                Campus = "C";
+                break;
+            case "6":   // Architektur
+                Campus = "C";
+                break;
+            case "7":   // Elektrotechnik und Informationstechnik
+                Campus = "C";
+                break;
+            case "8":   // Ingenieurfakultät Bau Geo Umwelt
+                Campus = "C";
+                break;
+            case "14":  // Wirtschaftswissenschaften
+                Campus = "C";
+                break;
+            case "17":  // Andere Einrichtungen
+
+                Campus = "C"; // Stammgelände
+                break;
+            case "16":  // TUM School of Governance
+                // Unklar, nicht weit vom Stammgelände, aber nicht Stammgelände ??
+                break;
+            case "1":   // Mathematik
+                Campus = "G";
+                break;
+            case "2":   // Physik
+                Campus = "G";
+                break;
+            case "3":   // Chemie
+                Campus = "G";
+                break;
+            case "4":   // Informatik
+                Campus = "G";
+                break;
+            case "11":  // Maschinenwesen
+
+                Campus = "G"; // Garching-FZ
+                break;
+            case "13":  // Sport-und Gesundheitswissenschaften
+
+                // Olympiapark, hat aber keine Zuordnung ??
+                break;
+            case "12":  // Medizin
+
+                Campus = "I"; // Klinikum rechts der Isar
+                break;
+            case "15":  // Wissenschaftszentrum Weihenstephan
+
+                Campus = "W"; // Weihenstephan
+                break;
+            default:
+                break;
+
+        }
+
+        if (Campus != "0") {
+            Utils.setSetting(getApplicationContext(), Const.DEFAULT_CAMPUS, Campus);
+        }
+        return;
     }
 
     /**

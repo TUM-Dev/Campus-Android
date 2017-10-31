@@ -43,7 +43,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, src INTEGER, title TEXT, link VARCHAR, "
-                + "image VARCHAR, date VARCHAR, created VARCHAR, dismissed INTEGER)");
+                   + "image VARCHAR, date VARCHAR, created VARCHAR, dismissed INTEGER)");
     }
 
     /**
@@ -68,7 +68,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     /**
      * Removes all old items (older than 3 months)
      */
-    void cleanupDb() {
+    private void cleanupDb() {
         db.execSQL("DELETE FROM news WHERE date < date('now','-3 month')");
     }
 
@@ -134,28 +134,32 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     public Cursor getAllFromDb(Context context) {
         String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
         StringBuilder and = new StringBuilder();
-        Cursor c = getNewsSources();
-        if (c.moveToFirst()) {
-            do {
-                int id = c.getInt(0);
-                boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
-                if (!show) {
-                    continue;
-                }
-                if (!and.toString().isEmpty()) {
-                    and.append(" OR ");
-                }
-                and.append("s.id=\"").append(id).append('\"');
-            } while (c.moveToNext());
+        try (Cursor c = getNewsSources()) {
+            if (c.moveToFirst()) {
+                do {
+                    int id = c.getInt(0);
+                    boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
+                    if (!show) {
+                        continue;
+                    }
+                    if (!and.toString()
+                            .isEmpty()) {
+                        and.append(" OR ");
+                    }
+                    and.append("s.id=\"")
+                       .append(id)
+                       .append('\"');
+                } while (c.moveToNext());
+            }
         }
-        c.close();
         return db.rawQuery("SELECT n.id AS _id, n.src, n.title, " +
-                "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
-                "(julianday('now') - julianday(date)) AS diff " +
-                "FROM news n, news_sources s " +
-                "WHERE n.src=s.id " + (and.toString().isEmpty() ? "" : "AND (" + and.toString() + ") ") +
-                "AND (s.id < 7 OR s.id > 13 OR s.id=?) " +
-                "ORDER BY date DESC", new String[]{selectedNewspread});
+                           "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
+                           "(julianday('now') - julianday(date)) AS diff " +
+                           "FROM news n, news_sources s " +
+                           "WHERE n.src=s.id " + (and.toString()
+                                                     .isEmpty() ? "" : "AND (" + and.toString() + ") ") +
+                           "AND (s.id < 7 OR s.id > 13 OR s.id=?) " +
+                           "ORDER BY date DESC", new String[]{selectedNewspread});
     }
 
     /**
@@ -165,31 +169,30 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     public int getTodayIndex() {
         String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
-        Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date(date)>date() AND (src < 7 OR src > 13 OR src=?)", new String[]{selectedNewspread});
-        if (c.moveToFirst()) {
-            int res = c.getInt(0);
-            c.close();
-            return res == 0 ? 0 : res - 1;
+        try (Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date(date)>date() AND (src < 7 OR src > 13 OR src=?)", new String[]{selectedNewspread})) {
+            if (c.moveToFirst()) {
+                int res = c.getInt(0);
+                return res == 0 ? 0 : res - 1;
+            }
         }
-        c.close();
         return 0;
     }
 
     private String getLastId() {
         String lastId = "";
-        Cursor c = db.rawQuery("SELECT id FROM news ORDER BY id DESC LIMIT 1", null);
-        if (c.moveToFirst()) {
-            lastId = c.getString(0);
+        try (Cursor c = db.rawQuery("SELECT id FROM news ORDER BY id DESC LIMIT 1", null)) {
+            if (c.moveToFirst()) {
+                lastId = c.getString(0);
+            }
         }
-        c.close();
         return lastId;
     }
 
     public Cursor getNewsSources() {
         String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
         return db.rawQuery("SELECT id, icon, " +
-                "CASE WHEN title LIKE 'newspread%' THEN \"Newspread\" ELSE title END " +
-                "FROM news_sources WHERE id < 7 OR id > 13 OR id=?", new String[]{selectedNewspread});
+                           "CASE WHEN title LIKE 'newspread%' THEN \"Newspread\" ELSE title END " +
+                           "FROM news_sources WHERE id < 7 OR id > 13 OR id=?", new String[]{selectedNewspread});
     }
 
     /**
@@ -199,9 +202,9 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     void replaceIntoDb(News n) {
         db.execSQL("REPLACE INTO news (id, src, title, link, image, date, " +
-                        "created, dismissed) VALUES (?, ?, ?, ?, ?, ?, ?, 0)",
-                new String[]{n.id, n.src, n.title, n.link, n.image,
-                        Utils.getDateTimeString(n.date), Utils.getDateTimeString(n.created)});
+                   "created, dismissed) VALUES (?, ?, ?, ?, ?, ?, ?, 0)",
+                   new String[]{n.getId(), n.getSrc(), n.getTitle(), n.getLink(), n.getImage(),
+                                Utils.getDateTimeString(n.getDate()), Utils.getDateTimeString(n.getCreated())});
     }
 
     /**
@@ -212,8 +215,8 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     void replaceIntoSourcesDb(JSONObject n) throws JSONException {
         db.execSQL("REPLACE INTO news_sources (id, icon, title) VALUES (?, ?, ?)",
-                new String[]{n.getString(Const.JSON_SOURCE), n.has(Const.JSON_ICON) ? n.getString(Const.JSON_ICON) : "",
-                        n.getString(Const.JSON_TITLE)});
+                   new String[]{n.getString(Const.JSON_SOURCE), n.has(Const.JSON_ICON) ? n.getString(Const.JSON_ICON) : "",
+                                n.getString(Const.JSON_TITLE)});
     }
 
     public void setDismissed(String id, int d) {
@@ -228,42 +231,48 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
         StringBuilder and = new StringBuilder();
-        Cursor c = getNewsSources();
-        if (c.moveToFirst()) {
-            do {
-                int id = c.getInt(0);
-                boolean show = Utils.getSettingBool(context, "card_news_source_" + id, true);
-                if (!show) {
-                    continue;
-                }
-                if (!and.toString().isEmpty()) {
-                    and.append(" OR ");
-                }
-                and.append("s.id=\"").append(id).append('\"');
-            } while (c.moveToNext());
+        try (Cursor c = getNewsSources()) {
+            if (c.moveToFirst()) {
+                do {
+                    int id = c.getInt(0);
+                    boolean show = Utils.getSettingBool(context, "card_news_source_" + id, true);
+                    if (!show) {
+                        continue;
+                    }
+                    if (!and.toString()
+                            .isEmpty()) {
+                        and.append(" OR ");
+                    }
+                    and.append("s.id=\"")
+                       .append(id)
+                       .append('\"');
+                } while (c.moveToNext());
+            }
         }
-        c.close();
 
         //boolean showImportant = Utils.getSettingBool(context, "card_news_alert", true);
-        if (!and.toString().isEmpty()) {
+        if (!and.toString()
+                .isEmpty()) {
 
             StringBuilder query = new StringBuilder("SELECT n.id AS _id, n.src, n.title, " +
-                    "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
-                    "ABS(julianday(date()) - julianday(n.date)) AS date_diff ");
+                                                    "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
+                                                    "ABS(julianday(date()) - julianday(n.date)) AS date_diff ");
 
             if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
                 // Limit to one entry per source
                 query.append("FROM (news n JOIN ( " +
-                        "SELECT src, MIN(abs(julianday(date()) - julianday(date))) AS diff " +
-                        "FROM news WHERE src!=\"2\" OR (julianday(date()) - julianday(date))<0 " +
-                        "GROUP BY src) last ON (n.src = last.src " +
-                        "AND date_diff = last.diff) " +
-                        "), news_sources s ");
+                             "SELECT src, MIN(abs(julianday(date()) - julianday(date))) AS diff " +
+                             "FROM news WHERE src!=\"2\" OR (julianday(date()) - julianday(date))<0 " +
+                             "GROUP BY src) last ON (n.src = last.src " +
+                             "AND date_diff = last.diff) " +
+                             "), news_sources s ");
             } else {
                 query.append("FROM news n, news_sources s ");
             }
 
-            query.append("WHERE n.src = s.id AND ((").append(and).append(") ) ORDER BY date_diff ASC");
+            query.append("WHERE n.src = s.id AND ((")
+                 .append(and)
+                 .append(") ) ORDER BY date_diff ASC");
             Cursor cur = db.rawQuery(query.toString(), null);
 
             int i = 0;

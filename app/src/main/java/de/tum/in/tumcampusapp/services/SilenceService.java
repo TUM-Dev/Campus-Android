@@ -41,7 +41,8 @@ public class SilenceService extends IntentService {
     private static long getWaitDuration(String timeToEventString) {
         long timeToEvent = Long.MAX_VALUE;
         try {
-            timeToEvent = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString).getTime();
+            timeToEvent = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString)
+                                                                                  .getTime();
         } catch (ParseException e) {
             Utils.log(e, "");
         }
@@ -74,6 +75,9 @@ public class SilenceService extends IntentService {
         }
 
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager == null) {
+            return;
+        }
         Intent newIntent = new Intent(this, SilenceService.class);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -89,48 +93,51 @@ public class SilenceService extends IntentService {
         }
 
         AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        Cursor cursor = calendarManager.getCurrentFromDb();
-        Utils.log("Current lectures: " + cursor.getCount());
-
-        if (cursor.getCount() == 0 || isDoNotDisturbMode()) {
-            if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
-                // default: old state
-                Utils.log("set ringer mode to old state");
-                am.setRingerMode(Integer.parseInt(
-                        Utils.getSetting(this, Const.SILENCE_OLD_STATE,
-                                Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
-                Utils.setInternalSetting(this, Const.SILENCE_ON, false);
-
-                Cursor cursor2 = calendarManager.getNextCalendarItem();
-                if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
-                    // refresh when next event has started
-                    waitDuration = getWaitDuration(cursor2.getString(1));
-                }
-                cursor2.close();
-            }
-        } else {
-            // remember old state if just activated ; in doubt dont change
-            if (!Utils.getInternalSettingBool(this, Const.SILENCE_ON, true)) {
-                Utils.setSetting(this, Const.SILENCE_OLD_STATE, am.getRingerMode());
-            }
-
-            // if current lecture(s) found, silence the mobile
-            Utils.setInternalSetting(this, Const.SILENCE_ON, true);
-
-            // Set into silent mode
-            String mode = Utils.getSetting(this, "silent_mode_set_to", "0");
-            if ("0".equals(mode)) {
-                Utils.log("set ringer mode: vibration");
-                am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-            } else {
-                Utils.log("set ringer mode: silent");
-                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-            }
-            // refresh when event has ended
-            cursor.moveToFirst();
-            waitDuration = getWaitDuration(cursor.getString(3));
+        if (am == null) {
+            return;
         }
-        cursor.close();
+        try (Cursor cursor = calendarManager.getCurrentFromDb()) {
+            Utils.log("Current lectures: " + cursor.getCount());
+
+            if (cursor.getCount() == 0 || isDoNotDisturbMode()) {
+                if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
+                    // default: old state
+                    Utils.log("set ringer mode to old state");
+                    am.setRingerMode(Integer.parseInt(
+                            Utils.getSetting(this, Const.SILENCE_OLD_STATE,
+                                             Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
+                    Utils.setInternalSetting(this, Const.SILENCE_ON, false);
+
+                    Cursor cursor2 = calendarManager.getNextCalendarItem();
+                    if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+                        // refresh when next event has started
+                        waitDuration = getWaitDuration(cursor2.getString(1));
+                    }
+                    cursor2.close();
+                }
+            } else {
+                // remember old state if just activated ; in doubt dont change
+                if (!Utils.getInternalSettingBool(this, Const.SILENCE_ON, true)) {
+                    Utils.setSetting(this, Const.SILENCE_OLD_STATE, am.getRingerMode());
+                }
+
+                // if current lecture(s) found, silence the mobile
+                Utils.setInternalSetting(this, Const.SILENCE_ON, true);
+
+                // Set into silent mode
+                String mode = Utils.getSetting(this, "silent_mode_set_to", "0");
+                if ("0".equals(mode)) {
+                    Utils.log("set ringer mode: vibration");
+                    am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                } else {
+                    Utils.log("set ringer mode: silent");
+                    am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                }
+                // refresh when event has ended
+                cursor.moveToFirst();
+                waitDuration = getWaitDuration(cursor.getString(3));
+            }
+        }
 
         alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
     }
@@ -161,18 +168,17 @@ public class SilenceService extends IntentService {
      */
     public static boolean hasPermissions(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-            && !notificationManager.isNotificationPolicyAccessGranted()) {
-            return false;
-        }
-        return true;
+        return !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                 && !notificationManager.isNotificationPolicyAccessGranted());
     }
 
     /**
      * Request the "Do Not Disturb" permissions for android version >= N.
      */
     public static void requestPermissions(Context context) {
-        if (hasPermissions(context)) return;
+        if (hasPermissions(context)) {
+            return;
+        }
         Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
         context.startActivity(intent);
     }

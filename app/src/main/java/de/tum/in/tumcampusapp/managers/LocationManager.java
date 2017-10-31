@@ -156,19 +156,20 @@ public class LocationManager extends AbstractManager {
         final double lng = location.getLongitude();
         float[] results = new float[1];
         CafeteriaManager manager = new CafeteriaManager(mContext);
-        Cursor cur = manager.getAllFromDb();
-        List<Cafeteria> list = new ArrayList<>(cur.getCount());
+        List<Cafeteria> list;
+        try (Cursor cur = manager.getAllFromDb()) {
+            list = new ArrayList<>(cur.getCount());
 
-        if (cur.moveToFirst()) {
-            do {
-                Cafeteria cafe = new Cafeteria(cur.getInt(0), cur.getString(1),
-                                               cur.getString(2), cur.getDouble(3), cur.getDouble(4));
-                Location.distanceBetween(cur.getDouble(3), cur.getDouble(4), lat, lng, results);
-                cafe.distance = results[0];
-                list.add(cafe);
-            } while (cur.moveToNext());
+            if (cur.moveToFirst()) {
+                do {
+                    Cafeteria cafe = new Cafeteria(cur.getInt(0), cur.getString(1),
+                                                   cur.getString(2), cur.getDouble(3), cur.getDouble(4));
+                    Location.distanceBetween(cur.getDouble(3), cur.getDouble(4), lat, lng, results);
+                    cafe.setDistance(results[0]);
+                    list.add(cafe);
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
         Collections.sort(list);
         return list;
     }
@@ -241,7 +242,7 @@ public class LocationManager extends AbstractManager {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final String defaultVal = DEFAULT_CAMPUS_STATION[campus].station;
+        final String defaultVal = DEFAULT_CAMPUS_STATION[campus].getStation();
         return prefs.getString("card_stations_default_" + CAMPUS_SHORT[campus], defaultVal);
     }
 
@@ -290,7 +291,8 @@ public class LocationManager extends AbstractManager {
         if (list == null || list.isEmpty()) {
             return -1;
         }
-        return list.get(0).id;
+        return list.get(0)
+                   .getId();
     }
 
     /**
@@ -434,23 +436,23 @@ public class LocationManager extends AbstractManager {
      * @return The list of BuildingsToGps
      */
     private List<BuildingsToGps> getOrFetchBuildingsToGps() {
-        Cursor cursor = db.rawQuery("SELECT * FROM buildings2gps", null);
-        List<BuildingsToGps> result = new ArrayList<>();
+        List<BuildingsToGps> result;
+        try (Cursor cursor = db.rawQuery("SELECT * FROM buildings2gps", null)) {
+            result = new ArrayList<>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                if (cursor.isAfterLast()) {
+                    continue;
+                }
 
-        while (cursor.moveToNext()) {
-            if (cursor.isAfterLast()) {
-                continue;
+                String id = cursor.getString(0);
+                String latitude = cursor.getString(1);
+                String longitude = cursor.getString(2);
+
+                BuildingsToGps mapping = new BuildingsToGps(id, latitude, longitude);
+
+                result.add(mapping);
             }
-
-            String id = cursor.getString(0);
-            String latitude = cursor.getString(1);
-            String longitude = cursor.getString(2);
-
-            BuildingsToGps mapping = new BuildingsToGps(id, latitude, longitude);
-
-            result.add(mapping);
         }
-        cursor.close();
 
         if (result.isEmpty()) {
             // we have to fetch buildings to gps mapping first.

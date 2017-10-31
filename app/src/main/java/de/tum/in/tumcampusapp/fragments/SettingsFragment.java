@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.CheckBoxPreference;
@@ -42,7 +41,7 @@ import de.tum.in.tumcampusapp.services.BackgroundService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements
-        SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
+                                                               SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     public static final String FRAGMENT_TAG = "my_preference_fragment";
     private static final String BUTTON_WIZARD = "button_wizard";
@@ -91,16 +90,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             setSummary("silent_mode_set_to");
             setSummary("background_mode_set_to");
 
-        } else if(rootKey.equals("card_eduroam")){
+        } else if (rootKey.equals("card_eduroam")) {
             findPreference(SETUP_EDUROAM).setOnPreferenceClickListener(this);
         }
 
         // Register the change listener to react immediately on changes
-        PreferenceManager.getDefaultSharedPreferences(mContext).registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(mContext)
+                         .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // Set the default white background in the view so as to avoid transparency
@@ -114,42 +114,35 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         PreferenceCategory newsSources = (PreferenceCategory) findPreference("card_news_sources");
 
         NewsManager cm = new NewsManager(mContext);
-        Cursor cur = cm.getNewsSources();
-        //If we don't have any, we can't add any
-        if (!cur.moveToFirst() || newsSources == null) {
-            cur.close();
-            return;
-        }
-
-        final NetUtils net = new NetUtils(mContext);
-        do {
-            final CheckBoxPreference pref = new CheckBoxPreference(mContext);
-            pref.setKey("card_news_source_" + cur.getString(0));
-            pref.setDefaultValue(true);
-            // Load news source icon in background and set it
-            final String url = cur.getString(1);
-
-            if (url != null) { // Skip News that do not have a image
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                        mContext.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (bmp.isPresent()) {
-                                    pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
-                                }
-                            }
-                        });
-                    }
-                }).start();
+        try (Cursor cur = cm.getNewsSources()) {
+            //If we don't have any, we can't add any
+            if (!cur.moveToFirst() || newsSources == null) {
+                return;
             }
 
-            pref.setTitle(cur.getString(2));
-            newsSources.addPreference(pref);
-        } while (cur.moveToNext());
-        cur.close();
+            final NetUtils net = new NetUtils(mContext);
+            do {
+                final CheckBoxPreference pref = new CheckBoxPreference(mContext);
+                pref.setKey("card_news_source_" + cur.getString(0));
+                pref.setDefaultValue(true);
+                // Load news source icon in background and set it
+                final String url = cur.getString(1);
+
+                if (url != null) { // Skip News that do not have a image
+                    new Thread(() -> {
+                        final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                        mContext.runOnUiThread(() -> {
+                            if (bmp.isPresent()) {
+                                pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
+                            }
+                        });
+                    }).start();
+                }
+
+                pref.setTitle(cur.getString(2));
+                newsSources.addPreference(pref);
+            } while (cur.moveToNext());
+        }
     }
 
     @Override
@@ -194,7 +187,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                     // disable until silence service permission is resolved
                     CheckBoxPreference silenceCheckbox = (CheckBoxPreference) findPreference(Const.SILENCE_SERVICE);
                     silenceCheckbox.setChecked(false);
-                    sharedPreferences.edit().putBoolean(Const.SILENCE_SERVICE, false).apply();
+                    sharedPreferences.edit()
+                                     .putBoolean(Const.SILENCE_SERVICE, false)
+                                     .apply();
                 } else {
                     mContext.startService(service);
                 }
@@ -245,13 +240,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 // This button invokes the clear cache method
                 new AlertDialog.Builder(mContext)
                         .setMessage(R.string.delete_chache_sure)
-                        .setPositiveButton(R.string.yes, new Dialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                clearCache();
-                            }
-                        })
-                        .setNegativeButton(R.string.no, null).show();
+                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> clearCache())
+                        .setNegativeButton(R.string.no, null)
+                        .show();
 
                 break;
             case FACEBOOK:
@@ -259,7 +250,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 Intent facebook;
                 try {
                     //Try to get facebook package to check if fb app is installed
-                    mContext.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+                    mContext.getPackageManager()
+                            .getPackageInfo("com.facebook.katana", 0);
                     facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)));
                 } catch (PackageManager.NameNotFoundException e) {
                     //otherwise just open the normal url
@@ -276,7 +268,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 new LicensesDialog.Builder(mContext)
                         .setNotices(R.raw.notices)
                         .setShowFullLicenseText(false)
-                        .setIncludeOwnLicense(true).build().show();
+                        .setIncludeOwnLicense(true)
+                        .build()
+                        .show();
                 break;
             case FEEDBACK:
             /* Create the Intent */
@@ -308,7 +302,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         // delete local calendar
         Utils.setInternalSetting(mContext, Const.SYNC_CALENDAR, false);
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             CalendarManager.deleteLocalCalendar(mContext);
         }
 

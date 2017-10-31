@@ -50,7 +50,7 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
         roomApiCode = getArguments().getString(Const.ROOM_ID);
 
         View view = inflater.inflate(R.layout.fragment_day_view, container, false);
-        mWeekView = (WeekView) view.findViewById(R.id.weekView);
+        mWeekView = view.findViewById(R.id.weekView);
         mWeekView.setMonthChangeListener(this);
         mWeekView.goToHour(8);
         return mWeekView;
@@ -68,35 +68,28 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
     }
 
     private void loadEventsInBackground(final int newYear, final int newMonth) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Populate the week view with the events of the month to display
-                Calendar calendar = Calendar.getInstance();
-                //Note the (-1), since the calendar starts with month 0, but we get months starting with 1
-                calendar.set(newYear, newMonth - 1, 1);
-                int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        new Thread(() -> {
+            // Populate the week view with the events of the month to display
+            Calendar calendar = Calendar.getInstance();
+            //Note the (-1), since the calendar starts with month 0, but we get months starting with 1
+            calendar.set(newYear, newMonth - 1, 1);
+            int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+            String startTime = format.format(calendar.getTime());
 
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-                String startTime =format.format(calendar.getTime());
+            calendar.set(newYear, newMonth - 1, daysInMonth);
+            String endTime = format.format(calendar.getTime());
 
-                calendar.set(newYear, newMonth - 1, daysInMonth);
-                String endTime =format.format(calendar.getTime());
+            //Convert to the proper type
+            final List<WeekViewEvent> events = fetchEventList(roomApiCode, startTime, endTime);
 
-                //Convert to the proper type
-                final List<WeekViewEvent> events = fetchEventList(roomApiCode, startTime, endTime);
-
-                //Finish loading
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadedEvents.put(calculateLoadedKey(newYear, newMonth), events);
-                        //Trigger onMonthChange() again
-                        mWeekView.notifyDatasetChanged();
-                    }
-                });
-            }
+            //Finish loading
+            context.runOnUiThread(() -> {
+                loadedEvents.put(calculateLoadedKey(newYear, newMonth), events);
+                //Trigger onMonthChange() again
+                mWeekView.notifyDatasetChanged();
+            });
         }).start();
     }
 
@@ -117,24 +110,24 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
         return (year * 16) | (month % 12);
     }
 
-    private List<WeekViewEvent> fetchEventList(String roomId, String startDate, String endDate){
+    private List<WeekViewEvent> fetchEventList(String roomId, String startDate, String endDate) {
         List<WeekViewEvent> events = new ArrayList<>();
         try {
-            Optional<List<RoomFinderSchedule>> result = Optional.of(TUMCabeClient.getInstance(context).fetchSchedule(roomId, startDate, endDate));
+            Optional<List<RoomFinderSchedule>> result = Optional.of(TUMCabeClient.getInstance(context)
+                                                                                 .fetchSchedule(roomId, startDate, endDate));
             List<RoomFinderSchedule> schedules = result.get();
 
             //Convert to the proper type
-            for(RoomFinderSchedule schedule : schedules){
+            for (RoomFinderSchedule schedule : schedules) {
                 Calendar startCal = Calendar.getInstance();
                 startCal.setTime(Utils.getISODateTime(schedule.getStart()));
-
 
                 Calendar endCal = Calendar.getInstance();
                 endCal.setTime(Utils.getISODateTime(schedule.getEnd()));
 
                 IntegratedCalendarEvent calendarEvent = new IntegratedCalendarEvent(schedule.getEvent_id(),
-                        schedule.getTitle(), startCal, endCal, "",
-                        IntegratedCalendarEvent.getDisplayColorFromColor(0xff28921f));
+                                                                                    schedule.getTitle(), startCal, endCal, "",
+                                                                                    IntegratedCalendarEvent.getDisplayColorFromColor(0xff28921f));
 
                 events.add(calendarEvent);
             }

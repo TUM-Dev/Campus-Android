@@ -32,7 +32,7 @@ public class TimetableWidgetService extends RemoteViewsService {
     private class TimetableRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
         private final Context applicationContext;
-        private int appWidgetID;
+        private final int appWidgetID;
         private List<IntegratedCalendarEvent> calendarEvents;
 
         TimetableRemoteViewFactory(Context applicationContext, Intent intent) {
@@ -114,8 +114,10 @@ public class TimetableWidgetService extends RemoteViewsService {
 
             // Setup event time
             DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(applicationContext);
-            String time = timeFormat.format(currentItem.getStartTime().getTime());
-            time += "-" + timeFormat.format(currentItem.getEndTime().getTime());
+            String time = timeFormat.format(currentItem.getStartTime()
+                                                       .getTime());
+            time += "-" + timeFormat.format(currentItem.getEndTime()
+                                                       .getTime());
             rv.setTextViewText(R.id.timetable_widget_event_time, time);
 
             // Setup event location

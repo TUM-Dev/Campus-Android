@@ -23,7 +23,7 @@
     <color name="sections_green">#7cbc49</color>
     <color name="sections_gray">#a5a5a5</color>
 
-    <color name="color_primary" >@color/tum_500</color>
+    <color name="color_primary">@color/tum_500</color>
     <color name="color_primary_dark">@color/tum_800</color>
 
     <color name="card_pressed">#fff8f8f8</color>

@@ -102,20 +102,18 @@ public abstract class ActivityForSearching extends ProgressActivity {
             }
 
             private String getSuggestion(int position) {
-                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
+                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter()
+                                                    .getItem(position);
                 return cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
             }
         });
 
         // Handle search cancellation
-        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                mSearchItem.collapseActionView();
-                mQuery = null;
-                onStartSearch();
-                return false;
-            }
+        mSearchView.setOnCloseListener(() -> {
+            mSearchItem.collapseActionView();
+            mQuery = null;
+            onStartSearch();
+            return false;
         });
 
         mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {

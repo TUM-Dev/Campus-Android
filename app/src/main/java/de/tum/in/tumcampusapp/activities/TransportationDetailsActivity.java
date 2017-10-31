@@ -74,7 +74,8 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
                     .setTitle(R.string.transport_action_usage)
                     .setMessage(R.string.transport_help_text)
                     .setPositiveButton(android.R.string.ok, null)
-                    .create().show();
+                    .create()
+                    .show();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -126,38 +127,36 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         for (Departure d : result) {
             DepartureView view = new DepartureView(this, true);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DepartureView departureView = (DepartureView) v;
-                    String symbol = departureView.getSymbol();
-                    boolean highlight;
-                    if (transportManager.isFavorite(symbol)) {
-                        transportManager.deleteFavorite(symbol);
-                        highlight = false;
-                    } else {
-                        transportManager.addFavorite(symbol);
-                        highlight = true;
-                    }
+            view.setOnClickListener(v -> {
+                DepartureView departureView = (DepartureView) v;
+                String symbol = departureView.getSymbol();
+                boolean highlight;
+                if (transportManager.isFavorite(symbol)) {
+                    transportManager.deleteFavorite(symbol);
+                    highlight = false;
+                } else {
+                    transportManager.addFavorite(symbol);
+                    highlight = true;
+                }
 
-                    // Update the other views with the same symbol
-                    for (int i = 0; i < mViewResults.getChildCount(); i++) {
-                        DepartureView child = (DepartureView) mViewResults.getChildAt(i);
-                        if (child.getSymbol().equals(symbol)) {
-                            child.setSymbol(symbol, highlight);
-                        }
+                // Update the other views with the same symbol
+                for (int i = 0; i < mViewResults.getChildCount(); i++) {
+                    DepartureView child = (DepartureView) mViewResults.getChildAt(i);
+                    if (child.getSymbol()
+                             .equals(symbol)) {
+                        child.setSymbol(symbol, highlight);
                     }
                 }
             });
 
-            if (transportManager.isFavorite(d.symbol)) {
-                view.setSymbol(d.symbol, true);
+            if (transportManager.isFavorite(d.getSymbol())) {
+                view.setSymbol(d.getSymbol(), true);
             } else {
-                view.setSymbol(d.symbol, false);
+                view.setSymbol(d.getSymbol(), false);
             }
 
-            view.setLine(d.direction);
-            view.setTime(d.countDown);
+            view.setLine(d.getDirection());
+            view.setTime(d.getCountDown());
             mViewResults.addView(view);
         }
     }

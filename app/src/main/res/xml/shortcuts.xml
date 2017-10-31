@@ -1,5 +1,5 @@
 <shortcuts xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+           xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
         android:shortcutId="mensa"
         android:enabled="true"
@@ -10,7 +10,7 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="de.tum.in.tumcampus"
-            android:targetClass="de.tum.in.tumcampusapp.activities.CafeteriaActivity" />
+            android:targetClass="de.tum.in.tumcampusapp.activities.CafeteriaActivity"/>
     </shortcut>
     <shortcut
         android:shortcutId="studyrooms"
@@ -22,7 +22,7 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="de.tum.in.tumcampus"
-            android:targetClass="de.tum.in.tumcampusapp.activities.StudyRoomsActivity" />
+            android:targetClass="de.tum.in.tumcampusapp.activities.StudyRoomsActivity"/>
     </shortcut>
     <shortcut
         android:shortcutId="calendar"
@@ -34,6 +34,6 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="de.tum.in.tumcampus"
-            android:targetClass="de.tum.in.tumcampusapp.activities.CalendarActivity" />
+            android:targetClass="de.tum.in.tumcampusapp.activities.CalendarActivity"/>
     </shortcut>
 </shortcuts>

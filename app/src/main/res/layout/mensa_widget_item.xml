@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
     <TextView
         android:id="@+id/menu_content"
@@ -14,7 +14,7 @@
         android:layout_toLeftOf="@+id/menu_price"
         android:layout_toStartOf="@id/menu_price"
         android:gravity="center_vertical"
-        android:textColor="#ff656865" />
+        android:textColor="#ff656865"/>
 
     <TextView
         android:id="@+id/menu_price"
@@ -25,5 +25,5 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:textColor="@color/sections_green" />
+        android:textColor="@color/sections_green"/>
 </RelativeLayout>

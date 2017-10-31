@@ -4,13 +4,12 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
-import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
+import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
@@ -292,29 +291,40 @@ public class TUMCabeClient {
     }
 
     public List<BarrierfreeContact> getBarrierfreeContactList() throws IOException {
-        return service.getBarrierfreeContactList().execute().body();
+        return service.getBarrierfreeContactList()
+                      .execute()
+                      .body();
     }
 
     public List<BarrierfreeMoreInfo> getMoreInfoList() throws IOException {
-        return service.getMoreInfoList().execute().body();
+        return service.getMoreInfoList()
+                      .execute()
+                      .body();
     }
 
     public List<RoomFinderRoom> getListOfToilets() throws IOException {
-        return service.getListOfToilets().execute().body();
+        return service.getListOfToilets()
+                      .execute()
+                      .body();
     }
 
     public List<RoomFinderRoom> getListOfElevators() throws IOException {
-        return service.getListOfElevators().execute().body();
+        return service.getListOfElevators()
+                      .execute()
+                      .body();
     }
 
     public List<RoomFinderRoom> getListOfNearbyFacilities(String buildingId) throws IOException {
-        return service.getListOfNearbyFacilities(buildingId).execute().body();
+        return service.getListOfNearbyFacilities(buildingId)
+                      .execute()
+                      .body();
     }
 
     public List<BuildingsToGps> getBuilding2Gps() throws IOException {
-        return service.getBuilding2Gps().execute().body();
+        return service.getBuilding2Gps()
+                      .execute()
+                      .body();
     }
-
 
     public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException {
         service.fetchAvailableMaps(Helper.encodeUrl(archId))
@@ -441,7 +451,6 @@ public class TUMCabeClient {
         //WifiHeatmap
         @POST(API_WIFI_HEATMAP + "create_measurements/")
         Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
-
 
         // Barrier free contacts
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)

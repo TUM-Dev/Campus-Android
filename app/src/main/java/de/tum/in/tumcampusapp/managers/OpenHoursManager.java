@@ -29,8 +29,8 @@ public class OpenHoursManager extends AbstractManager {
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS locations (id INTEGER PRIMARY KEY, category VARCHAR, "
-                + "name VARCHAR, address VARCHAR, room VARCHAR, transport VARCHAR, "
-                + "hours VARCHAR, remark VARCHAR, url VARCHAR)");
+                   + "name VARCHAR, address VARCHAR, room VARCHAR, transport VARCHAR, "
+                   + "hours VARCHAR, remark VARCHAR, url VARCHAR)");
     }
 
     /**
@@ -40,11 +40,11 @@ public class OpenHoursManager extends AbstractManager {
      */
     public boolean empty() {
         boolean result = true;
-        Cursor c = db.rawQuery("SELECT id FROM locations LIMIT 1", null);
-        if (c.moveToNext()) {
-            result = false;
+        try (Cursor c = db.rawQuery("SELECT id FROM locations LIMIT 1", null)) {
+            if (c.moveToNext()) {
+                result = false;
+            }
         }
-        c.close();
         return result;
     }
 
@@ -58,7 +58,7 @@ public class OpenHoursManager extends AbstractManager {
     public Cursor getAllHoursFromDb(String category) {
         return db.rawQuery(
                 "SELECT name, address, room, transport, hours, remark, url, id as _id "
-                        + "FROM locations WHERE category=? ORDER BY name",
+                + "FROM locations WHERE category=? ORDER BY name",
                 new String[]{category});
     }
 
@@ -70,13 +70,12 @@ public class OpenHoursManager extends AbstractManager {
      */
     String getHoursById(int id) {
         String result = "";
-        Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?",
-                new String[]{String.valueOf(id)});
-
-        if (c.moveToNext()) {
-            result = c.getString(0);
+        try (Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?",
+                                    new String[]{String.valueOf(id)})) {
+            if (c.moveToNext()) {
+                result = c.getString(0);
+            }
         }
-        c.close();
         return result;
     }
 
@@ -100,7 +99,8 @@ public class OpenHoursManager extends AbstractManager {
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
         //Split up the data string from the database with regex which has the format: "Mo-Do 11-14, Fr 11-13.45" or "Mo-Fr 9-20"
-        Matcher m = Pattern.compile("([a-z]{2}?)[-]?([a-z]{2}?)? ([0-9]{1,2}(?:[\\.][0-9]{2}?)?)-([0-9]{1,2}(?:[\\.][0-9]{2}?)?)", Pattern.CASE_INSENSITIVE).matcher(result);
+        Matcher m = Pattern.compile("([a-z]{2}?)[-]?([a-z]{2}?)? ([0-9]{1,2}(?:[\\.][0-9]{2}?)?)-([0-9]{1,2}(?:[\\.][0-9]{2}?)?)", Pattern.CASE_INSENSITIVE)
+                           .matcher(result);
 
         //Capture groups for: Mo-Do 9-21.30
         //#0	Mo-Do 9-21.30
@@ -113,7 +113,8 @@ public class OpenHoursManager extends AbstractManager {
         String[] time = new String[2];
         if (m.find()) {
             //We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
-            if (dayOfWeek <= Calendar.THURSDAY || m.group(2).equalsIgnoreCase("fr")) {
+            if (dayOfWeek <= Calendar.THURSDAY || m.group(2)
+                                                   .equalsIgnoreCase("fr")) {
                 time[0] = m.group(3);
                 time[1] = m.group(4);
             } else {
@@ -155,7 +156,8 @@ public class OpenHoursManager extends AbstractManager {
         String relStr = DateUtils.getFutureTime(relativeTo.getTime(), context);
 
         //Return an assembly
-        return context.getString(relation) + " " + relStr.substring(0, 1).toLowerCase(Locale.getDefault()) + relStr.substring(1);
+        return context.getString(relation) + " " + relStr.substring(0, 1)
+                                                         .toLowerCase(Locale.getDefault()) + relStr.substring(1);
 
     }
 
@@ -180,16 +182,17 @@ public class OpenHoursManager extends AbstractManager {
      * @param l Location object
      */
     public void replaceIntoDb(Location l) {
-        if (l.id <= 0) {
+        if (l.getId() <= 0) {
             throw new IllegalArgumentException("Invalid id.");
         }
-        if (l.name.isEmpty()) {
+        if (l.getName()
+             .isEmpty()) {
             throw new IllegalArgumentException("Invalid name.");
         }
         db.execSQL("REPLACE INTO locations (id, category, name, address, room, "
-                        + "transport, hours, remark, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                new String[]{String.valueOf(l.id), l.category, l.name,
-                        l.address, l.room, l.transport, l.hours, l.remark,
-                        l.url});
+                   + "transport, hours, remark, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                   new String[]{String.valueOf(l.getId()), l.getCategory(), l.getName(),
+                                l.getAddress(), l.getRoom(), l.getTransport(), l.getHours(), l.getRemark(),
+                                l.getUrl()});
     }
 }

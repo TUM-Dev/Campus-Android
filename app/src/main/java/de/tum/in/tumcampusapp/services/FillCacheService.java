@@ -11,33 +11,30 @@ import de.tum.in.tumcampusapp.managers.CacheManager;
  **/
 public class FillCacheService extends IntentService {
 
-	private static final String CACHE_SERVICE = "FillCacheService";
+    private static final String CACHE_SERVICE = "FillCacheService";
 
-	public FillCacheService() {
-		super(CACHE_SERVICE);
-	}
+    public FillCacheService() {
+        super(CACHE_SERVICE);
+    }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		Utils.logv("FillCacheService has started");
-	}
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Utils.logv("FillCacheService has started");
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Utils.logv("FillCacheService has stopped");
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Utils.logv("FillCacheService has stopped");
+    }
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Fill cache service
-                CacheManager cache = new CacheManager(FillCacheService.this);
-                cache.fillCache();
-            }
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        new Thread(() -> {
+            // Fill cache service
+            CacheManager cache = new CacheManager(FillCacheService.this);
+            cache.fillCache();
         }).start();
-	}
+    }
 }

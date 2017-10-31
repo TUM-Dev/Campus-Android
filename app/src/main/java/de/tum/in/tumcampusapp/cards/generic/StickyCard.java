@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.cards.generic;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 

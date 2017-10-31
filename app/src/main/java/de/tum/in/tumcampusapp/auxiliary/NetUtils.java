@@ -95,8 +95,10 @@ public class NetUtils {
         Request.Builder builder = new Request.Builder().url(url);
 
         //Execute the request
-        Response res = client.newCall(builder.build()).execute();
-        return Optional.of(res.body());
+        Response res = client.newCall(builder.build())
+                             .execute();
+        return Optional.fromNullable(res.body());
+
     }
 
     /**
@@ -104,12 +106,14 @@ public class NetUtils {
      *
      * @param url Download URL location
      * @return The content string
-     * @throws IOException
+     * @throws IOException when the http call fails
      */
     public Optional<String> downloadStringHttp(String url) throws IOException {
-        Optional<ResponseBody> body = getOkHttpResponse(url);
-        if (body.isPresent()) {
-            return Optional.of(body.get().string());
+        Optional<ResponseBody> response = getOkHttpResponse(url);
+        if (response.isPresent()) {
+            ResponseBody b = response.get();
+            return Optional.of(b.string());
+
         }
         return Optional.absent();
     }
@@ -153,18 +157,17 @@ public class NetUtils {
         }
 
         File file = new File(target);
-        FileOutputStream out = new FileOutputStream(file);
-        try {
+        try (FileOutputStream out = new FileOutputStream(file)) {
             Optional<ResponseBody> body = getOkHttpResponse(url);
             if (!body.isPresent()) {
                 file.delete();
                 throw new IOException();
             }
-            byte[] buffer = body.get().bytes();
+            byte[] buffer = body.get()
+                                .bytes();
+
             out.write(buffer, 0, buffer.length);
             out.flush();
-        } finally {
-            out.close();
         }
     }
 
@@ -189,7 +192,8 @@ public class NetUtils {
                 }
             }
 
-            file = Optional.of(mContext.getCacheDir().getAbsolutePath() + '/' + Utils.hash(url) + ".jpg");
+            file = Optional.of(mContext.getCacheDir()
+                                       .getAbsolutePath() + '/' + Utils.hash(url) + ".jpg");
             File f = new File(file.get());
             downloadToFile(url, file.get());
 
@@ -211,7 +215,8 @@ public class NetUtils {
     public Optional<Bitmap> downloadImageToBitmap(@NonNull String url) {
         Optional<File> f = downloadImage(url);
         if (f.isPresent()) {
-            return Optional.fromNullable(BitmapFactory.decodeFile(f.get().getAbsolutePath()));
+            return Optional.fromNullable(BitmapFactory.decodeFile(f.get()
+                                                                   .getAbsolutePath()));
         }
         return Optional.absent();
     }

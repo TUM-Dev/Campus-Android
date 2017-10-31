@@ -36,7 +36,7 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, ChatRoomsActivity.class, true, true),
             new SideNavigationItem(R.string.my_grades, R.drawable.ic_my_grades, GradesActivity.class, true, false),
             new SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesActivity.class, true, false),
-    };
+            };
 
     private static final SideNavigationItem[] COMMON_TUM = {
             new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, CafeteriaActivity.class, false, false),
@@ -79,7 +79,9 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             SubMenu myTumMenu = navigationMenu.addSubMenu(R.string.my_tum);
             for (SideNavigationItem item : MY_TUM) {
                 if (!(item.needsChatAccess && !chatEnabled)) {
-                    myTumMenu.add(item.titleRes).setIcon(item.iconRes).setIntent(new Intent(mContext, item.activity));
+                    myTumMenu.add(item.titleRes)
+                             .setIcon(item.iconRes)
+                             .setIntent(new Intent(mContext, item.activity));
                 }
             }
         }
@@ -87,7 +89,9 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
         SubMenu commonTumMenu = navigationMenu.addSubMenu(R.string.tum_common);
         for (SideNavigationItem item : COMMON_TUM) {
             if (!(item.needsTUMOAccess && !hasTUMOAccess)) {
-                commonTumMenu.add(item.titleRes).setIcon(item.iconRes).setIntent(new Intent(mContext, item.activity));
+                commonTumMenu.add(item.titleRes)
+                             .setIcon(item.iconRes)
+                             .setIntent(new Intent(mContext, item.activity));
             }
         }
     }

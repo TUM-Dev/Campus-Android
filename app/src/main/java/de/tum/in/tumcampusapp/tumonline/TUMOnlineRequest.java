@@ -40,7 +40,7 @@ public final class TUMOnlineRequest<T> {
 
     /**
      * Valid response (no TUMOnline error) but no data available (e.g. no grades yet)
-     * */
+     */
     public static final String NO_ENTRIES = "<rowset>\n</rowset>";
 
     /**
@@ -107,10 +107,11 @@ public final class TUMOnlineRequest<T> {
     }
 
     public static boolean checkTokenInactive(Context c) {
-        TUMOnlineRequest<TokenConfirmation> checkActiveToken = new TUMOnlineRequest<>(TUMOnlineConst.TOKEN_CONFIRMED, c, true);
+        TUMOnlineRequest<TokenConfirmation> checkActiveToken = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTOKEN_CONFIRMED(), c, true);
         Optional<TokenConfirmation> tc = checkActiveToken.fetch();
         if (tc.isPresent()) { //Check that the token is actually active
-            if (tc.get().isConfirmed()) {
+            if (tc.get()
+                  .isConfirmed()) {
                 Utils.setSetting(c, Const.TUMO_DISABLED, false);
             } else {
                 Utils.setSetting(c, Const.TUMO_DISABLED, true);//Nope its not, deactivate all requests to TUMOnline
@@ -131,7 +132,7 @@ public final class TUMOnlineRequest<T> {
         String url = this.getRequestURL();
 
         //If there were some requests that failed and we verified that the token is not active anymore, block all requests directly
-        if (!method.equals(TUMOnlineConst.TOKEN_CONFIRMED) && Utils.getSettingBool(mContext, Const.TUMO_DISABLED, false)) {
+        if (!method.equals(TUMOnlineConst.Companion.getTOKEN_CONFIRMED()) && Utils.getSettingBool(mContext, Const.TUMO_DISABLED, false)) {
             Utils.log("aborting fetch URL, as the token is not active any longer " + url);
             return Optional.absent();
         }
@@ -175,6 +176,7 @@ public final class TUMOnlineRequest<T> {
                 //Release any lock present in the database
                 tumManager.releaseLock(url);
             } catch (Exception e) {
+                Utils.log(e, "TUMonline request failed");
                 //Serialisation failed - lock for a specific time, save the error message
                 lastError = tumManager.addLock(url, result.get());
             }
@@ -227,7 +229,7 @@ public final class TUMOnlineRequest<T> {
 
                 //Check for common errors
                 if (!result.isPresent()) {
-                    if(lastError.contains(NO_ENTRIES)){
+                    if (lastError.contains(NO_ENTRIES)) {
                         listener.onNoDataToShow();
                         return;
                     }
@@ -262,11 +264,15 @@ public final class TUMOnlineRequest<T> {
      * @return a String URL
      */
     public String getRequestURL() {
-        StringBuilder url = new StringBuilder(SERVICE_BASE_URL).append(method).append('?');
+        StringBuilder url = new StringBuilder(SERVICE_BASE_URL).append(method)
+                                                               .append('?');
 
         // Builds to be fetched URL based on the base-url and additional parameters
         for (Entry<String, String> pairs : parameters.entrySet()) {
-            url.append(pairs.getKey()).append('=').append(pairs.getValue()).append('&');
+            url.append(pairs.getKey())
+               .append('=')
+               .append(pairs.getValue())
+               .append('&');
         }
         return url.toString();
     }
@@ -278,7 +284,8 @@ public final class TUMOnlineRequest<T> {
      * @return true if access token is available; false otherwise
      */
     private boolean loadAccessTokenFromPreferences(Context context) {
-        accessToken = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.ACCESS_TOKEN, null);
+        accessToken = PreferenceManager.getDefaultSharedPreferences(context)
+                                       .getString(Const.ACCESS_TOKEN, null);
 
         // no access token set, or it is obviously wrong
         if (accessToken == null || accessToken.length() < 1) {
@@ -308,7 +315,8 @@ public final class TUMOnlineRequest<T> {
      * @param value value of the parameter
      */
     public void setParameter(String name, String value) {
-        parameters.put(name, UrlEscapers.urlPathSegmentEscaper().escape(value));
+        parameters.put(name, UrlEscapers.urlPathSegmentEscaper()
+                                        .escape(value));
     }
 
     public void setParameterEncoded(String name, String value) {

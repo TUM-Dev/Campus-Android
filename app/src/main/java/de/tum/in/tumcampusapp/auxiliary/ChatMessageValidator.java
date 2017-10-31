@@ -17,7 +17,6 @@ import java.util.List;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
 
-
 /**
  * A class allowing a convenient API to check the validity of ChatMessages based
  * on a set of known public keys.

@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -147,8 +146,9 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @return True, if favorite
      */
     public boolean isFavorite(String symbol) {
-        return db.rawQuery("SELECT * FROM transport_favorites WHERE symbol = ?", new String[]{symbol})
-                 .getCount() > 0;
+        try (Cursor c = db.rawQuery("SELECT * FROM transport_favorites WHERE symbol = ?", new String[]{symbol})) {
+            return c.getCount() > 0;
+        }
     }
 
     /**
@@ -177,8 +177,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         values.put("id", appWidgetId);
         values.put("station", widgetDepartures.getStation());
         values.put("station_id", widgetDepartures.getStationId());
-        values.put("location", widgetDepartures.useLocation());
-        values.put("reload", widgetDepartures.autoReload());
+        values.put("location", widgetDepartures.getUseLocation());
+        values.put("reload", widgetDepartures.getAutoReload());
         db.replace("widgets_transport", null, values);
         TransportManager.widgetDeparturesList.put(appWidgetId, widgetDepartures);
     }
@@ -207,15 +207,16 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         if (TransportManager.widgetDeparturesList.indexOfKey(widgetId) >= 0) {
             return TransportManager.widgetDeparturesList.get(widgetId);
         }
-        Cursor c = db.rawQuery("SELECT * FROM widgets_transport WHERE id = ?", new String[]{String.valueOf(widgetId)});
-        WidgetDepartures widgetDepartures = new WidgetDepartures();
-        if (c.getCount() >= 1) {
-            c.moveToFirst();
-            widgetDepartures.setStation(c.getString(c.getColumnIndex("station")));
-            widgetDepartures.setStationId(c.getString(c.getColumnIndex("station_id")));
-            widgetDepartures.setUseLocation(c.getInt(c.getColumnIndex("location")) != 0);
-            widgetDepartures.setAutoReload(c.getInt(c.getColumnIndex("reload")) != 0);
-            c.close();
+        WidgetDepartures widgetDepartures;
+        try (Cursor c = db.rawQuery("SELECT * FROM widgets_transport WHERE id = ?", new String[]{String.valueOf(widgetId)})) {
+            widgetDepartures = new WidgetDepartures();
+            if (c.getCount() >= 1) {
+                c.moveToFirst();
+                widgetDepartures.setStation(c.getString(c.getColumnIndex("station")));
+                widgetDepartures.setStationId(c.getString(c.getColumnIndex("station_id")));
+                widgetDepartures.setUseLocation(c.getInt(c.getColumnIndex("location")) != 0);
+                widgetDepartures.setAutoReload(c.getInt(c.getColumnIndex("reload")) != 0);
+            }
         }
         TransportManager.widgetDeparturesList.put(widgetId, widgetDepartures);
         return widgetDepartures;
@@ -270,12 +271,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                 ));
             }
 
-            Collections.sort(result, new Comparator<Departure>() {
-                @Override
-                public int compare(Departure lhs, Departure rhs) {
-                    return lhs.countDown - rhs.countDown;
-                }
-            });
+            Collections.sort(result, (lhs, rhs) -> lhs.getCountDown() - rhs.getCountDown());
         } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
@@ -329,19 +325,14 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             }
 
             //Sort by quality
-            Collections.sort(results, new Comparator<StationResult>() {
-                @Override
-                public int compare(StationResult lhs, StationResult rhs) {
-                    return rhs.quality - lhs.quality;
-                }
-            });
+            Collections.sort(results, (lhs, rhs) -> rhs.getQuality() - lhs.getQuality());
 
             MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
             for (StationResult result : results) {
                 String jsonStationResult = gson.toJson(result, StationResult.class);
                 mc.addRow(new String[]{jsonStationResult, String.valueOf(RecentsManager.STATIONS)});
             }
-            return Optional.of((Cursor) mc);
+            return Optional.of(mc);
         } catch (JSONException e) {
             Utils.log(e, ERROR_INVALID_JSON + STATION_SEARCH);
         }

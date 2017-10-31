@@ -1,18 +1,18 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_marginBottom="@dimen/card_padding_vertical"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginTop="@dimen/card_padding_vertical"
-    android:elevation="@dimen/cardview_elevation"
-    android:transitionName="@string/transition_card"
-    card_view:cardBackgroundColor="#fff"
-    card_view:cardCornerRadius="3dp"
-    tools:ignore="UnusedAttribute">
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginBottom="@dimen/card_padding_vertical"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginRight="8dp"
+                                    android:layout_marginTop="@dimen/card_padding_vertical"
+                                    android:elevation="@dimen/cardview_elevation"
+                                    android:transitionName="@string/transition_card"
+                                    card_view:cardBackgroundColor="#fff"
+                                    card_view:cardCornerRadius="3dp"
+                                    tools:ignore="UnusedAttribute">
 
     <LinearLayout
         android:id="@+id/card_view"
@@ -30,21 +30,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:typeface="sans" />
+                android:typeface="sans"/>
 
             <TextView
                 android:id="@+id/card_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
 
         <View
             android:id="@+id/place_holder"
             android:layout_width="match_parent"
             android:layout_height="10dp"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

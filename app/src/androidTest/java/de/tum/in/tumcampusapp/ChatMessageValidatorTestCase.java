@@ -30,25 +30,25 @@ public class ChatMessageValidatorTestCase {
         publicKeyFixtures = new ArrayList<>();
         publicKeyFixtures.add(new ChatPublicKey(
                 "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDR4+3zbRYVRAecvMcn0vLswZAI1z7JqQ2Q0Mkq\n" +
-                        "ZAy78cE/tja8qcD4DXXiQYCKC8BdI68W+DqYLohPuOs6rTYfD/pLsbPKaJLHEb4dw0Uchq36pb60\n" +
-                        "6G6aCjZrYM0JJYO/pKbwl6ceF6EJRacGswUQ8qY3ZYd6W7R3J7MQxzJ+lQIDAQAB"));
+                "ZAy78cE/tja8qcD4DXXiQYCKC8BdI68W+DqYLohPuOs6rTYfD/pLsbPKaJLHEb4dw0Uchq36pb60\n" +
+                "6G6aCjZrYM0JJYO/pKbwl6ceF6EJRacGswUQ8qY3ZYd6W7R3J7MQxzJ+lQIDAQAB"));
 
         messageFixtures = new ArrayList<>();
         messageFixtures.add(buildChatMessage(
                 "This is a message!",
                 "MwBZFVhzIGehiGAVaoxp0k04BJN8YyyqlPQg1hXwg1bQxgjtEXz6KsVzYOWo40/TdhcbUHo+hUhk\n" +
-                        "/rLLBrkFldQuNGhd/ltwiMeN2KwdLYm5nl9DWIjPXXviCBogkVtwrBdAhgknr5Kn5Zy4TbGdMr9z\n" +
-                        "d/iOl27L7GYepazgNW8="));
+                "/rLLBrkFldQuNGhd/ltwiMeN2KwdLYm5nl9DWIjPXXviCBogkVtwrBdAhgknr5Kn5Zy4TbGdMr9z\n" +
+                "d/iOl27L7GYepazgNW8="));
         messageFixtures.add(buildChatMessage(
                 "A message with German characters: öäüßÖÄÜ!",
                 "qCOAmFho4tKW24qn6vv6j0x4jc3OVKPbVVm7EqYeJKBStGOmEcx6Crtx0MEMFxNe4Zyqo0kYMXNO\n" +
-                        "/NPTvhUJlAr5x6Hlc1iKWBT5eGE8F3mKE8pTSObrCWhEBXylQjkwej5eQpahW+uexZWzeme702V0\n" +
-                        "1C3FoeYUC9rSOfLlyss="));
+                "/NPTvhUJlAr5x6Hlc1iKWBT5eGE8F3mKE8pTSObrCWhEBXylQjkwej5eQpahW+uexZWzeme702V0\n" +
+                "1C3FoeYUC9rSOfLlyss="));
         messageFixtures.add(buildChatMessage(
                 "This is a Korean message: \uC88B\uC740 \uAC8C\uC784",
                 "L6DPFzKiVWrO3TeAjJwPNtC4U5D69ODloH3zmCXCpZx+fiZhopzC5cUAeolm2l/++KYZu3vR6IJK\n" +
-                        "HLjXaMd4jDruY8DiWNmCbOnR/ywHQ96sCuMcdfhot5AgM05NbBH7GiAFBDJQzDejuK7M7hGmHZ6s\n" +
-                        "L4WYKETiNiP1Oc6d58w="));
+                "HLjXaMd4jDruY8DiWNmCbOnR/ywHQ96sCuMcdfhot5AgM05NbBH7GiAFBDJQzDejuK7M7hGmHZ6s\n" +
+                "L4WYKETiNiP1Oc6d58w="));
     }
 
     /**
@@ -94,7 +94,8 @@ public class ChatMessageValidatorTestCase {
         validator = new ChatMessageValidator(buildPubkeyList(0, 1));
         ChatMessage message = messageFixtures.get(0);
         // Take a signature of a different message
-        message.setSignature(messageFixtures.get(1).getSignature());
+        message.setSignature(messageFixtures.get(1)
+                                            .getSignature());
 
         assertFalse(validator.validate(message));
     }
@@ -140,7 +141,8 @@ public class ChatMessageValidatorTestCase {
     @Test
     public void testInvalidBase64PublicKey() {
         List<ChatPublicKey> list = buildPubkeyList(0, 1);
-        list.get(0).setKey("This is not valid base 64");
+        list.get(0)
+            .setKey("This is not valid base 64");
         validator = new ChatMessageValidator(list);
         ChatMessage message = messageFixtures.get(0);
 
@@ -153,7 +155,7 @@ public class ChatMessageValidatorTestCase {
      */
     @Test
     public void testNoPublicKeys() {
-        validator = new ChatMessageValidator(new ArrayList<ChatPublicKey>());
+        validator = new ChatMessageValidator(new ArrayList<>());
 
         for (ChatMessage message : messageFixtures) {
             assertFalse(validator.validate(message));

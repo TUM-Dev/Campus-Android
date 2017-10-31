@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="16dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/widget_configure_description"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"/>
 
     <CheckBox
         android:id="@+id/chk_cafeteria"
@@ -18,7 +18,7 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="@string/cafeteria"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <CheckBox
         android:id="@+id/chk_eduroam"
@@ -27,7 +27,7 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="@string/eduroam"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <CheckBox
         android:id="@+id/chk_chatmessages"
@@ -36,7 +36,7 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="@string/chat"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <CheckBox
         android:id="@+id/chk_mvv"
@@ -45,7 +45,7 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="@string/mvv"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <CheckBox
         android:id="@+id/chk_newspread"
@@ -54,7 +54,7 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="@string/newspread"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <CheckBox
         android:id="@+id/chk_lecture"
@@ -63,7 +63,7 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="@string/next_lecture"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <CheckBox
         android:id="@+id/chk_tutionFee"
@@ -72,13 +72,13 @@
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="@string/tuition_fees"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <Button
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_widget"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"/>
 
 </LinearLayout>

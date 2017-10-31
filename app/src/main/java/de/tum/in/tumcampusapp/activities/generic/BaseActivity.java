@@ -17,7 +17,6 @@ import com.google.common.base.Optional;
 import de.hdodenhof.circleimageview.CircleImageView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.MainActivity;
-import de.tum.in.tumcampusapp.activities.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.DrawerMenuHelper;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
@@ -57,19 +56,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(mLayoutId);
 
         // Get handles to navigation drawer
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerList = findViewById(R.id.left_drawer);
 
         // Setup the navigation drawer if present in the layout
         if (mDrawerList != null && mDrawerLayout != null) {
             // Set personalization in the navdrawer
             headerView = mDrawerList.inflateHeaderView(R.layout.drawer_header);
-            TextView nameText = (TextView) headerView.findViewById(R.id.name);
-            TextView emailText = (TextView) headerView.findViewById(R.id.email);
+            TextView nameText = headerView.findViewById(R.id.name);
+            TextView emailText = headerView.findViewById(R.id.email);
             nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
-                    getString(R.string.token_not_enabled)));
+                                              getString(R.string.token_not_enabled)));
             StringBuffer email = new StringBuffer(Utils.getSetting(this, Const.LRZ_ID, ""));
-            if (!email.toString().isEmpty()) {
+            if (!email.toString()
+                      .isEmpty()) {
                 email.append("@mytum.de");
             }
             emailText.setText(email);
@@ -86,7 +86,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         String parent = NavUtils.getParentActivityName(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null && (parent != null || this instanceof MainActivity)) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -107,7 +107,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
                 // This activity is NOT part of this apps task, so create a new task
                 // when navigating up, with a synthesized back stack.
-                TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
+                TaskStackBuilder.create(this)
+                                .addNextIntentWithParentStack(upIntent)
+                                .startActivities();
             } else {
                 // This activity is part of this apps task, so simply
                 // navigate up to the logical parent activity.
@@ -124,26 +126,22 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        final TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_DETAILS, this, true);
+        final TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getPERSON_DETAILS(), this, true);
         request.setParameter("pIdentNr", id);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Optional<Employee> result = request.fetch();
-                if (!result.isPresent()) {
-                    return;
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        CircleImageView picture = (CircleImageView) headerView.findViewById(R.id.profile_image);
-                        if (result.get().getImage() != null) {
-                            picture.setImageBitmap(result.get().getImage());
-                        }
-                    }
-                });
+        new Thread(() -> {
+            final Optional<Employee> result = request.fetch();
+            if (!result.isPresent()) {
+                return;
             }
+            runOnUiThread(() -> {
+                CircleImageView picture = headerView.findViewById(R.id.profile_image);
+                if (result.get()
+                          .getImage() != null) {
+                    picture.setImageBitmap(result.get()
+                                                 .getImage());
+                }
+            });
         }).start();
     }
 }

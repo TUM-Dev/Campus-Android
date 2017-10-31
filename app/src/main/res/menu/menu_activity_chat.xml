@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+      xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_add_chat_member"
         android:icon="@drawable/ic_action_add_person"
         android:title="@string/add_chat_member"
-        tumcampus:showAsAction="ifRoom" />
+        tumcampus:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_leave_chat_room"
         android:title="@string/leave_chat_room"
-        tumcampus:showAsAction="never" />
+        tumcampus:showAsAction="never"/>
 
 </menu>

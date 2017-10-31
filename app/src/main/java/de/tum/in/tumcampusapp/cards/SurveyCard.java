@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -40,17 +39,18 @@ public class SurveyCard extends Card {
     private final DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // For converting Jade DateTime into String & vic versa (see show and discard functions)
     // Answer flags relevant for updating the answered questions in the db
 
-    private static int answerYes = 1;
-    private static int answerNo = 2;
-    private static int answerFlag = -1;
-    private static int answerSkip = 3;
+    private static final int answerYes = 1;
+    private static final int answerNo = 2;
+    private static final int answerFlag = -1;
+    private static final int answerSkip = 3;
 
     public SurveyCard(Context context) {
         super(CardManager.CARD_SURVEY, context, "card_survey");
     }
 
     public static Card.CardViewHolder inflateViewHolder(final ViewGroup parent) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_survey, parent, false);
+        final View view = LayoutInflater.from(parent.getContext())
+                                        .inflate(R.layout.card_survey, parent, false);
         return new Card.CardViewHolder(view);
     }
 
@@ -63,13 +63,13 @@ public class SurveyCard extends Card {
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
         mCard = viewHolder.itemView;
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
-        mQuestion = (TextView) mCard.findViewById(R.id.questionText);
-        bYes = (Button) mCard.findViewById(R.id.yesAnswerCard);
-        bNo = (Button) mCard.findViewById(R.id.noAnswerCard);
-        bSkip = (Button) mCard.findViewById(R.id.ignoreAnswerCard);
-        bFlagged = (ImageButton) mCard.findViewById(R.id.flagButton);
+        mLinearLayout = mCard.findViewById(R.id.card_view);
+        mTitleView = mCard.findViewById(R.id.card_title);
+        mQuestion = mCard.findViewById(R.id.questionText);
+        bYes = mCard.findViewById(R.id.yesAnswerCard);
+        bNo = mCard.findViewById(R.id.noAnswerCard);
+        bSkip = mCard.findViewById(R.id.ignoreAnswerCard);
+        bFlagged = mCard.findViewById(R.id.flagButton);
 
         showFirstQuestion();
 
@@ -86,38 +86,27 @@ public class SurveyCard extends Card {
             final Question ques = questions.get(0);
             mQuestion.setText(ques.getText()); // Sets the text of the question that should be shown first
 
+            // TODO: this can probably be replaced by a single OnClickListener
             // Listens on the yes button in the card
-            bYes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerYes); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
-                }
+            bYes.setOnClickListener(view -> {
+                Question updatedElement = questions.remove(0);
+                manager.updateQuestion(updatedElement, answerYes); // update the answerID in the local db.
+                showNextQuestions(); // handel showing next question(s)
             });
-            bNo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerNo); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
-                }
+            bNo.setOnClickListener(view -> {
+                Question updatedElement = questions.remove(0);
+                manager.updateQuestion(updatedElement, answerNo); // update the answerID in the local db.
+                showNextQuestions(); // handel showing next question(s)
             });
-            bSkip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerSkip); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
-                }
+            bSkip.setOnClickListener(view -> {
+                Question updatedElement = questions.remove(0);
+                manager.updateQuestion(updatedElement, answerSkip); // update the answerID in the local db.
+                showNextQuestions(); // handel showing next question(s)
             });
-            bFlagged.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerFlag); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
-                }
+            bFlagged.setOnClickListener(view -> {
+                Question updatedElement = questions.remove(0);
+                manager.updateQuestion(updatedElement, answerFlag); // update the answerID in the local db.
+                showNextQuestions(); // handel showing next question(s)
             });
         }
     }
@@ -147,7 +136,8 @@ public class SurveyCard extends Card {
      */
     @Override
     public void discard(SharedPreferences.Editor editor) {
-        DateTime discardedTill = DateTime.now().plusMinutes(1440); // in 24 hours
+        DateTime discardedTill = DateTime.now()
+                                         .plusMinutes(1440); // in 24 hours
         String discardTimeString = discardedTill.toString(fmt);
         editor.putString(SURVEY_CARD_DISCARDED_TILL, discardTimeString);
     }
@@ -159,9 +149,12 @@ public class SurveyCard extends Card {
     @Override
     protected boolean shouldShow(SharedPreferences p) {
         String currentDate = Utils.getDateTimeString(new Date());
-        DateTime discardedTill = fmt.parseDateTime(p.getString(SURVEY_CARD_DISCARDED_TILL, DateTime.now().toString(fmt)));
-        return discardedTill.isBeforeNow() &&
-                manager.getUnansweredQuestionsSince(currentDate).getCount() >= 1;
+        DateTime discardedTill = fmt.parseDateTime(p.getString(SURVEY_CARD_DISCARDED_TILL, DateTime.now()
+                                                                                                   .toString(fmt)));
+        try (Cursor cursor = manager.getUnansweredQuestionsSince(currentDate)) {
+            return discardedTill.isBeforeNow() &&
+                   cursor.getCount() >= 1;
+        }
     }
 
     @Override

@@ -51,7 +51,7 @@ public class CacheManager {
     public static final LruCache<String, Bitmap> BITMAP_CACHE;
 
     private static SQLiteDatabase cacheDb;
-    private Context mContext;
+    private final Context mContext;
 
     static {
         int cacheSize = 4 * 1024 * 1024; // 4MiB
@@ -66,12 +66,13 @@ public class CacheManager {
 
     private static synchronized void initCacheDb(Context c) {
         if (cacheDb == null) {
-            File dbFile = new File(c.getCacheDir().getAbsolutePath() + "/cache.db");
-            dbFile.getParentFile().mkdirs();
+            File dbFile = new File(c.getCacheDir()
+                                    .getAbsolutePath() + "/cache.db");
+            dbFile.getParentFile()
+                  .mkdirs();
             cacheDb = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
         }
     }
-
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -84,18 +85,18 @@ public class CacheManager {
 
         // create table if needed
         cacheDb.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, " +
-                "validity VARCHAR, max_age VARCHAR, typ INTEGER)");
+                        "validity VARCHAR, max_age VARCHAR, typ INTEGER)");
 
         // Delete all entries that are too old and delete corresponding image files
         cacheDb.beginTransaction();
-        Cursor cur = cacheDb.rawQuery("SELECT data FROM cache WHERE datetime()>max_age AND typ=1", null);
-        if (cur.moveToFirst()) {
-            do {
-                File f = new File(cur.getString(0));
-                f.delete();
-            } while (cur.moveToNext());
+        try (Cursor cur = cacheDb.rawQuery("SELECT data FROM cache WHERE datetime()>max_age AND typ=1", null)) {
+            if (cur.moveToFirst()) {
+                do {
+                    File f = new File(cur.getString(0));
+                    f.delete();
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
         cacheDb.execSQL("DELETE FROM cache WHERE datetime()>max_age");
         cacheDb.setTransactionSuccessful();
         cacheDb.endTransaction();
@@ -114,41 +115,41 @@ public class CacheManager {
 
         // Cache news source images
         NewsManager news = new NewsManager(mContext);
-        Cursor cur = news.getNewsSources();
-        if (cur.moveToFirst()) {
-            do {
-                String imgUrl = cur.getString(1);
-                if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
-                    net.downloadImage(imgUrl);
-                }
-            } while (cur.moveToNext());
+        try (Cursor cur = news.getNewsSources()) {
+            if (cur.moveToFirst()) {
+                do {
+                    String imgUrl = cur.getString(1);
+                    if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
+                        net.downloadImage(imgUrl);
+                    }
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
 
         // Cache news images
-        cur = news.getAllFromDb(mContext);
-        if (cur.moveToFirst()) {
-            do {
-                String imgUrl = cur.getString(4);
-                if (!"null".equals(imgUrl)) {
-                    net.downloadImage(imgUrl);
-                }
-            } while (cur.moveToNext());
+        try (Cursor cur = news.getAllFromDb(mContext)) {
+            if (cur.moveToFirst()) {
+                do {
+                    String imgUrl = cur.getString(4);
+                    if (!"null".equals(imgUrl)) {
+                        net.downloadImage(imgUrl);
+                    }
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
 
         // Cache kino covers
         KinoManager km = new KinoManager(mContext);
-        cur = km.getAllFromDb();
-        if (cur.moveToFirst()) {
-            do {
-                String imgUrl = cur.getString(cur.getColumnIndex(Const.JSON_COVER));
-                if (!"null".equals(imgUrl)) {
-                    net.downloadImage(imgUrl);
-                }
-            } while (cur.moveToNext());
+        try (Cursor cur = km.getAllFromDb()) {
+            if (cur.moveToFirst()) {
+                do {
+                    String imgUrl = cur.getString(cur.getColumnIndex(Const.JSON_COVER));
+                    if (!"null".equals(imgUrl)) {
+                        net.downloadImage(imgUrl);
+                    }
+                } while (cur.moveToNext());
+            }
         }
-        cur.close();
 
         // acquire access token
         if (!new AccessTokenManager(mContext).hasValidAccessToken()) {
@@ -158,13 +159,13 @@ public class CacheManager {
         // ALL STUFF BELOW HERE NEEDS A VALID ACCESS TOKEN
 
         // Sync organisation tree
-        TUMOnlineRequest<OrgItemList> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.ORG_TREE, mContext);
+        TUMOnlineRequest<OrgItemList> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getORG_TREE(), mContext);
         if (shouldRefresh(requestHandler.getRequestURL())) {
             requestHandler.fetch();
         }
 
         // Sync fee status
-        TUMOnlineRequest<TuitionList> requestHandler2 = new TUMOnlineRequest<>(TUMOnlineConst.TUITION_FEE_STATUS, mContext);
+        TUMOnlineRequest<TuitionList> requestHandler2 = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTUITION_FEE_STATUS(), mContext);
         if (shouldRefresh(requestHandler2.getRequestURL())) {
             requestHandler2.fetch();
         }
@@ -177,7 +178,7 @@ public class CacheManager {
     }
 
     public void syncCalendar() {
-        TUMOnlineRequest<CalendarRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.CALENDER, mContext);
+        TUMOnlineRequest<CalendarRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getCALENDER(), mContext);
         requestHandler.setParameter("pMonateVor", "0");
         requestHandler.setParameter("pMonateNach", "3");
         if (shouldRefresh(requestHandler.getRequestURL())) {
@@ -200,13 +201,11 @@ public class CacheManager {
     public Optional<String> getFromCache(String url) {
         String result = null;
 
-        try {
-            Cursor c = cacheDb.rawQuery("SELECT data FROM cache WHERE url=? AND datetime()<max_age", new String[]{url});
+        try (Cursor c = cacheDb.rawQuery("SELECT data FROM cache WHERE url=? AND datetime()<max_age", new String[]{url})) {
             if (c.getCount() == 1) {
                 c.moveToFirst();
                 result = c.getString(0);
             }
-            c.close();
         } catch (SQLiteException e) {
             Utils.log(e);
         }
@@ -219,15 +218,13 @@ public class CacheManager {
      * @param url Url from which data was cached
      * @return Data if valid version was found, null if no data is available
      */
-    public boolean shouldRefresh(String url) {
+    private boolean shouldRefresh(String url) {
         boolean result = true;
 
-        try {
-            Cursor c = cacheDb.rawQuery("SELECT url FROM cache WHERE url=? AND datetime() < validity", new String[]{url});
+        try (Cursor c = cacheDb.rawQuery("SELECT url FROM cache WHERE url=? AND datetime() < validity", new String[]{url})) {
             if (c.getCount() == 1) {
                 result = false;
             }
-            c.close();
         } catch (SQLiteException e) {
             Utils.log(e);
         }
@@ -247,15 +244,15 @@ public class CacheManager {
         cacheDb.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
                         "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
                         "datetime('now','+" + validity + " seconds'), ?)",
-                new String[]{url, data, String.valueOf(typ)});
+                        new String[]{url, data, String.valueOf(typ)});
     }
 
     /**
      * this function allows us to import all lecture items from TUMOnline
      */
-    public void importLecturesFromTUMOnline() {
+    private void importLecturesFromTUMOnline() {
         // get my lectures
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), mContext);
         if (!shouldRefresh(requestHandler.getRequestURL())) {
             return;
         }
@@ -264,7 +261,8 @@ public class CacheManager {
         if (!lecturesList.isPresent()) {
             return;
         }
-        List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
+        List<LecturesSearchRow> lectures = lecturesList.get()
+                                                       .getLehrveranstaltungen();
         if (lectures == null) {
             return;
         }
@@ -272,10 +270,11 @@ public class CacheManager {
         manager.replaceInto(lectures);
     }
 
-    public static synchronized void clearCache(Context context) {
+    static synchronized void clearCache(Context context) {
         cacheDb = null;
         try {
-            Process proc = Runtime.getRuntime().exec("rm -r " + context.getCacheDir());
+            Process proc = Runtime.getRuntime()
+                                  .exec("rm -r " + context.getCacheDir());
             proc.waitFor();
         } catch (InterruptedException | IOException e) {
             Utils.log("couldn't delete cache files " + e.toString());

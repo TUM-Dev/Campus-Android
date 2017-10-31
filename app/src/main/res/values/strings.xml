@@ -33,7 +33,7 @@
     <string name="search_rooms">Search rooms</string>
 
     <!-- Auxiliary -->
-    <string name="empty_string" translatable="false" />
+    <string name="empty_string" translatable="false"/>
     <string name="error_fetching_tumonline">Error accessing TUMonline.\nPlease make sure your TUMonline-Access-Token has
 		been\nactivated and the corresponding rights are set.\n\n<b>Click here to retry.</b></string>
     <string name="error_no_token_setup">No TUMonline-Access-Token was set.\nPlease set your TUMonline-Access-Token in the\n <i>Settings</i> screen to access TUMonline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>

@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin"
-    android:theme="@style/AppTheme.WhiteBackground">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/widget_margin"
+                android:theme="@style/AppTheme.WhiteBackground">
 
     <RelativeLayout
         android:id="@+id/mensa_widget_header_container"
@@ -22,7 +22,7 @@
             android:background="@color/color_primary"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:typeface="sans" />
+            android:typeface="sans"/>
 
         <ImageView
             android:id="@+id/mensa_widget_icon"
@@ -32,7 +32,7 @@
             android:layout_alignParentRight="true"
             android:background="@color/color_primary"
             android:src="@drawable/ic_cutlery"
-            android:tint="@android:color/white" />
+            android:tint="@android:color/white"/>
     </RelativeLayout>
 
 
@@ -40,7 +40,7 @@
         android:id="@+id/food_item"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/mensa_widget_header_container" />
+        android:layout_below="@id/mensa_widget_header_container"/>
 
     <TextView
         android:id="@+id/empty_view"
@@ -50,5 +50,5 @@
         android:gravity="center"
         android:textColor="#ff656865"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 </RelativeLayout>

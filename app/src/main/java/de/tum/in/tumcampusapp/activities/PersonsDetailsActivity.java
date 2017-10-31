@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
-import android.content.DialogInterface;
 import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -56,9 +55,8 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     private Employee mEmployee;
     private MenuItem mContact;
 
-
     public PersonsDetailsActivity() {
-        super(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_personsdetails);
+        super(TUMOnlineConst.Companion.getPERSON_DETAILS(), R.layout.activity_personsdetails);
     }
 
     private static void addContact(Collection<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
@@ -66,38 +64,38 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
             // Add work telefon number
             if (contact.getTelefon() != null) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                        .withValue(Phone.NUMBER, contact.getTelefon())
-                        .withValue(Phone.TYPE, work ? Phone.TYPE_WORK : Phone.TYPE_HOME)
-                        .build());
+                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                                                .withValue(Phone.NUMBER, contact.getTelefon())
+                                                .withValue(Phone.TYPE, work ? Phone.TYPE_WORK : Phone.TYPE_HOME)
+                                                .build());
             }
             // Add work mobile number
             if (contact.getMobilephone() != null) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                        .withValue(Phone.NUMBER, contact.getMobilephone())
-                        .withValue(Phone.TYPE, work ? Phone.TYPE_WORK_MOBILE : Phone.TYPE_MOBILE)
-                        .build());
+                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                                                .withValue(Phone.NUMBER, contact.getMobilephone())
+                                                .withValue(Phone.TYPE, work ? Phone.TYPE_WORK_MOBILE : Phone.TYPE_MOBILE)
+                                                .build());
             }
             // Add work fax number
             if (contact.getFax() != null) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                        .withValue(Phone.NUMBER, contact.getFax())
-                        .withValue(Phone.TYPE, work ? Phone.TYPE_FAX_WORK : Phone.TYPE_FAX_HOME)
-                        .build());
+                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                                                .withValue(Phone.NUMBER, contact.getFax())
+                                                .withValue(Phone.TYPE, work ? Phone.TYPE_FAX_WORK : Phone.TYPE_FAX_HOME)
+                                                .build());
             }
             // Add website
             if (contact.getHomepage() != null) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
-                        .withValue(Website.URL, contact.getHomepage())
-                        .withValue(Website.TYPE, work ? Website.TYPE_WORK : Website.TYPE_HOME)
-                        .build());
+                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                                .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
+                                                .withValue(Website.URL, contact.getHomepage())
+                                                .withValue(Website.TYPE, work ? Website.TYPE_WORK : Website.TYPE_HOME)
+                                                .build());
             }
         }
     }
@@ -107,7 +105,8 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         super.onCreate(savedInstanceState);
 
         // get person from staff activity
-        Bundle bundle = this.getIntent().getExtras();
+        Bundle bundle = this.getIntent()
+                            .getExtras();
         Person person = (Person) bundle.getSerializable("personObject");
 
         // make sure not both person is not null (error occurred)
@@ -163,12 +162,12 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
      */
     private void displayResults(Employee employee) {
         // add the employee's counterfeit
-        ImageView imageView = (ImageView) this.findViewById(R.id.ivImage);
+        ImageView imageView = this.findViewById(R.id.ivImage);
 
         Bitmap image = employee.getImage();
         if (image == null) {
             image = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.photo_not_available_rectangular);
+                                                 R.drawable.photo_not_available_rectangular);
         }
         imageView.setImageBitmap(image);
 
@@ -176,14 +175,16 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         // formatting
         HTMLStringBuffer contentText = new HTMLStringBuffer();
 
-        TextView tvDetails1 = (TextView) findViewById(R.id.tvDetails1);
+        TextView tvDetails1 = findViewById(R.id.tvDetails1);
 
         // get the right gender
         if (employee.getGender() != null
-                && employee.getGender().equals(Person.MALE)) {
+            && employee.getGender()
+                       .equals(Person.Companion.getMALE())) {
             contentText.append(getString(R.string.mr) + ' ');
         } else if (employee.getGender() != null
-                && employee.getGender().equals(Person.FEMALE)) {
+                   && employee.getGender()
+                              .equals(Person.Companion.getFEMALE())) {
             contentText.append(getString(R.string.mrs) + ' ');
         }
 
@@ -200,7 +201,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
         contentText.clear();
 
-        TextView tvDetails2 = (TextView) findViewById(R.id.tvDetails2);
+        TextView tvDetails2 = findViewById(R.id.tvDetails2);
 
         // add all groups the employee belongs to
         List<Group> groups = employee.getGroups();
@@ -208,63 +209,68 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
             for (Group group : groups) {
                 if (group != null) {
                     contentText.appendField(getString(R.string.function),
-                            group.getTitle());
+                                            group.getTitle());
                     contentText.appendField(getString(R.string.group), group.getOrg()
-                            + " ("
-                            + group.getId()
-                            + ")<br />");
+                                                                       + " ("
+                                                                       + group.getId()
+                                                                       + ")<br />");
                 }
             }
         }
         tvDetails2.setText(Utils.fromHtml(contentText.toString()),
-                TextView.BufferType.SPANNABLE);
+                           TextView.BufferType.SPANNABLE);
 
         // start new section
 
         contentText.clear();
 
-        TextView tvDetails3 = (TextView) findViewById(R.id.tvDetails3);
+        TextView tvDetails3 = findViewById(R.id.tvDetails3);
 
         // add contact information, if available
 
         contentText.appendField(getString(R.string.email), employee.getEmail());
         contentText.appendField(getString(R.string.homepage), employee
-                .getBusinessContact().getHomepage());
+                .getBusinessContact()
+                .getHomepage());
 
         List<TelSubstation> substations = employee.getTelSubstations();
         if (substations != null) {
             for (int i = 0; i < substations.size(); i++) {
                 if (substations.get(i) != null) {
                     contentText.appendField(getString(R.string.phone) + ' '
-                            + i + 1, substations.get(i).getNumber());
+                                            + i + 1, substations.get(i)
+                                                                .getNumber());
                 }
 
             }
         }
         contentText.appendField(getString(R.string.mobile_phone), employee
-                .getBusinessContact().getMobilephone());
+                .getBusinessContact()
+                .getMobilephone());
         contentText.appendField(getString(R.string.add_info), employee
-                .getBusinessContact().getAdditionalInfo());
+                .getBusinessContact()
+                .getAdditionalInfo());
         tvDetails3.setText(Utils.fromHtml(contentText.toString()),
-                TextView.BufferType.SPANNABLE);
+                           TextView.BufferType.SPANNABLE);
 
         // start new section
         contentText.clear();
 
-        TextView tvDetails4 = (TextView) findViewById(R.id.tvDetails4);
+        TextView tvDetails4 = findViewById(R.id.tvDetails4);
 
         contentText.appendField(getString(R.string.office_hours),
-                employee.getConsultationHours());
+                                employee.getConsultationHours());
 
         // add all rooms
         List<Room> rooms = employee.getRooms();
         if (rooms != null && !rooms.isEmpty()) {
             contentText.appendField(getString(R.string.room), rooms.get(0)
-                    .getLocation() + " (" + rooms.get(0).getNumber() + ')');
+                                                                   .getLocation() + " (" + rooms.get(0)
+                                                                                                .getNumber() + ')');
         }
 
         tvDetails4.setText(Utils.fromHtml(contentText.toString()),
-                TextView.BufferType.SPANNABLE);
+                           TextView.BufferType.SPANNABLE);
 
     }
 
@@ -284,38 +290,38 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         // Adding insert operation to operations list
         // to insert a new raw contact in the table ContactsContract.RawContacts
         ops.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
-                .withValue(RawContacts.ACCOUNT_TYPE, null)
-                .withValue(RawContacts.ACCOUNT_NAME, null)
-                .build());
+                                        .withValue(RawContacts.ACCOUNT_TYPE, null)
+                                        .withValue(RawContacts.ACCOUNT_NAME, null)
+                                        .build());
 
         // Add full name
         ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                .withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(StructuredName.PREFIX, employee.getTitle())
-                .withValue(StructuredName.GIVEN_NAME, employee.getName())
-                .withValue(StructuredName.FAMILY_NAME, employee.getSurname())
-                .build());
+                                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                        .withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE)
+                                        .withValue(StructuredName.PREFIX, employee.getTitle())
+                                        .withValue(StructuredName.GIVEN_NAME, employee.getName())
+                                        .withValue(StructuredName.FAMILY_NAME, employee.getSurname())
+                                        .build());
 
         // Add e-mail address
         if (employee.getEmail() != null) {
             ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                    .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                    .withValue(Data.MIMETYPE, CommonDataKinds.Email.CONTENT_ITEM_TYPE)
-                    .withValue(CommonDataKinds.Email.DATA, employee.getEmail())
-                    .withValue(CommonDataKinds.Email.TYPE, Email.TYPE_WORK)
-                    .build());
+                                            .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                            .withValue(Data.MIMETYPE, CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                                            .withValue(CommonDataKinds.Email.DATA, employee.getEmail())
+                                            .withValue(CommonDataKinds.Email.TYPE, Email.TYPE_WORK)
+                                            .build());
         }
 
         List<TelSubstation> substations = employee.getTelSubstations();
         if (substations != null) {
             for (TelSubstation sub : substations) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                        .withValue(Phone.NUMBER, sub.getNumber())
-                        .withValue(Phone.TYPE, Phone.TYPE_WORK)
-                        .build());
+                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                                                .withValue(Phone.NUMBER, sub.getNumber())
+                                                .withValue(Phone.TYPE, Phone.TYPE_WORK)
+                                                .build());
             }
         }
 
@@ -329,13 +335,14 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         if (employee.getGroups() != null) {
             for (Group group : employee.getGroups()) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
-                        .withValue(CommonDataKinds.Organization.COMPANY, group.getOrg())
-                        .withValue(Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
-                        .withValue(CommonDataKinds.Organization.TITLE, group.getTitle())
-                        .withValue(Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
-                        .withValue(CommonDataKinds.Organization.TYPE, Organization.TYPE_WORK).build());
+                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                                .withValue(Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+                                                .withValue(CommonDataKinds.Organization.COMPANY, group.getOrg())
+                                                .withValue(Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+                                                .withValue(CommonDataKinds.Organization.TITLE, group.getTitle())
+                                                .withValue(Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+                                                .withValue(CommonDataKinds.Organization.TYPE, Organization.TYPE_WORK)
+                                                .build());
             }
         }
 
@@ -343,31 +350,35 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         StringBuilder notes = new StringBuilder();
         if (employee.getConsultationHours() != null) {
             notes.append(getString(R.string.office_hours))
-                    .append(": ")
-                    .append(employee.getConsultationHours());
+                 .append(": ")
+                 .append(employee.getConsultationHours());
         }
 
         // add all rooms
         List<Room> rooms = employee.getRooms();
         if (rooms != null && !rooms.isEmpty()) {
-            if (!notes.toString().isEmpty()) {
+            if (!notes.toString()
+                      .isEmpty()) {
                 notes.append('\n');
             }
             notes.append(getString(R.string.room))
-                    .append(": ")
-                    .append(rooms.get(0).getLocation())
-                    .append(" (")
-                    .append(rooms.get(0).getNumber())
-                    .append(')');
+                 .append(": ")
+                 .append(rooms.get(0)
+                              .getLocation())
+                 .append(" (")
+                 .append(rooms.get(0)
+                              .getNumber())
+                 .append(')');
         }
 
         // Finally add notes
-        if (!notes.toString().isEmpty()) {
+        if (!notes.toString()
+                  .isEmpty()) {
             ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                    .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                    .withValue(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE)
-                    .withValue(Note.NOTE, notes.toString())
-                    .build());
+                                            .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                            .withValue(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE)
+                                            .withValue(Note.NOTE, notes.toString())
+                                            .build());
         }
 
         // Add image
@@ -379,11 +390,11 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
             // Adding insert operation to operations list
             // to insert Photo in the table ContactsContract.Data
             ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                    .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                    .withValue(Data.IS_SUPER_PRIMARY, 1)
-                    .withValue(Data.MIMETYPE, Photo.CONTENT_ITEM_TYPE)
-                    .withValue(CommonDataKinds.Photo.PHOTO, stream.toByteArray())
-                    .build());
+                                            .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                            .withValue(Data.IS_SUPER_PRIMARY, 1)
+                                            .withValue(Data.MIMETYPE, Photo.CONTENT_ITEM_TYPE)
+                                            .withValue(CommonDataKinds.Photo.PHOTO, stream.toByteArray())
+                                            .build());
 
             try {
                 stream.flush();
@@ -419,13 +430,8 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                 // Display an AlertDialog with an explanation and a button to trigger the request.
                 new AlertDialog.Builder(this)
                         .setMessage(R.string.permission_contacts_explanation)
-                        .setPositiveButton(R.string.grant_permission, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int onClickId) {
-                                ActivityCompat
-                                        .requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id);
-                            }
-                        })
+                        .setPositiveButton(R.string.grant_permission, (dialog, onClickId) -> ActivityCompat
+                                .requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id))
                         .setNegativeButton(R.string.cancel, null)
                         .show();
             } else {

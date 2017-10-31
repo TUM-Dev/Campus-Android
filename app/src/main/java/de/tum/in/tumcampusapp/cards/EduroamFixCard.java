@@ -15,7 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.common.base.Joiner;
@@ -31,10 +30,9 @@ import de.tum.in.tumcampusapp.managers.EduroamManager;
 
 import static de.tum.in.tumcampusapp.managers.EduroamManager.RADIUS_DNS;
 
-
 public class EduroamFixCard extends NotificationAwareCard {
 
-    private List<String> errors;
+    private final List<String> errors;
     private TextView errorsTv;
     private WifiConfiguration eduroam;
 
@@ -44,7 +42,8 @@ public class EduroamFixCard extends NotificationAwareCard {
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_eduroam_fix, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_eduroam_fix, parent, false);
         return new CardViewHolder(view);
     }
 
@@ -52,16 +51,18 @@ public class EduroamFixCard extends NotificationAwareCard {
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
         mCard = viewHolder.itemView;
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        errorsTv = (TextView) mCard.findViewById(R.id.eduroam_errors);
-        errorsTv.setText(Joiner.on("\n").join(errors));
+        mLinearLayout = mCard.findViewById(R.id.card_view);
+        errorsTv = mCard.findViewById(R.id.eduroam_errors);
+        errorsTv.setText(Joiner.on("\n")
+                               .join(errors));
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         //Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        WifiManager wifi = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if(!wifi.isWifiEnabled()) {
+        WifiManager wifi = (WifiManager) mContext.getApplicationContext()
+                                                 .getSystemService(Context.WIFI_SERVICE);
+        if (!wifi.isWifiEnabled()) {
             return false;
         }
 
@@ -71,7 +72,9 @@ public class EduroamFixCard extends NotificationAwareCard {
     @Override
     protected void discard(SharedPreferences.Editor editor) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        prefs.edit().putBoolean("card_eduroam_fix_start", false).apply();
+        prefs.edit()
+             .putBoolean("card_eduroam_fix_start", false)
+             .apply();
     }
 
     @Override
@@ -87,7 +90,8 @@ public class EduroamFixCard extends NotificationAwareCard {
     @Override
     public Intent getIntent() {
         if (eduroam != null) {
-            WifiManager wifi = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifi = (WifiManager) mContext.getApplicationContext()
+                                                     .getSystemService(Context.WIFI_SERVICE);
             wifi.removeNetwork(eduroam.networkId);
         }
         return new Intent(mContext, SetupEduroamActivity.class);
@@ -97,7 +101,6 @@ public class EduroamFixCard extends NotificationAwareCard {
     public int getId() {
         return 0;
     }
-
 
     private boolean isConfigValid() {
         errors.clear();
@@ -110,8 +113,10 @@ public class EduroamFixCard extends NotificationAwareCard {
 
         //Otherwise check attributes - Android 23+: check newer match for the radius server
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                (!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS) || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))
-                && !isValidSubjectMatchAPI18(eduroam)) {
+            (!eduroam.enterpriseConfig.getAltSubjectMatch()
+                                      .equals("DNS:" + RADIUS_DNS) || !eduroam.enterpriseConfig.getDomainSuffixMatch()
+                                                                                               .equals(RADIUS_DNS))
+            && !isValidSubjectMatchAPI18(eduroam)) {
             errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
         }
 
@@ -121,12 +126,18 @@ public class EduroamFixCard extends NotificationAwareCard {
             }
 
             //Check that the full quantifier and correct identity is used
-            if (!eduroam.enterpriseConfig.getIdentity().contains("@eduroam.mwn.de") && !eduroam.enterpriseConfig.getIdentity().contains("@mytum.de") && !eduroam.enterpriseConfig.getIdentity().contains("@tum.de")) {
+            if (!eduroam.enterpriseConfig.getIdentity()
+                                         .contains("@eduroam.mwn.de") && !eduroam.enterpriseConfig.getIdentity()
+                                                                                                  .contains("@mytum.de") && !eduroam.enterpriseConfig.getIdentity()
+                                                                                                                                                     .contains("@tum.de")) {
                 errors.add(mContext.getString(R.string.wifi_identity_zone));
             }
-            if (!eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mwn.de") &&
-                    !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@eduroam.mwn.de") &&
-                    !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mytum.de")) {
+            if (!eduroam.enterpriseConfig.getAnonymousIdentity()
+                                         .equals("anonymous@mwn.de") &&
+                !eduroam.enterpriseConfig.getAnonymousIdentity()
+                                         .equals("anonymous@eduroam.mwn.de") &&
+                !eduroam.enterpriseConfig.getAnonymousIdentity()
+                                         .equals("anonymous@mytum.de")) {
                 errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set));
             }
 
@@ -147,6 +158,7 @@ public class EduroamFixCard extends NotificationAwareCard {
     @SuppressLint("NewApi")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private boolean isValidSubjectMatchAPI18(WifiConfiguration eduroam) {
-        return eduroam.enterpriseConfig.getSubjectMatch().equals(RADIUS_DNS);
+        return eduroam.enterpriseConfig.getSubjectMatch()
+                                       .equals(RADIUS_DNS);
     }
 }

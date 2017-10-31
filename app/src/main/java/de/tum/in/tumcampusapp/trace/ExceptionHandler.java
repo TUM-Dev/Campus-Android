@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -69,7 +68,8 @@ public final class ExceptionHandler {
         Log.i(G.TAG, "Registering default exceptions handler");
 
         // Files dir for storing the stack traces
-        G.filesPath = context.getFilesDir().getAbsolutePath();
+        G.filesPath = context.getFilesDir()
+                             .getAbsolutePath();
 
         // Device model
         G.phoneModel = Build.MODEL;
@@ -216,17 +216,11 @@ public final class ExceptionHandler {
         }
 
         //Look into the files folder to see if there are any "*.stacktrace" files.
-        String[] list = dir.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(STACKTRACE_ENDING);
-            }
-        });
+        String[] list = dir.list((dir1, name) -> name.endsWith(STACKTRACE_ENDING));
         Utils.logv("Found " + list.length + " stacktrace(s)");
 
         //Try to read all of them
         try {
-
             sStackTraces = new ArrayList<>();
             for (String aList : list) {
 
@@ -241,15 +235,12 @@ public final class ExceptionHandler {
                 try {
                     // Read contents of stacktrace
                     StringBuilder stacktrace = new StringBuilder();
-                    BufferedReader input = new BufferedReader(getFileReader(filePath));
-                    try {
+                    try (BufferedReader input = new BufferedReader(getFileReader(filePath))) {
                         String line;
                         while ((line = input.readLine()) != null) {
                             stacktrace.append(line);
                             stacktrace.append(System.getProperty(LINE_SEPARATOR));
                         }
-                    } finally {
-                        input.close();
                     }
 
                     //Create the array containing the trace and the log file
@@ -286,7 +277,6 @@ public final class ExceptionHandler {
             return;
         }
 
-
         //If nothing passed we have nothing to submit
         if (list == null) {
             return;
@@ -295,13 +285,12 @@ public final class ExceptionHandler {
         //Otherwise do some hard work and submit all of them after eachother
         try {
 
-
             for (int i = 0; i < list.size(); i++) {
                 String stacktrace = list.get(i)[0];
 
                 // Transmit stack trace with PUT request
                 TUMCabeClient client = TUMCabeClient.getInstance(context);
-                BugReport r = new BugReport(context, stacktrace, list.get(i)[1]);
+                BugReport r = BugReport.Companion.getBugReport(context, stacktrace, list.get(i)[1]);
                 client.putBugReport(r);
                 // We don't care about the response, so we just hope it went well and on with it.
             }

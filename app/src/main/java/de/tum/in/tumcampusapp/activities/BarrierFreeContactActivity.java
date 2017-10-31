@@ -27,7 +27,7 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listview = (StickyListHeadersListView) findViewById(R.id.activity_barrier_info_list_view);
+        listview = findViewById(R.id.activity_barrier_info_list_view);
         startLoading();
     }
 
@@ -36,7 +36,8 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
         showLoadingStart();
         List<BarrierfreeContact> result = new ArrayList<>();
         try {
-            result = TUMCabeClient.getInstance(this).getBarrierfreeContactList();
+            result = TUMCabeClient.getInstance(this)
+                                  .getBarrierfreeContactList();
         } catch (IOException e) {
             Utils.log(e);
             return result;
@@ -47,7 +48,7 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
     @Override
     protected void onLoadFinished(List<BarrierfreeContact> result) {
         showLoadingEnded();
-        if(result == null || result.isEmpty()){
+        if (result == null || result.isEmpty()) {
             showErrorLayout();
             return;
         }

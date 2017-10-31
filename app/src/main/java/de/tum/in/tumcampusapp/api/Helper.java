@@ -10,7 +10,6 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.common.net.UrlEscapers;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
@@ -20,7 +19,6 @@ import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.API_HOSTNAME;
 import static de.tum.in.tumcampusapp.managers.StudyRoomGroupManager.STUDYROOM_HOST;
@@ -62,12 +60,7 @@ public final class Helper {
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
 
-        builder.addNetworkInterceptor(new TumHttpLoggingInterceptor(new TumHttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                Utils.logwithTag(TAG, message);
-            }
-        }));
+        builder.addNetworkInterceptor(new TumHttpLoggingInterceptor(message -> Utils.logwithTag(TAG, message)));
 
         //Save it to the static handle and return
         client = builder.build();
@@ -78,28 +71,31 @@ public final class Helper {
         //Clearly identify all requests from this app
         final StringBuilder userAgent = new StringBuilder("TCA Client");
         if (G.appVersion != null && !G.appVersion.equals(G.UNKNOWN)) {
-            userAgent.append(' ').append(G.appVersion);
+            userAgent.append(' ')
+                     .append(G.appVersion);
             if (G.appVersionCode != -1) {
-                userAgent.append('/').append(G.appVersionCode);
+                userAgent.append('/')
+                         .append(G.appVersionCode);
             }
         }
 
-        return new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Utils.log("Fetching: " + chain.request().url().toString());
-                Request.Builder newRequest = chain.request().newBuilder()
-                        .addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(c))
-                        .addHeader("User-Agent", userAgent.toString())
-                        .addHeader("X-ANDROID-VERSION", Build.VERSION.RELEASE);
-                try {
-                    newRequest.addHeader("X-APP-VERSION", c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName);
-                } catch (PackageManager.NameNotFoundException e) { //NOPMD
-                    //We don't care. In that case we simply don't send the information
-                }
-
-                return chain.proceed(newRequest.build());
+        return chain -> {
+            Utils.log("Fetching: " + chain.request()
+                                          .url()
+                                          .toString());
+            Request.Builder newRequest = chain.request()
+                                              .newBuilder()
+                                              .addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(c))
+                                              .addHeader("User-Agent", userAgent.toString())
+                                              .addHeader("X-ANDROID-VERSION", Build.VERSION.RELEASE);
+            try {
+                newRequest.addHeader("X-APP-VERSION", c.getPackageManager()
+                                                       .getPackageInfo(c.getPackageName(), 0).versionName);
+            } catch (PackageManager.NameNotFoundException e) { //NOPMD
+                //We don't care. In that case we simply don't send the information
             }
+
+            return chain.proceed(newRequest.build());
         };
     }
 
@@ -110,7 +106,8 @@ public final class Helper {
      * @return encoded url
      */
     public static String encodeUrl(String pUrl) {
-        return UrlEscapers.urlPathSegmentEscaper().escape(pUrl);
+        return UrlEscapers.urlPathSegmentEscaper()
+                          .escape(pUrl);
     }
 
     private Helper() {

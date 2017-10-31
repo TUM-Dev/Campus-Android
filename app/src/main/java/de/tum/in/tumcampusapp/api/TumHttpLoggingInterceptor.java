@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.api;
 
+import android.support.annotation.NonNull;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -33,21 +35,16 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         /**
          * A {@link Logger} defaults output appropriate for the current platform.
          */
-        Logger DEFAULT = new Logger() {
-            @Override
-            public void log(String message) {
-                Platform.get().log(INFO, message, null);
-            }
-        };
+        Logger DEFAULT = message -> Platform.get()
+                                            .log(INFO, message, null);
     }
 
     public TumHttpLoggingInterceptor(Logger logger) {
         this.logger = logger;
     }
 
-
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
 
         Request request = chain.request();
 
@@ -103,10 +100,10 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
                     if (isPlaintext(buffer)) {
                         logger.log(buffer.readString(charset));
                         logger.log("--> END " + request.method()
-                                + " (" + requestBody.contentLength() + "-byte body)");
+                                   + " (" + requestBody.contentLength() + "-byte body)");
                     } else {
                         logger.log("--> END " + request.method() + " (binary "
-                                + requestBody.contentLength() + "-byte body omitted)");
+                                   + requestBody.contentLength() + "-byte body omitted)");
                     }
                 }
             } else {
@@ -128,8 +125,9 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         long contentLength = responseBody.contentLength();
         String bodySize = contentLength == -1 ? "unknown-length" : contentLength + "-byte";
         logger.log("<-- " + response.code() + ' ' + response.message() + ' '
-                + response.request().url() + " (" + tookMs + "ms" + (logHeaders ? "" : ", "
-                + bodySize + " body") + ')');
+                   + response.request()
+                             .url() + " (" + tookMs + "ms" + (logHeaders ? "" : ", "
+                                                                                + bodySize + " body") + ')');
 
         if (logHeaders) {
             Headers headers = response.headers();
@@ -167,7 +165,8 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
 
                     if (contentLength != 0) {
                         logger.log("");
-                        logger.log(buffer.clone().readString(charset));
+                        logger.log(buffer.clone()
+                                         .readString(charset));
                     }
 
                     logger.log("<-- END HTTP (" + buffer.size() + "-byte body)");
@@ -179,7 +178,6 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
 
         return response;
     }
-
 
     /**
      * Returns true if the body in question probably contains human readable text. Uses a small sample
@@ -210,4 +208,3 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
     }
 }
-

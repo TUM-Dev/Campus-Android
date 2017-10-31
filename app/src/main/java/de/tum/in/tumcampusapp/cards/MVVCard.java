@@ -14,9 +14,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -44,7 +42,8 @@ public class MVVCard extends NotificationAwareCard {
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_item, parent, false);
         return new Card.CardViewHolder(view);
     }
 
@@ -57,10 +56,11 @@ public class MVVCard extends NotificationAwareCard {
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
         mCard = viewHolder.itemView;
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
+        mLinearLayout = mCard.findViewById(R.id.card_view);
+        mTitleView = mCard.findViewById(R.id.card_title);
         mTitleView.setText(mStationNameIDPair.first);
-        mCard.findViewById(R.id.place_holder).setVisibility(View.VISIBLE);
+        mCard.findViewById(R.id.place_holder)
+             .setVisibility(View.VISIBLE);
 
         //Remove old DepartureViews
         for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
@@ -75,13 +75,13 @@ public class MVVCard extends NotificationAwareCard {
         for (int i = 0; i < mDepartures.size() && i < 5; i++) {
             Departure curr = mDepartures.get(i);
             DepartureView view = new DepartureView(mContext);
-            if (transportManager.isFavorite(curr.symbol)) {
-                view.setSymbol(curr.symbol, true);
+            if (transportManager.isFavorite(curr.getSymbol())) {
+                view.setSymbol(curr.getSymbol(), true);
             } else {
-                view.setSymbol(curr.symbol, false);
+                view.setSymbol(curr.getSymbol(), false);
             }
-            view.setLine(curr.direction);
-            view.setTime(curr.countDown);
+            view.setLine(curr.getDirection());
+            view.setTime(curr.getCountDown());
             mLinearLayout.addView(view);
         }
     }
@@ -118,14 +118,14 @@ public class MVVCard extends NotificationAwareCard {
         String firstTime = "";
         for (Departure d : mDepartures) {
             if (firstTime.isEmpty()) {
-                firstTime = d.countDown + "min";
-                firstContent = d.servingLine + " " + d.direction;
+                firstTime = d.getCountDown() + "min";
+                firstContent = d.getServingLine() + " " + d.getDirection();
             }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT)
-                            .setContentTitle(d.countDown + "min")
-                            .setContentText(d.servingLine + " " + d.direction);
+                            .setContentTitle(d.getCountDown() + "min")
+                            .setContentText(d.getServingLine() + " " + d.getDirection());
             morePageNotification.addPage(pageNotification.build());
         }
 
@@ -133,7 +133,8 @@ public class MVVCard extends NotificationAwareCard {
         notificationBuilder.setContentText(firstContent);
         Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_mvv);
         morePageNotification.setBackground(bm);
-        return morePageNotification.extend(notificationBuilder).build();
+        return morePageNotification.extend(notificationBuilder)
+                                   .build();
     }
 
     public void setStation(Pair<String, String> stationNameIDPair) {

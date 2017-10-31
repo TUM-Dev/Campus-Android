@@ -67,11 +67,13 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
         // click on category in list
         OpenHoursManager lm = new OpenHoursManager(getActivity());
         String[] categories = {"library", "info", "cafeteria_gar", "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"};
-        Cursor c = lm.getAllHoursFromDb(categories[mItemId]);
-
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_item_detail_recyclerview);
-        recyclerView.setAdapter(new OpeningHoursDetailAdapter(c));
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView recyclerView;
+        LinearLayoutManager layoutManager;
+        try (Cursor c = lm.getAllHoursFromDb(categories[mItemId])) {
+            recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
+            recyclerView.setAdapter(new OpeningHoursDetailAdapter(c));
+        }
+        layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -91,15 +93,21 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
             String remark = c.getString(c.getColumnIndex(Const.REMARK_COLUMN));
             String room = c.getString(c.getColumnIndex(Const.ROOM_COLUMN));
 
-            StringBuilder sb = new StringBuilder(hours).append('\n').append(address);
+            StringBuilder sb = new StringBuilder(hours).append('\n')
+                                                       .append(address);
             if (!room.isEmpty()) {
-                sb.append(", ").append(room);
+                sb.append(", ")
+                  .append(room);
             }
             if (!transport.isEmpty()) {
-                sb.append(" (").append(transport).append(')');
+                sb.append(" (")
+                  .append(transport)
+                  .append(')');
             }
             if (!remark.isEmpty()) {
-                sb.append('\n').append(COMPILE.matcher(remark).replaceAll("\n"));
+                sb.append('\n')
+                  .append(COMPILE.matcher(remark)
+                                 .replaceAll("\n"));
             }
             TextView tv = (TextView) view;
             tv.setText(sb.toString());
@@ -111,10 +119,14 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
         } else if (view.getId() == R.id.text3) {
             StringBuilder url = new StringBuilder(c.getString(c.getColumnIndex(Const.URL_COLUMN)));
             TextView tv = (TextView) view;
-            if (url.toString().isEmpty()) {
+            if (url.toString()
+                   .isEmpty()) {
                 tv.setVisibility(View.GONE);
             } else {
-                url.insert(0, "<a href=\"").append("\">").append(getString(R.string.website)).append("</a>");
+                url.insert(0, "<a href=\"")
+                   .append("\">")
+                   .append(getString(R.string.website))
+                   .append("</a>");
                 tv.setMovementMethod(LinkMovementMethod.getInstance());
                 tv.setText(Utils.fromHtml(url.toString()));
             }
@@ -128,8 +140,8 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 
         OpeningHoursDetailAdapter(Cursor c) {
             cursorAdapter = new SimpleCursorAdapter(getActivity(),
-                    R.layout.two_line_list_item, c, c.getColumnNames(),
-                    new int[]{android.R.id.text1, android.R.id.text2, R.id.text3}, 0) {
+                                                    R.layout.two_line_list_item, c, c.getColumnNames(),
+                                                    new int[]{android.R.id.text1, android.R.id.text2, R.id.text3}, 0) {
 
                 @Override
                 public boolean isEnabled(int position) {
@@ -150,7 +162,8 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            cursorAdapter.getCursor().moveToPosition(position);
+            cursorAdapter.getCursor()
+                         .moveToPosition(position);
             cursorAdapter.bindView(holder.itemView, getContext(), cursorAdapter.getCursor());
         }
 

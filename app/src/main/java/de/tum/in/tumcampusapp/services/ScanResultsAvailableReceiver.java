@@ -13,19 +13,21 @@ import android.location.LocationManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
+
 import java.util.Calendar;
 import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.WifiMeasurementLocationListener;
 import de.tum.in.tumcampusapp.managers.EduroamManager;
 import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 
 /**
  * Listens for android's ScanResultsAvailable broadcast and checks if eduroam is nearby.
@@ -44,56 +46,59 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
      * interval.
      */
     public void onReceive(Context context, Intent intent) {
-        if (!intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
+        if (!intent.getAction()
+                   .equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
             return;
         }
         //Check if wifi is turned on at all
-        WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) context.getApplicationContext()
+                                                .getSystemService(Context.WIFI_SERVICE);
         if (!wifi.isWifiEnabled()) {
             return;
         }
 
-        if(locationManager == null){
-            locationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager == null) {
+            locationManager = (LocationManager) context.getApplicationContext()
+                                                       .getSystemService(Context.LOCATION_SERVICE);
         }
 
         // Test if user has eduroam configured already
         boolean eduroamConfiguredAlready = EduroamManager.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18;
 
         //Check if locations are enabled
-        boolean locationsEnabled = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean wifiScansEnabled  = Utils.getInternalSettingBool(context, WifiMeasurementManager.WIFI_SCANS_ALLOWED, false);
+        boolean locationsEnabled = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean wifiScansEnabled = Utils.getInternalSettingBool(context, WifiMeasurementManager.WIFI_SCANS_ALLOWED, false);
         boolean nextScanScheduled = false;
         WifiScanHandler wifiScanHandler = WifiScanHandler.getInstance(context);
         List<ScanResult> scan = wifi.getScanResults();
         for (final ScanResult network : scan) {
             //skips if network is not either eduroam or lrz network
-            if(!(network.SSID.equals("eduroam") || network.SSID.equals("lrz"))){
+            if (!(network.SSID.equals("eduroam") || network.SSID.equals("lrz"))) {
                 continue;
             }
             //if eduroam is not configured, set it up
-            if (network.SSID.equals("eduroam") && !eduroamConfiguredAlready){
+            if (network.SSID.equals("eduroam") && !eduroamConfiguredAlready) {
                 showNotification(context);
             }
 
             //if user allowed us to store his signal strength, store measurement to the local DB and later sync to remote
-            if (locationsEnabled && wifiScansEnabled){
+            if (locationsEnabled && wifiScansEnabled) {
                 storeWifiMeasurement(context, network);
                 nextScanScheduled = true;
             }
         }
 
-        if (nextScanScheduled){
+        if (nextScanScheduled) {
             //WIFI_SCAN_MINIMUM_BATTERY_LEVEL is used to decide, whether another Wifi-Scan is initiated on
             //encountering an eduroam/lrz network. If the battery is lower, no new automatic scan will be
             //scheduled. This setting can be used as additional way to limit battery consumption and leaves
             //the user more freedom in deciding, when to scan.
             float currentBattery = Utils.getBatteryLevel(context);
-            float minimumBattery = Utils.getInternalSettingFloat(context,WifiMeasurementManager.WIFI_SCAN_MINIMUM_BATTERY_LEVEL,50.0f);
-            if (currentBattery > minimumBattery){
+            float minimumBattery = Utils.getInternalSettingFloat(context, WifiMeasurementManager.WIFI_SCAN_MINIMUM_BATTERY_LEVEL, 50.0f);
+            if (currentBattery > minimumBattery) {
                 wifiScanHandler.startRepetition();
                 Utils.log("WifiScanHandler rescheduled");
-            }else{
+            } else {
                 Utils.log("WifiScanHandler stopped");
             }
         }
@@ -109,18 +114,20 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
      * ScanResultsAvailable's onReceive method, they lack gps information for creating a heatmap.
      * Therefore we request an update from the WifiMeasurementLocationListener, passing the incomplete WifiMeasurement.
      * The WifiMeasurementLocationListener then takes care of adding the location information, whenever it is ready.
+     *
      * @param context
      * @param scanResult
      */
 
-    private void storeWifiMeasurement(Context context, ScanResult scanResult) throws SecurityException{
+    private void storeWifiMeasurement(Context context, ScanResult scanResult) throws SecurityException {
         Criteria criteria = new Criteria();
         criteria.setHorizontalAccuracy(Criteria.ACCURACY_FINE);
         criteria.setBearingRequired(false);
         criteria.setAltitudeRequired(false);
         criteria.setSpeedRequired(false);
-        WifiMeasurement wifiMeasurement = new WifiMeasurement("",scanResult.SSID, scanResult.BSSID, scanResult.level, -1, -1, -1);
-        locationManager.requestSingleUpdate(criteria, new WifiMeasurementLocationListener(context, wifiMeasurement, Calendar.getInstance().getTimeInMillis()), null);
+        WifiMeasurement wifiMeasurement = new WifiMeasurement("", scanResult.SSID, scanResult.BSSID, scanResult.level, -1, -1, -1);
+        locationManager.requestSingleUpdate(criteria, new WifiMeasurementLocationListener(context, wifiMeasurement, Calendar.getInstance()
+                                                                                                                            .getTimeInMillis()), null);
     }
 
     /**
