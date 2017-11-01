@@ -202,53 +202,34 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         String Campus = "0";
         switch (faculty_number) {
             case "5":   // TUM School of Education
-                Campus = "C";
-                break;
             case "6":   // Architektur
-                Campus = "C";
-                break;
             case "7":   // Elektrotechnik und Informationstechnik
-                Campus = "C";
-                break;
             case "8":   // Ingenieurfakultät Bau Geo Umwelt
-                Campus = "C";
-                break;
             case "14":  // Wirtschaftswissenschaften
-                Campus = "C";
-                break;
             case "17":  // Andere Einrichtungen
-
                 Campus = "C"; // Stammgelände
                 break;
+
             case "16":  // TUM School of Governance
                 // Unklar, nicht weit vom Stammgelände, aber nicht Stammgelände ??
                 break;
             case "1":   // Mathematik
-                Campus = "G";
-                break;
             case "2":   // Physik
-                Campus = "G";
-                break;
             case "3":   // Chemie
-                Campus = "G";
-                break;
             case "4":   // Informatik
-                Campus = "G";
-                break;
             case "11":  // Maschinenwesen
-
                 Campus = "G"; // Garching-FZ
                 break;
-            case "13":  // Sport-und Gesundheitswissenschaften
 
+            case "13":  // Sport-und Gesundheitswissenschaften
                 // Olympiapark, hat aber keine Zuordnung ??
                 break;
-            case "12":  // Medizin
 
+            case "12":  // Medizin
                 Campus = "I"; // Klinikum rechts der Isar
                 break;
-            case "15":  // Wissenschaftszentrum Weihenstephan
 
+            case "15":  // Wissenschaftszentrum Weihenstephan
                 Campus = "W"; // Weihenstephan
                 break;
             default:
@@ -256,10 +237,9 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
         }
 
-        if (Campus != "0") {
+        if ( "0".equals(Campus) ) {
             Utils.setSetting(getApplicationContext(), Const.DEFAULT_CAMPUS, Campus);
         }
-        return;
     }
 
     /**
