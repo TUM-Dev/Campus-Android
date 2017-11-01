@@ -202,16 +202,6 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         String Campus = "0";
         switch (faculty_number) {
             case "5":   // TUM School of Education
-<<<<<<< HEAD
-            case "6":   // Architektur
-            case "7":   // Elektrotechnik und Informationstechnik
-            case "8":   // Ingenieurfakultät Bau Geo Umwelt
-            case "14":  // Wirtschaftswissenschaften
-            case "17":  // Andere Einrichtungen
-                Campus = "C"; // Stammgelände
-                break;
-
-=======
                 Campus = "C";
                 break;
             case "6":   // Architektur
@@ -230,29 +220,10 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
                 Campus = "C"; // Stammgelände
                 break;
->>>>>>> upstream/master
             case "16":  // TUM School of Governance
                 // Unklar, nicht weit vom Stammgelände, aber nicht Stammgelände ??
                 break;
             case "1":   // Mathematik
-<<<<<<< HEAD
-            case "2":   // Physik
-            case "3":   // Chemie
-            case "4":   // Informatik
-            case "11":  // Maschinenwesen
-                Campus = "G"; // Garching-FZ
-                break;
-
-            case "13":  // Sport-und Gesundheitswissenschaften
-                // Olympiapark, hat aber keine Zuordnung ??
-                break;
-
-            case "12":  // Medizin
-                Campus = "I"; // Klinikum rechts der Isar
-                break;
-
-            case "15":  // Wissenschaftszentrum Weihenstephan
-=======
                 Campus = "G";
                 break;
             case "2":   // Physik
@@ -278,7 +249,6 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                 break;
             case "15":  // Wissenschaftszentrum Weihenstephan
 
->>>>>>> upstream/master
                 Campus = "W"; // Weihenstephan
                 break;
             default:
@@ -286,16 +256,10 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
         }
 
-<<<<<<< HEAD
-        if ( "0".equals(Campus) ) {
-            Utils.setSetting(getApplicationContext(), Const.DEFAULT_CAMPUS, Campus);
-        }
-=======
         if (Campus != "0") {
             Utils.setSetting(getApplicationContext(), Const.DEFAULT_CAMPUS, Campus);
         }
         return;
->>>>>>> upstream/master
     }
 
     /**
