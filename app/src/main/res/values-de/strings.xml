@@ -133,7 +133,6 @@
     <string name="plans">Pläne</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="opening_hours">Öffnungszeiten</string>
-    <string name="organisations">Organisationsbaum</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
 
@@ -141,11 +140,9 @@
     <string name="lectures_information">Vorlesungsinformationen</string>
     <string name="lectures_appointments">Vorlesungstermine</string>
     <string name="person_information">Personeninformationen</string>
-    <string name="organisation_details">Organisationsdetails</string>
 
     <!-- Organisations -->
     <string name="tum">Technische Universität München</string>
-    <string name="invalid_organisation">Fehlerhafte Organisation!</string>
     <string name="contact_person">Kontaktperson</string>
     <string name="secretary">Sekretariat</string>
     <string name="bib">Bibliothek</string>

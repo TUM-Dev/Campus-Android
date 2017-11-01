@@ -107,7 +107,7 @@ public final class TUMOnlineRequest<T> {
     }
 
     public static boolean checkTokenInactive(Context c) {
-        TUMOnlineRequest<TokenConfirmation> checkActiveToken = new TUMOnlineRequest<>(TUMOnlineConst.TOKEN_CONFIRMED, c, true);
+        TUMOnlineRequest<TokenConfirmation> checkActiveToken = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTOKEN_CONFIRMED(), c, true);
         Optional<TokenConfirmation> tc = checkActiveToken.fetch();
         if (tc.isPresent()) { //Check that the token is actually active
             if (tc.get()
@@ -132,7 +132,7 @@ public final class TUMOnlineRequest<T> {
         String url = this.getRequestURL();
 
         //If there were some requests that failed and we verified that the token is not active anymore, block all requests directly
-        if (!method.equals(TUMOnlineConst.TOKEN_CONFIRMED) && Utils.getSettingBool(mContext, Const.TUMO_DISABLED, false)) {
+        if (!method.equals(TUMOnlineConst.Companion.getTOKEN_CONFIRMED()) && Utils.getSettingBool(mContext, Const.TUMO_DISABLED, false)) {
             Utils.log("aborting fetch URL, as the token is not active any longer " + url);
             return Optional.absent();
         }

@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -112,8 +113,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         int selIndex = -1;
         for (int i = 0; i < mCafeterias.size(); i++) {
             Cafeteria c = mCafeterias.get(i);
-            if (mCafeteriaId == -1 || mCafeteriaId == c.id) {
-                mCafeteriaId = c.id;
+            if (mCafeteriaId == -1 || mCafeteriaId == c.getId()) {
+                mCafeteriaId = c.getId();
                 selIndex = i;
                 break;
             }
@@ -124,7 +125,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar, parent, false);
                 Cafeteria c = getItem(position);
 
@@ -133,9 +134,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 TextView dist = v.findViewById(R.id.distance); // Set distance
 
                 if (c != null) {
-                    name.setText(c.name);
-                    address.setText(c.address);
-                    dist.setText(Utils.formatDist(c.distance));
+                    name.setText(c.getName());
+                    address.setText(c.getAddress());
+                    dist.setText(Utils.formatDist(c.getDistance()));
                 }
 
                 return v;
@@ -165,17 +166,20 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         if (intent != null && intent.getExtras() != null && intent.getExtras()
                                                                   .containsKey(Const.MENSA_FOR_FAVORITEDISH)) {
             for (int i = 0; i < parent.getCount(); i++) {
-                //get mensaId from extra to redirct the user to it.
+                //get mensaId from extra to redirect the user to it.
                 if (intent.getExtras()
-                          .getInt(Const.MENSA_FOR_FAVORITEDISH) == mCafeterias.get(i).id) {
-                    mCafeteriaId = mCafeterias.get(i).id;
+                          .getInt(Const.MENSA_FOR_FAVORITEDISH) == mCafeterias.get(i)
+                                                                              .getId()) {
+                    mCafeteriaId = mCafeterias.get(i)
+                                              .getId();
                     parent.setSelection(i);
                     intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH);
                     break;
                 }
             }
         } else {
-            mCafeteriaId = mCafeterias.get(pos).id;
+            mCafeteriaId = mCafeterias.get(pos)
+                                      .getId();
         }
 
         CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter

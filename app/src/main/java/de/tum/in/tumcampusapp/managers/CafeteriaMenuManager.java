@@ -213,9 +213,9 @@ public class CafeteriaMenuManager extends AbstractManager {
     private void replaceIntoDb(CafeteriaMenu c) {
         db.execSQL("REPLACE INTO cafeterias_menus (mensaId, date, typeShort, "
                    + "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?)",
-                   new String[]{String.valueOf(c.cafeteriaId),
-                                Utils.getDateString(c.date), c.typeShort, c.typeLong,
-                                String.valueOf(c.typeNr), c.name});
+                   new String[]{String.valueOf(c.getCafeteriaId()),
+                                Utils.getDateString(c.getDate()), c.getTypeShort(), c.getTypeLong(),
+                                String.valueOf(c.getTypeNr()), c.getName()});
     }
 
     /**

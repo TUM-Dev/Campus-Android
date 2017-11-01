@@ -61,8 +61,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     private void selectCurrentSpinnerItem(Spinner spinner) {
         for (int i = 0; i < mStudyRoomGroupList.size(); i++) {
             StudyRoomGroup s = mStudyRoomGroupList.get(i);
-            if (mSelectedStudyRoomGroupId == -1 || mSelectedStudyRoomGroupId == s.id) {
-                mSelectedStudyRoomGroupId = s.id;
+            if (mSelectedStudyRoomGroupId == -1 || mSelectedStudyRoomGroupId == s.getId()) {
+                mSelectedStudyRoomGroupId = s.getId();
                 spinner.setSelection(i);
                 return;
             }
@@ -70,7 +70,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     }
 
     private static void sortStudyRoomsByOccupation(List<StudyRoom> studyRooms) {
-        Collections.sort(studyRooms, (lhs, rhs) -> lhs.occupiedTill.compareTo(rhs.occupiedTill));
+        Collections.sort(studyRooms, (lhs, rhs) -> lhs.getOccupiedTill()
+                                                      .compareTo(rhs.getOccupiedTill()));
     }
 
     private Spinner getStudyRoomGroupsSpinner() {
@@ -91,8 +92,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
                         TextView details = v.findViewById(android.R.id.text2); // Set detail
 
                         if (studyRoomGroup != null) {
-                            name.setText(studyRoomGroup.name);
-                            details.setText(studyRoomGroup.details);
+                            name.setText(studyRoomGroup.getName());
+                            details.setText(studyRoomGroup.getDetails());
                         }
 
                         return v;
@@ -126,7 +127,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        mSelectedStudyRoomGroupId = mStudyRoomGroupList.get(pos).id;
+        mSelectedStudyRoomGroupId = mStudyRoomGroupList.get(pos)
+                                                       .getId();
 
         if (mSectionsPagerAdapter == null) {
             setupViewPagerAdapter(mSelectedStudyRoomGroupId);
@@ -180,7 +182,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         mStudyRoomGroupList = studyRoomGroupManager.getStudyRoomGroupsFromCursor
                 (studyRoomGroupManager.getAllFromDb());
         for (StudyRoomGroup group : mStudyRoomGroupList) {
-            sortStudyRoomsByOccupation(group.rooms);
+            sortStudyRoomsByOccupation(group.getRooms());
         }
 
         if (hasGotStudyRoomGroups()) {

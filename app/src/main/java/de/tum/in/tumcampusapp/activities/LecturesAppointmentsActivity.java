@@ -29,7 +29,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline<
     private ListView lvTermine;
 
     public LecturesAppointmentsActivity() {
-        super(TUMOnlineConst.LECTURES_APPOINTMENTS, R.layout.activity_lecturesappointments);
+        super(TUMOnlineConst.Companion.getLECTURES_APPOINTMENTS(), R.layout.activity_lecturesappointments);
     }
 
     @Override

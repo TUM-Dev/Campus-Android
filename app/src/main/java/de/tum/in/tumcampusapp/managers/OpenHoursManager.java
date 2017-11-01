@@ -182,16 +182,17 @@ public class OpenHoursManager extends AbstractManager {
      * @param l Location object
      */
     public void replaceIntoDb(Location l) {
-        if (l.id <= 0) {
+        if (l.getId() <= 0) {
             throw new IllegalArgumentException("Invalid id.");
         }
-        if (l.name.isEmpty()) {
+        if (l.getName()
+             .isEmpty()) {
             throw new IllegalArgumentException("Invalid name.");
         }
         db.execSQL("REPLACE INTO locations (id, category, name, address, room, "
                    + "transport, hours, remark, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                   new String[]{String.valueOf(l.id), l.category, l.name,
-                                l.address, l.room, l.transport, l.hours, l.remark,
-                                l.url});
+                   new String[]{String.valueOf(l.getId()), l.getCategory(), l.getName(),
+                                l.getAddress(), l.getRoom(), l.getTransport(), l.getHours(), l.getRemark(),
+                                l.getUrl()});
     }
 }

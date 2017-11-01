@@ -51,7 +51,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     private TextView tvLDetailsZiele;
 
     public LecturesDetailsActivity() {
-        super(TUMOnlineConst.LECTURES_DETAILS, R.layout.activity_lecturedetails);
+        super(TUMOnlineConst.Companion.getLECTURES_DETAILS(), R.layout.activity_lecturedetails);
     }
 
     @Override

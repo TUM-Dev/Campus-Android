@@ -26,12 +26,12 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.managers.OpenHoursManager;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaPrices;
 
 /**
  * Fragment for each cafeteria-page.
@@ -54,7 +54,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
         // initialize a few often used things
         final Context context = rootView.getContext();
-        final Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
+        final Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(context);
         final int padding = (int) context.getResources()
                                          .getDimension(R.dimen.card_text_padding);
         List<View> addedViews = new ArrayList<>(32);

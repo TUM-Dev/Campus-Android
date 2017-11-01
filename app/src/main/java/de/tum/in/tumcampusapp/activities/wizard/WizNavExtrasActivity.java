@@ -144,7 +144,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // Try to restore already joined chat rooms from server
         try {
             List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
-                                                .getMemberRooms(member.getId(), new ChatVerification(this, member));
+                                                .getMemberRooms(member.getId(), ChatVerification.Companion.getChatVerification(this, member));
             new ChatRoomManager(this).replaceIntoRooms(rooms);
 
             //Store that this key was activated

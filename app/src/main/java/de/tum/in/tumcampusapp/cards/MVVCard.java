@@ -75,13 +75,13 @@ public class MVVCard extends NotificationAwareCard {
         for (int i = 0; i < mDepartures.size() && i < 5; i++) {
             Departure curr = mDepartures.get(i);
             DepartureView view = new DepartureView(mContext);
-            if (transportManager.isFavorite(curr.symbol)) {
-                view.setSymbol(curr.symbol, true);
+            if (transportManager.isFavorite(curr.getSymbol())) {
+                view.setSymbol(curr.getSymbol(), true);
             } else {
-                view.setSymbol(curr.symbol, false);
+                view.setSymbol(curr.getSymbol(), false);
             }
-            view.setLine(curr.direction);
-            view.setTime(curr.countDown);
+            view.setLine(curr.getDirection());
+            view.setTime(curr.getCountDown());
             mLinearLayout.addView(view);
         }
     }
@@ -118,14 +118,14 @@ public class MVVCard extends NotificationAwareCard {
         String firstTime = "";
         for (Departure d : mDepartures) {
             if (firstTime.isEmpty()) {
-                firstTime = d.countDown + "min";
-                firstContent = d.servingLine + " " + d.direction;
+                firstTime = d.getCountDown() + "min";
+                firstContent = d.getServingLine() + " " + d.getDirection();
             }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT)
-                            .setContentTitle(d.countDown + "min")
-                            .setContentText(d.servingLine + " " + d.direction);
+                            .setContentTitle(d.getCountDown() + "min")
+                            .setContentText(d.getServingLine() + " " + d.getDirection());
             morePageNotification.addPage(pageNotification.build());
         }
 

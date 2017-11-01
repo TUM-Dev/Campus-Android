@@ -23,10 +23,10 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
-import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaPrices;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.showMenu;
 import static de.tum.in.tumcampusapp.managers.CardManager.CARD_CAFETERIA;
@@ -126,25 +126,25 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(mContext);
+        Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(mContext);
 
         NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
 
         StringBuilder allContent = new StringBuilder();
         StringBuilder firstContent = new StringBuilder();
         for (CafeteriaMenu menu : mMenus) {
-            if ("bei".equals(menu.typeShort)) {
+            if ("bei".equals(menu.getTypeShort())) {
                 continue;
             }
 
-            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.typeLong)
+            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.getTypeLong())
                                                                                                                                                               .replaceAll("")
                                                                                                                                                               .trim());
 
-            StringBuilder content = new StringBuilder(menu.name);
-            if (rolePrices.containsKey(menu.typeLong)) {
+            StringBuilder content = new StringBuilder(menu.getName());
+            if (rolePrices.containsKey(menu.getTypeLong())) {
                 content.append('\n')
-                       .append(rolePrices.get(menu.typeLong))
+                       .append(rolePrices.get(menu.getTypeLong()))
                        .append(" €");
             }
 
@@ -152,7 +152,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                                           .replaceAll("")
                                           .trim();
             pageNotification.setContentText(contentString);
-            if ("tg".equals(menu.typeShort)) {
+            if ("tg".equals(menu.getTypeShort())) {
                 if (!allContent.toString()
                                .isEmpty()) {
                     allContent.append('\n');
@@ -161,7 +161,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
             }
             if (firstContent.toString()
                             .isEmpty()) {
-                firstContent.append(COMPILE.matcher(menu.name)
+                firstContent.append(COMPILE.matcher(menu.getName())
                                            .replaceAll("")
                                            .trim())
                             .append('…');

@@ -149,14 +149,14 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
                 }
             });
 
-            if (transportManager.isFavorite(d.symbol)) {
-                view.setSymbol(d.symbol, true);
+            if (transportManager.isFavorite(d.getSymbol())) {
+                view.setSymbol(d.getSymbol(), true);
             } else {
-                view.setSymbol(d.symbol, false);
+                view.setSymbol(d.getSymbol(), false);
             }
 
-            view.setLine(d.direction);
-            view.setTime(d.countDown);
+            view.setLine(d.getDirection());
+            view.setTime(d.getCountDown());
             mViewResults.addView(view);
         }
     }

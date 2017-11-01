@@ -78,17 +78,17 @@ public class StudyRoomGroupManager extends AbstractManager {
     private void replaceIntoDb(StudyRoomGroup studyRoomGroup) {
         db.execSQL("REPLACE INTO study_room_groups(id, name, details) VALUES" +
                    " (?, ?, ?)",
-                   new String[]{String.valueOf(studyRoomGroup.id), studyRoomGroup.name,
-                                studyRoomGroup.details});
+                   new String[]{String.valueOf(studyRoomGroup.getId()), studyRoomGroup.getName(),
+                                studyRoomGroup.getDetails()});
         SimpleDateFormat dateFormatter = new SimpleDateFormat(DATEFORMAT, Locale.US);
-        for (StudyRoom studyRoom : studyRoomGroup.rooms) {
+        for (StudyRoom studyRoom : studyRoomGroup.getRooms()) {
             db.execSQL("REPLACE INTO study_rooms(id, code, name, location, occupied_till, " +
                        "group_id) VALUES " +
                        "(?, ?, ?, ?, ?, ?)",
-                       new String[]{String.valueOf(studyRoom.id), studyRoom.code, studyRoom.name,
-                                    studyRoom.location,
-                                    dateFormatter.format(studyRoom.occupiedTill), String.valueOf
-                                            (studyRoomGroup.id)});
+                       new String[]{String.valueOf(studyRoom.getId()), studyRoom.getCode(), studyRoom.getName(),
+                                    studyRoom.getLocation(),
+                                    dateFormatter.format(studyRoom.getOccupiedTill()), String.valueOf
+                                            (studyRoomGroup.getId())});
         }
     }
 

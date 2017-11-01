@@ -138,7 +138,6 @@
     <string name="roomfinder">Roomfinder</string>
     <string name="study_rooms">Study Rooms</string>
     <string name="opening_hours">Opening Hours</string>
-    <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
     <string name="barrier_free">Barrier-free Information</string>
@@ -147,11 +146,9 @@
     <string name="lectures_information">Lecture Information</string>
     <string name="lectures_appointments">Lecture Appointments</string>
     <string name="person_information">Person Information</string>
-    <string name="organisation_details">Organization Details</string>
 
     <!-- Organisations -->
     <string name="tum">Technical university of Munich</string>
-    <string name="invalid_organisation">Invalid organization!</string>
     <string name="contact_person">Contact Person</string>
     <string name="secretary">Secretary</string>
     <string name="bib">Library</string>

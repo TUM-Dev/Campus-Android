@@ -34,7 +34,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
     private RecentsManager recentsManager;
 
     public PersonsSearchActivity() {
-        super(TUMOnlineConst.PERSON_SEARCH, R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY, 3);
+        super(TUMOnlineConst.Companion.getPERSON_SEARCH(), R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY, 3);
     }
 
     @Override

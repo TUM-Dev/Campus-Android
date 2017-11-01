@@ -327,15 +327,15 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param f: a given faculty
      */
     void replaceIntoDb(Faculty f) {
-        try (Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?", new String[]{f.getId()})) {
+        try (Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?", new String[]{f.getFaculty()})) {
             db.beginTransaction();
             ContentValues cv = new ContentValues();
             if (c.moveToFirst()) { // if faculty exists, update name
                 cv.put("name", f.getName());
-                db.update("faculties", cv, "faculty = ?", new String[]{f.getId()});
+                db.update("faculties", cv, "faculty = ?", new String[]{f.getFaculty()});
                 db.setTransactionSuccessful();
             } else { // else inserts new faculty
-                cv.put("faculty", f.getId());
+                cv.put("faculty", f.getFaculty());
                 cv.put("name", f.getName());
                 db.insert("faculties", null, cv);
                 db.setTransactionSuccessful();

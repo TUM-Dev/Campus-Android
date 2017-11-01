@@ -57,7 +57,7 @@ public class Update extends GenericNotification {
 
     @Override
     public Notification getNotification() {
-        if (data.sdkVersion > Build.VERSION.SDK_INT || BuildConfig.VERSION_CODE >= data.packageVersion) {
+        if (data.getSdkVersion() > Build.VERSION.SDK_INT || BuildConfig.VERSION_CODE >= data.getPackageVersion()) {
             return null;
         }
 
@@ -68,7 +68,7 @@ public class Update extends GenericNotification {
 
         final String description;
         if (info.getDescription() == null || "".equals(info.getDescription())) {
-            description = String.format(context.getString(R.string.update_notification_description), data.releaseDate);
+            description = String.format(context.getString(R.string.update_notification_description), data.getReleaseDate());
         } else {
             description = info.getDescription();
         }

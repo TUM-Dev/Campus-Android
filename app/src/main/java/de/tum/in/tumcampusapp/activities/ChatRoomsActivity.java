@@ -71,7 +71,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         manager = new ChatRoomManager(this);
 
         //Load the lectures list
-        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
+        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), this, true);
 
         TabLayout tabLayout = findViewById(R.id.chat_rooms_tabs);
         // Create a tab listener that is called when the user changes tabs.
@@ -186,7 +186,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
         try {
             TUMCabeClient.getInstance(this)
-                         .createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
+                         .createRoom(currentChatRoom, ChatVerification.Companion.getChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
                              @Override
                              public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
                                  if (!response.isSuccessful()) {
@@ -240,7 +240,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         if (!firstLoad && currentChatMember != null) {
             try {
                 List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
-                                                    .getMemberRooms(currentChatMember.getId(), new ChatVerification(this, currentChatMember));
+                                                    .getMemberRooms(currentChatMember.getId(), ChatVerification.Companion.getChatVerification(this, currentChatMember));
                 manager.replaceIntoRooms(rooms);
             } catch (NoPrivateKey e) {
                 this.finish();

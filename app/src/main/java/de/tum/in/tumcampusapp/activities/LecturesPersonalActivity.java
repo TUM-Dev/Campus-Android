@@ -34,7 +34,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
     private StickyListHeadersListView lvMyLecturesList;
 
     public LecturesPersonalActivity() {
-        super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
+        super(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
             // set bundle for LectureDetails and show it
             Bundle bundle = new Bundle();
             // we need the stp_sp_nr
-            bundle.putString(LecturesSearchRow.STP_SP_NR, item.getStp_sp_nr());
+            bundle.putString(LecturesSearchRow.Companion.getSTP_SP_NR(), item.getStp_sp_nr());
             Intent intent = new Intent(LecturesPersonalActivity.this, LecturesDetailsActivity.class);
             intent.putExtras(bundle);
             // start LectureDetails for given stp_sp_nr
@@ -65,14 +65,14 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
     @Override
     protected void onStartSearch() {
         enableRefresh();
-        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
+        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), this, true);
         requestFetch();
     }
 
     @Override
     protected void onStartSearch(String query) {
         disableRefresh();
-        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_SEARCH, this, true);
+        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_SEARCH(), this, true);
         requestHandler.setParameter(P_SUCHE, query);
         requestFetch();
     }

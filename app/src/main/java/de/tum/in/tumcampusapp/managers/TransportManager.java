@@ -177,8 +177,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         values.put("id", appWidgetId);
         values.put("station", widgetDepartures.getStation());
         values.put("station_id", widgetDepartures.getStationId());
-        values.put("location", widgetDepartures.useLocation());
-        values.put("reload", widgetDepartures.autoReload());
+        values.put("location", widgetDepartures.getUseLocation());
+        values.put("reload", widgetDepartures.getAutoReload());
         db.replace("widgets_transport", null, values);
         TransportManager.widgetDeparturesList.put(appWidgetId, widgetDepartures);
     }
@@ -271,7 +271,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                 ));
             }
 
-            Collections.sort(result, (lhs, rhs) -> lhs.countDown - rhs.countDown);
+            Collections.sort(result, (lhs, rhs) -> lhs.getCountDown() - rhs.getCountDown());
         } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
@@ -325,7 +325,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             }
 
             //Sort by quality
-            Collections.sort(results, (lhs, rhs) -> rhs.quality - lhs.quality);
+            Collections.sort(results, (lhs, rhs) -> rhs.getQuality() - lhs.getQuality());
 
             MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
             for (StationResult result : results) {
