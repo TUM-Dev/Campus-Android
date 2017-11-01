@@ -1,4 +1,0 @@
-        android:id="@+id/tvCaption"
-        style="@style/SectionHeadline"/>
-
-    <ScrollView
