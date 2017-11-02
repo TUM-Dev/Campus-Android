@@ -2,14 +2,11 @@ package de.tum.in.tumcampusapp.activities.wizard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.common.base.Optional;
-
-import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -18,8 +15,6 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumo.Identity;
 import de.tum.in.tumcampusapp.models.tumo.IdentitySet;
-import de.tum.in.tumcampusapp.models.tumo.Person;
-import de.tum.in.tumcampusapp.models.tumo.PersonList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
@@ -104,9 +99,9 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
 
             // Save the TUMOnline id to preferences
             Utils.setSetting(this, Const.TUMO_PIDENT_NR, identity.getObfuscatd_id());
-            Utils.setSetting(this, Const.TUMO_ST_NR, identity.getObfuscatd_ids().getStudierende());
-            Utils.setSetting(this, Const.TUMO_EXT_NR, identity.getObfuscatd_ids().getExtern());
-            Utils.setSetting(this, Const.TUMO_B_NR, identity.getObfuscatd_ids().getBedienstete());
+            Utils.setSetting(this, Const.TUMO_STUDENT_ID, identity.getObfuscatd_ids().getStudierende());
+            Utils.setSetting(this, Const.TUMO_EXTERNAL_ID, identity.getObfuscatd_ids().getExtern());
+            Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscatd_ids().getBedienstete());
 
             return null;
         }
