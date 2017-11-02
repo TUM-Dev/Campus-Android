@@ -2,23 +2,19 @@ package de.tum.in.tumcampusapp.activities.wizard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.common.base.Optional;
 
-import java.util.List;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.tumo.Identity;
 import de.tum.in.tumcampusapp.models.tumo.IdentitySet;
-import de.tum.in.tumcampusapp.models.tumo.Person;
-import de.tum.in.tumcampusapp.models.tumo.PersonList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
@@ -87,22 +83,26 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             }
         } else {
             // Get users full name
-            TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getIDENTITY(), this, true);
-            Optional<IdentitySet> id = request2.fetch();
+            TUMOnlineRequest<IdentitySet> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getIDENTITY(), this, true);
+            Optional<IdentitySet> id = request.fetch();
             if (!id.isPresent()) {
                 return R.string.no_rights_to_access_id;
             }
 
+            Identity identity = id.get()
+                                  .getIds()
+                                  .get(0);
+
             // Save the name to preferences
-            Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.get()
-                                                                   .toString());
+            Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, identity
+                    .toString());
 
             // Save the TUMOnline id to preferences
-            String pID = getUserPIdentNr(id.get()
-                                           .toString());
-            if (pID != null) {
-                Utils.setSetting(this, Const.TUMO_PIDENT_NR, pID);
-            }
+            Utils.setSetting(this, Const.TUMO_PIDENT_NR, identity.getObfuscatd_id());
+            Utils.setSetting(this, Const.TUMO_STUDENT_ID, identity.getObfuscatd_ids().getStudierende());
+            Utils.setSetting(this, Const.TUMO_EXTERNAL_ID, identity.getObfuscatd_ids().getExtern());
+            Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscatd_ids().getBedienstete());
+
             return null;
         }
     }
@@ -131,36 +131,5 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
         super.onStart();
         TextView textView = findViewById(R.id.tvBrowse);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    /**
-     * Get the user's pident nr to identify him a little bit more. This allows information equal to
-     * the PersonDetailsActivity
-     *
-     * @param name The users full name
-     * @return the users pID, or null
-     */
-    @Nullable
-    private String getUserPIdentNr(String name) {
-        TUMOnlineRequest<PersonList> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getPERSON_SEARCH(), this, true);
-        request.setParameter("pSuche", name);
-
-        Optional<PersonList> result = request.fetch();
-
-        if (result.isPresent() && result.get()
-                                        .getPersons() != null) {
-            List<Person> persons = result.get()
-                                         .getPersons();
-
-            // Since we can't search by LRZ-Id, we can only search by name, which isn't necessarily
-            // unique. We'll probably end up with ubiquitous "Anna Meier"s etc. Only if we are
-            // completely certain, display the image rather than displaying a random image
-            if (persons.size() == 1) {
-                return persons.get(0)
-                              .getId();
-            }
-        }
-
-        return null;
     }
 }
