@@ -61,6 +61,9 @@ object Const {
     const val PUBLIC_KEY_UPLOADED = "chat_member_public_key_uploaded"
 
     const val TUMO_PIDENT_NR = "pIdentNr"
+    const val TUMO_ST_NR = "tumoStudentNr"
+    const val TUMO_EXT_NR = "tumoExternNr"
+    const val TUMO_B_NR = "tumoBediensteteNr"
     const val TUMO_DISABLED = "tumo_is_disabled"
 
     const val GCM_REG_ID = "gcm_registration_id"
