@@ -1,3 +1,3 @@
 package de.tum.`in`.tumcampusapp.models.tumcabe
 
-data class Statistics(val data: String)
+data class Statistics(var data: String = "")

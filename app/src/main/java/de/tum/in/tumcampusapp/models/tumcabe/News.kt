@@ -12,4 +12,10 @@ import java.util.*
  * @param date    Date
  * @param created Creation date
  */
-data class News(val id: String, val title: String, val link: String, val src: String, val image: String, val date: Date, val created: Date)
+data class News(var id: String = "",
+                var title: String = "",
+                var link: String = "",
+                var src: String = "",
+                var image: String = "",
+                var date: Date = Date(),
+                var created: Date = Date())

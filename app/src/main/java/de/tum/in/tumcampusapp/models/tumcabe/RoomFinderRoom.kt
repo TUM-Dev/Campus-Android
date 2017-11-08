@@ -7,11 +7,15 @@ import java.io.Serializable
  * This class is used as a model for rooms in Roomfinder retrofit request.
  * @param name This is the campus name
  */
-data class RoomFinderRoom(val campus: String, val address: String, val info: String, val arch_id: String, val room_id: String,
-                          private val name: String?) : SimpleStickyListItem, Serializable {
+data class RoomFinderRoom(var campus: String = "",
+                          var address: String = "",
+                          var info: String = "",
+                          var arch_id: String = "",
+                          var room_id: String = "",
+                          private val name: String = "") : SimpleStickyListItem, Serializable {
 
     fun getName(): String =
-            if (name == null || name == "null")
+            if (name == "null")
                 ""
             else
                 name

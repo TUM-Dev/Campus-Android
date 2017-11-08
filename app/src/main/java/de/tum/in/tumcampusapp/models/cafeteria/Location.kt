@@ -13,4 +13,12 @@ package de.tum.`in`.tumcampusapp.models.cafeteria
  * @param remark    Additional information, e.g. Tel: 089-11111
  * @param url       Location URL, e.g. http://stud.ub.uni-muenchen.de/
  */
-data class Location(val id: Int, val category: String, val name: String, val address: String, val room: String, val transport: String, val hours: String, val remark: String, val url: String)
+data class Location(var id: Int = -1,
+                    var category: String = "",
+                    var name: String = "",
+                    var address: String = "",
+                    var room: String = "",
+                    var transport: String = "",
+                    var hours: String = "",
+                    var remark: String = "",
+                    var url: String = "")

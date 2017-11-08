@@ -7,7 +7,10 @@ import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*
 
-data class DeviceVerification(val signature: String, val date: String, val rand: String, val device: String) {
+data class DeviceVerification(var signature: String = "",
+                              var date: String = "",
+                              var rand: String = "",
+                              var device: String = "") {
     companion object {
         @Throws(NoPrivateKey::class)
         fun getDeviceVerification(c: Context): DeviceVerification {

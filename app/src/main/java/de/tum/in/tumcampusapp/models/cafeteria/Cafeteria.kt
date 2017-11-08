@@ -9,7 +9,11 @@ package de.tum.`in`.tumcampusapp.models.cafeteria
  * @param latitude  Coordinates of the cafeteria
  * @param longitude Coordinates of the cafeteria
  */
-data class Cafeteria(val id: Int, val name: String, val address: String, val latitude: Double, val longitude: Double) : Comparable<Cafeteria> {
+data class Cafeteria(var id: Int = -1,
+                     var name: String = "",
+                     var address: String = "",
+                     var latitude: Double = -1.0,
+                     var longitude: Double = -1.0) : Comparable<Cafeteria> {
 
     // Used for ordering cafeterias
     var distance: Float = 0.toFloat()

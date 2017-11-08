@@ -6,9 +6,20 @@ import de.tum.`in`.tumcampusapp.auxiliary.NetUtils
 import de.tum.`in`.tumcampusapp.trace.G
 import de.tum.`in`.tumcampusapp.trace.Util
 
-data class BugReport(val packageName: String, val packageVersion: String, val packageVersionCode: String, val phoneModel: String,
-                     val androidVersion: String, val networkWifi: String, val networkMobile: String, val gps: String, val screenWidth: String,
-                     val screenHeight: String, val screenOrientation: String, val screenDpi: String, val log: String, val stacktrace: String) {
+data class BugReport(var packageName: String = "",
+                     var packageVersion: String = "",
+                     var packageVersionCode: String = "",
+                     var phoneModel: String = "",
+                     var androidVersion: String = "",
+                     var networkWifi: String = "",
+                     var networkMobile: String = "",
+                     var gps: String = "",
+                     var screenWidth: String = "",
+                     var screenHeight: String = "",
+                     var screenOrientation: String = "",
+                     var screenDpi: String = "",
+                     var log: String = "",
+                     var stacktrace: String = "") {
 
     companion object {
         fun getBugReport(c: Context, stacktrace: String, log: String): BugReport {
