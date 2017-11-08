@@ -7,7 +7,7 @@ import org.simpleframework.xml.Root
 data class Identity(@field:Element var vorname: String,
                     @field:Element var familienname: String,
                     @field:Element var kennung: String,
-                    @field:Element var obfuscatd_id: String,
-                    @field:Element var obfuscatd_ids: ObfuscatedIds) {
+                    @field:Element var obfuscated_id: String,
+                    @field:Element var obfuscated_ids: ObfuscatedIds) {
     override fun toString(): String = "$vorname $familienname"
 }
