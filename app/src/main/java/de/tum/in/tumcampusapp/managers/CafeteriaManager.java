@@ -21,16 +21,21 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 /**
  * Cafeteria Manager, handles database stuff, external imports
  */
-public class CafeteriaManager extends AbstractManager implements Card.ProvidesCard {
+public class CafeteriaManager implements Card.ProvidesCard {
     private static final int TIME_TO_SYNC = 604800; // 1 week
 
     private static final String CAFETERIAS_URL = "https://tumcabe.in.tum.de/Api/mensen";
+
+    private final Context mContext;
+    private final CafeteriaDao dao;
 
     /**
      * Get Cafeteria object by JSON object
@@ -57,10 +62,9 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
      * @param context Context
      */
     public CafeteriaManager(Context context) {
-        super(context);
-
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR, latitude REAL, longitude REAL)");
+        mContext = context;
+        dao = TcaDb.getInstance(context)
+                   .cafeteriaDao();
     }
 
     /**
@@ -80,63 +84,14 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         if (!jsonArray.isPresent()) {
             return;
         }
-        removeCache();
+        dao.removeCache();
 
         // write cafeterias into database, transaction = speedup
         JSONArray arr = jsonArray.get();
-        db.beginTransaction();
-        try {
-            for (int i = 0; i < arr.length(); i++) {
-                replaceIntoDb(getFromJson(arr.getJSONObject(i)));
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
+        for (int i = 0; i < arr.length(); i++) {
+            dao.insert(getFromJson(arr.getJSONObject(i)));
         }
         sync.replaceIntoDb(this);
-    }
-
-    /**
-     * Returns all cafeterias
-     *
-     * @return Database cursor (id, name, address, latitude, longitude)
-     */
-    public Cursor getAllFromDb() {
-        return db.query("cafeterias", null, null, null, null, null, null);
-    }
-
-    /**
-     * Removes all cache items
-     */
-    private void removeCache() {
-        db.execSQL("DELETE FROM cafeterias");
-    }
-
-    /**
-     * Replace or Insert a cafeteria in the database
-     *
-     * @param c Cafeteria object
-     */
-    void replaceIntoDb(Cafeteria c) {
-        if (c.getId() <= 0) {
-            throw new IllegalArgumentException("Invalid id.");
-        }
-        if (c.getName()
-             .isEmpty()) {
-            throw new IllegalArgumentException("Invalid name.");
-        }
-
-        db.execSQL("REPLACE INTO cafeterias (id, name, address, latitude, longitude) VALUES (?, ?, ?, ?, ?)",
-                   new String[]{String.valueOf(c.getId()), c.getName(), c.getAddress(), Double.toString(c.getLatitude()), Double.toString(c.getLongitude())});
-    }
-
-    public String getMensaNameFromId(int mensaId) {
-        try (Cursor c = db.rawQuery("SELECT name FROM cafeterias WHERE id = ?", new String[]{"" + mensaId})) {
-            if (c.moveToNext()) {
-                return c.getString(0);
-            }
-        }
-        return null;
     }
 
     /**
@@ -153,19 +108,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
             return;
         }
 
-        // Get all available cafeterias from database
-        String cafeteriaName = "";
-        try (Cursor cursor = getAllFromDb()) {
-            if (cursor.moveToFirst() && cursor.getColumnCount() >= 2) {
-                do {
-                    final int key = cursor.getInt(0);
-                    if (key == cafeteriaId) {
-                        cafeteriaName = cursor.getString(1);
-                        break;
-                    }
-                } while (cursor.moveToNext());
-            }
-        }
+        String cafeteriaName = dao.getMensaNameFromId(cafeteriaId);
 
         // Get available dates for cafeteria menus
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
@@ -214,19 +157,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         }
 
         // Get all available cafeterias from database
-        String cafeteriaName = "";
-        try (Cursor cursor = getAllFromDb()) {
-            // get the cafeteria's name
-            if (cursor.moveToFirst()) {
-                do {
-                    final int key = cursor.getInt(0);
-                    if (key == cafeteriaId) {
-                        cafeteriaName = cursor.getString(1);
-                        break;
-                    }
-                } while (cursor.moveToNext());
-            }
-        }
+        String cafeteriaName = dao.getMensaNameFromId(cafeteriaId);
 
         // Get available dates for cafeteria menus
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
@@ -263,19 +194,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         }
 
         // Get all available cafeterias from database
-        String cafeteriaName = "";
-        try (Cursor cursor = getAllFromDb()) {
-            // get the cafeteria's name
-            if (cursor.moveToFirst()) {
-                do {
-                    final int key = cursor.getInt(0);
-                    if (key == cafeteriaId) {
-                        cafeteriaName = cursor.getString(1);
-                        break;
-                    }
-                } while (cursor.moveToNext());
-            }
-        }
+        String cafeteriaName = dao.getMensaNameFromId(cafeteriaId);
 
         // Get available dates for cafeteria menus
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);

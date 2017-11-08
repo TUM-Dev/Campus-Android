@@ -22,6 +22,8 @@ import java.util.List;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.efa.StationResult;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
@@ -66,11 +68,14 @@ public class LocationManager extends AbstractManager {
 
     private static final String[] DEFAULT_CAMPUS_CAFETERIA = {"422", null, "423", "421", "414", null, "411", null};
     private final Context mContext;
+    private final CafeteriaDao cafeteriaDao;
 
     public LocationManager(Context c) {
         super(c);
         mContext = c;
         createBuildingsToGpsTable();
+        cafeteriaDao = TcaDb.getInstance(c)
+                            .cafeteriaDao();
     }
 
     /**
@@ -155,20 +160,10 @@ public class LocationManager extends AbstractManager {
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
         float[] results = new float[1];
-        CafeteriaManager manager = new CafeteriaManager(mContext);
-        List<Cafeteria> list;
-        try (Cursor cur = manager.getAllFromDb()) {
-            list = new ArrayList<>(cur.getCount());
-
-            if (cur.moveToFirst()) {
-                do {
-                    Cafeteria cafe = new Cafeteria(cur.getInt(0), cur.getString(1),
-                                                   cur.getString(2), cur.getDouble(3), cur.getDouble(4));
-                    Location.distanceBetween(cur.getDouble(3), cur.getDouble(4), lat, lng, results);
-                    cafe.setDistance(results[0]);
-                    list.add(cafe);
-                } while (cur.moveToNext());
-            }
+        List<Cafeteria> list = cafeteriaDao.getAll();
+        for (Cafeteria cafeteria : list) {
+            Location.distanceBetween(cafeteria.getLatitude(), cafeteria.getLongitude(), lat, lng, results);
+            cafeteria.setDistance(results[0]);
         }
         Collections.sort(list);
         return list;
