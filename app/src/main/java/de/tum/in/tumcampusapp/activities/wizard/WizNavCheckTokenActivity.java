@@ -98,10 +98,14 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
                     .toString());
 
             // Save the TUMOnline id to preferences
-            Utils.setSetting(this, Const.TUMO_PIDENT_NR, identity.getObfuscatd_ids().getStudierende()); // Switch to identity.getObfuscatd_id() in the future
-            Utils.setSetting(this, Const.TUMO_STUDENT_ID, identity.getObfuscatd_ids().getStudierende());
-            Utils.setSetting(this, Const.TUMO_EXTERNAL_ID, identity.getObfuscatd_ids().getExtern());
-            Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscatd_ids().getBedienstete());
+            Utils.setSetting(this, Const.TUMO_PIDENT_NR, identity.getObfuscated_ids()
+                                                                 .getStudierende()); // Switch to identity.getObfuscated_id() in the future
+            Utils.setSetting(this, Const.TUMO_STUDENT_ID, identity.getObfuscated_ids()
+                                                                  .getStudierende());
+            Utils.setSetting(this, Const.TUMO_EXTERNAL_ID, identity.getObfuscated_ids()
+                                                                   .getExtern());
+            Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscated_ids()
+                                                                   .getBedienstete());
 
             return null;
         }
