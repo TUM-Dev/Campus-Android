@@ -47,7 +47,7 @@ data class Employee(@field:Element(name = "geschlecht", required = false)
     val groups: List<Group>?
         get() = groupList?.groups
 
-    val image: Bitmap
+    val image: Bitmap?
         get() {
             val imageAsBytes = Base64.decode(imageData.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
             return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.size)
