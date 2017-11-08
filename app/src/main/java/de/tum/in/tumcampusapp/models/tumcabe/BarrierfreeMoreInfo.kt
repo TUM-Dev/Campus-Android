@@ -5,7 +5,9 @@ import de.tum.`in`.tumcampusapp.adapters.SimpleStickyListHeadersAdapter
 /**
  * The model used to display more infromation in barrier free page
  */
-data class BarrierfreeMoreInfo(val title: String, val category: String, val url: String) : SimpleStickyListHeadersAdapter.SimpleStickyListItem {
+data class BarrierfreeMoreInfo(var title: String = "",
+                               var category: String = "",
+                               var url: String = "") : SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun getHeadName() = category
 

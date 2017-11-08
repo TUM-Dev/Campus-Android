@@ -4,7 +4,9 @@ import android.content.Context
 import de.tum.`in`.tumcampusapp.auxiliary.AuthenticationManager
 import de.tum.`in`.tumcampusapp.exceptions.NoPrivateKey
 
-data class DeviceUploadGcmToken(val verification: DeviceVerification, val token: String, val signature: String) {
+data class DeviceUploadGcmToken(var verification: DeviceVerification? = null,
+                                var token: String = "",
+                                var signature: String = "") {
     companion object {
         @Throws(NoPrivateKey::class)
         fun getDeviceUploadGcmToken(c: Context, token: String): DeviceUploadGcmToken {

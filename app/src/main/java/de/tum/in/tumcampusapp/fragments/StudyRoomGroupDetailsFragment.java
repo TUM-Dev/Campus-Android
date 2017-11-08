@@ -46,13 +46,11 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
-        RecyclerView recyclerView;
-        LinearLayoutManager layoutManager;
-        try (Cursor studyRoomCursor = new StudyRoomGroupManager(getActivity()).getStudyRoomsFromDb(mStudyRoomGroupId)) {
-            recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
-            recyclerView.setAdapter(new StudyRoomAdapter(studyRoomCursor));
-        }
-        layoutManager = new LinearLayoutManager(getContext());
+        Cursor studyRoomCursor = new StudyRoomGroupManager(getActivity()).getStudyRoomsFromDb(mStudyRoomGroupId);
+        RecyclerView recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
+        recyclerView.setAdapter(new StudyRoomAdapter(studyRoomCursor));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);

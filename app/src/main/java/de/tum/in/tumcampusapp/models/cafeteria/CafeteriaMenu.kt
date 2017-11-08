@@ -13,4 +13,10 @@ import java.util.*
  * @param typeNr      Type ID
  * @param name        Menu name
  */
-data class CafeteriaMenu(val id: Int, val cafeteriaId: Int, val date: Date?, val typeShort: String?, val typeLong: String?, val typeNr: Int, val name: String?)
+data class CafeteriaMenu(var id: Int = -1,
+                         var cafeteriaId: Int = -1,
+                         var date: Date? = null,
+                         var typeShort: String = "",
+                         var typeLong: String = "",
+                         var typeNr: Int = -1,
+                         var name: String = "")

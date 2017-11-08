@@ -7,7 +7,11 @@ import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*
 
-data class ChatVerification(var signature: String = "", var date: String = "", var rand: String = "", var member: Int = 0, var data: Any? = null) {
+data class ChatVerification(var signature: String = "",
+                            var date: String = "",
+                            var rand: String = "",
+                            var member: Int = 0,
+                            var data: Any? = null) {
     companion object {
         @Throws(NoPrivateKey::class)
         fun getChatVerification(c: Context, member: ChatMember): ChatVerification {

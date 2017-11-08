@@ -1,3 +1,6 @@
 package de.tum.`in`.tumcampusapp.models.tumcabe
 
-data class RoomFinderSchedule(val start: String, val end: String, val event_id: Long, val title: String)
+data class RoomFinderSchedule(var start: String = "",
+                              var end: String = "",
+                              var event_id: Long = -1,
+                              var title: String = "")

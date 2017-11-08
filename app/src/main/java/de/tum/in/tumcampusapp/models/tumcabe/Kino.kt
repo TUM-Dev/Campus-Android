@@ -20,6 +20,18 @@ import java.util.*
  * @param created     Created
  * @param link        Link
  */
-data class Kino(val id: String, val title: String, val year: String, val runtime: String, val genre: String, val director: String, val actors: String,
-                val rating: String, val description: String, val cover: String, val trailer: String, val date: Date, val created: Date, val link: String)
+data class Kino(var id: String = "",
+                var title: String = "",
+                var year: String = "",
+                var runtime: String = "",
+                var genre: String = "",
+                var director: String = "",
+                var actors: String = "",
+                var rating: String = "",
+                var description: String = "",
+                var cover: String = "",
+                var trailer: String = "",
+                var date: Date = Date(),
+                var created: Date = Date(),
+                var link: String = "")
 
