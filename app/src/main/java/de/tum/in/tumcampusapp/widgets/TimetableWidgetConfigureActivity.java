@@ -40,9 +40,8 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
 
         // Initialize stations adapter
         CalendarManager calendarManager = new CalendarManager(this);
-        try (Cursor lectureCursor = calendarManager.getLecturesFromWidget(this.appWidgetId)) {
-            listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectureCursor, true, this.appWidgetId));
-        }
+        Cursor lectureCursor = calendarManager.getLecturesFromWidget(this.appWidgetId);
+        listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectureCursor, true, this.appWidgetId));
         listViewLectures.requestFocus();
     }
 
