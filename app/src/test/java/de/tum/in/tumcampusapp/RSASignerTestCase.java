@@ -1,12 +1,11 @@
 package de.tum.in.tumcampusapp;
 
-import android.support.test.filters.SmallTest;
-import android.support.test.runner.AndroidJUnit4;
 import android.util.Base64;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -23,8 +22,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-@RunWith(AndroidJUnit4.class)
-@SmallTest
+@RunWith(RobolectricTestRunner.class)
 public class RSASignerTestCase {
 
     private RSASigner signer;
@@ -78,7 +76,7 @@ public class RSASignerTestCase {
                 "MES0525W5YVR0knzoKw=\n"));
     }
 
-    protected ChatMessage buildChatMessage(String text, String signature) {
+    private ChatMessage buildChatMessage(String text, String signature) {
         ChatMessage message = new ChatMessage(text);
         message.setSignature(signature);
 
