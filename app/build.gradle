@@ -46,6 +46,13 @@ android {
             includeAndroidResources = true
         }
     }
+    sourceSets {
+        unitTest {
+            java {
+                srcDir 'src/test/java'
+            }
+        }
+    }
 }
 
 def androidSupportVersion = '27.0.0'
