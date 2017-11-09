@@ -19,8 +19,7 @@ import de.tum.in.tumcampusapp.auxiliary.RSASigner;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 public class RSASignerTestCase {
@@ -79,7 +78,6 @@ public class RSASignerTestCase {
     private ChatMessage buildChatMessage(String text, String signature) {
         ChatMessage message = new ChatMessage(text);
         message.setSignature(signature);
-
         return message;
     }
 
@@ -91,10 +89,7 @@ public class RSASignerTestCase {
         signer = new RSASigner(privateKeyFixture);
         ChatMessage message = messageFixtures.get(0);
 
-        Utils.log(Boolean.toString(message.getSignature()
-                                          .equals(signer.sign(message.getText()))));
-        Utils.log(signer.sign(message.getText()));
-        assertEquals(message.getSignature(), signer.sign(message.getText()));
+        assertThat(signer.sign(message.getText())).isEqualTo(message.getSignature());
     }
 
     /**
@@ -105,7 +100,7 @@ public class RSASignerTestCase {
         signer = new RSASigner(privateKeyFixture);
         ChatMessage message = messageFixtures.get(1);
 
-        assertEquals(message.getSignature(), signer.sign(message.getText()));
+        assertThat(signer.sign(message.getText())).isEqualTo(message.getSignature());
     }
 
     /**
@@ -116,7 +111,7 @@ public class RSASignerTestCase {
         signer = new RSASigner(privateKeyFixture);
         ChatMessage message = messageFixtures.get(2);
 
-        assertEquals(message.getSignature(), signer.sign(message.getText()));
+        assertThat(signer.sign(message.getText())).isEqualTo(message.getSignature());
     }
 
     /**
@@ -128,6 +123,6 @@ public class RSASignerTestCase {
         signer = new RSASigner(null);
         ChatMessage message = messageFixtures.get(0);
 
-        assertNull(signer.sign(message.getText()));
+        assertThat(signer.sign(message.getText())).isNull();
     }
 }
