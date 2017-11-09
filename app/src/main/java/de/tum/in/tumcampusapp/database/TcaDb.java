@@ -10,16 +10,19 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.FavoriteDishDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.SyncDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.TumLockDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
+import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
 
 @Database(version = 1, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
+        Sync.class,
         TumLock.class
 }, exportSchema = false) // TODO: probably version schema
 @TypeConverters(Converters.class)
@@ -31,6 +34,8 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract FavoriteDishDao favoriteDishDao();
 
     public abstract TumLockDao tumLockDao();
+
+    public abstract SyncDao syncDao();
 
     private static TcaDb instance;
 

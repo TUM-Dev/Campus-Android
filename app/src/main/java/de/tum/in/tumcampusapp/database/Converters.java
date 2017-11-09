@@ -9,7 +9,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 public class Converters {
     @TypeConverter
     public static Date fromIso(String str) {
-        return Utils.getDate(str);
+        return Utils.getISODateTime(str);
     }
 
     @TypeConverter
