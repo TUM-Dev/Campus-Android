@@ -1,11 +1,9 @@
 package de.tum.in.tumcampusapp;
 
-import android.support.test.filters.SmallTest;
-import android.support.test.runner.AndroidJUnit4;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +15,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(AndroidJUnit4.class)
-@SmallTest
+@RunWith(RobolectricTestRunner.class)
 public class ChatMessageValidatorTestCase {
 
     private ChatMessageValidator validator;
@@ -57,7 +54,7 @@ public class ChatMessageValidatorTestCase {
      * @param start The index of the first element to include in the list
      * @param end   The index after the last element to include in the list
      */
-    protected List<ChatPublicKey> buildPubkeyList(int start, int end) {
+    private List<ChatPublicKey> buildPubkeyList(int start, int end) {
         List<ChatPublicKey> list = new ArrayList<>();
         for (int i = start; i < end; ++i) {
             list.add(publicKeyFixtures.get(i));
@@ -66,7 +63,7 @@ public class ChatMessageValidatorTestCase {
         return list;
     }
 
-    protected ChatMessage buildChatMessage(String text, String signature) {
+    private ChatMessage buildChatMessage(String text, String signature) {
         ChatMessage message = new ChatMessage(text);
         message.setSignature(signature);
 
