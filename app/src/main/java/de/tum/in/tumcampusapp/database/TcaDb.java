@@ -11,6 +11,7 @@ import de.tum.in.tumcampusapp.database.dataAccessObjects.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.FavoriteDishDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.KinoDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.SyncDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.TumLockDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
@@ -19,6 +20,7 @@ import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
+import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 
 @Database(version = 1, entities = {
         Cafeteria.class,
@@ -26,7 +28,8 @@ import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
         FavoriteDish.class,
         Sync.class,
         TumLock.class,
-        BuildingToGps.class
+        BuildingToGps.class,
+        Kino.class
 }, exportSchema = false) // TODO: probably version schema
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -41,6 +44,8 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract SyncDao syncDao();
 
     public abstract BuildingToGpsDao buildingToGpsDao();
+
+    public abstract KinoDao kinoDao();
 
     private static TcaDb instance;
 
