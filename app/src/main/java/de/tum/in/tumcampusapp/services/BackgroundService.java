@@ -1,7 +1,11 @@
 package de.tum.in.tumcampusapp.services;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
+import android.util.Log;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
@@ -10,13 +14,11 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 /**
  * Service used to sync data in background
  */
-public class BackgroundService extends IntentService {
+public class BackgroundService extends JobIntentService {
 
     private static final String BACKGROUND_SERVICE = "BackgroundService";
 
-    public BackgroundService() {
-        super(BACKGROUND_SERVICE);
-    }
+    static final int JOB_ID = 1000;
 
     @Override
     public void onCreate() {
@@ -30,23 +32,30 @@ public class BackgroundService extends IntentService {
         Utils.log("BackgroundService has stopped");
     }
 
+    static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, BackgroundService.class, JOB_ID, work);
+    }
+
     /**
      * Starts {@link DownloadService} with appropriate extras
      *
      * @param intent Intent
      */
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         // Download all from external
-        Intent service = new Intent(this, DownloadService.class);
+        Log.d(BACKGROUND_SERVICE,"huhu");
+        Intent service = new Intent();
         service.putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL);
         service.putExtra(Const.FORCE_DOWNLOAD, false);
         service.putExtra(Const.APP_LAUNCHES, intent.getBooleanExtra(Const.APP_LAUNCHES, false));
-        startService(service);
+
+        DownloadService.enqueueWork(getBaseContext(),service);
 
         //Upload Usage statistics
         ImplicitCounter.submitCounter(this);
     }
+
 
     /**
      * This method should fetch the grade in order to get updates grades. It is not implemented,

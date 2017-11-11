@@ -1,8 +1,11 @@
 package de.tum.in.tumcampusapp.services;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.IOException;
@@ -19,23 +22,25 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 /**
  * Service used to silence the mobile during lectures
  */
-public class SendMessageService extends IntentService {
+public class SendMessageService extends JobIntentService {
 
     public static final int MAX_SEND_TRIES = 5;
     /**
      * Interval in milliseconds to check for current lectures
      */
     private static final String SEND_MESSAGE_SERVICE = "SendMessageService";
+    static final int JOB_ID = 1001;
 
     /**
      * default init (run intent in new thread)
      */
-    public SendMessageService() {
-        super(SEND_MESSAGE_SERVICE);
+
+    static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, SendMessageService.class, JOB_ID, work);
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         // Get all unsent messages from database
         List<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
         if (unsentMsg.isEmpty()) {
