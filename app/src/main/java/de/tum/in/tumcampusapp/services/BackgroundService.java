@@ -1,24 +1,21 @@
 package de.tum.in.tumcampusapp.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
-import android.util.Log;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+
+import static de.tum.in.tumcampusapp.services.JobIdConstants.BACKGROUND_SERVICE_JOB_ID;
 
 /**
  * Service used to sync data in background
  */
 public class BackgroundService extends JobIntentService {
 
-    private static final String BACKGROUND_SERVICE = "BackgroundService";
-
-    static final int JOB_ID = 1000;
 
     @Override
     public void onCreate() {
@@ -33,7 +30,7 @@ public class BackgroundService extends JobIntentService {
     }
 
     static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, BackgroundService.class, JOB_ID, work);
+        enqueueWork(context, BackgroundService.class, BACKGROUND_SERVICE_JOB_ID, work);
     }
 
     /**
@@ -44,18 +41,16 @@ public class BackgroundService extends JobIntentService {
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         // Download all from external
-        Log.d(BACKGROUND_SERVICE,"huhu");
         Intent service = new Intent();
         service.putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL);
         service.putExtra(Const.FORCE_DOWNLOAD, false);
         service.putExtra(Const.APP_LAUNCHES, intent.getBooleanExtra(Const.APP_LAUNCHES, false));
 
-        DownloadService.enqueueWork(getBaseContext(),service);
+        DownloadService.enqueueWork(getBaseContext(), service);
 
         //Upload Usage statistics
         ImplicitCounter.submitCounter(this);
     }
-
 
     /**
      * This method should fetch the grade in order to get updates grades. It is not implemented,

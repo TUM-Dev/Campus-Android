@@ -1,12 +1,13 @@
 package de.tum.in.tumcampusapp.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
 import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
+
+import static de.tum.in.tumcampusapp.services.JobIdConstants.SEND_WIFI_SERVICE_JOB_ID;
 
 /**
  * This service is getting used by StartSyncReceiver to send the accumulated WifiMeasurements
@@ -18,12 +19,10 @@ public class SendWifiMeasurementService extends JobIntentService {
     public static final int MAX_SEND_TRIES = 3;
     //Time between retries for trying again
     public static final int TIME_BETWEEN_MILIS = 300;
-    static final int JOB_ID = 1003;
-    private static final String SEND_WIFI_MEASUREMENT_SERVICE = "SendWifiMeasurementService";
 
 
     static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, SendWifiMeasurementService.class, JOB_ID, work);
+        enqueueWork(context, SendWifiMeasurementService.class, SEND_WIFI_SERVICE_JOB_ID, work);
     }
 
     @Override

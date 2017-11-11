@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.services;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -21,6 +20,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 
+import static de.tum.in.tumcampusapp.services.JobIdConstants.SILENCE_SERVICE_JOB_ID;
+
 /**
  * Service used to silence the mobile during lectures
  */
@@ -31,8 +32,6 @@ public class SilenceService extends JobIntentService {
      */
     private static final int CHECK_INTERVAL = 60000 * 15; // 15 Minutes
     private static final int CHECK_DELAY = 10000; // 10 Seconds after Calendar changed
-    private static final String SILENCE_SERVICE = "SilenceService";
-    static final int JOB_ID = 1002;
 
 
     private static long getWaitDuration(String timeToEventString) {
@@ -59,7 +58,7 @@ public class SilenceService extends JobIntentService {
     }
 
     static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, SilenceService.class, JOB_ID, work);
+        enqueueWork(context, SilenceService.class, SILENCE_SERVICE_JOB_ID, work);
     }
 
     @Override

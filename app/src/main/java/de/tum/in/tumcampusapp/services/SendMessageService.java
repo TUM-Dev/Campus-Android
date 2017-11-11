@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +18,8 @@ import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
+import static de.tum.in.tumcampusapp.services.JobIdConstants.SEND_MESSAGE_SERVICE_JOB_ID;
+
 /**
  * Service used to silence the mobile during lectures
  */
@@ -28,15 +29,9 @@ public class SendMessageService extends JobIntentService {
     /**
      * Interval in milliseconds to check for current lectures
      */
-    private static final String SEND_MESSAGE_SERVICE = "SendMessageService";
-    static final int JOB_ID = 1001;
-
-    /**
-     * default init (run intent in new thread)
-     */
 
     static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, SendMessageService.class, JOB_ID, work);
+        enqueueWork(context, SendMessageService.class, SEND_MESSAGE_SERVICE_JOB_ID, work);
     }
 
     @Override

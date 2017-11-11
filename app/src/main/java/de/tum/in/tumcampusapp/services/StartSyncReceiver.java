@@ -55,7 +55,6 @@ public class StartSyncReceiver extends BroadcastReceiver {
             Intent i = new Intent();
             i.putExtra(Const.APP_LAUNCHES, launch);
             BackgroundService.enqueueWork(context, i);
-            //context.startService(i);
         }
         SendMessageService.enqueueWork(context,new Intent());
 

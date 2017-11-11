@@ -32,6 +32,8 @@ import de.tum.in.tumcampusapp.models.cafeteria.Location;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
 
+import static de.tum.in.tumcampusapp.services.JobIdConstants.DOWNLOAD_SERVICE_JOB_ID;
+
 /**
  * Service used to download files from external pages
  */
@@ -41,11 +43,9 @@ public class DownloadService extends JobIntentService {
      * Download broadcast identifier
      */
     public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
-    private static final String DOWNLOAD_SERVICE = "DownloadService";
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
     private LocalBroadcastManager broadcastManager;
-    static final int JOB_ID = 1004;
 
     /**
      * Gets the time when BackgroundService was called last time
@@ -168,7 +168,7 @@ public class DownloadService extends JobIntentService {
     }
 
     static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, DownloadService.class, JOB_ID, work);
+        enqueueWork(context, DownloadService.class, DOWNLOAD_SERVICE_JOB_ID, work);
     }
 
     @Override
