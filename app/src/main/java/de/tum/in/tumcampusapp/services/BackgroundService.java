@@ -9,7 +9,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
-import static de.tum.in.tumcampusapp.services.JobIdConstants.BACKGROUND_SERVICE_JOB_ID;
+import static de.tum.in.tumcampusapp.auxiliary.Const.BACKGROUND_SERVICE_JOB_ID;
 
 /**
  * Service used to sync data in background

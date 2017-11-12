@@ -18,7 +18,7 @@ import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
-import static de.tum.in.tumcampusapp.services.JobIdConstants.SEND_MESSAGE_SERVICE_JOB_ID;
+import static de.tum.in.tumcampusapp.auxiliary.Const.SEND_MESSAGE_SERVICE_JOB_ID;
 
 /**
  * Service used to silence the mobile during lectures

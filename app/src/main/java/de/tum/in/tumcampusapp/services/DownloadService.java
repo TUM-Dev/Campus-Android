@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,7 +31,7 @@ import de.tum.in.tumcampusapp.models.cafeteria.Location;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
 
-import static de.tum.in.tumcampusapp.services.JobIdConstants.DOWNLOAD_SERVICE_JOB_ID;
+import static de.tum.in.tumcampusapp.auxiliary.Const.DOWNLOAD_SERVICE_JOB_ID;
 
 /**
  * Service used to download files from external pages

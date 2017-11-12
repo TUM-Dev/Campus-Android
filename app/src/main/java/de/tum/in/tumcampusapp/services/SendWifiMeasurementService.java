@@ -7,7 +7,7 @@ import android.support.v4.app.JobIntentService;
 
 import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
 
-import static de.tum.in.tumcampusapp.services.JobIdConstants.SEND_WIFI_SERVICE_JOB_ID;
+import static de.tum.in.tumcampusapp.auxiliary.Const.SEND_WIFI_SERVICE_JOB_ID;
 
 /**
  * This service is getting used by StartSyncReceiver to send the accumulated WifiMeasurements

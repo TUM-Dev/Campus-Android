@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 
-import static de.tum.in.tumcampusapp.services.JobIdConstants.SILENCE_SERVICE_JOB_ID;
+import static de.tum.in.tumcampusapp.auxiliary.Const.SILENCE_SERVICE_JOB_ID;
 
 /**
  * Service used to silence the mobile during lectures
