@@ -1,11 +1,12 @@
 package de.tum.in.tumcampusapp.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONException;
@@ -30,26 +31,20 @@ import de.tum.in.tumcampusapp.models.cafeteria.Location;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
 
+import static de.tum.in.tumcampusapp.auxiliary.Const.DOWNLOAD_SERVICE_JOB_ID;
+
 /**
  * Service used to download files from external pages
  */
-public class DownloadService extends IntentService {
+public class DownloadService extends JobIntentService {
 
     /**
      * Download broadcast identifier
      */
     public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
-    private static final String DOWNLOAD_SERVICE = "DownloadService";
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
     private LocalBroadcastManager broadcastManager;
-
-    /**
-     * default init (run intent in new thread)
-     */
-    public DownloadService() {
-        super(DOWNLOAD_SERVICE);
-    }
 
     /**
      * Gets the time when BackgroundService was called last time
@@ -151,7 +146,7 @@ public class DownloadService extends IntentService {
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
         if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
-            service.startService(new Intent(service, FillCacheService.class));
+            FillCacheService.enqueueWork(service.getBaseContext(),new Intent());
         }
     }
 
@@ -171,8 +166,12 @@ public class DownloadService extends IntentService {
         Utils.log("DownloadService service has stopped");
     }
 
+    static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, DownloadService.class, DOWNLOAD_SERVICE_JOB_ID, work);
+    }
+
     @Override
-    protected void onHandleIntent(final Intent intent) {
+    protected void onHandleWork(@NonNull final Intent intent) {
         new Thread(() -> download(intent, DownloadService.this)).start();
     }
 
