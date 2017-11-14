@@ -19,7 +19,6 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -44,6 +43,7 @@ import java.text.DateFormat;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.ChatMessageValidator;
@@ -72,7 +72,7 @@ import retrofit2.Response;
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
-public class ChatActivity extends AppCompatActivity implements DialogInterface.OnClickListener, OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemLongClickListener {
+public class ChatActivity extends ActivityForDownloadingExternal implements DialogInterface.OnClickListener, OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemLongClickListener {
 
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
@@ -164,6 +164,10 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             handleRoomBroadcast(extras);
         }
     };
+    public ChatActivity() {
+        super(Const.CURRENT_CHAT_ROOM, R.layout.activity_chat);
+    }
+
 
     /**
      * Gets the text from speech input and returns null if no input was provided
@@ -217,7 +221,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
-        this.setContentView(R.layout.activity_chat);
 
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
