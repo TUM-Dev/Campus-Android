@@ -69,6 +69,12 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         boolean locationsEnabled = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         boolean wifiScansEnabled = Utils.getInternalSettingBool(context, WifiMeasurementManager.WIFI_SCANS_ALLOWED, false);
         boolean nextScanScheduled = false;
+
+        if (!locationsEnabled) {
+            //Stop here as wifi.getScanResults will either return an empty list or throw an exception (on android 6.0.0)
+            return;
+        }
+
         WifiScanHandler wifiScanHandler = WifiScanHandler.getInstance(context);
         List<ScanResult> scan = wifi.getScanResults();
         for (final ScanResult network : scan) {
@@ -82,7 +88,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             }
 
             //if user allowed us to store his signal strength, store measurement to the local DB and later sync to remote
-            if (locationsEnabled && wifiScansEnabled) {
+            if (wifiScansEnabled) {
                 storeWifiMeasurement(context, network);
                 nextScanScheduled = true;
             }

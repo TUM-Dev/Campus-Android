@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.services;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,6 +9,8 @@ import android.database.Cursor;
 import android.media.AudioManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,24 +20,19 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 
+import static de.tum.in.tumcampusapp.auxiliary.Const.SILENCE_SERVICE_JOB_ID;
+
 /**
  * Service used to silence the mobile during lectures
  */
-public class SilenceService extends IntentService {
+public class SilenceService extends JobIntentService {
 
     /**
      * Interval in milliseconds to check for current lectures
      */
     private static final int CHECK_INTERVAL = 60000 * 15; // 15 Minutes
     private static final int CHECK_DELAY = 10000; // 10 Seconds after Calendar changed
-    private static final String SILENCE_SERVICE = "SilenceService";
 
-    /**
-     * default init (run intent in new thread)
-     */
-    public SilenceService() {
-        super(SILENCE_SERVICE);
-    }
 
     private static long getWaitDuration(String timeToEventString) {
         long timeToEvent = Long.MAX_VALUE;
@@ -61,8 +57,12 @@ public class SilenceService extends IntentService {
         Utils.log("SilenceService has stopped");
     }
 
+    static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, SilenceService.class, SILENCE_SERVICE_JOB_ID, work);
+    }
+
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         //Abort, if the settings changed
         if (!Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
             // Don't schedule a new run, since the service is disabled

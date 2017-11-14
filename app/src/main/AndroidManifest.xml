@@ -619,21 +619,27 @@
 
         <service
             android:name=".services.DownloadService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.SilenceService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.SendMessageService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.SendWifiMeasurementService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.BackgroundService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.FillCacheService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.ScanResultsAvailableReceiver$NeverShowAgain"

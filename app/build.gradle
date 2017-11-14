@@ -20,7 +20,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 27
         versionCode 99999
-        versionName "1.5.1-dev"
+        versionName "1.5.2-dev"
     }
     lintOptions {
         checkAllWarnings true

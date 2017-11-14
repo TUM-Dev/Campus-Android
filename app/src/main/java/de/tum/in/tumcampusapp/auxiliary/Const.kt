@@ -123,4 +123,11 @@ object Const {
     const val ROOM_ID = "room_id"
 
     const val NOTIFICATION_CHANNEL_DEFAULT = "default"
+
+    const val BACKGROUND_SERVICE_JOB_ID = 1000
+    const val SEND_MESSAGE_SERVICE_JOB_ID = 1001
+    const val SILENCE_SERVICE_JOB_ID = 1002
+    const val SEND_WIFI_SERVICE_JOB_ID = 1003
+    const val DOWNLOAD_SERVICE_JOB_ID = 1004
+    const val FILL_CACHE_SERVICE_JOB_ID = 1005
 }
