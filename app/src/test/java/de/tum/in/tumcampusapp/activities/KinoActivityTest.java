@@ -7,7 +7,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import de.tum.in.tumcampusapp.R;
 
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 public class KinoActivityTest extends BaseActivityTest {
@@ -15,7 +15,7 @@ public class KinoActivityTest extends BaseActivityTest {
     @Test
     public void mainComponentDisplayedTest() {
         KinoActivity activity = Robolectric.setupActivity(KinoActivity.class);
-        assertFalse(activity.findViewById(R.id.no_movies_layout).isActivated());// TODO: should be true
+        assertThat(activity.findViewById(R.id.no_movies_layout).isActivated()).isTrue();
 
         // TODO: download all from external, then check if movies are shown
     }
