@@ -175,7 +175,6 @@ public class DepartureView extends LinearLayout {
         public void onAnimationUpdate(ValueAnimator animator) {
             float value = (Float) animator.getAnimatedValue();
             if (getLayoutParams() != null) {
-                System.out.println("Animating" + value);
                 setTranslationX(value * getWidth());
                 getLayoutParams().height = (int) ((1.0f - value) * getHeight());
                 setAlpha(1.0f - value);
