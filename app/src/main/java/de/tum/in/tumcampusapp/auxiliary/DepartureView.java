@@ -144,9 +144,7 @@ public class DepartureView extends LinearLayout {
         }
         // Keep countDown approximately in sync.
         if (mHandler != null) {
-            mHandler.postDelayed(() -> {
-                updateDepartureTime();
-            }, 1000);
+            mHandler.postDelayed(this::updateDepartureTime, 1000);
         }
     }
 
