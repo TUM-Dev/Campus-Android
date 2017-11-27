@@ -23,6 +23,11 @@ import com.google.common.escape.Escaper;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.DateTimeParser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -133,13 +138,14 @@ public final class Utils {
      * @return Date
      */
     public static Date getISODateTime(String str) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-            return dateFormat.parse(str);
-        } catch (ParseException e) {
-            log(e, str);
-        }
-        return new Date();
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder().append(null, new DateTimeParser[]{
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd").getParser()
+        })
+                                                                    .toFormatter();
+
+        return formatter.parseDateTime(str)
+                        .toDate();
     }
 
     /**
