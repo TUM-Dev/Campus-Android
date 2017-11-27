@@ -47,10 +47,10 @@ android {
     publishNonDefault true
 }
 
-def androidSupportVersion = '27.0.0'
+def androidSupportVersion = '27.0.1'
 def retrofitVersion = '2.3.0'
 def espressoVersion = '3.0.1'
-def firebaseVersion = '11.6.0'
+def firebaseVersion = '11.6.2'
 def roomVersion = '1.0.0'
 
 configurations.all {
@@ -80,7 +80,7 @@ dependencies {
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
     implementation 'com.github.alamkanak:android-week-view:1.2.6'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'net.danlew:android.joda:2.9.9'
+    implementation 'net.danlew:android.joda:2.9.9.1'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
     implementation 'com.github.barteksc:android-pdf-viewer:2.5.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
