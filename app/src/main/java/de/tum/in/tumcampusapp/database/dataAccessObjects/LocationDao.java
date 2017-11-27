@@ -18,7 +18,7 @@ public interface LocationDao {
     @Query("SELECT * FROM location WHERE category = :category ORDER BY name")
     List<Location> getAllOfCategory(String category);
 
-    @Query("SELECT count(*) FROM location")
+    @Query("SELECT NOT count(*) FROM location")
     boolean isEmpty();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
