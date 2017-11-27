@@ -1,12 +1,11 @@
 package de.tum.in.tumcampusapp;
 
-import android.support.test.filters.SmallTest;
-import android.support.test.runner.AndroidJUnit4;
 import android.util.Base64;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -20,11 +19,9 @@ import de.tum.in.tumcampusapp.auxiliary.RSASigner;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(AndroidJUnit4.class)
-@SmallTest
+@RunWith(RobolectricTestRunner.class)
 public class RSASignerTestCase {
 
     private RSASigner signer;
@@ -78,10 +75,9 @@ public class RSASignerTestCase {
                 "MES0525W5YVR0knzoKw=\n"));
     }
 
-    protected ChatMessage buildChatMessage(String text, String signature) {
+    private ChatMessage buildChatMessage(String text, String signature) {
         ChatMessage message = new ChatMessage(text);
         message.setSignature(signature);
-
         return message;
     }
 
@@ -93,10 +89,7 @@ public class RSASignerTestCase {
         signer = new RSASigner(privateKeyFixture);
         ChatMessage message = messageFixtures.get(0);
 
-        Utils.log(Boolean.toString(message.getSignature()
-                                          .equals(signer.sign(message.getText()))));
-        Utils.log(signer.sign(message.getText()));
-        assertEquals(message.getSignature(), signer.sign(message.getText()));
+        assertThat(signer.sign(message.getText())).isEqualTo(message.getSignature());
     }
 
     /**
@@ -107,7 +100,7 @@ public class RSASignerTestCase {
         signer = new RSASigner(privateKeyFixture);
         ChatMessage message = messageFixtures.get(1);
 
-        assertEquals(message.getSignature(), signer.sign(message.getText()));
+        assertThat(signer.sign(message.getText())).isEqualTo(message.getSignature());
     }
 
     /**
@@ -118,7 +111,7 @@ public class RSASignerTestCase {
         signer = new RSASigner(privateKeyFixture);
         ChatMessage message = messageFixtures.get(2);
 
-        assertEquals(message.getSignature(), signer.sign(message.getText()));
+        assertThat(signer.sign(message.getText())).isEqualTo(message.getSignature());
     }
 
     /**
@@ -130,6 +123,6 @@ public class RSASignerTestCase {
         signer = new RSASigner(null);
         ChatMessage message = messageFixtures.get(0);
 
-        assertNull(signer.sign(message.getText()));
+        assertThat(signer.sign(message.getText())).isNull();
     }
 }

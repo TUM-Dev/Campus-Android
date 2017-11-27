@@ -81,7 +81,7 @@ public class MVVCard extends NotificationAwareCard {
                 view.setSymbol(curr.getSymbol(), false);
             }
             view.setLine(curr.getDirection());
-            view.setTime(curr.getCountDown());
+            view.setTime(curr.getDepartureTime());
             mLinearLayout.addView(view);
         }
     }
