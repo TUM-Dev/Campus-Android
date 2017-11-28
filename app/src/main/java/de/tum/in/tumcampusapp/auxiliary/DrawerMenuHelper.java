@@ -27,7 +27,6 @@ import de.tum.in.tumcampusapp.activities.StudyRoomsActivity;
 import de.tum.in.tumcampusapp.activities.SurveyActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
-import de.tum.in.tumcampusapp.activities.UserPreferencesActivity;
 
 public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -52,10 +51,6 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity.class, false, false),
             new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)
 
-    };
-
-    private static final SideNavigationItem[] APP = {
-            new SideNavigationItem(R.string.settings, R.drawable.ic_action_settings, UserPreferencesActivity.class, false, false)
     };
 
     private final Context mContext;
@@ -98,11 +93,6 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
                              .setIcon(item.iconRes)
                              .setIntent(new Intent(mContext, item.activity));
             }
-        }
-        for(SideNavigationItem item : APP){
-            navigationMenu.add(item.titleRes)
-                         .setIcon(item.iconRes)
-                         .setIntent(new Intent(mContext, item.activity));
         }
     }
 

@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.google.common.base.Optional;
 
@@ -9,8 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,12 +15,16 @@ import java.util.List;
 import de.tum.in.tumcampusapp.auxiliary.FavoriteFoodAlarmStorage;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.FavoriteDishDao;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
+import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 
 /**
  * Cafeteria Menu Manager, handles database stuff, external imports
  */
-public class CafeteriaMenuManager extends AbstractManager {
+public class CafeteriaMenuManager {
 
     private static final int TIME_TO_SYNC = 86400; // 1 day
 
@@ -57,10 +58,15 @@ public class CafeteriaMenuManager extends AbstractManager {
      * @throws JSONException if the json is invalid
      */
     private static CafeteriaMenu getFromJsonAddendum(JSONObject json) throws JSONException {
-        return new CafeteriaMenu(0, json.getInt("mensa_id"), Utils.getDate(json
-                                                                                   .getString("date")), json.getString("type_short"),
-                                 json.getString("type_long"), 10, json.getString("name"));
+        return new CafeteriaMenu(0, json.getInt("mensa_id"),
+                                 Utils.getDate(json.getString("date")),
+                                 json.getString("type_short"), json.getString("type_long"),
+                                 10, json.getString("name"));
     }
+
+    private final Context mContext;
+    private final CafeteriaMenuDao menuDao;
+    private final FavoriteDishDao favoriteDishDao;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -68,14 +74,10 @@ public class CafeteriaMenuManager extends AbstractManager {
      * @param context Context
      */
     public CafeteriaMenuManager(Context context) {
-        super(context);
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus ("
-                   + "id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
-                   + "typeLong VARCHAR, typeNr INTEGER, name VARCHAR)");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS favorite_dishes ("
-                   + "id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER, dishName VARCHAR,date VARCHAR, tag VARCHAR)");
+        mContext = context;
+        TcaDb db = TcaDb.getInstance(context);
+        menuDao = db.cafeteriaMenuDao();
+        favoriteDishDao = db.favoriteDishDao();
     }
 
     /**
@@ -94,128 +96,31 @@ public class CafeteriaMenuManager extends AbstractManager {
             return;
         }
         JSONObject obj = json.get();
-        db.beginTransaction();
-        removeCache();
+        menuDao.removeCache();
         try {
             JSONArray menu = obj.getJSONArray("mensa_menu");
             for (int j = 0; j < menu.length(); j++) {
-                replaceIntoDb(getFromJson(menu.getJSONObject(j)));
+                menuDao.insert(getFromJson(menu.getJSONObject(j)));
             }
             JSONArray beilagen = obj.getJSONArray("mensa_beilagen");
             for (int j = 0; j < beilagen.length(); j++) {
-                replaceIntoDb(getFromJsonAddendum(beilagen.getJSONObject(j)));
+                menuDao.insert(getFromJsonAddendum(beilagen.getJSONObject(j)));
             }
-            db.setTransactionSuccessful();
         } catch (JSONException e) {
             Utils.log(e);
-        } finally {
-            db.endTransaction();
         }
         sync.replaceIntoDb(this);
         scheduleFoodAlarms(true);
     }
 
     public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {
-        db.execSQL("INSERT INTO favorite_dishes (mensaId, dishName, date, tag) VALUES (?, ?, ?,?)",
-                   new String[]{String.valueOf(mensaId), dishName, date, tag});
+        favoriteDishDao.insertFavouriteDish(FavoriteDish.Companion.create(mensaId, dishName, date, tag));
         scheduleFoodAlarms(false);
     }
 
-    public Cursor getFavoriteDishNextDates(int mensaId, String dishName) {
-        return db.rawQuery("SELECT strftime('%d-%m-%Y', date) "
-                           + "FROM cafeterias_menus WHERE date > date('now','localtime') AND mensaId=? AND name=?", new String[]{String.valueOf(mensaId), dishName});
-    }
-
-    public Cursor checkIfFavoriteDish(String tag) {
-        return db.rawQuery("SELECT * "
-                           + "FROM favorite_dishes WHERE tag=? ", new String[]{tag});
-    }
-
-    public Cursor getLastInsertedDishId(int mensaId, String dishName) {
-        return db.rawQuery("SELECT MAX(id) "
-                           + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{String.valueOf(mensaId), dishName});
-    }
-
-    public Cursor getFavoriteDishAllIds(int mensaId, String dishName) {
-        return db.rawQuery("SELECT id "
-                           + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{String.valueOf(mensaId), dishName});
-    }
-
     public void deleteFavoriteDish(int mensaId, String dishName) {
-        db.execSQL("DELETE "
-                   + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{String.valueOf(mensaId), dishName});
+        favoriteDishDao.deleteFavoriteDish(mensaId, dishName);
         scheduleFoodAlarms(true);
-    }
-
-    public Cursor getFavoriteDishToday() {
-        return db.rawQuery("SELECT dishName,mensaId FROM favorite_dishes WHERE date = date('now','localtime')", null);
-    }
-
-    /**
-     * Get all distinct menu dates from the database
-     *
-     * @return Database cursor (date_de, _id)
-     */
-    public Cursor getDatesFromDb() {
-        return db.rawQuery("SELECT DISTINCT strftime('%d.%m.%Y', date) as date_de, date as _id "
-                           + "FROM cafeterias_menus WHERE date >= date('now','localtime') ORDER BY date", null);
-    }
-
-    /**
-     * Get all types and names from the database for a special date and a special cafeteria
-     *
-     * @param mensaId Mensa ID, e.g. 411
-     * @param date    ISO-Date, e.g. 2011-12-31
-     * @return Database cursor (typeLong, names, _id, typeShort)
-     */
-    public Cursor getTypeNameFromDbCard(int mensaId, String date) {
-        return db.rawQuery("SELECT typeLong, group_concat(name, '\n') as names, id as _id, typeShort "
-                           + "FROM cafeterias_menus WHERE mensaId = ? AND "
-                           + "date = ? GROUP BY typeLong ORDER BY typeShort=\"tg\" DESC, typeShort ASC, typeNr",
-                           new String[]{String.valueOf(mensaId), date});
-    }
-
-    /**
-     * Get all types and names from the database for a special date and a special cafeteria
-     *
-     * @param mensaId Mensa ID, e.g. 411
-     * @param dateStr ISO-Date, e.g. 2011-12-31
-     * @param date    Date
-     * @return List of cafeteria menus
-     */
-    List<CafeteriaMenu> getTypeNameFromDbCardList(int mensaId, String dateStr, Date date) {
-        List<CafeteriaMenu> menus = new ArrayList<>();
-        try (Cursor cursorCafeteriaMenu = getTypeNameFromDbCard(mensaId, dateStr)) {
-            if (cursorCafeteriaMenu.moveToFirst()) {
-                do {
-                    CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),
-                                                           mensaId, date, cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0),
-                                                           0, cursorCafeteriaMenu.getString(1));
-                    menus.add(menu);
-                } while (cursorCafeteriaMenu.moveToNext());
-            }
-        }
-        return menus;
-    }
-
-    /**
-     * Removes all cache items
-     */
-    private void removeCache() {
-        db.execSQL("DELETE FROM cafeterias_menus");
-    }
-
-    /**
-     * Replace or Insert a cafeteria menu in the database
-     *
-     * @param c CafeteriaMenu object
-     */
-    private void replaceIntoDb(CafeteriaMenu c) {
-        db.execSQL("REPLACE INTO cafeterias_menus (mensaId, date, typeShort, "
-                   + "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?)",
-                   new String[]{String.valueOf(c.getCafeteriaId()),
-                                Utils.getDateString(c.getDate()), c.getTypeShort(), c.getTypeLong(),
-                                String.valueOf(c.getTypeNr()), c.getName()});
     }
 
     /**
@@ -235,14 +140,10 @@ public class CafeteriaMenuManager extends AbstractManager {
             favoriteFoodAlarmStorage.cancelOutstandingAlarms();
         }
 
-        String query = "SELECT cafeterias_menus.date FROM favorite_dishes INNER JOIN cafeterias_menus" +
-                       " ON cafeterias_menus.mensaId = favorite_dishes.mensaId" +
-                       " AND favorite_dishes.dishName = cafeterias_menus.name";
+        List<String> dates = favoriteDishDao.getFavouriteDishDates();
 
-        try (Cursor favoriteFoodWhere = db.rawQuery(query, null)) {
-            while (favoriteFoodWhere.moveToNext()) {
-                favoriteFoodAlarmStorage.scheduleAlarm(favoriteFoodWhere.getString(0));
-            }
+        for (String date : dates) {
+            favoriteFoodAlarmStorage.scheduleAlarm(date);
         }
     }
 
@@ -255,30 +156,20 @@ public class CafeteriaMenuManager extends AbstractManager {
      */
     public HashMap<Integer, HashSet<CafeteriaMenu>> getServedFavoritesAtDate(String dayMonthYear) {
         HashMap<Integer, HashSet<CafeteriaMenu>> cafeteriaServedDish = new HashMap<>();
-        String query = "SELECT cafeterias_menus.* FROM favorite_dishes INNER JOIN cafeterias_menus" +
-                       " ON cafeterias_menus.mensaId = favorite_dishes.mensaId" +
-                       " AND favorite_dishes.dishName = cafeterias_menus.name WHERE cafeterias_menus.date = ?";
 
-        try (Cursor upcomingServings = db.rawQuery(query, new String[]{dayMonthYear})) {
-            while (upcomingServings.moveToNext()) {
-                int mensaId = upcomingServings.getInt(upcomingServings.getColumnIndex("mensaId"));
-                String dishName = upcomingServings.getString(upcomingServings.getColumnIndex("name"));
-
-                int dishId = upcomingServings.getInt(upcomingServings.getColumnIndex("id"));
-                String typeShort = upcomingServings.getString(upcomingServings.getColumnIndex("typeShort"));
-                String typeLong = upcomingServings.getString(upcomingServings.getColumnIndex("typeLong"));
-                int typeNr = upcomingServings.getInt(upcomingServings.getColumnIndex("typeNr"));
-                CafeteriaMenu cafeteriaMenu = new CafeteriaMenu(dishId, mensaId, Utils.getDate(dayMonthYear), typeShort, typeLong, typeNr, dishName);
-                HashSet<CafeteriaMenu> servedAtCafeteria;
-                if (cafeteriaServedDish.containsKey(mensaId)) {
-                    servedAtCafeteria = cafeteriaServedDish.get(mensaId);
-                } else {
-                    servedAtCafeteria = new HashSet<>();
-                    cafeteriaServedDish.put(mensaId, servedAtCafeteria);
-                }
-                servedAtCafeteria.add(cafeteriaMenu);
+        List<CafeteriaMenu> upcomingServings = favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dayMonthYear);
+        for (CafeteriaMenu upcomingServing : upcomingServings) {
+            int mensaId = upcomingServing.getCafeteriaId();
+            HashSet<CafeteriaMenu> servedAtCafeteria;
+            if (cafeteriaServedDish.containsKey(mensaId)) {
+                servedAtCafeteria = cafeteriaServedDish.get(mensaId);
+            } else {
+                servedAtCafeteria = new HashSet<>();
+                cafeteriaServedDish.put(mensaId, servedAtCafeteria);
             }
+            servedAtCafeteria.add(upcomingServing);
         }
+
         return cafeteriaServedDish;
     }
 }

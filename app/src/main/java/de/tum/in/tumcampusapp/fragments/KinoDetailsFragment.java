@@ -2,9 +2,9 @@ package de.tum.in.tumcampusapp.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +18,9 @@ import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.managers.KinoManager;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 
 /**
  * Fragment for KinoDetails. Manages content that gets shown on the pagerView
@@ -26,12 +28,14 @@ import de.tum.in.tumcampusapp.managers.KinoManager;
 public class KinoDetailsFragment extends Fragment implements View.OnClickListener {
 
     private Context context;
-    private Cursor cursor;
+    private Kino kino;
     private NetUtils net;
     private String url; // link to homepage
+    private LayoutInflater inflater;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.inflater = inflater;
         View rootView = inflater.inflate(R.layout.fragment_kinodetails_section, container, false);
         LinearLayout root = rootView.findViewById(R.id.layout);
 
@@ -39,10 +43,12 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         int position = getArguments().getInt(Const.POSITION);
 
         context = root.getContext();
-        cursor = new KinoManager(context).getAllFromDb();
         net = new NetUtils(context);
+        kino = TcaDb.getInstance(context)
+                    .kinoDao()
+                    .getByPosition(position);
 
-        showDetails(root, position);
+        showDetails(root);
         return rootView;
     }
 
@@ -50,63 +56,33 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
      * creates the content of the fragment
      *
      * @param rootView view on which the content gets drawn
-     * @param position position in database
      */
-    private void showDetails(LinearLayout rootView, int position) {
-        cursor.moveToPosition(position);
-        url = cursor.getString(cursor.getColumnIndex(Const.JSON_LINK));
+    private void showDetails(LinearLayout rootView) {
+        url = kino.getLink();
 
         createKinoHeader(rootView);
         createKinoFooter(rootView);
-
-        cursor.close();
-
     }
 
-    private void createKinoFooter(LinearLayout rootView) {
-        View view;
-        TextView text;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        // TODO: replace those copypasted blocks with a function
-        // genre
-        view = inflater.inflate(R.layout.list_header_big, rootView, false);
-        text = view.findViewById(R.id.list_header);
-        text.setText(R.string.genre);
+    private void addToRoot(LinearLayout rootView, int headerId, CharSequence contentString) {
+        View view = inflater.inflate(R.layout.list_header_big, rootView, false);
+        TextView text = view.findViewById(R.id.list_header);
+        text.setText(headerId);
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = view.findViewById(R.id.line_name);
-        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_GENRE)));
+        text.setText(contentString);
         rootView.addView(view);
+    }
 
-        // director
-        view = inflater.inflate(R.layout.list_header_big, rootView, false);
-        text = view.findViewById(R.id.list_header);
-        text.setText(R.string.director);
+    private void addToRootWithPadding(LinearLayout rootView, int headerId, CharSequence contentString) {
+        View view = inflater.inflate(R.layout.list_header_big, rootView, false);
+        TextView text = view.findViewById(R.id.list_header);
+        text.setText(headerId);
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = view.findViewById(R.id.line_name);
-        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_DIRECTOR)));
-        rootView.addView(view);
-
-        // actors
-        view = inflater.inflate(R.layout.list_header_big, rootView, false);
-        text = view.findViewById(R.id.list_header);
-        text.setText(R.string.actors);
-        rootView.addView(view);
-        view = inflater.inflate(R.layout.kino_content, rootView, false);
-        text = view.findViewById(R.id.line_name);
-        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_ACTORS)));
-        rootView.addView(view);
-
-        // description
-        view = inflater.inflate(R.layout.list_header_big, rootView, false);
-        text = view.findViewById(R.id.list_header);
-        text.setText(R.string.description);
-        rootView.addView(view);
-        view = inflater.inflate(R.layout.kino_content, rootView, false);
-        text = view.findViewById(R.id.line_name);
-        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_DESCRIPTION)));
+        text.setText(contentString);
         // padding is done programmatically here because we need more padding at the end
         int padding = (int) context.getResources()
                                    .getDimension(R.dimen.padding_kino);
@@ -118,8 +94,14 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         rootView.addView(view);
     }
 
+    private void createKinoFooter(LinearLayout root) {
+        addToRoot(root, R.string.genre, kino.getGenre());
+        addToRoot(root, R.string.director, kino.getDirector());
+        addToRoot(root, R.string.actors, kino.getActors());
+        addToRootWithPadding(root, R.string.description, kino.getDescription());
+    }
+
     private void createKinoHeader(LinearLayout rootView) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.kino_header, rootView, false);
 
         Button date;
@@ -137,11 +119,11 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         runtime = headerView.findViewById(R.id.button_runtime);
 
         // set text for all buttons
-        date.setText(KinoDetailsFragment.formDateString(cursor.getString(cursor.getColumnIndex(Const.JSON_DATE))));
+        date.setText(KinoDetailsFragment.formDateString(Utils.getDateString(kino.getDate())));
         link.setText(R.string.www);
-        imdb.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RATING)));
-        year.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_YEAR)));
-        runtime.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RUNTIME)));
+        imdb.setText(kino.getRating());
+        year.setText(kino.getYear());
+        runtime.setText(kino.getRuntime());
 
         // set onClickListener
         date.setOnClickListener(this);
@@ -151,8 +133,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         runtime.setOnClickListener(this);
 
         // cover
-        String coverUrl = cursor.getString(cursor.getColumnIndex(Const.JSON_COVER));
-        net.loadAndSetImage(coverUrl, cover);
+        net.loadAndSetImage(kino.getCover(), cover);
 
         rootView.addView(headerView);
     }
@@ -163,22 +144,17 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         if (i == R.id.button_date) {
             Toast.makeText(context, R.string.date, Toast.LENGTH_SHORT)
                  .show();
-
         } else if (i == R.id.button_link) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-
         } else if (i == R.id.button_imdb) {
             Toast.makeText(context, R.string.imdb_rating, Toast.LENGTH_SHORT)
                  .show();
-
         } else if (i == R.id.button_year) {
             Toast.makeText(context, R.string.year, Toast.LENGTH_SHORT)
                  .show();
-
         } else if (i == R.id.button_runtime) {
             Toast.makeText(context, R.string.runtime, Toast.LENGTH_SHORT)
                  .show();
-
         }
     }
 

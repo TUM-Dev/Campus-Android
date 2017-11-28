@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.models.cafeteria
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
 /**
@@ -13,7 +15,9 @@ import java.util.*
  * @param typeNr      Type ID
  * @param name        Menu name
  */
-data class CafeteriaMenu(var id: Int = -1,
+@Entity
+data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
+                         var id: Int = 0,
                          var cafeteriaId: Int = -1,
                          var date: Date? = null,
                          var typeShort: String = "",

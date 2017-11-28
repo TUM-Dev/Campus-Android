@@ -11,7 +11,7 @@ import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
-import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
+import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
@@ -320,7 +320,7 @@ public class TUMCabeClient {
                       .body();
     }
 
-    public List<BuildingsToGps> getBuilding2Gps() throws IOException {
+    public List<BuildingToGps> getBuilding2Gps() throws IOException {
         return service.getBuilding2Gps()
                       .execute()
                       .body();
@@ -474,7 +474,7 @@ public class TUMCabeClient {
 
         // building to gps information
         @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
-        Call<List<BuildingsToGps>> getBuilding2Gps();
+        Call<List<BuildingToGps>> getBuilding2Gps();
 
         //RoomFinder maps
         @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")

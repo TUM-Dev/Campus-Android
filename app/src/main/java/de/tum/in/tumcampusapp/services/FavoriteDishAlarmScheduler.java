@@ -23,7 +23,8 @@ import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaNotificationSettings;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.managers.CafeteriaManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
 import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
@@ -103,7 +104,8 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
             Utils.log("FavoriteDishAlarmScheduler: Scheduled now is null, onReceived aborted");
             return;
         }
-        CafeteriaManager cmm = new CafeteriaManager(context);
+        CafeteriaDao dao = TcaDb.getInstance(context)
+                                .cafeteriaDao();
         for (Integer mensaId : scheduledNow.keySet()) {
             String message = "";
             int menuCount = 0;
@@ -112,7 +114,7 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
                 menuCount++;
             }
             activeNotifications.add(mensaId);
-            String mensaName = cmm.getMensaNameFromId(mensaId);
+            String mensaName = dao.getMensaNameFromId(mensaId);
             Intent intent = new Intent(context, CafeteriaActivity.class);
             intent.putExtra(Const.MENSA_FOR_FAVORITEDISH, mensaId);
             PendingIntent pi = PendingIntent.getActivity(context, mensaId, intent, PendingIntent.FLAG_UPDATE_CURRENT);

@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -12,12 +11,15 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
-import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.LocationDao;
 
 /**
  * Location manager, handles database stuff
  */
-public class OpenHoursManager extends AbstractManager {
+public class OpenHoursManager {
+
+    private final LocationDao dao;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -25,58 +27,8 @@ public class OpenHoursManager extends AbstractManager {
      * @param context Context
      */
     public OpenHoursManager(Context context) {
-        super(context);
-
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS locations (id INTEGER PRIMARY KEY, category VARCHAR, "
-                   + "name VARCHAR, address VARCHAR, room VARCHAR, transport VARCHAR, "
-                   + "hours VARCHAR, remark VARCHAR, url VARCHAR)");
-    }
-
-    /**
-     * Checks if the locations table is empty
-     *
-     * @return true if no locations are available, else false
-     */
-    public boolean empty() {
-        boolean result = true;
-        try (Cursor c = db.rawQuery("SELECT id FROM locations LIMIT 1", null)) {
-            if (c.moveToNext()) {
-                result = false;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Get all locations by category from the database
-     *
-     * @param category String Location category, e.g. library, cafeteria
-     * @return Database cursor (name, address, room, transport, hours, remark,
-     * url, _id)
-     */
-    public Cursor getAllHoursFromDb(String category) {
-        return db.rawQuery(
-                "SELECT name, address, room, transport, hours, remark, url, id as _id "
-                + "FROM locations WHERE category=? ORDER BY name",
-                new String[]{category});
-    }
-
-    /**
-     * Get opening hours for a specific location
-     *
-     * @param id Location ID, e.g. 100
-     * @return hours
-     */
-    String getHoursById(int id) {
-        String result = "";
-        try (Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?",
-                                    new String[]{String.valueOf(id)})) {
-            if (c.moveToNext()) {
-                result = c.getString(0);
-            }
-        }
-        return result;
+        dao = TcaDb.getInstance(context)
+                   .locationDao();
     }
 
     /**
@@ -91,7 +43,7 @@ public class OpenHoursManager extends AbstractManager {
      * @return Readable opening string
      */
     public String getHoursByIdAsString(Context context, int id, Date date) {
-        String result = this.getHoursById(id);
+        String result = dao.getHoursById(id);
 
         //Check which week day we have
         Calendar cal = new GregorianCalendar();
@@ -174,25 +126,5 @@ public class OpenHoursManager extends AbstractManager {
             opens.set(Calendar.MINUTE, 0);
         }
         return opens;
-    }
-
-    /**
-     * Replaces a location in the database
-     *
-     * @param l Location object
-     */
-    public void replaceIntoDb(Location l) {
-        if (l.getId() <= 0) {
-            throw new IllegalArgumentException("Invalid id.");
-        }
-        if (l.getName()
-             .isEmpty()) {
-            throw new IllegalArgumentException("Invalid name.");
-        }
-        db.execSQL("REPLACE INTO locations (id, category, name, address, room, "
-                   + "transport, hours, remark, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                   new String[]{String.valueOf(l.getId()), l.getCategory(), l.getName(),
-                                l.getAddress(), l.getRoom(), l.getTransport(), l.getHours(), l.getRemark(),
-                                l.getUrl()});
     }
 }
