@@ -53,7 +53,7 @@ public class EduroamManager {
                                                  .getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
 
-        //We didn't get a list, so maybe theres no wifi?
+        //We didn't get a list, so maybe there's no wifi?
         if (list == null) {
             return null;
         }

@@ -55,6 +55,11 @@ public class EduroamFixCard extends NotificationAwareCard {
         errorsTv = mCard.findViewById(R.id.eduroam_errors);
         errorsTv.setText(Joiner.on("\n")
                                .join(errors));
+
+        // only error is missing realm which is not insecure per se but also not right
+        if(errors.size() == 1 && errors.get(0).equals(mContext.getString(R.string.wifi_identity_zone))){
+            mCard.findViewById(R.id.eduroam_insecure_message).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -84,7 +89,7 @@ public class EduroamFixCard extends NotificationAwareCard {
 
     @Override
     public String getTitle() {
-        return mContext.getString(R.string.eduroam_fix);
+        return mContext.getString(R.string.fix_eduroam);
     }
 
     @Override
