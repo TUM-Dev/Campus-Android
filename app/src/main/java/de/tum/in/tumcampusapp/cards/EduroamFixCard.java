@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.EduroamManager;
@@ -131,19 +133,22 @@ public class EduroamFixCard extends NotificationAwareCard {
             }
 
             //Check that the full quantifier and correct identity is used
-            if (!eduroam.enterpriseConfig.getIdentity()
-                                         .contains("@eduroam.mwn.de") && !eduroam.enterpriseConfig.getIdentity()
-                                                                                                  .contains("@mytum.de") && !eduroam.enterpriseConfig.getIdentity()
-                                                                                                                                                     .contains("@tum.de")) {
+            if (!eduroam.enterpriseConfig.getIdentity().contains("@eduroam.mwn.de")
+                && !eduroam.enterpriseConfig.getIdentity().contains("@mytum.de")
+                && !eduroam.enterpriseConfig.getIdentity().contains("@tum.de")) {
+
                 errors.add(mContext.getString(R.string.wifi_identity_zone));
             }
-            if (!eduroam.enterpriseConfig.getAnonymousIdentity()
-                                         .equals("anonymous@mwn.de") &&
-                !eduroam.enterpriseConfig.getAnonymousIdentity()
-                                         .equals("anonymous@eduroam.mwn.de") &&
-                !eduroam.enterpriseConfig.getAnonymousIdentity()
-                                         .equals("anonymous@mytum.de")) {
-                errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set));
+
+            Utils.log("Eap method: " + eduroam.enterpriseConfig.getEapMethod() + " phase2: " + eduroam.enterpriseConfig.getPhase2Method());
+            if ((eduroam.enterpriseConfig.getEapMethod() == WifiEnterpriseConfig.Eap.TTLS
+                 || (eduroam.enterpriseConfig.getEapMethod() == WifiEnterpriseConfig.Eap.PEAP
+                     && eduroam.enterpriseConfig.getPhase2Method() == WifiEnterpriseConfig.Phase2.MSCHAPV2))
+                && !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mwn.de")
+                && !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@eduroam.mwn.de")
+                && !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mytum.de")) {
+
+                errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set) );
             }
 
             //Check certificate

@@ -41,10 +41,8 @@ public class SetupEduroamActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
-        setContentView(R.layout.activity_setup_eduroam);
 
         // Enable 'More Info' links
-        ((TextView) findViewById(R.id.text_with_link_1)).setMovementMethod(LinkMovementMethod.getInstance());
         ((TextView) findViewById(R.id.text_with_link_2)).setMovementMethod(LinkMovementMethod.getInstance());
 
         if (Build.VERSION.SDK_INT >= 18) {
@@ -97,8 +95,7 @@ public class SetupEduroamActivity extends BaseActivity {
 
             CardManager.setShouldRefresh();
         } else {
-            ((TextView) findViewById(R.id.pin_lock)).setTextColor(0xFFFF0000);
-            findViewById(R.id.pin_lock_rem).setVisibility(View.VISIBLE);
+            findViewById(R.id.eduroam_config_error).setVisibility(View.VISIBLE);
         }
     }
 

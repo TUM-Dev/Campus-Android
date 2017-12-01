@@ -69,35 +69,17 @@
                         android:id="@+id/textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="15dp"
                         android:layout_margin="5dp"
                         android:text="@string/password_gets_not_saved"/>
 
                     <TextView
-                        android:id="@+id/pin_lock_rem"
+                        android:id="@+id/eduroam_config_error"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pin_lock_rem"
                         android:textColor="#FF0000"
                         android:visibility="gone"/>
-
-                    <TextView
-                        android:id="@+id/pin_lock"
-                        style="@style/SmallListSeparatorTextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pin_lock"/>
-
-                    <TextView
-                        android:id="@+id/text_with_link_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="@string/pin_lock_desc"/>
-
-                    <Button
-                        style="@style/FlatButton"
-                        android:onClick="openSecuritySettings"
-                        android:text="@string/enable_pin_lock"/>
 
                     <LinearLayout
                         android:id="@+id/certificate"
