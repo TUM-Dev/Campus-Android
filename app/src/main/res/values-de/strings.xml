@@ -448,4 +448,12 @@ Signatur: %5$s</string>
     <string name="elevators">Aufzüge</string>
     <string name="facilities">Einrichtungen</string>
     <string name="nerby_facilities">Einrichtungen in der Nähe</string>
+
+    <string name="eduroam_dialog_title">Altes Eduroam Profil Löschen</string>
+    <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
+    <string name="done">Fertig</string>
+    <string name="eduroam_dialgo_step_1">1.</string>
+    <string name="eduroam_dialog_step_2">2. Wenn du nicht in der Nähe des Eduroam bist gehe zu \'\'</string>
+    <string name="eduroam_dialog_step_3">Auf \'Entfernen\' klicken</string>
+    <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann.</string>
 </resources>

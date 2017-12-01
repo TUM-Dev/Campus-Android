@@ -101,7 +101,10 @@ public class EduroamFixCard extends NotificationAwareCard {
                                                      .getSystemService(Context.WIFI_SERVICE);
             wifi.removeNetwork(eduroam.networkId);
         }
-        return new Intent(mContext, SetupEduroamActivity.class);
+        Intent intent = new Intent(mContext, SetupEduroamActivity.class);
+        // TCA should only produce correct profiles, so incorrect ones were configured somewhere else
+        intent.putExtra(SetupEduroamActivity.EXTRA_FOREIGN_CONFIGURATION_EXISTS, true);
+        return intent;
     }
 
     @Override

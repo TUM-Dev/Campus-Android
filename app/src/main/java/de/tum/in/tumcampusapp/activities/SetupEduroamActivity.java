@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
@@ -33,6 +34,8 @@ public class SetupEduroamActivity extends BaseActivity {
     private EditText lrz;
     private EditText password;
 
+    public static final String EXTRA_FOREIGN_CONFIGURATION_EXISTS = "CONFIGURED_BY_OTHER_APP";
+
     public SetupEduroamActivity() {
         super(R.layout.activity_setup_eduroam);
     }
@@ -41,6 +44,10 @@ public class SetupEduroamActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
+
+        if(getIntent().getBooleanExtra(EXTRA_FOREIGN_CONFIGURATION_EXISTS, false)){
+            showDeleteProfileDialog(true);
+        }
 
         // Enable 'More Info' links
         ((TextView) findViewById(R.id.text_with_link_2)).setMovementMethod(LinkMovementMethod.getInstance());
@@ -60,6 +67,26 @@ public class SetupEduroamActivity extends BaseActivity {
         } else {
             password.requestFocus();
         }
+
+        findViewById(R.id.eduroam_config_error).setOnClickListener(view -> {
+            showDeleteProfileDialog(false);
+        });
+    }
+
+    private void showDeleteProfileDialog(boolean showAtStart){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(R.string.eduroam_dialog_title);
+        View content = getLayoutInflater().inflate(R.layout.delete_wifi_config, null);
+        content.findViewById(R.id.button_open_wifi_preferences)
+               .setOnClickListener(view1 -> startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)));
+        if(showAtStart){
+            content.findViewById(R.id.eduroam_delete_info).setVisibility(View.VISIBLE);
+        } else {
+            content.findViewById(R.id.eduroam_delete_info).setVisibility(View.GONE);
+        }
+        dialog.setView(content);
+        dialog.setPositiveButton(R.string.done, null);
+        dialog.show();
     }
 
     /**

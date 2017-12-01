@@ -526,6 +526,14 @@ Signature: %5$s</string>
     <string name="nerby_facilities">Nearby Facilities</string>
     <string name="barrierfree_toilets">Barrier-free Toilets</string>
     <string name="elevators">Elevators</string>
+
+    <string name="eduroam_dialog_title">Delete Old Eduroam Profile</string>
+    <string name="done">Done</string>
+    <string name="eduroam_dialgo_step_1">1.</string>
+    <string name="eduroam_dialog_preferences">Open Wi-Fi Preferences</string>
+    <string name="eduroam_dialog_step_2">2. Click on \'eduroam\'</string>
+    <string name="eduroam_dialog_step_3">3. Click on \'Forget\'</string>
+    <string name="eduroam_dialog_info_text">The wifi profile has to be deleted because the app doesn\'t have permission to overwrite configurations.</string>
 </resources>
 
 
