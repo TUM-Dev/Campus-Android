@@ -84,7 +84,7 @@
     <string name="silence_phone">Silent Service</string>
     <string name="silence_phone_info">The device will be automatically put into silent mode during a lecture.</string>
     <string name="background_mode">Background Mode (Recommended)</string>
-    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don’t open the app.</string>
+    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don’t open the app. If you’re more than 50km outside of munich it’ll automatically turned off/on</string>
     <string name="mode_background_mode">Background Mode activation</string>
     <string name="always">Always</string>
     <string name="wifi_only">WiFi only</string>

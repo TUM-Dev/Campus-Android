@@ -611,7 +611,6 @@
             <intent-filter>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>
             </intent-filter>
-            intent-filter>
         </receiver>
 
         <!-- Used to set Notification for favoriteDish -->
@@ -661,6 +660,19 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
+
+        <service android:name=".services.GeofencingRegistrationService"/>
+
+        <receiver android:name=".services.GeofencingUpdateReceiver"/>
+
+        <receiver android:name=".services.GeofencingStartupReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.location.MODE_CHANGED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.location.PROVIDERS_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
