@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 
@@ -9,7 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -224,73 +228,74 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     }
 
     /**
+     * Gather all sources that should be displayed
+     * @param context
+     * @return
+     */
+    private Collection<Integer> getActiveSources(Context context) {
+        Collection<Integer> sources = new ArrayList<>();
+        try (Cursor c = getNewsSources()) {
+            if (c.moveToFirst()) {
+                do {
+                    Integer id = c.getInt(0);
+                    if (Utils.getSettingBool(context, "card_news_source_" + id, true)) {
+                        sources.add(id);
+                    }
+                } while (c.moveToNext());
+            }
+        }
+    }
+
+    /**
      * Adds the newest news card
      *
      * @param context Context
      */
     @Override
     public void onRequestCard(Context context) {
-        StringBuilder and = new StringBuilder();
-        try (Cursor c = getNewsSources()) {
-            if (c.moveToFirst()) {
-                do {
-                    int id = c.getInt(0);
-                    boolean show = Utils.getSettingBool(context, "card_news_source_" + id, true);
-                    if (!show) {
-                        continue;
-                    }
-                    if (!and.toString()
-                            .isEmpty()) {
-                        and.append(" OR ");
-                    }
-                    and.append("s.id=\"")
-                       .append(id)
-                       .append('\"');
-                } while (c.moveToNext());
-            }
+        Collection<Integer> sources = getActiveSources(context);
+
+        //Build our query
+        StringBuilder query = new StringBuilder("SELECT n.id AS _id, n.src, n.title, n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed ");
+        query.append("FROM news n ")
+             .append("JOIN news_sources s ON (n.src = s.id) ")
+             .append("WHERE ");
+
+        if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
+            // Limit to one entry per source
+            query.append(" n.id IN (SELECT id FROM (")
+                 //Show latest news item only
+                 .append("SELECT id, src FROM news WHERE datetime(date) <= datetime('now') and src!=2 ORDER BY datetime(date) ASC ")
+                 .append(") GROUP BY src ")
+                 .append("UNION ")
+                 //Special treatment for TU Kino, as we want to actually display the upcoming movie
+                 .append("SELECT id FROM (SELECT id, datetime(date) FROM news WHERE datetime(date) > datetime('now') and src=2 ORDER BY datetime(date) ASC LIMIT 1)")
+                 .append(") AND ");
         }
 
-        //boolean showImportant = Utils.getSettingBool(context, "card_news_alert", true);
-        if (!and.toString()
-                .isEmpty()) {
+        query.append("s.id IN (")
+             .append(TextUtils.join(",", sources))
+             .append(") ")
+             .append("ORDER BY n.date ASC");
+        Cursor cur = db.rawQuery(query.toString(), null);
 
-            StringBuilder query = new StringBuilder("SELECT n.id AS _id, n.src, n.title, " +
-                                                    "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
-                                                    "ABS(julianday(date()) - julianday(n.date)) AS date_diff ");
-
-            if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
-                // Limit to one entry per source
-                query.append("FROM (news n JOIN ( " +
-                             "SELECT src, MIN(abs(julianday(date()) - julianday(date))) AS diff " +
-                             "FROM news WHERE src!=\"2\" OR (julianday(date()) - julianday(date))<0 " +
-                             "GROUP BY src) last ON (n.src = last.src " +
-                             "AND date_diff = last.diff) " +
-                             "), news_sources s ");
-            } else {
-                query.append("FROM news n, news_sources s ");
-            }
-
-            query.append("WHERE n.src = s.id AND ((")
-                 .append(and)
-                 .append(") ) ORDER BY date_diff ASC");
-            Cursor cur = db.rawQuery(query.toString(), null);
-
-            int i = 0;
-            if (cur.moveToFirst()) {
-                do {
-                    NewsCard card;
-                    if (FilmCard.isNewsAFilm(cur, i)) {
-                        card = new FilmCard(context);
-                    } else {
-                        card = new NewsCard(context);
-                    }
-                    card.setNews(cur, i);
-                    card.apply();
-                    i++;
-                } while (cur.moveToNext());
-            } else {
-                cur.close();
-            }
+        //Display resulting cards
+        int i = 0;
+        if (cur.moveToFirst()) {
+            do {
+                NewsCard card;
+                if (FilmCard.isNewsAFilm(cur, i)) {
+                    card = new FilmCard(context);
+                } else {
+                    card = new NewsCard(context);
+                }
+                card.setNews(cur, i);
+                card.apply();
+                i++;
+            } while (cur.moveToNext());
+        } else {
+            cur.close();
         }
+
     }
 }
