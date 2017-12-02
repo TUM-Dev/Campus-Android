@@ -1,5 +1,5 @@
-# TumCampusApp - an unoffical guide through university life
-[![Build Status](https://server4.wdkk.de/buildStatus/icon?job=TCA-Android)](https://server4.wdkk.de/job/TCA-Android/)
+# TumCampusApp [![Build Status](https://server4.wdkk.de/buildStatus/icon?job=TCA-Android)](https://server4.wdkk.de/job/TCA-Android/)
+### An unoffical guide through university life
 The TUM Campus App (TCA) is a open source project, mainly developed by volunteers with significant contributions by the Android Practical course. The TCA mostly targets phones, but can also be used on tablets or any other device that runs Android.
 
 ## Features:
