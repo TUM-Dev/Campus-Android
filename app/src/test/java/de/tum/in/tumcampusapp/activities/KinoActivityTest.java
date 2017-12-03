@@ -1,58 +1,65 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.database.Cursor;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.mockito.Mockito;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.adapters.KinoAdapter;
 import de.tum.in.tumcampusapp.managers.KinoManager;
+import de.tum.in.tumcampusapp.shadows.KinoManagerShadow;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, shadows={KinoManagerShadow.class})
 @PrepareForTest(KinoActivity.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 public class KinoActivityTest {
-    private Cursor mockedDbCursor;
-    private KinoManager mockedKinoManager;
     private KinoActivity kinoActivity;
 
     @Before
     public void setUp() {
-        mockedDbCursor = PowerMockito.mock(Cursor.class);
-        mockedKinoManager = PowerMockito.mock(KinoManager.class);
+        KinoManagerShadow.returnedCursor = Mockito.mock(Cursor.class);
     }
+
     /**
      * Default usage - there are some movies
      * Expected output: default Kino activity layout
      */
     @Test
-    public void mainComponentDisplayedTest() throws Exception{
-        PowerMockito.when(mockedDbCursor.getCount()).thenReturn(1);
-        PowerMockito.when(mockedKinoManager.getAllFromDb()).thenReturn(mockedDbCursor);
-
-        PowerMockito.whenNew(KinoManager.class)
-                    .withArguments(Mockito.any())
-                    .thenReturn(mockedKinoManager);
-
+    public void mainComponentDisplayedTest() {
+        Mockito.when(KinoManagerShadow.returnedCursor.getCount()).thenReturn(1);
         kinoActivity = Robolectric.buildActivity(KinoActivity.class).create().start().get();
-        PowerMockito.verifyNew(KinoManager.class).withNoArguments();
 
         assertThat(kinoActivity.findViewById(R.id.drawer_layout).getVisibility()).isEqualTo(View.VISIBLE);
+    }
+
+    @Test
+    public void mainComponentNoMoviesDisplayedTest() {
+        Mockito.when(KinoManagerShadow.returnedCursor.getCount()).thenReturn(0);
+        kinoActivity = Robolectric.buildActivity(KinoActivity.class).create().start().get();
+
+        assertThat(kinoActivity.findViewById(R.id.no_movies_layout).getVisibility()).isEqualTo(View.VISIBLE);
+    }
+
+    @Test
+    public void kinoAdapterUsedTest() {
+        Mockito.when(KinoManagerShadow.returnedCursor.getCount()).thenReturn(1);
+        kinoActivity = Robolectric.buildActivity(KinoActivity.class).create().start().get();
+
+        assertThat(((ViewPager)kinoActivity.findViewById(R.id.pager)).getAdapter().getClass()).isEqualTo(KinoAdapter.class);
     }
 }
