@@ -244,6 +244,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
                 } while (c.moveToNext());
             }
         }
+        return sources;
     }
 
     /**
