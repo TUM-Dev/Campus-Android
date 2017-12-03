@@ -372,7 +372,7 @@
     <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the TUM credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.</string>
     <string name="disable_data_backup">Disable Data-Backup</string>
     <string name="eduroam_success">Eduroam successfully configured</string>
-    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?\nDeleted the manually created profile? We cannot overwrite manually created wifi profiles!</string>
+    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDo you have a manually created wifi profile? We cannot overwrite it so please delete it!</string>
     <string name="install_certificate">Install certificate</string>
     <string name="certificate">Certificate</string>
     <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click ‘Install certificate’ and confirm with ‘OK’.</string>
@@ -501,9 +501,10 @@ Signature: %5$s</string>
     <string name="startup_motto">By students - For students</string>
     <string name="fix_eduroam">Fix Eduroam</string>
     <string name="eduroam_fix">Click to fix it now!</string>
+    <string name="eduroam_realm_comment">\@eduroam.mwn.de is added automatically</string>
     <string name="eduroam_insecure_configuration">We have detected an insecure eduroam wifi configuration. You are subject to leaking information about you and your account.</string>
     <string name="wifi_dns_name_not_set">DNS Name is not set</string>
-    <string name="wifi_identity_zone">Identity does not contain zone</string>
+    <string name="wifi_identity_zone">Identity does not contain zone (e.g. @eduroam.mwn.de). This may not always work and should be updated!</string>
     <string name="wifi_anonymous_identity_not_set">Anonymous Identity not correct</string>
 
     <string name="transport_action_usage">Usage</string>
@@ -525,6 +526,14 @@ Signature: %5$s</string>
     <string name="nerby_facilities">Nearby Facilities</string>
     <string name="barrierfree_toilets">Barrier-free Toilets</string>
     <string name="elevators">Elevators</string>
+
+    <string name="eduroam_dialog_title">Delete Old Eduroam Profile</string>
+    <string name="done">Done</string>
+    <string name="eduroam_dialgo_step_1">1.</string>
+    <string name="eduroam_dialog_preferences">Open Wi-Fi Preferences</string>
+    <string name="eduroam_dialog_step_2">2. Click on \'eduroam\'</string>
+    <string name="eduroam_dialog_step_3">3. Click on \'Forget\'</string>
+    <string name="eduroam_dialog_info_text">The wifi profile has to be deleted because the app doesn\'t have permission to overwrite configurations.</string>
 </resources>
 
 
