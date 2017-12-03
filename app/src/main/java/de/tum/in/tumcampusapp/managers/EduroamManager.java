@@ -53,7 +53,7 @@ public class EduroamManager {
                                                  .getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
 
-        //We didn't get a list, so maybe theres no wifi?
+        //We didn't get a list, so maybe there's no wifi?
         if (list == null) {
             return null;
         }
@@ -129,22 +129,8 @@ public class EduroamManager {
     private void setupEnterpriseConfigAPI18(WifiConfiguration conf, String lrzId, String networkPass) {
         conf.enterpriseConfig.setIdentity(lrzId + "@eduroam.mwn.de");
         conf.enterpriseConfig.setPassword(networkPass);
-        conf.enterpriseConfig.setEapMethod(WifiEnterpriseConfig.Eap.PEAP);
-        conf.enterpriseConfig.setPhase2Method(WifiEnterpriseConfig.Phase2.MSCHAPV2);
-        conf.enterpriseConfig.setAnonymousIdentity(ANON_IDENTITY);
+        conf.enterpriseConfig.setEapMethod(WifiEnterpriseConfig.Eap.PWD);
 
-        // Install certificate
-        X509Certificate cert;
-        try {
-            InputStream is = mContext.getResources()
-                                     .openRawResource(R.raw.rootcert);
-            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-            cert = (X509Certificate) certFactory.generateCertificate(is);
-        } catch (CertificateException e) {
-            Utils.log(e);
-            throw new AssertionError("Certificate corrupt!");
-        }
-        conf.enterpriseConfig.setCaCertificate(cert);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             setSubjectMatchAPI23(conf);
         }
@@ -189,30 +175,15 @@ public class EduroamManager {
 
             Field[] wcefFields = WifiConfiguration.class.getFields();
             for (Field wcefField : wcefFields) {
-                if (wcefField.getName()
-                             .trim()
-                             .equals(INT_ANONYMOUS_IDENTITY)) {
-                    wcefSetValue.invoke(wcefField.get(conf), ANON_IDENTITY);
-                } else if (wcefField.getName()
-                                    .trim()
-                                    .equals(INT_CA_CERT)) {
-                    wcefSetValue.invoke(wcefField.get(conf), "keystore://CACERT_eduroam");
-                } else if (wcefField.getName()
-                                    .trim()
-                                    .equals(INT_EAP)) {
-                    wcefSetValue.invoke(wcefField.get(conf), "PEAP");
-                } else if (wcefField.getName()
-                                    .trim()
-                                    .equals(INT_IDENTITY)) {
+
+                if (wcefField.getName().trim().equals(INT_EAP)) {
+                    wcefSetValue.invoke(wcefField.get(conf), "PWD");
+
+                } else if (wcefField.getName().trim().equals(INT_IDENTITY)) {
                     wcefSetValue.invoke(wcefField.get(conf), lrzId + "@eduroam.mwn.de");
-                } else if (wcefField.getName()
-                                    .trim()
-                                    .equals(INT_PASSWORD)) {
+
+                } else if (wcefField.getName().trim().equals(INT_PASSWORD)) {
                     wcefSetValue.invoke(wcefField.get(conf), networkPass);
-                } else if (wcefField.getName()
-                                    .trim()
-                                    .equals(INT_PHASE2)) {
-                    wcefSetValue.invoke(wcefField.get(conf), "MSCHAPV2");
                 }
             }
         } catch (Exception e) {

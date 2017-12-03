@@ -303,7 +303,7 @@
         Dazu unter ‘Sichern &amp; zurücksetzen’ > ‘Meine Daten sichern’ deaktivieren.</string>
     <string name="disable_data_backup">Daten-Backup deaktivieren</string>
     <string name="eduroam_success">Eduroam wurde erfolgreich eingerichtet</string>
-    <string name="pin_lock_rem"><b>Konfiguration fehlgeschlagen!</b>\nHast du eine PIN-Sperre eingerichtet?\nManuell angelegtes Profil gelöscht? Wir können wlan Profile nicht überschreiben!</string>
+    <string name="pin_lock_rem"><b>Konfiguration fehlgeschlagen!</b>\nHast du dein manuell angelegtes Profil gelöscht? Wir können wlan Profile nicht überschreiben!</string>
     <string name="install_certificate">Zertifikat installieren</string>
     <string name="certificate">Zertifikat</string>
     <string name="certificate_desc">Du musst ein CA-Root-Zertifikat installieren um eine sichere Verbindung mit dem Server aufbauen zu können. Tippe einfach auf ‘Zertifikat installieren’ und bestätige mit ‘OK’.</string>
@@ -426,7 +426,8 @@ Signatur: %5$s</string>
     <string name="eduroam_fix">Jetzt reparieren!</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">Eduroam Reparieren</string>
-    <string name="wifi_identity_zone">Identität enthält keine Zone</string>
+    <string name="wifi_identity_zone">Identität enthält keine Zone (z.B. @eduroam.mwn.de). Dies kann zu Problemen führen und sollte deshalb geändert werden!</string>
+    <string name="eduroam_realm_comment">\@eduroam.mwn.de wird automatisch angehängt</string>
     <string name="wifi_dns_name_not_set">DNS-Name ist nicht festgelegt</string>
     <string name="wifi_anonymous_identity_not_set">Anonyme Identität nicht korrekt</string>
 
@@ -447,4 +448,12 @@ Signatur: %5$s</string>
     <string name="elevators">Aufzüge</string>
     <string name="facilities">Einrichtungen</string>
     <string name="nerby_facilities">Einrichtungen in der Nähe</string>
+
+    <string name="eduroam_dialog_title">Altes Eduroam Profil Löschen</string>
+    <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
+    <string name="done">Fertig</string>
+    <string name="eduroam_dialgo_step_1">1.</string>
+    <string name="eduroam_dialog_step_2">2. Wenn du nicht in der Nähe des Eduroam bist gehe zu \'\'</string>
+    <string name="eduroam_dialog_step_3">Auf \'Entfernen\' klicken</string>
+    <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann.</string>
 </resources>
