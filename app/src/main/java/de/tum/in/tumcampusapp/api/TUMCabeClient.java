@@ -44,38 +44,38 @@ import retrofit2.http.Path;
 
 public class TUMCabeClient {
 
-    private static final String API_HOSTNAME = Const.API_HOSTNAME;
-    private static final String API_BASEURL = "/Api/";
-    private static final String API_CHAT = "chat/";
-    private static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
-    private static final String API_CHAT_MEMBERS = API_CHAT + "members/";
-    //private static final String API_SESSION = "session/";
-    //private static final String API_NEWS = "news/";
-    //private static final String API_MENSA = "mensen/";
-    private static final String API_CURRICULA = "curricula/";
-    private static final String API_REPORT = "report/";
-    private static final String API_STATISTICS = "statistics/";
-    //private static final String API_CINEMA = "kino/";
-    private static final String API_NOTIFICATIONS = "notifications/";
-    private static final String API_LOCATIONS = "locations/";
-    private static final String API_DEVICE = "device/";
-    private static final String API_QUESTION = "question/";
-    private static final String API_ANSWER_QUESTION = "question/answer/";
-    private static final String API_OWN_QUESTIONS = "question/my/";
-    private static final String API_FACULTY = "faculty/";
-    private static final String API_WIFI_HEATMAP = "wifimap/";
-    private static final String API_BARRIER_FREE = "barrierfree/";
-    private static final String API_BARRIER_FREE_CONTACT = "contacts/";
-    private static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
-    private static final String API_BARRIER_FREE_NERBY_FACILITIES = "nerby/";
-    private static final String API_BARRIER_FREE_LIST_OF_TOILETS = "listOfToilets/";
-    private static final String API_BARRIER_FREE_LIST_OF_ELEVATORS = "listOfElevators/";
-    private static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
-    private static final String API_ROOM_FINDER = "roomfinder/room/";
-    private static final String API_ROOM_FINDER_SEARCH = "search/";
-    private static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
-    private static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
-    private static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
+    static final String API_HOSTNAME = Const.API_HOSTNAME;
+    static final String API_BASEURL = "/Api/";
+    static final String API_CHAT = "chat/";
+    static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
+    static final String API_CHAT_MEMBERS = API_CHAT + "members/";
+    //static final String API_SESSION = "session/";
+    //static final String API_NEWS = "news/";
+    //static final String API_MENSA = "mensen/";
+    static final String API_CURRICULA = "curricula/";
+    static final String API_REPORT = "report/";
+    static final String API_STATISTICS = "statistics/";
+    //static final String API_CINEMA = "kino/";
+    static final String API_NOTIFICATIONS = "notifications/";
+    static final String API_LOCATIONS = "locations/";
+    static final String API_DEVICE = "device/";
+    static final String API_QUESTION = "question/";
+    static final String API_ANSWER_QUESTION = "question/answer/";
+    static final String API_OWN_QUESTIONS = "question/my/";
+    static final String API_FACULTY = "faculty/";
+    static final String API_WIFI_HEATMAP = "wifimap/";
+    static final String API_BARRIER_FREE = "barrierfree/";
+    static final String API_BARRIER_FREE_CONTACT = "contacts/";
+    static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
+    static final String API_BARRIER_FREE_NERBY_FACILITIES = "nerby/";
+    static final String API_BARRIER_FREE_LIST_OF_TOILETS = "listOfToilets/";
+    static final String API_BARRIER_FREE_LIST_OF_ELEVATORS = "listOfElevators/";
+    static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
+    static final String API_ROOM_FINDER = "roomfinder/room/";
+    static final String API_ROOM_FINDER_SEARCH = "search/";
+    static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
+    static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
+    static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -354,143 +354,5 @@ public class TUMCabeClient {
                                      Helper.encodeUrl(start), Helper.encodeUrl(end))
                       .execute()
                       .body();
-    }
-
-    private interface TUMCabeAPIService {
-
-        @GET(API_FACULTY)
-        Call<List<Faculty>> getFaculties();
-
-        @DELETE(API_QUESTION + "{question}")
-        Call<Question> deleteOwnQuestion(@Path("question") int question);
-
-        @GET(API_OWN_QUESTIONS)
-        Call<List<Question>> getOwnQuestions();
-
-        @POST(API_ANSWER_QUESTION)
-        Call<Question> answerQuestion(@Body Question question);
-
-        //Questions
-        @POST(API_QUESTION)
-        Call<Question> createQuestion(@Body Question question);
-
-        @GET(API_QUESTION)
-        Call<List<Question>> getOpenQuestions();
-
-        //Group chat
-        @POST(API_CHAT_ROOMS)
-        Call<ChatRoom> createRoom(@Body ChatVerification verification);
-
-        @GET(API_CHAT_ROOMS + "{room}")
-        Call<ChatRoom> getChatRoom(@Path("room") int id);
-
-        @POST(API_CHAT_ROOMS + "{room}/leave/")
-        Call<ChatRoom> leaveChatRoom(@Path("room") int roomId, @Body ChatVerification verification);
-
-        //Get/Update single message
-        @PUT(API_CHAT_ROOMS + "{room}/message/")
-        Call<ChatMessage> sendMessage(@Path("room") int roomId, @Body ChatMessage message);
-
-        @PUT(API_CHAT_ROOMS + "{room}/message/{message}/")
-        Call<ChatMessage> updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body ChatMessage message);
-
-        //Get all recent messages or older ones
-        @POST(API_CHAT_ROOMS + "{room}/messages/{page}/")
-        Call<List<ChatMessage>> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body ChatVerification verification);
-
-        @POST(API_CHAT_ROOMS + "{room}/messages/")
-        Call<List<ChatMessage>> getNewMessages(@Path("room") int roomId, @Body ChatVerification verification);
-
-        @POST(API_CHAT_MEMBERS)
-        Call<ChatMember> createMember(@Body ChatMember chatMember);
-
-        @GET(API_CHAT_MEMBERS + "{lrz_id}/")
-        Call<ChatMember> getMember(@Path("lrz_id") String lrzId);
-
-        @POST(API_CHAT_MEMBERS + "{memberId}/rooms/")
-        Call<List<ChatRoom>> getMemberRooms(@Path("memberId") int memberId, @Body ChatVerification verification);
-
-        @GET(API_CHAT_MEMBERS + "{memberId}/pubkeys/")
-        Call<List<ChatPublicKey>> getPublicKeysForMember(@Path("memberId") int memberId);
-
-        @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
-        Call<ChatRegistrationId> uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId);
-
-        //Curricula
-        @GET(API_CURRICULA)
-        Call<List<Curriculum>> getAllCurriculas();
-
-        @GET(API_NOTIFICATIONS + "{notification}/")
-        Call<GCMNotification> getNotification(@Path("notification") int notification);
-
-        @GET(API_NOTIFICATIONS + "confirm/{notification}/")
-        Call<String> confirm(@Path("notification") int notification);
-
-        //Locations
-        @GET(API_LOCATIONS)
-        Call<List<GCMNotificationLocation>> getAllLocations();
-
-        @GET(API_LOCATIONS + "{locationId}/")
-        Call<GCMNotificationLocation> getLocation(@Path("locationId") int locationId);
-
-        //Bug Reports
-        @PUT(API_REPORT)
-        Call<List<String>> putBugReport(@Body BugReport r);
-
-        //Statistics
-        @PUT(API_STATISTICS)
-        Call<List<String>> putStatistics(@Body Statistics r);
-
-        //Device
-        @POST(API_DEVICE + "register/")
-        Call<TUMCabeStatus> deviceRegister(@Body DeviceRegister verification);
-
-        @POST(API_DEVICE + "addGcmToken/")
-        Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadGcmToken verification);
-
-        //WifiHeatmap
-        @POST(API_WIFI_HEATMAP + "create_measurements/")
-        Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
-
-        // Barrier free contacts
-        @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)
-        Call<List<BarrierfreeContact>> getBarrierfreeContactList();
-
-        // Barrier free More Info
-        @GET(API_BARRIER_FREE + API_BARRIER_FREE_MORE_INFO)
-        Call<List<BarrierfreeMoreInfo>> getMoreInfoList();
-
-        // Barrier free toilets list
-        @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_TOILETS)
-        Call<List<RoomFinderRoom>> getListOfToilets();
-
-        // Barrier free elevator list
-        @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_ELEVATORS)
-        Call<List<RoomFinderRoom>> getListOfElevators();
-
-        // Barrier free nearby list
-        @GET(API_BARRIER_FREE + API_BARRIER_FREE_NERBY_FACILITIES + "{buildingId}/")
-        Call<List<RoomFinderRoom>> getListOfNearbyFacilities(@Path("buildingId") String buildingId);
-
-        // building to gps information
-        @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
-        Call<List<BuildingsToGps>> getBuilding2Gps();
-
-        //RoomFinder maps
-        @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")
-        Call<List<RoomFinderMap>> fetchAvailableMaps(@Path("archId") String archId);
-
-        //RoomFinder maps
-        @GET(API_ROOM_FINDER + API_ROOM_FINDER_SEARCH + "{searchStrings}")
-        Call<List<RoomFinderRoom>> fetchRooms(@Path("searchStrings") String searchStrings);
-
-        //RoomFinder cordinates
-        @GET(API_ROOM_FINDER + API_ROOM_FINDER_COORDINATES + "{archId}")
-        Call<RoomFinderCoordinate> fetchCoordinates(@Path("archId") String archId);
-
-        //RoomFinder schedule
-        @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
-        Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
-                                                     @Path("start") String start, @Path("end") String end);
     }
 }
