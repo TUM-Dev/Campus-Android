@@ -51,6 +51,9 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatMessageDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.UnreadChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
@@ -84,6 +87,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     /**
      * UI elements
      */
+    private ChatMessageDao chatMessageDao;
+    private UnreadChatMessageDao unreadChatMessageDao;
     private ListView lvMessageHistory;
     private ChatHistoryAdapter chatHistoryAdapter;
     private EditText etMessage;
@@ -118,7 +123,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             int i = item.getItemId();
             if (i == R.id.action_edit) {// If item is not sent at the moment, stop sending
                 if (msg.getStatus() == ChatMessage.STATUS_SENDING) {
-                    chatManager.removeFromUnsent(msg);
+                    unreadChatMessageDao.removeFromUnsent(msg.getId());
                     chatHistoryAdapter.removeUnsent(msg);
                 } else { // set editing item
                     chatHistoryAdapter.mEditedItem = msg;
@@ -199,7 +204,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         }
 
         //Update the history
-        chatHistoryAdapter.changeCursor(chatManager.getAll());
+        chatHistoryAdapter.changeCursor(chatMessageDao.getAll());
 
     }
 
@@ -218,6 +223,10 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
         this.setContentView(R.layout.activity_chat);
+
+        TcaDb db = TcaDb.getInstance(this);
+        chatMessageDao = db.chatMessageDao();
+        unreadChatMessageDao = db.unreadChatMessageDao();
 
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -343,15 +352,15 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         if (chatHistoryAdapter.mEditedItem == null) {
             final ChatMessage message = new ChatMessage(text, currentChatMember);
             chatHistoryAdapter.add(message);
-            chatManager.addToUnsent(message);
+            unreadChatMessageDao.addToUnsent(text,message.getRoom(),currentChatMember.getId(),message.getId());
         } else {
             chatHistoryAdapter.mEditedItem.setText(etMessage.getText()
                                                             .toString());
-            chatManager.addToUnsent(chatHistoryAdapter.mEditedItem);
+            unreadChatMessageDao.addToUnsent(text,currentChatRoom.getId(),currentChatMember.getId(),chatHistoryAdapter.mEditedItem.getId());
             chatHistoryAdapter.mEditedItem.setStatus(ChatMessage.STATUS_SENDING);
-            chatManager.replaceMessage(chatHistoryAdapter.mEditedItem);
+            chatMessageDao.replaceMessage(chatHistoryAdapter.mEditedItem.getId(),chatHistoryAdapter.mEditedItem.getPrevious(),currentChatRoom.getId(),text,chatHistoryAdapter.mEditedItem.getTimestamp(),chatHistoryAdapter.mEditedItem.getSignature(),currentChatMember.getId(),chatHistoryAdapter.mCheckedItem.getRead()? 1 : 0,chatHistoryAdapter.mEditedItem.getStatus());
             chatHistoryAdapter.mEditedItem = null;
-            chatHistoryAdapter.changeCursor(chatManager.getAll());
+            chatHistoryAdapter.changeCursor(chatMessageDao.getAll());
         }
 
         // start service to send the message
@@ -444,7 +453,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             // Got results from webservice
             Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
 
-            final Cursor cur = chatManager.getAll();
+            final Cursor cur = unreadChatMessageDao.getAllUnsent();
 
             // Update results in UI
             runOnUiThread(() -> {

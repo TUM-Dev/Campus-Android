@@ -10,11 +10,25 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatMessageDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.UnreadChatMessageDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.FavoriteDishDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.KinoDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.LocationDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.SyncDao;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.TumLockDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.CalendarDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.WidgetTimetableBlacklistDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.RoomLocationsDao;
+
+
+import de.tum.in.tumcampusapp.models.calendar.Calendar;
+import de.tum.in.tumcampusapp.models.calendar.RoomLocations;
+import de.tum.in.tumcampusapp.models.calendar.WidgetsTimetableBlacklist;
+
+import de.tum.in.tumcampusapp.models.chat.ChatMessageTable;
+import de.tum.in.tumcampusapp.models.chat.UnsentChatMessageTable;
+
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
@@ -32,7 +46,12 @@ import de.tum.in.tumcampusapp.models.tumcabe.Kino;
         TumLock.class,
         BuildingToGps.class,
         Kino.class,
-        Location.class
+        Location.class,
+        ChatMessageTable.class,
+        UnsentChatMessageTable.class,
+        Calendar.class,
+        RoomLocations.class,
+        WidgetsTimetableBlacklist.class
 }, exportSchema = false) // TODO: probably version schema
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -51,6 +70,16 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract KinoDao kinoDao();
 
     public abstract LocationDao locationDao();
+
+    public abstract ChatMessageDao chatMessageDao();
+
+    public abstract UnreadChatMessageDao unreadChatMessageDao();
+
+    public abstract CalendarDao calendarDao();
+
+    public abstract WidgetTimetableBlacklistDao widgetTimetableBlacklistDao();
+
+    public abstract RoomLocationsDao roomLocationsDao();
 
     private static TcaDb instance;
 
