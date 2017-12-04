@@ -1,5 +1,8 @@
 package de.tum.`in`.tumcampusapp.models.cafeteria
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+
 /**
  * New Location
  *
@@ -13,7 +16,9 @@ package de.tum.`in`.tumcampusapp.models.cafeteria
  * @param remark    Additional information, e.g. Tel: 089-11111
  * @param url       Location URL, e.g. http://stud.ub.uni-muenchen.de/
  */
-data class Location(var id: Int = -1,
+@Entity
+data class Location(@PrimaryKey
+                    var id: Int = -1,
                     var category: String = "",
                     var name: String = "",
                     var address: String = "",

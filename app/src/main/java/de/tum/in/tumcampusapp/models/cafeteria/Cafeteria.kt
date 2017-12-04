@@ -1,5 +1,8 @@
 package de.tum.`in`.tumcampusapp.models.cafeteria
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+
 /**
  * new Cafeteria
  *
@@ -9,7 +12,9 @@ package de.tum.`in`.tumcampusapp.models.cafeteria
  * @param latitude  Coordinates of the cafeteria
  * @param longitude Coordinates of the cafeteria
  */
-data class Cafeteria(var id: Int = -1,
+@Entity
+data class Cafeteria(@field:PrimaryKey
+                     var id: Int = -1,
                      var name: String = "",
                      var address: String = "",
                      var latitude: Double = -1.0,

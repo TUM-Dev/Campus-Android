@@ -21,7 +21,7 @@ allprojects {
         options.forkOptions.setMemoryMaximumSize("4g") // Set maximum memory to 4g
         options.compilerArgs << "-Xlint:all"
         options.compilerArgs << "-Xlint:-classfile"
-        options.compilerArgs << "-Werror"
+        //options.compilerArgs << "-Werror"
     }
     repositories {
         jcenter()

@@ -11,7 +11,7 @@ import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
-import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
+import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
@@ -36,11 +36,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
 
 public class TUMCabeClient {
 
@@ -320,7 +315,7 @@ public class TUMCabeClient {
                       .body();
     }
 
-    public List<BuildingsToGps> getBuilding2Gps() throws IOException {
+    public List<BuildingToGps> getBuilding2Gps() throws IOException {
         return service.getBuilding2Gps()
                       .execute()
                       .body();

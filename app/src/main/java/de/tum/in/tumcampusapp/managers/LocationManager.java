@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -22,9 +21,12 @@ import java.util.List;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.BuildingToGpsDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.efa.StationResult;
-import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
+import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
@@ -33,7 +35,7 @@ import de.tum.in.tumcampusapp.models.tumo.Geo;
  * Location manager, manages intelligent location services, provides methods to easily access
  * the users current location, campus, next public transfer station and best cafeteria
  */
-public class LocationManager extends AbstractManager {
+public class LocationManager {
     private static final double[][] CAMPUS_LOCATIONS = {
             {48.2648424, 11.6709511}, // Garching Forschungszentrum
             {48.249432, 11.633905}, // Garching Hochbrück
@@ -54,23 +56,27 @@ public class LocationManager extends AbstractManager {
             "L", // Leopoldstraße
             "S" // Geschwister Schollplatz/Adalbertstraße
     };
-    private static final StationResult[] DEFAULT_CAMPUS_STATION = {new StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE),
-                                                                   new StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE),
-                                                                   new StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE),
-                                                                   new StationResult("Theresienstraße", "1000120", Integer.MAX_VALUE),
-                                                                   new StationResult("Klinikum Großhadern", "1001540", Integer.MAX_VALUE),
-                                                                   new StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE),
-                                                                   new StationResult("Giselastraße", "1000080", Integer.MAX_VALUE),
-                                                                   new StationResult("Universität", "1000070", Integer.MAX_VALUE)
+    private static final StationResult[] DEFAULT_CAMPUS_STATION = {
+            new StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE),
+            new StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE),
+            new StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE),
+            new StationResult("Theresienstraße", "1000120", Integer.MAX_VALUE),
+            new StationResult("Klinikum Großhadern", "1001540", Integer.MAX_VALUE),
+            new StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE),
+            new StationResult("Giselastraße", "1000080", Integer.MAX_VALUE),
+            new StationResult("Universität", "1000070", Integer.MAX_VALUE)
     };
 
     private static final String[] DEFAULT_CAMPUS_CAFETERIA = {"422", null, "423", "421", "414", null, "411", null};
     private final Context mContext;
+    private final CafeteriaDao cafeteriaDao;
+    private final BuildingToGpsDao buildingToGpsDao;
 
     public LocationManager(Context c) {
-        super(c);
-        mContext = c;
-        createBuildingsToGpsTable();
+        mContext = c.getApplicationContext();
+        TcaDb db = TcaDb.getInstance(c);
+        cafeteriaDao = db.cafeteriaDao();
+        buildingToGpsDao = db.buildingToGpsDao();
     }
 
     /**
@@ -155,20 +161,10 @@ public class LocationManager extends AbstractManager {
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
         float[] results = new float[1];
-        CafeteriaManager manager = new CafeteriaManager(mContext);
-        List<Cafeteria> list;
-        try (Cursor cur = manager.getAllFromDb()) {
-            list = new ArrayList<>(cur.getCount());
-
-            if (cur.moveToFirst()) {
-                do {
-                    Cafeteria cafe = new Cafeteria(cur.getInt(0), cur.getString(1),
-                                                   cur.getString(2), cur.getDouble(3), cur.getDouble(4));
-                    Location.distanceBetween(cur.getDouble(3), cur.getDouble(4), lat, lng, results);
-                    cafe.setDistance(results[0]);
-                    list.add(cafe);
-                } while (cur.moveToNext());
-            }
+        List<Cafeteria> list = cafeteriaDao.getAll();
+        for (Cafeteria cafeteria : list) {
+            Location.distanceBetween(cafeteria.getLatitude(), cafeteria.getLongitude(), lat, lng, results);
+            cafeteria.setDistance(results[0]);
         }
         Collections.sort(list);
         return list;
@@ -397,8 +393,8 @@ public class LocationManager extends AbstractManager {
         }
 
         try {
-            Optional<List<RoomFinderRoom>> rooms = Optional.of(TUMCabeClient.getInstance(mContext)
-                                                                            .fetchRooms(loc));
+            Optional<List<RoomFinderRoom>> rooms = Optional.fromNullable(TUMCabeClient.getInstance(mContext)
+                                                                                      .fetchRooms(loc));
 
             if (rooms.isPresent() && !rooms.get()
                                            .isEmpty()) {
@@ -415,57 +411,26 @@ public class LocationManager extends AbstractManager {
         return Optional.absent();
     }
 
-    private void createBuildingsToGpsTable() {
-        db.execSQL("CREATE TABLE IF NOT EXISTS buildings2gps ("
-                   + "id VARCHAR PRIMARY KEY, latitude VARCHAR, longitude VARCHAR)");
-    }
-
-    private void insertInBuildingsToGps(BuildingsToGps map) {
-        String[] params = {
-                map.getId(),
-                map.getLatitude(),
-                map.getLongitude()
-        };
-        db.execSQL("INSERT INTO buildings2gps (id, latitude, longitude) VALUES (?, ?, ?)", params);
-    }
-
     /**
-     * This method tries to get the list of BuildingsToGps by querying database or requesting the server.
+     * This method tries to get the list of BuildingToGps by querying database or requesting the server.
      * If both two ways fail, it returns Optional.absent().
      *
-     * @return The list of BuildingsToGps
+     * @return The list of BuildingToGps
      */
-    private List<BuildingsToGps> getOrFetchBuildingsToGps() {
-        List<BuildingsToGps> result;
-        try (Cursor cursor = db.rawQuery("SELECT * FROM buildings2gps", null)) {
-            result = new ArrayList<>(cursor.getCount());
-            while (cursor.moveToNext()) {
-                if (cursor.isAfterLast()) {
-                    continue;
-                }
-
-                String id = cursor.getString(0);
-                String latitude = cursor.getString(1);
-                String longitude = cursor.getString(2);
-
-                BuildingsToGps mapping = new BuildingsToGps(id, latitude, longitude);
-
-                result.add(mapping);
-            }
-        }
+    private List<BuildingToGps> getOrFetchBuildingsToGps() {
+        List<BuildingToGps> result = buildingToGpsDao.getAll();
 
         if (result.isEmpty()) {
             // we have to fetch buildings to gps mapping first.
-
             try {
                 result = TUMCabeClient.getInstance(mContext)
                                       .getBuilding2Gps();
                 if (result == null) {
-                    return new ArrayList<>();
+                    return Collections.emptyList();
                 }
 
-                for (BuildingsToGps map : result) {
-                    insertInBuildingsToGps(map);
+                for (BuildingToGps map : result) {
+                    buildingToGpsDao.insert(map);
                 }
 
             } catch (IOException e) {
@@ -495,9 +460,9 @@ public class LocationManager extends AbstractManager {
      * @return the id of current building
      */
     private Optional<String> getBuildingIDFromLocation(Location location) {
-        List<BuildingsToGps> buildingsToGpsList = getOrFetchBuildingsToGps();
+        List<BuildingToGps> buildingToGpsList = getOrFetchBuildingsToGps();
 
-        if (buildingsToGpsList.isEmpty()) {
+        if (buildingToGpsList.isEmpty()) {
             return Optional.absent();
         }
 
@@ -507,7 +472,7 @@ public class LocationManager extends AbstractManager {
         float bestDistance = Float.MAX_VALUE;
         String bestBuilding = "";
 
-        for (BuildingsToGps building : buildingsToGpsList) {
+        for (BuildingToGps building : buildingToGpsList) {
             double buildingLat = Double.parseDouble(building.getLatitude());
             double buildingLng = Double.parseDouble(building.getLongitude());
 

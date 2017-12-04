@@ -99,10 +99,10 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
                              .setIntent(new Intent(mContext, item.activity));
             }
         }
-        for(SideNavigationItem item : APP){
+        for (SideNavigationItem item : APP) {
             navigationMenu.add(item.titleRes)
-                         .setIcon(item.iconRes)
-                         .setIntent(new Intent(mContext, item.activity));
+                          .setIcon(item.iconRes)
+                          .setIntent(new Intent(mContext, item.activity));
         }
     }
 

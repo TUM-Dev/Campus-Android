@@ -164,6 +164,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             handleRoomBroadcast(extras);
         }
     };
+
     public ChatActivity() {
         super(Const.CURRENT_CHAT_ROOM, R.layout.activity_chat);
     }
