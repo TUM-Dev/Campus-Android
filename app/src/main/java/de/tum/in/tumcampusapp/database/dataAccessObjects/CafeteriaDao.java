@@ -8,14 +8,15 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import io.reactivex.Flowable;
 
 @Dao
 public interface CafeteriaDao {
     @Query("SELECT * FROM cafeteria")
-    List<Cafeteria> getAll();
+    Flowable<List<Cafeteria>> getAll();
 
     @Query("SELECT * FROM cafeteria WHERE id = :id")
-    Cafeteria getById(int id);
+    Flowable<Cafeteria> getById(int id);
 
     @Query("DELETE FROM cafeteria")
     void removeCache();
