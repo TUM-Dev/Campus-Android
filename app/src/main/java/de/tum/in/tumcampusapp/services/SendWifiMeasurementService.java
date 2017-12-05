@@ -20,7 +20,6 @@ public class SendWifiMeasurementService extends JobIntentService {
     //Time between retries for trying again
     public static final int TIME_BETWEEN_MILIS = 300;
 
-
     static void enqueueWork(Context context, Intent work) {
         enqueueWork(context, SendWifiMeasurementService.class, SEND_WIFI_SERVICE_JOB_ID, work);
     }

@@ -7,7 +7,7 @@ import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
-import de.tum.in.tumcampusapp.models.tumcabe.BuildingsToGps;
+import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
@@ -34,7 +34,31 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-import static de.tum.in.tumcampusapp.api.TUMCabeClient.*;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ANSWER_QUESTION;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_BUILDINGS_TO_GPS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_CONTACT;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_LIST_OF_ELEVATORS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_LIST_OF_TOILETS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_MORE_INFO;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_NERBY_FACILITIES;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CHAT_MEMBERS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CHAT_ROOMS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CURRICULA;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_DEVICE;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_FACULTY;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_LOCATIONS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_NOTIFICATIONS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_OWN_QUESTIONS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_QUESTION;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_REPORT;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ROOM_FINDER;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ROOM_FINDER_COORDINATES;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ROOM_FINDER_SEARCH;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_STATISTICS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_WIFI_HEATMAP;
 
 public interface TUMCabeAPIService {
 
@@ -154,7 +178,7 @@ public interface TUMCabeAPIService {
 
     // building to gps information
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
-    Call<List<BuildingsToGps>> getBuilding2Gps();
+    Call<List<BuildingToGps>> getBuilding2Gps();
 
     //RoomFinder maps
     @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")

@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.models.tumcabe
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
 /**
@@ -20,7 +22,9 @@ import java.util.*
  * @param created     Created
  * @param link        Link
  */
-data class Kino(var id: String = "",
+@Entity
+data class Kino(@PrimaryKey
+                var id: String = "",
                 var title: String = "",
                 var year: String = "",
                 var runtime: String = "",

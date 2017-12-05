@@ -7,7 +7,6 @@ import org.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class RoomFinderActivityTest extends BaseActivityTest {
 
-
     @Override
     @Test
     public void mainComponentDisplayedTest() {

@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -29,9 +28,13 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
-import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.FavoriteDishDao;
 import de.tum.in.tumcampusapp.managers.OpenHoursManager;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaPrices;
+import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 
 /**
  * Fragment for each cafeteria-page.
@@ -59,104 +62,94 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                                          .getDimension(R.dimen.card_text_padding);
         List<View> addedViews = new ArrayList<>(32);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
+        TcaDb db = TcaDb.getInstance(context);
+        final CafeteriaMenuDao cafeteriaMenuDao = db.cafeteriaMenuDao();
+        final FavoriteDishDao favoriteDishDao = db.favoriteDishDao();
 
         // Get menu items
-        try (Cursor cursorCafeteriaMenu = new CafeteriaMenuManager(context).getTypeNameFromDbCard(cafeteriaId, dateStr)) {
+        List<CafeteriaMenu> cafeteriaMenus = cafeteriaMenuDao.getTypeNameFromDbCard(cafeteriaId, dateStr);
+        TextView textview;
+        if (!big) {
+            // Show opening hours
+            OpenHoursManager lm = new OpenHoursManager(context);
+            textview = new TextView(context);
+            textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, Utils.getDate(dateStr)));
+            textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
+            rootView.addView(textview);
+            addedViews.add(textview);
+        }
 
-            TextView textview;
-            if (!big) {
-                // Show opening hours
-                OpenHoursManager lm = new OpenHoursManager(context);
-                textview = new TextView(context);
-                textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, Utils.getDate(dateStr)));
-                textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
-                rootView.addView(textview);
-                addedViews.add(textview);
+        // Show cafeteria menu
+        String curShort = "";
+        for (CafeteriaMenu cafeteriaMenu : cafeteriaMenus) {
+            String typeShort = cafeteriaMenu.getTypeShort();
+            String typeLong = cafeteriaMenu.getTypeLong();
+            // Skip unchecked categories if showing card
+            boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
+                                                      "tg".equals(typeShort) || "ae".equals(typeShort));
+            if (!big && !shouldShow) {
+                continue;
             }
 
-            // Show cafeteria menu
-            String curShort = "";
-            if (cursorCafeteriaMenu.moveToFirst()) {
-                do {
-                    String typeShort = cursorCafeteriaMenu.getString(3);
-                    String typeLong = cursorCafeteriaMenu.getString(0);
-                    final String menu = cursorCafeteriaMenu.getString(1);
+            // Add header if we start with a new category
+            if (!typeShort.equals(curShort)) {
+                curShort = typeShort;
+                View view = inflater.inflate(big ? R.layout.list_header_big : R.layout.card_list_header, rootView, false);
+                textview = view.findViewById(R.id.list_header);
+                textview.setText(typeLong.replaceAll("[0-9]", "")
+                                         .trim());
+                rootView.addView(view);
+                addedViews.add(view);
+            }
 
-                    // Skip unchecked categories if showing card
-                    boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
-                                                              "tg".equals(typeShort) || "ae".equals(typeShort));
-                    if (!big && !shouldShow) {
-                        continue;
-                    }
-
-                    // Add header if we start with a new category
-                    if (!typeShort.equals(curShort)) {
-                        curShort = typeShort;
-                        View view = inflater.inflate(big ? R.layout.list_header_big : R.layout.card_list_header, rootView, false);
-                        textview = view.findViewById(R.id.list_header);
-                        textview.setText(typeLong.replaceAll("[0-9]", "")
-                                                 .trim());
-                        rootView.addView(view);
-                        addedViews.add(view);
-                    }
-
-                    // Show menu item
-
-                    final SpannableString text = menuToSpan(context, big ? menu : prepare(menu));
-                    if (rolePrices.containsKey(typeLong)) {
-                        // If price is available
-                        View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line, rootView, false);
-                        textview = view.findViewById(R.id.line_name);
-                        TextView priceView = view.findViewById(R.id.line_price);
-                        final View favDish = view.findViewById(R.id.favoriteDish);
-                        favDish.setTag(menu + "__" + cafeteriaId);
+            // Show menu item
+            String menuName = cafeteriaMenu.getName();
+            final SpannableString text = menuToSpan(context, big ? menuName : prepare(menuName));
+            if (rolePrices.containsKey(typeLong)) {
+                // If price is available
+                View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line, rootView, false);
+                textview = view.findViewById(R.id.line_name);
+                TextView priceView = view.findViewById(R.id.line_price);
+                final View favDish = view.findViewById(R.id.favoriteDish);
+                favDish.setTag(menuName + "__" + cafeteriaId);
                         /*
                          * saved dish id in the favoriteDishButton tag.
                          * onButton checked getTag->DishID and mark it as favorite locally (favorite=1)
                          */
-                        textview.setText(text);
-                        priceView.setText(String.format("%s €", rolePrices.get(typeLong)));
-                        rootView.addView(view);
-                        addedViews.add(view);
+                textview.setText(text);
+                priceView.setText(String.format("%s €", rolePrices.get(typeLong)));
+                rootView.addView(view);
+                addedViews.add(view);
 
-                        Cursor c = cmm.checkIfFavoriteDish(favDish.getTag()
-                                                                  .toString());
-                        if (c.getCount() > 0) {
-                            favDish.setSelected(true);
-                        } else {
-                            favDish.setSelected(false);
-                        }
+                Object tag = favDish.getTag();
+                List<FavoriteDish> isFavourite = favoriteDishDao.checkIfFavoriteDish(tag.toString());
+                favDish.setSelected(!isFavourite.isEmpty());
 
-                        favDish.setOnClickListener(view1 -> {
-                            String id = view1.getTag()
-                                             .toString();
-                            String[] data = id.split("__");
-                            String dishName = data[0];
-                            int mensaId = Integer.parseInt(data[1]);
+                favDish.setOnClickListener(view1 -> {
+                    String id = view1.getTag()
+                                     .toString();
+                    String[] data = id.split("__");
+                    String dishName = data[0];
+                    int mensaId = Integer.parseInt(data[1]);
 
-                            if (!view1.isSelected()) {
-                                DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
-                                String currentDate = DateTime.now()
-                                                             .toString(formatter);
-                                cmm.insertFavoriteDish(mensaId, dishName, currentDate, favDish.getTag()
-                                                                                              .toString());
-                                view1.setSelected(true);
-                            } else {
-                                cmm.deleteFavoriteDish(mensaId, dishName);
-                                view1.setSelected(false);
-                            }
-                        });
-
+                    if (!view1.isSelected()) {
+                        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+                        String currentDate = DateTime.now()
+                                                     .toString(formatter);
+                        favoriteDishDao.insertFavouriteDish(FavoriteDish.Companion.create(mensaId, dishName, currentDate, tag.toString()));
+                        view1.setSelected(true);
                     } else {
-                        // Without price
-                        textview = new TextView(context);
-                        textview.setText(text);
-                        textview.setPadding(padding, padding, padding, padding);
-                        rootView.addView(textview);
-                        addedViews.add(textview);
+                        favoriteDishDao.deleteFavoriteDish(mensaId, dishName);
+                        view1.setSelected(false);
                     }
-                } while (cursorCafeteriaMenu.moveToNext());
+                });
+            } else {
+                // Without price
+                textview = new TextView(context);
+                textview.setText(text);
+                textview.setPadding(padding, padding, padding, padding);
+                rootView.addView(textview);
+                addedViews.add(textview);
             }
         }
         return addedViews;
@@ -180,52 +173,52 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         replaceWithImg(context, processedMenu, text, "(GQB)", R.drawable.ic_gqb);
         replaceWithImg(context, processedMenu, text, "(99)", R.drawable.meal_alcohol);
         /* TODO Somday replace all of them:
-        '2'	:	'mit Konservierungsstoff',
-		'3'	:	'mit Antioxidationsmittel',
-		'4'	:	'mit Geschmacksverstärker',
-		'5'	:	'geschwefelt',
-		'6'	:	'geschwärzt (Oliven)',
-		'7'	:	'unbekannt',
-		'8'	:	'mit Phosphat',
-		'9'	:	'mit Süßungsmitteln',
-		'10':	'enthält eine Phenylalaninquelle',
-		'11':	'mit einer Zuckerart und Süßungsmitteln',
-		'99':	'mit Alkohol',
-		'f'	:	'fleischloses Gericht',
-		'v'	:	'veganes Gericht',
-		'GQB'	:	'Geprüfte Qualität - Bayern',
-		'S'	:	'mit Schweinefleisch',
-		'R'	:	'mit Rindfleisch',
-		'K'	:	'mit Kalbfleisch',
-		'MSC':	'Marine Stewardship Council',
-		'Kn':	'Knoblauch',
-		'13':	'kakaohaltige Fettglasur',
-		'14':	'Gelatine',
-		'Ei':	'Hühnerei',
-		'En':	'Erdnuss',
-		'Fi':	'Fisch',
-		'Gl':	'Glutenhaltiges Getreide',
-		'GlW':	'Weizen',
-		'GlR':	'Roggen',
-		'GlG':	'Gerste',
-		'GlH':	'Hafer',
-		'GlD':	'Dinkel',
-		'Kr':	'Krebstiere',
-		'Lu':	'Lupinen',
-		'Mi':	'Milch und Laktose',
-		'Sc':	'Schalenfrüchte',
-		'ScM':	'Mandeln',
-		'ScH':	'Haselnüsse',
-		'ScW':	'Walnüsse',
-		'ScC':	'Cashewnüssen',
-		'ScP':	'Pistazien',
-		'Se':	'Sesamsamen',
-		'Sf':	'Senf',
-		'Sl':	'Sellerie',
-		'So':	'Soja',
-		'Sw':	'Schwefeloxid und Sulfite',
-		'Wt':	'Weichtiere'
-         */
+        '2':'mit Konservierungsstoff',
+        '3':'mit Antioxidationsmittel',
+        '4':'mit Geschmacksverstärker',
+        '5':'geschwefelt',
+        '6':'geschwärzt (Oliven)',
+        '7':'unbekannt',
+        '8':'mit Phosphat',
+        '9':'mit Süßungsmitteln',
+        '10':'enthält eine Phenylalaninquelle',
+        '11':'mit einer Zuckerart und Süßungsmitteln',
+        '99':'mit Alkohol',
+        'f':'fleischloses Gericht',
+        'v':'veganes Gericht',
+        'GQB':'Geprüfte Qualität - Bayern',
+        'S':'mit Schweinefleisch',
+        'R':'mit Rindfleisch',
+        'K':'mit Kalbfleisch',
+        'MSC':'Marine Stewardship Council',
+        'Kn':'Knoblauch',
+        '13':'kakaohaltige Fettglasur',
+        '14':'Gelatine',
+        'Ei':'Hühnerei',
+        'En':'Erdnuss',
+        'Fi':'Fisch',
+        'Gl':'Glutenhaltiges Getreide',
+        'GlW':'Weizen',
+        'GlR':'Roggen',
+        'GlG':'Gerste',
+        'GlH':'Hafer',
+        'GlD':'Dinkel',
+        'Kr':'Krebstiere',
+        'Lu':'Lupinen',
+        'Mi':'Milch und Laktose',
+        'Sc':'Schalenfrüchte',
+        'ScM':'Mandeln',
+        'ScH':'Haselnüsse',
+        'ScW':'Walnüsse',
+        'ScC':'Cashewnüssen',
+        'ScP':'Pistazien',
+        'Se':'Sesamsamen',
+        'Sf':'Senf',
+        'Sl':'Sellerie',
+        'So':'Soja',
+        'Sw':'Schwefeloxid und Sulfite',
+        'Wt':'Weichtiere'
+        */
         return text;
     }
 

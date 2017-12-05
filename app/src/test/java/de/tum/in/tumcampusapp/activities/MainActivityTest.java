@@ -7,7 +7,6 @@ import org.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest extends BaseActivityTest {
 
-
     @Test
     @Override
     public void mainComponentDisplayedTest() {

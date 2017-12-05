@@ -18,13 +18,14 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.LocationDao;
 import de.tum.in.tumcampusapp.managers.CacheManager;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.KinoManager;
 import de.tum.in.tumcampusapp.managers.NewsManager;
-import de.tum.in.tumcampusapp.managers.OpenHoursManager;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
 import de.tum.in.tumcampusapp.managers.SyncManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
@@ -146,7 +147,7 @@ public class DownloadService extends JobIntentService {
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
         if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
-            FillCacheService.enqueueWork(service.getBaseContext(),new Intent());
+            FillCacheService.enqueueWork(service.getBaseContext(), new Intent());
         }
     }
 
@@ -256,13 +257,14 @@ public class DownloadService extends JobIntentService {
      * Import default location and opening hours from assets
      */
     private void importLocationsDefaults() throws IOException {
-        OpenHoursManager lm = new OpenHoursManager(this);
-        if (lm.empty()) {
+        LocationDao dao = TcaDb.getInstance(this)
+                               .locationDao();
+        if (dao.isEmpty()) {
             AssetManager assetManager = getAssets();
             List<String[]> rows = Utils.readCsv(assetManager.open(CSV_LOCATIONS));
             for (String[] row : rows) {
-                lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1],
-                                              row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
+                dao.replaceInto(new Location(Integer.parseInt(row[0]), row[1],
+                                             row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
         }
     }

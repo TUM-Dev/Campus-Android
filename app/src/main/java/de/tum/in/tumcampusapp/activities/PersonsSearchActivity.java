@@ -122,10 +122,11 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
         requestFetch();
     }
 
-    private void proceedToPersonDetails(PersonList response )    {
+    private void proceedToPersonDetails(PersonList response) {
         lvPersons.setAdapter(null);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("personObject", response.getPersons().get(0));
+        bundle.putSerializable("personObject", response.getPersons()
+                                                       .get(0));
         Intent intent = new Intent(this, PersonsDetailsActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
@@ -139,9 +140,11 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
      */
     @Override
     public void onLoadFinished(PersonList response) {
-        if (response.getPersons() == null || response.getPersons().isEmpty()) {
+        if (response.getPersons() == null || response.getPersons()
+                                                     .isEmpty()) {
             lvPersons.setAdapter(new NoResultsAdapter(this));
-        } else if (response.getPersons().size() == 1){
+        } else if (response.getPersons()
+                           .size() == 1) {
             proceedToPersonDetails(response);
         } else {
             ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, response.getPersons());
