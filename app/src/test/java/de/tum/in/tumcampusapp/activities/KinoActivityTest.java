@@ -7,9 +7,6 @@ import android.view.View;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
@@ -19,7 +16,6 @@ import org.robolectric.annotation.Config;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.KinoAdapter;
-import de.tum.in.tumcampusapp.managers.KinoManager;
 import de.tum.in.tumcampusapp.shadows.KinoManagerShadow;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +43,10 @@ public class KinoActivityTest {
         assertThat(kinoActivity.findViewById(R.id.drawer_layout).getVisibility()).isEqualTo(View.VISIBLE);
     }
 
+    /**
+     * There are no movies to display
+     * Expected output: no movies layout displayed
+     */
     @Test
     public void mainComponentNoMoviesDisplayedTest() {
         Mockito.when(KinoManagerShadow.returnedCursor.getCount()).thenReturn(0);
@@ -55,6 +55,10 @@ public class KinoActivityTest {
         assertThat(kinoActivity.findViewById(R.id.no_movies_layout).getVisibility()).isEqualTo(View.VISIBLE);
     }
 
+    /**
+     * There are movies available
+     * Expected output: KinoAdapter is used for pager.
+     */
     @Test
     public void kinoAdapterUsedTest() {
         Mockito.when(KinoManagerShadow.returnedCursor.getCount()).thenReturn(1);
