@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,7 +88,7 @@ public class NetUtils {
     private Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
-        if (!isOnline || url == null || url.equals("null")) {
+        if (!isOnline || Strings.isNullOrEmpty(url) || url.equals("null")) {
             return Optional.absent();
         }
 

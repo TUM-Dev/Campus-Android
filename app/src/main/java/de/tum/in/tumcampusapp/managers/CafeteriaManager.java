@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.text.format.DateUtils;
 
 import com.google.common.base.Optional;
@@ -11,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,16 +21,23 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 /**
  * Cafeteria Manager, handles database stuff, external imports
  */
-public class CafeteriaManager extends AbstractManager implements Card.ProvidesCard {
+public class CafeteriaManager implements Card.ProvidesCard {
     private static final int TIME_TO_SYNC = 604800; // 1 week
 
     private static final String CAFETERIAS_URL = "https://tumcabe.in.tum.de/Api/mensen";
+
+    private final Context mContext;
+    private final CafeteriaDao cafeteriaDao;
+    private final CafeteriaMenuDao cafeteriaMenuDao;
 
     /**
      * Get Cafeteria object by JSON object
@@ -57,10 +64,10 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
      * @param context Context
      */
     public CafeteriaManager(Context context) {
-        super(context);
-
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR, latitude REAL, longitude REAL)");
+        mContext = context;
+        TcaDb db = TcaDb.getInstance(context);
+        cafeteriaDao = db.cafeteriaDao();
+        cafeteriaMenuDao = db.cafeteriaMenuDao();
     }
 
     /**
@@ -80,63 +87,14 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         if (!jsonArray.isPresent()) {
             return;
         }
-        removeCache();
+        cafeteriaDao.removeCache();
 
         // write cafeterias into database, transaction = speedup
         JSONArray arr = jsonArray.get();
-        db.beginTransaction();
-        try {
-            for (int i = 0; i < arr.length(); i++) {
-                replaceIntoDb(getFromJson(arr.getJSONObject(i)));
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
+        for (int i = 0; i < arr.length(); i++) {
+            cafeteriaDao.insert(getFromJson(arr.getJSONObject(i)));
         }
         sync.replaceIntoDb(this);
-    }
-
-    /**
-     * Returns all cafeterias
-     *
-     * @return Database cursor (id, name, address, latitude, longitude)
-     */
-    public Cursor getAllFromDb() {
-        return db.query("cafeterias", null, null, null, null, null, null);
-    }
-
-    /**
-     * Removes all cache items
-     */
-    private void removeCache() {
-        db.execSQL("DELETE FROM cafeterias");
-    }
-
-    /**
-     * Replace or Insert a cafeteria in the database
-     *
-     * @param c Cafeteria object
-     */
-    void replaceIntoDb(Cafeteria c) {
-        if (c.getId() <= 0) {
-            throw new IllegalArgumentException("Invalid id.");
-        }
-        if (c.getName()
-             .isEmpty()) {
-            throw new IllegalArgumentException("Invalid name.");
-        }
-
-        db.execSQL("REPLACE INTO cafeterias (id, name, address, latitude, longitude) VALUES (?, ?, ?, ?, ?)",
-                   new String[]{String.valueOf(c.getId()), c.getName(), c.getAddress(), Double.toString(c.getLatitude()), Double.toString(c.getLongitude())});
-    }
-
-    public String getMensaNameFromId(int mensaId) {
-        try (Cursor c = db.rawQuery("SELECT name FROM cafeterias WHERE id = ?", new String[]{"" + mensaId})) {
-            if (c.moveToNext()) {
-                return c.getString(0);
-            }
-        }
-        return null;
     }
 
     /**
@@ -153,48 +111,25 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
             return;
         }
 
-        // Get all available cafeterias from database
-        String cafeteriaName = "";
-        try (Cursor cursor = getAllFromDb()) {
-            if (cursor.moveToFirst() && cursor.getColumnCount() >= 2) {
-                do {
-                    final int key = cursor.getInt(0);
-                    if (key == cafeteriaId) {
-                        cafeteriaName = cursor.getString(1);
-                        break;
-                    }
-                } while (cursor.moveToNext());
-            }
-        }
+        String cafeteriaName = cafeteriaDao.getMensaNameFromId(cafeteriaId);
 
         // Get available dates for cafeteria menus
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
-        Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
+        List<String> cafeteriaDates = cafeteriaMenuDao.getAllDates();
 
-        // Try with next available date
-        cursorCafeteriaDates.moveToFirst(); // Get today or tomorrow if today is sunday e.g.
-        if (cursorCafeteriaDates.getCount() == 0) {
+        if (cafeteriaDates.isEmpty()) {
             return;
         }
-
-        final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
-        String dateStr = cursorCafeteriaDates.getString(idCol);
+        String dateStr = cafeteriaDates.get(0);
         Date date = Utils.getDate(dateStr);
 
         // If it is 3pm or later mensa has already closed so display the menu for the following day
         Calendar now = Calendar.getInstance();
-        if (DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY) >= 15) {
-            cursorCafeteriaDates.moveToNext(); // Get following day
-            try {
-                dateStr = cursorCafeteriaDates.getString(idCol);
-                date = Utils.getDate(dateStr);
-            } catch (Exception ignore) {
-                return;
-            }
+        if (DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY) >= 15 && cafeteriaDates.size() > 1) {
+            dateStr = cafeteriaDates.get(1);
+            date = Utils.getDate(dateStr);
         }
-        cursorCafeteriaDates.close();
 
-        List<CafeteriaMenu> menus = cmm.getTypeNameFromDbCardList(cafeteriaId, dateStr, date);
+        List<CafeteriaMenu> menus = cafeteriaMenuDao.getTypeNameFromDbCard(cafeteriaId, dateStr);
         if (!menus.isEmpty()) {
             CafeteriaMenuCard card = new CafeteriaMenuCard(context);
             card.setCardMenus(cafeteriaId, cafeteriaName, dateStr, date, menus);
@@ -214,40 +149,24 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         }
 
         // Get all available cafeterias from database
-        String cafeteriaName = "";
-        try (Cursor cursor = getAllFromDb()) {
-            // get the cafeteria's name
-            if (cursor.moveToFirst()) {
-                do {
-                    final int key = cursor.getInt(0);
-                    if (key == cafeteriaId) {
-                        cafeteriaName = cursor.getString(1);
-                        break;
-                    }
-                } while (cursor.moveToNext());
-            }
-        }
+        String cafeteriaName = cafeteriaDao.getMensaNameFromId(cafeteriaId);
 
         // Get available dates for cafeteria menus
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
-        Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
-        final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
+        List<String> cafeteriaDates = cafeteriaMenuDao.getAllDates();
+        if (cafeteriaDates.isEmpty()) {
+            return Collections.emptyMap();
+        }
 
-        // Try with next available date
-        cursorCafeteriaDates.moveToFirst(); // Get today or tomorrow if today is sunday e.g.
-        String dateStr = cursorCafeteriaDates.getString(idCol);
+        String dateStr = cafeteriaDates.get(0);
         Date date = Utils.getDate(dateStr);
 
         // If it is 3pm or later mensa has already closed so display the menu for the following day
         Calendar now = Calendar.getInstance();
-        if (DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY) >= 15) {
-            cursorCafeteriaDates.moveToNext(); // Get following day
-            dateStr = cursorCafeteriaDates.getString(idCol);
-            date = Utils.getDate(dateStr);
+        if (DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY) >= 15 && cafeteriaDates.size() > 1) {
+            dateStr = cafeteriaDates.get(0); // Get following day
         }
-        cursorCafeteriaDates.close();
 
-        List<CafeteriaMenu> menus = cmm.getTypeNameFromDbCardList(cafeteriaId, dateStr, date);
+        List<CafeteriaMenu> menus = cafeteriaMenuDao.getTypeNameFromDbCard(cafeteriaId, dateStr);
         String mensaKey = cafeteriaName + ' ' + dateStr;
         Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>(1);
         selectedMensaMenus.put(mensaKey, menus);
@@ -263,37 +182,22 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         }
 
         // Get all available cafeterias from database
-        String cafeteriaName = "";
-        try (Cursor cursor = getAllFromDb()) {
-            // get the cafeteria's name
-            if (cursor.moveToFirst()) {
-                do {
-                    final int key = cursor.getInt(0);
-                    if (key == cafeteriaId) {
-                        cafeteriaName = cursor.getString(1);
-                        break;
-                    }
-                } while (cursor.moveToNext());
-            }
-        }
+        String cafeteriaName = cafeteriaDao.getMensaNameFromId(cafeteriaId);
 
         // Get available dates for cafeteria menus
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
-        Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
-        final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
+        List<String> cafeteriaDates = cafeteriaMenuDao.getAllDates();
+        if (cafeteriaDates.isEmpty()) {
+            return null;
+        }
 
-        // Try with next available date
-        cursorCafeteriaDates.moveToFirst(); // Get today or tomorrow if today is sunday e.g.
-        String dateStr = cursorCafeteriaDates.getString(idCol);
+        String dateStr = cafeteriaDates.get(0);
         Date date = Utils.getDate(dateStr);
 
         // If it is 3pm or later mensa has already closed so display the menu for the following day
         Calendar now = Calendar.getInstance();
-        if (DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY) >= 15) {
-            cursorCafeteriaDates.moveToNext(); // Get following day
-            dateStr = cursorCafeteriaDates.getString(idCol);
+        if (DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY) >= 15 && cafeteriaDates.size() > 1) {
+            dateStr = cafeteriaDates.get(0); // Get following day
         }
-        cursorCafeteriaDates.close();
 
         return cafeteriaName + ' ' + dateStr;
     }

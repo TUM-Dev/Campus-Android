@@ -34,8 +34,6 @@ public class SetupEduroamActivity extends BaseActivity {
     private EditText lrz;
     private EditText password;
 
-    public static final String EXTRA_FOREIGN_CONFIGURATION_EXISTS = "CONFIGURED_BY_OTHER_APP";
-
     public SetupEduroamActivity() {
         super(R.layout.activity_setup_eduroam);
     }
@@ -45,7 +43,7 @@ public class SetupEduroamActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
 
-        if(getIntent().getBooleanExtra(EXTRA_FOREIGN_CONFIGURATION_EXISTS, false)){
+        if(getIntent().getBooleanExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, false)){
             showDeleteProfileDialog(true);
         }
 

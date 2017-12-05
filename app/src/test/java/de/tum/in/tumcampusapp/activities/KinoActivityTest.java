@@ -1,34 +1,43 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.database.Cursor;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import org.joda.time.DateTimeZone;
+import org.joda.time.tz.UTCProvider;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.KinoAdapter;
-import de.tum.in.tumcampusapp.shadows.KinoManagerShadow;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.KinoDao;
+import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, shadows={KinoManagerShadow.class})
-@PrepareForTest(KinoActivity.class)
+@Config(constants = BuildConfig.class)
 public class KinoActivityTest {
     private KinoActivity kinoActivity;
+    private KinoDao dao;
 
     @Before
     public void setUp() {
-        KinoManagerShadow.returnedCursor = Mockito.mock(Cursor.class);
+        dao = TcaDb.getInstance(RuntimeEnvironment.application).kinoDao();
+        dao.flush(); // alternatives to control dao?
+    }
+
+    @After
+    public void tearDown() {
+        TcaDb.getInstance(RuntimeEnvironment.application).close();
     }
 
     /**
@@ -37,7 +46,7 @@ public class KinoActivityTest {
      */
     @Test
     public void mainComponentDisplayedTest() {
-        Mockito.when(KinoManagerShadow.returnedCursor.getCount()).thenReturn(1);
+        dao.insert(new Kino());
         kinoActivity = Robolectric.buildActivity(KinoActivity.class).create().start().get();
 
         assertThat(kinoActivity.findViewById(R.id.drawer_layout).getVisibility()).isEqualTo(View.VISIBLE);
@@ -49,7 +58,6 @@ public class KinoActivityTest {
      */
     @Test
     public void mainComponentNoMoviesDisplayedTest() {
-        Mockito.when(KinoManagerShadow.returnedCursor.getCount()).thenReturn(0);
         kinoActivity = Robolectric.buildActivity(KinoActivity.class).create().start().get();
 
         assertThat(kinoActivity.findViewById(R.id.no_movies_layout).getVisibility()).isEqualTo(View.VISIBLE);
@@ -61,7 +69,7 @@ public class KinoActivityTest {
      */
     @Test
     public void kinoAdapterUsedTest() {
-        Mockito.when(KinoManagerShadow.returnedCursor.getCount()).thenReturn(1);
+        dao.insert(new Kino());
         kinoActivity = Robolectric.buildActivity(KinoActivity.class).create().start().get();
 
         assertThat(((ViewPager)kinoActivity.findViewById(R.id.pager)).getAdapter().getClass()).isEqualTo(KinoAdapter.class);

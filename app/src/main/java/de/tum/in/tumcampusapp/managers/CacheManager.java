@@ -19,9 +19,11 @@ import java.util.WeakHashMap;
 
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.KinoDao;
+import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
@@ -52,6 +54,7 @@ public class CacheManager {
 
     private static SQLiteDatabase cacheDb;
     private final Context mContext;
+    private final KinoDao kinoDao;
 
     static {
         int cacheSize = 4 * 1024 * 1024; // 4MiB
@@ -82,6 +85,8 @@ public class CacheManager {
     public CacheManager(Context context) {
         initCacheDb(context);
         mContext = context;
+        kinoDao = TcaDb.getInstance(context)
+                       .kinoDao();
 
         // create table if needed
         cacheDb.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, " +
@@ -139,15 +144,10 @@ public class CacheManager {
         }
 
         // Cache kino covers
-        KinoManager km = new KinoManager(mContext);
-        try (Cursor cur = km.getAllFromDb()) {
-            if (cur.moveToFirst()) {
-                do {
-                    String imgUrl = cur.getString(cur.getColumnIndex(Const.JSON_COVER));
-                    if (!"null".equals(imgUrl)) {
-                        net.downloadImage(imgUrl);
-                    }
-                } while (cur.moveToNext());
+        for (Kino kino : kinoDao.getAll()) {
+            String imgUrl = kino.getCover();
+            if (!"null".equals(imgUrl)) {
+                net.downloadImage(imgUrl);
             }
         }
 
