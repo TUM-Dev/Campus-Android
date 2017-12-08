@@ -32,7 +32,7 @@ public class KinoActivityTest {
     @Before
     public void setUp() {
         dao = TcaDb.getInstance(RuntimeEnvironment.application).kinoDao();
-        dao.flush(); // alternatives to control dao?
+        dao.flush();
     }
 
     @After
