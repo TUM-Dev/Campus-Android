@@ -3,8 +3,6 @@ package de.tum.in.tumcampusapp.activities;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-import org.joda.time.DateTimeZone;
-import org.joda.time.tz.UTCProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
