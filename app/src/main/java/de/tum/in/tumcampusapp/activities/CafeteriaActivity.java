@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -15,19 +16,24 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.adapters.CafeteriaDetailsSectionsPagerAdapter;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.database.repository.LocalRepositoryImpl;
-import de.tum.in.tumcampusapp.database.repository.RemoteRepositoryImpl;
-import de.tum.in.tumcampusapp.database.viewmodel.CafeteriaViewModel;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.repository.CafeteriaRemoteRepository;
+import de.tum.in.tumcampusapp.viewmodel.CafeteriaViewModel;
+import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
@@ -42,7 +48,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     private ViewPager mViewPager;
     private int mCafeteriaId = -1;
     private CafeteriaViewModel cafeteriaViewModel;
-    private List<Cafeteria> mCafeterias = new LinkedList<>();
+    private List<Cafeteria> mCafeterias = new ArrayList<>();
 
     private final CompositeDisposable mDisposable = new CompositeDisposable();
 
@@ -68,7 +74,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
          *by default it's 1.
          */
         mViewPager.setOffscreenPageLimit(50);
-        cafeteriaViewModel = new CafeteriaViewModel(LocalRepositoryImpl.getInstance(this), RemoteRepositoryImpl.getInstance(this), mDisposable);
+        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(this));
+        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
     }
 
     @Override
@@ -107,7 +117,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
 
         // Adapter for drop-down navigation
-        ArrayAdapter adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
+        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
             @Override
@@ -131,32 +141,44 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         Spinner spinner = findViewById(R.id.spinnerToolbar);
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
-        //TODO: handle on empty, cause right now we no longer handle no internet connection or empty results at all
-        //TODO: only select first item on activity start, but not on database update.
-        mDisposable.add(cafeteriaViewModel.getAllCafeteria(new LocationManager(this).getCurrentOrNextLocation())
-                                          .subscribe(
-                                                  it -> {
-                                                      mCafeterias.clear();
-                                                      mCafeterias.addAll(it);
-                                                      adapterCafeterias.notifyDataSetChanged();
-                                                      int selIndex = -1;
-                                                      for (int i = 0; i < mCafeterias.size(); i++) {
-                                                          Cafeteria c = mCafeterias.get(i);
-                                                          if (mCafeteriaId == -1 || mCafeteriaId == c.getId()) {
-                                                              mCafeteriaId = c.getId();
-                                                              selIndex = i;
-                                                              break;
-                                                          }
-                                                      }
-                                                      if (selIndex > -1) {
-                                                          spinner.setSelection(selIndex);
-                                                      }
-                                                  }, throwable -> Utils.logwithTag("CafeteriaActivity", throwable.getMessage())
-                                          ));
-
+        Location currLocation = new LocationManager(this).getCurrentOrNextLocation();
+        Flowable<List<Cafeteria>> cafeterias = cafeteriaViewModel.getAllCafeteria(currLocation);
+        mDisposable.add(
+                cafeterias.subscribe(
+                        it -> {
+                            validateList(it);
+                            mCafeterias.clear();
+                            mCafeterias.addAll(it);
+                            adapterCafeterias.notifyDataSetChanged();
+                            setCurrentSelectedCafeteria(spinner);
+                        }, throwable -> Utils.logwithTag("CafeteriaActivity", throwable.getMessage())
+                ));
     }
 
+    private void validateList(Collection<Cafeteria> cafeterias){
+        if (cafeterias.isEmpty()) {
+            if (NetUtils.isConnected(this)) {
+                showErrorLayout();
+            } else {
+                showNoInternetLayout();
+            }
+        }
+    }
 
+    private void setCurrentSelectedCafeteria(Spinner spinner) {
+        int selIndex = -1;
+        for (int i = 0; i < mCafeterias.size(); i++) {
+            Cafeteria c = mCafeterias.get(i);
+            if (mCafeteriaId == -1 || mCafeteriaId == c.getId()) {
+                mCafeteriaId = c.getId();
+                selIndex = i;
+                break;
+            }
+        }
+        if (selIndex > -1) {
+            spinner.setSelection(selIndex);
+        }
+    }
 
     /**
      * Switch cafeteria if a new cafeteria has been selected

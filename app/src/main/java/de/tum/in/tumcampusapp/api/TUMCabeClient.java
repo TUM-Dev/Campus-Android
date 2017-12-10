@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
@@ -30,10 +31,12 @@ import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 
@@ -71,6 +74,7 @@ public class TUMCabeClient {
     static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
     static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
+    static final String API_CAFETERIAS = "mensen/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -78,6 +82,7 @@ public class TUMCabeClient {
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create());
 
         builder.client(Helper.getOkClient(c));
@@ -350,4 +355,9 @@ public class TUMCabeClient {
                       .execute()
                       .body();
     }
+
+    public Observable<List<Cafeteria>> getCafeterias(){
+        return service.getCafeterias();
+    }
+
 }
