@@ -157,7 +157,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
             holder.tvUser.setText(chatMessage.getMember()
                                              .getDisplayName());
         } else {// Set status for outgoing messages (ivSent is not null)
-            boolean sending = chatMessage.getStatus() == ChatMessage.STATUS_SENDING;
+            boolean sending = chatMessage.getSendingStatus() == ChatMessage.STATUS_SENDING;
             holder.ivSent.setVisibility(sending ? View.GONE : View.VISIBLE);
             holder.pbSending.setVisibility(sending ? View.VISIBLE : View.GONE);
         }
@@ -171,10 +171,10 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
         if ((mCheckedItem != null
              && mCheckedItem.getId() == chatMessage.getId()
-             && (mCheckedItem.getStatus() == chatMessage.getStatus()))
+             && (mCheckedItem.getSendingStatus() == chatMessage.getSendingStatus()))
             || (mEditedItem != null
                 && mEditedItem.getId() == chatMessage.getId()
-                && mEditedItem.getStatus() == chatMessage.getStatus())) {
+                && mEditedItem.getSendingStatus() == chatMessage.getSendingStatus())) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing_selected);
         } else if (holder.ivSent != null) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing);

@@ -20,6 +20,9 @@ import de.tum.in.tumcampusapp.activities.ChatActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatMessageDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.UnsentChatMessageDao;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
@@ -35,9 +38,15 @@ public class ChatMessagesCard extends NotificationAwareCard {
     private String mRoomName;
     private int mRoomId;
     private String mRoomIdString;
+    private final ChatMessageDao chatMessageDao;
+    private final UnsentChatMessageDao unsentChatMessageDao;
+
 
     public ChatMessagesCard(Context context) {
         super(CARD_CHAT, context, "card_chat");
+        TcaDb db = TcaDb.getInstance(context);
+        chatMessageDao = db.chatMessageDao();
+        unsentChatMessageDao = db.unsentChatMessageDao();
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -109,7 +118,7 @@ public class ChatMessagesCard extends NotificationAwareCard {
 
     @Override
     protected void discard(Editor editor) {
-        manager.markAsRead();
+        chatMessageDao.markAsRead(getId());
     }
 
     @Override

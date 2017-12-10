@@ -1,25 +1,36 @@
 package de.tum.in.tumcampusapp.models.tumcabe;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.annotation.Nullable;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
+@Entity(tableName = "chat_message")
 public class ChatMessage {
 
     public static final int STATUS_SENDING = 1;
     public static final int STATUS_SENT = 0;
     public static final int STATUS_SENDING_FAILED = -1;
 
+    @PrimaryKey
+    @ColumnInfo(name = "_id")
     private int id;
     private String text;
     private ChatMember member;
     private String timestamp;
     private String signature;
+    @ColumnInfo(name = "sending")
     private int sendingStatus;
     private int previous;
     private int room;
@@ -29,10 +40,12 @@ public class ChatMessage {
     /**
      * Default constructor: called by gson when parsing an element
      */
+    @Ignore
     public ChatMessage() {
         this.sendingStatus = STATUS_SENT;
     }
 
+    @Ignore
     public ChatMessage(String text) {
         super();
         this.text = text;
@@ -40,7 +53,7 @@ public class ChatMessage {
 
     /**
      * Called when creating a new chat message
-     *
+     * int status
      * @param text   Chat message text
      * @param member Member who sent the message
      */
@@ -61,14 +74,15 @@ public class ChatMessage {
         this.room = room;
     }
 
-    public int getStatus() {
+    public int getSendingStatus() {
         return sendingStatus;
     }
 
-    public void setStatus(int status) {
+    public void setSendingStatus(int status) {
         sendingStatus = status;
     }
 
+    @Ignore
     public ChatMessage(int id, String text, ChatMember member, String timestamp, int previous) {
         super();
         this.id = id;
@@ -180,6 +194,7 @@ public class ChatMessage {
         return read;
     }
 
+    @Ignore
     public boolean getRead() {
         return read;
     }
