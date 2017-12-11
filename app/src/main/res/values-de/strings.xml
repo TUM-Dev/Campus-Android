@@ -1,242 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <!-- START Translated, please do not change identifiers -->
-
-    <!-- Generic -->
-    <string name="search">Suchen</string>
-    <string name="tum_logo">TUM Logo</string>
-    <string name="update">Update</string>
-    <string name="loading">Lade …</string>
-    <string name="settings">Einstellungen</string>
-    <string name="yes">Ja</string>
-    <string name="save">Speichern</string>
-    <string name="no">Nein</string>
-    <string name="no_internet_connection">Keine Internetverbindung</string>
-
-    <!-- Calendar -->
-    <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender <i>TUM_CAMPUS_APP</i> in der <i>Google Calendar App</i> anzeigen?</string>
-    <string name="export_to_google">Exportiere nach Google</string>
-    <string name="delete_from_google">Löschen aus Google</string>
-    <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
-    <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
-    <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalender</string>
-
-    <!-- Roomfinder -->
-    <string name="no_map_available">Keine Karte verfügbar</string>
-    <string name="search_rooms">Suche nach Räumen</string>
-
-    <!-- Auxiliary -->
-    <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMonline.\nBitte stelle sicher, dass das TUMonline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
-    <string name="error_no_token_setup">Kein TUMonline-Access-Token gefunden.\nBitte erzeuge ein TUMonline-Access-Token in den\n <i>Einstellungen</i>, um TUMonline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
-    <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.</string>
-    <string name="click_to_try_again"><b>Klicke hier zum Wiederholen.</b></string>
-    <string name="dialog_new_token">Dein TUMonline-Access-Token ist bereits gesetzt.\n\nKlicke auf <i>Ja</i> um ein neues zu generieren.\nDabei wird dein altes Token unbrauchbar.</string>
-    <string name="error_lrz_wrong">Deine TUM Kennung ist ungültig</string>
-    <string name="access_token_wasnt_generated">TUMonline-Access-Token konnte nicht erzeugt werden</string>
-    <string name="dialog_access_token_invalid">TUMonline-Access-Token nicht aktiviert</string>
-    <string name="dialog_no_rights_function">Keine Rechte für diese Funktion</string>
-    <string name="empty_result">Die Anfrage lieferte ein fehlerhaftes Ergebnis</string>
-    <string name="no_data_to_show">Es sind keine Daten vorhanden.</string>
-
-    <!-- Exam/Grades -->
-    <string name="average_grade">Durchschnittsnote</string>
-    <string name="show_column_chart">Zeige als Balkendiagramm</string>
-    <string name="show_pie_chart">Zeige als Tortendiagramm</string>
-    <string name="result_extra">Ergebnis:&#160;</string>
-    <string name="semester">Semester</string>
-    <string name="examiner">Prüfer</string>
-    <string name="mode">Modus</string>
-    <string name="all_programs">Alle Programme</string>
-    <string name="date">Datum</string>
-    <string name="no_grades">Du hast noch keine Noten, die angezeigt werden könnten.</string>
-
-    <!-- Preferences -->
-    <string name="lrz_id">TUM Kennung</string>
-
-    <string name="role">Rolle</string>
-    <string name="role_summary">Deine Rolle an der TUM. Entweder Student, Mitarbeiter oder Gast.</string>
-    <string name="student">Student</string>
-    <string name="employee">Mitarbeiter</string>
-    <string name="guest">Gast</string>
-    <string name="cards_settings">Karten</string>
-    <string name="startpage">Startseite</string>
-    <string name="wear">Wearable</string>
-
-    <string name="extras">Extras</string>
-    <string name="open_wizard">Öffne Startup-Wizard</string>
-    <string name="open_wizard_detail">Der Startup-Wizard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMonline Dienste einzurichten und das Farbschema der App festzulegen.</string>
-    <string name="clear_cache">Lösche Daten</string>
-    <string name="clear_cache_detail">Löscht alle durch die TUM Campus App heruntergeladenen, auf der SD-Karte gespeicherten Daten.</string>
-    <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
-    <string name="success_clear_cache">Daten erfolgreich gelöscht</string>
-
-    <string name="services">Dienste</string>
-    <string name="silence_phone">Lautlos Service</string>
-    <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
-    <string name="background_mode">Hintergrundmodus (empfohlen)</string>
-    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
-    <string name="mode_background_mode">Aktivierung des Hintergrundmodus</string>
-    <string name="always">Immer</string>
-    <string name="wifi_only">Nur bei WLAN-Verbindung</string>
-    <string name="demo_mode">In-App-Tutorial</string>
-    <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
-
-    <string name="about_tca">Über TCA</string>
-    <string name="information">Informationen</string>
-    <string name="github">Mitmachen auf Github</string>
-    <string name="licences">Open Source-Lizenzen</string>
-    <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
-
-    <!-- Startup Wizard -->
-    <string name="token_not_enabled">TUMonline-Access-Token ist nicht aktiviert</string>
-    <string name="startup_wizard_uppercase">STARTUP-WIZARD</string>
-    <string name="welcome_msg"><b>Willkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
-    <string name="button_skip">Überspringen</string>
-    <string name="button_next">Weiter</string>
-    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nDu kannst das Token nun in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
-    <string name="step_1">Schritt 1</string>
-    <string name="step_2">Schritt 2</string>
-    <string name="step_3">Schritt 3</string>
-    <string name="step_4">Schritt 4</string>
-    <string name="step_5">Schritt 5</string>
-    <string name="set_silent_mode">Aktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
-    <string name="set_background_mode">Aktiviere oder deaktiviere den <i>Hintergrundmodus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
-    <string name="goto_tumcampus">Starte TUM Campus App</string>
-
-    <!-- News -->
-    <string name="no_link_existing">Kein Link gefunden.</string>
-    <string name="info_title">Neuigkeiten:</string>
-
-    <!-- Kino -->
-    <string name="imdb_rating">IMDb-Wertung</string>
-    <string name="year">Erscheinungsjahr</string>
-    <string name="runtime">Laufzeit</string>
-    <string name="genre">Genre</string>
-    <string name="director">Regisseur</string>
-    <string name="actors">Schauspieler</string>
-    <string name="description">Beschreibung</string>
-    <string name="no_movies">Zur Zeit gibt es keine Filme.</string>
-
-    <!-- Navigation drawer -->
-    <string name="drawer_open">Öffnen</string>
-    <string name="drawer_close">Schließen</string>
-    <string name="my_tum">Mein TUM</string>
-    <string name="schedule">Kalender</string>
-    <string name="my_lectures">Meine Vorlesungen</string>
-    <string name="chat_rooms">Chatrooms</string>
-    <string name="tuition_fees">Rückmeldung</string>
-    <string name="tum_common">TUM Allgemein</string>
-    <string name="menues">Mensen</string>
-    <string name="study_plans">Studienpläne</string>
-    <string name="person_search">Personensuche</string>
-    <string name="plans">Pläne</string>
-    <string name="roomfinder">Roomfinder</string>
-    <string name="opening_hours">Öffnungszeiten</string>
-    <string name="mvv">MVV</string>
-    <string name="news">News</string>
-
-    <!-- Activity titles -->
-    <string name="lectures_information">Vorlesungsinformationen</string>
-    <string name="lectures_appointments">Vorlesungstermine</string>
-    <string name="person_information">Personeninformationen</string>
-
-    <!-- Organisations -->
-    <string name="tum">Technische Universität München</string>
-    <string name="contact_person">Kontaktperson</string>
-    <string name="secretary">Sekretariat</string>
-    <string name="bib">Bibliothek</string>
-    <string name="extra">Extra</string>
-    <string name="extra_name">Extraname</string>
-    <string name="identifier">Kennung</string>
-    <string name="adress">Adresse</string>
-    <string name="name">Name</string>
-
-    <!-- MVV -->
-    <string name="no_departures_found">Keine Abfahrtszeiten verfügbar</string>
-    <string name="exception_unknown">Unbekannter Fehler</string>
-    <string name="search_station">Suche nach Stationen</string>
-
-    <!-- Lectures -->
-    <string name="no_appointments">Keine Termine verfügbar</string>
-    <string name="lec_details">Details</string>
-    <string name="lecture_begin">Vorlesungbeginn</string>
-    <string name="lec_contributors">Vorlesungsteam</string>
-    <string name="lec_content">Vorlesungsinhalt</string>
-    <string name="lec_method">Methode</string>
-    <string name="lec_target">Ziele</string>
-    <string name="examination_aids">Prüfungshilfsmittel</string>
-
-    <!-- Tuition fees -->
-    <string name="amount_dots">Offener Betrag</string>
-    <string name="deadline_dots">Deadline</string>
-
-    <!-- Persons -->
-    <string name="no_search_result">Keine Suchergebnisse</string>
-    <string name="no_person_set">Keine Person ausgewählt!</string>
-    <string name="email">E-Mail</string>
-    <string name="phone">Telefon</string>
-    <string name="fax">Fax</string>
-    <string name="homepage">Homepage</string>
-    <string name="mr">Herr</string>
-    <string name="mrs">Frau</string>
-    <string name="function">Funktion</string>
-    <string name="group">Gruppe</string>
-    <string name="mobile_phone">Handynummer</string>
-    <string name="add_info">Zusatzinformationen</string>
-    <string name="office_hours">Bürozeiten</string>
-    <string name="room">Raum</string>
-    <string name="add_contact">Zu Kontakten hinzufügen</string>
-    <string name="contact_added">Kontakt wurde hinzugefügt!</string>
-
-    <!-- Curricula -->
-    <string name="something_wrong">Ein Fehler ist aufgetreten</string>
-
-    <!-- Opening hours -->
-    <string name="libraries">Bibliotheken</string>
-    <string name="mensa_garching">Mensa Garching</string>
-    <string name="mensa_grosshadern">Mensa Großhadern</string>
-    <string name="mensa_city">Mensa Stammgelände</string>
-    <string name="mensa_pasing">Mensa Pasing</string>
-    <string name="mensa_weihenstephan">Mensa Weihenstephan</string>
-
-    <!-- Plans -->
-    <string name="campus_klinikum">Campus Klinikum</string>
-    <string name="campus_olympiapark">Campus Olympiapark</string>
-    <string name="campus_olympiapark_gyms">Campus Olympiapark Hallenplan</string>
-    <string name="campus_main">Stammgelände</string>
-    <string name="campus_weihenstephan">Campus Weihenstephan</string>
-    <string name="mvv_fast_train_net">MVV Schnellbahnnetz</string>
-    <string name="mvv_tram">MVV Tramnetz</string>
-    <string name="mvv_entire_net">MVV Gesamtnetz</string>
-    <string name="mvv_nightlines">MVV Nachtliniennetz</string>
-    <string name="campus_garching_adress">Walther-Meißner-Straße 3, 85748 Garching</string>
-    <string name="campus_klinikum_adress">Ismaninger Straße 22, 81675 München</string>
-    <string name="campus_olympiapark_adress">Connollystraße 32, 80809 München</string>
-    <string name="campus_main_adress">Arcisstraße 21, 80333 München</string>
-    <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
-
-    <!-- Chat rooms -->
-    <string name="my_chat_rooms">Meine Chatrooms</string>
-    <string name="send">Senden</string>
-    <string name="leave_chat_room">Chatroom verlassen</string>
-    <string name="leave_chat_room_body">Bist du sicher, dass du den Chatroom verlassen willst?</string>
-
-    <!-- Cards -->
-    <string name="last_updated">Der Inhalt wurde zuletzt %s aktualisiert.</string>
-    <string name="next_lecture">Nächste Vorlesung</string>
-    <string name="restore_all_cards">Karten wiederherstellen</string>
-    <string name="card_dismissed">Karte ausgeblendet</string>
-    <string name="reregister_success">Du bist für das %s rückgemeldet!</string>
-    <string name="reregister_todo">Du kannst dich bis zum %s rückmelden!</string>
-    <string name="undo">Rückgängig</string>
-
-    <!-- first use tutorial -->
-    <string name="swipe_instruction">Wische nach links oder rechts um eine Karte auszublenden.</string>
-    <string name="card_settings_instruction">Wenn du eine Karte dauerhaft ausblenden willst oder bei neuen Karten benachrichtigt werden willst öffne die Karten-Einstellungen indem du lange auf eine Karte drückst</string>
-
-    <!-- Cafeteria -->
-    <string name="cafeteria_ingredients">(f) fleischloses Gericht
+<!--Generated by crowdin.com-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- START Translated, please do not change identifiers -->
+  <!-- Generic -->
+  <string name="search">Suchen</string>
+  <string name="tum_logo">TUM Logo</string>
+  <string name="update">Update</string>
+  <string name="loading">Lade …</string>
+  <string name="settings">Einstellungen</string>
+  <string name="yes">Ja</string>
+  <string name="save">Speichern</string>
+  <string name="no">Nein</string>
+  <string name="no_internet_connection">Keine Internetverbindung</string>
+  <!-- Calendar -->
+  <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender <i>TUM_CAMPUS_APP</i> in der <i>Google Calendar App</i> anzeigen?</string>
+  <string name="export_to_google">Exportiere nach Google</string>
+  <string name="delete_from_google">Löschen aus Google</string>
+  <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
+  <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
+  <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalender</string>
+  <string name="semester_summer">Sommersemester</string>
+  <string name="semester_winter">Wintersemester</string>
+  <!-- Roomfinder -->
+  <string name="no_map_available">Keine Karte verfügbar</string>
+  <string name="search_rooms">Suche nach Räumen</string>
+  <!-- Auxiliary -->
+  <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMonline.\nBitte stelle sicher, dass das TUMonline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
+  <string name="error_no_token_setup">Kein TUMonline-Access-Token gefunden.\nBitte erzeuge ein TUMonline-Access-Token in den\n <i>Einstellungen</i>, um TUMonline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
+  <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.</string>
+  <string name="click_to_try_again"><b>Klicke hier zum Wiederholen.</b></string>
+  <string name="dialog_new_token">Dein TUMonline-Access-Token ist bereits gesetzt.\n\nKlicke auf <i>Ja</i> um ein neues zu generieren.\nDabei wird dein altes Token unbrauchbar.</string>
+  <string name="error_lrz_wrong">Deine TUM Kennung ist ungültig</string>
+  <string name="access_token_wasnt_generated">TUMonline-Access-Token konnte nicht erzeugt werden</string>
+  <string name="dialog_access_token_invalid">TUMonline-Access-Token nicht aktiviert</string>
+  <string name="dialog_no_rights_function">Keine Rechte für diese Funktion</string>
+  <string name="empty_result">Die Anfrage lieferte ein fehlerhaftes Ergebnis</string>
+  <string name="no_data_to_show">Es sind keine Daten vorhanden.</string>
+  <!-- Exam/Grades -->
+  <string name="average_grade">Durchschnittsnote</string>
+  <string name="show_column_chart">Zeige als Balkendiagramm</string>
+  <string name="show_pie_chart">Zeige als Tortendiagramm</string>
+  <string name="result_extra">Ergebnis:&#160;</string>
+  <string name="semester">Semester</string>
+  <string name="examiner">Prüfer</string>
+  <string name="mode">Modus</string>
+  <string name="all_programs">Alle Programme</string>
+  <string name="date">Datum</string>
+  <string name="no_grades">Du hast noch keine Noten, die angezeigt werden könnten.</string>
+  <!-- Preferences -->
+  <string name="lrz_id">TUM Kennung</string>
+  <string name="role">Rolle</string>
+  <string name="role_summary">Deine Rolle an der TUM. Entweder Student, Mitarbeiter oder Gast.</string>
+  <string name="student">Student</string>
+  <string name="employee">Mitarbeiter</string>
+  <string name="guest">Gast</string>
+  <string name="cards_settings">Karten</string>
+  <string name="startpage">Startseite</string>
+  <string name="wear">Wearable</string>
+  <string name="extras">Extras</string>
+  <string name="open_wizard">Öffne Startup-Wizard</string>
+  <string name="open_wizard_detail">Der Startup-Wizard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMonline Dienste einzurichten und das Farbschema der App festzulegen.</string>
+  <string name="clear_cache">Lösche Daten</string>
+  <string name="clear_cache_detail">Löscht alle durch die TUM Campus App heruntergeladenen, auf der SD-Karte gespeicherten Daten.</string>
+  <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
+  <string name="success_clear_cache">Daten erfolgreich gelöscht</string>
+  <string name="services">Dienste</string>
+  <string name="silence_phone">Lautlos Service</string>
+  <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
+  <string name="background_mode">Hintergrundmodus (empfohlen)</string>
+  <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
+  <string name="mode_background_mode">Aktivierung des Hintergrundmodus</string>
+  <string name="always">Immer</string>
+  <string name="wifi_only">Nur bei WLAN-Verbindung</string>
+  <string name="demo_mode">In-App-Tutorial</string>
+  <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
+  <string name="about_tca">Über TCA</string>
+  <string name="information">Informationen</string>
+  <string name="github">Mitmachen auf Github</string>
+  <string name="licences">Open Source-Lizenzen</string>
+  <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
+  <!-- Startup Wizard -->
+  <string name="token_not_enabled">TUMonline-Access-Token ist nicht aktiviert</string>
+  <string name="startup_wizard_uppercase">STARTUP-WIZARD</string>
+  <string name="welcome_msg"><b>Willkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
+  <string name="button_skip">Überspringen</string>
+  <string name="button_next">Weiter</string>
+  <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nDu kannst das Token nun in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
+  <string name="step_1">Schritt 1</string>
+  <string name="step_2">Schritt 2</string>
+  <string name="step_3">Schritt 3</string>
+  <string name="step_4">Schritt 4</string>
+  <string name="step_5">Schritt 5</string>
+  <string name="set_silent_mode">Aktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
+  <string name="set_background_mode">Aktiviere oder deaktiviere den <i>Hintergrundmodus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
+  <string name="goto_tumcampus">Starte TUM Campus App</string>
+  <!-- News -->
+  <string name="no_link_existing">Kein Link gefunden.</string>
+  <string name="info_title">Neuigkeiten:</string>
+  <!-- Navigation drawer -->
+  <string name="drawer_open">Öffnen</string>
+  <string name="drawer_close">Schließen</string>
+  <string name="my_tum">Mein TUM</string>
+  <string name="schedule">Kalender</string>
+  <string name="my_lectures">Meine Vorlesungen</string>
+  <string name="my_grades">Meine Noten</string>
+  <string name="chat_rooms">Chatrooms</string>
+  <string name="tuition_fees">Rückmeldung</string>
+  <string name="tum_common">TUM Allgemein</string>
+  <string name="menues">Mensen</string>
+  <string name="study_plans">Studienpläne</string>
+  <string name="person_search">Personensuche</string>
+  <string name="plans">Pläne</string>
+  <string name="roomfinder">Roomfinder</string>
+  <string name="study_rooms">Lernräume</string>
+  <string name="opening_hours">Öffnungszeiten</string>
+  <string name="mvv">MVV</string>
+  <string name="news">News</string>
+  <string name="barrier_free">Barrierefreiheit</string>
+  <!-- Activity titles -->
+  <string name="lectures_information">Vorlesungsinformationen</string>
+  <string name="lectures_appointments">Vorlesungstermine</string>
+  <string name="person_information">Personeninformationen</string>
+  <!-- Organisations -->
+  <string name="tum">Technische Universität München</string>
+  <string name="contact_person">Kontaktperson</string>
+  <string name="secretary">Sekretariat</string>
+  <string name="bib">Bibliothek</string>
+  <string name="extra">Extra</string>
+  <string name="extra_name">Extraname</string>
+  <string name="identifier">Kennung</string>
+  <string name="adress">Adresse</string>
+  <string name="name">Name</string>
+  <!-- MVV -->
+  <string name="no_departures_found">Keine Abfahrtszeiten verfügbar</string>
+  <string name="exception_unknown">Unbekannter Fehler</string>
+  <string name="search_station">Suche nach Stationen</string>
+  <!-- Lectures -->
+  <string name="no_appointments">Keine Termine verfügbar</string>
+  <string name="lec_details">Details</string>
+  <string name="lecture_begin">Vorlesungbeginn</string>
+  <string name="lec_contributors">Vorlesungsteam</string>
+  <string name="lec_content">Vorlesungsinhalt</string>
+  <string name="lec_method">Methode</string>
+  <string name="lec_target">Ziele</string>
+  <string name="examination_aids">Prüfungshilfsmittel</string>
+  <!-- Tuition fees -->
+  <string name="amount_dots">Offener Betrag</string>
+  <string name="deadline_dots">Deadline</string>
+  <!-- Persons -->
+  <string name="no_search_result">Keine Suchergebnisse</string>
+  <string name="no_person_set">Keine Person ausgewählt!</string>
+  <string name="email">E-Mail</string>
+  <string name="phone">Telefon</string>
+  <string name="fax">Fax</string>
+  <string name="homepage">Homepage</string>
+  <string name="mr">Herr</string>
+  <string name="mrs">Frau</string>
+  <string name="function">Funktion</string>
+  <string name="group">Gruppe</string>
+  <string name="mobile_phone">Handynummer</string>
+  <string name="add_info">Zusatzinformationen</string>
+  <string name="office_hours">Bürozeiten</string>
+  <string name="room">Raum</string>
+  <string name="add_contact">Zu Kontakten hinzufügen</string>
+  <string name="contact_added">Kontakt wurde hinzugefügt!</string>
+  <!-- Curricula -->
+  <string name="something_wrong">Ein Fehler ist aufgetreten</string>
+  <!-- Opening hours -->
+  <string name="libraries">Bibliotheken</string>
+  <string name="mensa_garching">Mensa Garching</string>
+  <string name="mensa_grosshadern">Mensa Großhadern</string>
+  <string name="mensa_city">Mensa Stammgelände</string>
+  <string name="mensa_pasing">Mensa Pasing</string>
+  <string name="mensa_weihenstephan">Mensa Weihenstephan</string>
+  <!-- Study Rooms -->
+  <string name="occupied">Belegt bis</string>
+  <string name="free">Frei</string>
+  <!-- Plans -->
+  <string name="campus_klinikum">Campus Klinikum</string>
+  <string name="campus_olympiapark">Campus Olympiapark</string>
+  <string name="campus_olympiapark_gyms">Campus Olympiapark Hallenplan</string>
+  <string name="campus_main">Stammgelände</string>
+  <string name="campus_weihenstephan">Campus Weihenstephan</string>
+  <string name="mvv_fast_train_net">MVV Schnellbahnnetz</string>
+  <string name="mvv_tram">MVV Tramnetz</string>
+  <string name="mvv_entire_net">MVV Gesamtnetz</string>
+  <string name="mvv_nightlines">MVV Nachtliniennetz</string>
+  <string name="campus_garching_adress">Walther-Meißner-Straße 3, 85748 Garching</string>
+  <string name="campus_klinikum_adress">Ismaninger Straße 22, 81675 München</string>
+  <string name="campus_olympiapark_adress">Connollystraße 32, 80809 München</string>
+  <string name="campus_main_adress">Arcisstraße 21, 80333 München</string>
+  <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
+  <!-- Chat rooms -->
+  <string name="my_chat_rooms">Meine Chatrooms</string>
+  <string name="send">Senden</string>
+  <string name="leave_chat_room">Chatroom verlassen</string>
+  <string name="leave_chat_room_body">Bist du sicher, dass du den Chatroom verlassen willst?</string>
+  <!-- Cards -->
+  <string name="last_updated">Der Inhalt wurde zuletzt %s aktualisiert.</string>
+  <string name="next_lecture">Nächste Vorlesung</string>
+  <string name="restore_all_cards">Karten wiederherstellen</string>
+  <string name="card_dismissed">Karte ausgeblendet</string>
+  <string name="reregister_success">Du bist für das %s rückgemeldet!</string>
+  <string name="reregister_todo">Du kannst dich bis zum %s rückmelden!</string>
+  <string name="undo">Rückgängig</string>
+  <!-- first use tutorial -->
+  <string name="swipe_instruction">Wische nach links oder rechts um eine Karte auszublenden.</string>
+  <string name="card_settings_instruction">Wenn du eine Karte dauerhaft ausblenden willst oder bei neuen Karten benachrichtigt werden willst öffne die Karten-Einstellungen indem du lange auf eine Karte drückst</string>
+  <!-- Cafeteria -->
+  <string name="cafeteria_ingredients">(f) fleischloses Gericht
         \n(v) veganes Gericht
 		\n(S) Gericht mit Schweinefleisch
 		\n(R) Gericht mit Rindfleisch
@@ -252,208 +224,204 @@
 		\n9 mit Süßungsmitteln
 		\n10 enthält eine Phenylalaninquelle
 		\n11 mit einer Zuckerart und Süßungsmitteln</string>
-    <string name="action_ingredients">Inhaltsstoffe</string>
-    <string name="cafeteria_notification_settings">Mensa Benachrichtigungen</string>
-
-    <!-- Cafeteria Notification Settings -->
-    <string name="invalid_notification_time">Ungültige Zeit ausgewählt. Bitte eine Uhrzeit im folgenden Intervall wählen:</string>
-
-    <!-- Information -->
-    <string name="version">Version</string>
-    <string name="send_email">E-Mail Feedback senden</string>
-    <string name="show_feedback">Feedback senden</string>
-    <string name="feedbackSubj">Feedback für TUM Campus App</string>
-    <!-- END Translated, please do not change identifiers -->
-
-    <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
-    <string name="default_cafeteria">Standardmensa</string>
-    <string name="default_station">Standardhaltestelle</string>
-    <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
-    <string name="cafeteria">Mensa</string>
-    <string name="card_cafeteria_summary">Zeigt den Mensa-Speiseplan an</string>
-    <string name="card_mvv_summary">Zeigt die Abfahrtszeiten der öffentlich Verkehrmittel an</string>
-    <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
-    <string name="card_tuition_fee_summary">Erinnert dich wenn du die Studiengebühren zahlen musst</string>
-    <string name="card_news_summary">Schlägt ausgewählte News vor</string>
-    <string name="card_chat_summary">Benachrichtigt dich wenn neue Nachrichten verfügbar sind</string>
-    <string name="open_card_settings">Karte anpassen</string>
-    <string name="always_hide_card">Karte immer ausblenden</string>
-    <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
-    <string name="display">Anzeige</string>
-
-    <string name="opens">Öffnet</string>
-    <string name="closes">Schließt</string>
-    <string name="closed">Geschlossen</string>
-
-    <!-- Eduroam card -->
-    <string name="setup">Einrichten</string>
-    <string name="setup_eduroam">Eduroam einrichten</string>
-    <string name="setup_eduroam_now">Jetzt Eduroam einrichten</string>
-    <string name="password">Passwort</string>
-    <string name="not_ask_again">Nicht mehr fragen</string>
-    <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
-    <string name="eduroam_setup_question_desc">Hier klicken um eduroam einzurichten</string>
-    <string name="card_eduroam_summary">Hilft dir eduroam einzurichten</string>
-    <string name="pin_lock">PIN-Sperre</string>
-    <string name="pin_lock_desc">Für die Einrichtung des WLAN-Zugangs wird eine PIN-Sperre benötigt.
+  <string name="action_ingredients">Inhaltsstoffe</string>
+  <string name="cafeteria_notification_settings">Mensa Benachrichtigungen</string>
+  <!-- Cafeteria Notification Settings -->
+  <string name="invalid_notification_time">Ungültige Zeit ausgewählt. Bitte eine Uhrzeit im folgenden Intervall wählen:</string>
+  <!-- Information -->
+  <string name="version">Version</string>
+  <string name="send_email">E-Mail Feedback senden</string>
+  <string name="show_feedback">Feedback senden</string>
+  <string name="feedbackSubj">Feedback für TUM Campus App</string>
+  <!-- END Translated, please do not change identifiers -->
+  <string name="min_search_len" tools:ignore="PluralsCandidate">Text muss mindestens %d Zeichen lang sein</string>
+  <string name="default_cafeteria">Standardmensa</string>
+  <string name="default_station">Standardhaltestelle</string>
+  <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
+  <string name="cafeteria">Mensa</string>
+  <string name="card_cafeteria_summary">Zeigt den Mensa-Speiseplan an</string>
+  <string name="card_mvv_summary">Zeigt die Abfahrtszeiten der öffentlich Verkehrmittel an</string>
+  <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
+  <string name="card_tuition_fee_summary">Erinnert dich wenn du die Studiengebühren zahlen musst</string>
+  <string name="card_news_summary">Schlägt ausgewählte News vor</string>
+  <string name="card_chat_summary">Benachrichtigt dich wenn neue Nachrichten verfügbar sind</string>
+  <string name="open_card_settings">Karte anpassen</string>
+  <string name="always_hide_card">Karte immer ausblenden</string>
+  <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
+  <string name="display">Anzeige</string>
+  <string name="opens">Öffnet</string>
+  <string name="closes">Schließt</string>
+  <string name="closed">Geschlossen</string>
+  <!-- Kino -->
+  <string name="imdb_rating">IMDb-Wertung</string>
+  <string name="year">Erscheinungsjahr</string>
+  <string name="runtime">Laufzeit</string>
+  <string name="genre">Genre</string>
+  <string name="director">Regisseur</string>
+  <string name="actors">Schauspieler</string>
+  <string name="description">Beschreibung</string>
+  <string name="no_movies">Zur Zeit gibt es keine Filme.</string>
+  <!-- Eduroam card -->
+  <string name="setup">Einrichten</string>
+  <string name="setup_eduroam">Eduroam einrichten</string>
+  <string name="setup_eduroam_now">Jetzt Eduroam einrichten</string>
+  <string name="password">Passwort</string>
+  <string name="not_ask_again">Nicht mehr fragen</string>
+  <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
+  <string name="eduroam_setup_question_desc">Hier klicken um eduroam einzurichten</string>
+  <string name="card_eduroam_summary">Hilft dir eduroam einzurichten</string>
+  <string name="pin_lock">PIN-Sperre</string>
+  <string name="pin_lock_desc">Für die Einrichtung des WLAN-Zugangs wird eine PIN-Sperre benötigt.
         Falls du noch keine PIN-Sperre verwendet kannst du hier eine einrichten.</string>
-    <string name="enable_pin_lock">PIN-Sperre aktivieren</string>
-    <string name="data_backup">Daten-Backup</string>
-    <string name="data_backup_desc">Aus Sicherheitsgründen muss das Daten-Backup deaktiviert werden, damit die TUM-Zugangsdaten nicht unverschlüsselt auf den Google Servern gespeichert werden.
-        Dazu unter ‘Sichern &amp; zurücksetzen’ > ‘Meine Daten sichern’ deaktivieren.</string>
-    <string name="disable_data_backup">Daten-Backup deaktivieren</string>
-    <string name="eduroam_success">Eduroam wurde erfolgreich eingerichtet</string>
-    <string name="pin_lock_rem"><b>Konfiguration fehlgeschlagen!</b>\nHast du dein manuell angelegtes Profil gelöscht? Wir können wlan Profile nicht überschreiben!</string>
-    <string name="install_certificate">Zertifikat installieren</string>
-    <string name="certificate">Zertifikat</string>
-    <string name="certificate_desc">Du musst ein CA-Root-Zertifikat installieren um eine sichere Verbindung mit dem Server aufbauen zu können. Tippe einfach auf ‘Zertifikat installieren’ und bestätige mit ‘OK’.</string>
-
-    <string name="enable_wifi">WLAN aktivieren</string>
-    <string name="loading_first_time">Der erste Start könnte ein paar Minuten dauern</string>
-    <string name="password_gets_not_saved">Das Passwort wird nicht von der TUM Campus App gespeichert, aber vom Android WLAN Manager.</string>
-    <string name="website">Website</string>
-    <string name="switch_map">Karte wählen</string>
-    <string name="navigate">Navigation starten</string>
-    <string name="categories_to_show">Anzuzeigende Kategorien</string>
-    <string name="news_sources">News Quellen</string>
-    <string name="only_latest_article">Nur neusten Artikel</string>
-    <string name="only_latest_article_summary">Zeigt jeweils nur den neusten Artikel. Ansonsten werden alle Artikel der ausgewählten Quellen angezeigt.</string>
-    <string name="lecture_chat">Vorlesungs-Chat &amp; Bedingungen akzeptieren</string>
-    <string name="set_lecture_chat">Aktiviere oder deaktiviere <i>Vorlesungs-Chat</i>. Wenn es aktiviert ist kannst du Vorlesungs-Chatrooms beitreten und mit deinen Komilitonen diskutieren.</string>
-    <string name="open_chat_terms">Chatbedingungen</string>
-    <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
-    <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
-    <string name="joined_chat_room">Du bist dem Chatroom beigetreten!</string>
-    <string name="view_mode">Ansicht wechseln</string>
-    <string name="bug_reports">Anonyme Fehlerberichte</string>
-    <string name="set_bug_reports">Unterstütze das TCA Team indem du anonyme Fehlerberichte zu unseren Server schicken lässt. Diese beinhalten: Stacktrace, Logdatei, Android Version, App Version und Bildschirm Auflösung</string>
-    <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
-    <string name="room_timetable">Belegungsplan</string>
-    <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
-    <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter: <a href="https://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a></string>
-    <string name="no_rights_to_access_id">Identität konnte nicht abgefragt werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
-    <string name="vibration">Vibration</string>
-    <string name="silent">Leise</string>
-    <string name="mode_silent_mode">Modus während Vorlesung</string>
-    <string name="message_details">Nachricht-Info</string>
-    <string name="message_detail_text">&lt;b>Sender&lt;/b>&lt;br>
-Name: %1$s&lt;br>
-E-Mail: %2$s@mytum.de&lt;br>&lt;br>
-&lt;b>Nachricht&lt;/b>&lt;br>
-Zeit: %3$s&lt;br>
-Status: %4$s&lt;br>
+  <string name="enable_pin_lock">PIN-Sperre aktivieren</string>
+  <string name="data_backup">Daten-Backup</string>
+  <string name="data_backup_desc">Aus Sicherheitsgründen muss das Daten-Backup deaktiviert werden, damit die TUM-Zugangsdaten nicht unverschlüsselt auf den Google Servern gespeichert werden.
+        Dazu unter ‘Sichern &amp; zurücksetzen’ &gt; ‘Meine Daten sichern’ deaktivieren.</string>
+  <string name="disable_data_backup">Daten-Backup deaktivieren</string>
+  <string name="eduroam_success">Eduroam wurde erfolgreich eingerichtet</string>
+  <string name="pin_lock_rem"><b>Konfiguration fehlgeschlagen!</b>\nHast du dein manuell angelegtes Profil gelöscht? Wir können wlan Profile nicht überschreiben!</string>
+  <string name="install_certificate">Zertifikat installieren</string>
+  <string name="certificate">Zertifikat</string>
+  <string name="certificate_desc">Du musst ein CA-Root-Zertifikat installieren um eine sichere Verbindung mit dem Server aufbauen zu können. Tippe einfach auf ‘Zertifikat installieren’ und bestätige mit ‘OK’.</string>
+  <string name="enable_wifi">WLAN aktivieren</string>
+  <string name="loading_first_time">Der erste Start könnte ein paar Minuten dauern</string>
+  <string name="password_gets_not_saved">Das Passwort wird nicht von der TUM Campus App gespeichert, aber vom Android WLAN Manager.</string>
+  <string name="website">Website</string>
+  <string name="switch_map">Karte wählen</string>
+  <string name="navigate">Navigation starten</string>
+  <string name="categories_to_show">Anzuzeigende Kategorien</string>
+  <string name="news_sources">News Quellen</string>
+  <string name="only_latest_article">Nur neusten Artikel</string>
+  <string name="only_latest_article_summary">Zeigt jeweils nur den neusten Artikel. Ansonsten werden alle Artikel der ausgewählten Quellen angezeigt.</string>
+  <string name="lecture_chat">Vorlesungs-Chat &amp; Bedingungen akzeptieren</string>
+  <string name="set_lecture_chat">Aktiviere oder deaktiviere <i>Vorlesungs-Chat</i>. Wenn es aktiviert ist kannst du Vorlesungs-Chatrooms beitreten und mit deinen Komilitonen diskutieren.</string>
+  <string name="open_chat_terms">Chatbedingungen</string>
+  <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
+  <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
+  <string name="joined_chat_room">Du bist dem Chatroom beigetreten!</string>
+  <string name="view_mode">Ansicht wechseln</string>
+  <string name="bug_reports">Anonyme Fehlerberichte</string>
+  <string name="set_bug_reports">Unterstütze das TCA Team indem du anonyme Fehlerberichte zu unseren Server schicken lässt. Diese beinhalten: Stacktrace, Logdatei, Android Version, App Version und Bildschirm Auflösung</string>
+  <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
+  <string name="room_timetable">Belegungsplan</string>
+  <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
+  <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter: <a href="https://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a></string>
+  <string name="no_rights_to_access_id">Identität konnte nicht abgefragt werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
+  <string name="vibration">Vibration</string>
+  <string name="silent">Leise</string>
+  <string name="mode_silent_mode">Modus während Vorlesung</string>
+  <string name="privacy_policy">Datenschutzerklärung</string>
+  <string name="message_details">Nachricht-Info</string>
+  <string name="message_detail_text">&lt;b&gt;Sender&lt;/b&gt;&lt;br&gt;
+Name: %1$s&lt;br&gt;
+E-Mail: %2$s@mytum.de&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Nachricht&lt;/b&gt;&lt;br&gt;
+Zeit: %3$s&lt;br&gt;
+Status: %4$s&lt;br&gt;
 Signatur: %5$s</string>
-    <string name="valid">Gültig</string>
-    <string name="not_valid">Nicht gültig</string>
-    <string name="status_sent">Gesendet</string>
-    <string name="status_sending">Wird gesendet</string>
-    <string name="status_sending_failed">Senden fehlgeschlagen</string>
-    <string name="joined">Meine</string>
-    <string name="not_joined">Weitere</string>
-    <string name="default_campus">Standardcampus</string>
-    <string name="no_default_campus">Kein Standardcampus</string>
-    <string name="public_key_mail">Public Key Aktivierungs-E-Mail wurde an %s@mytum.de gesendet!\n\n<b>Bitte aktiviere ihn jetzt!</b></string>
-    <string name="failure_uploading_public_key">Fehler beim Hochladen des Public Key</string>
-    <string name="key_not_activated">Du hast deinen Key noch nicht aktiviert!</string>
-    <string name="no_rights_to_access_lectures">Vorlesungen konnten nicht abgerufen werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
-    <string name="edit">Bearbeiten</string>
-    <string name="auto_join_chat">Neuen Vorlesungs-Chats beitreten</string>
-    <string name="set_auto_join_chat">Wenn du dich für eine neue Vorlesung einschreibst, wirst du automatisch zum Chatroom der Vorlesung hinzugefügt.</string>
-    <string name="add_chat_member">Jemanden zum Chatroom hinzufügen</string>
-    <string name="add_chat_room">Neuer Chatroom</string>
-    <string name="join_chat_room">Chatroom betreten</string>
-    <string name="invalid_chat_room">Ungültiger Chatroom</string>
-    <string name="new_chat_room">Neuer Chatroom</string>
-    <string name="new_chat_room_desc">Wähle einen Namen für den Chatroom. Der Name kann später nicht mehr geändert werden!\n\n</string>
-    <string name="reply_label">Antworten</string>
-    <string name="privacy_policy">Datenschutzerklärung</string>
-    <string name="just_now">Gerade eben</string>
-    <string name="yesterday">Gestern</string>
-    <string name="semester_summer">Sommersemester</string>
-    <string name="semester_winter">Wintersemester</string>
-    <string name="update_notification_description">Eine neue Version der Tum Campus App wurde am %s released. Hier tippen zum herunterladen.</string>
-    <string name="support_us">Hilf uns die TUM Campus App besser zu machen! Gib’ uns ein ‘Gefällt mir’ auf Facebook, schlag’ uns neue Ideen auf Github vor oder sag’ uns deine Meinung per E-Mail!</string>
-    <string name="support_us_title">Unterstütze uns!</string>
-    <string name="permission_calendar_explanation">Diese App braucht die Erlaubnis auf deinen Standort zugreifen zu können um nützliche Informationen, zum Beispiel zum Anzeigen der Mensa Speisepläne in deiner nähe oder von Fahrplänen der nächstgelegenen MVV Station. \n Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
-    <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zuzugreifen, um sie diesen mit deinem TUM-Kalender abzugleichen.</string>
-    <string name="permission_contacts_explanation">Diese App braucht die Erlaubnis auf deine Kontakte zuzugreifen, um diese Person hizufügen zu können.</string>
-    <string name="cancel">Abbruch</string>
-    <string name="grant_permission">Erlauben</string>
-    <string name="ok">OK</string>
-    <string name="alarm_date_published_on">Veröffentlicht am:</string>
-    <string name="free">Frei</string>
-    <string name="occupied">Belegt bis</string>
-    <string name="study_rooms">Lernräume</string>
-    <string name="next_possible_survey_date">Du hast die maximale Anzahl an Fragen diese Woche erreicht. Das Datum für die nächste Eingabe ist</string>
-    <string name="no_questions_available">Keine Fragen verfügbar</string>
-    <string name="one_question_left">Nur eine Frage übrig</string>
-    <string name="quiz_target_faculty">Bitte wähle die Zielfakultäten aus:</string>
-    <string name="select_number_of_questions_survey">Wähle die Anzahl der Fragen</string>
-    <string name="select_target_faculties_survey">Wähle die Zielfakultäten aus: </string>
-    <string name="submit_question_survey">Frage einreichen</string>
-    <string name="survey_no">Nein</string>
-    <string name="survey_yes">Ja</string>
-    <string name="survey_skip">Überspringen</string>
-    <string name="enter_first_question_survey">Bitte gebe deine erste Frage ein</string>
-    <string name="enter_second_question_survey">Bitte gebe deine zweite Frage ein</string>
-    <string name="enter_third_question_survey">Bitte gebe deine dritte Frage ein</string>
-    <string name="enter_question_survey">Stelle bitte frage Nummer</string>
-    <string name="complete_question_form">Bitte fulle das Formular aus</string>
-    <string name="question_deleted">Die Frage wurde geloscht</string>
-    <string name="select_one_faculty">Wahle bitte mindestens eine Fakultat aus</string>
-    <string name="survey_submitted">Die Umfrage wurde eingereicht</string>
-    <string name="tab_responses">Antworten</string>
-    <string name="tab_survey">Umfrage</string>
-    <string name="more_info">Mehr Informationen</string>
-    <string name="welcome_faculty">Um die bestmögliche Erfahrung zu liefern, teile uns bitte deine Fakultät mit:</string>
-    <string name="event_plan">Tagesablauf</string>
-    <string name="choose_own_faculty">Bitte wähle deine Fakultät aus</string>
-    <string name="add_widget">Widget hinzufügen</string>
-    <string name="my_grades">Meine Noten</string>
-    <string name="widget_configure_description">Anzeige der Karten einstellen</string>
-    <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
-    <string name="quiz">Umfrage</string>
-    <string name="selected_target_faculties">Ausgewählte Fakultät:</string>
-    <string name="card_survey_summary">Ermöglicht es Ihnen, an forschungsbezogenen Umfragen teilzunehmen</string>
-    <string name="chat_not_setup">Chat ist nicht richtig eingerichtet, bitte den Assistenten über die Einstellungen neu starten!</string>
-    <string name="flag_inappropriate">Unangemessene Frage melden</string>
-    <string name="mvv_download">Bitte klicken Sie auf OK, um MVV-Pläne herunterzuladen, sonst können Sie diese Funktion nicht verwenden</string>
-    <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
-    <string name="IN">in</string>
-    <string name="MINUTES">minuten</string>
-    <string name="AT">um</string>
-    <string name="startup_motto">Von Studierenden - Für Studierende</string>
-    <string name="eduroam_fix">Jetzt reparieren!</string>
-    <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
-    <string name="fix_eduroam">Eduroam Reparieren</string>
-    <string name="wifi_identity_zone">Identität enthält keine Zone (z.B. @eduroam.mwn.de). Dies kann zu Problemen führen und sollte deshalb geändert werden!</string>
-    <string name="eduroam_realm_comment">\@eduroam.mwn.de wird automatisch angehängt</string>
-    <string name="wifi_dns_name_not_set">DNS-Name ist nicht festgelegt</string>
-    <string name="wifi_anonymous_identity_not_set">Anonyme Identität nicht korrekt</string>
-
-    <string name="transport_action_usage">Hilfestellung</string>
-    <string name="transport_help_text">Tippe deine favorisierten Verkehrslinien an um sie hervorzuheben. Tippe erneut und sie sind wieder normal.</string>
-    <string name="mvv_widget_no_station">Keine Station ausgewählt</string>
-    <string name="mvv_widget_select_station">Station auswählen</string>
-    <string name="mvv_widget_no_data">Offline oder keine Daten verfügbar</string>
-    <string name="mvv_widget_auto_reload">Automatisch aktualisieren</string>
-    <string name="mvv_widget_auto_reload_hint">Erhöht Strom und Datenverbrauch</string>
-    <string name="timetable_widget">Stundenplan Widget TUM</string>
-    <string name="timetable_widget_select_lectures">Vorlesungen auswählen</string>
-    <string name="timetable_widget_no_lectures">KeineVorlesungen geplant :)</string>
-    <string name="eduroam_not_valid_id">Keine gültige TUM-Kennung</string>
-    <string name="eduroam_please_enter_password">Bitte Passwort eingeben. Dieses wird nicht gespeichert.</string>
-    <string name="barrier_free">Barrierefreiheit</string>
-    <string name="barrierfree_toilets">Berrierefreie Toiletten</string>
-    <string name="elevators">Aufzüge</string>
-    <string name="facilities">Einrichtungen</string>
-    <string name="nerby_facilities">Einrichtungen in der Nähe</string>
-
-    <string name="eduroam_dialog_title">Altes Eduroam Profil Löschen</string>
-    <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
-    <string name="done">Fertig</string>
-    <string name="eduroam_dialgo_step_1">1.</string>
-    <string name="eduroam_dialog_step_2">2. Wenn du nicht in der Nähe des Eduroam bist gehe zu \'\'</string>
-    <string name="eduroam_dialog_step_3">Auf \'Entfernen\' klicken</string>
-    <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann.</string>
+  <string name="valid">Gültig</string>
+  <string name="not_valid">Nicht gültig</string>
+  <string name="status_sent">Gesendet</string>
+  <string name="status_sending">Wird gesendet</string>
+  <string name="status_sending_failed">Senden fehlgeschlagen</string>
+  <string name="joined">Meine</string>
+  <string name="not_joined">Weitere</string>
+  <string name="default_campus">Standardcampus</string>
+  <string name="no_default_campus">Kein Standardcampus</string>
+  <string name="reply_label">Antworten</string>
+  <string name="public_key_mail">Public Key Aktivierungs-E-Mail wurde an %s@mytum.de gesendet!\n\n<b>Bitte aktiviere ihn jetzt!</b></string>
+  <string name="failure_uploading_public_key">Fehler beim Hochladen des Public Key</string>
+  <string name="key_not_activated">Du hast deinen Key noch nicht aktiviert!</string>
+  <string name="no_rights_to_access_lectures">Vorlesungen konnten nicht abgerufen werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
+  <string name="edit">Bearbeiten</string>
+  <string name="auto_join_chat">Neuen Vorlesungs-Chats beitreten</string>
+  <string name="set_auto_join_chat">Wenn du dich für eine neue Vorlesung einschreibst, wirst du automatisch zum Chatroom der Vorlesung hinzugefügt.</string>
+  <string name="add_chat_member">Jemanden zum Chatroom hinzufügen</string>
+  <string name="add_chat_room">Neuer Chatroom</string>
+  <string name="join_chat_room">Chatroom betreten</string>
+  <string name="invalid_chat_room">Ungültiger Chatroom</string>
+  <string name="new_chat_room">Neuer Chatroom</string>
+  <string name="new_chat_room_desc">Wähle einen Namen für den Chatroom. Der Name kann später nicht mehr geändert werden!\n\n</string>
+  <string name="just_now">Gerade eben</string>
+  <string name="yesterday">Gestern</string>
+  <string name="add_widget">Widget hinzufügen</string>
+  <!-- Widget Mensa -->
+  <string name="widget_configure_description">Anzeige der Karten einstellen</string>
+  <string name="update_notification_description">Eine neue Version der Tum Campus App wurde am %s released. Hier tippen zum herunterladen.</string>
+  <string name="support_us">Hilf uns die TUM Campus App besser zu machen! Gib’ uns ein ‘Gefällt mir’ auf Facebook, schlag’ uns neue Ideen auf Github vor oder sag’ uns deine Meinung per E-Mail!</string>
+  <string name="support_us_title">Unterstütze uns!</string>
+  <string name="permission_calendar_explanation">Diese App braucht die Erlaubnis auf deinen Standort zugreifen zu können um nützliche Informationen, zum Beispiel zum Anzeigen der Mensa Speisepläne in deiner nähe oder von Fahrplänen der nächstgelegenen MVV Station. \n Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
+  <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zuzugreifen, um sie diesen mit deinem TUM-Kalender abzugleichen.</string>
+  <string name="permission_contacts_explanation">Diese App braucht die Erlaubnis auf deine Kontakte zuzugreifen, um diese Person hizufügen zu können.</string>
+  <string name="grant_permission">Erlauben</string>
+  <string name="cancel">Abbruch</string>
+  <string name="ok">OK</string>
+  <string name="alarm_date_published_on">Veröffentlicht am:</string>
+  <string name="chat_not_setup">Chat ist nicht richtig eingerichtet, bitte den Assistenten über die Einstellungen neu starten!</string>
+  <string name="quiz">Umfrage</string>
+  <string name="no_questions_available">Keine Fragen verfügbar</string>
+  <string name="one_question_left">Nur eine Frage übrig</string>
+  <string name="next_possible_survey_date">Du hast die maximale Anzahl an Fragen diese Woche erreicht. Das Datum für die nächste Eingabe ist</string>
+  <string name="flag_inappropriate">Unangemessene Frage melden</string>
+  <string name="survey_yes">Ja</string>
+  <string name="select_target_faculties_survey">Wähle die Zielfakultäten aus: </string>
+  <string name="survey_no">Nein</string>
+  <string name="select_number_of_questions_survey">Wähle die Anzahl der Fragen</string>
+  <string name="survey_skip">Überspringen</string>
+  <string name="enter_first_question_survey">Bitte gebe deine erste Frage ein</string>
+  <string name="enter_second_question_survey">Bitte gebe deine zweite Frage ein</string>
+  <string name="enter_third_question_survey">Bitte gebe deine dritte Frage ein</string>
+  <string name="enter_question_survey">Stelle bitte frage Nummer</string>
+  <string name="submit_question_survey">Frage einreichen</string>
+  <string name="quiz_target_faculty">Bitte wähle die Zielfakultäten aus:</string>
+  <string name="tab_survey">Umfrage</string>
+  <string name="tab_responses">Antworten</string>
+  <string name="survey_submitted">Die Umfrage wurde eingereicht</string>
+  <string name="complete_question_form">Bitte fulle das Formular aus</string>
+  <string name="select_one_faculty">Wahle bitte mindestens eine Fakultat aus</string>
+  <string name="question_deleted">Die Frage wurde geloscht</string>
+  <string name="choose_own_faculty">Bitte wähle deine Fakultät aus</string>
+  <string name="mvv_download">Bitte klicken Sie auf OK, um MVV-Pläne herunterzuladen, sonst können Sie diese Funktion nicht verwenden</string>
+  <string name="more_info">Mehr Informationen</string>
+  <string name="welcome_faculty">Um die bestmögliche Erfahrung zu liefern, teile uns bitte deine Fakultät mit:</string>
+  <string name="event_plan">Tagesablauf</string>
+  <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
+  <string name="card_survey_summary">Ermöglicht es Ihnen, an forschungsbezogenen Umfragen teilzunehmen</string>
+  <string name="selected_target_faculties">Ausgewählte Fakultät:</string>
+  <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
+  <string name="IN">in</string>
+  <string name="MINUTES">minuten</string>
+  <string name="AT">um</string>
+  <string name="startup_motto">Von Studierenden - Für Studierende</string>
+  <string name="fix_eduroam">Eduroam Reparieren</string>
+  <string name="eduroam_fix">Jetzt reparieren!</string>
+  <string name="eduroam_realm_comment">\@eduroam.mwn.de wird automatisch angehängt</string>
+  <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
+  <string name="wifi_dns_name_not_set">DNS-Name ist nicht festgelegt</string>
+  <string name="wifi_identity_zone">Identität enthält keine Zone (z.B. @eduroam.mwn.de). Dies kann zu Problemen führen und sollte deshalb geändert werden!</string>
+  <string name="wifi_anonymous_identity_not_set">Anonyme Identität nicht korrekt</string>
+  <string name="transport_action_usage">Hilfestellung</string>
+  <string name="transport_help_text">Tippe deine favorisierten Verkehrslinien an um sie hervorzuheben. Tippe erneut und sie sind wieder normal.</string>
+  <string name="mvv_widget_select_station">Station auswählen</string>
+  <string name="mvv_widget_no_station">Keine Station ausgewählt</string>
+  <string name="mvv_widget_no_data">Offline oder keine Daten verfügbar</string>
+  <string name="mvv_widget_auto_reload">Automatisch aktualisieren</string>
+  <string name="mvv_widget_auto_reload_hint">Erhöht Strom und Datenverbrauch</string>
+  <string name="timetable_widget">Stundenplan Widget TUM</string>
+  <string name="timetable_widget_select_lectures">Vorlesungen auswählen</string>
+  <string name="timetable_widget_no_lectures">KeineVorlesungen geplant :)</string>
+  <string name="eduroam_not_valid_id">Keine gültige TUM-Kennung</string>
+  <string name="eduroam_please_enter_password">Bitte Passwort eingeben. Dieses wird nicht gespeichert.</string>
+  <!-- Barrier-free  -->
+  <string name="facilities">Einrichtungen</string>
+  <string name="nerby_facilities">Einrichtungen in der Nähe</string>
+  <string name="barrierfree_toilets">Berrierefreie Toiletten</string>
+  <string name="elevators">Aufzüge</string>
+  <string name="eduroam_dialog_title">Altes Eduroam Profil Löschen</string>
+  <string name="done">Fertig</string>
+  <string name="eduroam_dialgo_step_1">1.</string>
+  <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
+  <string name="eduroam_dialog_step_2">2. Wenn du nicht in der Nähe des Eduroam bist gehe zu \'\'</string>
+  <string name="eduroam_dialog_step_3">Auf \'Entfernen\' klicken</string>
+  <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann.</string>
 </resources>
