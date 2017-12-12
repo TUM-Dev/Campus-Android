@@ -195,9 +195,6 @@ public class ChatMessageManager  {
         }
         m.setTimestamp(Utils.getDateTimeString(date));
         chatMessageDao.replaceMessage(m);
-        /*db.execSQL("REPLACE INTO chat_message (_id,previous,room,text,timestamp,signature,member,read,sending) VALUES (?,?,?,?,?,?,?,?,?)",
-                   new String[]{String.valueOf(m.getId()), String.valueOf(m.getPrevious()), String.valueOf(mChatRoom), m.getText(), Utils.getDateTimeString(date),
-                                m.getSignature(), new Gson().toJson(m.getMember()), m.getRead() ? "1" : "0", String.valueOf(m.getSendingStatus())});*/
     }
 
     /**
