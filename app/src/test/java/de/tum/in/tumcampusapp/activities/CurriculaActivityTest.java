@@ -8,6 +8,6 @@ public class CurriculaActivityTest extends BaseActivityTest {
 
     @Override
     public void mainComponentDisplayedTest() {
-       // idIsDisplayed(R.id.activity_curricula_list_view);
+        // idIsDisplayed(R.id.activity_curricula_list_view);
     }
 }

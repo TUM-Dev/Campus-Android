@@ -16,7 +16,7 @@ public abstract class BaseActivityTest {
 
     @Test
     public void toolbarTest() {
-      //  onView(withId(R.id.main_toolbar)).check(matches(isDisplayed()));
+        //  onView(withId(R.id.main_toolbar)).check(matches(isDisplayed()));
     }
 
     @Test

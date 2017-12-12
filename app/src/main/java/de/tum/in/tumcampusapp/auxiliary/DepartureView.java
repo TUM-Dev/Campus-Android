@@ -2,10 +2,12 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -20,13 +22,13 @@ import de.tum.in.tumcampusapp.R;
  * automatically down counting departure time
  */
 public class DepartureView extends LinearLayout {
-
+    private final boolean big;
     private final TextView mSymbolView;
     private final TextView mLineView;
     private final TextSwitcher mTimeSwitcher;
     private final Handler mHandler;
-    private final ValueAnimator mValueAnimator;
-    private int mCountDown;
+    private ValueAnimator mValueAnimator;
+    private long mDepartureTime;
 
     /**
      * Standard constructor for DepartureView
@@ -46,6 +48,7 @@ public class DepartureView extends LinearLayout {
      */
     public DepartureView(Context context, boolean big) {
         super(context);
+        this.big = big;
 
         setOrientation(LinearLayout.HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
@@ -70,20 +73,6 @@ public class DepartureView extends LinearLayout {
         mTimeSwitcher.setOutAnimation(out);
 
         mHandler = new Handler();
-
-        // Set up the ValueAnimator for animateOut()
-        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0)
-                                      .setDuration(500);
-        mValueAnimator.addUpdateListener(animation -> {
-            int value = (Integer) animation.getAnimatedValue();
-            if (getLayoutParams() != null) {
-                getLayoutParams().height = value;
-                requestLayout();
-                if (value == 0) {
-                    setVisibility(View.GONE);
-                }
-            }
-        });
     }
 
     /**
@@ -99,9 +88,24 @@ public class DepartureView extends LinearLayout {
         mSymbolView.setBackgroundDrawable(d);
 
         if (highlight) {
-            setBackgroundColor(0x20ffffff & d.getBackgroundColor());
+            if (big) {
+                setBackgroundColor(d.getBackgroundColor());
+                mLineView.setTextColor(Color.WHITE);
+                for (int i = 0; i < mTimeSwitcher.getChildCount(); i++) {
+                    TextView tw = (TextView) mTimeSwitcher.getChildAt(i);
+                    tw.setTextColor(Color.WHITE);
+                }
+            } else {
+                setBackgroundColor(0x20ffffff & d.getBackgroundColor());
+            }
         } else {
             setBackgroundColor(d.getTextColor());
+            mLineView.setTextColor(Color.BLACK);
+
+            for (int i = 0; i < mTimeSwitcher.getChildCount(); i++) {
+                TextView tw = (TextView) mTimeSwitcher.getChildAt(i);
+                tw.setTextColor(Color.GRAY);
+            }
         }
     }
 
@@ -122,16 +126,17 @@ public class DepartureView extends LinearLayout {
     /**
      * Sets the departure time
      *
-     * @param countDown Minutes, until this line leaves
+     * @param departureTime Timestamp in milliseconds, when transport leaves
      */
-    public void setTime(int countDown) {
-        mCountDown = countDown;
+    public void setTime(long departureTime) {
+        mDepartureTime = departureTime;
         updateDepartureTime();
     }
 
     private void updateDepartureTime() {
-        String text = mCountDown + " min";
-        if (mCountDown >= 0) {
+        long departureOffset = (mDepartureTime - System.currentTimeMillis()) / 1000;
+        String text = String.format("%2d:%02d", departureOffset / 60, departureOffset % 60);
+        if (departureOffset > 0) {
             mTimeSwitcher.setCurrentText(text);
         } else {
             animateOut();
@@ -139,14 +144,15 @@ public class DepartureView extends LinearLayout {
         }
         // Keep countDown approximately in sync.
         if (mHandler != null) {
-            mHandler.postDelayed(() -> {
-                mCountDown--;
-                updateDepartureTime();
-            }, 60000);
+            mHandler.postDelayed(this::updateDepartureTime, 1000);
         }
     }
 
     private void animateOut() {
+        mValueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f)
+                                      .setDuration(500);
+        mValueAnimator.addUpdateListener(new SlideOutAnimator());
+        mValueAnimator.setInterpolator(new AccelerateInterpolator());
         mValueAnimator.start();
     }
 
@@ -155,7 +161,26 @@ public class DepartureView extends LinearLayout {
      */
     public void removeAllCallbacksAndMessages() {
         mHandler.removeCallbacksAndMessages(null);
-        mValueAnimator.cancel();
-        mValueAnimator.removeAllUpdateListeners();
+
+        if (mValueAnimator != null) {
+            mValueAnimator.cancel();
+            mValueAnimator.removeAllUpdateListeners();
+        }
+    }
+
+    private class SlideOutAnimator implements ValueAnimator.AnimatorUpdateListener {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animator) {
+            float value = (Float) animator.getAnimatedValue();
+            if (getLayoutParams() != null) {
+                setTranslationX(value * getWidth());
+                getLayoutParams().height = (int) ((1.0f - value) * getHeight());
+                setAlpha(1.0f - value);
+                requestLayout();
+                if (value >= 1.0f) {
+                    setVisibility(View.GONE);
+                }
+            }
+        }
     }
 }

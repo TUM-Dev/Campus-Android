@@ -389,7 +389,7 @@
         <activity
             android:name=".activities.SetupEduroamActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
+            android:label="@string/setup_eduroam"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
@@ -619,21 +619,27 @@
 
         <service
             android:name=".services.DownloadService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.SilenceService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.SendMessageService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.SendWifiMeasurementService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.BackgroundService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.FillCacheService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
         <service
             android:name=".services.ScanResultsAvailableReceiver$NeverShowAgain"

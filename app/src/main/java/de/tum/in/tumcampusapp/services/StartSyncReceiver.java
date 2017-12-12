@@ -51,17 +51,16 @@ public class StartSyncReceiver extends BroadcastReceiver {
         // Start BackgroundService
         if (launch || backgroundServicePermitted) {
             Utils.logv("Start background service...");
-            Intent i = new Intent(context, BackgroundService.class);
+            Intent i = new Intent();
             i.putExtra(Const.APP_LAUNCHES, launch);
-            context.startService(i);
+            BackgroundService.enqueueWork(context, i);
         }
-
-        context.startService(new Intent(context, SendMessageService.class));
+        SendMessageService.enqueueWork(context, new Intent());
 
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
-        context.startService(new Intent(context, SilenceService.class));
+        SilenceService.enqueueWork(context, new Intent());
         if (intent.getAction() != "android.net.wifi.WIFI_STATE_CHANGED" && Utils.getInternalSettingBool(context, WifiMeasurementManager.WIFI_SCANS_ALLOWED, false)) {
-            context.startService(new Intent(context, SendWifiMeasurementService.class));
+            SendWifiMeasurementService.enqueueWork(context, new Intent());
         }
     }
 }

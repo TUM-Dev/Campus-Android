@@ -15,7 +15,8 @@ public class KinoActivityTest extends BaseActivityTest {
     @Test
     public void mainComponentDisplayedTest() {
         KinoActivity activity = Robolectric.setupActivity(KinoActivity.class);
-        assertFalse(activity.findViewById(R.id.no_movies_layout).isActivated());// TODO: should be true
+        assertFalse(activity.findViewById(R.id.no_movies_layout)
+                            .isActivated());// TODO: should be true
 
         // TODO: download all from external, then check if movies are shown
     }

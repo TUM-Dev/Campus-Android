@@ -38,7 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/eduroam_insecure_configuration"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/eduroam_insecure_message"/>
 
         <TextView
             android:id="@+id/eduroam_errors"
