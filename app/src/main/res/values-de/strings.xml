@@ -456,4 +456,24 @@ Signatur: %5$s</string>
     <string name="eduroam_dialog_step_2">2. Wenn du nicht in der Nähe des Eduroam bist gehe zu \'\'</string>
     <string name="eduroam_dialog_step_3">Auf \'Entfernen\' klicken</string>
     <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann.</string>
+
+    <!-- Feedback Activity -->
+    <string name="feedback">Feedback</string>
+    <string name="general">Allgemein (IT-Support)</string>
+    <string name="tca">TUM Campus App</string>
+    <string-array name="feedback_options">
+        <item>@string/general</item>
+        <item>@string/tca</item>
+    </string-array>
+    <string name="feedback_hint">Hier ist Platz für dein Feedback...</string>
+    <string name="add_picture_button">&#160;&#160;Bild hinzufügen</string>
+    <string name="feedback_include_email">Email mitversenden um eine Antwort zu erhalten</string>
+    <string name="feedback_include_email_tum_id">Email mitversenden um eine Antwort zu erhalten (%s)</string>
+    <string name="feedback_email_hint">E-Mail-Adresse</string>
+    <string name="feedback_include_location">Standort beifügen</string>
+    <string name="feedback_send_button">Feedback abschicken</string>
+    <string name="feedback_add_picture">Foto hinzufügen</string>
+    <string name="feedback_take_picture">Kamera</string>
+    <string name="gallery">Galerie</string>
+    <string name="feedback_remove_image">Bild löschen</string>
 </resources>

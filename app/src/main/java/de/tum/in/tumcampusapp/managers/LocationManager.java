@@ -191,7 +191,7 @@ public class LocationManager {
      *
      * @return The last location
      */
-    private Location getLastLocation() {
+    public Location getLastLocation() {
         //Check Location permission for Android 6.0
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

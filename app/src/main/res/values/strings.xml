@@ -534,6 +534,26 @@ Signature: %5$s</string>
     <string name="eduroam_dialog_step_2">2. Click on \'eduroam\'</string>
     <string name="eduroam_dialog_step_3">3. Click on \'Forget\'</string>
     <string name="eduroam_dialog_info_text">The wifi profile has to be deleted because the app doesn\'t have permission to overwrite configurations.</string>
+
+    <!-- Feedback Activity -->
+    <string name="feedback">Feedback</string>
+    <string name="general">General (IT-Support)</string>
+    <string name="tca">TUM Campus App</string>
+    <string name="feedback_hint">What would you like us to know?</string>
+    <string name="add_picture_button">&#160;&#160;Add picture</string>
+    <string name="feedback_include_email">Include my email to get a reply</string>
+    <string name="feedback_include_email_tum_id">Include my email to get a reply (%s)</string>
+    <string name="feedback_email_hint">Your email</string>
+    <string name="feedback_include_location">Include current location</string>
+    <string name="feedback_send_button">Send Feedback</string>
+    <string name="feedback_add_picture">Add Picture</string>
+    <string name="feedback_take_picture">Take Picture</string>
+    <string name="gallery">Gallery</string>
+    <string name="feedback_remove_image">Remove Image</string>
+    <string-array name="feedback_options">
+        <item>@string/general</item>
+        <item>@string/tca</item>
+    </string-array>
 </resources>
 
 
