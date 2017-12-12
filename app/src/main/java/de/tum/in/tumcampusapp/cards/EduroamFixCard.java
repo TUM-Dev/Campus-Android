@@ -25,6 +25,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.CardManager;
@@ -103,7 +104,7 @@ public class EduroamFixCard extends NotificationAwareCard {
         }
         Intent intent = new Intent(mContext, SetupEduroamActivity.class);
         // TCA should only produce correct profiles, so incorrect ones were configured somewhere else
-        intent.putExtra(SetupEduroamActivity.EXTRA_FOREIGN_CONFIGURATION_EXISTS, true);
+        intent.putExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, true);
         return intent;
     }
 

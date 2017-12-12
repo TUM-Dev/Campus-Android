@@ -11,15 +11,10 @@ import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
@@ -28,14 +23,10 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 public class EduroamManager {
     public static final String NETWORK_SSID = "eduroam";
     public static final String RADIUS_DNS = "radius.lrz.de";
-    private static final String INT_PHASE2 = "phase2";
     private static final String INT_PASSWORD = "password";
     private static final String INT_IDENTITY = "identity";
     private static final String INT_EAP = "eap";
-    private static final String INT_CA_CERT = "ca_cert";
-    private static final String INT_ANONYMOUS_IDENTITY = "anonymous_identity";
     private static final String INT_ENTERPRISE_FIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
-    private static final String ANON_IDENTITY = "anonymous@eduroam.mwn.de";
 
     private final Context mContext;
 
@@ -130,23 +121,6 @@ public class EduroamManager {
         conf.enterpriseConfig.setIdentity(lrzId + "@eduroam.mwn.de");
         conf.enterpriseConfig.setPassword(networkPass);
         conf.enterpriseConfig.setEapMethod(WifiEnterpriseConfig.Eap.PWD);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            setSubjectMatchAPI23(conf);
-        }
-        setSubjectMatch18To23(conf); //Set both just to be sure
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private void setSubjectMatchAPI23(WifiConfiguration conf) {
-        conf.enterpriseConfig.setDomainSuffixMatch(RADIUS_DNS);
-        conf.enterpriseConfig.setAltSubjectMatch("DNS:" + RADIUS_DNS);
-    }
-
-    @TargetApi(18)
-    @SuppressWarnings("deprecation")
-    private void setSubjectMatch18To23(WifiConfiguration conf) {
-        conf.enterpriseConfig.setSubjectMatch(RADIUS_DNS);
     }
 
     private boolean setupEnterpriseConfigOld(WifiConfiguration conf, String lrzId, String networkPass) {
