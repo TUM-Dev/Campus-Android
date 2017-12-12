@@ -22,7 +22,6 @@ import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -31,6 +30,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
@@ -47,6 +47,13 @@ public class FeedbackActivity extends BaseActivity {
     private static final int PERMISSION_CAMERA = 14;
     private static final int PERMISSION_FILES = 15;
 
+    private static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private Pattern pattern;
+
+    private CheckBox includeEmail, includeLocation;
+    private EditText feedbackView, customEmailView;
+
     private String mCurrentPhotoPath;
     private int feedbackTopic;
     private String email;
@@ -56,7 +63,6 @@ public class FeedbackActivity extends BaseActivity {
     private ArrayList<String> picPaths;
 
     private RecyclerView.Adapter thumbAdapter;
-
 
     public FeedbackActivity() {
         super(R.layout.activity_feedback);
@@ -68,12 +74,94 @@ public class FeedbackActivity extends BaseActivity {
 
         feedbackTopic = 0; // General feedback by default
 
-        EditText feedbackView = findViewById(R.id.feedback_message);
-        feedbackView.clearFocus();
-        if(savedInstanceState != null){
+        feedbackView = findViewById(R.id.feedback_message);
+        customEmailView = findViewById(R.id.feedback_custom_email);
+        includeEmail = findViewById(R.id.feedback_include_email);
+        includeLocation = findViewById(R.id.feedback_include_location);
+
+        lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
+
+        initTopicSpinner(savedInstanceState);
+        initIncludeLocation(savedInstanceState);
+        initIncludeEmail(savedInstanceState);
+
+        if(savedInstanceState == null){
+            picPaths = new ArrayList<>();
+        } else {
+            picPaths = savedInstanceState.getStringArrayList(Const.FEEDBACK_PIC_PATHS);
             feedbackView.setText(savedInstanceState.getString(Const.FEEDBACK_MESSAGE));
         }
 
+        RecyclerView pictureList = findViewById(R.id.feedback_image_list);
+        pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        thumbAdapter = new FeedbackThumbAdapter(picPaths);
+        pictureList.setAdapter(thumbAdapter);
+
+        pattern = Pattern.compile(EMAIL_PATTERN);
+    }
+
+    private void initIncludeLocation(Bundle savedInstanceState){
+        includeLocation.setOnClickListener(view -> {
+            if(includeLocation.isChecked() && location == null){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR);
+                    if( permissionCheck == PackageManager.PERMISSION_DENIED){
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION);
+                    }
+                }
+                saveLocation();
+            }
+        });
+
+        if(savedInstanceState != null){
+            includeLocation.setChecked(savedInstanceState.getBoolean(Const.FEEDBACK_INCL_LOCATION));
+            saveLocation();
+        } else {
+            includeLocation.setChecked(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                includeLocation.callOnClick();
+            } else {
+                saveLocation();
+            }
+        }
+    }
+
+    private void saveLocation(){
+        location = new LocationManager(this).getLastLocation();
+        if(location == null){
+            includeLocation.setChecked(false);
+        }
+    }
+
+    private void initIncludeEmail(Bundle savedInstanceState){
+        if(!"".equals(lrzId)){
+            email = lrzId + "@mytum.de";
+        } else {
+            if(savedInstanceState != null){
+                email = savedInstanceState.getString(Const.FEEDBACK_EMAIL, null);
+            }
+        }
+
+        if(email != null){
+            includeEmail.setText(getResources().getString(R.string.feedback_include_email_tum_id, email));
+            includeEmail.setChecked(true);
+        } else {
+            includeEmail.setChecked(false);
+        }
+        includeEmail.setOnClickListener(view -> {
+            Checkable box = (Checkable) view;
+            if(box.isChecked()){
+                if("".equals(lrzId)){
+                    customEmailView.setVisibility(View.VISIBLE);
+                    customEmailView.setText(email);
+                }
+            } else {
+                customEmailView.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void initTopicSpinner(Bundle savedInstanceState){
         Spinner spinner = findViewById(R.id.feedback_topic_spinner);
         spinner.requestFocus();
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.feedback_options, R.layout.spinner_item_bold);
@@ -91,77 +179,9 @@ public class FeedbackActivity extends BaseActivity {
             }
         });
 
-        CheckBox includeLocationBox = findViewById(R.id.feedback_include_location);
-        includeLocationBox.setOnClickListener(view -> {
-            CheckBox box = (CheckBox) view;
-            if(box.isChecked() && location == null){
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR);
-                    if( permissionCheck == PackageManager.PERMISSION_DENIED){
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION);
-                    }
-                }
-
-                location = new LocationManager(view.getContext()).getLastLocation();
-                if(location == null){
-                    box.setChecked(false);
-                }
-            }
-        });
-
-        lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-
-        if(!"".equals(lrzId)){
-            email = lrzId + "@mytum.de";
-        } else {
-            if(savedInstanceState != null){
-                email = savedInstanceState.getString(Const.FEEDBACK_EMAIL, null);
-            }
-        }
-
-        CheckBox includeEmail = findViewById(R.id.feedback_include_email);
-        if(email != null){
-            includeEmail.setText(getResources().getString(R.string.feedback_include_email_tum_id, email));
-            includeEmail.setChecked(true);
-        } else {
-            includeEmail.setChecked(false);
-        }
-        includeEmail.setOnClickListener(view -> {
-            Checkable box = (Checkable) view;
-            if(box.isChecked()){
-                if("".equals(lrzId)){
-                    EditText emailView = findViewById(R.id.feedback_custom_email);
-                    emailView.setVisibility(View.VISIBLE);
-                    emailView.setText(email);
-                }
-            } else {
-                findViewById(R.id.feedback_custom_email).setVisibility(View.GONE);
-            }
-        });
-
         if(savedInstanceState != null){
-            includeLocationBox.setChecked(savedInstanceState.getBoolean(Const.FEEDBACK_INCL_LOCATION));
             spinner.getOnItemSelectedListener().onItemSelected(null, null, savedInstanceState.getInt(Const.FEEDBACK_TOPIC), 0);
-            picPaths = savedInstanceState.getStringArrayList(Const.FEEDBACK_PIC_PATHS);
-        } else {
-            picPaths = new ArrayList<>();
-            includeLocationBox.setChecked(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                includeLocationBox.callOnClick();
-            } else {
-                location = new LocationManager(this).getLastLocation();
-                if(location == null){
-                    includeLocationBox.setChecked(false);
-                }
-            }
         }
-
-        RecyclerView pictureList = findViewById(R.id.feedback_image_list);
-        pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        thumbAdapter = new FeedbackThumbAdapter(picPaths);
-        pictureList.setAdapter(thumbAdapter);
-
     }
 
     @Override
@@ -173,17 +193,16 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     location = new LocationManager(this).getLastLocation();
-                    ((Checkable)findViewById(R.id.feedback_include_location)).setChecked(true);
+                    includeLocation.setChecked(true);
                 } else {
-                    ((Checkable)findViewById(R.id.feedback_include_location)).setChecked(false);
+                    includeLocation.setChecked(false);
                 }
                 return;
             }
@@ -204,22 +223,34 @@ public class FeedbackActivity extends BaseActivity {
         }
     }
 
+    private boolean isValidEmail(){
+        String email = customEmailView.getText().toString();
+        boolean isValid = pattern.matcher(email).matches();
+        if(isValid){
+            customEmailView.setTextColor(getResources().getColor(R.color.valid));
+        } else {
+            customEmailView.setTextColor(getResources().getColor(R.color.error));
+        }
+        return isValid;
+    }
+
     public void sendFeedback(View view){
-        // TODO check format of user-provided email and warn the user if it's not correct
+        if(includeEmail.isChecked() && "".equals(lrzId) && !isValidEmail()){
+            return;
+        }
 
         // TODO send the feedback data to the server
-
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
         outState.putInt(Const.FEEDBACK_TOPIC, feedbackTopic);
-        outState.putString(Const.FEEDBACK_MESSAGE, ((TextView) findViewById(R.id.feedback_message)).getText().toString());
+        outState.putString(Const.FEEDBACK_MESSAGE, feedbackView.getText().toString());
         outState.putStringArrayList(Const.FEEDBACK_PIC_PATHS, picPaths);
-        outState.putBoolean(Const.FEEDBACK_INCL_EMAIL, ((Checkable) findViewById(R.id.feedback_include_email)).isChecked());
-        outState.putBoolean(Const.FEEDBACK_INCL_LOCATION, ((Checkable) findViewById(R.id.feedback_include_location)).isChecked());
-        outState.putString(Const.FEEDBACK_EMAIL, ((TextView) findViewById(R.id.feedback_custom_email)).getText().toString());
+        outState.putBoolean(Const.FEEDBACK_INCL_EMAIL, includeEmail.isChecked());
+        outState.putBoolean(Const.FEEDBACK_INCL_LOCATION, includeLocation.isChecked());
+        outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText().toString());
     }
 
     public void addPicture(View view){
@@ -254,7 +285,6 @@ public class FeedbackActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Utils.log("onActivityResult called");
         if(resultCode == RESULT_OK){
             if (requestCode == REQUEST_TAKE_PHOTO) {
                 picPaths.add(mCurrentPhotoPath);
@@ -321,7 +351,6 @@ public class FeedbackActivity extends BaseActivity {
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
-        Utils.log("file created: " + mCurrentPhotoPath);
         return image;
     }
 
