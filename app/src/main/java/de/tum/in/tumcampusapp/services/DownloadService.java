@@ -15,22 +15,25 @@ import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.LocationDao;
 import de.tum.in.tumcampusapp.managers.CacheManager;
-import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.KinoManager;
 import de.tum.in.tumcampusapp.managers.NewsManager;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
-import de.tum.in.tumcampusapp.managers.SyncManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
+import de.tum.in.tumcampusapp.viewmodel.CafeteriaViewModel;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.DOWNLOAD_SERVICE_JOB_ID;
 
@@ -46,6 +49,8 @@ public class DownloadService extends JobIntentService {
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
     private LocalBroadcastManager broadcastManager;
+    private CompositeDisposable mDisposable = new CompositeDisposable();
+    private CafeteriaViewModel cafeteriaViewModel;
 
     /**
      * Gets the time when BackgroundService was called last time
@@ -156,13 +161,16 @@ public class DownloadService extends JobIntentService {
         super.onCreate();
         Utils.log("DownloadService service has started");
         broadcastManager = LocalBroadcastManager.getInstance(this);
-
-        // Init sync table
-        new SyncManager(this);
+        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(this));
+        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
     }
 
     @Override
     public void onDestroy() {
+        mDisposable.clear();
         super.onDestroy();
         Utils.log("DownloadService service has stopped");
     }
@@ -211,16 +219,10 @@ public class DownloadService extends JobIntentService {
     }
 
     private boolean downloadCafeterias(boolean force) {
-        try {
-            CafeteriaManager cm = new CafeteriaManager(this);
-            CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
-            cm.downloadFromExternal(force);
-            cmm.downloadFromExternal(this, force);
-            return true;
-        } catch (JSONException e) {
-            Utils.log(e);
-            return false;
-        }
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
+        cmm.downloadFromExternal(this, force);
+        cafeteriaViewModel.getCafeteriasFromService(force);
+        return true;
     }
 
     private boolean downLoadKino(boolean force) {

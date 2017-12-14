@@ -14,7 +14,6 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment;
 
 /**
@@ -37,9 +36,9 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
         mCafeteriaId = cafeteriaId;
 
         // get all (distinct) dates having menus available
-        dates = TcaDb.getInstance(context)
-                     .cafeteriaMenuDao()
-                     .getAllDates();
+//        dates = TcaDb.getInstance(context)
+//                     .cafeteriaMenuDao()
+//                     .getAllDates();
 
         // Tell we just update the data
         this.notifyDataSetChanged();

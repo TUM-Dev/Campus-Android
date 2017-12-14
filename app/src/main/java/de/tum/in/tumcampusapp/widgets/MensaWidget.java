@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.services.MensaWidgetService;
 
@@ -29,12 +30,13 @@ public class MensaWidget extends AppWidgetProvider {
         this.appWidgetManager = appWidgetManager;
 
         for (int appWidgetId : appWidgetIds) {
+
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
 
             // set the header for the Widget layout
             CafeteriaManager mensaManager = new CafeteriaManager(context);
-            String mensaName = mensaManager.getBestMatchMensaName(context);
-            rv.setTextViewText(R.id.mensa_widget_header, mensaName);
+            String name = mensaManager.getBestMatchMensaName(context).blockingFirst();
+            rv.setTextViewText(R.id.mensa_widget_header, name);
 
             // set the header on click to open the mensa activity
             Intent mensaIntent = new Intent(context, CafeteriaActivity.class);

@@ -8,6 +8,7 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
+import io.reactivex.Flowable;
 
 @Dao
 public interface CafeteriaMenuDao {
@@ -21,13 +22,13 @@ public interface CafeteriaMenuDao {
     @Query("SELECT strftime('%d-%m-%Y', date) FROM cafeteriaMenu " +
            "WHERE date > date('now','localtime') AND cafeteriaId=:cafeteriaId AND name=:dishName " +
            "ORDER BY date ASC")
-    List<String> getNextDatesForDish(int cafeteriaId, String dishName);
+    Flowable<List<String>> getNextDatesForDish(int cafeteriaId, String dishName);
 
     @Query("SELECT DISTINCT date FROM cafeteriaMenu WHERE date >= date('now','localtime') ORDER BY date")
-    List<String> getAllDates();
+    Flowable<List<String>> getAllDates();
 
     @Query("SELECT id, cafeteriaId, date, typeShort, typeLong, 0 AS typeNr, group_concat(name, '\n') AS name FROM cafeteriaMenu " +
            "WHERE cafeteriaId = :cafeteriaId AND date = :date " +
            "GROUP BY typeLong ORDER BY typeShort=\"tg\" DESC, typeShort ASC, typeNr")
-    List<CafeteriaMenu> getTypeNameFromDbCard(int cafeteriaId, String date);
+    Flowable<List<CafeteriaMenu>> getTypeNameFromDbCard(int cafeteriaId, String date);
 }

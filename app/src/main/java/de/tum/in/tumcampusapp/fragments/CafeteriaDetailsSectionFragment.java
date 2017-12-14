@@ -67,7 +67,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         final FavoriteDishDao favoriteDishDao = db.favoriteDishDao();
 
         // Get menu items
-        List<CafeteriaMenu> cafeteriaMenus = cafeteriaMenuDao.getTypeNameFromDbCard(cafeteriaId, dateStr);
+        List<CafeteriaMenu> cafeteriaMenus = new ArrayList<>();// cafeteriaMenuDao.getTypeNameFromDbCard(cafeteriaId, dateStr);
         TextView textview;
         if (!big) {
             // Show opening hours

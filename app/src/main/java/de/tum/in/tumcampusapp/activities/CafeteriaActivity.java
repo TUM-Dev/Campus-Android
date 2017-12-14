@@ -112,9 +112,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     @Override
     protected void onStart() {
         super.onStart();
-//        cafeteriaViewModel.getCafeteriasFromService();
-
-
+        cafeteriaViewModel.getCafeteriasFromService(false);
 
         // Adapter for drop-down navigation
         ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
@@ -142,7 +140,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
         Location currLocation = new LocationManager(this).getCurrentOrNextLocation();
-        Flowable<List<Cafeteria>> cafeterias = cafeteriaViewModel.getAllCafeteria(currLocation);
+        Flowable<List<Cafeteria>> cafeterias = cafeteriaViewModel.getAllCafeterias(currLocation);
         mDisposable.add(
                 cafeterias.subscribe(
                         it -> {
@@ -226,7 +224,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
     @Override
     protected void onDestroy() {
-        mDisposable.dispose();
+        mDisposable.clear();
         super.onDestroy();
     }
 }

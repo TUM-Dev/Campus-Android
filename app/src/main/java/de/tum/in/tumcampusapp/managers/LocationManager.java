@@ -128,7 +128,7 @@ public class LocationManager {
      * @param location The location to search for a campus
      * @return Campus id
      */
-    private static int getCampusFromLocation(Location location) {
+    public static int getCampusFromLocation(Location location) {
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
         float[] results = new float[1];
