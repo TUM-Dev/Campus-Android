@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public class FeedbackThumbAdapter extends RecyclerView.Adapter<FeedbackThumbAdapter.ViewHolder> {
     private ArrayList<String> paths;
@@ -46,6 +47,15 @@ public class FeedbackThumbAdapter extends RecyclerView.Adapter<FeedbackThumbAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         if(thumbs.size() < position+1 || thumbs.get(position) == null){
             Bitmap bitmap = createThumb(holder.imageView, position);
+
+            if(bitmap == null){
+                Utils.log("Image removed from feedback (thumbnail couldn't be read)");
+                new File(paths.get(position)).delete();
+                paths.remove(position);
+                thumbs.remove(position);
+                notifyItemRemoved(position);
+            }
+
             if(thumbs.size() < position+1){
                 thumbs.add(bitmap);
             } else {

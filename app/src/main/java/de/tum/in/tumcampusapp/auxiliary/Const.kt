@@ -137,6 +137,7 @@ object Const {
     const val FEEDBACK_INCL_LOCATION = "feedback_incl_location"
     const val FEEDBACK_TOPIC = "feedback_topic"
     const val FEEDBACK_EMAIL = "feedback_reply_to"
+    const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50;
     
     const val EXTRA_FOREIGN_CONFIGURATION_EXISTS = "CONFIGURED_BY_OTHER_APP"
 }
