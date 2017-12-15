@@ -22,6 +22,7 @@ import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
@@ -38,6 +39,7 @@ public class EduroamFixCard extends NotificationAwareCard {
     private final List<String> errors;
     private TextView errorsTv;
     private WifiConfiguration eduroam;
+    private static final String atSign = "@";
 
     public EduroamFixCard(Context context) {
         super(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start", false, true);
@@ -122,56 +124,84 @@ public class EduroamFixCard extends NotificationAwareCard {
             return true;
         }
 
-        //Otherwise check attributes - Android 23+: check newer match for the radius server
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            (!eduroam.enterpriseConfig.getAltSubjectMatch()
-                                      .equals("DNS:" + RADIUS_DNS) || !eduroam.enterpriseConfig.getDomainSuffixMatch()
-                                                                                               .equals(RADIUS_DNS))
-            && !isValidSubjectMatchAPI18(eduroam)) {
-            errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
+        // Eduroam was configured by other university
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2
+                && !isTumEduroam(eduroam.enterpriseConfig.getIdentity())) {
+            Utils.log("Eduroam wasn't configured at TUM");
+            return true;
         }
 
+        //Otherwise check attributes - Android 23+: check newer match for the radius server
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !isValidSubjectMatchAPI18(eduroam)) {
-                errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
-            }
 
-            //Check that the full quantifier and correct identity is used
-            if (!eduroam.enterpriseConfig.getIdentity().contains("@eduroam.mwn.de")
-                && !eduroam.enterpriseConfig.getIdentity().contains("@mytum.de")
-                && !eduroam.enterpriseConfig.getIdentity().contains("@tum.de")) {
+            int eapMethod = eduroam.enterpriseConfig.getEapMethod();
+            int phase2 = eduroam.enterpriseConfig.getPhase2Method();
+            Utils.log("Eap method: " + eapMethod + " phase2: " + phase2);
 
+            // for all configurations
+            // Check that the full quantifier is used (we already know it's a tum config)
+            if (!eduroam.enterpriseConfig.getIdentity().contains(atSign)) {
                 errors.add(mContext.getString(R.string.wifi_identity_zone));
             }
 
-            Utils.log("Eap method: " + eduroam.enterpriseConfig.getEapMethod() + " phase2: " + eduroam.enterpriseConfig.getPhase2Method());
-            if ((eduroam.enterpriseConfig.getEapMethod() == WifiEnterpriseConfig.Eap.TTLS
-                 || (eduroam.enterpriseConfig.getEapMethod() == WifiEnterpriseConfig.Eap.PEAP
-                     && eduroam.enterpriseConfig.getPhase2Method() == WifiEnterpriseConfig.Phase2.MSCHAPV2))
-                && !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mwn.de")
-                && !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@eduroam.mwn.de")
-                && !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mytum.de")) {
+            if ((eapMethod == WifiEnterpriseConfig.Eap.TTLS
+                 && (phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2 || phase2 == WifiEnterpriseConfig.Phase2.PAP)
+                 || (eapMethod == WifiEnterpriseConfig.Eap.PEAP
+                     && phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2))) {
 
-                errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set) );
-            }
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                    && !isValidSubjectMatchAPI18(eduroam)) {
+                    errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
+                }
 
-            //Check certificate
-            //TODO
-            /*if (eduroam.enterpriseConfig.getCaCertificate() == null) {
-                errors.add("No CA certificate set");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if ((!eduroam.enterpriseConfig.getAltSubjectMatch()
+                                                  .equals("DNS:" + RADIUS_DNS)
+                         || !eduroam.enterpriseConfig.getDomainSuffixMatch()
+                                                     .equals(RADIUS_DNS))
+                        && !isValidSubjectMatchAPI18(eduroam)) {
+                        errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
+                    } else {
+                        Utils.log("AltSubjectMatch: " + eduroam.enterpriseConfig.getAltSubjectMatch());
+                        Utils.log("DomainSuffixMatch: " + eduroam.enterpriseConfig.getDomainSuffixMatch());
+                    }
+                }
+
+                String anonymousIdentity = eduroam.enterpriseConfig.getAnonymousIdentity();
+                if (anonymousIdentity != null
+                    && (!anonymousIdentity.equals("anonymous@mwn.de")
+                        && !anonymousIdentity.equals("anonymous@eduroam.mwn.de")
+                        && !anonymousIdentity.equals("anonymous@mytum.de"))) {
+                    errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set));
+                }
+
+                // TODO check certificate (getCaCertificate() and getClientCertificate() return null
+                // even though threre is a CA certificate according to eduroamCAT)
+                // KeyStore -> AndroidCAStore?
+
+
             } else {
-                Utils.log(eduroam.enterpriseConfig.getCaCertificate().toString());
-            }*/
+                // PWD or
+                // unknown authentication method -> we don't know if this is safe or not -> ignore
+            }
 
         }
 
-        return errors.size() == 0;
+        return errors.isEmpty();
+    }
+
+    private boolean isTumEduroam(String identity) {
+        Pattern pattern = Pattern.compile(Const.TUM_ID_PATTERN);
+        return identity.endsWith("@mwn.de") || identity.endsWith("@mytum.de") || identity.endsWith("@tum.de")
+                || ((identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(atSign))
+               || pattern.matcher(identity).matches();
     }
 
     @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private boolean isValidSubjectMatchAPI18(WifiConfiguration eduroam) {
+        Utils.log("SubjectMatch: " + eduroam.enterpriseConfig.getSubjectMatch());
         return eduroam.enterpriseConfig.getSubjectMatch()
                                        .equals(RADIUS_DNS);
     }
