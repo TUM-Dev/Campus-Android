@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,8 +24,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.google.common.base.Strings;
-
-import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -226,7 +225,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private boolean isValidEmail(){
         String email = customEmailView.getText().toString();
-        boolean isValid = EmailValidator.getInstance().isValid(email);
+        boolean isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
         if(isValid){
             customEmailView.setTextColor(getResources().getColor(R.color.valid));
         } else {
