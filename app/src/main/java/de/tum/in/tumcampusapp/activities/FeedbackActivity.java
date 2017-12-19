@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
@@ -95,10 +97,11 @@ public class FeedbackActivity extends BaseActivity {
         pictureList.setAdapter(thumbAdapter);
     }
 
+    @SuppressLint("NewApi")
     private void initIncludeLocation(Bundle savedInstanceState){
         includeLocation.setOnClickListener(view -> {
-            if(includeLocation.isChecked() && location == null){
-                checkLocationPermission();
+            if(includeLocation.isChecked() && location == null
+               && checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
                 saveLocation();
             }
         });
@@ -109,19 +112,34 @@ public class FeedbackActivity extends BaseActivity {
             includeLocation.setChecked(true);
         }
 
-        if(includeLocation.isChecked()) {
-            checkLocationPermission();
+        if(includeLocation.isChecked()
+           && checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
             saveLocation();
         }
     }
 
-    private void checkLocationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR);
-            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION);
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    /**
+     * @return true if user has given permission before
+     */
+    private boolean checkPermission(String permission) {
+        int permissionCheck = ContextCompat.checkSelfPermission(this, permission);
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            int requestCode;
+            switch(permission){
+                case Manifest.permission.READ_EXTERNAL_STORAGE:
+                    requestCode = PERMISSION_FILES;
+                    break;
+                case Manifest.permission.CAMERA:
+                    requestCode = PERMISSION_CAMERA;
+                    break;
+                default: requestCode = PERMISSION_LOCATION;
+                    break;
             }
+            requestPermissions(new String[]{permission}, requestCode);
+            return false;
         }
+        return true;
     }
 
     private void saveLocation(){
@@ -253,6 +271,7 @@ public class FeedbackActivity extends BaseActivity {
         outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText().toString());
     }
 
+    @SuppressLint("NewApi")
     public void addPicture(View view){
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(R.string.feedback_add_picture);
@@ -260,23 +279,13 @@ public class FeedbackActivity extends BaseActivity {
         String[] options = {getString(R.string.feedback_take_picture), getString(R.string.gallery)};
         dialog.setItems(options, (dialogInterface, i) -> {
             if(i == 0){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-                    if( permissionCheck == PackageManager.PERMISSION_DENIED){
-                        requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CAMERA);
-                        return;
-                    }
+                if(checkPermission(Manifest.permission.CAMERA)){
+                    startTakingPicture();
                 }
-                startTakingPicture();
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-                    if( permissionCheck == PackageManager.PERMISSION_DENIED){
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_FILES);
-                        return;
-                    }
+                if(checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    openGallery();
                 }
-                openGallery();
             }
         });
         dialog.setNegativeButton(R.string.cancel, null);
@@ -328,7 +337,6 @@ public class FeedbackActivity extends BaseActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Utils.log(getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());
-
                 Uri photoURI = FileProvider.getUriForFile(this,
                                                           "de.tum.in.tumcampusapp.fileprovider",
                                                           photoFile);
