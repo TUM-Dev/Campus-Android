@@ -11,6 +11,7 @@ import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -131,12 +132,8 @@ public class EduroamFixCard extends NotificationAwareCard {
             return true;
         }
 
-        //Otherwise check attributes - Android 23+: check newer match for the radius server
+        // Check attributes - Android 23+: check newer match for the radius server
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-
-            int eapMethod = eduroam.enterpriseConfig.getEapMethod();
-            int phase2 = eduroam.enterpriseConfig.getPhase2Method();
-            Utils.log("Eap method: " + eapMethod + " phase2: " + phase2);
 
             // for all configurations
             // Check that the full quantifier is used (we already know it's a tum config)
@@ -144,50 +141,51 @@ public class EduroamFixCard extends NotificationAwareCard {
                 errors.add(mContext.getString(R.string.wifi_identity_zone));
             }
 
+            int eapMethod = eduroam.enterpriseConfig.getEapMethod();
+            int phase2 = eduroam.enterpriseConfig.getPhase2Method();
+
             if ((eapMethod == WifiEnterpriseConfig.Eap.TTLS
                  && (phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2 || phase2 == WifiEnterpriseConfig.Phase2.PAP)
                  || (eapMethod == WifiEnterpriseConfig.Eap.PEAP
                      && phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2))) {
 
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                    && !isValidSubjectMatchAPI18(eduroam)) {
-                    errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
-                }
+                checkDNSName();
+                checkAnonymousIdentity();
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if ((!eduroam.enterpriseConfig.getAltSubjectMatch()
-                                                  .equals("DNS:" + RADIUS_DNS)
-                         || !eduroam.enterpriseConfig.getDomainSuffixMatch()
-                                                     .equals(RADIUS_DNS))
-                        && !isValidSubjectMatchAPI18(eduroam)) {
-                        errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
-                    } else {
-                        Utils.log("AltSubjectMatch: " + eduroam.enterpriseConfig.getAltSubjectMatch());
-                        Utils.log("DomainSuffixMatch: " + eduroam.enterpriseConfig.getDomainSuffixMatch());
-                    }
-                }
-
-                String anonymousIdentity = eduroam.enterpriseConfig.getAnonymousIdentity();
-                if (anonymousIdentity != null
-                    && (!anonymousIdentity.equals("anonymous@mwn.de")
-                        && !anonymousIdentity.equals("anonymous@eduroam.mwn.de")
-                        && !anonymousIdentity.equals("anonymous@mytum.de"))) {
-                    errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set));
-                }
-
-                // TODO check certificate (getCaCertificate() and getClientCertificate() return null
-                // even though threre is a CA certificate according to eduroamCAT)
-                // KeyStore -> AndroidCAStore?
-
-
+                // note: checking the certificate does not seem possible
             } else {
-                // PWD or
-                // unknown authentication method -> we don't know if this is safe or not -> ignore
+                // PWD or unknown authentication method (we don't know if that method is safe or not -> ignore)
             }
-
         }
-
         return errors.isEmpty();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void checkAnonymousIdentity(){
+        String anonymousIdentity = eduroam.enterpriseConfig.getAnonymousIdentity();
+        if (anonymousIdentity != null
+            && (!anonymousIdentity.equals("anonymous@mwn.de")
+                && !anonymousIdentity.equals("anonymous@eduroam.mwn.de")
+                && !anonymousIdentity.equals("anonymous@mytum.de"))) {
+            errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set));
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private void checkDNSName(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+            && !isValidSubjectMatchAPI18(eduroam)) {
+            errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
+        } else {
+            if ((!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS)
+                 || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))
+                && !isValidSubjectMatchAPI18(eduroam)) {
+                errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
+            } else {
+                Utils.log("AltSubjectMatch: " + eduroam.enterpriseConfig.getAltSubjectMatch());
+                Utils.log("DomainSuffixMatch: " + eduroam.enterpriseConfig.getDomainSuffixMatch());
+            }
+        }
     }
 
     private boolean isTumEduroam(String identity) {
