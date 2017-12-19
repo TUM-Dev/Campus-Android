@@ -29,7 +29,7 @@ public class MVVWidgetService extends RemoteViewsService {
         private final Context applicationContext;
         private List<Departure> departures = new ArrayList<>();
         private int appWidgetID;
-        private boolean forceLoadDepartures;
+        private boolean forceLoadDepartures = false;
 
         MVVRemoteViewFactory(Context applicationContext, Intent intent) {
             this.applicationContext = applicationContext.getApplicationContext();
