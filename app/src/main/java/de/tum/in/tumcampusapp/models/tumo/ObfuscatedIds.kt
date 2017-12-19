@@ -5,5 +5,5 @@ import org.simpleframework.xml.Root
 
 @Root(name = "row")
 data class ObfuscatedIds(@field:Element var studierende: String = "",
-                         @field:Element var bedienstete: String = "",
-                         @field:Element var extern: String = "")
+                         @field:Element(required = false) var bedienstete: String = "",
+                         @field:Element(required = false) var extern: String = "")

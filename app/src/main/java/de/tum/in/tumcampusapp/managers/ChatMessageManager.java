@@ -2,14 +2,12 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -19,12 +17,10 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatMessageDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.UnsentChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
-import de.tum.in.tumcampusapp.notifications.Chat;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -40,11 +36,11 @@ public class ChatMessageManager  {
     public static final int COL_MEMBER = 6;
     public static final int COL_READ = 7;
     public static final int COL_SENDING = 8;
+    public static final int COL_MSGID = 9;
 
     private final int mChatRoom;
     private final Context mContext;
     private final ChatMessageDao chatMessageDao;
-    private final UnsentChatMessageDao unsentChatMessageDao;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -55,31 +51,8 @@ public class ChatMessageManager  {
         mContext = context;
         mChatRoom = room;
         TcaDb tcaDb = TcaDb.getInstance(context);
-        unsentChatMessageDao = tcaDb.unsentChatMessageDao();
         chatMessageDao = tcaDb.chatMessageDao();
         chatMessageDao.deleteOldEntries();
-    }
-
-    /**
-     * Gets all unsent chat messages
-     */
-    public  List<ChatMessage> getAllUnsentUpdated() {
-        chatMessageDao.deleteOldEntries();
-        List<ChatMessage> list;
-        try (Cursor cur = unsentChatMessageDao.getAllUnsent()) {
-            list = new ArrayList<>(cur.getCount());
-            if (cur.moveToFirst()) {
-                do {
-                    ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
-                    ChatMessage msg = new ChatMessage(cur.getString(1), member);
-                    msg.setRoom(cur.getInt(2));
-                    msg.setId(cur.getInt(3));
-                    msg.internalID = cur.getInt(4);
-                    list.add(msg);
-                } while (cur.moveToNext());
-            }
-        }
-        return list;
     }
 
     public static ChatMessage toObject(Cursor cursor) {
@@ -94,6 +67,7 @@ public class ChatMessageManager  {
         msg.setRoom(cursor.getInt(COL_ROOM));
         msg.setRead(cursor.getInt(COL_READ) == 1);
         msg.setSendingStatus(cursor.getInt(COL_SENDING));
+        msg.internalID = cursor.getInt(COL_MSGID);
         return msg;
     }
 
@@ -103,29 +77,19 @@ public class ChatMessageManager  {
      * @return List of chat messages
      */
     public Cursor getAll() {
+        markAsRead();
+        return chatMessageDao.getAll(mChatRoom);
+    }
+
+    public void markAsRead()    {
         chatMessageDao.markAsRead(mChatRoom);
-        Cursor cur = chatMessageDao.getAll(mChatRoom);
-        return cur;
     }
 
     /**
      * Gets all unsent chat messages from the current room
      */
     public List<ChatMessage> getAllUnsent() {
-        List<ChatMessage> list;
-        try (Cursor cur = unsentChatMessageDao.getAllUnsentFromCurrentRoom()) {
-            list = new ArrayList<>(cur.getCount());
-            if (cur.moveToFirst()) {
-                do {
-                    ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
-                    ChatMessage msg = new ChatMessage(cur.getString(1), member);
-                    msg.setRoom(cur.getInt(2));
-                    msg.internalID = cur.getInt(3);
-                    list.add(msg);
-                } while (cur.moveToNext());
-            }
-        }
-        return list;
+        return chatMessageDao.getAllUnsentFromCurrentRoom();
     }
 
     /**
@@ -134,32 +98,23 @@ public class ChatMessageManager  {
     public void addToUnsent(ChatMessage m) {
         //TODO handle message with already set id
         Utils.logv("replace into unsent " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getSendingStatus());
-        unsentChatMessageDao.addToUnsent(m);
+        m.setRoom(mChatRoom);
+        chatMessageDao.addToUnsent(m);
     }
 
     /**
      * Removes the message from unsent database
      */
-    public void removeFromUnsent(ChatMessage message) {
-        unsentChatMessageDao.removeFromUnsent(message.internalID);
+    public void removeUnsentMessage(ChatMessage message) {
+        chatMessageDao.removeUnsentMessage(message.internalID);
     }
+
 
     /**
      * Gets all unread chat messages
      */
     public List<ChatMessage> getLastUnread() {
-        List<ChatMessage> list;
-        try (Cursor cur = chatMessageDao.getLastUnread(mChatRoom)) {
-            list = new ArrayList<>(cur.getCount());
-            if (cur.moveToFirst()) {
-                do {
-                    ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
-                    ChatMessage msg = new ChatMessage(cur.getString(1), member);
-                    list.add(msg);
-                } while (cur.moveToNext());
-            }
-        }
-        return list;
+        return chatMessageDao.getLastUnread(mChatRoom);
     }
 
     /**

@@ -99,6 +99,7 @@ public final class TUMOnlineRequest<T> {
         this.fillCache = true;
     }
 
+
     public void cancelRequest(boolean mayInterruptIfRunning) {
         // Cancel background task just if one has been established
         if (backgroundTask != null) {
@@ -177,6 +178,7 @@ public final class TUMOnlineRequest<T> {
                 tumManager.releaseLock(url);
             } catch (Exception e) {
                 Utils.log(e, "TUMonline request failed");
+                e.printStackTrace();
                 //Serialisation failed - lock for a specific time, save the error message
                 lastError = tumManager.addLock(url, result.get());
             }

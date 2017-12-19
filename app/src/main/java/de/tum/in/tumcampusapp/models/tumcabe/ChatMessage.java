@@ -11,8 +11,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.annotation.Nullable;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
@@ -26,15 +24,16 @@ public class ChatMessage {
     @PrimaryKey
     @ColumnInfo(name = "_id")
     private int id;
-    private String text;
-    private ChatMember member;
-    private String timestamp;
-    private String signature;
-    @ColumnInfo(name = "sending")
-    private int sendingStatus;
     private int previous;
     private int room;
+    private String text;
+    private String timestamp;
+    private String signature;
+    private ChatMember member;
     private boolean read;
+    @ColumnInfo(name = "sending")
+    private int sendingStatus;
+    @ColumnInfo(name = "msg_id")
     public int internalID;
 
     /**
