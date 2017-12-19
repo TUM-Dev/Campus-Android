@@ -41,6 +41,7 @@ public final class Helper {
                 .add(API_HOSTNAME, "sha256/YLh1dUR9y6Kja30RrAn7JKnbQG/uEtLMkBgFF2Fuihg=") //Let's Encrypt Authority X3
                 .add(API_HOSTNAME, "sha256/Vjs8r4z+80wjNcr1YKepWQboSIRi63WsWXhIMN+eWys=") //LE Cross Sign: DST Root CA X3
                 .add(STUDYROOM_HOST, "sha256/dVphPQ9xG7woPpEKXrNalw4eMUQ4Fw9r3OXTzxfuL5A=") //wwwv2.tum.de
+                .add(STUDYROOM_HOST, "sha256/K64RzAqr/RSxwfpHN6fe0DcmdaIVmzAyi511ufYaK1s=") //wwwv4.tum.de
                 .add(STUDYROOM_HOST, "sha256/SwdQoHL7SB/6o12XsIhbQJ9bANVnbrJoHTLzlu/qXT0=") //Zertifizierungsstelle der TUM
                 .add(STUDYROOM_HOST, "sha256/VzL+FtAKvzb4N5igmFJyv83GD7CBK7Yyw+R6XdRRfmg=") //DFN-Verein PCA Global - G01
                 .add(STUDYROOM_HOST, "sha256/0d4q5hyN8vpiOWYWPUxz1GC/xCjldYW+a/65pWMj0bY=") //Deutsche Telekom Root CA 2

@@ -28,4 +28,7 @@ public interface KinoDao {
 
     @Query("SELECT * FROM kino ORDER BY id LIMIT 1 OFFSET :position")
     Kino getByPosition(int position);
+
+    @Query("DELETE FROM kino")
+    void flush();
 }
