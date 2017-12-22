@@ -550,6 +550,10 @@ Signature: %5$s</string>
     <string name="feedback_take_picture">Take Picture</string>
     <string name="gallery">Gallery</string>
     <string name="feedback_remove_image">Remove Image</string>
+    <string name="feedback_sending_error">There was an error sending your feedback</string>
+    <string name="try_again">Try Again</string>
+    <string name="feedback_sending">Sending...</string>
+    <string name="feedback_send_success">Your feedback was successfully sent!</string>
     <string-array name="feedback_options">
         <item>@string/general</item>
         <item>@string/tca</item>

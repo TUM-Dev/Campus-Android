@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,7 +24,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.common.base.Strings;
 
@@ -34,13 +37,19 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.FeedbackThumbAdapter;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.LocationManager;
+import de.tum.in.tumcampusapp.models.tumcabe.Feedback;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FeedbackActivity extends BaseActivity {
 
@@ -62,6 +71,10 @@ public class FeedbackActivity extends BaseActivity {
     private ArrayList<String> picPaths;
 
     private RecyclerView.Adapter thumbAdapter;
+
+    private int sentCount;
+    private Dialog progress;
+    private Dialog errorDialog;
 
     public FeedbackActivity() {
         super(R.layout.activity_feedback);
@@ -118,10 +131,10 @@ public class FeedbackActivity extends BaseActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     /**
      * @return true if user has given permission before
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private boolean checkPermission(String permission) {
         int permissionCheck = ContextCompat.checkSelfPermission(this, permission);
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
@@ -242,7 +255,7 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private boolean isValidEmail(){
-        String email = customEmailView.getText().toString();
+        email = customEmailView.getText().toString();
         boolean isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
         if(isValid){
             customEmailView.setTextColor(getResources().getColor(R.color.valid));
@@ -252,12 +265,70 @@ public class FeedbackActivity extends BaseActivity {
         return isValid;
     }
 
+    private Feedback getFeedback(){
+        return new Feedback(UUID.randomUUID().toString(),
+                     (feedbackTopic == 0 ? Const.FEEDBACK_TOPIC_GENERAL : Const.FEEDBACK_TOPIC_APP),
+                     feedbackView.getText().toString(),
+                     (includeEmail.isChecked() ? email : ""),
+                     (includeLocation.isChecked() ? location.getLatitude() : 0),
+                     (includeLocation.isChecked() ? location.getLongitude() : 0),
+                     picPaths == null ? 0 : picPaths.size());
+    }
+
     public void sendFeedback(View view){
+        sentCount = 0;
+
         if(includeEmail.isChecked() && Strings.isNullOrEmpty(lrzId) && !isValidEmail()){
             return;
         }
 
-        // TODO send the feedback data to the server
+        try {
+            showProgressBarDialog();
+            TUMCabeClient client = TUMCabeClient.getInstance(this);
+            client.sendFeedback(getFeedback(), picPaths.toArray(new String[0]), new Callback<String>() {
+                 @Override
+                 public void onResponse(Call<String> call, Response<String> response) {
+                     sentCount++;
+                     if(sentCount == picPaths.size() + 1){
+                         progress.cancel();
+                         finish();
+                         Toast.makeText(feedbackView.getContext(), R.string.feedback_send_success, Toast.LENGTH_SHORT).show();
+                     }
+                     Utils.log("sent " + sentCount + " of " + (picPaths.size()+1) + " message parts");
+                 }
+                 @Override
+                 public void onFailure(Call<String> call, Throwable t) {
+                     showErrorDialog();
+                 }
+            });
+        } catch (IOException e){
+            showErrorDialog();
+            e.printStackTrace();
+        }
+    }
+
+    private void showProgressBarDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.feedback_sending);
+        builder.setView(new ProgressBar(this));
+        builder.setCancelable(false);
+        builder.setNeutralButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+        progress = builder.show();
+    }
+
+    private void showErrorDialog(){
+        if(errorDialog != null && errorDialog.isShowing()){
+            return;
+        }
+        progress.cancel();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.feedback_sending_error);
+        builder.setIcon(R.drawable.ic_error_outline);
+        builder.setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback(null));
+
+        // Or save message to send later -> db table needed? / sharedPreferences
+        builder.setNegativeButton(R.string.ok, null);
+        errorDialog = builder.show();
     }
 
     @Override
@@ -349,7 +420,7 @@ public class FeedbackActivity extends BaseActivity {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "IMG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */

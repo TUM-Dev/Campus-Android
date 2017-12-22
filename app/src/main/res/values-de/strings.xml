@@ -465,7 +465,7 @@ Signatur: %5$s</string>
         <item>@string/general</item>
         <item>@string/tca</item>
     </string-array>
-    <string name="feedback_hint">Hier ist Platz für dein Feedback...</string>
+    <string name="feedback_hint">Hier ist Platz für dein Feedback…</string>
     <string name="add_picture_button">&#160;&#160;Bild hinzufügen</string>
     <string name="feedback_include_email">Email mitversenden um eine Antwort zu erhalten</string>
     <string name="feedback_include_email_tum_id">Email mitversenden um eine Antwort zu erhalten (%s)</string>
@@ -476,4 +476,8 @@ Signatur: %5$s</string>
     <string name="feedback_take_picture">Kamera</string>
     <string name="gallery">Galerie</string>
     <string name="feedback_remove_image">Bild löschen</string>
+    <string name="feedback_sending_error">Es ist ein Fehler aufgetreten</string>
+    <string name="try_again">Erneut versuchen</string>
+    <string name="feedback_sending">Feedback wird gesendet…</string>
+    <string name="feedback_send_success">Feedback erfolgreich versandt!</string>
 </resources>

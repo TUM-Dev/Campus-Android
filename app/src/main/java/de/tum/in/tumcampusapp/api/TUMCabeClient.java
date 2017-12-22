@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
+import de.tum.in.tumcampusapp.models.tumcabe.Feedback;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
@@ -30,6 +32,9 @@ import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,6 +76,7 @@ public class TUMCabeClient {
     static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
     static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
+    static final String API_FEEDBACK = "feedback/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -349,5 +355,15 @@ public class TUMCabeClient {
                                      Helper.encodeUrl(start), Helper.encodeUrl(end))
                       .execute()
                       .body();
+    }
+
+    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<String> cb) throws IOException {
+        service.sendFeedback(feedback).enqueue(cb);
+        for(int i = 0; i < imagePaths.length; i++){
+            File file = new File(imagePaths[i]);
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", file.getName(), reqFile);
+            service.sendFeedbackImage(body, i, feedback.getId()).enqueue(cb);
+        }
     }
 }
