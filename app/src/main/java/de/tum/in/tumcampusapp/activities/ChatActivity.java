@@ -40,7 +40,11 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
@@ -51,6 +55,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
@@ -80,6 +86,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
 
     public static ChatRoom mCurrentOpenChatRoom;
     private final Handler mUpdateHandler = new Handler();
+    private final ChatMessageDao chatMessageDao;
 
     /**
      * UI elements
@@ -118,7 +125,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             int i = item.getItemId();
             if (i == R.id.action_edit) {// If item is not sent at the moment, stop sending
                 if (msg.getSendingStatus() == ChatMessage.STATUS_SENDING) {
-                    chatManager.removeUnsentMessage(msg);
+                    chatMessageDao.removeUnsentMessage(msg.internalID);
                     chatHistoryAdapter.removeUnsent(msg);
                 } else { // set editing item
                     chatHistoryAdapter.mEditedItem = msg;
@@ -167,6 +174,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
 
     public ChatActivity() {
         super(Const.CURRENT_CHAT_ROOM, R.layout.activity_chat);
+        TcaDb tcaDb = TcaDb.getInstance(this);
+        chatMessageDao = tcaDb.chatMessageDao();
     }
 
 
@@ -188,7 +197,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         }
         if (extras.getMember() == currentChatMember.getId()) {
             // Remove this message from the adapter
-            chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
+            chatHistoryAdapter.setUnsentMessages(chatMessageDao.getAllUnsentFromCurrentRoom());
         } else if (extras.getMessage() == -1) {
             //Check first, if sounds are enabled
             AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -204,7 +213,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         }
 
         //Update the history
-        chatHistoryAdapter.changeCursor(chatManager.getAll());
+        chatHistoryAdapter.notifyDataSetChanged();
+        chatHistoryAdapter.changeCursor(chatMessageDao.getAll(currentChatRoom.getId()));
 
     }
 
@@ -271,7 +281,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                                                                  .substring(4));
             }
             chatHistoryAdapter = null;
-            chatManager = new ChatMessageManager(this, currentChatRoom.getId());
+            chatMessageDao.deleteOldEntries();
             getNextHistoryFromServer(true);
 
         }
@@ -346,16 +356,18 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     private void sendMessage(String text) {
         if (chatHistoryAdapter.mEditedItem == null) {
             final ChatMessage message = new ChatMessage(text, currentChatMember);
+            message.setRoom(currentChatRoom.getId());
             chatHistoryAdapter.add(message);
-            chatManager.addToUnsent(message);
+            chatMessageDao.addToUnsent(message);
         } else {
             chatHistoryAdapter.mEditedItem.setText(etMessage.getText()
                                                             .toString());
-            chatManager.addToUnsent(chatHistoryAdapter.mEditedItem);
+            chatHistoryAdapter.mEditedItem.setRoom(currentChatRoom.getId());
+            chatMessageDao.addToUnsent(chatHistoryAdapter.mEditedItem);
             chatHistoryAdapter.mEditedItem.setSendingStatus(ChatMessage.STATUS_SENDING);
-            chatManager.replaceMessage(chatHistoryAdapter.mEditedItem);
+            chatMessageDao.replaceMessage(chatHistoryAdapter.mEditedItem);
             chatHistoryAdapter.mEditedItem = null;
-            chatHistoryAdapter.changeCursor(chatManager.getAll());
+            chatHistoryAdapter.changeCursor(chatMessageDao.getAll(currentChatRoom.getId()));
         }
 
         // start service to send the message
@@ -373,8 +385,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             getSupportActionBar().setTitle(currentChatRoom.getName()
                                                           .substring(4));
         }
-        chatManager = new ChatMessageManager(this, currentChatRoom.getId());
-
+        chatMessageDao.deleteOldEntries();
         CharSequence message = getMessageText(getIntent());
         if (message != null) {
             sendMessage(message.toString());
@@ -411,6 +422,49 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             getNextHistoryFromServer(false);
         }
     }
+    public void replaceInto(List<ChatMessage> m) {
+        ChatMember member = Utils.getSetting(getApplicationContext(), Const.CHAT_MEMBER, ChatMember.class);
+
+        if (member == null) {
+            return;
+        }
+
+        for (ChatMessage msg : m) {
+            replaceInto(msg, member.getId());
+        }
+    }
+
+    public void replaceInto(ChatMessage m, int memberId) {
+        if (m == null || m.getText() == null) {
+            Utils.log("Message empty");
+            return;
+        }
+
+        Utils.logv("replace " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getSendingStatus());
+
+        // Query read status from the previous message and use this read status as well if it is "0"
+        boolean read = memberId == m.getMember()
+                                    .getId();
+        int status = chatMessageDao.getRead(m.getId());
+        if (status == 1) {
+            read = true;
+        }
+        m.setSendingStatus(ChatMessage.STATUS_SENT);
+        m.setRead(read);
+        replaceMessage(m);
+    }
+
+    public void replaceMessage(ChatMessage m) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+        Date date;
+        try {
+            date = formatter.parse(m.getTimestamp());
+        } catch (ParseException e) {
+            date = new Date();
+        }
+        m.setTimestamp(Utils.getDateTimeString(date));
+        chatMessageDao.replaceMessage(m);
+    }
 
     /**
      * Loads older chat messages from the server and sets the adapter accordingly
@@ -443,12 +497,12 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             }
 
             //Save it to our local cache
-            chatManager.replaceInto(downloadedChatHistory);
+            replaceInto(downloadedChatHistory);
 
             // Got results from webservice
             Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
 
-            final Cursor cur = chatManager.getAll();
+            final Cursor cur = chatMessageDao.getAll(currentChatRoom.getId());
 
             // Update results in UI
             runOnUiThread(() -> {

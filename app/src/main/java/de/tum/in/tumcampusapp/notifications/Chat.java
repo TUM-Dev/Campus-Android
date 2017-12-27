@@ -15,6 +15,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.ChatActivity;
@@ -23,12 +28,15 @@ import de.tum.in.tumcampusapp.activities.MainActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 
 public class Chat extends GenericNotification {
 
@@ -39,6 +47,8 @@ public class Chat extends GenericNotification {
     private ChatRoom chatRoom;
     private String notificationText;
     private TaskStackBuilder sBuilder;
+    private final ChatMessageDao chatMessageDao;
+
 
     public Chat(Bundle extras, Context context, int notfication) {
         super(context, 1, notfication, true);
@@ -62,6 +72,8 @@ public class Chat extends GenericNotification {
         } catch (IOException e) {
             Utils.log(e);
         }
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        chatMessageDao = tcaDb.chatMessageDao();
     }
 
     public Chat(String payload, Context context, int notfication) {
@@ -80,6 +92,56 @@ public class Chat extends GenericNotification {
         } catch (IOException e) {
             Utils.log(e);
         }
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        chatMessageDao = tcaDb.chatMessageDao();
+    }
+    //chatRoom might be wrong one
+    private Cursor getNewMessages(ChatMember member, int messageId) throws NoPrivateKey, IOException {
+        List<ChatMessage> messages;
+        if (messageId == -1) {
+            messages = TUMCabeClient.getInstance(context)
+                                    .getNewMessages(chatRoom.getId(), ChatVerification.Companion.getChatVerification(context, member));
+        } else {
+            messages = TUMCabeClient.getInstance(context)
+                                    .getMessages(chatRoom.getId(), messageId, ChatVerification.Companion.getChatVerification(context, member));
+        }
+        ChatMember chatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
+
+        if (member == null) {
+            return null;
+        }
+        for (ChatMessage msg : messages) {
+            if (msg == null || msg.getText() == null) {
+                Utils.log("Message empty");
+                return null;
+            }
+
+            Utils.logv("replace " + msg.getText() + " " + msg.getId() + " " + msg.getPrevious() + " " + msg.getSendingStatus());
+
+            // Query read status from the previous message and use this read status as well if it is "0"
+            //might be wrong chatMemger.getId
+            boolean read = chatMember.getId() == msg.getMember()
+                                        .getId();
+            int status = chatMessageDao.getRead(msg.getId());
+            if (status == 1) {
+                read = true;
+            }
+            msg.setSendingStatus(ChatMessage.STATUS_SENT);
+            msg.setRead(read);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+            Date date;
+            try {
+                date = formatter.parse(msg.getTimestamp());
+            } catch (ParseException e) {
+                date = new Date();
+            }
+            msg.setTimestamp(Utils.getDateTimeString(date));
+            chatMessageDao.replaceMessage(msg);
+/*
+            replaceMessage(m);
+*/
+        }
+        return chatMessageDao.getUnread(chatRoom.getId());
     }
 
     private void prepare() throws IOException {
@@ -90,8 +152,8 @@ public class Chat extends GenericNotification {
         chatRoom = TUMCabeClient.getInstance(context)
                                 .getChatRoom(this.extras.getRoom());
 
-        ChatMessageManager manager = new ChatMessageManager(context, chatRoom.getId());
-        try (Cursor messages = manager.getNewMessages(member, this.extras.getMessage())) {
+        chatMessageDao.deleteOldEntries();
+        try (Cursor messages = getNewMessages(member,this.extras.getMessage())) {
             // Notify any open chat activity that a message has been received
             Intent intent = new Intent("chat-message-received");
             intent.putExtra("GCMChat", this.extras);

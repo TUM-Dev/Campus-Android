@@ -8,7 +8,11 @@ import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
@@ -71,10 +75,29 @@ public class SendMessageService extends JobIntentService {
 
                     //Update the status on the ui
                     createdMessage.setSendingStatus(ChatMessage.STATUS_SENT);
-                    ChatMessageManager messageManager = new ChatMessageManager(this, message.getRoom());
-                    messageManager.replaceInto(createdMessage, message.getMember()
-                                                                      .getId());
-                    messageManager.removeUnsentMessage(message);
+                    chatMessageDao.deleteOldEntries();
+
+                    if(createdMessage == null || createdMessage.getText() == null)  {
+                        Utils.log("Message empty");
+                        return;
+                    }
+                    boolean read = message.getMember().getId() == createdMessage.getMember().getId();
+                    int status = chatMessageDao.getRead(createdMessage.getId());
+                    if (status == 1)    {
+                        read = true;
+                    }
+                    createdMessage.setSendingStatus(ChatMessage.STATUS_SENT);
+                    createdMessage.setRead(read);
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+                    Date date;
+                    try {
+                        date = formatter.parse(createdMessage.getTimestamp());
+                    } catch (ParseException e) {
+                        date = new Date();
+                    }
+                    createdMessage.setTimestamp(Utils.getDateTimeString(date));
+                    chatMessageDao.replaceMessage(createdMessage);
+                    chatMessageDao.removeUnsentMessage(message.internalID);
 
                     // Send broadcast to eventually open ChatActivity
                     Intent i = new Intent("chat-message-received");
