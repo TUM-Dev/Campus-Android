@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -59,7 +58,6 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.managers.ChatRoomManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
@@ -100,7 +98,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     private ChatMember currentChatMember;
     private boolean loadingMore;
     private ActionMode mActionMode;
-    private ChatMessageManager chatManager;
     private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         // Called when the action mode is created; startActionMode() was called
@@ -213,9 +210,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         }
 
         //Update the history
-        chatHistoryAdapter.notifyDataSetChanged();
-        chatHistoryAdapter.changeCursor(chatMessageDao.getAll(currentChatRoom.getId()));
-
+        chatHistoryAdapter.updateHistory(chatMessageDao.getAll(currentChatRoom.getId()));
+        chatMessageDao.markAsRead(currentChatRoom.getId());
     }
 
     @SuppressWarnings("deprecation")
@@ -367,7 +363,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             chatHistoryAdapter.mEditedItem.setSendingStatus(ChatMessage.STATUS_SENDING);
             chatMessageDao.replaceMessage(chatHistoryAdapter.mEditedItem);
             chatHistoryAdapter.mEditedItem = null;
-            chatHistoryAdapter.changeCursor(chatMessageDao.getAll(currentChatRoom.getId()));
+            chatMessageDao.markAsRead(currentChatRoom.getId());
+            chatHistoryAdapter.updateHistory(chatMessageDao.getAll(currentChatRoom.getId()));
         }
 
         // start service to send the message
@@ -483,11 +480,11 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             }
             List<ChatMessage> downloadedChatHistory;
             try {
-                if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
+                if (chatHistoryAdapter == null || chatHistoryAdapter.getCount() == 0 || newMsg) {
                     downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this)
                                                          .getNewMessages(currentChatRoom.getId(), verification);
                 } else {
-                    long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
+                    long id = chatHistoryAdapter.getItemId(0);
                     downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this)
                                                          .getMessages(currentChatRoom.getId(), id, verification);
                 }
@@ -502,25 +499,23 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             // Got results from webservice
             Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
 
-            final Cursor cur = chatMessageDao.getAll(currentChatRoom.getId());
+            final List<ChatMessage> msgs = chatMessageDao.getAll(currentChatRoom.getId());
 
             // Update results in UI
             runOnUiThread(() -> {
                 if (chatHistoryAdapter == null) {
-                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, cur, currentChatMember);
+                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, msgs, currentChatMember);
                     lvMessageHistory.setAdapter(chatHistoryAdapter);
                 } else {
-                    chatHistoryAdapter.changeCursor(cur);
-                    chatHistoryAdapter.notifyDataSetChanged();
+                    chatHistoryAdapter.updateHistory(chatMessageDao.getAll(currentChatRoom.getId()));
                 }
 
                 // If all messages are loaded hide header view
-                if ((cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0) || cur.getCount() == 0) {
+                if ((msgs.size() != 0 && msgs.get(0).getPrevious()==0) || chatHistoryAdapter.getCount()==0) {
                     lvMessageHistory.removeHeaderView(bar);
                 } else {
                     loadingMore = false;
                 }
-                cur.close();
             });
         }).start();
     }

@@ -22,7 +22,7 @@ public interface ChatMessageDao {
            "LIMIT 1) AS until " +
            "WHERE c._id>=until._id AND c.room=:room " +
            "ORDER BY c._id")
-    Cursor getAll(int room);
+    List<ChatMessage> getAll(int room);
 
     @Query("UPDATE chat_message SET read=1 WHERE read=0 AND room=:room")
     void markAsRead(int room);
