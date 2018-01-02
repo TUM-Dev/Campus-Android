@@ -3,20 +3,22 @@ package de.tum.`in`.tumcampusapp.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import de.tum.`in`.tumcampusapp.auxiliary.Const.DISTANCE_IN_METER
+import de.tum.`in`.tumcampusapp.auxiliary.Const.MUNICH_GEOFENCE
 import de.tum.`in`.tumcampusapp.auxiliary.Utils
 
 
 class GeofencingStartupReceiver : BroadcastReceiver() {
 
-    override fun onReceive(p0: Context?, p1: Intent?) {
-        if (!isValidIntent(p1))
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (!isValidIntent(intent)) {
             return
-
-        Utils.logwithTag(TAG, "Restarting geofencing due to " + p1?.action)
-        if (p0 != null) {
-            val intent = GeofencingRegistrationService.buildGeofence(p0, MUNICH_GEOFENCE,
+        }
+        Utils.log("Restarting geofencing due to " + intent?.action)
+        if (context != null) {
+            val geofencingIntent = GeofencingRegistrationService.buildGeofence(context, MUNICH_GEOFENCE,
                     48.137430, 11.575490, DISTANCE_IN_METER)
-            GeofencingRegistrationService.startGeofencing(p0, intent)
+            GeofencingRegistrationService.startGeofencing(context, geofencingIntent)
         }
     }
 
@@ -25,11 +27,5 @@ class GeofencingStartupReceiver : BroadcastReceiver() {
                 intent.action == "android.location.MODE_CHANGED" ||
                 intent.action == "android.intent.action.QUICKBOOT_POWERON" ||
                 intent.action == "android.location.PROVIDERS_CHANGED")
-    }
-
-    companion object {
-        const val TAG = "GeofencingStartupReceiver"
-        const val DISTANCE_IN_METER = 50 * 1000f
-        const val MUNICH_GEOFENCE = "geofence_munich_id"
     }
 }
