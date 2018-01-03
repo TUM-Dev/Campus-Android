@@ -12,7 +12,7 @@ import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 @Dao
 public interface SyncDao {
     @Nullable
-    @Query("SELECT lastSync FROM sync WHERE (strftime('%s','now') - strftime('%s',lastSync)) > :seconds AND id=:id")
+    @Query("SELECT lastSync FROM sync WHERE (strftime('%s','now') - strftime('%s',lastSync)) < :seconds AND id=:id")
     String getSyncSince(String id, int seconds);
 
     @Query("DELETE FROM sync")

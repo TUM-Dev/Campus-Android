@@ -46,7 +46,7 @@ public class SyncManager {
      * @return true if sync is needed, else false
      */
     public boolean needSync(String id, int seconds) {
-        return dao.getSyncSince(id, seconds) != null;
+        return dao.getSyncSince(id, seconds) == null;
     }
 
     /**
