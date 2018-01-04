@@ -55,7 +55,7 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
         NewsViewHolder holder = (NewsViewHolder) newsViewHolder;
 
         // Set image
-        String imgUrl = cursor.getString(4);
+        String imgUrl = cursor.getString(cursor.getColumnIndexOrThrow("n.image"));
         if (imgUrl == null || imgUrl.isEmpty() || imgUrl.equals("null")) {
             holder.img.setVisibility(View.GONE);
         } else {
@@ -63,21 +63,21 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
             net.loadAndSetImage(imgUrl, holder.img);
         }
 
-        String title = cursor.getString(2);
-        if (cursor.getInt(1) == 2) {
+        String title = cursor.getString(cursor.getColumnIndexOrThrow("n.title"));
+        if (cursor.getInt(cursor.getColumnIndexOrThrow("n.src")) == 2) {
             title = COMPILE.matcher(title)
                            .replaceAll("");
         }
         holder.title.setText(title);
 
         // Adds date
-        String date = cursor.getString(5);
+        String date = cursor.getString(cursor.getColumnIndexOrThrow("n.date"));
         Date d = Utils.getISODateTime(date);
         DateFormat sdf = DateFormat.getDateInstance();
         holder.srcDate.setText(sdf.format(d));
 
-        holder.srcTitle.setText(cursor.getString(8));
-        String icon = cursor.getString(7);
+        holder.srcTitle.setText(cursor.getString(cursor.getColumnIndexOrThrow("source")));
+        String icon = cursor.getString(cursor.getColumnIndexOrThrow("s.icon"));
         if (icon.isEmpty() || "null".equals(icon)) {
             holder.srcIcon.setImageResource(R.drawable.ic_comment);
         } else {
@@ -109,7 +109,7 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     @Override
     public int getItemViewType(int position) {
         c.moveToPosition(position);
-        return "2".equals(c.getString(1)) ? 0 : 1;
+        return "2".equals(c.getString(c.getColumnIndexOrThrow("n.title"))) ? 0 : 1;
     }
 
     @Override
