@@ -55,7 +55,7 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
         NewsViewHolder holder = (NewsViewHolder) newsViewHolder;
 
         // Set image
-        String imgUrl = cursor.getString(cursor.getColumnIndexOrThrow("n.image"));
+        String imgUrl = cursor.getString(cursor.getColumnIndexOrThrow("image"));
         if (imgUrl == null || imgUrl.isEmpty() || imgUrl.equals("null")) {
             holder.img.setVisibility(View.GONE);
         } else {
@@ -63,21 +63,22 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
             net.loadAndSetImage(imgUrl, holder.img);
         }
 
-        String title = cursor.getString(cursor.getColumnIndexOrThrow("n.title"));
-        if (cursor.getInt(cursor.getColumnIndexOrThrow("n.src")) == 2) {
+        String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
+        if (cursor.getInt(cursor.getColumnIndexOrThrow("src")) == 2) {
             title = COMPILE.matcher(title)
                            .replaceAll("");
         }
         holder.title.setText(title);
 
         // Adds date
-        String date = cursor.getString(cursor.getColumnIndexOrThrow("n.date"));
+        String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
         Date d = Utils.getISODateTime(date);
         DateFormat sdf = DateFormat.getDateInstance();
         holder.srcDate.setText(sdf.format(d));
 
         holder.srcTitle.setText(cursor.getString(cursor.getColumnIndexOrThrow("source")));
-        String icon = cursor.getString(cursor.getColumnIndexOrThrow("s.icon"));
+        String icon = cursor.getString(7);
+        Utils.log("ICON IS: (" + cursor.getColumnIndexOrThrow("icon") + ") " + icon);
         if (icon.isEmpty() || "null".equals(icon)) {
             holder.srcIcon.setImageResource(R.drawable.ic_comment);
         } else {

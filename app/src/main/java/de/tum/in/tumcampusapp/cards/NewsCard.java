@@ -54,12 +54,12 @@ public class NewsCard extends NotificationAwareCard {
     @Override
     public String getTitle() {
         mCursor.moveToPosition(mPosition);
-        return mCursor.getString(mCursor.getColumnIndexOrThrow("n.title"));
+        return mCursor.getString(mCursor.getColumnIndexOrThrow("title"));
     }
 
     public String getSource() {
         mCursor.moveToPosition(mPosition);
-        return mCursor.getString(mCursor.getColumnIndexOrThrow("n.src"));
+        return mCursor.getString(mCursor.getColumnIndexOrThrow("src"));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class NewsCard extends NotificationAwareCard {
         NewsManager newsManager = new NewsManager(mContext);
         mCursor.moveToPosition(mPosition);
         newsManager.setDismissed(mCursor.getString(mCursor.getColumnIndexOrThrow("_id")),
-                                 mCursor.getInt(mCursor.getColumnIndexOrThrow("n.dismissed")) | 1);
+                                 mCursor.getInt(mCursor.getColumnIndexOrThrow("dismissed")) | 1);
     }
 
     @Override
@@ -93,29 +93,29 @@ public class NewsCard extends NotificationAwareCard {
         NewsManager newsManager = new NewsManager(mContext);
         mCursor.moveToPosition(mPosition);
         newsManager.setDismissed(mCursor.getString(mCursor.getColumnIndexOrThrow("_id")),
-                                 mCursor.getInt(mCursor.getColumnIndexOrThrow("n.dismissed")) | 2);
+                                 mCursor.getInt(mCursor.getColumnIndexOrThrow("dismissed")) | 2);
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         mCursor.moveToPosition(mPosition);
-        return (mCursor.getInt(mCursor.getColumnIndexOrThrow("n.dismissed")) & 1) == 0;
+        return (mCursor.getInt(mCursor.getColumnIndexOrThrow("dismissed")) & 1) == 0;
     }
 
     @Override
     protected boolean shouldShowNotification(SharedPreferences prefs) {
         mCursor.moveToPosition(mPosition);
-        return (mCursor.getInt(mCursor.getColumnIndexOrThrow("n.dismissed")) & 2) == 0;
+        return (mCursor.getInt(mCursor.getColumnIndexOrThrow("dismissed")) & 2) == 0;
     }
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         mCursor.moveToPosition(mPosition);
         notificationBuilder.setContentTitle(mContext.getString(R.string.news));
-        notificationBuilder.setContentText(mCursor.getString(mCursor.getColumnIndexOrThrow("n.title")));
+        notificationBuilder.setContentText(mCursor.getString(mCursor.getColumnIndexOrThrow("title")));
         notificationBuilder.setContentInfo(mCursor.getString(mCursor.getColumnIndexOrThrow("source")));
-        notificationBuilder.setTicker(mCursor.getString(mCursor.getColumnIndexOrThrow("n.title")));
-        Optional<Bitmap> img = net.downloadImageToBitmap(mCursor.getString(mCursor.getColumnIndexOrThrow("n.image")));
+        notificationBuilder.setTicker(mCursor.getString(mCursor.getColumnIndexOrThrow("title")));
+        Optional<Bitmap> img = net.downloadImageToBitmap(mCursor.getString(mCursor.getColumnIndexOrThrow("image")));
         if (img.isPresent()) {
             notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img.get()));
         }
@@ -126,7 +126,7 @@ public class NewsCard extends NotificationAwareCard {
     public Intent getIntent() {
         // Show regular news in browser
         mCursor.moveToPosition(mPosition);
-        String url = mCursor.getString(mCursor.getColumnIndexOrThrow("n.link"));
+        String url = mCursor.getString(mCursor.getColumnIndexOrThrow("link"));
         if (url.isEmpty()) {
             Utils.showToast(mContext, R.string.no_link_existing);
             return null;
@@ -141,7 +141,7 @@ public class NewsCard extends NotificationAwareCard {
         mCursor.moveToPosition(mPosition);
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        final String imgURL = mCursor.getString(mCursor.getColumnIndexOrThrow("n.image"));
+        final String imgURL = mCursor.getString(mCursor.getColumnIndexOrThrow("image"));
         if (imgURL != null && !imgURL.trim()
                                      .isEmpty() && !"null".equals(imgURL)) {
             Optional<Bitmap> img = net.downloadImageToBitmap(imgURL);

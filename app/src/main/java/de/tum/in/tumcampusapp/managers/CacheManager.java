@@ -135,7 +135,7 @@ public class CacheManager {
         try (Cursor cur = news.getAllFromDb(mContext)) {
             if (cur.moveToFirst()) {
                 do {
-                    String imgUrl = cur.getString(4);
+                    String imgUrl = cur.getString(cur.getColumnIndexOrThrow("image"));
                     if (!"null".equals(imgUrl)) {
                         net.downloadImage(imgUrl);
                     }

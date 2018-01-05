@@ -21,7 +21,11 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.FilmCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.NewsDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.NewsSourcesDao;
 import de.tum.in.tumcampusapp.models.tumcabe.News;
+import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
 
 /**
  * News Manager, handles database stuff, external imports
@@ -32,6 +36,8 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     private static final String NEWS_URL = "https://tumcabe.in.tum.de/Api/news/";
     private static final String NEWS_SOURCES_URL = NEWS_URL + "sources";
     private final Context mContext;
+    private final NewsDao newsDao;
+    private final NewsSourcesDao newsSourcesDao;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -41,13 +47,8 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     public NewsManager(Context context) {
         super(context);
         mContext = context;
-
-        // create news sources table
-        db.execSQL("CREATE TABLE IF NOT EXISTS news_sources (id INTEGER PRIMARY KEY, icon VARCHAR, title VARCHAR)");
-
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, src INTEGER, title TEXT, link VARCHAR, "
-                   + "image VARCHAR, date VARCHAR, created VARCHAR, dismissed INTEGER)");
+        newsDao = TcaDb.getInstance(context).newsDao();
+        newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();
     }
 
     /**
@@ -66,14 +67,14 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
         Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
         Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
 
-        return new News(id, title, link, src, image, date, created);
+        return new News(id, title, link, src, image, date, created, 0);
     }
 
     /**
      * Removes all old items (older than 3 months)
      */
     private void cleanupDb() {
-        db.execSQL("DELETE FROM news WHERE date < date('now','-3 month')");
+        newsDao.cleanUp();
     }
 
     /**
@@ -84,9 +85,10 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     public void downloadFromExternal(boolean force) throws JSONException {
         SyncManager sync = new SyncManager(mContext);
-        if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
-            return;
-        }
+        // FIXME: update after sync PR gets merged
+//        if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
+//            return;
+//        }
 
         NetUtils net = new NetUtils(mContext);
         // Load all news sources
@@ -94,15 +96,11 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
 
         if (jsonArray.isPresent()) {
             JSONArray arr = jsonArray.get();
-            db.beginTransaction();
-            try {
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject obj = arr.getJSONObject(i);
-                    replaceIntoSourcesDb(obj);
-                }
-                db.setTransactionSuccessful();
-            } finally {
-                db.endTransaction();
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
+                newsSourcesDao.insert(new NewsSources(obj.getInt(Const.JSON_SOURCE),
+                                                      obj.getString(Const.JSON_TITLE),
+                                                      obj.has(Const.JSON_ICON) ? obj.getString(Const.JSON_ICON) : ""));
             }
         }
 
@@ -116,17 +114,20 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
             return;
         }
 
-        db.beginTransaction();
-        try {
-            JSONArray arr = jsonArray.get();
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject obj = arr.getJSONObject(i);
-                replaceIntoDb(getFromJson(obj));
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
+
+        JSONArray arr = jsonArray.get();
+        for (int i = 0; i < arr.length(); i++) {
+            JSONObject obj = arr.getJSONObject(i);
+            newsDao.insert(new News(obj.getString(Const.JSON_NEWS),
+                                    obj.getString(Const.JSON_TITLE),
+                                    obj.getString(Const.JSON_LINK),
+                                    obj.getString(Const.JSON_SRC),
+                                    obj.getString(Const.JSON_IMAGE),
+                                    Utils.getISODateTime(obj.getString(Const.JSON_DATE)),
+                                    Utils.getISODateTime(obj.getString(Const.JSON_CREATED)),
+                                    0));
         }
+
         sync.replaceIntoDb(this);
     }
 
