@@ -138,33 +138,22 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     public Cursor getAllFromDb(Context context) {
         String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
-        StringBuilder and = new StringBuilder();
-        try (Cursor c = getNewsSources()) {
-            if (c.moveToFirst()) {
-                do {
-                    int id = c.getInt(0);
-                    boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
-                    if (!show) {
-                        continue;
-                    }
-                    if (!and.toString()
-                            .isEmpty()) {
-                        and.append(" OR ");
-                    }
-                    and.append("s.id=\"")
-                       .append(id)
-                       .append('\"');
-                } while (c.moveToNext());
+        List<NewsSources> newsSources = getNewsSources();
+        StringBuilder newsSourceIds = new StringBuilder();
+        for (NewsSources newsSource: newsSources) {
+            int id = newsSource.getId();
+            boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
+            if (!show) {
+                continue;
             }
+            if (newsSourceIds.length() == 0) {
+                newsSourceIds.append(id);
+            } else {
+                newsSourceIds.append(", " + id);
+            }
+
         }
-        return db.rawQuery("SELECT n.id AS _id, n.src, n.title, " +
-                           "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
-                           "(julianday('now') - julianday(date)) AS diff " +
-                           "FROM news n, news_sources s " +
-                           "WHERE n.src=s.id " + (and.toString()
-                                                     .isEmpty() ? "" : "AND (" + and.toString() + ") ") +
-                           "AND (s.id < 7 OR s.id > 13 OR s.id=?) " +
-                           "ORDER BY date DESC", new String[]{selectedNewspread});
+        return newsDao.getAll(newsSourceIds.toString(), selectedNewspread);
     }
 
     /**
@@ -193,11 +182,9 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
         return lastId;
     }
 
-    public Cursor getNewsSources() {
+    public List<NewsSources> getNewsSources() {
         String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
-        return db.rawQuery("SELECT id, icon, " +
-                           "CASE WHEN title LIKE 'newspread%' THEN \"Newspread\" ELSE title END " +
-                           "FROM news_sources WHERE id < 7 OR id > 13 OR id=?", new String[]{selectedNewspread});
+        return newsSourcesDao.getNewsSources(selectedNewspread);
     }
 
     /**
@@ -235,14 +222,11 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     private Collection<Integer> getActiveSources(Context context) {
         Collection<Integer> sources = new ArrayList<>();
-        try (Cursor c = getNewsSources()) {
-            if (c.moveToFirst()) {
-                do {
-                    Integer id = c.getInt(0);
-                    if (Utils.getSettingBool(context, "card_news_source_" + id, true)) {
-                        sources.add(id);
-                    }
-                } while (c.moveToNext());
+        List<NewsSources> newsSources = getNewsSources();
+        for (NewsSources newsSource: newsSources) {
+            Integer id = newsSource.getId();
+            if (Utils.getSettingBool(context, "card_news_source_" + id, true)) {
+                sources.add(id);
             }
         }
         return sources;

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.database.Cursor;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface NewsSourcesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(NewsSources news);
 
-    @Query("SELECT id, icon, title FROM news_sources WHERE id < 7 OR id > 13 OR id=:selectedNewspread")
+    @Query("SELECT * FROM news_sources WHERE id < 7 OR id > 13 OR id=:selectedNewspread")
     List<NewsSources> getNewsSources(String selectedNewspread);
 
     @Query("SELECT * FROM news_sources WHERE id=:id")
