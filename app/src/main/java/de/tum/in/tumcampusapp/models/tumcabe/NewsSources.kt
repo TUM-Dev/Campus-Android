@@ -11,7 +11,7 @@ import android.arch.persistence.room.PrimaryKey
  * @param title   Title
  * @param icon    TODO
  */
-@Entity(tableName = "news_sources")
+@Entity
 data class NewsSources(@PrimaryKey
                        var id: Int = -1,
                        var title: String = "",

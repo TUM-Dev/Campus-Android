@@ -8,6 +8,8 @@ import android.database.Cursor;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import de.tum.in.tumcampusapp.models.tumcabe.News;
 
 @Dao
@@ -19,13 +21,38 @@ public interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(News news);
 
-    @Query("SELECT n.id AS _id, n.src, n.title, " +
-           "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
-           "(julianday('now') - julianday(date)) AS diff " +
-           "FROM news n, news_sources s " +
-           "WHERE n.src=s.id " +
-           "AND s.id IN (:ids) " +
-           "AND (s.id < 7 OR s.id > 13 OR s.id=:selectedNewspread) " +
+    @Query("SELECT * FROM news " +
+           "WHERE src IN (:ids) " +
+           "AND (src < 7 OR src > 13 OR src=:selectedNewspread) " +
            "ORDER BY date DESC")
-    Cursor getAll(String ids, String selectedNewspread);
+    List<News> getAll(Integer[] ids, int selectedNewspread);
+
+    @Query("SELECT * FROM news WHERE date(date) > date() AND (src < 7 OR src > 13 OR src=:selectedNewspread)")
+    List<News> getNewer(int selectedNewspread);
+
+    @Nullable
+    @Query("SELECT * FROM news ORDER BY id DESC LIMIT 1")
+    News getLast();
+
+    @Query("SELECT * FROM news WHERE src IN (:sources) ORDER BY date ASC")
+    List<News> getBySources(Integer[] sources);
+
+    @Query("SELECT * FROM news " +
+           "WHERE src IN (:sources) " +
+           //Show latest news item only
+           "AND id IN (SELECT id FROM (SELECT id, src FROM news " +
+                                      "WHERE datetime(date) <= datetime('now') " +
+                                      "AND src != 2 " +
+                                      "ORDER BY datetime(date) ASC) " +
+                      "GROUP BY src " +
+           //Special treatment for TU Kino, as we want to actually display the upcoming movie
+                      "UNION SELECT id FROM (SELECT id, datetime(date) FROM news " +
+                                            "WHERE datetime(date) > datetime('now') " +
+                                            "AND src = 2 " +
+                                            "ORDER BY datetime(date) ASC LIMIT 1))" +
+           "ORDER BY date ASC")
+    List<News> getBySourcesLatest(Integer[] sources);
+
+    @Query("UPDATE news SET dismissed=:d WHERE id=:id")
+    void setDismissed(String d, String id);
 }

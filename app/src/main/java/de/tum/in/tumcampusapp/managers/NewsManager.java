@@ -136,24 +136,18 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      *
      * @return Database cursor (_id, src, title, description, link, image, date, created, icon, source)
      */
-    public Cursor getAllFromDb(Context context) {
-        String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
+    public List<News> getAllFromDb(Context context) {
+        int selectedNewspread = Integer.parseInt(Utils.getSetting(mContext, "news_newspread", "7"));
         List<NewsSources> newsSources = getNewsSources();
-        StringBuilder newsSourceIds = new StringBuilder();
+        Collection<Integer> newsSourceIds = new ArrayList<>();
         for (NewsSources newsSource: newsSources) {
             int id = newsSource.getId();
             boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
-            if (!show) {
-                continue;
+            if (show) {
+                newsSourceIds.add(id);
             }
-            if (newsSourceIds.length() == 0) {
-                newsSourceIds.append(id);
-            } else {
-                newsSourceIds.append(", " + id);
-            }
-
         }
-        return newsDao.getAll(newsSourceIds.toString(), selectedNewspread);
+        return newsDao.getAll(newsSourceIds.toArray(new Integer[newsSourceIds.size()]), selectedNewspread);
     }
 
     /**
@@ -162,24 +156,14 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      * @return index of the newest item that is older than 'now' - 1
      */
     public int getTodayIndex() {
-        String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
-        try (Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date(date)>date() AND (src < 7 OR src > 13 OR src=?)", new String[]{selectedNewspread})) {
-            if (c.moveToFirst()) {
-                int res = c.getInt(0);
-                return res == 0 ? 0 : res - 1;
-            }
-        }
-        return 0;
+        int selectedNewspread = Integer.parseInt(Utils.getSetting(mContext, "news_newspread", "7"));
+        List<News> news = newsDao.getNewer(selectedNewspread);
+        return news.size() == 0? 0: news.size() - 1;
     }
 
     private String getLastId() {
-        String lastId = "";
-        try (Cursor c = db.rawQuery("SELECT id FROM news ORDER BY id DESC LIMIT 1", null)) {
-            if (c.moveToFirst()) {
-                lastId = c.getString(0);
-            }
-        }
-        return lastId;
+        News last = newsDao.getLast();
+        return last == null? "": last.getId();
     }
 
     public List<NewsSources> getNewsSources() {
@@ -187,32 +171,8 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
         return newsSourcesDao.getNewsSources(selectedNewspread);
     }
 
-    /**
-     * Replace or Insert a event in the database
-     *
-     * @param n News object
-     */
-    void replaceIntoDb(News n) {
-        db.execSQL("REPLACE INTO news (id, src, title, link, image, date, " +
-                   "created, dismissed) VALUES (?, ?, ?, ?, ?, ?, ?, 0)",
-                   new String[]{n.getId(), n.getSrc(), n.getTitle(), n.getLink(), n.getImage(),
-                                Utils.getDateTimeString(n.getDate()), Utils.getDateTimeString(n.getCreated())});
-    }
-
-    /**
-     * Replace or Insert a news source in the database
-     *
-     * @param n News source object
-     * @throws JSONException
-     */
-    void replaceIntoSourcesDb(JSONObject n) throws JSONException {
-        db.execSQL("REPLACE INTO news_sources (id, icon, title) VALUES (?, ?, ?)",
-                   new String[]{n.getString(Const.JSON_SOURCE), n.has(Const.JSON_ICON) ? n.getString(Const.JSON_ICON) : "",
-                                n.getString(Const.JSON_TITLE)});
-    }
-
     public void setDismissed(String id, int d) {
-        db.execSQL("UPDATE news SET dismissed=? WHERE id=?", new String[]{String.valueOf(d), id});
+        newsDao.setDismissed(String.valueOf(d), id);
     }
 
     /**
@@ -241,47 +201,23 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     public void onRequestCard(Context context) {
         Collection<Integer> sources = getActiveSources(context);
 
-        //Build our query
-        StringBuilder query = new StringBuilder("SELECT n.id AS _id, n.src, n.title, n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed ");
-        query.append("FROM news n ")
-             .append("JOIN news_sources s ON (n.src = s.id) ")
-             .append("WHERE ");
-
+        List<News> news;
         if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
-            // Limit to one entry per source
-            query.append(" n.id IN (SELECT id FROM (")
-                 //Show latest news item only
-                 .append("SELECT id, src FROM news WHERE datetime(date) <= datetime('now') and src!=2 ORDER BY datetime(date) ASC ")
-                 .append(") GROUP BY src ")
-                 .append("UNION ")
-                 //Special treatment for TU Kino, as we want to actually display the upcoming movie
-                 .append("SELECT id FROM (SELECT id, datetime(date) FROM news WHERE datetime(date) > datetime('now') and src=2 ORDER BY datetime(date) ASC LIMIT 1)")
-                 .append(") AND ");
+            news = newsDao.getBySourcesLatest(sources.toArray(new Integer[sources.size()]));
+        } else {
+            news = newsDao.getBySources(sources.toArray(new Integer[sources.size()]));
         }
-
-        query.append("s.id IN (")
-             .append(TextUtils.join(",", sources))
-             .append(") ")
-             .append("ORDER BY n.date ASC");
-        Cursor cur = db.rawQuery(query.toString(), null);
 
         //Display resulting cards
-        int i = 0;
-        if (cur.moveToFirst()) {
-            do {
-                NewsCard card;
-                if (FilmCard.isNewsAFilm(cur, i)) {
-                    card = new FilmCard(context);
-                } else {
-                    card = new NewsCard(context);
-                }
-                card.setNews(cur, i);
-                card.apply();
-                i++;
-            } while (cur.moveToNext());
-        } else {
-            cur.close();
+        for (News n: news) {
+            NewsCard card;
+            if (FilmCard.isNewsAFilm(n)) {
+                card = new FilmCard(context);
+            } else {
+                card = new NewsCard(context);
+            }
+            card.setNews(n);
+            card.apply();
         }
-
     }
 }

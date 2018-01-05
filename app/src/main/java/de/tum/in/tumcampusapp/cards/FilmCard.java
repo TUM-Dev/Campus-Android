@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import de.tum.in.tumcampusapp.activities.KinoActivity;
 import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.models.tumcabe.News;
 
 public class FilmCard extends NewsCard {
     public FilmCard(Context context) {
@@ -17,8 +18,7 @@ public class FilmCard extends NewsCard {
         return new Intent(mContext, KinoActivity.class);
     }
 
-    public static boolean isNewsAFilm(Cursor c, int pos) {
-        c.moveToPosition(pos);
-        return c.getInt(1) == 2;
+    public static boolean isNewsAFilm(News news) {
+        return news.getSrc().equals("2");
     }
 }

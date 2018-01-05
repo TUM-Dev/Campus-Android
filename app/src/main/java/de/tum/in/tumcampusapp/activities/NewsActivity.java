@@ -23,6 +23,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.NewsManager;
+import de.tum.in.tumcampusapp.models.tumcabe.News;
 import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
 
 /**
@@ -50,9 +51,10 @@ public class NewsActivity extends ActivityForDownloadingExternal implements Dial
 
         // Gets all news from database
         nm = new NewsManager(this);
-        Cursor cursor = nm.getAllFromDb(this);
-        if (cursor.getCount() > 0) {
-            NewsAdapter adapter = new NewsAdapter(this, cursor);
+        List<News> news = nm.getAllFromDb(this);
+
+        if (news.size() > 0) {
+            NewsAdapter adapter = new NewsAdapter(this, news);
 
             lv = findViewById(R.id.activity_news_list_view);
             lv.setLayoutManager(new LinearLayoutManager(this));

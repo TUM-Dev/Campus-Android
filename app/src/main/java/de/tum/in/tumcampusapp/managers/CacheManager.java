@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.KinoDao;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
+import de.tum.in.tumcampusapp.models.tumcabe.News;
 import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
@@ -130,14 +131,11 @@ public class CacheManager {
         }
 
         // Cache news images
-        try (Cursor cur = newsManager.getAllFromDb(mContext)) {
-            if (cur.moveToFirst()) {
-                do {
-                    String imgUrl = cur.getString(cur.getColumnIndexOrThrow("image"));
-                    if (!"null".equals(imgUrl)) {
-                        net.downloadImage(imgUrl);
-                    }
-                } while (cur.moveToNext());
+        List<News> news = newsManager.getAllFromDb(mContext);
+        for (News n: news) {
+            String imgUrl = n.getImage();
+            if (!"null".equals(imgUrl)) {
+                net.downloadImage(imgUrl);
             }
         }
 
