@@ -16,9 +16,9 @@ public interface NewsSourcesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(NewsSources news);
 
-    @Query("SELECT * FROM newssources WHERE id < 7 OR id > 13 OR id=:selectedNewspread")
+    @Query("SELECT * FROM news_sources WHERE id < 7 OR id > 13 OR id=:selectedNewspread")
     List<NewsSources> getNewsSources(String selectedNewspread);
 
-    @Query("SELECT * FROM newssources WHERE id=:id")
+    @Query("SELECT * FROM news_sources WHERE id=:id")
     NewsSources getNewsSource(int id);
 }
