@@ -1,8 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 
@@ -49,25 +47,6 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
         mContext = context;
         newsDao = TcaDb.getInstance(context).newsDao();
         newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();
-    }
-
-    /**
-     * Convert JSON object to News and download news image
-     *
-     * @param json see above
-     * @return News
-     * @throws JSONException if the json is invalid
-     */
-    private static News getFromJson(JSONObject json) throws JSONException {
-        String id = json.getString(Const.JSON_NEWS);
-        String src = json.getString(Const.JSON_SRC);
-        String title = json.getString(Const.JSON_TITLE);
-        String link = json.getString(Const.JSON_LINK);
-        String image = json.getString(Const.JSON_IMAGE);
-        Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
-        Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
-
-        return new News(id, title, link, src, image, date, created, 0);
     }
 
     /**

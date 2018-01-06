@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.cards;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 
 import de.tum.in.tumcampusapp.activities.KinoActivity;
 import de.tum.in.tumcampusapp.managers.CardManager;

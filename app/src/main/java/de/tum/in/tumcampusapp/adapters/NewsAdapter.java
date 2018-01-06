@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.FilmCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
