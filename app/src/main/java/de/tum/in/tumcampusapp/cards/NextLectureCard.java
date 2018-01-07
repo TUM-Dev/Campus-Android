@@ -165,8 +165,8 @@ public class NextLectureCard extends NotificationAwareCard {
     public void setLectures(Cursor cur) {
         do {
             CalendarItem item = new CalendarItem();
-            item.start = Utils.getISODateTime(cur.getString(1));
-            item.end = Utils.getISODateTime(cur.getString(2));
+            item.start = Utils.getDateTime(cur.getString(1));
+            item.end = Utils.getDateTime(cur.getString(2));
 
             // Extract course title
             item.title = cur.getString(0);

@@ -72,7 +72,7 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
 
         // Adds date
         String date = cursor.getString(5);
-        Date d = Utils.getISODateTime(date);
+        Date d = Utils.getDateTime(date);
         DateFormat sdf = DateFormat.getDateInstance();
         holder.srcDate.setText(sdf.format(d));
 
