@@ -84,14 +84,14 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private static Calendar getEventEndFromCursor(Cursor cEvents) {
         String eventEnd = cEvents.getString(6);
         Calendar result = Calendar.getInstance();
-        result.setTime(Utils.getISODateTime(eventEnd));
+        result.setTime(Utils.getDateTime(eventEnd));
         return result;
     }
 
     private static Calendar getEventStartFromCursor(Cursor cEvents) {
         String eventStart = cEvents.getString(5);
         Calendar result = Calendar.getInstance();
-        result.setTime(Utils.getISODateTime(eventStart));
+        result.setTime(Utils.getDateTime(eventStart));
         return result;
     }
 
