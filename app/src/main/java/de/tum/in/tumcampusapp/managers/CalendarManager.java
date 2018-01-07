@@ -15,13 +15,10 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Optional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -93,8 +90,6 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         }
 
         CalendarManager calendarManager = new CalendarManager(c);
-        Date dtstart;
-        Date dtend;
 
         // Get all calendar items from database
         try (Cursor cursor = calendarManager.getAllFromDb()) {
@@ -107,36 +102,22 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                 final String strEnd = cursor.getString(6);
                 final String location = cursor.getString(7);
 
-                try {
-                    // Get the correct date and time from database
-                    dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strStart);
-                    dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strEnd);
+                // Get start and end time
+                long startMillis = Utils.getDateTime(strStart).getTime();
+                long endMillis = Utils.getDateTime(strEnd).getTime();
 
-                    Calendar beginTime = Calendar.getInstance();
-                    beginTime.setTime(dtstart);
-                    Calendar endTime = Calendar.getInstance();
-                    endTime.setTime(dtend);
+                ContentValues values = new ContentValues();
 
-                    // Get start and end time
-                    long startMillis = beginTime.getTimeInMillis();
-                    long endMillis = endTime.getTimeInMillis();
-
-                    ContentValues values = new ContentValues();
-
-                    // Put the received values into a contentResolver to
-                    // transmit the to Google Calendar
-                    values.put(CalendarContract.Events.DTSTART, startMillis);
-                    values.put(CalendarContract.Events.DTEND, endMillis);
-                    values.put(CalendarContract.Events.TITLE, title);
-                    values.put(CalendarContract.Events.DESCRIPTION, description);
-                    values.put(CalendarContract.Events.CALENDAR_ID, id);
-                    values.put(CalendarContract.Events.EVENT_LOCATION, location);
-                    values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
-                    contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
-
-                } catch (ParseException e) {
-                    Utils.log(e);
-                }
+                // Put the received values into a contentResolver to
+                // transmit the to Google Calendar
+                values.put(CalendarContract.Events.DTSTART, startMillis);
+                values.put(CalendarContract.Events.DTEND, endMillis);
+                values.put(CalendarContract.Events.TITLE, title);
+                values.put(CalendarContract.Events.DESCRIPTION, description);
+                values.put(CalendarContract.Events.CALENDAR_ID, id);
+                values.put(CalendarContract.Events.EVENT_LOCATION, location);
+                values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
+                contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
             }
         }
     }

@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -63,8 +62,8 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
         String title = json.getString(Const.JSON_TITLE);
         String link = json.getString(Const.JSON_LINK);
         String image = json.getString(Const.JSON_IMAGE);
-        Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
-        Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
+        Date date = Utils.getDateTime(json.getString(Const.JSON_DATE));
+        Date created = Utils.getDateTime(json.getString(Const.JSON_CREATED));
 
         return new News(id, title, link, src, image, date, created);
     }
