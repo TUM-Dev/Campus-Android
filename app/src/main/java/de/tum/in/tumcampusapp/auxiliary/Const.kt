@@ -131,6 +131,11 @@ object Const {
     const val DOWNLOAD_SERVICE_JOB_ID = 1004
     const val FILL_CACHE_SERVICE_JOB_ID = 1005
 
+    const val GEOFENCING_SERVICE_JOB_ID = 1006
+    const val ADD_GEOFENCE_EXTRA = "AddGeofence"
+    const val DISTANCE_IN_METER = 50 * 1000f
+    const val MUNICH_GEOFENCE = "geofence_munich_id"
+  
     const val EXTRA_FOREIGN_CONFIGURATION_EXISTS = "CONFIGURED_BY_OTHER_APP"
     const val TUM_ID_PATTERN = "^[a-z]{2}[0-9]{2}[a-z]{3}$"
 }
