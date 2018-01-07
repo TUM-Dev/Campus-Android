@@ -120,10 +120,10 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
             //Convert to the proper type
             for (RoomFinderSchedule schedule : schedules) {
                 Calendar startCal = Calendar.getInstance();
-                startCal.setTime(Utils.getISODateTime(schedule.getStart()));
+                startCal.setTime(Utils.getDateTime(schedule.getStart()));
 
                 Calendar endCal = Calendar.getInstance();
-                endCal.setTime(Utils.getISODateTime(schedule.getEnd()));
+                endCal.setTime(Utils.getDateTime(schedule.getEnd()));
 
                 IntegratedCalendarEvent calendarEvent = new IntegratedCalendarEvent(schedule.getEvent_id(),
                                                                                     schedule.getTitle(), startCal, endCal, "",
