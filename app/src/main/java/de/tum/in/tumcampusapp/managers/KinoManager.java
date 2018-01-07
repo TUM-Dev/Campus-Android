@@ -93,8 +93,8 @@ public class KinoManager {
                                  .trim();
         String cover = json.getString(Const.JSON_COVER);
         String trailer = json.getString(Const.JSON_TRAILER);
-        Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
-        Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
+        Date date = Utils.getDateTime(json.getString(Const.JSON_DATE));
+        Date created = Utils.getDateTime(json.getString(Const.JSON_CREATED));
         String link = json.getString(Const.JSON_LINK);
 
         return new Kino(id, title, year, runtime, genre, director, actors, rating, description, cover, trailer, date, created, link);

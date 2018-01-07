@@ -88,7 +88,7 @@ public class ChatMessageManager extends AbstractManager {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         int id = cursor.getInt(COL_ID);
         String text = cursor.getString(COL_TEXT);
-        String time = formatter.format(Utils.getISODateTime(cursor.getString(COL_TIMESTAMP)));
+        String time = formatter.format(Utils.getDateTime(cursor.getString(COL_TIMESTAMP)));
         int previous = cursor.getInt(COL_PREVIOUS);
         ChatMember member = new Gson().fromJson(cursor.getString(COL_MEMBER), ChatMember.class);
         ChatMessage msg = new ChatMessage(id, text, member, time, previous);
