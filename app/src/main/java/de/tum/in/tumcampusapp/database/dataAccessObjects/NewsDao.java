@@ -54,4 +54,7 @@ public interface NewsDao {
 
     @Query("UPDATE news SET dismissed=:d WHERE id=:id")
     void setDismissed(String d, String id);
+
+    @Query("DELETE FROM news")
+    void flush();
 }
