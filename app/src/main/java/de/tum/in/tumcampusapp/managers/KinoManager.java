@@ -56,7 +56,8 @@ public class KinoManager {
         NetUtils net = new NetUtils(mContext);
 
         // download from kino database
-        Optional<JSONArray> jsonArray = net.downloadJsonArray(KINO_URL + dao.getLastId(), CacheManager.VALIDITY_ONE_DAY, force);
+        String lastId = dao.getLastId();
+        Optional<JSONArray> jsonArray = net.downloadJsonArray(KINO_URL + (lastId == null? "": lastId), CacheManager.VALIDITY_ONE_DAY, force);
 
         if (!jsonArray.isPresent()) {
             return;
