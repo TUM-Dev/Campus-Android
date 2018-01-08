@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -63,10 +64,9 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     public void downloadFromExternal(boolean force) throws JSONException {
         SyncManager sync = new SyncManager(mContext);
-        // FIXME: update after sync PR gets merged
-//        if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
-//            return;
-//        }
+        if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
+            return;
+        }
 
         NetUtils net = new NetUtils(mContext);
         // Load all news sources
@@ -101,8 +101,8 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
                                     obj.getString(Const.JSON_LINK),
                                     obj.getString(Const.JSON_SRC),
                                     obj.getString(Const.JSON_IMAGE),
-                                    Utils.getISODateTime(obj.getString(Const.JSON_DATE)),
-                                    Utils.getISODateTime(obj.getString(Const.JSON_CREATED)),
+                                    Utils.getDateTime(obj.getString(Const.JSON_DATE)),
+                                    Utils.getDateTime(obj.getString(Const.JSON_CREATED)),
                                     0));
         }
 
