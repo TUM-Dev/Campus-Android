@@ -44,37 +44,8 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     public NewsManager(Context context) {
         super(context);
         mContext = context;
-<<<<<<< HEAD
         newsDao = TcaDb.getInstance(context).newsDao();
         newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();
-=======
-
-        // create news sources table
-        db.execSQL("CREATE TABLE IF NOT EXISTS news_sources (id INTEGER PRIMARY KEY, icon VARCHAR, title VARCHAR)");
-
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, src INTEGER, title TEXT, link VARCHAR, "
-                   + "image VARCHAR, date VARCHAR, created VARCHAR, dismissed INTEGER)");
-    }
-
-    /**
-     * Convert JSON object to News and download news image
-     *
-     * @param json see above
-     * @return News
-     * @throws JSONException if the json is invalid
-     */
-    private static News getFromJson(JSONObject json) throws JSONException {
-        String id = json.getString(Const.JSON_NEWS);
-        String src = json.getString(Const.JSON_SRC);
-        String title = json.getString(Const.JSON_TITLE);
-        String link = json.getString(Const.JSON_LINK);
-        String image = json.getString(Const.JSON_IMAGE);
-        Date date = Utils.getDateTime(json.getString(Const.JSON_DATE));
-        Date created = Utils.getDateTime(json.getString(Const.JSON_CREATED));
-
-        return new News(id, title, link, src, image, date, created);
->>>>>>> a8efcb15976b884f61bbb5581e35d1d11c06d7e2
     }
 
     /**
