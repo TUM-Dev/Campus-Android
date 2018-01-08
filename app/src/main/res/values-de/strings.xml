@@ -75,7 +75,7 @@
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
     <string name="background_mode">Hintergrundmodus (empfohlen)</string>
-    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
+    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist. Wird automatisch abgeschalten, wenn du dich mehr als 50km außerhalb von München befindest.</string>
     <string name="mode_background_mode">Aktivierung des Hintergrundmodus</string>
     <string name="always">Immer</string>
     <string name="wifi_only">Nur bei WLAN-Verbindung</string>
@@ -453,7 +453,7 @@ Signatur: %5$s</string>
     <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
     <string name="done">Fertig</string>
     <string name="eduroam_dialgo_step_1">1.</string>
-    <string name="eduroam_dialog_step_2">2. Wenn du nicht in der Nähe des Eduroam bist gehe zu \'\'</string>
-    <string name="eduroam_dialog_step_3">Auf \'Entfernen\' klicken</string>
+    <string name="eduroam_dialog_step_2">2. Auf \'eduroam\' klicken</string>
+    <string name="eduroam_dialog_step_3">3. Auf \'Entfernen\' klicken</string>
     <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann.</string>
 </resources>
