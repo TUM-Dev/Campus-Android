@@ -20,4 +20,7 @@ public interface NewsSourcesDao {
 
     @Query("SELECT * FROM news_sources WHERE id=:id")
     NewsSources getNewsSource(int id);
+
+    @Query("DELETE FROM news_sources")
+    void flush();
 }
