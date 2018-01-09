@@ -22,8 +22,8 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
+import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 

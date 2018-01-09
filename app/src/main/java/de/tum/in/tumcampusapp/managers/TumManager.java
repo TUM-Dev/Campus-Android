@@ -6,7 +6,7 @@ import org.simpleframework.xml.core.Persister;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.TumLockDao;
+import de.tum.in.tumcampusapp.database.dao.TumLockDao;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
 import de.tum.in.tumcampusapp.models.tumo.Error;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;

@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.database.dataAccessObjects;
+package de.tum.in.tumcampusapp.database.dao;
 
 import org.junit.Test;
 import org.junit.After;
