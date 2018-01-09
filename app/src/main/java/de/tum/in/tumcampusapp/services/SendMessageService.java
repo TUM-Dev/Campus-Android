@@ -65,7 +65,7 @@ public class SendMessageService extends JobIntentService {
                     }
 
                     //Update the status on the ui
-                    createdMessage.setStatus(ChatMessage.STATUS_SENT);
+                    createdMessage.setSendingStatus(ChatMessage.STATUS_SENT);
                     ChatMessageManager messageManager = new ChatMessageManager(this, message.getRoom());
                     messageManager.replaceInto(createdMessage, message.getMember()
                                                                       .getId());

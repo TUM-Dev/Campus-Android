@@ -17,6 +17,7 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
@@ -95,7 +96,7 @@ public class ChatMessageManager extends AbstractManager {
         msg.setSignature(cursor.getString(COL_SIGNATURE));
         msg.setRoom(cursor.getInt(COL_ROOM));
         msg.setRead(cursor.getInt(COL_READ) == 1);
-        msg.setStatus(cursor.getInt(COL_SENDING));
+        msg.setSendingStatus(cursor.getInt(COL_SENDING));
         return msg;
     }
 
@@ -144,7 +145,7 @@ public class ChatMessageManager extends AbstractManager {
      */
     public void addToUnsent(ChatMessage m) {
         //TODO handle message with already set id
-        Utils.logv("replace into unsent " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getStatus());
+        Utils.logv("replace into unsent " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getSendingStatus());
         db.execSQL("REPLACE INTO unsent_chat_message (text,room,member,msg_id) VALUES (?,?,?, ?)",
                    new String[]{m.getText(), String.valueOf(mChatRoom), new Gson().toJson(m.getMember()), String.valueOf(m.getId())});
     }
@@ -203,7 +204,7 @@ public class ChatMessageManager extends AbstractManager {
             return;
         }
 
-        Utils.logv("replace " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getStatus());
+        Utils.logv("replace " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getSendingStatus());
 
         db.beginTransaction();
         // Query read status from the previous message and use this read status as well if it is "0"
@@ -214,7 +215,7 @@ public class ChatMessageManager extends AbstractManager {
                 read = true;
             }
         }
-        m.setStatus(ChatMessage.STATUS_SENT);
+        m.setSendingStatus(ChatMessage.STATUS_SENT);
         m.setRead(read);
         replaceMessage(m);
         db.setTransactionSuccessful();
@@ -231,7 +232,7 @@ public class ChatMessageManager extends AbstractManager {
         }
         db.execSQL("REPLACE INTO chat_message (_id,previous,room,text,timestamp,signature,member,read,sending) VALUES (?,?,?,?,?,?,?,?,?)",
                    new String[]{String.valueOf(m.getId()), String.valueOf(m.getPrevious()), String.valueOf(mChatRoom), m.getText(), Utils.getDateTimeString(date),
-                                m.getSignature(), new Gson().toJson(m.getMember()), m.getRead() ? "1" : "0", String.valueOf(m.getStatus())});
+                                m.getSignature(), new Gson().toJson(m.getMember()), m.getRead() ? "1" : "0", String.valueOf(m.getSendingStatus())});
     }
 
     /**
