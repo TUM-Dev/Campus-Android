@@ -112,7 +112,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     @Override
     protected void onStart() {
         super.onStart();
-        cafeteriaViewModel.getCafeteriasFromService(false);
 
         // Adapter for drop-down navigation
         ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {

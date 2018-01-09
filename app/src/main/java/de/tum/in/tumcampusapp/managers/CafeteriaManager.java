@@ -15,18 +15,12 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
-import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.trace.Util;
 import de.tum.in.tumcampusapp.viewmodel.CafeteriaViewModel;
 import io.reactivex.Flowable;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Cafeteria Manager, handles database stuff, external imports
@@ -101,10 +95,9 @@ public class CafeteriaManager implements Card.ProvidesCard {
         // Choose which mensa should be shown
         int cafeteriaId = new LocationManager(context).getCafeteria();
         if (cafeteriaId == -1) {
-            Utils.logwithTag("MensaWidget","could not get a Cafeteria form locationManager!");
+            Utils.log("could not get a Cafeteria form locationManager!");
             return Flowable.just("");
         }
-
         return createCafeteriaObservable(cafeteriaId)
                 .map(s -> s.name + ' ' + s.dateStr);
 
@@ -135,7 +128,7 @@ public class CafeteriaManager implements Card.ProvidesCard {
 
         return cafeteriaViewModel
                 .getCafeteriaNameFromId(cafeteriaId)
-                .doOnError(throwable -> Utils.logwithTag("MensaWidget",throwable.getMessage()))
+                .doOnError(throwable -> Utils.log(throwable.getMessage()))
                 .flatMap(cafeteriaName -> {
                     cafeteria.name = cafeteriaName;
                     return cafeteriaViewModel.getAllMenuDates();

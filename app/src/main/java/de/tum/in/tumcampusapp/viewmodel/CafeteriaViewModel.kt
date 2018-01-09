@@ -25,20 +25,29 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
      */
     fun getAllCafeterias(location: Location): Flowable<List<Cafeteria>> =
             localRepository.getAllCafeterias()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .map { transformCafeteria(it, location) }
                     .defaultIfEmpty(emptyList())
 
     fun getCafeteriaNameFromId(id: Int): Flowable<String> =
             localRepository.getCafeteria(id)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .map { it.name }
 
     fun getCafeteriaMenu(id: Int, date: String): Flowable<List<CafeteriaMenu>> =
             localRepository.getCafeteriaMenu(id,date)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .defaultIfEmpty(emptyList())
 
     fun getAllMenuDates():Flowable<List<String>> =
             localRepository.getAllMenuDates()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .defaultIfEmpty(emptyList())
+
 
     /**
      * Downloads cafeterias and stores them in the local repository.
@@ -56,7 +65,7 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
                     .doOnNext { localRepository.clear() }
                     .flatMap { remoteRepository.getAllCafeterias() }.observeOn(Schedulers.io())
                     .doAfterNext { localRepository.updateLastSync() }
-                    .doOnError { Utils.logwithTag("CafeteriaViewModel", it.message) }
+                    .doOnError { Utils.log(it.message) }
                     .subscribe({ t -> t.forEach { localRepository.addCafeteria(it) } })
             )
 
