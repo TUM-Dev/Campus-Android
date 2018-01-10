@@ -24,6 +24,11 @@ data class News(@PrimaryKey
                 var date: Date = Date(),
                 var created: Date = Date(),
                 var dismissed: Int = 0) {
+    /**
+     * Identifies News as a film.
+     *
+     * @return true if News is a film; else false
+     */
     fun isFilm(): Boolean {
         return src == "2"
     }
