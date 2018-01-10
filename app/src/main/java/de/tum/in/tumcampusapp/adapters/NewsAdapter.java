@@ -68,7 +68,7 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
         }
 
         String title = news.getTitle();
-        if (news.getSrc().equals("2")) {
+        if (news.isFilm()) {
             title = COMPILE.matcher(title)
                            .replaceAll("");
         }
@@ -97,7 +97,7 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     public void onBindViewHolder(Card.CardViewHolder holder, int position) {
         NewsViewHolder nHolder = (NewsViewHolder) holder;
         NewsCard card;
-        if (FilmCard.isNewsAFilm(news.get(position))) {
+        if (news.get(position).isFilm()) {
             card = new FilmCard(mContext);
         } else {
             card = new NewsCard(mContext);
@@ -110,7 +110,7 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return "2".equals(news.get(position).getTitle()) ? 0 : 1;
+        return news.get(position).isFilm() ? 0 : 1;
     }
 
     @Override

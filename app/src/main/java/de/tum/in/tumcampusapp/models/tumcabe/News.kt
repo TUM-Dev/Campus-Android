@@ -23,4 +23,9 @@ data class News(@PrimaryKey
                 var image: String = "",
                 var date: Date = Date(),
                 var created: Date = Date(),
-                var dismissed: Int = 0)
+                var dismissed: Int = 0) {
+    fun isFilm(): Boolean {
+        return src == "2"
+    }
+
+}

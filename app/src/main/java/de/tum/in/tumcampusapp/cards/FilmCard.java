@@ -16,8 +16,4 @@ public class FilmCard extends NewsCard {
     public Intent getIntent() {
         return new Intent(mContext, KinoActivity.class);
     }
-
-    public static boolean isNewsAFilm(News news) {
-        return news.getSrc().equals("2");
-    }
 }

@@ -189,7 +189,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
         //Display resulting cards
         for (News n: news) {
             NewsCard card;
-            if (FilmCard.isNewsAFilm(n)) {
+            if (n.isFilm()) {
                 card = new FilmCard(context);
             } else {
                 card = new NewsCard(context);
