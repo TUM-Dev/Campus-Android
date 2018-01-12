@@ -7,7 +7,8 @@
         android:icon="@drawable/ic_pie_chart"
         android:orderInCategory="100"
         android:title="@string/show_pie_chart"
-        tumcampus:showAsAction="ifRoom"/>
+        tumcampus:showAsAction="ifRoom"
+        android:visible="false"/>
     <item
         android:id="@+id/columnChart"
         android:icon="@drawable/ic_column_chart"

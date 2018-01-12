@@ -534,6 +534,11 @@ Signature: %5$s</string>
     <string name="eduroam_dialog_step_2">2. Click on \'eduroam\'</string>
     <string name="eduroam_dialog_step_3">3. Click on \'Forget\'</string>
     <string name="eduroam_dialog_info_text">The wifi profile has to be deleted because the app doesn\'t have permission to overwrite configurations.</string>
+    <string name="grade">Grade</string>
+    <string name="number_of_exams">Number of Exams</string>
+    <string name="ects">ECTS</string>
+    <string name="chart_equal_weights">Equal Weights</string>
+    <string name="grades_without_weight">Grades without weights</string>
 </resources>
 
 

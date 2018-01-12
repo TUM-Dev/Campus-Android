@@ -4,45 +4,59 @@
                                         android:layout_height="match_parent">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
         <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar"/>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical">
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <include
-                layout="@layout/layout_all_errors"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"/>
-
-            <Spinner
-                android:id="@+id/spFilter"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/sections_blue"
-                android:drawSelectorOnTop="true"/>
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefreshLayout"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <ListView
-                    android:id="@+id/lstGrades"
+                <include
+                    layout="@layout/layout_all_errors"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:listSelector="@android:color/transparent"/>
-            </android.support.v4.widget.SwipeRefreshLayout>
-        </LinearLayout>
+                    android:layout_height="fill_parent"/>
+
+                <Spinner
+                    android:id="@+id/spFilter"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/sections_blue"
+                    android:drawSelectorOnTop="true"/>
+
+                <WebView
+                    android:id="@+id/exam_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:visibility="visible"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_arrow_up"
+                    android:background="@color/tum_300"
+                    android:id="@+id/hide_chart"
+                    android:onClick="hideChartToggle"/>
+
+                <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+                    android:id="@+id/lstGrades"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"/>
+            </LinearLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
 
