@@ -10,23 +10,29 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dao.CalendarDao;
 import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
 import de.tum.in.tumcampusapp.database.dao.KinoDao;
 import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.database.dao.NewsDao;
 import de.tum.in.tumcampusapp.database.dao.NewsSourcesDao;
+import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
 import de.tum.in.tumcampusapp.database.dao.SyncDao;
 import de.tum.in.tumcampusapp.database.dao.TumLockDao;
+import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
+import de.tum.in.tumcampusapp.models.dbEntities.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.News;
 import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
+import de.tum.in.tumcampusapp.models.tumo.Calendar;
 
 @Database(version = 1, entities = {
         Cafeteria.class,
@@ -38,7 +44,10 @@ import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
         Kino.class,
         Location.class,
         News.class,
-        NewsSources.class
+        NewsSources.class,
+        Calendar.class,
+        RoomLocations.class,
+        WidgetsTimetableBlacklist.class
 }, exportSchema = false) // TODO: probably version schema
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -61,6 +70,12 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract NewsDao newsDao();
 
     public abstract NewsSourcesDao newsSourcesDao();
+
+    public abstract CalendarDao calendarDao();
+
+    public abstract RoomLocationsDao roomLocationsDao();
+
+    public abstract WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao();
 
     private static TcaDb instance;
 

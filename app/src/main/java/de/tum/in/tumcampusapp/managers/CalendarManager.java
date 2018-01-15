@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +26,11 @@ import de.tum.in.tumcampusapp.auxiliary.calendar.CalendarHelper;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.cards.NextLectureCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.CalendarDao;
+import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
+import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
+import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRow;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
@@ -39,20 +43,17 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
+    private final CalendarDao calendarDao;
+
+    private final RoomLocationsDao roomLocationsDao;
+
+    private final WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao;
+
     public CalendarManager(Context context) {
         super(context);
-
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS room_locations ("
-                   + "title VARCHAR PRIMARY KEY, latitude VARCHAR, longitude VARCHAR)");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS calendar ("
-                   + "nr VARCHAR PRIMARY KEY, status VARCHAR, url VARCHAR, "
-                   + "title VARCHAR, description VARCHAR, dtstart VARCHAR, dtend VARCHAR, "
-                   + "location VARCHAR REFERENCES room_locations)");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS widgets_timetable_blacklist ("
-                   + "widget_id INTEGER, lecture_title VARCHAR, PRIMARY KEY (widget_id, lecture_title))");
+        calendarDao = TcaDb.getInstance(context).calendarDao();
+        roomLocationsDao = TcaDb.getInstance(context).roomLocationsDao();
+        widgetsTimetableBlacklistDao = TcaDb.getInstance(context).widgetsTimetableBlacklistDao();
     }
 
     /**
@@ -129,7 +130,8 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * (nr, status, url, title, description, dtstart, dtend, location)
      */
     private Cursor getAllFromDb() {
-        return db.rawQuery("SELECT * FROM calendar WHERE status!='CANCEL'", null);
+        Cursor c = calendarDao.getAllNotCancelled();
+        return c;
     }
 
     public Cursor getFromDbForDate(Date date) {
@@ -137,7 +139,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         String requestedDateString = Utils.getDateString(date);
 
         // Fetch the data
-        return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? AND status!='CANCEL' ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
+        return calendarDao.getAllByDateNotCancelled("%" + requestedDateString + "%");
     }
 
     /**
@@ -155,9 +157,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         String to = Utils.getDateTimeString(calendar.getTime());
 
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
-        try (Cursor cursor = db.rawQuery("SELECT * FROM calendar c WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' " +
-                                         "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title) " +
-                                         "ORDER BY dtstart ASC", new String[]{from, to, String.valueOf(widgetId)})) {
+        try (Cursor cursor = calendarDao.getNextDays(from, to, String.valueOf(widgetId))) {
             while (cursor.moveToNext()) {
                 calendarEvents.add(new IntegratedCalendarEvent(cursor));
             }
@@ -171,7 +171,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @return Database cursor (name, location, _id)
      */
     public Cursor getCurrentFromDb() {
-        return db.rawQuery("SELECT title, location, nr, dtend FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!='CANCEL'", null);
+        return calendarDao.getCurrentLecture();
     }
 
     /**
@@ -181,7 +181,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     public boolean hasLectures() {
         boolean result = false;
-        try (Cursor c = db.rawQuery("SELECT nr FROM calendar", null)) {
+        try (Cursor c = calendarDao.hasLectures()) {
             if (c.moveToNext()) {
                 result = true;
             }
@@ -220,9 +220,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @return A cursor containing a list of lectures and the is_on_blacklist flag
      */
     public Cursor getLecturesFromWidget(int widgetId) {
-        return db.rawQuery("SELECT DISTINCT c.ROWID as _id, c.title, EXISTS (" +
-                           "SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title" +
-                           ") as is_on_blacklist from calendar c GROUP BY c.title", new String[]{String.valueOf(widgetId)});
+        return calendarDao.getBlacklistedLectures(String.valueOf(widgetId));
     }
 
     public void importCalendar(CalendarRowSet myCalendarList) {
@@ -249,7 +247,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * Removes all cache items
      */
     private void removeCache() {
-        db.execSQL("DELETE FROM calendar");
+        calendarDao.flush();
     }
 
     void replaceIntoDb(CalendarRow row) {
@@ -263,21 +261,16 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             throw new IllegalArgumentException("Invalid lecture Title.");
         }
 
-        db.execSQL("REPLACE INTO calendar (nr, status, url, title, "
-                   + "description, dtstart, dtend, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                   new String[]{row.getNr(), row.getStatus(), row.getUrl(),
-                                row.getTitle(), row.getDescription(),
-                                row.getDtstart(), row.getDtend(), row.getLocation()});
+        calendarDao.insert(new de.tum.in.tumcampusapp.models.tumo.Calendar(row.getNr(), row.getStatus(), row.getUrl(),
+                                                                           row.getTitle(), row.getDescription(),
+                                                                           row.getDtstart(), row.getDtend(), row.getLocation()));
     }
 
     /**
      * Gets the next lectures that could be important to the user
      */
     public Cursor getNextCalendarItem() {
-        return db.rawQuery("SELECT title, dtstart, dtend, location FROM calendar JOIN " +
-                           "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
-                           "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
-                           "ORDER BY dtend, dtstart LIMIT 4", null);
+        return calendarDao.getNextCalendarItem();
     }
 
     /**
@@ -286,14 +279,10 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     Geo getNextCalendarItemGeo() {
         Geo geo;
-        try (Cursor cur = db.rawQuery("SELECT r.latitude, r.longitude " +
-                                      "FROM calendar c, room_locations r " +
-                                      "WHERE datetime('now', 'localtime') < datetime(c.dtstart, '+1800 seconds') AND " +
-                                      "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!='CANCEL'" +
-                                      "ORDER BY dtstart LIMIT 1", null)) {
+        try (Cursor cur = calendarDao.getNextLectureCoordinates()) {
             geo = null;
             if (cur.moveToFirst()) {
-                geo = new Geo(cur.getDouble(0), cur.getDouble(1));
+                geo = new Geo(cur.getDouble(1), cur.getDouble(2));
             }
         }
         return geo;
@@ -324,13 +313,10 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
         public static void loadGeo(Context c) {
             LocationManager locationManager = new LocationManager(c);
-            SQLiteDatabase db = getDb(c);
+            final CalendarDao calendarDao = TcaDb.getInstance(c).calendarDao();
+            final RoomLocationsDao roomLocationsDao = TcaDb.getInstance(c).roomLocationsDao();
 
-            try (Cursor cur = db.rawQuery("SELECT c.location " +
-                                          "FROM calendar c LEFT JOIN room_locations r ON " +
-                                          "c.location=r.title " +
-                                          "WHERE r.latitude IS NULL " +
-                                          "GROUP BY c.location", null)) {
+            try (Cursor cur = calendarDao.getLecturesWithoutCoordinates()) {
 
                 // Retrieve geo from room name
                 if (cur.moveToFirst()) {
@@ -342,8 +328,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                         Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
                         if (geo.isPresent()) {
                             Utils.logv("inserted " + location + ' ' + geo);
-                            db.execSQL("REPLACE INTO room_locations (title, latitude, longitude) VALUES (?, ?, ?)",
-                                       new String[]{location, geo.get().getLatitude(), geo.get().getLongitude()});
+                            roomLocationsDao.insert(new RoomLocations(location, geo.get().getLatitude(), geo.get().getLongitude()));
                         }
 
                     } while (cur.moveToNext());
