@@ -1,12 +1,14 @@
 package de.tum.`in`.tumcampusapp.models.gcm
 
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import de.tum.`in`.tumcampusapp.auxiliary.Utils
 import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = "notification")
-data class GCMNotification(var notification: Int = 0,
+data class GCMNotification(@PrimaryKey
+                           var notification: Int = 0,
                            var type: Int = 0,
                            var location: GCMNotificationLocation = GCMNotificationLocation(),
                            var title: String = "",
