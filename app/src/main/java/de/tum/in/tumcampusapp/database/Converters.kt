@@ -8,22 +8,15 @@ import java.util.*
 
 class Converters {
     @TypeConverter
-    fun fromIso(str: String): Date {
-        return Utils.getDateTime(str)
-    }
+    fun fromIso(str: String): Date = Utils.getDateTime(str)
 
     @TypeConverter
-    fun fromDate(date: Date): String {
-        return Utils.getDateTimeString(date)
-    }
+    fun fromDate(date: Date): String = Utils.getDateTimeString(date)
 
     @TypeConverter
-    fun toJson(location: GCMNotificationLocation): String {
-        return Gson().toJson(location);
-    }
+    fun toJson(location: GCMNotificationLocation): String = Gson().toJson(location);
 
     @TypeConverter
-    fun toLocation(json: String): GCMNotificationLocation {
-        return Gson().fromJson(json, GCMNotificationLocation::class.java)
-    }
+    fun toLocation(json: String): GCMNotificationLocation = Gson().fromJson(json, GCMNotificationLocation::class.java)
+
 }
