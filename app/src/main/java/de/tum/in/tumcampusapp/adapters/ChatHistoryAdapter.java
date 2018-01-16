@@ -10,18 +10,24 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.reactivestreams.Subscriber;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
-
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class ChatHistoryAdapter extends BaseAdapter {
     private List<ChatMessage> chatHistoryList;
     private List<ChatMessage> unsentMessages = new ArrayList<>();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+
     private ChatMember currentChatMember;
     private Context mContext;
     public ChatMessage mCheckedItem;
@@ -129,7 +135,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
         }
 
         holder.tvMessage.setText(msg.getText());
-        holder.tvTimestamp.setText(DateUtils.getTimeOrDay(msg.getTimestamp(), mContext));
+        holder.tvTimestamp.setText(DateUtils.getTimeOrDayISO(msg.getTimestamp(), mContext));
 
         if (holder.ivSent == null) {
             holder.tvUser.setText(msg.getMember()

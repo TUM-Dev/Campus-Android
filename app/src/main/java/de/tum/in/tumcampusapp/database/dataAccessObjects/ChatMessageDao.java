@@ -9,6 +9,8 @@ import android.database.Cursor;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
+import io.reactivex.Flowable;
+
 @Dao
 public interface ChatMessageDao {
 
@@ -34,7 +36,7 @@ public interface ChatMessageDao {
            "LIMIT 1) AS until "+
            "WHERE c._id>until._id AND c.room=:room "+
            "ORDER BY c._id")
-    Cursor getUnread(int room);
+    List<ChatMessage> getUnreadList(int room);
 
     @Query("SELECT * FROM chat_message c, (SELECT c1._id " +
            "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
@@ -65,4 +67,44 @@ public interface ChatMessageDao {
     void removeUnsentMessage(int id);
 
 
+    /**
+     * Flowables
+     * */
+
+    @Query("SELECT c.* FROM chat_message c, (SELECT c1._id " +
+           "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
+           "WHERE c2._id IS NULL AND c1.room=:room " +
+           "ORDER BY c1._id DESC " +
+           "LIMIT 1) AS until " +
+           "WHERE c._id>=until._id AND c.room=:room " +
+           "ORDER BY c._id")
+    Flowable<List<ChatMessage>> getAllFlow(int room);
+
+    @Query("SELECT c.* FROM chat_message c, (SELECT c1._id "+
+           "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous "+
+           "WHERE (c2._id IS NULL OR c1.read=1) AND c1.room=:room "+
+           "ORDER BY c1._id DESC "+
+           "LIMIT 1) AS until "+
+           "WHERE c._id>until._id AND c.room=:room "+
+           "ORDER BY c._id")
+    Flowable<List<ChatMessage>> getUnreadListFlow(int room);
+
+    @Query("SELECT * FROM chat_message c, (SELECT c1._id " +
+           "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
+           "WHERE (c2._id IS NULL OR c1.read=1) AND c1.room=:room " +
+           "ORDER BY c1._id DESC " +
+           "LIMIT 1) AS until " +
+           "WHERE c._id>until._id AND c.room=:room " +
+           "ORDER BY c._id DESC " +
+           "LIMIT 5")
+    Flowable<List<ChatMessage>> getLastUnreadFlow(int room);
+
+    @Query("SELECT read FROM chat_message WHERE _id=:id")
+    Flowable<Integer> getReadFlow(int id);
+
+    @Query("SELECT * FROM chat_message WHERE sending=1 ORDER BY _id")
+    Flowable<List<ChatMessage>> getAllUnsentFlow();
+
+    @Query("SELECT * FROM chat_message WHERE msg_id=0 AND sending=1 ORDER BY _id")
+    Flowable<List<ChatMessage>> getAllUnsentFromCurrentRoomFlow();
 }
