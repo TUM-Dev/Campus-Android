@@ -13,12 +13,11 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 @Dao
 public interface WifiMeasurementDao {
     @Nullable
-    @Query("SELECT * FROM wifiMeasurement")
+    @Query("SELECT * FROM wifi_measurement")
     List<WifiMeasurement> getAll();
 
     @Query("DELETE FROM wifi_measurement")
     void cleanup();
-
 
     @Insert
     void insert(WifiMeasurement wifiMeasurement);

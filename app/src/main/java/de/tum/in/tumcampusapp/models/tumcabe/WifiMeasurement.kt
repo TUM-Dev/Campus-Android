@@ -1,9 +1,11 @@
 package de.tum.`in`.tumcampusapp.models.tumcabe
 
+import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import de.tum.`in`.tumcampusapp.auxiliary.Utils
 import java.util.*
 
+@Entity(tableName = "wifi_measurement")
 data class WifiMeasurement(@PrimaryKey
                            var date: String = "",
                            var ssid: String = "",
