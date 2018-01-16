@@ -165,18 +165,18 @@ public class NextLectureCard extends NotificationAwareCard {
     public void setLectures(Cursor cur) {
         do {
             CalendarItem item = new CalendarItem();
-            item.start = Utils.getDateTime(cur.getString(1));
-            item.end = Utils.getDateTime(cur.getString(2));
+            item.start = Utils.getDateTime(cur.getString(5));
+            item.end = Utils.getDateTime(cur.getString(6));
 
             // Extract course title
-            item.title = cur.getString(0);
+            item.title = cur.getString(3);
             item.title = item.title.replaceAll("[A-Z, 0-9(LV\\.Nr)=]+$", "");
             item.title = item.title.replaceAll("\\([A-Z]+[0-9]+\\)", "");
             item.title = item.title.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
             item.title = item.title.trim();
 
             // Handle location
-            item.location = cur.getString(3);
+            item.location = cur.getString(7);
             if (item.location != null) {
                 item.location = item.location.replaceAll("\\([A-Z0-9\\.]+\\)", "")
                                              .trim();
