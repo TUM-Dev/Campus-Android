@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
@@ -9,9 +8,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -24,11 +32,11 @@ import java.util.Map;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumo.Exam;
 import de.tum.in.tumcampusapp.models.tumo.ExamList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Activity to show the user's grades/exams passed.
@@ -38,14 +46,17 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     private final NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
     private static int lastChoice;
     private TextView averageTx;
-    private double averageGrade;
-    private String columnChartContent;
-    private MenuItem columnMenuItem;
+    private MenuItem barMenuItem;
     private MenuItem pieMenuItem;
-    private ExamList examList;
-    private ListView lvGrades;
-    private String pieChartContent;
+    private List<Exam> examList;
+    private StickyListHeadersListView lvGrades;
+    private View listView;
+    private PieChart pieChart;
+    private BarChart barChart;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private String[] programIds;
+
+    private boolean chartVisible;
 
     private Spinner spFilter;
 
@@ -55,110 +66,61 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         super(TUMOnlineConst.Companion.getEXAMS(), R.layout.activity_grades);
     }
 
-    /**
-     * Builds HTML string showing a column chart
-     *
-     * @param filteredExamList List of exams
-     * @return content string
-     */
-    String buildColumnChartContentString(List<Exam> filteredExamList) {
-        Map<String, Integer> gradeDistribution = calculateGradeDistribution(filteredExamList);
-
-        StringBuilder datas = new StringBuilder(1024);
-        // Build data string
-        for (int i = 0; i < GRADES.length; i++) {
-            datas.append("['")
-                 .append(GRADES[i])
-                 .append("', ")
-                 .append(gradeDistribution.get(GRADES[i]))
-                 .append(']');
-
-            if (i != GRADES.length - 1) {
-                datas.append(',');
-            }
-        }
-
-        // Build content String
-        return "<html>"
-               + "  <head>"
-               + "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
-               + "    <script type=\"text/javascript\">"
-               + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
-               + "      google.setOnLoadCallback(drawChart);"
-               + "      function drawChart() {"
-               + "        var data = google.visualization.arrayToDataTable(["
-               + "          ['Grade', 'Quantity'],"
-               + datas
-               + "        ]);"
-               + "        var options = {"
-               + "          title: 'Grades of "
-               + filteredExamList.get(0)
-                                 .getProgramID()
-               + "',"
-               // + " 	     legend: {position: 'none'}"
-               + "        };"
-               + "        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));"
-               + "        chart.draw(data, options);"
-               + "      }"
-               + "    </script>"
-               + "  </head>"
-               + "  <body>"
-               + "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
-               + "  </body>" + "</html>";
+    private int[] getGradeColors(){
+        return new int[]{
+                R.color.grade_1_0, R.color.grade_1_3, R.color.grade_1_3, R.color.grade_1_7,
+                R.color.grade_2_0, R.color.grade_2_3, R.color.grade_2_3, R.color.grade_2_7,
+                R.color.grade_3_0, R.color.grade_3_3, R.color.grade_3_3, R.color.grade_3_7,
+                R.color.grade_4_0, R.color.grade_4_3, R.color.grade_4_3, R.color.grade_4_7,
+                R.color.grade_5_0, R.color.grade_default};
     }
 
-    /**
-     * Builds HTML string showing a pie chart
-     *
-     * @param filteredExamList List of exams
-     * @return content string
-     */
-    String buildPieChartContentString(List<Exam> filteredExamList) {
-        Map<String, Integer> gradeDistrubution = calculateGradeDistribution(filteredExamList);
-        StringBuilder datas = new StringBuilder(1024);
+    private void showPieChart(List<Exam> exams){
+        barChart.setVisibility(View.GONE);
+        pieChart.setVisibility(View.VISIBLE);
 
-        // build data String
-        for (int i = 0; i < GRADES.length; i++) {
-            datas.append("['")
-                 .append(GRADES[i])
-                 .append("', ")
-                 .append(gradeDistrubution.get(GRADES[i]))
-                 .append(']');
-            if (i != GRADES.length - 1) {
-                datas.append(',');
-            }
+        Map<String, Integer> gradeCount = calculateGradeDistribution(exams);
+
+        List<PieEntry> entries = new ArrayList<>();
+        for (String GRADE : GRADES) {
+            entries.add(new PieEntry(gradeCount.get(GRADE), GRADE));
         }
 
-        // build content String
+        PieDataSet set = new PieDataSet(entries, getString(R.string.grades_without_weight));
+        set.setColors(getGradeColors(), this);
+        set.setDrawValues(false);
 
-        return "<html>"
-               + "  <head>"
-               + "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
-               + "    <script type=\"text/javascript\">"
-               + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
-               + "      google.setOnLoadCallback(drawChart);"
-               + "      function drawChart() {"
-               + "        var data = google.visualization.arrayToDataTable(["
-               + "          ['Grade', 'Quantity'],"
-               + datas
-               + "        ]);"
-               + "        var options = {"
-               + "          title: 'Grades of "
-               + filteredExamList.get(0)
-                                 .
+        pieChart.setData(new PieData(set));
+        pieChart.setDrawEntryLabels(false);
+        //pieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
+        pieChart.getLegend().setWordWrapEnabled(true);
+        pieChart.setDescription(null);
+        pieChart.invalidate();
+    }
 
-                                         getProgramID()
+    private void showBarChart(List<Exam> exams){
+        pieChart.setVisibility(View.GONE);
+        barChart.setVisibility(View.VISIBLE);
 
-               + "'"
-               + "        };"
-               + "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
-               + "        chart.draw(data, options);"
-               + "      }"
-               + "    </script>"
-               + "  </head>"
-               + "  <body>"
-               + "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
-               + "  </body>" + "</html>";
+        Map<String, Integer> gradeCount = calculateGradeDistribution(exams);
+
+        List<BarEntry> entries = new ArrayList<>();
+        for(int i = 0; i < GRADES.length; i++){
+            entries.add(new BarEntry(i, gradeCount.get(GRADES[i])));
+        }
+
+        BarDataSet set = new BarDataSet(entries, getString(R.string.grades_without_weight));
+        set.setColors(getGradeColors(), this);
+
+        BarData data = new BarData(set);
+
+        barChart.setData(data);
+        barChart.setFitBars(true);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setGranularity(1);
+        xAxis.setValueFormatter((value, axis) -> GRADES[(int)value]);
+        barChart.invalidate();
     }
 
     /**
@@ -168,22 +130,23 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * @return Average grade
      */
     Double calculateAverageGrade(List<Exam> filteredExamList) {
-        //List<Exam> removedDoubles = removeDuplicates(filteredExamList);
-        double weightedGrade = 0.0;
-        double creditSum = 0.0;
+        double gradeSum = 0.0;
+        int grades = 0;
 
         for (Exam item : filteredExamList) {
-            creditSum += Double.valueOf(item.getCredits());
             try {
-                weightedGrade += format.parse(item.getGrade())
-                                       .doubleValue()
-                                 * Double.valueOf(item.getCredits());
-            } catch (NumberFormatException | ParseException e) {
+                double grade = format.parse(item.getGrade()).doubleValue();
+                if(grade <= 4.0){
+                    gradeSum += grade;
+                    grades++;
+                } else {
+                    Utils.log("Grade " + grade + " won't be considered in the average");
+                }
+            } catch (ParseException e) {
                 Utils.log(e);
             }
-
         }
-        return weightedGrade / creditSum;
+        return gradeSum / grades;
 
     }
 
@@ -196,12 +159,16 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     Map<String, Integer> calculateGradeDistribution(
             List<Exam> filteredExamList) {
         Map<String, Integer> gradeDistribution = new HashMap<>(128);
-        for (Exam item : filteredExamList) {
-            // increment hash value
-            int curCount = gradeDistribution.containsKey(item.getGrade()) ? gradeDistribution
-                    .get(item.getGrade()) : 0;
 
-            gradeDistribution.put(item.getGrade(), curCount + 1);
+        for (String GRADE : GRADES) {
+            gradeDistribution.put(GRADE, 0);
+        }
+
+        for (Exam exam : filteredExamList) {
+            // increment hash value
+            int curCount = gradeDistribution.containsKey(exam.getGrade()) ? gradeDistribution
+                    .get(exam.getGrade()) : 0;
+            gradeDistribution.put(exam.getGrade(), curCount + 1);
         }
         return gradeDistribution;
     }
@@ -216,100 +183,130 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         filters.add(getString(R.string.all_programs));
 
         // get all program ids from the results
-        for (int i = 0; i < examList.getExams()
-                                    .size(); i++) {
-            String item = examList.getExams()
-                                  .get(i)
-                                  .getProgramID();
-            if (filters.indexOf(item) == -1) {
+        for (int i = 0; i < examList.size(); i++) {
+            String item = examList.get(i).getProgramID();
+            if (!filters.contains(item)) {
                 filters.add(item);
             }
         }
+        programIds = filters.toArray(new String[]{});
+
+        for(int i = 1; i < filters.size(); i++){
+            String programId = filters.get(i);
+            filters.set(i, getString(R.string.study_program, programId));
+        }
 
         // init the spinner
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_checked, filters);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item_actionbar, filters);
         spFilter.setAdapter(spinnerArrayAdapter);
         spFilter.setSelection(lastChoice);
+        spFilter.setVisibility(View.VISIBLE);
 
         // handle if program choice is changed
         spFilter.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                String filter = programIds[position];
+                Utils.log("Spinner filter " + filter);
+                lastChoice = position;
 
-                String filter = spFilter.getItemAtPosition(arg2)
-                                        .toString();
-                lastChoice = arg2;
+                List<Exam> examsToShow;
 
                 if (filter.equals(getString(R.string.all_programs))) {
-
-                    // display all grades
-                    lvGrades.setAdapter(new ExamListAdapter(
-                            GradesActivity.this, examList.getExams()));
-                    averageTx.setVisibility(View.GONE);
-                    // convert exam list
-                    List<Exam> convertedList = new ArrayList<>();
-                    for (int i = 0; i < examList.getExams()
-                                                .size(); i++) {
-                        Exam item = examList.getExams()
-                                            .get(i);
-                        convertedList.add(item);
-                    }
-
-                    // build chart Content for corresponding list
-                    columnChartContent = buildColumnChartContentString(convertedList);
-                    pieChartContent = buildPieChartContentString(convertedList);
-
+                    examsToShow = examList;
                 } else {
                     // do filtering according to selected program
                     List<Exam> filteredExamList = new ArrayList<>();
-                    for (int i = 0; i < examList.getExams()
-                                                .size(); i++) {
-                        Exam item = examList.getExams()
-                                            .get(i);
-                        if (item.getProgramID()
-                                .equals(filter)) {
-                            filteredExamList.add(item);
+                    for (Exam exam : examList) {
+                        if (exam.getProgramID().equals(filter)) {
+                            filteredExamList.add(exam);
                         }
-
                     }
-                    // list view gets filtered list
-                    lvGrades.setAdapter(new ExamListAdapter(
-                            GradesActivity.this, filteredExamList));
-
-                    columnChartContent = buildColumnChartContentString(filteredExamList);
-                    pieChartContent = buildPieChartContentString(filteredExamList);
-
-                    averageGrade = Math.round(calculateAverageGrade(filteredExamList) * 1000.0) / 1000.0;
-
-                    averageTx.setText(String.format("%s: %s",
-                                                    getResources().getString(R.string.average_grade), averageGrade));
-                    averageTx.setVisibility(View.VISIBLE);
+                    examsToShow = filteredExamList;
                 }
+                showExams(examsToShow);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
                 // select ALL
                 spFilter.setSelection(0);
-                lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this,
-                                                        examList.getExams()));
+                showExams(examList);
             }
         });
+    }
+
+    private void showExams(List<Exam> exams){
+        lvGrades.setAdapter(new ExamListAdapter(
+                GradesActivity.this, exams));
+        if(chartVisible){
+            if(pieChart.getVisibility() == View.VISIBLE){
+                showPieChart(exams);
+            } else {
+                showBarChart(exams);
+            }
+        }
+        double averageGrade = Math.round(calculateAverageGrade(exams) * 100.0) / 100.0;
+        averageTx.setText(String.format("%s: %s",
+                                        getResources().getString(R.string.average_grade), averageGrade));
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        barChart = findViewById(R.id.bar_chart);
+        pieChart = findViewById(R.id.pie_chart);
         lvGrades = findViewById(R.id.lstGrades);
         spFilter = findViewById(R.id.spFilter);
         averageTx = findViewById(R.id.avgGrade);
         mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.color_primary, R.color.tum_A100, R.color.tum_A200);
-
+        listView = mSwipeRefreshLayout;
+        chartVisible = true;
         requestFetch();
+    }
+
+    private void showChart(boolean show, boolean landscape){
+        if(show){
+            if(pieMenuItem.isVisible()){
+                barChart.setVisibility(View.VISIBLE);
+            } else {
+                pieChart.setVisibility(View.VISIBLE);
+            }
+            if(landscape){
+                listView.setVisibility(View.GONE);
+            }
+        } else {
+            pieChart.setVisibility(View.GONE);
+            barChart.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+
+        }
+        chartVisible = show;
+    }
+
+    // for landscape
+    public void showChart(View view){
+        listView.setVisibility(View.GONE);
+        view.setVisibility(View.GONE);
+        findViewById(R.id.button_show_list).setVisibility(View.VISIBLE);
+        showChart(true, true);
+    }
+
+    public void showList(View view){
+        listView.setVisibility(View.VISIBLE);
+        findViewById(R.id.button_show_chart).setVisibility(View.VISIBLE);
+        view.setVisibility(View.GONE);
+        showChart(false, true);
+    }
+
+    // for portrait
+    public void hideChartToggle(View view){
+        showChart(!chartVisible, false);
+        view.setRotation(view.getRotation() + 180);
     }
 
     @Override
@@ -322,8 +319,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_activity_grades, menu);
-        columnMenuItem = menu.findItem(R.id.columnChart);
-        pieMenuItem = menu.findItem(R.id.pieChart);
+        barMenuItem = menu.findItem(R.id.bar_chart_menu);
+        pieMenuItem = menu.findItem(R.id.pie_chart_menu);
         return true;
     }
 
@@ -334,18 +331,20 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      */
     @Override
     public void onFetch(ExamList rawResponse) {
-        examList = rawResponse;
+        examList = rawResponse.getExams();
+        Utils.log(examList.toString());
 
         // initialize the program choice spinner
         initSpinner();
 
         // Displays results in view
-        lvGrades.setAdapter(new ExamListAdapter(this, examList.getExams()));
+        lvGrades.setAdapter(new ExamListAdapter(this, examList));
 
         showLoadingEnded();
 
         // enabling the Menu options after first fetch
         isFetched = true;
+        showExams(examList);
 
         // update the action bar to display the enabled menu options
         this.invalidateOptionsMenu();
@@ -365,74 +364,35 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-
-        if (NetUtils.isConnected(this)) {
-            int i = item.getItemId();
-            if (i == R.id.columnChart) {
-                intent = new Intent(this, GradeChartActivity.class);
-                intent.putExtra("chartContent", columnChartContent);
-                startActivity(intent);
-                return true;
-            } else if (i == R.id.pieChart) {
-                intent = new Intent(this, GradeChartActivity.class);
-                intent.putExtra("chartContent", pieChartContent);
-                startActivity(intent);
-                return true;
-            } else {
-                isFetched = false;
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.bar_chart_menu) {
+            barMenuItem.setVisible(false);
+            pieMenuItem.setVisible(true);
+            if(chartVisible){
+                showBarChart(examList);
             }
-        } else {
-            showError(R.string.no_internet_connection);
-            averageTx.setVisibility(View.GONE);
             return true;
+        } else if (i == R.id.pie_chart_menu) {
+            barMenuItem.setVisible(true);
+            pieMenuItem.setVisible(false);
+            if(chartVisible){
+                showPieChart(examList);
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // enable Menu Items after fetching grades
-        columnMenuItem = menu.findItem(R.id.columnChart);
-        columnMenuItem.setEnabled(isFetched);
-        pieMenuItem = menu.findItem(R.id.pieChart);
+        barMenuItem = menu.findItem(R.id.bar_chart_menu);
+        barMenuItem.setEnabled(isFetched);
+        pieMenuItem = menu.findItem(R.id.pie_chart_menu);
         pieMenuItem.setEnabled(isFetched);
 
         return super.onPrepareOptionsMenu(menu);
     }
 
-    /**
-     * Removes duplicate exams from the list
-     *
-     * @param filteredExamList List of exams
-     * @return List with duplicate items removed
-
-    List<Exam> removeDuplicates(List<Exam> filteredExamList) {
-    List<Exam> removedDoubles = new ArrayList<>();
-
-    // find and remove duplicates
-    for (int i = 0; i < filteredExamList.size(); i++) {
-    Exam item1 = filteredExamList.get(i);
-    boolean insert = true;
-
-    for (Exam item2 : filteredExamList) {
-    if (item1.getCourse().equals(item2.getCourse())) {
-    Utils.logv("Double = " + item1.getCourse());
-    try {
-    if (format.parse(item1.getGrade()).doubleValue() > format
-    .parse(item2.getGrade()).doubleValue()) {
-    insert = false;
-    }
-    } catch (ParseException e) {
-    Utils.log(e);
-    }
-    }
-    }
-
-    if (insert) {
-    removedDoubles.add(item1);
-    }
-    }
-    return removedDoubles;
-    }*/
 }

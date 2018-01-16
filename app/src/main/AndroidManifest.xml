@@ -144,18 +144,8 @@
                 android:value="de.tum.in.tumcampusapp.activities.PlansActivity"/>
         </activity>
         <activity
-            android:name=".activities.GradeChartActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/my_grades"
-            android:parentActivityName=".activities.GradesActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.GradesActivity"/>
-        </activity>
-        <activity
             android:name=".activities.GradesActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/my_grades"
+            android:label="@string/empty_string"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
             <meta-data

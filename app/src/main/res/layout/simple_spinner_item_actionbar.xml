@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="fill_horizontal"
-                android:orientation="vertical">
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    style="?android:attr/spinnerItemStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_primary"
+    android:textColor="#fff"
+    android:maxLines="1"
+    android:padding="10dp"/>
 
-    <TextView
-        android:id="@android:id/text1"
-        style="?android:attr/spinnerItemStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:textColor="#fff"
-        android:maxLines="1"/>
-
-</RelativeLayout>

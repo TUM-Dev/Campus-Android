@@ -3,13 +3,14 @@
       xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/pieChart"
+        android:id="@+id/pie_chart_menu"
         android:icon="@drawable/ic_pie_chart"
         android:orderInCategory="100"
         android:title="@string/show_pie_chart"
-        tumcampus:showAsAction="ifRoom"/>
+        tumcampus:showAsAction="ifRoom"
+        android:visible="false"/>
     <item
-        android:id="@+id/columnChart"
+        android:id="@+id/bar_chart_menu"
         android:icon="@drawable/ic_column_chart"
         android:orderInCategory="100"
         android:title="@string/show_column_chart"
