@@ -298,22 +298,16 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             final CalendarDao calendarDao = TcaDb.getInstance(c).calendarDao();
             final RoomLocationsDao roomLocationsDao = TcaDb.getInstance(c).roomLocationsDao();
 
-            try (Cursor cur = calendarDao.getLecturesWithoutCoordinates()) {
-
-                // Retrieve geo from room name
-                if (cur.moveToFirst()) {
-                    do {
-                        String location = cur.getString(0);
-                        if (location == null || location.isEmpty()) {
-                            continue;
-                        }
-                        Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
-                        if (geo.isPresent()) {
-                            Utils.logv("inserted " + location + ' ' + geo);
-                            roomLocationsDao.insert(new RoomLocations(location, geo.get().getLatitude(), geo.get().getLongitude()));
-                        }
-
-                    } while (cur.moveToNext());
+            List<CalendarItem> calendarItems = calendarDao.getLecturesWithoutCoordinates();
+            for (CalendarItem calendarItem: calendarItems) {
+                String location = calendarItem.getLocation();
+                if (location == null || location.isEmpty()) {
+                    continue;
+                }
+                Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
+                if (geo.isPresent()) {
+                    Utils.logv("inserted " + location + ' ' + geo);
+                    roomLocationsDao.insert(new RoomLocations(location, geo.get().getLatitude(), geo.get().getLongitude()));
                 }
             }
 

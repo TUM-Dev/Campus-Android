@@ -42,12 +42,12 @@ public interface CalendarDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(CalendarItem cal);
 
-    @Query("SELECT c.location " +
+    @Query("SELECT * " +
            "FROM calendar c LEFT JOIN room_locations r ON " +
            "c.location=r.title " +
-           "WHERE r.latitude IS NULL " +
+           "WHERE r.latitude = '' " +
            "GROUP BY c.location")
-    Cursor getLecturesWithoutCoordinates();
+    List<CalendarItem> getLecturesWithoutCoordinates();
 
     @Query("SELECT * FROM calendar JOIN " +
            "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
