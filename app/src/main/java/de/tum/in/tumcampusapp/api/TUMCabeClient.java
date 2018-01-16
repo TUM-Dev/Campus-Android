@@ -83,23 +83,6 @@ public class TUMCabeClient {
         builder.client(Helper.getOkClient(c));
         service = builder.build()
                          .create(TUMCabeAPIService.class);
-
-        /*
-        TODO port the error handler to Retrofit 2
-        ErrorHandler errorHandler = new ErrorHandler() {
-            @Override
-            public Throwable handleError(RetrofitError cause) {
-                Throwable t = cause.getCause();
-                if (t instanceof SSLPeerUnverifiedException) {
-                    //TODO show a error message
-                    //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
-                }
-
-                //Return the same cause, so it can be handled by other activities
-                return cause;
-            }
-        }; */
-
     }
 
     public static synchronized TUMCabeClient getInstance(Context c) {
@@ -280,7 +263,7 @@ public class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public void createMeasurements(WifiMeasurement[] wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
+    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
         service.createMeasurements(wifiMeasurementList)
                .enqueue(cb);
     }

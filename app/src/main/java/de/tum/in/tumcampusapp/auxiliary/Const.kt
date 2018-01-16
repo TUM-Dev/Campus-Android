@@ -135,7 +135,11 @@ object Const {
     const val ADD_GEOFENCE_EXTRA = "AddGeofence"
     const val DISTANCE_IN_METER = 50 * 1000f
     const val MUNICH_GEOFENCE = "geofence_munich_id"
-  
+
     const val EXTRA_FOREIGN_CONFIGURATION_EXISTS = "CONFIGURED_BY_OTHER_APP"
     const val TUM_ID_PATTERN = "^[a-z]{2}[0-9]{2}[a-z]{3}$"
+
+
+    const val WIFI_SCANS_ALLOWED = "WIFI_SCANS_ALLOWED"
+    const val WIFI_SCAN_MINIMUM_BATTERY_LEVEL = "WIFI_SCAN_MINIMUM_BATTERY_LEVEL"
 }

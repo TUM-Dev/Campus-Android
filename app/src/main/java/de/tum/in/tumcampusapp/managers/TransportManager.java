@@ -10,6 +10,7 @@ import android.util.SparseArray;
 import com.google.common.base.Optional;
 import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +29,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.MVVCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.efa.Departure;
 import de.tum.in.tumcampusapp.models.efa.StationResult;
 import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
@@ -285,7 +287,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @param prefix Name prefix
      * @return Database Cursor (name, _id)
      */
-    public static Optional<Cursor> getStationsFromExternal(Context context, String prefix) {
+    public static List<StationResult> getStationsFromExternal(Context context, String prefix) {
         prefix = Utils.escapeUmlauts(prefix);
         try {
             String language = LANGUAGE + Locale.getDefault()
@@ -301,7 +303,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             // Download possible stations
             Optional<JSONObject> jsonObj = net.downloadJsonObject(query, CacheManager.VALIDITY_DO_NOT_CACHE, true);
             if (!jsonObj.isPresent()) {
-                return Optional.absent();
+                return Collections.emptyList();
             }
 
             List<StationResult> results = new ArrayList<>();
@@ -313,7 +315,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             if (pointsArray == null) {
                 JSONObject points = stopfinder.optJSONObject(POINTS);
                 if (points == null) {
-                    return Optional.absent();
+                    return Collections.emptyList();
                 }
                 JSONObject point = points.getJSONObject("point");
                 addStationResult(results, point);
@@ -327,16 +329,11 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             //Sort by quality
             Collections.sort(results, (lhs, rhs) -> rhs.getQuality() - lhs.getQuality());
 
-            MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
-            for (StationResult result : results) {
-                String jsonStationResult = gson.toJson(result, StationResult.class);
-                mc.addRow(new String[]{jsonStationResult, String.valueOf(RecentsManager.STATIONS)});
-            }
-            return Optional.of(mc);
+            return results;
         } catch (JSONException e) {
             Utils.log(e, ERROR_INVALID_JSON + STATION_SEARCH);
         }
-        return Optional.absent();
+        return Collections.emptyList();
     }
 
     private static void addStationResult(Collection<StationResult> results, JSONObject point) throws JSONException {
@@ -371,5 +368,19 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         card.setDepartures(cur);
         card.apply();
 
+    }
+
+
+    public static List<StationResult> getRecentStations(RecentsManager recentsManager) {
+        List<Recent> recentList = recentsManager.getAllFromDb();
+        List<StationResult> stationResults = new ArrayList<>(recentList.size());
+        for (Recent r : recentList) {
+            try {
+                stationResults.add(StationResult.Companion.fromRecent(r));
+            } catch (JsonSyntaxException ignore) {
+                //We don't care about deserialization errors
+            }
+        }
+        return stationResults;
     }
 }

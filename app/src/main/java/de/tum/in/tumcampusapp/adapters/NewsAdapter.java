@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,25 +10,29 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.FilmCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.NewsSourcesDao;
+import de.tum.in.tumcampusapp.models.tumcabe.News;
+import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
 
 public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
     private final NetUtils net;
-    private final Cursor c;
+    private final List<News> news;
     private final Context mContext;
 
-    public NewsAdapter(Context context, Cursor c) {
+    public NewsAdapter(Context context, List<News> news) {
         this.mContext = context;
         net = new NetUtils(context);
-        this.c = c;
+        this.news = news;
     }
 
     public static NewsViewHolder newNewsView(ViewGroup parent, boolean isFilm) {
@@ -51,11 +54,12 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
         return holder;
     }
 
-    public static void bindNewsView(NetUtils net, RecyclerView.ViewHolder newsViewHolder, Cursor cursor) {
+    public static void bindNewsView(NetUtils net, RecyclerView.ViewHolder newsViewHolder, News news, Context context) {
         NewsViewHolder holder = (NewsViewHolder) newsViewHolder;
-
+        NewsSourcesDao newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();
+        NewsSources newsSource = newsSourcesDao.getNewsSource(Integer.parseInt(news.getSrc()));
         // Set image
-        String imgUrl = cursor.getString(4);
+        String imgUrl = news.getImage();
         if (imgUrl == null || imgUrl.isEmpty() || imgUrl.equals("null")) {
             holder.img.setVisibility(View.GONE);
         } else {
@@ -63,21 +67,20 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
             net.loadAndSetImage(imgUrl, holder.img);
         }
 
-        String title = cursor.getString(2);
-        if (cursor.getInt(1) == 2) {
+        String title = news.getTitle();
+        if (news.isFilm()) {
             title = COMPILE.matcher(title)
                            .replaceAll("");
         }
         holder.title.setText(title);
 
         // Adds date
-        String date = cursor.getString(5);
-        Date d = Utils.getDateTime(date);
+        Date date = news.getDate();
         DateFormat sdf = DateFormat.getDateInstance();
-        holder.srcDate.setText(sdf.format(d));
+        holder.srcDate.setText(sdf.format(date));
 
-        holder.srcTitle.setText(cursor.getString(8));
-        String icon = cursor.getString(7);
+        holder.srcTitle.setText(newsSource.getTitle());
+        String icon = newsSource.getIcon();
         if (icon.isEmpty() || "null".equals(icon)) {
             holder.srcIcon.setImageResource(R.drawable.ic_comment);
         } else {
@@ -94,27 +97,25 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     public void onBindViewHolder(Card.CardViewHolder holder, int position) {
         NewsViewHolder nHolder = (NewsViewHolder) holder;
         NewsCard card;
-        if (FilmCard.isNewsAFilm(c, position)) {
+        if (news.get(position).isFilm()) {
             card = new FilmCard(mContext);
         } else {
             card = new NewsCard(mContext);
         }
-        card.setNews(c, position);
+        card.setNews(news.get(position));
         nHolder.setCurrentCard(card);
 
-        c.moveToPosition(position);
-        bindNewsView(net, holder, c);
+        bindNewsView(net, holder, news.get(position), mContext);
     }
 
     @Override
     public int getItemViewType(int position) {
-        c.moveToPosition(position);
-        return "2".equals(c.getString(1)) ? 0 : 1;
+        return news.get(position).isFilm() ? 0 : 1;
     }
 
     @Override
     public int getItemCount() {
-        return c.getCount();
+        return news.size();
     }
 
     private static class NewsViewHolder extends Card.CardViewHolder {

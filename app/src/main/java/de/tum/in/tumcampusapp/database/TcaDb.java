@@ -7,22 +7,30 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.BuildingToGpsDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.FavoriteDishDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.KinoDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.LocationDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.SyncDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.TumLockDao;
+import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
+import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
+import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
+import de.tum.in.tumcampusapp.database.dao.KinoDao;
+import de.tum.in.tumcampusapp.database.dao.LocationDao;
+import de.tum.in.tumcampusapp.database.dao.NewsDao;
+import de.tum.in.tumcampusapp.database.dao.NewsSourcesDao;
+import de.tum.in.tumcampusapp.database.dao.RecentsDao;
+import de.tum.in.tumcampusapp.database.dao.SyncDao;
+import de.tum.in.tumcampusapp.database.dao.TumLockDao;
+import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
+import de.tum.in.tumcampusapp.models.tumcabe.News;
+import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
+import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 
 @Database(version = 1, entities = {
         Cafeteria.class,
@@ -32,7 +40,11 @@ import de.tum.in.tumcampusapp.models.tumcabe.Kino;
         TumLock.class,
         BuildingToGps.class,
         Kino.class,
-        Location.class
+        Location.class,
+        News.class,
+        NewsSources.class,
+        WifiMeasurement.class,
+        Recent.class
 }, exportSchema = false) // TODO: probably version schema
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -51,6 +63,14 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract KinoDao kinoDao();
 
     public abstract LocationDao locationDao();
+
+    public abstract NewsDao newsDao();
+
+    public abstract NewsSourcesDao newsSourcesDao();
+
+    public abstract WifiMeasurementDao wifiMeasurementDao();
+
+    public abstract RecentsDao recentsDao();
 
     private static TcaDb instance;
 

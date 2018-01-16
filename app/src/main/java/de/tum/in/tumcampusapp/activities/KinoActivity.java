@@ -8,7 +8,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.KinoAdapter;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.KinoDao;
+import de.tum.in.tumcampusapp.database.dao.KinoDao;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 
 /**

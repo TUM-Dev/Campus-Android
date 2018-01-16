@@ -22,8 +22,10 @@ import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.KinoDao;
+import de.tum.in.tumcampusapp.database.dao.KinoDao;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
+import de.tum.in.tumcampusapp.models.tumcabe.News;
+import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
@@ -119,27 +121,21 @@ public class CacheManager {
         }
 
         // Cache news source images
-        NewsManager news = new NewsManager(mContext);
-        try (Cursor cur = news.getNewsSources()) {
-            if (cur.moveToFirst()) {
-                do {
-                    String imgUrl = cur.getString(1);
-                    if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
-                        net.downloadImage(imgUrl);
-                    }
-                } while (cur.moveToNext());
+        NewsManager newsManager = new NewsManager(mContext);
+        List<NewsSources> newsSources = newsManager.getNewsSources();
+        for (NewsSources newsSource: newsSources) {
+            String imgUrl = newsSource.getIcon();
+            if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
+                net.downloadImage(imgUrl);
             }
         }
 
         // Cache news images
-        try (Cursor cur = news.getAllFromDb(mContext)) {
-            if (cur.moveToFirst()) {
-                do {
-                    String imgUrl = cur.getString(4);
-                    if (!"null".equals(imgUrl)) {
-                        net.downloadImage(imgUrl);
-                    }
-                } while (cur.moveToNext());
+        List<News> news = newsManager.getAllFromDb(mContext);
+        for (News n: news) {
+            String imgUrl = n.getImage();
+            if (!"null".equals(imgUrl)) {
+                net.downloadImage(imgUrl);
             }
         }
 
