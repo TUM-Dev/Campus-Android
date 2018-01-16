@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.app.SearchManager;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +23,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -125,20 +125,12 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
      * Reconstruct recents from String
      */
     private List<RoomFinderRoom> getRecents() {
-        List<RoomFinderRoom> roomList;
-        try (Cursor recentStations = recentsManager.getAllFromDb()) {
-            roomList = new ArrayList<>(recentStations.getCount());
-            if (recentStations.moveToFirst()) {
-                do {
-                    String[] values = recentStations.getString(0)
-                                                    .split(";");
-                    if (values.length != 6) {
-                        continue;
-                    }
-                    RoomFinderRoom room = new RoomFinderRoom(values[0], values[1],
-                                                             values[2], values[3], values[4], values[5]);
-                    roomList.add(room);
-                } while (recentStations.moveToNext());
+        List<Recent> recentList = recentsManager.getAllFromDb();
+        List<RoomFinderRoom> roomList = new ArrayList<>(recentList.size());
+        for (Recent r : recentList) {
+            try {
+                roomList.add(RoomFinderRoom.Companion.fromRecent(r));
+            } catch (IllegalArgumentException ignore) {
             }
         }
         return roomList;

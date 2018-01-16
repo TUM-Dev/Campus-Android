@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.widgets;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,8 +12,9 @@ import android.widget.Switch;
 
 import com.google.common.base.Optional;
 
+import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.MVVStationSuggestionProvider;
@@ -24,7 +23,7 @@ import de.tum.in.tumcampusapp.managers.TransportManager;
 import de.tum.in.tumcampusapp.models.efa.StationResult;
 import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
 
-public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<Cursor> implements AdapterView.OnItemClickListener {
+public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<List<StationResult>> implements AdapterView.OnItemClickListener {
 
     private int appWidgetId;
     private ListView listViewResults;
@@ -69,9 +68,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         listViewResults.setOnItemClickListener(this);
 
         // Initialize stations adapter
-        try (Cursor stationCursor = recentsManager.getAllFromDb()) {
-            adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportationActivity.getAllStationResults(stationCursor));
-        }
+        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportManager.getRecentStations(recentsManager));
 
         if (adapterStations.getCount() == 0) {
             openSearch();
@@ -99,8 +96,8 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      * @return Cursor holding the recents information (name, _id)
      */
     @Override
-    public Optional<Cursor> onSearchInBackground() {
-        return Optional.of(recentsManager.getAllFromDb());
+    public Optional<List<StationResult>> onSearchInBackground() {
+        return Optional.of(TransportManager.getRecentStations(recentsManager));
     }
 
     /**
@@ -110,53 +107,44 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      * @return Cursor holding the stations (name, _id)
      */
     @Override
-    public Optional<Cursor> onSearchInBackground(String query) {
+    public Optional<List<StationResult>> onSearchInBackground(String query) {
         // Get Information
-        Optional<Cursor> stationCursor = TransportManager.getStationsFromExternal(this, query);
-        if (!stationCursor.isPresent()) {
-            showError(R.string.exception_unknown);
-        }
+        List<StationResult> stationCursor = TransportManager.getStationsFromExternal(this, query);
 
         // Drop results if canceled
         if (asyncTask.isCancelled()) {
             return Optional.absent();
         }
 
-        return stationCursor;
+        return Optional.of(stationCursor);
     }
 
     /**
      * Shows the stations
      *
-     * @param possibleStationCursor Cursor with stations (name, _id)
+     * @param possibleStationList Cursor with stations (name, _id)
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Override
-    protected void onSearchFinished(Optional<Cursor> possibleStationCursor) {
-        if (!possibleStationCursor.isPresent()) {
+    protected void onSearchFinished(Optional<List<StationResult>> possibleStationList) {
+        if (!possibleStationList.isPresent()) {
             return;
         }
-        try (Cursor stationCursor = possibleStationCursor.get()) {
-            showLoadingEnded();
+        List<StationResult> stationResultList = possibleStationList.get();
 
-            // mQuery is not null if it was a real search
-            if (stationCursor.getCount() == 0) {
-                // When stationCursor is a MatrixCursor the result comes from querying a station name
-                if (stationCursor instanceof MatrixCursor) {
-                    // So show no results found
-                    listViewResults.setAdapter(new NoResultsAdapter(this));
-                    listViewResults.requestFocus();
-                } else {
-                    // if the loading came from the user canceling search
-                    // and there are no recents to show close activity
-                    cancelAndReturn();
-                }
-                return;
-            }
+        showLoadingEnded();
 
-            adapterStations.clear();
-            adapterStations.addAll(TransportationActivity.getAllStationResults(stationCursor));
+        // mQuery is not null if it was a real search
+        if (stationResultList.isEmpty()) {
+            // So show no results found
+            listViewResults.setAdapter(new NoResultsAdapter(this));
+            listViewResults.requestFocus();
+            return;
         }
+
+        adapterStations.clear();
+        adapterStations.addAll(stationResultList);
+
         adapterStations.notifyDataSetChanged();
         listViewResults.setAdapter(adapterStations);
         listViewResults.requestFocus();
