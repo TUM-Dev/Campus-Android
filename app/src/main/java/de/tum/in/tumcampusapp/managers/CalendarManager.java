@@ -166,13 +166,9 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @return True if there are lectures in the database, false if there is no lecture
      */
     public boolean hasLectures() {
-        boolean result = false;
-        try (Cursor c = calendarDao.hasLectures()) {
-            if (c.moveToNext()) {
-                result = true;
-            }
-        }
-        return result;
+        int result = calendarDao.lectureCount();
+        Utils.logv("Has " + result + " lectures");
+        return result > 0;
     }
 
     /**

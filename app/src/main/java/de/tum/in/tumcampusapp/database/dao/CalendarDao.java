@@ -29,7 +29,7 @@ public interface CalendarDao {
     List<CalendarItem> getCurrentLectures();
 
     @Query("SELECT COUNT(*) FROM calendar LIMIT 1")
-    Cursor hasLectures();
+    int lectureCount();
 
     @Query("SELECT DISTINCT c.ROWID as _id, c.title, EXISTS (" +
            "SELECT * FROM widgets_timetable_blacklist WHERE widget_id=:widgetId AND lecture_title=c.title" +
