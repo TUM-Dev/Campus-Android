@@ -13,7 +13,7 @@ import java.util.Date;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.SyncDao;
+import de.tum.in.tumcampusapp.database.dao.SyncDao;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 
 import static org.assertj.core.api.Assertions.assertThat;

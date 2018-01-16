@@ -14,6 +14,6 @@ public class Converters {
 
     @TypeConverter
     public static String fromDate(Date date) {
-        return Utils.getDateString(date);
+        return Utils.getDateTimeString(date);
     }
 }

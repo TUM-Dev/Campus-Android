@@ -24,7 +24,7 @@ import de.tum.in.tumcampusapp.auxiliary.CafeteriaNotificationSettings;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaDao;
+import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
 import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 

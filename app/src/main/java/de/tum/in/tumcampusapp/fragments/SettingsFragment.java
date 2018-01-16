@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,6 +23,8 @@ import android.view.View;
 
 import com.google.common.base.Optional;
 
+import java.util.List;
+
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
@@ -37,6 +38,7 @@ import de.tum.in.tumcampusapp.managers.AbstractManager;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.NewsManager;
+import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
 import de.tum.in.tumcampusapp.services.BackgroundService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
@@ -111,37 +113,31 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     }
 
     private void populateNewsSources() {
-        PreferenceCategory newsSources = (PreferenceCategory) findPreference("card_news_sources");
+        PreferenceCategory newsSourcesPreference = (PreferenceCategory) findPreference("card_news_sources");
 
-        NewsManager cm = new NewsManager(mContext);
-        try (Cursor cur = cm.getNewsSources()) {
-            //If we don't have any, we can't add any
-            if (!cur.moveToFirst() || newsSources == null) {
-                return;
+        NewsManager newsManager = new NewsManager(mContext);
+        List<NewsSources> newsSources = newsManager.getNewsSources();
+        final NetUtils net = new NetUtils(mContext);
+        for (NewsSources newsSource: newsSources) {
+            final CheckBoxPreference pref = new CheckBoxPreference(mContext);
+            pref.setKey("card_news_source_" + newsSource.getId());
+            pref.setDefaultValue(true);
+            // Load news source icon in background and set it
+            final String url = newsSource.getIcon();
+
+            if (url != null) { // Skip News that do not have a image
+                new Thread(() -> {
+                    final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                    mContext.runOnUiThread(() -> {
+                        if (bmp.isPresent()) {
+                            pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
+                        }
+                    });
+                }).start();
             }
 
-            final NetUtils net = new NetUtils(mContext);
-            do {
-                final CheckBoxPreference pref = new CheckBoxPreference(mContext);
-                pref.setKey("card_news_source_" + cur.getString(0));
-                pref.setDefaultValue(true);
-                // Load news source icon in background and set it
-                final String url = cur.getString(1);
-
-                if (url != null) { // Skip News that do not have a image
-                    new Thread(() -> {
-                        final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                        mContext.runOnUiThread(() -> {
-                            if (bmp.isPresent()) {
-                                pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
-                            }
-                        });
-                    }).start();
-                }
-
-                pref.setTitle(cur.getString(2));
-                newsSources.addPreference(pref);
-            } while (cur.moveToNext());
+            pref.setTitle(newsSource.getTitle());
+            newsSourcesPreference.addPreference(pref);
         }
     }
 
