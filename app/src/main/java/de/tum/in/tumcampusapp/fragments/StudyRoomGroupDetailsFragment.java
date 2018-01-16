@@ -1,12 +1,9 @@
 package de.tum.in.tumcampusapp.fragments;
 
-import android.annotation.SuppressLint;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +14,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -28,8 +26,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
 /**
  * Fragment for each study room group. Shows study room details in a list.
  */
-public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCursorAdapter
-                                                                               .ViewBinder {
+public class StudyRoomGroupDetailsFragment extends Fragment {
     private int mStudyRoomGroupId;
 
     @Override
@@ -45,11 +42,9 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
-
-        Cursor studyRoomCursor = new StudyRoomGroupManager(getActivity()).getStudyRoomsFromDb(mStudyRoomGroupId);
+        StudyRoomGroupManager manager = new StudyRoomGroupManager(getActivity());
         RecyclerView recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
-        recyclerView.setAdapter(new StudyRoomAdapter(studyRoomCursor));
-
+        recyclerView.setAdapter(new StudyRoomAdapter(manager.getAllStudyRoomsForGroup(mStudyRoomGroupId)));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
@@ -59,33 +54,52 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
     }
 
     private class StudyRoomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private final SimpleCursorAdapter mCursorAdapter;
 
-        StudyRoomAdapter(Cursor studyRoomCursor) {
-            mCursorAdapter = createStudyRoomCursorAdapter(studyRoomCursor);
-            mCursorAdapter.setViewBinder(StudyRoomGroupDetailsFragment.this);
+        private List<StudyRoom> studyRooms;
+
+        StudyRoomAdapter(List<StudyRoom> studyRooms) {
+            this.studyRooms = studyRooms;
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = mCursorAdapter.newView(getContext(), mCursorAdapter.getCursor(), parent);
+            View view = LayoutInflater.from(parent.getContext())
+                                      .inflate(R.layout.two_line_list_item,
+                                               parent, false);
             return new RecyclerView.ViewHolder(view) {
             };
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            mCursorAdapter.getCursor()
-                          .moveToPosition(position);
-            mCursorAdapter.bindView(holder.itemView, getContext(), mCursorAdapter.getCursor());
+
+            StudyRoom room = studyRooms.get(position);
 
             CardView cardView = holder.itemView.findViewById(R.id.card_view);
-            TextView text = holder.itemView.findViewById(android.R.id.text2);
+            TextView locationName = holder.itemView.findViewById(R.id.text3);
+            TextView occupationStatus = holder.itemView.findViewById(R.id.text2);
+            TextView roomName = holder.itemView.findViewById(R.id.text1);
+            locationName.setText(room.getCode());
+            roomName.setText(room.getName());
+
+            StringBuilder stringBuilder = new StringBuilder(room.getLocation()).append("<br>");
+
+            if (room.getOccupiedTill()
+                    .compareTo(new Date()) < 0) {
+                stringBuilder.append(getString(R.string.free));
+            } else {
+                stringBuilder.append(getString(R.string.occupied))
+                             .append(" <b>")
+                             .append(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(room.getOccupiedTill()))
+                             .append("</b>");
+            }
+
+            occupationStatus.setText(Utils.fromHtml(stringBuilder.toString()));
 
             int color;
-            if (text.getText()
-                    .toString()
-                    .contains(getString(R.string.free))) {
+            if (occupationStatus.getText()
+                                .toString()
+                                .contains(getString(R.string.free))) {
                 color = Color.rgb(200, 230, 201);
             } else {
                 color = Color.rgb(255, 205, 210);
@@ -96,52 +110,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
 
         @Override
         public int getItemCount() {
-            return mCursorAdapter.getCount();
+            return studyRooms.size();
         }
-
-    }
-
-    @NonNull
-    private SimpleCursorAdapter createStudyRoomCursorAdapter(final Cursor studyRoomCursor) {
-        return new SimpleCursorAdapter(getActivity(),
-                                       R.layout.two_line_list_item, studyRoomCursor, studyRoomCursor.getColumnNames(),
-                                       new int[]{android.R.id.text1, android.R.id.text2, R.id.text3}, 0) {
-
-            @Override
-            public boolean isEnabled(int position) {
-                // disable onclick
-                return false;
-            }
-        };
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    @Override
-    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-        StudyRoom studyRoom = StudyRoomGroupManager.getStudyRoomFromCursor(cursor);
-
-        if (view.getId() == android.R.id.text1) {
-            TextView tv = (TextView) view;
-            tv.setText(studyRoom.getName());
-        } else if (view.getId() == android.R.id.text2) {
-            StringBuilder stringBuilder = new StringBuilder(studyRoom.getLocation()).append("<br>");
-
-            if (studyRoom.getOccupiedTill()
-                         .compareTo(new Date()) < 0) {
-                stringBuilder.append(getString(R.string.free));
-            } else {
-                stringBuilder.append(getString(R.string.occupied))
-                             .append(" <b>")
-                             .append(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(studyRoom.getOccupiedTill()))
-                             .append("</b>");
-            }
-
-            TextView tv = (TextView) view;
-            tv.setText(Utils.fromHtml(stringBuilder.toString()));
-        } else if (view.getId() == R.id.text3) {
-            TextView tv = (TextView) view;
-            tv.setText(studyRoom.getCode());
-        }
-        return true;
     }
 }
