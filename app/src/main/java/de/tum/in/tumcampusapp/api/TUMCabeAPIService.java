@@ -154,7 +154,7 @@ public interface TUMCabeAPIService {
 
     //WifiHeatmap
     @POST(API_WIFI_HEATMAP + "create_measurements/")
-    Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
+    Call<TUMCabeStatus> createMeasurements(@Body List<WifiMeasurement> wifiMeasurementList);
 
     // Barrier free contacts
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)

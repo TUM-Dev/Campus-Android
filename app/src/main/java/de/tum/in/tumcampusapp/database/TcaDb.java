@@ -17,6 +17,7 @@ import de.tum.in.tumcampusapp.database.dao.NewsDao;
 import de.tum.in.tumcampusapp.database.dao.NewsSourcesDao;
 import de.tum.in.tumcampusapp.database.dao.SyncDao;
 import de.tum.in.tumcampusapp.database.dao.TumLockDao;
+import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
@@ -27,6 +28,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.News;
 import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
+import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 
 @Database(version = 1, entities = {
         Cafeteria.class,
@@ -38,7 +40,8 @@ import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
         Kino.class,
         Location.class,
         News.class,
-        NewsSources.class
+        NewsSources.class,
+        WifiMeasurement.class
 }, exportSchema = false) // TODO: probably version schema
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -61,6 +64,8 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract NewsDao newsDao();
 
     public abstract NewsSourcesDao newsSourcesDao();
+
+    public abstract WifiMeasurementDao wifiMeasurementDao();
 
     private static TcaDb instance;
 

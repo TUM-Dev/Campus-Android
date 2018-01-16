@@ -10,7 +10,6 @@ import android.os.Build;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
 
 /**
  * Receives on boot completed broadcast, sets alarm for next sync-try
@@ -59,7 +58,7 @@ public class StartSyncReceiver extends BroadcastReceiver {
 
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
         SilenceService.enqueueWork(context, new Intent());
-        if (intent.getAction() != "android.net.wifi.WIFI_STATE_CHANGED" && Utils.getInternalSettingBool(context, WifiMeasurementManager.WIFI_SCANS_ALLOWED, false)) {
+        if (intent.getAction() != "android.net.wifi.WIFI_STATE_CHANGED" && Utils.getInternalSettingBool(context, Const.WIFI_SCANS_ALLOWED, false)) {
             SendWifiMeasurementService.enqueueWork(context, new Intent());
         }
     }
