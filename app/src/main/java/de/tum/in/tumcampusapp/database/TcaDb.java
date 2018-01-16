@@ -20,11 +20,14 @@ import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
 import de.tum.in.tumcampusapp.database.dao.SyncDao;
 import de.tum.in.tumcampusapp.database.dao.TumLockDao;
 import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
+import de.tum.in.tumcampusapp.database.dao.RecentsDao;
+import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
 import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
+import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
 import de.tum.in.tumcampusapp.models.dbEntities.WidgetsTimetableBlacklist;
@@ -33,6 +36,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.News;
 import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
 import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
+import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 
 @Database(version = 1, entities = {
         Cafeteria.class,
@@ -47,7 +51,9 @@ import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
         NewsSources.class,
         CalendarItem.class,
         RoomLocations.class,
-        WidgetsTimetableBlacklist.class
+        WidgetsTimetableBlacklist.class,
+        WifiMeasurement.class,
+        Recent.class
 }, exportSchema = false) // TODO: probably version schema
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -76,6 +82,10 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract RoomLocationsDao roomLocationsDao();
 
     public abstract WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao();
+    
+    public abstract WifiMeasurementDao wifiMeasurementDao();
+
+    public abstract RecentsDao recentsDao();
 
     private static TcaDb instance;
 
