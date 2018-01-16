@@ -53,7 +53,7 @@ public interface CalendarDao {
            "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
            "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
            "ORDER BY dtend, dtstart LIMIT 4")
-    Cursor getNextCalendarItem();
+    List<CalendarItem> getNextCalendarItem();
 
     @Query("SELECT * " +
            "FROM calendar c, room_locations r " +

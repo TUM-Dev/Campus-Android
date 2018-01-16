@@ -110,12 +110,11 @@ public class SilenceService extends JobIntentService {
                                          Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
                 Utils.setInternalSetting(this, Const.SILENCE_ON, false);
 
-                Cursor cursor2 = calendarManager.getNextCalendarItem();
-                if (cursor2.moveToFirst()) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+                List<CalendarItem> nextCalendarItem = calendarManager.getNextCalendarItem();
+                if (nextCalendarItem.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
                     // refresh when next event has started
-                    waitDuration = getWaitDuration(cursor2.getString(1));
+                    waitDuration = getWaitDuration(nextCalendarItem.get(0).getDtstart());
                 }
-                cursor2.close();
             }
         } else {
             // remember old state if just activated ; in doubt dont change

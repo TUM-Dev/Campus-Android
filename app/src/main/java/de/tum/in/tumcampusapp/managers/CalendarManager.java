@@ -251,7 +251,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
     /**
      * Gets the next lectures that could be important to the user
      */
-    public Cursor getNextCalendarItem() {
+    public List<CalendarItem> getNextCalendarItem() {
         return calendarDao.getNextCalendarItem();
     }
 
@@ -277,8 +277,8 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     @Override
     public void onRequestCard(Context context) {
-        Cursor nextCalendarItems = getNextCalendarItem();
-        if (nextCalendarItems.moveToFirst()) {
+        List<CalendarItem> nextCalendarItems = getNextCalendarItem();
+        if (nextCalendarItems.size() != 0) {
             NextLectureCard card = new NextLectureCard(context);
             card.setLectures(nextCalendarItems);
             card.apply();
