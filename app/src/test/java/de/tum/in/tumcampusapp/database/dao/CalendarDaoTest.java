@@ -377,4 +377,98 @@ public class CalendarDaoTest {
         assertThat(results).hasSize(1);
         assertThat(results.get(0)).isEqualToComparingFieldByField(expected);
     }
+
+    /**
+     * Get all calendar items that are blacklisted
+     * Expected output: all items are returned
+     */
+    @Test
+    public void getLecturesWithBlacklist() {
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GOOD", now.plusHours(1)));
+        dao.insert(createCalendarItem("OK", now.plusDays(5)));
+        dao.insert(createCalendarItem("DUNNO", now.plusDays(1)));
+        dao.insert(createCalendarItem("YES", now.plusDays(2)));
+
+        wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 0"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 1"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 2"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 3"));
+
+
+        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(4);
+    }
+
+    /**
+     * Some titles are blacklisted
+     * Expected output: some items are returned
+     */
+    @Test
+    public void getLecturesWithBlacklistSomeTitles() {
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GOOD", now.plusHours(1)));
+        dao.insert(createCalendarItem("OK", now.plusDays(5)));
+        dao.insert(createCalendarItem("DUNNO", now.plusDays(1)));
+        dao.insert(createCalendarItem("YES", now.plusDays(2)));
+
+        wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 0"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 1"));
+
+        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(2);
+    }
+
+    /**
+     * All titles are blacklisted, but on different widget ids
+     * Expected output: some items are returned
+     */
+    @Test
+    public void getLecturesWithBlacklistSomeWidget() {
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GOOD", now.plusHours(1)));
+        dao.insert(createCalendarItem("OK", now.plusDays(5)));
+        dao.insert(createCalendarItem("DUNNO", now.plusDays(1)));
+        dao.insert(createCalendarItem("YES", now.plusDays(2)));
+
+        wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 0"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 1"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 2"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 3"));
+
+        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(2);
+    }
+
+    /**
+     * Nothing is blacklisted
+     * Expected output: empty list is returned
+     */
+    @Test
+    public void getLecturesWithBlacklistNone() {
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GOOD", now.plusHours(1)));
+        dao.insert(createCalendarItem("OK", now.plusDays(5)));
+        dao.insert(createCalendarItem("DUNNO", now.plusDays(1)));
+        dao.insert(createCalendarItem("YES", now.plusDays(2)));
+
+        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(0);
+    }
+
+    /**
+     * Everything is blacklisted, but for different widget id
+     * Expected output: empty list is returned
+     */
+    @Test
+    public void getLecturesWithBlacklistNoneWidget() {
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GOOD", now.plusHours(1)));
+        dao.insert(createCalendarItem("OK", now.plusDays(5)));
+        dao.insert(createCalendarItem("DUNNO", now.plusDays(1)));
+        dao.insert(createCalendarItem("YES", now.plusDays(2)));
+
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 0"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 1"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 2"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 3"));
+
+        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(0);
+    }
 }
