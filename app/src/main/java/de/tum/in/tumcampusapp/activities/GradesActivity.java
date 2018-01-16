@@ -43,6 +43,12 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     private static final String[] GRADES = {"1,0", "1,3", "1,4", "1,7", "2,0", "2,3", "2,4", "2,7", "3,0", "3,3", "3,4", "3,7", "4,0", "4,3", "4,4", "4,7", "5,0"};
+    private static final int[] GRADE_COLORS = {R.color.grade_1_0, R.color.grade_1_3, R.color.grade_1_3, R.color.grade_1_7,
+                                               R.color.grade_2_0, R.color.grade_2_3, R.color.grade_2_3, R.color.grade_2_7,
+                                               R.color.grade_3_0, R.color.grade_3_3, R.color.grade_3_3, R.color.grade_3_7,
+                                               R.color.grade_4_0, R.color.grade_4_3, R.color.grade_4_3, R.color.grade_4_7,
+                                               R.color.grade_5_0, R.color.grade_default};
+
     private final NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
     private static int lastChoice;
     private TextView averageTx;
@@ -66,15 +72,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         super(TUMOnlineConst.Companion.getEXAMS(), R.layout.activity_grades);
     }
 
-    private int[] getGradeColors(){
-        return new int[]{
-                R.color.grade_1_0, R.color.grade_1_3, R.color.grade_1_3, R.color.grade_1_7,
-                R.color.grade_2_0, R.color.grade_2_3, R.color.grade_2_3, R.color.grade_2_7,
-                R.color.grade_3_0, R.color.grade_3_3, R.color.grade_3_3, R.color.grade_3_7,
-                R.color.grade_4_0, R.color.grade_4_3, R.color.grade_4_3, R.color.grade_4_7,
-                R.color.grade_5_0, R.color.grade_default};
-    }
-
     private void showPieChart(List<Exam> exams){
         barChart.setVisibility(View.GONE);
         pieChart.setVisibility(View.VISIBLE);
@@ -87,12 +84,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         }
 
         PieDataSet set = new PieDataSet(entries, getString(R.string.grades_without_weight));
-        set.setColors(getGradeColors(), this);
+        set.setColors(GRADE_COLORS);
         set.setDrawValues(false);
 
         pieChart.setData(new PieData(set));
         pieChart.setDrawEntryLabels(false);
-        //pieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
         pieChart.getLegend().setWordWrapEnabled(true);
         pieChart.setDescription(null);
         pieChart.invalidate();
@@ -110,7 +106,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         }
 
         BarDataSet set = new BarDataSet(entries, getString(R.string.grades_without_weight));
-        set.setColors(getGradeColors(), this);
+        set.setColors(GRADE_COLORS, this);
 
         BarData data = new BarData(set);
 
@@ -139,8 +135,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                 if(grade <= 4.0){
                     gradeSum += grade;
                     grades++;
-                } else {
-                    Utils.log("Grade " + grade + " won't be considered in the average");
                 }
             } catch (ParseException e) {
                 Utils.log(e);
@@ -208,7 +202,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 String filter = programIds[position];
-                Utils.log("Spinner filter " + filter);
                 lastChoice = position;
 
                 List<Exam> examsToShow;
