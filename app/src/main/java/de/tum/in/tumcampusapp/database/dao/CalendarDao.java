@@ -5,9 +5,11 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
 import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 @Dao
@@ -54,11 +56,4 @@ public interface CalendarDao {
            "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
            "ORDER BY dtend, dtstart LIMIT 4")
     List<CalendarItem> getNextCalendarItem();
-
-    @Query("SELECT * " +
-           "FROM calendar c, room_locations r " +
-           "WHERE datetime('now', 'localtime') < datetime(c.dtstart, '+1800 seconds') AND " +
-           "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!='CANCEL'" +
-           "ORDER BY dtstart LIMIT 1")
-    Cursor getNextLectureCoordinates();
 }

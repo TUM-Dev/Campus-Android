@@ -260,12 +260,10 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * if it started during the last 30 minutes
      */
     Geo getNextCalendarItemGeo() {
-        Geo geo;
-        try (Cursor cur = calendarDao.getNextLectureCoordinates()) {
-            geo = null;
-            if (cur.moveToFirst()) {
-                geo = new Geo(cur.getDouble(1), cur.getDouble(2));
-            }
+        Geo geo = null;
+        RoomLocations roomLocation = roomLocationsDao.getNextLectureCoordinates();
+        if (roomLocation != null) {
+            geo = new Geo(roomLocation.getLatitude(), roomLocation.getLongtitude());
         }
         return geo;
     }

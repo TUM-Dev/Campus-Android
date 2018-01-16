@@ -16,7 +16,7 @@ public interface RoomLocationsDao {
            "WHERE datetime('now', 'localtime') < datetime(c.dtstart, '+1800 seconds') AND " +
            "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!='CANCEL'" +
            "ORDER BY dtstart LIMIT 1")
-    Cursor getNextLectureCoordinates();
+    RoomLocations getNextLectureCoordinates();
 
     @Insert
     void insert(RoomLocations roomLocations);
