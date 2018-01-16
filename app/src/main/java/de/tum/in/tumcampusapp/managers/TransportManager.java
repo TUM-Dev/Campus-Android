@@ -376,9 +376,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         List<StationResult> stationResults = new ArrayList<>(recentList.size());
         for (Recent r : recentList) {
             try {
-                String jsonStationResult = r.getName();
-                StationResult stationResult = gson.fromJson(jsonStationResult, StationResult.class);
-                stationResults.add(stationResult);
+                stationResults.add(StationResult.Companion.fromRecent(r));
             } catch (JsonSyntaxException ignore) {
                 //We don't care about deserialization errors
             }

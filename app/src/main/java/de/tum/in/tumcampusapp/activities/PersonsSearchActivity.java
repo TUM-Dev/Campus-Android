@@ -62,12 +62,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
         List<Recent> recentList = recentsManager.getAllFromDb();
         ArrayList<Person> personList = new ArrayList<>(recentList.size());
         for (Recent r : recentList) {
-            String[] t = r.getName()
-                          .split("\\$");
-            Person p = new Person();
-            p.setId(t[0]);
-            p.setName(t[1]);
-            personList.add(p);
+            personList.add(Person.Companion.fromRecent(r));
         }
         return personList;
     }

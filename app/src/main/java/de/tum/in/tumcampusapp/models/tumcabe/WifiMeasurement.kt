@@ -7,7 +7,7 @@ import java.util.*
 
 @Entity(tableName = "wifi_measurement")
 data class WifiMeasurement(@PrimaryKey
-                           var date: String = "",
+                           var date: String = Utils.getDateTimeString(Date()),
                            var ssid: String = "",
                            var bssid: String = "",
                            var dBm: Int = -1,
@@ -16,8 +16,8 @@ data class WifiMeasurement(@PrimaryKey
                            var longitude: Double = -1.0) {
     companion object {
         fun create(ssid: String, bssid: String, dBm: Int, accuracyInMeters: Float, latitude: Double, longitude: Double): WifiMeasurement {
-            val now = Utils.getDateTimeString(Date())
-            return WifiMeasurement(date = now, ssid = ssid, bssid = bssid, dBm = dBm, accuracyInMeters = accuracyInMeters, latitude = latitude, longitude = longitude)
+            return WifiMeasurement(ssid = ssid, bssid = bssid, dBm = dBm,
+                    accuracyInMeters = accuracyInMeters, latitude = latitude, longitude = longitude)
         }
     }
 }

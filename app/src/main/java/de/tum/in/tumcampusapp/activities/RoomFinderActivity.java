@@ -128,14 +128,10 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
         List<Recent> recentList = recentsManager.getAllFromDb();
         List<RoomFinderRoom> roomList = new ArrayList<>(recentList.size());
         for (Recent r : recentList) {
-            String[] values = r.getName()
-                               .split(";");
-            if (values.length != 6) {
-                continue;
+            try {
+                roomList.add(RoomFinderRoom.Companion.fromRecent(r));
+            } catch (IllegalArgumentException ignore) {
             }
-            RoomFinderRoom room = new RoomFinderRoom(values[0], values[1],
-                                                     values[2], values[3], values[4], values[5]);
-            roomList.add(room);
         }
         return roomList;
     }
