@@ -16,4 +16,7 @@ public interface WidgetsTimetableBlacklistDao  {
 
     @Delete
     void delete(WidgetsTimetableBlacklist widgetsTimetableBlacklist);
+
+    @Query("DELETE FROM widgets_timetable_blacklist")
+    void flush();
 }

@@ -15,7 +15,7 @@ import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 @Dao
 public interface CalendarDao {
     @Query("SELECT * FROM calendar WHERE status != 'CANCEL'")
-    List<CalendarItem> getAllNotCancelled(); // TODO: replace cursor with object list
+    List<CalendarItem> getAllNotCancelled();
 
     @Query("SELECT * FROM calendar WHERE dtstart LIKE :date AND status != 'CANCEL' ORDER BY dtstart ASC")
     List<CalendarItem> getAllByDateNotCancelled(String date);

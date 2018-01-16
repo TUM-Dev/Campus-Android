@@ -20,4 +20,7 @@ public interface RoomLocationsDao {
 
     @Insert
     void insert(RoomLocations roomLocations);
+
+    @Query("DELETE FROM room_locations")
+    void flush();
 }
