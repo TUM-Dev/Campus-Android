@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 /**
  * A class to represent events for the integrated WeekView calendar
@@ -23,7 +24,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private final String location;
     private boolean isFirstOnDay;
 
-    public IntegratedCalendarEvent(Cursor cEvents) {
+    public IntegratedCalendarEvent(CalendarItem cEvents) {
         super(getEventIdFromCursor(cEvents),
               getEventTitleFromCursor(cEvents),
               getEventStartFromCursor(cEvents),
@@ -39,8 +40,8 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         this.setColor(color);
     }
 
-    private static String getEventTitleFromCursor(Cursor cEvents) {
-        String eventTitle = cEvents.getString(3);
+    private static String getEventTitleFromCursor(CalendarItem cEvents) {
+        String eventTitle = cEvents.getTitle();
         if (eventTitle == null) {
             eventTitle = "";
         }
@@ -53,8 +54,8 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         return eventTitle;
     }
 
-    private static int getEventColorFromCursor(Cursor cEvents) {
-        String eventTitle = cEvents.getString(3);
+    private static int getEventColorFromCursor(CalendarItem cEvents) {
+        String eventTitle = cEvents.getTitle();
         if (eventTitle == null) {
             eventTitle = "";
         }
@@ -67,8 +68,8 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         }
     }
 
-    private static String getEventLocationFromCursor(Cursor cEvents) {
-        String eventLocation = cEvents.getString(7);
+    private static String getEventLocationFromCursor(CalendarItem cEvents) {
+        String eventLocation = cEvents.getLocation();
         if (eventLocation == null) {
             eventLocation = "";
         }
@@ -77,19 +78,19 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         return eventLocation.trim();
     }
 
-    private static long getEventIdFromCursor(Cursor cEvents) {
-        return cEvents.getLong(0);
+    private static long getEventIdFromCursor(CalendarItem cEvents) {
+        return Long.parseLong(cEvents.getNr());
     }
 
-    private static Calendar getEventEndFromCursor(Cursor cEvents) {
-        String eventEnd = cEvents.getString(6);
+    private static Calendar getEventEndFromCursor(CalendarItem cEvents) {
+        String eventEnd = cEvents.getDtend();
         Calendar result = Calendar.getInstance();
         result.setTime(Utils.getDateTime(eventEnd));
         return result;
     }
 
-    private static Calendar getEventStartFromCursor(Cursor cEvents) {
-        String eventStart = cEvents.getString(5);
+    private static Calendar getEventStartFromCursor(CalendarItem cEvents) {
+        String eventStart = cEvents.getDtstart();
         Calendar result = Calendar.getInstance();
         result.setTime(Utils.getDateTime(eventStart));
         return result;

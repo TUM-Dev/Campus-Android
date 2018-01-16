@@ -32,7 +32,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.News;
 import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
-import de.tum.in.tumcampusapp.models.tumo.Calendar;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 @Database(version = 1, entities = {
         Cafeteria.class,
@@ -45,7 +45,7 @@ import de.tum.in.tumcampusapp.models.tumo.Calendar;
         Location.class,
         News.class,
         NewsSources.class,
-        Calendar.class,
+        CalendarItem.class,
         RoomLocations.class,
         WidgetsTimetableBlacklist.class
 }, exportSchema = false) // TODO: probably version schema

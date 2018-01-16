@@ -8,30 +8,25 @@ import android.database.Cursor;
 
 import java.util.List;
 
-import de.tum.in.tumcampusapp.models.tumo.Calendar;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 @Dao
 public interface CalendarDao {
     @Query("SELECT * FROM calendar WHERE status != 'CANCEL'")
-    Cursor getAllNotCancelled(); // TODO: replace cursor with object list
+    List<CalendarItem> getAllNotCancelled(); // TODO: replace cursor with object list
 
     @Query("SELECT * FROM calendar WHERE dtstart LIKE :date AND status != 'CANCEL' ORDER BY dtstart ASC")
-    Cursor getAllByDateNotCancelled(String date);
+    List<CalendarItem> getAllByDateNotCancelled(String date);
 
-    /*
-    "SELECT * FROM calendar c WHERE dtend BETWEEN ? AND ? AND status!='CANCEL' " +
-                                         "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id=? AND lecture_title=c.title) " +
-                                         "ORDER BY dtstart ASC", new String[]{from, to, String.valueOf(widgetId)})
-     */
     @Query("SELECT * FROM calendar c WHERE dtend BETWEEN :from AND :to "
            + "AND STATUS != 'CANCEL'"
            + "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id = :widgetId"
            + "                AND lecture_title = c.title)"
            + "ORDER BY dtstart ASC")
-    Cursor getNextDays(String from, String to, String widgetId);
+    List<CalendarItem> getNextDays(String from, String to, String widgetId);
 
-    @Query("SELECT title, location, nr, dtend FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status != 'CANCEL'")
-    Cursor getCurrentLecture();
+    @Query("SELECT * FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status != 'CANCEL'")
+    Cursor getCurrentLecture(); // technically should be one, but query allows multiple
 
     @Query("SELECT COUNT(*) FROM calendar LIMIT 1")
     Cursor hasLectures();
@@ -45,7 +40,7 @@ public interface CalendarDao {
     void flush();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Calendar cal);
+    void insert(CalendarItem cal);
 
     @Query("SELECT c.location " +
            "FROM calendar c LEFT JOIN room_locations r ON " +
@@ -54,7 +49,7 @@ public interface CalendarDao {
            "GROUP BY c.location")
     Cursor getLecturesWithoutCoordinates();
 
-    @Query("SELECT title, dtstart, dtend, location FROM calendar JOIN " +
+    @Query("SELECT * FROM calendar JOIN " +
            "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
            "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
            "ORDER BY dtend, dtstart LIMIT 4")

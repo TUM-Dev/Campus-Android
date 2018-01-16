@@ -31,6 +31,7 @@ import de.tum.in.tumcampusapp.database.dao.CalendarDao;
 import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
 import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRow;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.tumo.Geo;
@@ -90,51 +91,36 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             }
         }
 
-        CalendarManager calendarManager = new CalendarManager(c);
+        CalendarDao calendarDao = TcaDb.getInstance(c).calendarDao();
 
-        // Get all calendar items from database
-        try (Cursor cursor = calendarManager.getAllFromDb()) {
-            while (cursor.moveToNext()) {
-                // Get each table row
-                //final String status = cursor.getString(1);
-                final String title = cursor.getString(3);
-                final String description = cursor.getString(4);
-                final String strStart = cursor.getString(5);
-                final String strEnd = cursor.getString(6);
-                final String location = cursor.getString(7);
+        List<CalendarItem> calendarItems = calendarDao.getAllNotCancelled();
+        for (CalendarItem calendarItem: calendarItems) {
+            final String title = calendarItem.getTitle();
+            final String description = calendarItem.getDescription();
+            final String strStart = calendarItem.getDtstart();
+            final String strEnd = calendarItem.getDtend();
+            final String location = calendarItem.getLocation();
 
-                // Get start and end time
-                long startMillis = Utils.getDateTime(strStart).getTime();
-                long endMillis = Utils.getDateTime(strEnd).getTime();
+            // Get start and end time
+            long startMillis = Utils.getDateTime(strStart).getTime();
+            long endMillis = Utils.getDateTime(strEnd).getTime();
 
-                ContentValues values = new ContentValues();
+            ContentValues values = new ContentValues();
 
-                // Put the received values into a contentResolver to
-                // transmit the to Google Calendar
-                values.put(CalendarContract.Events.DTSTART, startMillis);
-                values.put(CalendarContract.Events.DTEND, endMillis);
-                values.put(CalendarContract.Events.TITLE, title);
-                values.put(CalendarContract.Events.DESCRIPTION, description);
-                values.put(CalendarContract.Events.CALENDAR_ID, id);
-                values.put(CalendarContract.Events.EVENT_LOCATION, location);
-                values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
-                contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
-            }
+            // Put the received values into a contentResolver to
+            // transmit the to Google Calendar
+            values.put(CalendarContract.Events.DTSTART, startMillis);
+            values.put(CalendarContract.Events.DTEND, endMillis);
+            values.put(CalendarContract.Events.TITLE, title);
+            values.put(CalendarContract.Events.DESCRIPTION, description);
+            values.put(CalendarContract.Events.CALENDAR_ID, id);
+            values.put(CalendarContract.Events.EVENT_LOCATION, location);
+            values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
+            contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
         }
     }
 
-    /**
-     * Returns all stored events from db
-     *
-     * @return Cursor with all calendar events. Columns are
-     * (nr, status, url, title, description, dtstart, dtend, location)
-     */
-    private Cursor getAllFromDb() {
-        Cursor c = calendarDao.getAllNotCancelled();
-        return c;
-    }
-
-    public Cursor getFromDbForDate(Date date) {
+    public List<CalendarItem> getFromDbForDate(Date date) {
         // Format the requested date
         String requestedDateString = Utils.getDateString(date);
 
@@ -157,18 +143,18 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         String to = Utils.getDateTimeString(calendar.getTime());
 
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
-        try (Cursor cursor = calendarDao.getNextDays(from, to, String.valueOf(widgetId))) {
-            while (cursor.moveToNext()) {
-                calendarEvents.add(new IntegratedCalendarEvent(cursor));
-            }
+        List<CalendarItem> calendarItems = calendarDao.getNextDays(from, to, String.valueOf(widgetId));
+        for (CalendarItem calendarItem: calendarItems) {
+            calendarEvents.add(new IntegratedCalendarEvent(calendarItem));
         }
+
         return calendarEvents;
     }
 
     /**
      * Get current lecture from the database
      *
-     * @return Database cursor (name, location, _id)
+     * @return
      */
     public Cursor getCurrentFromDb() {
         return calendarDao.getCurrentLecture();
@@ -261,9 +247,9 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             throw new IllegalArgumentException("Invalid lecture Title.");
         }
 
-        calendarDao.insert(new de.tum.in.tumcampusapp.models.tumo.Calendar(row.getNr(), row.getStatus(), row.getUrl(),
-                                                                           row.getTitle(), row.getDescription(),
-                                                                           row.getDtstart(), row.getDtend(), row.getLocation()));
+        calendarDao.insert(new CalendarItem(row.getNr(), row.getStatus(), row.getUrl(),
+                                            row.getTitle(), row.getDescription(),
+                                            row.getDtstart(), row.getDtend(), row.getLocation()));
     }
 
     /**
@@ -295,10 +281,10 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     @Override
     public void onRequestCard(Context context) {
-        Cursor rows = getNextCalendarItem();
-        if (rows.moveToFirst()) {
+        Cursor nextCalendarItems = getNextCalendarItem();
+        if (nextCalendarItems.moveToFirst()) {
             NextLectureCard card = new NextLectureCard(context);
-            card.setLectures(rows);
+            card.setLectures(nextCalendarItems);
             card.apply();
         }
     }
