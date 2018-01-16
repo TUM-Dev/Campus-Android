@@ -471,4 +471,71 @@ public class CalendarDaoTest {
 
         assertThat(dao.getLecturesWithBlacklist("1")).hasSize(0);
     }
+
+    /**
+     * Get distinct lectures, when all inserted are unique
+     * Expected output: all are returned
+     */
+    @Test
+    public void getDistinctLectures() {
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GOOD", now));
+        dao.insert(createCalendarItem("GOOD", now));
+        dao.insert(createCalendarItem("GOOD", now));
+
+        assertThat(dao.getDistinctLectures()).hasSize(3);
+    }
+
+    /**
+     * Get distinct lectures, when some lectures have the same name
+     * Expected output: Some are returned
+     */
+    @Test
+    public void getDistinctLecturesSome() {
+        DateTime now = DateTime.now();
+        CalendarItem calendarItem = createCalendarItem("GOOD", now);
+        String firstTitle = calendarItem.getTitle();
+        dao.insert(calendarItem);
+
+        calendarItem = createCalendarItem("BAD", now);
+        calendarItem.setTitle(firstTitle);
+        dao.insert(calendarItem);
+
+        calendarItem = createCalendarItem("OK", now);
+        String secondTitle = calendarItem.getTitle();
+        dao.insert(calendarItem);
+
+        calendarItem = createCalendarItem("YES", now);
+        calendarItem.setTitle(secondTitle);
+        dao.insert(calendarItem);
+
+        calendarItem = createCalendarItem("YES", now);
+        dao.insert(calendarItem);
+
+        // 5 inserted, 3 distinct
+        assertThat(dao.getDistinctLectures()).hasSize(3);
+    }
+
+    /**
+     * Get distinct lectures, when some lectures have the same name
+     * Expected output: Some are returned
+     */
+    @Test
+    public void getDistinctLecturesOne() {
+        DateTime now = DateTime.now();
+        CalendarItem calendarItem = createCalendarItem("GOOD", now);
+        String firstTitle = calendarItem.getTitle();
+        dao.insert(calendarItem);
+
+        int n = 0;
+
+        for (int i = 0; i < n; i++) {
+            calendarItem = createCalendarItem("OK", now);
+            calendarItem.setTitle(firstTitle);
+            dao.insert(calendarItem);
+        }
+
+        // n + 1 items
+        assertThat(dao.getDistinctLectures()).hasSize(n + 1);
+    }
 }

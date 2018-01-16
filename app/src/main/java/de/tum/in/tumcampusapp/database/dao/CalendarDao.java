@@ -39,7 +39,7 @@ public interface CalendarDao {
     List<CalendarItem> getLecturesWithBlacklist(String widgetId);
 
     @Query("SELECT * FROM calendar GROUP BY title")
-    List<CalendarItem> getLectures();
+    List<CalendarItem> getDistinctLectures();
 
     @Query("DELETE FROM calendar")
     void flush();

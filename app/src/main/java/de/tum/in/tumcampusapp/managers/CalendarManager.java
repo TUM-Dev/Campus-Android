@@ -190,7 +190,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     public List<CalendarItem> getLecturesForWidget(int widgetId) {
         List<CalendarItem> lectures = new ArrayList<>();
-        List<CalendarItem> distinctLectures = calendarDao.getLectures();
+        List<CalendarItem> distinctLectures = calendarDao.getDistinctLectures();
         List<CalendarItem> blacklistedLectures = calendarDao.getLecturesWithBlacklist(Integer.toString(widgetId));
         for (CalendarItem distinctLecture: distinctLectures) {
             for (CalendarItem blacklistedLecture: blacklistedLectures) {
