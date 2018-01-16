@@ -140,12 +140,13 @@ public class CacheManager {
         }
 
         // Cache kino covers
-        for (Kino kino : kinoDao.getAll()) {
+        kinoDao.getAll().subscribe(it -> {
+        for (Kino kino : it) {
             String imgUrl = kino.getCover();
             if (!"null".equals(imgUrl)) {
                 net.downloadImage(imgUrl);
-            }
-        }
+            }}
+        });
 
         // acquire access token
         if (!new AccessTokenManager(mContext).hasValidAccessToken()) {
