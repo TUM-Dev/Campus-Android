@@ -60,12 +60,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
                          kino = kino1;
                          showDetails(root);
                      });
-//
-//        kino = TcaDb.getInstance(context)
-//                    .kinoDao()
-//                    .getByPosition(position);
-//
-//        showDetails(root);
+
         return rootView;
     }
 
