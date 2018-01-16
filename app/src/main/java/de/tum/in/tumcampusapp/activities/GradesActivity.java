@@ -42,11 +42,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * Activity to show the user's grades/exams passed.
  */
 public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
+
+    private static final String SHOW_PIE_CHART = "showPieChart"; // show pie or bar chart after rotation
     private static final String[] GRADES = {"1,0", "1,3", "1,4", "1,7", "2,0", "2,3", "2,4", "2,7", "3,0", "3,3", "3,4", "3,7", "4,0", "4,3", "4,4", "4,7", "5,0"};
-    private static final int[] GRADE_COLORS = {R.color.grade_1_0, R.color.grade_1_3, R.color.grade_1_3, R.color.grade_1_7,
-                                               R.color.grade_2_0, R.color.grade_2_3, R.color.grade_2_3, R.color.grade_2_7,
-                                               R.color.grade_3_0, R.color.grade_3_3, R.color.grade_3_3, R.color.grade_3_7,
-                                               R.color.grade_4_0, R.color.grade_4_3, R.color.grade_4_3, R.color.grade_4_7,
+    private static final int[] GRADE_COLORS = {R.color.grade_1_0, R.color.grade_1_3, R.color.grade_1_4, R.color.grade_1_7,
+                                               R.color.grade_2_0, R.color.grade_2_3, R.color.grade_2_4, R.color.grade_2_7,
+                                               R.color.grade_3_0, R.color.grade_3_3, R.color.grade_3_4, R.color.grade_3_7,
+                                               R.color.grade_4_0, R.color.grade_4_3, R.color.grade_4_4, R.color.grade_4_7,
                                                R.color.grade_5_0, R.color.grade_default};
 
     private final NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
@@ -67,6 +69,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     private Spinner spFilter;
 
     private boolean isFetched;
+    private boolean showBarChartAfterRotate;
 
     public GradesActivity() {
         super(TUMOnlineConst.Companion.getEXAMS(), R.layout.activity_grades);
@@ -84,7 +87,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         }
 
         PieDataSet set = new PieDataSet(entries, getString(R.string.grades_without_weight));
-        set.setColors(GRADE_COLORS);
+        set.setColors(GRADE_COLORS, this);
         set.setDrawValues(false);
 
         pieChart.setData(new PieData(set));
@@ -116,6 +119,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         XAxis xAxis = barChart.getXAxis();
         xAxis.setGranularity(1);
         xAxis.setValueFormatter((value, axis) -> GRADES[(int)value]);
+        barChart.setDescription(null);
         barChart.invalidate();
     }
 
@@ -218,15 +222,15 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                     }
                     examsToShow = filteredExamList;
                 }
+                if(showBarChartAfterRotate){
+                    barMenuItem.setVisible(false);
+                    pieMenuItem.setVisible(true);
+                }
                 showExams(examsToShow);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // select ALL
-                spFilter.setSelection(0);
-                showExams(examList);
-            }
+            public void onNothingSelected(AdapterView<?> arg0) {}
         });
     }
 
@@ -234,7 +238,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         lvGrades.setAdapter(new ExamListAdapter(
                 GradesActivity.this, exams));
         if(chartVisible){
-            if(pieChart.getVisibility() == View.VISIBLE){
+            if(barMenuItem.isVisible()){
                 showPieChart(exams);
             } else {
                 showBarChart(exams);
@@ -259,7 +263,14 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         mSwipeRefreshLayout.setColorSchemeResources(R.color.color_primary, R.color.tum_A100, R.color.tum_A200);
         listView = mSwipeRefreshLayout;
         chartVisible = true;
+        showBarChartAfterRotate = savedInstanceState != null && !savedInstanceState.getBoolean(SHOW_PIE_CHART, true);
         requestFetch();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle instanceState){
+        super.onSaveInstanceState(instanceState);
+        instanceState.putBoolean(SHOW_PIE_CHART, barMenuItem.isVisible());
     }
 
     private void showChart(boolean show, boolean landscape){

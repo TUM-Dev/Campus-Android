@@ -83,7 +83,12 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
         if (exam != null) {
             holder.tvName.setText(exam.getCourse());
             holder.tvGrade.setText(exam.getGrade());
-            holder.tvGrade.setBackgroundResource(GRADE_DRAWABLE.get(exam.getGrade()));
+            if(GRADE_DRAWABLE.containsKey(exam.getGrade())){
+                holder.tvGrade.setBackgroundResource(GRADE_DRAWABLE.get(exam.getGrade()));
+            } else {
+                holder.tvGrade.setBackgroundResource(R.drawable.grade_background);
+            }
+
 
             holder.tvDetails1.setText(
                     String.format("%s: %s, ",
