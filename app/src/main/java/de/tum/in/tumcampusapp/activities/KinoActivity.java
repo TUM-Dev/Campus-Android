@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.KinoAdapter;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
+import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.viewmodel.KinoViewModel;
@@ -32,21 +34,24 @@ public class KinoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         KinoLocalRepository.db = TcaDb.getInstance(this);
-        kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposable
-        );
+        kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposable);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-
         // set up ViewPager and adapter
         ViewPager mpager = findViewById(R.id.pager);
         kinoViewModel.getAllKinos()
+                     .doOnError(throwable -> setContentView(R.layout.layout_error))
                      .subscribe(kinos -> {
-                         KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
-                         mpager.setAdapter(kinoAdapter);
+                         if (kinos.isEmpty()) {
+                             setContentView(R.layout.layout_no_movies);
+                         } else {
+                             KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
+                             mpager.setAdapter(kinoAdapter);
+                         }
                      });
 
     }
