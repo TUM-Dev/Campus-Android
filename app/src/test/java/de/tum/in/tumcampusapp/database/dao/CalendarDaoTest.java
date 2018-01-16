@@ -191,14 +191,15 @@ public class CalendarDaoTest {
      */
     @Test
     public void getAllByDateNotCancelledMix() {
-        dao.insert(createCalendarItem("CANCEL", DateTime.now().minusDays(123)));
-        dao.insert(createCalendarItem("OK", DateTime.now()));
-        dao.insert(createCalendarItem("DUNNO", DateTime.now().plusDays(123)));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("CANCEL", now.minusDays(123)));
+        dao.insert(createCalendarItem("OK", now));
+        dao.insert(createCalendarItem("DUNNO", now.plusDays(123)));
+        dao.insert(createCalendarItem("CANCEL", now));
 
-        String now = Utils.getDateTimeString(DateTime.now().toDate());
+        String nowStr = Utils.getDateTimeString(now.toDate());
 
-        assertThat(dao.getAllByDateNotCancelled(now)).hasSize(1);
+        assertThat(dao.getAllByDateNotCancelled(nowStr)).hasSize(1);
     }
 
     /**
