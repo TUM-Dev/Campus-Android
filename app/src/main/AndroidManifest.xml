@@ -145,7 +145,7 @@
         </activity>
         <activity
             android:name=".activities.GradesActivity"
-            android:label="@string/my_grades"
+            android:label="@string/empty_string"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
             <meta-data

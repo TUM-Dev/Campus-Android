@@ -1,13 +1,9 @@
 package de.tum.in.tumcampusapp.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -16,6 +12,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.tumo.Exam;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 
 /**
  * Custom UI adapter for a list of exams.
@@ -26,6 +23,17 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
     public ExamListAdapter(Context context, List<Exam> results)  {
         super(context, results);
         Collections.sort(infoList);
+    }
+
+    @Override
+    String genenrateHeaderName(Exam item) {
+        String headerText = super.genenrateHeaderName(item);
+        int year = Integer.parseInt(headerText.substring(0, 2));
+        if(headerText.charAt(2) == 'W'){
+            return context.getString(R.string.winter_semester, year, year+1);
+        } else {
+            return context.getString(R.string.summer_semester, year);
+        }
     }
 
     @Override
@@ -46,7 +54,6 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
             holder.tvGrade = view.findViewById(R.id.grade);
             holder.tvDetails1 = view.findViewById(R.id.tv1);
             holder.tvDetails2 = view.findViewById(R.id.tv2);
-            holder.gradeBackground = holder.tvGrade.getBackground();
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -59,12 +66,8 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
             setGradeBackground(holder, exam.getGrade());
 
             holder.tvDetails1.setText(
-                    String.format("%s: %s, " +
-                                  "%s: %s, " +
-                                  "%s: %s",
-                                  context.getString(R.string.date), DF.format(exam.getDate()),
-                                  context.getString(R.string.semester), exam.getSemester(),
-                                  context.getString(R.string.credits), exam.getCredits()));
+                    String.format("%s: %s, ",
+                                  context.getString(R.string.date), DF.format(exam.getDate())));
 
             holder.tvDetails2
                     .setText(String.format("%s: %s, " +
@@ -82,6 +85,7 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
             //Resources res = holder.tvGrade.getResources();
             TextView view = holder.tvGrade;
 
+            // TODO find elegant/better solution that only needs one file
             switch (grade){
                 case "1,0": view.setBackgroundResource(R.drawable.grade_1_0);
                     break;
@@ -124,6 +128,5 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
         TextView tvDetails2;
         TextView tvGrade;
         TextView tvName;
-        Drawable gradeBackground;
     }
 }
