@@ -19,8 +19,6 @@ import de.tum.in.tumcampusapp.cards.generic.Card;
  * Card manager, manages inserting, dismissing, updating and displaying of cards
  */
 public final class CardManager {
-    public static final String SHOW_TUTORIAL_1 = "show_tutorial_1";
-    public static final String SHOW_TUTORIAL_2 = "show_tutorial_2";
     public static final String SHOW_SUPPORT = "show_support";
 
     /**
@@ -30,8 +28,6 @@ public final class CardManager {
     public static final int CARD_TUITION_FEE = 2;
     public static final int CARD_NEXT_LECTURE = 3;
     public static final int CARD_RESTORE = 4;
-    public static final int CARD_FIRST_USE_1 = 5;
-    public static final int CARD_FIRST_USE_2 = 6;
     public static final int CARD_NO_INTERNET = 7;
     public static final int CARD_MVV = 8;
     public static final int CARD_NEWS = 9;
