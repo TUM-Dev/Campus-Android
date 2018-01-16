@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 /**
  * ViewModel for kinos.
@@ -60,8 +61,14 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
                     .doAfterNext { localRepository.updateLastSync() }
                     .doOnError { Utils.log(it) }
                     .map { transformKino(it) }
-                    .subscribe({ it.forEach { localRepository.addKino(it) } })
+                    .subscribe({ it.forEach {
+                        if(isMovieInFuture(it))
+                            localRepository.addKino(it)
+                    } })
             )
+
+    private fun isMovieInFuture(kino: Kino): Boolean = Date().before(kino.date)
+
 
     /**
      * Sets fields that might be null to prevent excpetions when inserting a kino object into the database
