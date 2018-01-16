@@ -96,26 +96,16 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
         List<CalendarItem> calendarItems = calendarDao.getAllNotCancelled();
         for (CalendarItem calendarItem: calendarItems) {
-            final String title = calendarItem.getTitle();
-            final String description = calendarItem.getDescription();
-            final String strStart = calendarItem.getDtstart();
-            final String strEnd = calendarItem.getDtend();
-            final String location = calendarItem.getLocation();
-
-            // Get start and end time
-            long startMillis = Utils.getDateTime(strStart).getTime();
-            long endMillis = Utils.getDateTime(strEnd).getTime();
-
             ContentValues values = new ContentValues();
 
             // Put the received values into a contentResolver to
             // transmit the to Google Calendar
-            values.put(CalendarContract.Events.DTSTART, startMillis);
-            values.put(CalendarContract.Events.DTEND, endMillis);
-            values.put(CalendarContract.Events.TITLE, title);
-            values.put(CalendarContract.Events.DESCRIPTION, description);
+            values.put(CalendarContract.Events.DTSTART, Utils.getDateTime(calendarItem.getDtstart()).getTime());
+            values.put(CalendarContract.Events.DTEND, Utils.getDateTime(calendarItem.getDtend()).getTime());
+            values.put(CalendarContract.Events.TITLE, calendarItem.getTitle());
+            values.put(CalendarContract.Events.DESCRIPTION, calendarItem.getDescription());
             values.put(CalendarContract.Events.CALENDAR_ID, id);
-            values.put(CalendarContract.Events.EVENT_LOCATION, location);
+            values.put(CalendarContract.Events.EVENT_LOCATION, calendarItem.getLocation());
             values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
             contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
         }
