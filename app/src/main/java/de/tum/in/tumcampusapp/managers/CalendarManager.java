@@ -156,8 +156,8 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      *
      * @return
      */
-    public Cursor getCurrentFromDb() {
-        return calendarDao.getCurrentLecture();
+    public List<CalendarItem> getCurrentFromDb() {
+        return calendarDao.getCurrentLectures();
     }
 
     /**

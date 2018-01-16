@@ -26,7 +26,7 @@ public interface CalendarDao {
     List<CalendarItem> getNextDays(String from, String to, String widgetId);
 
     @Query("SELECT * FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status != 'CANCEL'")
-    Cursor getCurrentLecture(); // technically should be one, but query allows multiple
+    List<CalendarItem> getCurrentLectures();
 
     @Query("SELECT COUNT(*) FROM calendar LIMIT 1")
     Cursor hasLectures();
