@@ -1,9 +1,8 @@
 package de.tum.`in`.tumcampusapp.models.tumo
 
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
-import de.tum.`in`.tumcampusapp.models.dbEntities.RoomLocations
 
 @Entity(tableName="calendar")
 data class CalendarItem(@PrimaryKey
@@ -14,4 +13,6 @@ data class CalendarItem(@PrimaryKey
                         var description: String = "",
                         var dtstart: String = "",
                         var dtend: String = "",
-                        var location: String = "")
+                        var location: String = "",
+                        @Ignore
+                        var blacklisted: Boolean = false)

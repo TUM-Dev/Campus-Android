@@ -33,10 +33,13 @@ public interface CalendarDao {
     @Query("SELECT COUNT(*) FROM calendar LIMIT 1")
     int lectureCount();
 
-    @Query("SELECT DISTINCT c.ROWID as _id, c.title, EXISTS (" +
-           "SELECT * FROM widgets_timetable_blacklist WHERE widget_id=:widgetId AND lecture_title=c.title" +
-           ") as is_on_blacklist from calendar c GROUP BY c.title")
-    Cursor getBlacklistedLectures(String widgetId);
+    @Query("SELECT * FROM calendar, widgets_timetable_blacklist " +
+           "WHERE widget_id=:widgetId AND lecture_title=title " +
+           "GROUP BY title")
+    List<CalendarItem> getLecturesWithBlacklist(String widgetId);
+
+    @Query("SELECT * FROM calendar GROUP BY title")
+    List<CalendarItem> getLectures();
 
     @Query("DELETE FROM calendar")
     void flush();

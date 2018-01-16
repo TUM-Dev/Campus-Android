@@ -57,7 +57,8 @@ public class CalendarDaoTest {
                                              "dummy description",
                                              Utils.getDateTimeString(startDate.toDate()),
                                              Utils.getDateTimeString(endDate.toDate()),
-                                             "dummy location");
+                                             "dummy location",
+                                             false);
         nr++;
         return item;
     }

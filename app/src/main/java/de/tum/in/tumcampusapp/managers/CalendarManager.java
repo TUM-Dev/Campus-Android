@@ -188,8 +188,20 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @param widgetId the Id of the widget
      * @return A cursor containing a list of lectures and the is_on_blacklist flag
      */
-    public Cursor getLecturesFromWidget(int widgetId) {
-        return calendarDao.getBlacklistedLectures(String.valueOf(widgetId));
+    public List<CalendarItem> getLecturesForWidget(int widgetId) {
+        List<CalendarItem> lectures = new ArrayList<>();
+        List<CalendarItem> distinctLectures = calendarDao.getLectures();
+        List<CalendarItem> blacklistedLectures = calendarDao.getLecturesWithBlacklist(Integer.toString(widgetId));
+        for (CalendarItem distinctLecture: distinctLectures) {
+            for (CalendarItem blacklistedLecture: blacklistedLectures) {
+                if (distinctLecture.getTitle().equals(blacklistedLecture.getTitle())) {
+                    distinctLecture.setBlacklisted(true);
+                    break;
+                }
+            }
+            lectures.add(distinctLecture);
+        }
+        return lectures;
     }
 
     public void importCalendar(CalendarRowSet myCalendarList) {
@@ -232,7 +244,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
         calendarDao.insert(new CalendarItem(row.getNr(), row.getStatus(), row.getUrl(),
                                             row.getTitle(), row.getDescription(),
-                                            row.getDtstart(), row.getDtend(), row.getLocation()));
+                                            row.getDtstart(), row.getDtend(), row.getLocation(), false));
     }
 
     /**
