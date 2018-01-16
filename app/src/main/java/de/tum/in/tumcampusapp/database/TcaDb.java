@@ -10,11 +10,14 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dao.FacultyDao;
 import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
 import de.tum.in.tumcampusapp.database.dao.KinoDao;
 import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.database.dao.NewsDao;
 import de.tum.in.tumcampusapp.database.dao.NewsSourcesDao;
+import de.tum.in.tumcampusapp.database.dao.OpenQuestionsDao;
+import de.tum.in.tumcampusapp.database.dao.OwnQuestionsDao;
 import de.tum.in.tumcampusapp.database.dao.RecentsDao;
 import de.tum.in.tumcampusapp.database.dao.SyncDao;
 import de.tum.in.tumcampusapp.database.dao.TumLockDao;
@@ -23,10 +26,13 @@ import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.models.dbEntities.OpenQuestions;
+import de.tum.in.tumcampusapp.models.dbEntities.OwnQuestions;
 import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
+import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.News;
 import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
@@ -44,7 +50,10 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
         News.class,
         NewsSources.class,
         WifiMeasurement.class,
-        Recent.class
+        Recent.class,
+        Faculty.class,
+        OpenQuestions.class,
+        OwnQuestions.class
 }, exportSchema = false) // TODO: probably version schema
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -71,6 +80,12 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract WifiMeasurementDao wifiMeasurementDao();
 
     public abstract RecentsDao recentsDao();
+
+    public abstract FacultyDao facultyDao();
+
+    public abstract OpenQuestionsDao openQuestionsDao();
+
+    public abstract OwnQuestionsDao ownQuestionsDao();
 
     private static TcaDb instance;
 
