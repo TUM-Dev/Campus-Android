@@ -31,6 +31,7 @@ import de.tum.in.tumcampusapp.database.dao.CalendarDao;
 import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
 import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
+import de.tum.in.tumcampusapp.models.dbEntities.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRow;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
@@ -178,10 +179,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @param lecture  the title of the lecture
      */
     public void addLectureToBlacklist(int widgetId, String lecture) {
-        ContentValues values = new ContentValues();
-        values.put("widget_id", widgetId);
-        values.put("lecture_title", lecture);
-        db.replace("widgets_timetable_blacklist", null, values);
+        widgetsTimetableBlacklistDao.insert(new WidgetsTimetableBlacklist(widgetId, lecture));
     }
 
     /**
@@ -191,8 +189,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @param lecture  the title of the lecture
      */
     public void deleteLectureFromBlacklist(int widgetId, String lecture) {
-        db.delete("widgets_timetable_blacklist", "widget_id = ? AND lecture_title = ?",
-                  new String[]{String.valueOf(widgetId), lecture});
+        widgetsTimetableBlacklistDao.delete(new WidgetsTimetableBlacklist(widgetId, lecture));
     }
 
     /**
