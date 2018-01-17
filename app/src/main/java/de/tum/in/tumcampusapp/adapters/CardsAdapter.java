@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.adapters;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import de.tum.in.tumcampusapp.activities.MainActivity;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
@@ -21,7 +22,7 @@ import de.tum.in.tumcampusapp.managers.CardManager;
 /**
  * Adapter for the cards start page used in {@link de.tum.in.tumcampusapp.activities.MainActivity}
  */
-public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
+public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> implements MainActivity.ItemTouchHelperAdapter{
 
     public static Card getItem(int i) {
         return CardManager.getCard(i);
@@ -99,5 +100,16 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     public void insert(int position, Card item) {
         CardManager.insert(position, item);
         notifyItemInserted(position);
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        Card card = CardManager.remove(fromPosition);
+        CardManager.insert(toPosition,card);
+
+        for(int index = 0; index < CardManager.getCardCount();index++){
+            CardManager.getCard(index).setPosition(index);
+        }
+        notifyItemMoved(fromPosition, toPosition);
     }
 }

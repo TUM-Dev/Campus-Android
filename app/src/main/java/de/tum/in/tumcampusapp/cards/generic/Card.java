@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,7 +32,7 @@ import de.tum.in.tumcampusapp.managers.CardManager;
 /**
  * Base class for all cards
  */
-public abstract class Card {
+public abstract class Card implements Comparable<Card> {
     public static final String DISCARD_SETTINGS_START = "discard_settings_start";
     public static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
 
@@ -208,6 +209,28 @@ public abstract class Card {
      * @return a unique identifier among the type of the card
      */
     public abstract int getId();
+
+
+    public int getPosition(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return prefs.getInt(this.getClass().getSimpleName()+"_position",-1);
+    }
+
+    public void setPosition(int position){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Editor e = prefs.edit();
+        e.putInt(this.getClass().getSimpleName() + "_position", position);
+        e.apply();
+    }
+
+    @Override
+    public int compareTo(@NonNull Card card) {
+        if(card.getPosition()>getPosition()) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
 
     @Nullable
     public RemoteViews getRemoteViews(Context context) {

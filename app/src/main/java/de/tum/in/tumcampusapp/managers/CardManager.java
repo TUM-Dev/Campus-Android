@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
@@ -48,7 +49,13 @@ public final class CardManager {
      * @param card Card that should be added
      */
     public static void addCard(Card card) {
+        if (card.getPosition() == -1) {
+            card.setPosition(newCards.size());
+        }
+
         newCards.add(card);
+
+        Collections.sort(newCards);
     }
 
     /**
