@@ -11,7 +11,7 @@ import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
 
 @Dao
 public interface RoomLocationsDao {
-    @Query("SELECT * " +
+    @Query("SELECT r.* " +
            "FROM calendar c, room_locations r " +
            "WHERE datetime('now', 'localtime') < datetime(c.dtstart, '+1800 seconds') AND " +
            "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!='CANCEL'" +
