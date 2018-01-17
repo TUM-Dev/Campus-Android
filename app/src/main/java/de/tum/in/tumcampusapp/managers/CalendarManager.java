@@ -96,27 +96,16 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
         List<CalendarItem> calendarItems = calendarDao.getAllNotCancelled();
         for (CalendarItem calendarItem: calendarItems) {
-            ContentValues values = new ContentValues();
+            ContentValues values = calendarItem.toContentValues();
 
-            // Put the received values into a contentResolver to
-            // transmit the to Google Calendar
-            values.put(CalendarContract.Events.DTSTART, Utils.getDateTime(calendarItem.getDtstart()).getTime());
-            values.put(CalendarContract.Events.DTEND, Utils.getDateTime(calendarItem.getDtend()).getTime());
-            values.put(CalendarContract.Events.TITLE, calendarItem.getTitle());
-            values.put(CalendarContract.Events.DESCRIPTION, calendarItem.getDescription());
             values.put(CalendarContract.Events.CALENDAR_ID, id);
-            values.put(CalendarContract.Events.EVENT_LOCATION, calendarItem.getLocation());
             values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
             contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
         }
     }
 
     public List<CalendarItem> getFromDbForDate(Date date) {
-        // Format the requested date
-        String requestedDateString = Utils.getDateString(date);
-
-        // Fetch the data
-        return calendarDao.getAllByDateNotCancelled("%" + requestedDateString + "%");
+        return calendarDao.getAllByDateNotCancelled(date);
     }
 
     /**
@@ -157,9 +146,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @return True if there are lectures in the database, false if there is no lecture
      */
     public boolean hasLectures() {
-        int result = calendarDao.lectureCount();
-        Utils.logv("Has " + result + " lectures");
-        return result > 0;
+        return calendarDao.hasLectures();
     }
 
     /**

@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 
+import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
@@ -17,8 +18,8 @@ public interface CalendarDao {
     @Query("SELECT * FROM calendar WHERE status != 'CANCEL'")
     List<CalendarItem> getAllNotCancelled();
 
-    @Query("SELECT * FROM calendar WHERE dtstart LIKE :date AND status != 'CANCEL' ORDER BY dtstart ASC")
-    List<CalendarItem> getAllByDateNotCancelled(String date);
+    @Query("SELECT * FROM calendar WHERE dtstart LIKE '%' || :date || '%' AND status != 'CANCEL' ORDER BY dtstart ASC")
+    List<CalendarItem> getAllByDateNotCancelled(Date date);
 
     @Query("SELECT * FROM calendar c WHERE dtend BETWEEN :from AND :to "
            + "AND STATUS != 'CANCEL'"
@@ -30,8 +31,8 @@ public interface CalendarDao {
     @Query("SELECT * FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status != 'CANCEL'")
     List<CalendarItem> getCurrentLectures();
 
-    @Query("SELECT COUNT(*) FROM calendar LIMIT 1")
-    int lectureCount();
+    @Query("SELECT COUNT(*) FROM calendar")
+    boolean hasLectures();
 
     @Query("SELECT * FROM calendar, widgets_timetable_blacklist " +
            "WHERE widget_id=:widgetId AND lecture_title=title " +
@@ -50,7 +51,7 @@ public interface CalendarDao {
     @Query("SELECT * " +
            "FROM calendar c LEFT JOIN room_locations r ON " +
            "c.location=r.title " +
-           "WHERE r.latitude = '' " +
+           "WHERE coalesce(r.latitude, '') = '' " +
            "GROUP BY c.location")
     List<CalendarItem> getLecturesWithoutCoordinates();
 

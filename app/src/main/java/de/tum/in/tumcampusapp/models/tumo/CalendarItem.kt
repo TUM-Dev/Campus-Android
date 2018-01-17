@@ -3,6 +3,8 @@ package de.tum.`in`.tumcampusapp.models.tumo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
+import android.content.ContentValues
+import android.provider.CalendarContract
 import de.tum.`in`.tumcampusapp.auxiliary.Utils
 import de.tum.`in`.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent
 import java.util.*
@@ -67,5 +69,18 @@ data class CalendarItem(@PrimaryKey
                 .matcher(location)
                 .replaceAll("")!!
                 .trim { it <= ' ' }
+    }
+
+    fun toContentValues(): ContentValues {
+        val values = ContentValues()
+
+        // Put the received values into a contentResolver to
+        // transmit the to Google Calendar
+        values.put(CalendarContract.Events.DTSTART, Utils.getDateTime(dtstart).time)
+        values.put(CalendarContract.Events.DTEND, Utils.getDateTime(dtend).time)
+        values.put(CalendarContract.Events.TITLE, title)
+        values.put(CalendarContract.Events.DESCRIPTION, description)
+        values.put(CalendarContract.Events.EVENT_LOCATION, location)
+        return values
     }
 }
