@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.auxiliary.calendar;
 
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 
@@ -24,14 +23,14 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private final String location;
     private boolean isFirstOnDay;
 
-    public IntegratedCalendarEvent(CalendarItem cEvents) {
-        super(getEventIdFromCursor(cEvents),
-              getEventTitleFromCursor(cEvents),
-              getEventStartFromCursor(cEvents),
-              getEventEndFromCursor(cEvents));
+    public IntegratedCalendarEvent(CalendarItem calendarItem) {
+        super(Long.parseLong(calendarItem.getNr()),
+              formatEventTitle(calendarItem.getTitle()),
+              calendarItem.getEventStart(),
+              calendarItem.getEventEnd());
 
-        this.location = getEventLocationFromCursor(cEvents);
-        this.setColor(getEventColorFromCursor(cEvents));
+        this.location = getEventLocationFromCalendarItem(calendarItem);
+        this.setColor(calendarItem.getEventColor());
     }
 
     public IntegratedCalendarEvent(long id, String title, Calendar startTime, Calendar endTime, String location, int color) {
@@ -40,8 +39,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         this.setColor(color);
     }
 
-    private static String getEventTitleFromCursor(CalendarItem cEvents) {
-        String eventTitle = cEvents.getTitle();
+    private static String formatEventTitle(String eventTitle) {
         if (eventTitle == null) {
             eventTitle = "";
         }
@@ -54,21 +52,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         return eventTitle;
     }
 
-    private static int getEventColorFromCursor(CalendarItem cEvents) {
-        String eventTitle = cEvents.getTitle();
-        if (eventTitle == null) {
-            eventTitle = "";
-        }
-        if (eventTitle.endsWith("VO") || eventTitle.endsWith("VU")) {
-            return getDisplayColorFromColor(0xff28921f);
-        } else if (eventTitle.endsWith("UE")) {
-            return getDisplayColorFromColor(0xffFF8000);
-        } else {
-            return getDisplayColorFromColor(0xff0000ff);
-        }
-    }
-
-    private static String getEventLocationFromCursor(CalendarItem cEvents) {
+    private static String getEventLocationFromCalendarItem(CalendarItem cEvents) {
         String eventLocation = cEvents.getLocation();
         if (eventLocation == null) {
             eventLocation = "";
@@ -76,24 +60,6 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         eventLocation = COMPILE1.matcher(eventLocation)
                                 .replaceAll("");
         return eventLocation.trim();
-    }
-
-    private static long getEventIdFromCursor(CalendarItem cEvents) {
-        return Long.parseLong(cEvents.getNr());
-    }
-
-    private static Calendar getEventEndFromCursor(CalendarItem cEvents) {
-        String eventEnd = cEvents.getDtend();
-        Calendar result = Calendar.getInstance();
-        result.setTime(Utils.getDateTime(eventEnd));
-        return result;
-    }
-
-    private static Calendar getEventStartFromCursor(CalendarItem cEvents) {
-        String eventStart = cEvents.getDtstart();
-        Calendar result = Calendar.getInstance();
-        result.setTime(Utils.getDateTime(eventStart));
-        return result;
     }
 
     public static int getDisplayColorFromColor(int color) {
