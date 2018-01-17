@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.google.common.base.Optional;
 
@@ -12,13 +11,14 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.StudyRoomDao;
+import de.tum.in.tumcampusapp.database.dao.StudyRoomGroupDao;
 import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
 
@@ -31,65 +31,33 @@ public class StudyRoomGroupManager extends AbstractManager {
     public static final String STUDYROOM_URL = "https://" + STUDYROOM_HOST + "/iris/ris_api.php?format=json";
     public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    private final StudyRoomDao dao;
+    private final StudyRoomGroupDao groupDao;
+
     public StudyRoomGroupManager(Context context) {
         super(context);
-        createStudyRoomGroupTable();
-        createStudyRoomTable();
+        dao = TcaDb.getInstance(context).studyRoomDao();
+        groupDao = TcaDb.getInstance(context).studyRoomGroupDao();
     }
 
-    private final void createStudyRoomGroupTable() {
-        db.execSQL("CREATE TABLE IF NOT EXISTS study_room_groups " +
-                   "(id INTEGER PRIMARY KEY, name VARCHAR, details VARCHAR)");
-    }
-
-    private final void createStudyRoomTable() {
-        db.execSQL("CREATE TABLE IF NOT EXISTS study_rooms " +
-                   "(id INTEGER PRIMARY KEY, code VARCHAR, name VARCHAR, location VARCHAR, " +
-                   "occupied_till VARCHAR, " +
-                   "group_id INTEGER)");
-    }
 
     public void downloadFromExternal() throws JSONException {
         Optional<JSONObject> jsonObject = new NetUtils(mContext).downloadJsonObject(STUDYROOM_URL, CacheManager.VALIDITY_DO_NOT_CACHE, true);
         if (!jsonObject.isPresent()) {
             return;
         }
+        dao.removeCache();
+        groupDao.removeCache();
 
-        removeCache();
-
-        db.beginTransaction();
-        try {
-            List<StudyRoomGroup> groups = getAllFromJson(jsonObject.get());
-            for (StudyRoomGroup group : groups) {
-                replaceIntoDb(group);
+        List<StudyRoomGroup> groups = getAllFromJson(jsonObject.get());
+        for (StudyRoomGroup group : groups) {
+            groupDao.insert(group);
+            for(StudyRoom room : group.getRooms()){
+                room.setStudyRoomGroup(group.getId());
+                dao.insert(room);
             }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
         }
         new SyncManager(mContext).replaceIntoDb(this);
-    }
-
-    /**
-     * Replaces/Inserts both study room group and its studyrooms into db.
-     *
-     * @param studyRoomGroup the study room group that should be saved/updated.
-     */
-    private void replaceIntoDb(StudyRoomGroup studyRoomGroup) {
-        db.execSQL("REPLACE INTO study_room_groups(id, name, details) VALUES" +
-                   " (?, ?, ?)",
-                   new String[]{String.valueOf(studyRoomGroup.getId()), studyRoomGroup.getName(),
-                                studyRoomGroup.getDetails()});
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATEFORMAT, Locale.US);
-        for (StudyRoom studyRoom : studyRoomGroup.getRooms()) {
-            db.execSQL("REPLACE INTO study_rooms(id, code, name, location, occupied_till, " +
-                       "group_id) VALUES " +
-                       "(?, ?, ?, ?, ?, ?)",
-                       new String[]{String.valueOf(studyRoom.getId()), studyRoom.getCode(), studyRoom.getName(),
-                                    studyRoom.getLocation(),
-                                    dateFormatter.format(studyRoom.getOccupiedTill()), String.valueOf
-                                            (studyRoomGroup.getId())});
-        }
     }
 
     public static List<StudyRoomGroup> getAllFromJson(JSONObject jsonObject) throws JSONException {
@@ -131,6 +99,7 @@ public class StudyRoomGroupManager extends AbstractManager {
                                         .getString("raum_name"),
                                 allRooms.getJSONObject(i)
                                         .getString("gebaeude_name"),
+                                -1,
                                 new SimpleDateFormat(DATEFORMAT, Locale.US).parse(allRooms
                                                                                           .getJSONObject(i)
                                                                                           .getString("belegung_bis"))
@@ -146,6 +115,7 @@ public class StudyRoomGroupManager extends AbstractManager {
                                         .getString("raum_name"),
                                 allRooms.getJSONObject(i)
                                         .getString("gebaeude_name"),
+                                -1,
                                 new Date()
                         );
                     }
@@ -156,76 +126,13 @@ public class StudyRoomGroupManager extends AbstractManager {
         return studyRooms;
     }
 
-    private void removeCache() {
-        db.execSQL("DELETE FROM study_room_groups");
-        db.execSQL("DELETE FROM study_rooms");
+
+    public List<StudyRoom> getAllStudyRoomsForGroup(int groupId){
+        return dao.getAll(groupId);
     }
 
-    /**
-     * Returns all study room groups
-     *
-     * @return Database cursor (id, name, details)
-     */
-    public Cursor getAllFromDb() {
-        return db.query("study_room_groups", null, null, null, null, null, null);
+    public List<StudyRoomGroup>getAllFromDb() {
+        return groupDao.getAll();
     }
 
-    /**
-     * Retrieves all study room groups from a cursor, ordered by name.
-     */
-    public List<StudyRoomGroup> getStudyRoomGroupsFromCursor(Cursor cursor) {
-        List<StudyRoomGroup> studyRoomGroups = new ArrayList<>();
-
-        if (cursor.moveToFirst()) {
-            do {
-                studyRoomGroups.add(new StudyRoomGroup(cursor.getInt(0), cursor.getString(1),
-                                                       cursor.getString(2), getStudyRoomsFromCursor(getStudyRoomsFromDb(cursor
-                                                                                                                                .getInt(0)))));
-            } while (cursor.moveToNext());
-        }
-        Collections.sort(studyRoomGroups);
-
-        return studyRoomGroups;
-    }
-
-    /**
-     * Retrieves all study rooms of a given group from db, ordered by occupation status.
-     */
-    public Cursor getStudyRoomsFromDb(int studyRoomGroupId) {
-        return db.rawQuery("SELECT id as _id, code, name, location, occupied_till, group_id FROM " +
-                           "study_rooms WHERE group_id = ? ORDER BY occupied_till ASC", new String[]{String
-                                                                                                             .valueOf(studyRoomGroupId)});
-    }
-
-    private static List<StudyRoom> getStudyRoomsFromCursor(Cursor cursor) {
-        List<StudyRoom> studyRooms = new ArrayList<>(cursor.getCount());
-
-        if (cursor.moveToFirst()) {
-            do {
-                studyRooms.add(getStudyRoomFromCursor(cursor));
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-
-        return studyRooms;
-    }
-
-    /**
-     * Gets a single study room from a cursor, if possible. Note: This won't move the cursor
-     * forward.
-     *
-     * @param cursor the cursor which contains study room information
-     * @return study room
-     */
-    public static StudyRoom getStudyRoomFromCursor(Cursor cursor) {
-        StudyRoom studyRoom = null;
-        try {
-            studyRoom = new StudyRoom(cursor.getInt(0), cursor.getString(1), cursor.getString
-                    (2), cursor.getString(3), new SimpleDateFormat(DATEFORMAT, Locale.US).parse(cursor
-                                                                                                        .getString(4)));
-        } catch (ParseException e) {
-            Utils.log(e);
-        }
-        return studyRoom;
-    }
 }

@@ -179,8 +179,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     @Override
     protected void onLoadFinished(Void result) {
         StudyRoomGroupManager studyRoomGroupManager = new StudyRoomGroupManager(this);
-        mStudyRoomGroupList = studyRoomGroupManager.getStudyRoomGroupsFromCursor
-                (studyRoomGroupManager.getAllFromDb());
+        mStudyRoomGroupList = studyRoomGroupManager.getAllFromDb();
         for (StudyRoomGroup group : mStudyRoomGroupList) {
             sortStudyRoomsByOccupation(group.getRooms());
         }
