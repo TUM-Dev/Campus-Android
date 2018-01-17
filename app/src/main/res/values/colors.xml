@@ -42,15 +42,19 @@
 
     <color name="grade_1.0">#318f11</color>
     <color name="grade_1.3">#5dab12</color>
+    <color name="grade_1.4">#5dab12</color>
     <color name="grade_1.7">#86c415</color>
     <color name="grade_2.0">#c6e618</color>
     <color name="grade_2.3">#fdf01a</color>
+    <color name="grade_2.4">#fdf01a</color>
     <color name="grade_2.7">#fddf18</color>
     <color name="grade_3.0">#fdbf19</color>
     <color name="grade_3.3">#fcad18</color>
+    <color name="grade_3.4">#fcad18</color>
     <color name="grade_3.7">#fb6515</color>
     <color name="grade_4.0">#d50000</color>
     <color name="grade_4.3">#c62828</color>
+    <color name="grade_4.4">#c62828</color>
     <color name="grade_4.7">#b71c1c</color>
     <color name="grade_5.0">#000000</color>
     <color name="grade_default">@color/sections_gray</color>

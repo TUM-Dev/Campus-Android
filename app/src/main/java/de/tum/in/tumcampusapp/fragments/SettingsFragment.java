@@ -178,14 +178,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             Intent service = new Intent(mContext, SilenceService.class);
             if (sharedPreferences.getBoolean(key, false)) {
                 if (!SilenceService.hasPermissions(mContext)) {
-                    SilenceService.requestPermissions(mContext);
-
                     // disable until silence service permission is resolved
                     CheckBoxPreference silenceCheckbox = (CheckBoxPreference) findPreference(Const.SILENCE_SERVICE);
                     silenceCheckbox.setChecked(false);
-                    sharedPreferences.edit()
-                                     .putBoolean(Const.SILENCE_SERVICE, false)
-                                     .apply();
+                    Utils.setSetting(mContext, Const.SILENCE_SERVICE, false);
+
+                    SilenceService.requestPermissions(mContext);
                 } else {
                     mContext.startService(service);
                 }
