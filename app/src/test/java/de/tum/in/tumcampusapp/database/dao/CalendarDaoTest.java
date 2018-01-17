@@ -9,7 +9,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.BuildConfig;
@@ -362,7 +361,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(1)));
         dao.insert(createCalendarItem("YES", now.plusDays(2)));
 
-        List<CalendarItem> results = dao.getNextCalendarItem();
+        List<CalendarItem> results = dao.getNextCalendarItems();
         assertThat(results).hasSize(1);
         assertThat(results.get(0)).isEqualToComparingFieldByField(expected);
     }
@@ -385,7 +384,7 @@ public class CalendarDaoTest {
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 3"));
 
 
-        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(4);
+        assertThat(dao.getLecturesInBlacklist("1")).hasSize(4);
     }
 
     /**
@@ -403,7 +402,7 @@ public class CalendarDaoTest {
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 0"));
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 1"));
 
-        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(2);
+        assertThat(dao.getLecturesInBlacklist("1")).hasSize(2);
     }
 
     /**
@@ -423,7 +422,7 @@ public class CalendarDaoTest {
         wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 2"));
         wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 3"));
 
-        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(2);
+        assertThat(dao.getLecturesInBlacklist("1")).hasSize(2);
     }
 
     /**
@@ -438,7 +437,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(1)));
         dao.insert(createCalendarItem("YES", now.plusDays(2)));
 
-        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(0);
+        assertThat(dao.getLecturesInBlacklist("1")).hasSize(0);
     }
 
     /**
@@ -458,73 +457,58 @@ public class CalendarDaoTest {
         wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 2"));
         wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 3"));
 
-        assertThat(dao.getLecturesWithBlacklist("1")).hasSize(0);
+        assertThat(dao.getLecturesInBlacklist("1")).hasSize(0);
     }
 
     /**
-     * Get distinct lectures, when all inserted are unique
+     * Get lectures not in blacklist, when none of them are
      * Expected output: all are returned
      */
     @Test
-    public void getDistinctLectures() {
+    public void getLecturesNotInBlacklist() {
         DateTime now = DateTime.now();
         dao.insert(createCalendarItem("GOOD", now));
         dao.insert(createCalendarItem("GOOD", now));
         dao.insert(createCalendarItem("GOOD", now));
 
-        assertThat(dao.getDistinctLectures()).hasSize(3);
+        assertThat(dao.getLecturesNotInBlacklist("1")).hasSize(3);
     }
 
     /**
-     * Get distinct lectures, when some lectures have the same name
-     * Expected output: Some are returned
+     * Some are in blacklist
+     * Expected output: rest are returned
      */
     @Test
-    public void getDistinctLecturesSome() {
+    public void getLecturesNotInBlacklistSome() {
         DateTime now = DateTime.now();
-        CalendarItem calendarItem = createCalendarItem("GOOD", now);
-        String firstTitle = calendarItem.getTitle();
-        dao.insert(calendarItem);
+        dao.insert(createCalendarItem("BAD", now));
+        dao.insert(createCalendarItem("OK", now));
+        dao.insert(createCalendarItem("YES", now));
+        dao.insert(createCalendarItem("YES", now));
 
-        calendarItem = createCalendarItem("BAD", now);
-        calendarItem.setTitle(firstTitle);
-        dao.insert(calendarItem);
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 0"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 1"));
 
-        calendarItem = createCalendarItem("OK", now);
-        String secondTitle = calendarItem.getTitle();
-        dao.insert(calendarItem);
-
-        calendarItem = createCalendarItem("YES", now);
-        calendarItem.setTitle(secondTitle);
-        dao.insert(calendarItem);
-
-        calendarItem = createCalendarItem("YES", now);
-        dao.insert(calendarItem);
-
-        // 5 inserted, 3 distinct
-        assertThat(dao.getDistinctLectures()).hasSize(3);
+        assertThat(dao.getLecturesNotInBlacklist("2")).hasSize(2);
     }
 
     /**
-     * Get distinct lectures, when some lectures have the same name
-     * Expected output: Some are returned
+     * All are in blacklist
+     * Expected output: Empty list
      */
     @Test
-    public void getDistinctLecturesOne() {
+    public void getLecturesNotInBlacklistNone() {
         DateTime now = DateTime.now();
-        CalendarItem calendarItem = createCalendarItem("GOOD", now);
-        String firstTitle = calendarItem.getTitle();
-        dao.insert(calendarItem);
+        dao.insert(createCalendarItem("BAD", now));
+        dao.insert(createCalendarItem("OK", now));
+        dao.insert(createCalendarItem("YES", now));
+        dao.insert(createCalendarItem("YES", now));
 
-        int n = 0;
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 0"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 1"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 2"));
+        wtbDao.insert(new WidgetsTimetableBlacklist(2, "title 3"));
 
-        for (int i = 0; i < n; i++) {
-            calendarItem = createCalendarItem("OK", now);
-            calendarItem.setTitle(firstTitle);
-            dao.insert(calendarItem);
-        }
-
-        // n + 1 items
-        assertThat(dao.getDistinctLectures()).hasSize(n + 1);
+        assertThat(dao.getLecturesNotInBlacklist("2")).hasSize(0);
     }
 }

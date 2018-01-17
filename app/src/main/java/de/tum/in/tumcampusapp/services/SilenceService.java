@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.media.AudioManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -110,10 +109,10 @@ public class SilenceService extends JobIntentService {
                                          Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
                 Utils.setInternalSetting(this, Const.SILENCE_ON, false);
 
-                List<CalendarItem> nextCalendarItem = calendarManager.getNextCalendarItem();
-                if (nextCalendarItem.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+                List<CalendarItem> nextCalendarItems = calendarManager.getNextCalendarItems();
+                if (nextCalendarItems.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
                     // refresh when next event has started
-                    waitDuration = getWaitDuration(nextCalendarItem.get(0).getDtstart());
+                    waitDuration = getWaitDuration(nextCalendarItems.get(0).getDtstart());
                 }
             }
         } else {

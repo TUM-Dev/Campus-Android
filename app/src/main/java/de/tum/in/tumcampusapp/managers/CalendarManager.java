@@ -176,18 +176,11 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      * @return A cursor containing a list of lectures and the is_on_blacklist flag
      */
     public List<CalendarItem> getLecturesForWidget(int widgetId) {
-        List<CalendarItem> lectures = new ArrayList<>();
-        List<CalendarItem> distinctLectures = calendarDao.getDistinctLectures();
-        List<CalendarItem> blacklistedLectures = calendarDao.getLecturesWithBlacklist(Integer.toString(widgetId));
-        for (CalendarItem distinctLecture: distinctLectures) {
-            for (CalendarItem blacklistedLecture: blacklistedLectures) {
-                if (distinctLecture.getTitle().equals(blacklistedLecture.getTitle())) {
-                    distinctLecture.setBlacklisted(true);
-                    break;
-                }
-            }
-            lectures.add(distinctLecture);
+        List<CalendarItem> lectures = calendarDao.getLecturesInBlacklist(Integer.toString(widgetId));
+        for (CalendarItem blacklistedLecture: lectures) {
+            blacklistedLecture.setBlacklisted(true);
         }
+        lectures.addAll(calendarDao.getLecturesNotInBlacklist(Integer.toString(widgetId)));
         return lectures;
     }
 
@@ -229,16 +222,14 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             throw new IllegalArgumentException("Invalid lecture Title.");
         }
 
-        calendarDao.insert(new CalendarItem(row.getNr(), row.getStatus(), row.getUrl(),
-                                            row.getTitle(), row.getDescription(),
-                                            row.getDtstart(), row.getDtend(), row.getLocation(), false));
+        calendarDao.insert(row.toCalendarItem());
     }
 
     /**
      * Gets the next lectures that could be important to the user
      */
-    public List<CalendarItem> getNextCalendarItem() {
-        return calendarDao.getNextCalendarItem();
+    public List<CalendarItem> getNextCalendarItems() {
+        return calendarDao.getNextCalendarItems();
     }
 
     /**
@@ -249,7 +240,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         Geo geo = null;
         RoomLocations roomLocation = roomLocationsDao.getNextLectureCoordinates();
         if (roomLocation != null) {
-            geo = new Geo(roomLocation.getLatitude(), roomLocation.getLongtitude());
+            geo = roomLocation.toGeo();
         }
         return geo;
     }
@@ -261,7 +252,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      */
     @Override
     public void onRequestCard(Context context) {
-        List<CalendarItem> nextCalendarItems = getNextCalendarItem();
+        List<CalendarItem> nextCalendarItems = getNextCalendarItems();
         if (nextCalendarItems.size() != 0) {
             NextLectureCard card = new NextLectureCard(context);
             card.setLectures(nextCalendarItems);
@@ -291,7 +282,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                 Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
                 if (geo.isPresent()) {
                     Utils.logv("inserted " + location + ' ' + geo);
-                    roomLocationsDao.insert(new RoomLocations(location, geo.get().getLatitude(), geo.get().getLongitude()));
+                    roomLocationsDao.insert(new RoomLocations(location, geo.get()));
                 }
             }
 
