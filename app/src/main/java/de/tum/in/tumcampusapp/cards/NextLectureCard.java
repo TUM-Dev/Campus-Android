@@ -170,18 +170,10 @@ public class NextLectureCard extends NotificationAwareCard {
             item.end = Utils.getDateTime(calendarItem.getDtend());
 
             // Extract course title
-            item.title = calendarItem.getTitle();
-            item.title = item.title.replaceAll("[A-Z, 0-9(LV\\.Nr)=]+$", "");
-            item.title = item.title.replaceAll("\\([A-Z]+[0-9]+\\)", "");
-            item.title = item.title.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
-            item.title = item.title.trim();
+            item.title = calendarItem.getFormattedTitle();
 
             // Handle location
-            item.location = calendarItem.getLocation();
-            if (item.location != null) {
-                item.location = item.location.replaceAll("\\([A-Z0-9\\.]+\\)", "")
-                                             .trim();
-            }
+            item.location = calendarItem.getEventLocation();
             lectures.add(item);
         }
     }

@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import de.tum.`in`.tumcampusapp.auxiliary.Utils
 import de.tum.`in`.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent
 import java.util.*
+import java.util.regex.Pattern
 
 @Entity(tableName="calendar")
 data class CalendarItem(@PrimaryKey
@@ -48,5 +49,23 @@ data class CalendarItem(@PrimaryKey
         val result = Calendar.getInstance()
         result.time = Utils.getDateTime(dtend)
         return result
+    }
+
+    fun getFormattedTitle(): String {
+        return Pattern.compile("\\([A-Z0-9\\.]+\\)")
+                .matcher(Pattern.compile("\\([A-Z]+[0-9]+\\)")
+                        .matcher(Pattern.compile("[A-Z, 0-9(LV\\.Nr)=]+$")
+                                .matcher(title)
+                                .replaceAll(""))
+                        .replaceAll(""))
+                .replaceAll("")!!
+                .trim { it <= ' ' }
+    }
+
+    fun getEventLocation(): String {
+        return Pattern.compile("\\([A-Z0-9\\.]+\\)")
+                .matcher(location)
+                .replaceAll("")!!
+                .trim { it <= ' ' }
     }
 }

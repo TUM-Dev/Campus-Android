@@ -17,19 +17,16 @@ import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 public class IntegratedCalendarEvent extends WeekViewEvent {
     private static final float SATURATION_ADJUST = 1.3f;
     private static final float INTENSITY_ADJUST = 0.8f;
-    private static final Pattern COMPILE = Pattern.compile("[A-Z, 0-9(LV\\.Nr)=]+$");
-    private static final Pattern PATTERN = Pattern.compile("\\([A-Z]+[0-9]+\\)");
-    private static final Pattern COMPILE1 = Pattern.compile("\\([A-Z0-9\\.]+\\)");
     private final String location;
     private boolean isFirstOnDay;
 
     public IntegratedCalendarEvent(CalendarItem calendarItem) {
         super(Long.parseLong(calendarItem.getNr()),
-              formatEventTitle(calendarItem.getTitle()),
+              calendarItem.getFormattedTitle(),
               calendarItem.getEventStart(),
               calendarItem.getEventEnd());
 
-        this.location = getEventLocationFromCalendarItem(calendarItem);
+        this.location = calendarItem.getEventLocation();
         this.setColor(calendarItem.getEventColor());
     }
 
@@ -37,29 +34,6 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         super(id, title, startTime, endTime);
         this.location = location;
         this.setColor(color);
-    }
-
-    private static String formatEventTitle(String eventTitle) {
-        if (eventTitle == null) {
-            eventTitle = "";
-        }
-        eventTitle = COMPILE.matcher(eventTitle)
-                            .replaceAll("");
-        eventTitle = PATTERN.matcher(eventTitle)
-                            .replaceAll("");
-        eventTitle = PATTERN.matcher(eventTitle)
-                            .replaceAll("");
-        return eventTitle;
-    }
-
-    private static String getEventLocationFromCalendarItem(CalendarItem cEvents) {
-        String eventLocation = cEvents.getLocation();
-        if (eventLocation == null) {
-            eventLocation = "";
-        }
-        eventLocation = COMPILE1.matcher(eventLocation)
-                                .replaceAll("");
-        return eventLocation.trim();
     }
 
     public static int getDisplayColorFromColor(int color) {
