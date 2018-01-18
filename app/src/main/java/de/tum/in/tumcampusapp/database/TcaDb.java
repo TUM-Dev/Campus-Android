@@ -10,30 +10,37 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dao.CalendarDao;
 import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
 import de.tum.in.tumcampusapp.database.dao.KinoDao;
 import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.database.dao.NewsDao;
 import de.tum.in.tumcampusapp.database.dao.NewsSourcesDao;
+import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
 import de.tum.in.tumcampusapp.database.dao.NotificationDao;
 import de.tum.in.tumcampusapp.database.dao.RecentsDao;
 import de.tum.in.tumcampusapp.database.dao.StudyRoomDao;
 import de.tum.in.tumcampusapp.database.dao.StudyRoomGroupDao;
 import de.tum.in.tumcampusapp.database.dao.SyncDao;
 import de.tum.in.tumcampusapp.database.dao.TumLockDao;
+import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
+import de.tum.in.tumcampusapp.database.dao.RecentsDao;
 import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
 import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
+import de.tum.in.tumcampusapp.models.dbEntities.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.News;
 import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
@@ -49,6 +56,9 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
         Location.class,
         News.class,
         NewsSources.class,
+        CalendarItem.class,
+        RoomLocations.class,
+        WidgetsTimetableBlacklist.class,
         WifiMeasurement.class,
         Recent.class,
         StudyRoomGroup.class,
@@ -77,6 +87,12 @@ public abstract class TcaDb extends RoomDatabase {
 
     public abstract NewsSourcesDao newsSourcesDao();
 
+    public abstract CalendarDao calendarDao();
+
+    public abstract RoomLocationsDao roomLocationsDao();
+
+    public abstract WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao();
+    
     public abstract WifiMeasurementDao wifiMeasurementDao();
 
     public abstract RecentsDao recentsDao();
