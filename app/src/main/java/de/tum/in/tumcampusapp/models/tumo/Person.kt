@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.models.tumo
 
+import de.tum.`in`.tumcampusapp.models.dbEntities.Recent
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
-
 import java.io.Serializable
 
 /**
@@ -29,5 +29,13 @@ data class Person(@field:Element(name = "geschlecht", required = false)
         val FEMALE = "W"
         val MALE = "M"
         private const val serialVersionUID = -5210814076506102292L
+
+        fun fromRecent(r: Recent): Person {
+            val split = r.name.split("\\$".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val p = Person()
+            p.id = split[0]
+            p.name = split[1]
+            return p
+        }
     }
 }

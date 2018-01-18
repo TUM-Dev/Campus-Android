@@ -95,7 +95,7 @@ public class SetupEduroamActivity extends BaseActivity {
     @SuppressWarnings("UnusedParameters")
     public void onClickSetup(View v) {
         //Verify that we have a valid LRZ / TUM ID
-        final Pattern pattern = Pattern.compile("^[a-z]{2}[0-9]{2}[a-z]{3}$");
+        final Pattern pattern = Pattern.compile(Const.TUM_ID_PATTERN);
         if (!pattern.matcher(lrz.getText())
                     .matches()) {
             Utils.showToast(this, getString(R.string.eduroam_not_valid_id));

@@ -47,12 +47,6 @@
                         android:layout_marginTop="16dp"
                         android:hint="@string/lrz_id"
                         android:inputType="text"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/eduroam_realm_comment"
-                        android:paddingLeft="5dp"
-                        android:layout_marginTop="-10dp"/>
 
                     <EditText
                         android:id="@+id/wifi_password"

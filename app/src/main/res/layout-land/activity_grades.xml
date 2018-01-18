@@ -1,0 +1,117 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                        xmlns:tools="http://schemas.android.com/tools"
+                                        android:id="@+id/drawer_layout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/main_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@color/color_primary"
+                    android:elevation="12dp"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                    tools:ignore="UnusedAttribute">
+                    <Spinner
+                        android:id="@+id/spFilter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </android.support.v7.widget.Toolbar>
+            </android.support.design.widget.AppBarLayout>
+
+            <include
+                layout="@layout/layout_all_errors"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"/>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pie_chart"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:visibility="visible"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/bar_chart"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:visibility="gone">
+                <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+                    android:id="@+id/lstGrades"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"/>
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/avgGrade"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:text="Avg: 3,2"
+                    android:textSize="@dimen/semilarge_text_size"
+                    android:visibility="visible"/>
+
+                <Button
+                    android:id="@+id/button_show_list"
+                    style="@style/FlatButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:drawableLeft="@drawable/ic_list_bulleted"
+                    android:gravity="center"
+                    android:onClick="showList"
+                    android:text="@string/show_list"/>
+
+                <Button
+                    android:id="@+id/button_show_chart"
+                    style="@style/FlatButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:drawableLeft="@drawable/ic_pie_chart"
+                    android:gravity="center"
+                    android:onClick="showChart"
+                    android:text="@string/show_chart"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/hide_chart"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@color/tum_300"
+                android:onClick="hideChartToggle"
+                android:src="@drawable/ic_arrow_up"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    <!-- The navigation drawer -->
+    <include layout="@layout/navigation_drawer"/>
+</android.support.v4.widget.DrawerLayout>

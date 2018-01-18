@@ -6,7 +6,7 @@ import java.util.Date;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.SyncDao;
+import de.tum.in.tumcampusapp.database.dao.SyncDao;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 
 /**
@@ -46,7 +46,7 @@ public class SyncManager {
      * @return true if sync is needed, else false
      */
     public boolean needSync(String id, int seconds) {
-        return dao.getSyncSince(id, seconds) != null;
+        return dao.getSyncSince(id, seconds) == null;
     }
 
     /**
