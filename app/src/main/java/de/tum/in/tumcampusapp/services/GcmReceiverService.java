@@ -97,8 +97,10 @@ public class GcmReceiverService extends FirebaseMessagingService {
                     Utils.log(e);
                 }
 
-                //de.tum.in.tumcampusapp.managers.NotificationManager man = new de.tum.in.tumcampusapp.managers.NotificationManager(this);
-                //@todo save to our notificationmanager
+                //TODO
+                //de.tum.in.tumcampusapp.managers.NotificationManager notificationManager
+                //        = new de.tum.in.tumcampusapp.managers.NotificationManager(this);
+                //notificationManager.replaceInto(n);
             }
         } else {
 

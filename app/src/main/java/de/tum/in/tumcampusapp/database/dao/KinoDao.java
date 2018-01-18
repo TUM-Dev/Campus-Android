@@ -7,6 +7,8 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 @Dao
 public interface KinoDao {
@@ -21,13 +23,13 @@ public interface KinoDao {
     void insert(Kino kino);
 
     @Query("SELECT * FROM kino")
-    List<Kino> getAll();
+    Flowable<List<Kino>> getAll();
 
     @Query("SELECT id FROM kino ORDER BY id DESC LIMIT 1")
-    String getLastId();
+    Maybe<String> getLastId();
 
     @Query("SELECT * FROM kino ORDER BY id LIMIT 1 OFFSET :position")
-    Kino getByPosition(int position);
+    Flowable<Kino> getByPosition(int position);
 
     @Query("DELETE FROM kino")
     void flush();
