@@ -115,7 +115,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("OTHER", DateTime.now()));
         dao.insert(createCalendarItem("DUNNO", DateTime.now()));
 
-        assertThat(dao.getAllByDateNotCancelled(DateTime.now().toDate())).hasSize(4);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(DateTime.now().toDate()))).hasSize(4);
     }
 
     /**
@@ -129,7 +129,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("CANCEL", DateTime.now()));
         dao.insert(createCalendarItem("CANCEL", DateTime.now()));
 
-        assertThat(dao.getAllByDateNotCancelled(DateTime.now().toDate())).hasSize(1);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(DateTime.now().toDate()))).hasSize(1);
     }
 
     /**
@@ -143,7 +143,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("OTHER", DateTime.now().minusMonths(10)));
         dao.insert(createCalendarItem("COOL", DateTime.now()));
 
-        assertThat(dao.getAllByDateNotCancelled(DateTime.now().toDate())).hasSize(2);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(DateTime.now().toDate()))).hasSize(2);
     }
 
     /**
@@ -157,7 +157,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("OTHER", DateTime.now().minusMonths(10)));
         dao.insert(createCalendarItem("COOL", DateTime.now().minusDays(123)));
 
-        assertThat(dao.getAllByDateNotCancelled(DateTime.now().toDate())).hasSize(0);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(DateTime.now().toDate()))).hasSize(0);
     }
 
     /**
@@ -171,7 +171,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("CANCEL", DateTime.now()));
         dao.insert(createCalendarItem("CANCEL", DateTime.now()));
 
-        assertThat(dao.getAllByDateNotCancelled(DateTime.now().toDate())).hasSize(0);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(DateTime.now().toDate()))).hasSize(0);
     }
 
     /**
@@ -186,7 +186,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(123)));
         dao.insert(createCalendarItem("CANCEL", now));
 
-        assertThat(dao.getAllByDateNotCancelled(now.toDate())).hasSize(1);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(now.toDate()))).hasSize(1);
     }
 
     /**

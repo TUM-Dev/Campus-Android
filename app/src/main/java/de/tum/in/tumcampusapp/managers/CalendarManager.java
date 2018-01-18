@@ -105,7 +105,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
     }
 
     public List<CalendarItem> getFromDbForDate(Date date) {
-        return calendarDao.getAllByDateNotCancelled(date);
+        return calendarDao.getAllByDateNotCancelled(Utils.getDateString(date));
     }
 
     /**
