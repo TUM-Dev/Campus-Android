@@ -5,7 +5,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
