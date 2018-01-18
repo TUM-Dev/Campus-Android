@@ -22,10 +22,12 @@ import de.tum.in.tumcampusapp.database.dao.StudyRoomGroupDao;
 import de.tum.in.tumcampusapp.database.dao.SyncDao;
 import de.tum.in.tumcampusapp.database.dao.TumLockDao;
 import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
+import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatRoomDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
@@ -50,7 +52,6 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
         Location.class,
         ChatRoomDbRow.class,
         ChatMessage.class,
-        Location.class,
         News.class,
         NewsSources.class,
         WifiMeasurement.class,
