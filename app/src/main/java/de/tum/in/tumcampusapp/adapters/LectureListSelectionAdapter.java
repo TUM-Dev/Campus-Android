@@ -1,14 +1,12 @@
 package de.tum.in.tumcampusapp.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.CursorAdapter;
 
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class LectureListSelectionAdapter extends BaseAdapter implements Compound
     private final List<CalendarItem> calendarItems;
     private final LayoutInflater mInflater;
 
-    public LectureListSelectionAdapter(Context context, List<CalendarItem> cItems, boolean autoRequery, int appWidgetId) {
+    public LectureListSelectionAdapter(Context context, List<CalendarItem> cItems, int appWidgetId) {
         calendarItems = cItems;
         this.appWidgetId = appWidgetId;
         this.calendarManager = new CalendarManager(context);
@@ -63,7 +61,7 @@ public class LectureListSelectionAdapter extends BaseAdapter implements Compound
             view = mInflater.inflate(R.layout.list_timetable_configure_item, parent, false);
         }
         CheckBox checkBox = view.findViewById(R.id.timetable_configure_item);
-        checkBox.setChecked(calendarItems.get(position).getBlacklisted() == false);
+        checkBox.setChecked( !calendarItems.get(position).getBlacklisted() );
         checkBox.setText(calendarItems.get(position).getTitle());
         checkBox.setOnCheckedChangeListener(this);
 

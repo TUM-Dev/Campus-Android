@@ -10,6 +10,9 @@ import de.tum.`in`.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent
 import java.util.*
 import java.util.regex.Pattern
 
+/**
+ * Entity for storing information about lecture events
+ */
 @Entity(tableName="calendar")
 data class CalendarItem(@PrimaryKey
                         var nr: String = "",
@@ -53,6 +56,9 @@ data class CalendarItem(@PrimaryKey
         return result
     }
 
+    /**
+     * Formats title to exclude codes
+     */
     fun getFormattedTitle(): String {
         return Pattern.compile("\\([A-Z0-9\\.]+\\)")
                 .matcher(Pattern.compile("\\([A-Z]+[0-9]+\\)")
@@ -64,6 +70,9 @@ data class CalendarItem(@PrimaryKey
                 .trim { it <= ' ' }
     }
 
+    /**
+     * Formats event's location
+     */
     fun getEventLocation(): String {
         return Pattern.compile("\\([A-Z0-9\\.]+\\)")
                 .matcher(location)
@@ -71,6 +80,9 @@ data class CalendarItem(@PrimaryKey
                 .trim { it <= ' ' }
     }
 
+    /**
+     * Prepares ContentValues object with related values plugged
+     */
     fun toContentValues(): ContentValues {
         val values = ContentValues()
 

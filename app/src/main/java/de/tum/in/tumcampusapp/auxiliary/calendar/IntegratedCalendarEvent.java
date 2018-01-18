@@ -6,9 +6,6 @@ import android.os.Build;
 import com.alamkanak.weekview.WeekViewEvent;
 
 import java.util.Calendar;
-import java.util.regex.Pattern;
-
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 /**

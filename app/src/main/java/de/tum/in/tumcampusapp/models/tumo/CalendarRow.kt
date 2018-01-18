@@ -14,6 +14,9 @@ data class CalendarRow(
         @field:Element(required = false) var status: String = "",
         @field:Element(required = false) var title: String = "",
         @field:Element(required = false) var url: String = "") {
+    /**
+     * Retrieve related values for calendar item as CalendarItem object
+     */
     fun toCalendarItem(): CalendarItem {
         return CalendarItem(nr, status, url, title, description, dtstart,
                 dtend, location, false)
