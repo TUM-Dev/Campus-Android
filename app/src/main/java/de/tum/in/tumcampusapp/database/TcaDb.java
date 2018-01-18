@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
-import de.tum.in.tumcampusapp.models.chat.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;

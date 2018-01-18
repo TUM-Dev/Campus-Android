@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.google.common.base.Optional;
 
@@ -20,8 +19,9 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatRoomDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
-import de.tum.in.tumcampusapp.models.chat.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
@@ -32,15 +32,6 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
 public class ChatRoomManager extends AbstractManager implements Card.ProvidesCard {
-
-    public static final int COL_ROOM = 0;
-    public static final int COL_NAME = 1;
-    public static final int COL_SEMESTER = 2;
-    public static final int COL_SEMESTER_ID = 3;
-    public static final int COL_JOINED = 4;
-    public static final int COL_LV_NR = 5;
-    public static final int COL_CONTRIBUTOR = 6;
-    public static final int COL_MEMBERS = 7;
 
     private final ChatRoomDao chatRoomDao;
 
@@ -61,11 +52,32 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      * @param joined chat room 1=joined, 0=not joined/left chat room, -1=not joined
      * @return List of chat messages
      */
-    public Cursor getAllByStatus(int joined) {
+
+
+    public List<ChatRoomDbRow> getAllByStatus(int joined) {
+        List<ChatMessage> msgs;
+        List<ChatRoomDbRow> rooms;
         if (joined == 0) {
-            return chatRoomDao.getAllRoomsNotJoined();
+            msgs = chatRoomDao.getTsAndTextRoomsNotJoined();
+            rooms = chatRoomDao.getAllRoomsNotJoinedList();
+            for(int i=0;i<rooms.size();i++) {
+                if(msgs.get(i).getTimestamp()!=null && msgs.get(i).getText()!=null) {
+                    rooms.get(i).setTimestamp(msgs.get(i).getTimestamp());
+                    rooms.get(i).setText(msgs.get(i).getText());
+                }
+            }
+            return rooms;
         }
-        return chatRoomDao.getAllRoomsJoined();
+        msgs = chatRoomDao.getTsAndTextRoomsJoined();
+        rooms = chatRoomDao.getAllRoomsJoinedList();
+        for(int i=0;i<rooms.size();i++) {
+            if (msgs.get(i).getTimestamp()!=null && msgs.get(i).getText()!=null)    {
+                rooms.get(i).setTimestamp(msgs.get(i).getTimestamp());
+                rooms.get(i).setText(msgs.get(i).getText());
+            }
+
+        }
+        return rooms;
     }
 
     /**
@@ -73,7 +85,6 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      */
     public void replaceInto(LecturesSearchRow lecture) {
         List<Integer> givenLecture = chatRoomDao.getGivenLecture(lecture.getTitel(), lecture.getSemester_id());
-        //maybe try with givenLecture != null
         if (givenLecture.size() >= 1) {
             chatRoomDao.updateRoom(lecture.getSemester_name(), Integer.valueOf(lecture.getStp_lv_nr()),
                                    lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id());
@@ -127,7 +138,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
             List<Integer> roomIds = chatRoomDao.getGivenLecture(roomName,semester);
             if (roomIds.size() >= 1) {
                 //in dao
-                chatRoomDao.updateRoomJoined(room.getId(),room.getMembers(), roomName, semester);
+                chatRoomDao.updateRoomToJoined(room.getId(),room.getMembers(), roomName, semester);
             } else {
                 ChatRoomDbRow chatRoom = new ChatRoomDbRow(room.getId(),roomName,"",semester,1,0,"",room.getMembers());
                 chatRoomDao.replaceRoom(chatRoom);
@@ -139,13 +150,11 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
     }
 
     public void join(ChatRoom currentChatRoom) {
-        //in dao
-        chatRoomDao.updateJoined(currentChatRoom.getId(),currentChatRoom.getName().substring(4),currentChatRoom.getName().substring(0,3));
+        chatRoomDao.updateJoinedRooms(currentChatRoom.getId(),currentChatRoom.getName().substring(4),currentChatRoom.getName().substring(0,3));
     }
 
     public void leave(ChatRoom currentChatRoom) {
-        //in dao
-        chatRoomDao.updateLeft(currentChatRoom.getId(),currentChatRoom.getName().substring(4),currentChatRoom.getName().substring(0,3));
+        chatRoomDao.updateLeftRooms(currentChatRoom.getId(),currentChatRoom.getName().substring(4),currentChatRoom.getName().substring(0,3));
     }
 
     @Override
