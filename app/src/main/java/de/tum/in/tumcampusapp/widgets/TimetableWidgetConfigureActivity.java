@@ -2,15 +2,17 @@ package de.tum.in.tumcampusapp.widgets;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.LectureListSelectionAdapter;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 public class TimetableWidgetConfigureActivity extends AppCompatActivity {
 
@@ -40,8 +42,8 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
 
         // Initialize stations adapter
         CalendarManager calendarManager = new CalendarManager(this);
-        Cursor lectureCursor = calendarManager.getLecturesFromWidget(this.appWidgetId);
-        listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectureCursor, true, this.appWidgetId));
+        List<CalendarItem> lectures = calendarManager.getLecturesForWidget(this.appWidgetId);
+        listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectures, this.appWidgetId));
         listViewLectures.requestFocus();
     }
 

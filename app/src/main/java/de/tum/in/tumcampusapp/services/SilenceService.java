@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.media.AudioManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -14,11 +13,13 @@ import android.support.v4.app.JobIntentService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.SILENCE_SERVICE_JOB_ID;
 
@@ -96,47 +97,44 @@ public class SilenceService extends JobIntentService {
         if (am == null) {
             return;
         }
-        try (Cursor cursor = calendarManager.getCurrentFromDb()) {
-            Utils.log("Current lectures: " + cursor.getCount());
+        List<CalendarItem> currentLectures = calendarManager.getCurrentFromDb();
+        Utils.log("Current lectures: " + currentLectures.size());
 
-            if (cursor.getCount() == 0 || isDoNotDisturbMode()) {
-                if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
-                    // default: old state
-                    Utils.log("set ringer mode to old state");
-                    am.setRingerMode(Integer.parseInt(
-                            Utils.getSetting(this, Const.SILENCE_OLD_STATE,
-                                             Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
-                    Utils.setInternalSetting(this, Const.SILENCE_ON, false);
+        if (currentLectures.size() == 0 || isDoNotDisturbMode()) {
+            if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
+                // default: old state
+                Utils.log("set ringer mode to old state");
+                am.setRingerMode(Integer.parseInt(
+                        Utils.getSetting(this, Const.SILENCE_OLD_STATE,
+                                         Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
+                Utils.setInternalSetting(this, Const.SILENCE_ON, false);
 
-                    Cursor cursor2 = calendarManager.getNextCalendarItem();
-                    if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
-                        // refresh when next event has started
-                        waitDuration = getWaitDuration(cursor2.getString(1));
-                    }
-                    cursor2.close();
+                List<CalendarItem> nextCalendarItems = calendarManager.getNextCalendarItems();
+                if (nextCalendarItems.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+                    // refresh when next event has started
+                    waitDuration = getWaitDuration(nextCalendarItems.get(0).getDtstart());
                 }
-            } else {
-                // remember old state if just activated ; in doubt dont change
-                if (!Utils.getInternalSettingBool(this, Const.SILENCE_ON, true)) {
-                    Utils.setSetting(this, Const.SILENCE_OLD_STATE, am.getRingerMode());
-                }
-
-                // if current lecture(s) found, silence the mobile
-                Utils.setInternalSetting(this, Const.SILENCE_ON, true);
-
-                // Set into silent mode
-                String mode = Utils.getSetting(this, "silent_mode_set_to", "0");
-                if ("0".equals(mode)) {
-                    Utils.log("set ringer mode: vibration");
-                    am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                } else {
-                    Utils.log("set ringer mode: silent");
-                    am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                }
-                // refresh when event has ended
-                cursor.moveToFirst();
-                waitDuration = getWaitDuration(cursor.getString(3));
             }
+        } else {
+            // remember old state if just activated ; in doubt dont change
+            if (!Utils.getInternalSettingBool(this, Const.SILENCE_ON, true)) {
+                Utils.setSetting(this, Const.SILENCE_OLD_STATE, am.getRingerMode());
+            }
+
+            // if current lecture(s) found, silence the mobile
+            Utils.setInternalSetting(this, Const.SILENCE_ON, true);
+
+            // Set into silent mode
+            String mode = Utils.getSetting(this, "silent_mode_set_to", "0");
+            if ("0".equals(mode)) {
+                Utils.log("set ringer mode: vibration");
+                am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            } else {
+                Utils.log("set ringer mode: silent");
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            }
+            // refresh when event has ended
+            waitDuration = getWaitDuration(currentLectures.get(0).getDtstart());
         }
 
         alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);

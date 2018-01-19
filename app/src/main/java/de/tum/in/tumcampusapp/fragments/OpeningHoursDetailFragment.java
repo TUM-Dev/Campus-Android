@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.activities.OpeningHoursDetailActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.LocationDao;
+import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
 
 /**

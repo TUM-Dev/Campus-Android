@@ -1,8 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.view.Menu;
@@ -45,6 +48,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Cursor> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
+    private static final int CAMERA_REQUEST_CODE = 34;
+    private static final int JOIN_ROOM_REQUEST_CODE = 22;
 
     private StickyListHeadersListView lvMyChatRoomList;
 
@@ -131,11 +136,24 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             newChatRoom();
             return true;
         } else if (i == R.id.action_join_chat_room) {
-            startActivityForResult(new Intent(this, JoinRoomScanActivity.class), 1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                int permissionCheck = checkSelfPermission(Manifest.permission.CAMERA);
+                if(permissionCheck == PackageManager.PERMISSION_DENIED){
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+                } else {
+                    startJoinRoom();
+                }
+            } else {
+                startJoinRoom();
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void startJoinRoom(){
+        startActivityForResult(new Intent(this, JoinRoomScanActivity.class), JOIN_ROOM_REQUEST_CODE);
     }
 
     @Override
@@ -147,6 +165,15 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             } else {
                 Utils.showToast(this, R.string.invalid_chat_room);
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        if(requestCode == CAMERA_REQUEST_CODE
+           && grantResults != null && grantResults.length >= 1
+           && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                startJoinRoom();
         }
     }
 

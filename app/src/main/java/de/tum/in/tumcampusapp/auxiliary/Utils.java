@@ -137,15 +137,15 @@ public final class Utils {
      * @param str String with ISO-DateTime (yyyy-mm-dd hh:mm:ss)
      * @return Date
      */
-    public static Date getISODateTime(String str) {
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder().append(null, new DateTimeParser[]{
-                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").getParser(),
-                DateTimeFormat.forPattern("yyyy-MM-dd").getParser()
-        })
-                                                                    .toFormatter();
-
-        return formatter.parseDateTime(str)
-                        .toDate();
+    public static Date getDateTime(String str) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        Date date = new Date();
+        try {
+            date = format.parse(str);
+        } catch (ParseException e) {
+            log(e, str);
+        }
+        return date;
     }
 
     /**

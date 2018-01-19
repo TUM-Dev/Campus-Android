@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.models.tumcabe
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 import java.util.*
 
 /**
@@ -24,6 +25,7 @@ import java.util.*
  */
 @Entity
 data class Kino(@PrimaryKey
+                @SerializedName("kino")
                 var id: String = "",
                 var title: String = "",
                 var year: String = "",
@@ -34,7 +36,7 @@ data class Kino(@PrimaryKey
                 var rating: String = "",
                 var description: String = "",
                 var cover: String = "",
-                var trailer: String = "",
+                var trailer: String? = "",
                 var date: Date = Date(),
                 var created: Date = Date(),
                 var link: String = "")

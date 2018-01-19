@@ -18,6 +18,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
+import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
@@ -49,6 +50,7 @@ import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CURRICULA;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_FACULTY;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_LOCATIONS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_NOTIFICATIONS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_OWN_QUESTIONS;
@@ -155,7 +157,7 @@ public interface TUMCabeAPIService {
 
     //WifiHeatmap
     @POST(API_WIFI_HEATMAP + "create_measurements/")
-    Call<TUMCabeStatus> createMeasurements(@Body WifiMeasurement[] wifiMeasurementList);
+    Call<TUMCabeStatus> createMeasurements(@Body List<WifiMeasurement> wifiMeasurementList);
 
     // Barrier free contacts
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)
@@ -197,4 +199,8 @@ public interface TUMCabeAPIService {
     @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
     Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
                                                  @Path("start") String start, @Path("end") String end);
+
+    @GET(API_KINOS+"{lastId}")
+    Observable<List<Kino>> getKinos(@Path("lastId") String lastId);
+
 }
