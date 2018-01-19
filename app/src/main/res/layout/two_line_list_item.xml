@@ -22,14 +22,14 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@android:id/text1"
+            android:id="@+id/text1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         <TextView
-            android:id="@android:id/text2"
+            android:id="@+id/text2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"

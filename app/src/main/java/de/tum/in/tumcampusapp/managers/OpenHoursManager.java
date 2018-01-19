@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.LocationDao;
+import de.tum.in.tumcampusapp.database.dao.LocationDao;
 
 /**
  * Location manager, handles database stuff

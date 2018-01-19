@@ -21,6 +21,10 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
+import de.tum.in.tumcampusapp.repository.KinoLocalRepository;
+import de.tum.in.tumcampusapp.repository.KinoRemoteRepository;
+import de.tum.in.tumcampusapp.viewmodel.KinoViewModel;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Fragment for KinoDetails. Manages content that gets shown on the pagerView
@@ -33,6 +37,10 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
     private String url; // link to homepage
     private LayoutInflater inflater;
 
+    private KinoViewModel kinoViewModel;
+
+    private final CompositeDisposable disposable = new CompositeDisposable();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
@@ -42,13 +50,17 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         // position in database
         int position = getArguments().getInt(Const.POSITION);
 
+        KinoLocalRepository.db = TcaDb.getInstance(context);
+        kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposable);
         context = root.getContext();
         net = new NetUtils(context);
-        kino = TcaDb.getInstance(context)
-                    .kinoDao()
-                    .getByPosition(position);
 
-        showDetails(root);
+        kinoViewModel.getKinoByPosition(position)
+                     .subscribe(kino1 -> {
+                         kino = kino1;
+                         showDetails(root);
+                     });
+
         return rootView;
     }
 
@@ -168,4 +180,9 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         return date.substring(8, 10) + '.' + date.substring(5, 7) + '.';
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposable.clear();
+    }
 }

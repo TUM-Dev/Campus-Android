@@ -150,7 +150,9 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     public void onFetch(Employee rawResponse) {
         mEmployee = rawResponse;
         displayResults(mEmployee);
-        mContact.setVisible(true);
+        if (mContact != null) {
+            mContact.setVisible(true);
+        }
         showLoadingEnded();
     }
 

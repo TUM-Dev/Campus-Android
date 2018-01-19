@@ -2,7 +2,11 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -23,6 +27,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
+import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
@@ -75,6 +80,7 @@ public class TUMCabeClient {
     static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
     static final String API_CAFETERIAS = "mensen/";
+    static final String API_KINOS = "kino/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -82,29 +88,15 @@ public class TUMCabeClient {
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create());
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
+        Gson gson = new GsonBuilder().
+                registerTypeAdapter(Date.class,new DateSerializer())
+                .create();
+        builder.addConverterFactory(GsonConverterFactory.create(gson));
 
         builder.client(Helper.getOkClient(c));
         service = builder.build()
                          .create(TUMCabeAPIService.class);
-
-        /*
-        TODO port the error handler to Retrofit 2
-        ErrorHandler errorHandler = new ErrorHandler() {
-            @Override
-            public Throwable handleError(RetrofitError cause) {
-                Throwable t = cause.getCause();
-                if (t instanceof SSLPeerUnverifiedException) {
-                    //TODO show a error message
-                    //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
-                }
-
-                //Return the same cause, so it can be handled by other activities
-                return cause;
-            }
-        }; */
-
     }
 
     public static synchronized TUMCabeClient getInstance(Context c) {
@@ -285,7 +277,7 @@ public class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public void createMeasurements(WifiMeasurement[] wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
+    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
         service.createMeasurements(wifiMeasurementList)
                .enqueue(cb);
     }
@@ -356,8 +348,12 @@ public class TUMCabeClient {
                       .body();
     }
 
-    public Observable<List<Cafeteria>> getCafeterias(){
+    public Observable<List<Cafeteria>> getCafeterias() {
         return service.getCafeterias();
+    }
+
+    public Observable<List<Kino>> getKinos(String lastId){
+        return service.getKinos(lastId);
     }
 
 }

@@ -15,8 +15,11 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
@@ -73,8 +76,18 @@ public class TuitionFeesCard extends NotificationAwareCard {
             String date = DateFormat.getDateInstance()
                                     .format(d);
             addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_todo), date)));
+
+            String balanceStr = mTuition.getSoll();
+            try {
+                Double balance = NumberFormat.getInstance(Locale.GERMAN)
+                                             .parse(mTuition.getSoll())
+                                             .doubleValue();
+
+                balanceStr = String.format(Locale.GERMAN, "Value of a: %.2f", balance);
+            } catch (ParseException ignore) {
+            }
             addedViews.add(addTextView(viewHolder.itemView.getContext()
-                                                          .getString(R.string.amount_dots) + ' ' + mTuition.getSoll() + '€'));
+                                                          .getString(R.string.amount_dots) + ' ' + balanceStr + '€'));
         }
     }
 

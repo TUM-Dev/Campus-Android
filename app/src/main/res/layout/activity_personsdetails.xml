@@ -1,75 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical">
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                        android:id="@+id/drawer_layout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
-    <!-- The toolbar aka SupportActionBar -->
-    <include layout="@layout/toolbar"/>
+    <!-- The main content view -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <include
-        layout="@layout/layout_all_errors"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
-
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        <!-- The toolbar aka SupportActionBar -->
+        <include layout="@layout/toolbar"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding_default">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/ivImage"
-                android:layout_width="150dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:contentDescription="@string/tum_logo"
-                android:paddingBottom="10dp"
-                android:scaleType="fitXY"
-                android:src="@mipmap/ic_launcher"/>
-
-            <TextView
-                android:id="@+id/tvDetails1"
+            <include
+                layout="@layout/layout_all_errors"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_light_blue"
-                android:textSize="@dimen/large_text_size"
-                android:textStyle="bold"
-                android:gravity="center_horizontal"/>
+                android:layout_height="fill_parent"/>
 
-            <TextView
-                android:id="@+id/tvDetails2"
+            <ScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="all"
-                android:scrollHorizontally="false"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/semilarge_text_size"/>
+                android:layout_height="fill_parent">
 
-            <TextView
-                android:id="@+id/tvDetails3"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="all"
-                android:scrollHorizontally="false"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/semilarge_text_size"/>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_default">
 
-            <TextView
-                android:id="@+id/tvDetails4"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/semilarge_text_size"/>
+                    <ImageView
+                        android:id="@+id/ivImage"
+                        android:layout_width="150dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:contentDescription="@string/tum_logo"
+                        android:paddingBottom="10dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <TextView
+                        android:id="@+id/tvDetails1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/text_light_blue"
+                        android:textSize="@dimen/large_text_size"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvDetails2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:scrollHorizontally="false"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/semilarge_text_size"/>
+
+                    <TextView
+                        android:id="@+id/tvDetails3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:scrollHorizontally="false"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/semilarge_text_size"/>
+
+                    <TextView
+                        android:id="@+id/tvDetails4"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:autoLink="none"
+                        android:scrollHorizontally="false"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/semilarge_text_size"/>
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
-</LinearLayout>
+    <!-- The navigation drawer -->
+    <include layout="@layout/navigation_drawer"/>
+
+</android.support.v4.widget.DrawerLayout>

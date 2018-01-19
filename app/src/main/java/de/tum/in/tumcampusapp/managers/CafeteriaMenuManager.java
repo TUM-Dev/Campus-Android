@@ -16,8 +16,8 @@ import de.tum.in.tumcampusapp.auxiliary.FavoriteFoodAlarmStorage;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.CafeteriaMenuDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.FavoriteDishDao;
+import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 
