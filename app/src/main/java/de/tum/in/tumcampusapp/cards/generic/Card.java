@@ -29,6 +29,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.managers.CardManager;
 
+import static de.tum.in.tumcampusapp.auxiliary.Const.CARD_POSITION_PREFERENCE_SUFFIX;
+
 /**
  * Base class for all cards
  */
@@ -210,26 +212,23 @@ public abstract class Card implements Comparable<Card> {
      */
     public abstract int getId();
 
-
-    public int getPosition(){
+    public int getPosition() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return prefs.getInt(this.getClass().getSimpleName()+"_position",-1);
+        return prefs.getInt(String.format("%s%s", this.getClass()
+                                                      .getSimpleName(), CARD_POSITION_PREFERENCE_SUFFIX), -1);
     }
 
-    public void setPosition(int position){
+    public void setPosition(int position) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         Editor e = prefs.edit();
-        e.putInt(this.getClass().getSimpleName() + "_position", position);
+        e.putInt(String.format("%s%s", this.getClass()
+                                           .getSimpleName(), CARD_POSITION_PREFERENCE_SUFFIX), position);
         e.apply();
     }
 
     @Override
     public int compareTo(@NonNull Card card) {
-        if(card.getPosition()>getPosition()) {
-            return -1;
-        } else {
-            return 1;
-        }
+        return Integer.compare(getPosition(),card.getPosition());
     }
 
     @Nullable
