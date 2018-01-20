@@ -20,7 +20,6 @@ import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,17 +37,8 @@ import android.widget.ProgressBar;
 import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
-
-import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
@@ -60,7 +50,6 @@ import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
@@ -75,12 +64,7 @@ import de.tum.in.tumcampusapp.repository.ChatMessageLocalRepository;
 import de.tum.in.tumcampusapp.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.services.SendMessageService;
 import de.tum.in.tumcampusapp.viewmodel.ChatMessageViewModel;
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -191,7 +175,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     public ChatActivity() {
         super(Const.CURRENT_CHAT_ROOM, R.layout.activity_chat);
     }
-
 
     /**
      * Gets the text from speech input and returns null if no input was provided
@@ -460,10 +443,10 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 return; //In this case we simply cannot do anything
             }
             if (chatHistoryAdapter == null || chatHistoryAdapter.getCount() == 0 || newMsg) {
-                chatMessageViewModel.getNewMessages(currentChatRoom.getId(),verification);
+                chatMessageViewModel.getNewMessages(currentChatRoom.getId(), verification);
             } else {
                 long id = chatHistoryAdapter.getItemId(0);
-                chatMessageViewModel.getMessages(currentChatRoom.getId(),id,verification);
+                chatMessageViewModel.getMessages(currentChatRoom.getId(), id, verification);
             }
 
             final List<ChatMessage> msgs = chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId());
@@ -477,7 +460,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 }
 
                 // If all messages are loaded hide header view
-                if ((msgs.size() != 0 && msgs.get(0).getPrevious() == 0) || chatHistoryAdapter.getCount() == 0) {
+                if ((msgs.size() != 0 && msgs.get(0)
+                                             .getPrevious() == 0) || chatHistoryAdapter.getCount() == 0) {
                     lvMessageHistory.removeHeaderView(bar);
                 } else {
                     loadingMore = false;

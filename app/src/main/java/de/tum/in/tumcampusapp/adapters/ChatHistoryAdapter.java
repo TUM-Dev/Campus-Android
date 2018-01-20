@@ -14,6 +14,7 @@ import org.reactivestreams.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
@@ -26,7 +27,6 @@ public class ChatHistoryAdapter extends BaseAdapter {
     private List<ChatMessage> chatHistoryList;
     private List<ChatMessage> unsentMessages = new ArrayList<>();
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-
 
     private ChatMember currentChatMember;
     private Context mContext;
@@ -59,7 +59,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
         return chatHistoryList.size() + unsentMessages.size();
     }
 
-    public int getSentCount()    {
+    public int getSentCount() {
         return chatHistoryList.size();
     }
 
@@ -69,7 +69,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
         if (position < count) {
             return chatHistoryList.get(position);
         } else {
-            return unsentMessages.get(position-count);
+            return unsentMessages.get(position - count);
         }
     }
 
@@ -77,12 +77,12 @@ public class ChatHistoryAdapter extends BaseAdapter {
     public long getItemId(int position) {
         int count = getSentCount();
         if (position < count) {
-            return chatHistoryList.get(position).getId();
+            return chatHistoryList.get(position)
+                                  .getId();
         } else {
             return 0;
         }
     }
-
 
     public int getViewTypeCount() {
         return 2;
@@ -99,30 +99,26 @@ public class ChatHistoryAdapter extends BaseAdapter {
                                                .getId() ? 0 : 1;
     }
 
-
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)   {
+    public View getView(int position, View convertView, ViewGroup parent) {
         boolean outgoing;
 
-        if (getItemViewType(position)==0)   {
-            outgoing = true;
-        } else {
-            outgoing = false;
-        }
+        outgoing = getItemViewType(position) == 0;
 
         int layout = outgoing ? R.layout.activity_chat_history_row_outgoing : R.layout.activity_chat_history_row_incoming;
         ChatMessage msg = getItem(position);
         ViewHolder holder;
         View listItem = convertView;
-        if (listItem == null)   {
-            listItem = LayoutInflater.from(mContext).inflate(layout, parent, false);
+        if (listItem == null) {
+            listItem = LayoutInflater.from(mContext)
+                                     .inflate(layout, parent, false);
             holder = new ViewHolder();
             //Set UI elements
             holder.layout = listItem.findViewById(R.id.chatMessageLayout);
 
             holder.tvMessage = listItem.findViewById(R.id.tvMessage);
             holder.tvTimestamp = listItem.findViewById(R.id.tvTime);
-            if(outgoing)    {
+            if (outgoing) {
                 holder.pbSending = listItem.findViewById(R.id.progressBar);
                 holder.ivSent = listItem.findViewById(R.id.sentImage);
             } else {
@@ -167,7 +163,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
         return listItem;
     }
 
-    public void add(ChatMessage unsentMessage)  {
+    public void add(ChatMessage unsentMessage) {
         unsentMessages.add(unsentMessage);
         notifyDataSetChanged();
     }
@@ -176,7 +172,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
         unsentMessages = unsent;
     }
 
-    public void removeUnsent(ChatMessage msg)   {
+    public void removeUnsent(ChatMessage msg) {
         unsentMessages.remove(msg);
     }
 

@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import android.location.Location
+import de.tum.`in`.tumcampusapp.activities.ChatActivity
 import de.tum.`in`.tumcampusapp.auxiliary.Utils
 import de.tum.`in`.tumcampusapp.managers.ChatMessageManager
 import de.tum.`in`.tumcampusapp.models.tumcabe.ChatMessage
@@ -24,9 +25,11 @@ import java.util.concurrent.TimeUnit
 class ChatMessageViewModel(private val localRepository: ChatMessageLocalRepository,
                            private val remoteRepository: ChatMessageRemoteRepository,
                            private val compositeDisposable: CompositeDisposable) : ViewModel() {
+
     /**
      * Returns a flowable that emits a list of chat messages from the local repository
      */
+
     fun markAsRead(room: Int) =
             localRepository.markAsRead(room)
 
@@ -73,7 +76,7 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                     .flatMap { remoteRepository.getMessages(roomId, messageId, verification) }
                     .observeOn(Schedulers.io())
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
-                    .subscribe({ t -> t.forEach {localRepository.addChatMessage(it)} })
+                    .subscribe({ t -> t.forEach { localRepository.addChatMessage(it) } })
             )
 
     fun getNewMessages(roomId: Int, verification: ChatVerification): Boolean =
@@ -82,29 +85,35 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                     .flatMap { remoteRepository.getNewMessages(roomId, verification) }
                     .observeOn(Schedulers.io())
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
-                    .subscribe({ t -> t.forEach {localRepository.addChatMessage(it)} })
+                    .subscribe({ t -> t.forEach { localRepository.addChatMessage(it) } })
             )
 
     fun sendMessage(roomId: Int, chatMessageCreate: ChatMessage): Boolean =
             compositeDisposable.add(Observable.just(1)
                     .subscribeOn(Schedulers.computation())
-                    .flatMap { remoteRepository.sendMessage(roomId, chatMessageCreate) }
+                    .flatMap {
+                        chatMessageCreate.sendingStatus = ChatMessage.STATUS_SENT
+                        remoteRepository.sendMessage(roomId, chatMessageCreate) }
                     .observeOn(Schedulers.io())
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
                     .subscribe({
                         it.sendingStatus = ChatMessage.STATUS_SENT
-                        localRepository.addChatMessage(it)})
+                        localRepository.addChatMessage(it)
+                    })
+
             )
 
     fun updateMessage(roomId: Int, message: ChatMessage): Boolean =
             compositeDisposable.add(Observable.just(1)
                     .subscribeOn(Schedulers.computation())
-                    .flatMap { remoteRepository.updateMessage(roomId, message) }
+                    .flatMap {
+                        remoteRepository.updateMessage(roomId, message) }
                     .observeOn(Schedulers.io())
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
                     .subscribe({
                         it.sendingStatus = ChatMessage.STATUS_SENT
-                        localRepository.addChatMessage(it) })
+                        localRepository.addChatMessage(it)
+                    })
 
             )
 

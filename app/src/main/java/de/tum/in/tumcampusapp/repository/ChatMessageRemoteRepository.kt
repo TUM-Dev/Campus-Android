@@ -8,9 +8,6 @@ import kotlin.properties.Delegates
 
 object ChatMessageRemoteRepository {
 
-    /*var roomId : Int by Delegates.notNull<Int>()
-    var messageId : Long by Delegates.notNull<Long>()
-    lateinit var verification : ChatVerification*/
     lateinit var tumCabeClient: TUMCabeClient
 
     fun getMessages(roomId: Int, messageId: Long, verification: ChatVerification): Observable<List<ChatMessage>> = tumCabeClient.getMessages(roomId, messageId, verification)

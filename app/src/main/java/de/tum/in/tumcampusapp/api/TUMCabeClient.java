@@ -78,6 +78,7 @@ public class TUMCabeClient {
     static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
     static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
+    static final String API_KINOS = "kino/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;

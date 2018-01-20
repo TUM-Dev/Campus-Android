@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.database.dao.SyncDao;
 import de.tum.in.tumcampusapp.database.dao.TumLockDao;
 import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatMessageDao;
+import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
@@ -54,8 +54,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
         TumLock.class,
         BuildingToGps.class,
         Kino.class,
-        Location.class,
-        ChatMessage.class
+        ChatMessage.class,
         Location.class,
         News.class,
         NewsSources.class,

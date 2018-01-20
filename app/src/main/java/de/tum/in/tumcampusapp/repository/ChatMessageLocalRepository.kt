@@ -4,6 +4,7 @@ package de.tum.`in`.tumcampusapp.repository
 import android.support.v7.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.auxiliary.Utils
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.managers.ChatMessageManager
 import de.tum.`in`.tumcampusapp.models.tumcabe.ChatMessage
 import de.tum.`in`.tumcampusapp.models.dbEntities.Sync
 import de.tum.`in`.tumcampusapp.notifications.Chat
@@ -12,23 +13,14 @@ import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-object ChatMessageLocalRepository   {
-
-    const val COL_ID = 0;
-    const val COL_PREVIOUS = 1;
-    const val COL_ROOM = 2;
-    const val COL_TEXT = 3;
-    const val COL_TIMESTAMP = 4;
-    const val COL_SIGNATURE = 5;
-    const val COL_MEMBER = 6;
-    const val COL_READ = 7;
-    const val COL_SENDING = 8;
+object ChatMessageLocalRepository {
 
     private val executor: Executor = Executors.newSingleThreadExecutor();
 
     lateinit var db: TcaDb
 
     //ChatMessage methods
+
     fun markAsRead(room: Int) =
             executor.execute { db.chatMessageDao().markAsRead(room) }
 
@@ -68,9 +60,4 @@ object ChatMessageLocalRepository   {
     fun replaceMessage(chatMessage: ChatMessage) =
             executor.execute { db.chatMessageDao().replaceMessage(chatMessage) }
 
-    // Sync methods??
-
-/*
-    fun removeUnsent(id: Int) = db.chatMessageDao().removeUnsentMessage(id)
-*/
 }
