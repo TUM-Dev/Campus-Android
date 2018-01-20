@@ -59,4 +59,10 @@ public interface CalendarDao {
            "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
            "ORDER BY dtend, dtstart LIMIT 4")
     List<CalendarItem> getNextCalendarItems();
+
+    @Query("SELECT * FROM calendar WHERE dtstart LIKE '%' || :start AND dtend LIKE '%' || :end ")
+    CalendarItem getCalendarItemByStartAndEndTime(String start, String end);
+
+    @Query("SELECT * FROM calendar WHERE nr=:id")
+    CalendarItem getCalendarItemById(String id);
 }

@@ -23,11 +23,6 @@ import com.google.common.escape.Escaper;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
-import org.joda.time.format.DateTimeParser;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.BuildConfig;
 
@@ -146,6 +143,12 @@ public final class Utils {
             log(e, str);
         }
         return date;
+    }
+
+    public static String getEventDateString(Date begin, Date end) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        return String.format("%s %s - %s", dateFormat.format(begin), timeFormat.format(begin), timeFormat.format(end));
     }
 
     /**
@@ -642,4 +645,16 @@ public final class Utils {
         }
         return ((float) level / (float) scale) * 100.0f;
     }
+
+    public static String extractRoomNumberFromLocation(String location){
+        Pattern pattern = Pattern.compile("\\((.*?)\\)");
+        Matcher matcher = pattern.matcher(location);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        else {
+            return location;
+        }
+    }
+
 }
