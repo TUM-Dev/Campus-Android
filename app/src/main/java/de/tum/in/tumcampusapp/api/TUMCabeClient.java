@@ -2,10 +2,15 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
@@ -22,6 +27,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
+import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
@@ -30,10 +36,12 @@ import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 
@@ -71,6 +79,8 @@ public class TUMCabeClient {
     static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
     static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
+    static final String API_CAFETERIAS = "mensen/";
+    static final String API_KINOS = "kino/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -78,7 +88,11 @@ public class TUMCabeClient {
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
-                .addConverterFactory(GsonConverterFactory.create());
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
+        Gson gson = new GsonBuilder().
+                registerTypeAdapter(Date.class,new DateSerializer())
+                .create();
+        builder.addConverterFactory(GsonConverterFactory.create(gson));
 
         builder.client(Helper.getOkClient(c));
         service = builder.build()
@@ -161,28 +175,21 @@ public class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public ChatMessage sendMessage(int roomId, ChatMessage chatMessageCreate) throws IOException {
-        return service.sendMessage(roomId, chatMessageCreate)
-                      .execute()
-                      .body();
+    public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessageCreate) throws IOException {
+        return service.sendMessage(roomId, chatMessageCreate);
+
     }
 
-    public ChatMessage updateMessage(int roomId, ChatMessage message) throws IOException {
-        return service.updateMessage(roomId, message.getId(), message)
-                      .execute()
-                      .body();
+    public Observable<ChatMessage> updateMessage(int roomId, ChatMessage message) throws IOException {
+        return service.updateMessage(roomId, message.getId(), message);
+    }
+    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
+        return service.getMessages(roomId, messageId, verification);
     }
 
-    public List<ChatMessage> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
-        return service.getMessages(roomId, messageId, verification)
-                      .execute()
-                      .body();
-    }
+    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
+        return service.getNewMessages(roomId, verification);
 
-    public List<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
-        return service.getNewMessages(roomId, verification)
-                      .execute()
-                      .body();
     }
 
     public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) throws IOException {
@@ -333,4 +340,13 @@ public class TUMCabeClient {
                       .execute()
                       .body();
     }
+
+    public Observable<List<Cafeteria>> getCafeterias() {
+        return service.getCafeterias();
+    }
+
+    public Observable<List<Kino>> getKinos(String lastId){
+        return service.getKinos(lastId);
+    }
+
 }

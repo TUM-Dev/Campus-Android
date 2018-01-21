@@ -7,16 +7,22 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 
-import java.io.IOException;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.activities.ChatActivity;
+import de.tum.in.tumcampusapp.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
+import de.tum.in.tumcampusapp.repository.ChatMessageLocalRepository;
+import de.tum.in.tumcampusapp.repository.ChatMessageRemoteRepository;
+import de.tum.in.tumcampusapp.viewmodel.ChatMessageViewModel;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.SEND_MESSAGE_SERVICE_JOB_ID;
 
@@ -26,6 +32,7 @@ import static de.tum.in.tumcampusapp.auxiliary.Const.SEND_MESSAGE_SERVICE_JOB_ID
 public class SendMessageService extends JobIntentService {
 
     public static final int MAX_SEND_TRIES = 5;
+
     /**
      * Interval in milliseconds to check for current lectures
      */
@@ -36,8 +43,17 @@ public class SendMessageService extends JobIntentService {
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
+        TcaDb tcaDb = TcaDb.getInstance(this);
+        final CompositeDisposable mDisposable = new CompositeDisposable();
+        ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+        ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
+        localRepository.setDb(tcaDb);
+        ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, mDisposable);
+        chatMessageViewModel.deleteOldEntries();
+
         // Get all unsent messages from database
-        List<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
+        List<ChatMessage> unsentMsg = chatMessageViewModel.getAllUnsentList();
         if (unsentMsg.isEmpty()) {
             return;
         }
@@ -53,23 +69,24 @@ public class SendMessageService extends JobIntentService {
                     message.setSignature(am.sign(message.getText()));
 
                     // Send the message to the server
-                    ChatMessage createdMessage;
                     if (message.getId() == 0) { //If the id is zero then its an new entry otherwise try to update it
-                        createdMessage = TUMCabeClient.getInstance(this)
-                                                      .sendMessage(message.getRoom(), message);
-                        Utils.logv("successfully sent message: " + createdMessage.getText());
+                        chatMessageViewModel.sendMessage(message.getRoom(), message);
+                        Utils.logv("successfully sent message: " + message.getText());
                     } else {
-                        createdMessage = TUMCabeClient.getInstance(this)
-                                                      .updateMessage(message.getRoom(), message);
-                        Utils.logv("successfully updated message: " + createdMessage.getText());
+                        chatMessageViewModel.updateMessage(message.getRoom(), message);
+
+                        Utils.logv("successfully updated message: " + message.getText());
                     }
 
+                   /* try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        Utils.log(e);
+                    }*/
                     //Update the status on the ui
-                    createdMessage.setStatus(ChatMessage.STATUS_SENT);
-                    ChatMessageManager messageManager = new ChatMessageManager(this, message.getRoom());
-                    messageManager.replaceInto(createdMessage, message.getMember()
-                                                                      .getId());
-                    messageManager.removeFromUnsent(message);
+                    chatMessageViewModel.deleteOldEntries();
+
+                    chatMessageViewModel.removeUnsentMessage(message.internalID);
 
                     // Send broadcast to eventually open ChatActivity
                     Intent i = new Intent("chat-message-received");
@@ -85,8 +102,7 @@ public class SendMessageService extends JobIntentService {
                 return;
             } catch (NoPrivateKey noPrivateKey) {
                 return; //Nothing can be done, just exit
-            } catch (IOException e) {
-                Utils.log(e);
+            } catch (Exception e) {
                 numberOfAttempts++;
             }
 

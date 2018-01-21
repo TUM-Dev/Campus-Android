@@ -20,7 +20,8 @@ import de.tum.in.tumcampusapp.activities.ChatActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
-import de.tum.in.tumcampusapp.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 
@@ -31,13 +32,16 @@ import static de.tum.in.tumcampusapp.managers.CardManager.CARD_CHAT;
  */
 public class ChatMessagesCard extends NotificationAwareCard {
     private List<ChatMessage> mUnread;
-    private ChatMessageManager manager;
     private String mRoomName;
     private int mRoomId;
     private String mRoomIdString;
+    private final ChatMessageDao chatMessageDao;
+
 
     public ChatMessagesCard(Context context) {
         super(CARD_CHAT, context, "card_chat");
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        chatMessageDao = tcaDb.chatMessageDao();
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -85,8 +89,8 @@ public class ChatMessagesCard extends NotificationAwareCard {
         mRoomName = mRoomName.replaceAll("\\([A-Z]+[0-9]+\\)", "");
         mRoomName = mRoomName.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
         mRoomName = mRoomName.trim();
-        manager = new ChatMessageManager(mContext, roomId);
-        mUnread = manager.getLastUnread();
+        chatMessageDao.deleteOldEntries();
+        mUnread = chatMessageDao.getLastUnread(roomId);
         mRoomIdString = roomIdString;
         mRoomId = roomId;
     }
@@ -109,7 +113,7 @@ public class ChatMessagesCard extends NotificationAwareCard {
 
     @Override
     protected void discard(Editor editor) {
-        manager.markAsRead();
+        chatMessageDao.markAsRead(getId());
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.google.common.base.Optional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
@@ -84,7 +85,7 @@ public class LocationManager {
      *
      * @return Returns the more or less current position or null on failure
      */
-    private Location getCurrentLocation() {
+    public Location getCurrentLocation() {
         if (servicesConnected()) {
             Location loc = getLastLocation();
             if (loc != null) {
@@ -127,7 +128,7 @@ public class LocationManager {
      * @param location The location to search for a campus
      * @return Campus id
      */
-    private static int getCampusFromLocation(Location location) {
+    public static int getCampusFromLocation(Location location) {
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
         float[] results = new float[1];
@@ -161,7 +162,7 @@ public class LocationManager {
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
         float[] results = new float[1];
-        List<Cafeteria> list = cafeteriaDao.getAll();
+        List<Cafeteria> list = new LinkedList<>();// cafeteriaDao.getAll();
         for (Cafeteria cafeteria : list) {
             Location.distanceBetween(cafeteria.getLatitude(), cafeteria.getLongitude(), lat, lng, results);
             cafeteria.setDistance(results[0]);
@@ -176,7 +177,7 @@ public class LocationManager {
      *
      * @return Any of the above described locations.
      */
-    private
+    public
     @NonNull
     Location getCurrentOrNextLocation() {
         Location l = getCurrentLocation();
