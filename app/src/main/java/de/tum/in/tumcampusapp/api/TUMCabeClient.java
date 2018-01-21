@@ -175,28 +175,21 @@ public class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public ChatMessage sendMessage(int roomId, ChatMessage chatMessageCreate) throws IOException {
-        return service.sendMessage(roomId, chatMessageCreate)
-                      .execute()
-                      .body();
+    public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessageCreate) throws IOException {
+        return service.sendMessage(roomId, chatMessageCreate);
+
     }
 
-    public ChatMessage updateMessage(int roomId, ChatMessage message) throws IOException {
-        return service.updateMessage(roomId, message.getId(), message)
-                      .execute()
-                      .body();
+    public Observable<ChatMessage> updateMessage(int roomId, ChatMessage message) throws IOException {
+        return service.updateMessage(roomId, message.getId(), message);
+    }
+    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
+        return service.getMessages(roomId, messageId, verification);
     }
 
-    public List<ChatMessage> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
-        return service.getMessages(roomId, messageId, verification)
-                      .execute()
-                      .body();
-    }
+    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
+        return service.getNewMessages(roomId, verification);
 
-    public List<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
-        return service.getNewMessages(roomId, verification)
-                      .execute()
-                      .body();
     }
 
     public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) throws IOException {
