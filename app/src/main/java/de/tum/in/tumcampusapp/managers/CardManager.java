@@ -56,10 +56,10 @@ public final class CardManager {
         if (card.getPosition() == -1) {
             card.setPosition(newCards.size());
         }
-
-        newCards.add(card);
-
-        Collections.sort(newCards);
+        synchronized (newCards) {
+            newCards.add(card);
+            Collections.sort(newCards);
+        }
     }
 
     /**
