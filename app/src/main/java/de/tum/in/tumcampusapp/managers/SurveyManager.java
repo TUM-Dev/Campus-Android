@@ -16,6 +16,12 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.FacultyDao;
+import de.tum.in.tumcampusapp.database.dao.OpenQuestionsDao;
+import de.tum.in.tumcampusapp.database.dao.OwnQuestionsDao;
+import de.tum.in.tumcampusapp.models.dbEntities.OpenQuestions;
+import de.tum.in.tumcampusapp.models.dbEntities.OwnQuestions;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import retrofit2.Call;
@@ -27,6 +33,10 @@ import retrofit2.Response;
  */
 public class SurveyManager extends AbstractManager implements Card.ProvidesCard {
 
+    private final FacultyDao facultyDao;
+    private final OpenQuestionsDao openQuestionsDao;
+    private final OwnQuestionsDao ownQuestionsDao;
+
     /**
      * Constructor for creating tables if needed
      *
@@ -34,9 +44,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      */
     public SurveyManager(Context context) {
         super(context);
-        db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)"); // for facultyData
-        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)"); // for SurveyCard
-        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
+        facultyDao = TcaDb.getInstance(context).facultyDao();
+        openQuestionsDao = TcaDb.getInstance(context).openQuestionsDao();
+        ownQuestionsDao = TcaDb.getInstance(context).ownQuestionsDao();
     }
 
     /**
@@ -121,7 +131,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param q
      */
     void replaceIntoDBOpenQuestions(Question q) {
-        try (Cursor c = db.rawQuery("SELECT answerid FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()})) {
+        try (Cursor c = openQuestionsDao.getQuestionById(Integer.parseInt(q.getQuestion()))) {
             // if question doesn't exist, then insert it
             if (!c.moveToFirst()) {
                 ContentValues cv = new ContentValues();
@@ -152,7 +162,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @return all faculties (id and name)
      */
     public Cursor getAllFaculties() {
-        return db.rawQuery("SELECT * FROM faculties", null);
+        return facultyDao.getAll();
     }
 
     /**
@@ -163,7 +173,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @return
      */
     public Cursor getUnansweredQuestionsSince(String date) {
-        return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0 AND end >= '" + date + "'", null);
+        return openQuestionsDao.getUnansweredQuestions(date);
     }
 
     /**
@@ -175,7 +185,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @return relevant ownQuestions
      */
     public Cursor getMyRelevantOwnQuestionsSince(String date) {
-        return db.rawQuery("SELECT * FROM ownQuestions where deleted = 0 AND end >= '" + date + "'", null);
+        return ownQuestionsDao.getFromEndDate(date);
     }
 
     /**
@@ -238,7 +248,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * Syncs answered but not yet synced responses with server
      */
     public void syncOpenQuestionsTable() {
-        try (Cursor cursor = db.rawQuery("SELECT question, answerid FROM openQuestions WHERE synced=0 AND answered=1", null)) {
+        try (Cursor cursor = openQuestionsDao.getAnsweredNotSynced()) {
             // In case there are answered but not yet synced questions in local db
             while (cursor.moveToNext()) {
                 Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")), cursor.getInt(cursor.getColumnIndex("answerid")));
@@ -274,7 +284,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @return questions created since a given date
      */
     public Cursor ownQuestionsSince(String weekAgo) {
-        return db.rawQuery("SELECT created FROM ownQuestions WHERE created >= '" + weekAgo + "'", null);
+        return ownQuestionsDao.getFromCreatedDate(weekAgo);
     }
 
     /**
@@ -284,11 +294,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @return faculty ID for a given faculty name
      */
     public Cursor getFacultyID(String facultyName) {
-        return db.rawQuery("SELECT faculty FROM faculties WHERE name=?", new String[]{facultyName});
+        return facultyDao.getFacultyIdByName(facultyName);
     }
 
     public Cursor getFacultyName(String facultyID) {
-        return db.rawQuery("SELECT name FROM faculties WHERE faculty=?", new String[]{facultyID});
+        return facultyDao.getFacultyNameById(facultyID);
     }
 
     /**
@@ -309,14 +319,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             return;
         }
 
-        db.beginTransaction();
-        try {
-            for (int i = 0; i < faculties.size(); i++) {
-                replaceIntoDb(faculties.get(i));
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
+
+        for (int i = 0; i < faculties.size(); i++) {
+            replaceIntoDb(faculties.get(i));
         }
     }
 
@@ -327,22 +332,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param f: a given faculty
      */
     void replaceIntoDb(Faculty f) {
-        try (Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?", new String[]{f.getFaculty()})) {
-            db.beginTransaction();
-            ContentValues cv = new ContentValues();
-            if (c.moveToFirst()) { // if faculty exists, update name
-                cv.put("name", f.getName());
-                db.update("faculties", cv, "faculty = ?", new String[]{f.getFaculty()});
-                db.setTransactionSuccessful();
-            } else { // else inserts new faculty
-                cv.put("faculty", f.getFaculty());
-                cv.put("name", f.getName());
-                db.insert("faculties", null, cv);
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
+        facultyDao.insert(f);
     }
 
     /**
@@ -371,7 +361,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param q
      */
     void replaceIntoDbOwnQuestions(Question q) {
-        try (Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()})) {
+        try (Cursor c = ownQuestionsDao.getById(Integer.parseInt(q.getQuestion()))) {
             db.beginTransaction();
 
             if (c.moveToFirst()) {// update non-exsisting question fields in the db (false means don't update 'delete' and 'synced' fields

@@ -5,7 +5,12 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "ownQuestions")
 data class OwnQuestions(@PrimaryKey
-                         var id: String = "",
-                         var lastSync: String = "")
-
-//CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)
+                        var question: Int = -1,
+                        var test: String = "",
+                        var targetFac: String = "",
+                        var created: String = "",
+                        var end: String = "",
+                        var yes: Int = -1,
+                        var no: Int = -1,
+                        var deleted: Boolean = false,
+                        var synced: Boolean = false)
