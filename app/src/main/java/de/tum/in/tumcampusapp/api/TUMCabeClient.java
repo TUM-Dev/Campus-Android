@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
@@ -78,8 +79,8 @@ public class TUMCabeClient {
     static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
     static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
+    static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
-
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -92,6 +93,7 @@ public class TUMCabeClient {
                 registerTypeAdapter(Date.class,new DateSerializer())
                 .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
+
         builder.client(Helper.getOkClient(c));
         service = builder.build()
                          .create(TUMCabeAPIService.class);
@@ -344,6 +346,10 @@ public class TUMCabeClient {
                                      Helper.encodeUrl(start), Helper.encodeUrl(end))
                       .execute()
                       .body();
+    }
+
+    public Observable<List<Cafeteria>> getCafeterias() {
+        return service.getCafeterias();
     }
 
     public Observable<List<Kino>> getKinos(String lastId){

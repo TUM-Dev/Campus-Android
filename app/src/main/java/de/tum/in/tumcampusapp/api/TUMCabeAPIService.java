@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.api;
 
 import java.util.List;
 
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
@@ -44,6 +45,7 @@ import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_LIST_OF_
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_LIST_OF_TOILETS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_MORE_INFO;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_NERBY_FACILITIES;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CAFETERIAS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CURRICULA;
@@ -199,6 +201,9 @@ public interface TUMCabeAPIService {
     @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
     Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
                                                  @Path("start") String start, @Path("end") String end);
+
+    @GET(API_CAFETERIAS)
+    Observable<List<Cafeteria>> getCafeterias();
 
     @GET(API_KINOS+"{lastId}")
     Observable<List<Kino>> getKinos(@Path("lastId") String lastId);
