@@ -1,8 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.text.TextUtils;
 
 import java.io.IOException;
@@ -10,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;

@@ -3,6 +3,9 @@ package de.tum.`in`.tumcampusapp.models.dbEntities
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 
+/**
+ * Data class for questions that the user itself has asked.
+ */
 @Entity(tableName = "ownQuestions")
 data class OwnQuestions(@PrimaryKey
                         var question: Int = -1,
