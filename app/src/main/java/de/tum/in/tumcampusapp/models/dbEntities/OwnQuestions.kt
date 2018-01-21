@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 @Entity(tableName = "ownQuestions")
 data class OwnQuestions(@PrimaryKey
                         var question: Int = -1,
-                        var test: String = "",
+                        var text: String = "",
                         var targetFac: String = "",
                         var created: String = "",
                         var end: String = "",

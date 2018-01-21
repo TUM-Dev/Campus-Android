@@ -13,16 +13,13 @@ import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 @Dao
 public interface FacultyDao {
     @Query("SELECT * FROM faculties")
-    Cursor getAll();
+    List<Faculty> getAll();
 
     @Query("SELECT faculty FROM faculties WHERE name=:name")
-    Cursor getFacultyIdByName(String name);
+    String getFacultyIdByName(String name);
 
     @Query("SELECT name FROM faculties WHERE faculty=:id")
-    Cursor getFacultyNameById(String id);
-
-    @Query("SELECT * FROM faculties WHERE faculty=:id")
-    Cursor getById(String id);
+    String getFacultyNameById(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Faculty faculty);
