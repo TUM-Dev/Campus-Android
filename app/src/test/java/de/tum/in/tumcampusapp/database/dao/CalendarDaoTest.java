@@ -68,10 +68,11 @@ public class CalendarDaoTest {
      */
     @Test
     public void getAllNotCancelledAll() {
-        dao.insert(createCalendarItem("OPEN", DateTime.now()));
-        dao.insert(createCalendarItem("OTHER", DateTime.now()));
-        dao.insert(createCalendarItem("OTHER", DateTime.now()));
-        dao.insert(createCalendarItem("OPEN", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("OPEN", now));
+        dao.insert(createCalendarItem("OTHER", now));
+        dao.insert(createCalendarItem("OTHER", now));
+        dao.insert(createCalendarItem("OPEN", now));
 
         assertThat(dao.getAllNotCancelled()).hasSize(4);
     }
@@ -82,10 +83,11 @@ public class CalendarDaoTest {
      */
     @Test
     public void getAllNotCancelledSome() {
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("OTHER", DateTime.now()));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("OPEN", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("CANCEL", now));
+        dao.insert(createCalendarItem("OTHER", now));
+        dao.insert(createCalendarItem("CANCEL", now));
+        dao.insert(createCalendarItem("OPEN", now));
 
         assertThat(dao.getAllNotCancelled()).hasSize(2);
     }
@@ -96,10 +98,11 @@ public class CalendarDaoTest {
      */
     @Test
     public void getAllNotCancelledNone() {
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("CANCEL", now));
+        dao.insert(createCalendarItem("CANCEL", now));
+        dao.insert(createCalendarItem("CANCEL", now));
+        dao.insert(createCalendarItem("CANCEL", now));
 
         assertThat(dao.getAllNotCancelled()).hasSize(0);
     }
@@ -110,12 +113,13 @@ public class CalendarDaoTest {
      */
     @Test
     public void getAllByDateNotCancelledAll() {
-        dao.insert(createCalendarItem("OPEN", DateTime.now()));
-        dao.insert(createCalendarItem("OK", DateTime.now()));
-        dao.insert(createCalendarItem("OTHER", DateTime.now()));
-        dao.insert(createCalendarItem("DUNNO", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("OPEN", now));
+        dao.insert(createCalendarItem("OK", now));
+        dao.insert(createCalendarItem("OTHER", now));
+        dao.insert(createCalendarItem("DUNNO", now));
 
-        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(DateTime.now().toDate()))).hasSize(4);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(now.toDate()))).hasSize(4);
     }
 
     /**
@@ -124,12 +128,13 @@ public class CalendarDaoTest {
      */
     @Test
     public void getAllByDateNotCancelledSomeStatuses() {
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("OK", DateTime.now()));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("CANCEL", now));
+        dao.insert(createCalendarItem("OK", now));
+        dao.insert(createCalendarItem("CANCEL", now));
+        dao.insert(createCalendarItem("CANCEL", now));
 
-        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(DateTime.now().toDate()))).hasSize(1);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(now.toDate()))).hasSize(1);
     }
 
     /**
@@ -138,12 +143,13 @@ public class CalendarDaoTest {
      */
     @Test
     public void getAllByDateNotCancelledSomeDates() {
-        dao.insert(createCalendarItem("GO", DateTime.now().plusMonths(10)));
-        dao.insert(createCalendarItem("OK", DateTime.now()));
-        dao.insert(createCalendarItem("OTHER", DateTime.now().minusMonths(10)));
-        dao.insert(createCalendarItem("COOL", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GO", now.plusMonths(10)));
+        dao.insert(createCalendarItem("OK", now));
+        dao.insert(createCalendarItem("OTHER", now.minusMonths(10)));
+        dao.insert(createCalendarItem("COOL", now));
 
-        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(DateTime.now().toDate()))).hasSize(2);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(now.toDate()))).hasSize(2);
     }
 
     /**
@@ -152,12 +158,13 @@ public class CalendarDaoTest {
      */
     @Test
     public void getAllByDateNotCancelledNoneDates() {
-        dao.insert(createCalendarItem("GO", DateTime.now().plusMonths(10)));
-        dao.insert(createCalendarItem("OK", DateTime.now().plusDays(123)));
-        dao.insert(createCalendarItem("OTHER", DateTime.now().minusMonths(10)));
-        dao.insert(createCalendarItem("COOL", DateTime.now().minusDays(123)));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GO", now.plusMonths(10)));
+        dao.insert(createCalendarItem("OK", now.plusDays(123)));
+        dao.insert(createCalendarItem("OTHER", now.minusMonths(10)));
+        dao.insert(createCalendarItem("COOL", now.minusDays(123)));
 
-        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(DateTime.now().toDate()))).hasSize(0);
+        assertThat(dao.getAllByDateNotCancelled(Utils.getDateString(now.toDate()))).hasSize(0);
     }
 
     /**
@@ -195,13 +202,14 @@ public class CalendarDaoTest {
      */
     @Test
     public void getNextDaysAll() {
-        dao.insert(createCalendarItem("GOOD", DateTime.now().minusDays(3)));
-        dao.insert(createCalendarItem("OK", DateTime.now()));
-        dao.insert(createCalendarItem("DUNNO", DateTime.now().plusDays(3)));
-        dao.insert(createCalendarItem("YES", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GOOD", now.minusDays(3)));
+        dao.insert(createCalendarItem("OK", now));
+        dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
+        dao.insert(createCalendarItem("YES", now));
 
-        String from = Utils.getDateTimeString(DateTime.now().minusDays(4).toDate());
-        String to = Utils.getDateTimeString(DateTime.now().plusDays(4).toDate());
+        String from = Utils.getDateTimeString(now.minusDays(4).toDate());
+        String to = Utils.getDateTimeString(now.plusDays(4).toDate());
 
         // widgetId is used only for blacklisting
         assertThat(dao.getNextDays(from, to, "1")).hasSize(4);
@@ -213,13 +221,14 @@ public class CalendarDaoTest {
      */
     @Test
     public void getNextDaysSomeBlacklisted() {
-        dao.insert(createCalendarItem("GOOD", DateTime.now().minusDays(3)));
-        dao.insert(createCalendarItem("OK", DateTime.now()));
-        dao.insert(createCalendarItem("DUNNO", DateTime.now().plusDays(3)));
-        dao.insert(createCalendarItem("YES", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GOOD", now.minusDays(3)));
+        dao.insert(createCalendarItem("OK", now));
+        dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
+        dao.insert(createCalendarItem("YES", now));
 
-        String from = Utils.getDateTimeString(DateTime.now().minusDays(4).toDate());
-        String to = Utils.getDateTimeString(DateTime.now().plusDays(4).toDate());
+        String from = Utils.getDateTimeString(now.minusDays(4).toDate());
+        String to = Utils.getDateTimeString(now.plusDays(4).toDate());
 
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 0"));
 
@@ -233,13 +242,14 @@ public class CalendarDaoTest {
      */
     @Test
     public void getNextDaysSomeOutOfDateRange() {
-        dao.insert(createCalendarItem("GOOD", DateTime.now().minusDays(3)));
-        dao.insert(createCalendarItem("OK", DateTime.now()));
-        dao.insert(createCalendarItem("DUNNO", DateTime.now().plusDays(3)));
-        dao.insert(createCalendarItem("YES", DateTime.now()));
+        DateTime now = DateTime.now();
+        dao.insert(createCalendarItem("GOOD", now.minusDays(3)));
+        dao.insert(createCalendarItem("OK", now));
+        dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
+        dao.insert(createCalendarItem("YES", now));
 
-        String from = Utils.getDateTimeString(DateTime.now().minusDays(2).toDate());
-        String to = Utils.getDateTimeString(DateTime.now().plusDays(2).toDate());
+        String from = Utils.getDateTimeString(now.minusDays(2).toDate());
+        String to = Utils.getDateTimeString(now.plusDays(2).toDate());
 
         // widgetId is used only for blacklisting
         assertThat(dao.getNextDays(from, to, "1")).hasSize(2);

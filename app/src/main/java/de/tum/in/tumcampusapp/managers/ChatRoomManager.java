@@ -16,6 +16,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
@@ -39,6 +41,9 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
     public static final int COL_CONTRIBUTOR = 6;
     public static final int COL_MEMBERS = 7;
 
+    private final ChatMessageDao chatMessageDao;
+
+
     /**
      * Constructor, open/create database, create table if necessary
      *
@@ -46,7 +51,8 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      */
     public ChatRoomManager(Context context) {
         super(context);
-
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        chatMessageDao = tcaDb.chatMessageDao();
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (room INTEGER, name VARCHAR, " +
                    "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id))");
@@ -166,8 +172,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
     public void onRequestCard(Context context) {
         ChatRoomManager manager = new ChatRoomManager(context);
 
-        // Use this to make sure chat_message table exists
-        new ChatMessageManager(context, 0);
+        chatMessageDao.deleteOldEntries();
 
         // Get all of the users lectures and save them as possible chat rooms
         TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), context, true);

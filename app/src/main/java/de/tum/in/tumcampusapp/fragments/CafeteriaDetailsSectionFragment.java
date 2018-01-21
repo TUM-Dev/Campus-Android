@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -25,16 +26,20 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
 import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
 import de.tum.in.tumcampusapp.managers.OpenHoursManager;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaPrices;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
+import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.repository.CafeteriaRemoteRepository;
+import de.tum.in.tumcampusapp.viewmodel.CafeteriaViewModel;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Fragment for each cafeteria-page.
@@ -42,6 +47,18 @@ import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 public class CafeteriaDetailsSectionFragment extends Fragment {
     private static final Pattern SPLIT_ANNOTATIONS_PATTERN = Pattern.compile("\\(([A-Za-z0-9]+),");
     private static final Pattern NUMERICAL_ANNOTATIONS_PATTERN = Pattern.compile("\\(([1-9]|10|11)\\)");
+
+    private CafeteriaViewModel cafeteriaViewModel;
+    private final CompositeDisposable mDisposable = new CompositeDisposable();
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(getContext()));
+        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(getContext()));
+        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
+    }
 
     /**
      * Inflates the cafeteria menu layout.
@@ -54,7 +71,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * @param big         True to show big lines
      */
     @SuppressLint("ShowToast")
-    public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
+    public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big, List<CafeteriaMenu> cafeteriaMenus) {
         // initialize a few often used things
         final Context context = rootView.getContext();
         final Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(context);
@@ -63,11 +80,8 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         List<View> addedViews = new ArrayList<>(32);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TcaDb db = TcaDb.getInstance(context);
-        final CafeteriaMenuDao cafeteriaMenuDao = db.cafeteriaMenuDao();
         final FavoriteDishDao favoriteDishDao = db.favoriteDishDao();
 
-        // Get menu items
-        List<CafeteriaMenu> cafeteriaMenus = cafeteriaMenuDao.getTypeNameFromDbCard(cafeteriaId, dateStr);
         TextView textview;
         if (!big) {
             // Show opening hours
@@ -81,6 +95,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
         // Show cafeteria menu
         String curShort = "";
+
         for (CafeteriaMenu cafeteriaMenu : cafeteriaMenus) {
             String typeShort = cafeteriaMenu.getTypeShort();
             String typeLong = cafeteriaMenu.getTypeLong();
@@ -261,7 +276,13 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         LinearLayout root = rootView.findViewById(R.id.layout);
         int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
         String date = getArguments().getString(Const.DATE);
-        showMenu(root, cafeteriaId, date, true);
+        cafeteriaViewModel.getCafeteriaMenu(cafeteriaId,date).subscribe(menu-> showMenu(root, cafeteriaId, date, true, menu));
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDisposable.clear();
     }
 }
