@@ -184,6 +184,10 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         return lectures;
     }
 
+    public CalendarItem getCalendarItemByStartAndEndTime(Calendar start, Calendar end) {
+        return calendarDao.getCalendarItemByStartAndEndTime(Utils.getDateTimeString(start.getTime()), Utils.getDateTimeString(end.getTime()));
+    }
+
     public void importCalendar(CalendarRowSet myCalendarList) {
 
         // Cleanup cache before importing
