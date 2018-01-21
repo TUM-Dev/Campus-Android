@@ -424,6 +424,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         CalendarItem item = calendarManager.getCalendarItemByStartAndEndTime(weekViewEvent.getStartTime(), weekViewEvent.getEndTime());
         bundle.putString(CALENDAR_ID_PARAM, item.getNr());
         detailsFragment.setArguments(bundle);
-        detailsFragment.show(getSupportFragmentManager(), "CalendarDialog");
+        detailsFragment.show(getSupportFragmentManager(), null);
     }
 }

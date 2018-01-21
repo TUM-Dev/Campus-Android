@@ -7,6 +7,7 @@ import android.content.ContentValues
 import android.provider.CalendarContract
 import de.tum.`in`.tumcampusapp.auxiliary.Utils
 import de.tum.`in`.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
@@ -79,6 +80,16 @@ data class CalendarItem(@PrimaryKey
                 .replaceAll("")!!
                 .trim { it <= ' ' }
     }
+
+
+    fun getEventDateString(): String {
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val startDate = Utils.getDateTime(dtstart)
+        val endDate = Utils.getDateTime(dtend)
+        return String.format("%s %s - %s", dateFormat.format(startDate), timeFormat.format(startDate), timeFormat.format(endDate))
+    }
+
 
     /**
      * Prepares ContentValues object with related values plugged

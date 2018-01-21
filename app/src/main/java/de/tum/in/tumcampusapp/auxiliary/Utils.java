@@ -145,12 +145,6 @@ public final class Utils {
         return date;
     }
 
-    public static String getEventDateString(Date begin, Date end) {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        return String.format("%s %s - %s", dateFormat.format(begin), timeFormat.format(begin), timeFormat.format(end));
-    }
-
     /**
      * Get a value from the default shared preferences
      *

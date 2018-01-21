@@ -42,7 +42,7 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
         val descriptionTextView = view.findViewById<TextView>(R.id.bottomSheetDescriptionText)
 
         titleTextView.text = calendarItem.title
-        dateTextView.text = Utils.getEventDateString(Utils.getDateTime(calendarItem.dtstart), Utils.getDateTime(calendarItem.dtend))
+        dateTextView.text = calendarItem.getEventDateString()
         locationTextView.text = calendarItem.location
         descriptionTextView.text = calendarItem.description
         locationTextView.setOnClickListener { onLocationClicked(calendarItem.location) }
