@@ -147,4 +147,5 @@ object Const {
     const val DATE_ONLY = "yyyy-MM-dd"
 
     const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
+    const val CALENDAR_ID_PARAM = "calendar_id"
 }
