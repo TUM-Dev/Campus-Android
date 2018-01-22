@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import com.google.common.base.Optional;
 

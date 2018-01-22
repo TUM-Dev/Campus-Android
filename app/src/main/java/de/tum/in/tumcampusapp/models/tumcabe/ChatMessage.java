@@ -33,7 +33,6 @@ public class ChatMessage {
     private boolean read;
     @ColumnInfo(name = "sending")
     private int sendingStatus;
-    @Ignore
     @ColumnInfo(name = "msg_id")
     public int internalID;
 
@@ -53,7 +52,7 @@ public class ChatMessage {
 
     /**
      * Called when creating a new chat message
-     * int status
+     *
      * @param text   Chat message text
      * @param member Member who sent the message
      */

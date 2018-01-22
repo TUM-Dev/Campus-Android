@@ -29,5 +29,4 @@ class Converters {
     fun toMember(member: String): ChatMember {
         return Gson().fromJson<ChatMember>(member, ChatMember::class.java!!)
     }
-
 }

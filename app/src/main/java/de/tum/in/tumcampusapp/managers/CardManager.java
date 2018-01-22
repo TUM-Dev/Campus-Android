@@ -2,9 +2,12 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
@@ -14,6 +17,8 @@ import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+
+import static de.tum.in.tumcampusapp.auxiliary.Const.CARD_POSITION_PREFERENCE_SUFFIX;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -48,7 +53,13 @@ public final class CardManager {
      * @param card Card that should be added
      */
     public static void addCard(Card card) {
+        if (card.getPosition() == -1) {
+            card.setPosition(newCards.size());
+        }
+
         newCards.add(card);
+
+        Collections.sort(newCards);
     }
 
     /**
@@ -72,6 +83,16 @@ public final class CardManager {
      */
     public static Card getCard(int pos) {
         return cards.get(pos);
+    }
+
+    public static void restorePositions(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Editor editor = preferences.edit();
+        for(String s : preferences.getAll().keySet()){
+            if(s.endsWith(CARD_POSITION_PREFERENCE_SUFFIX))
+                editor.remove(s);
+        }
+        editor.apply();
     }
 
     /**
@@ -169,6 +190,7 @@ public final class CardManager {
              .apply();
         AbstractManager.getDb(context)
                        .execSQL("UPDATE news SET dismissed=0");
+        restorePositions(context);
     }
 
     public static List<Card> getCards() {

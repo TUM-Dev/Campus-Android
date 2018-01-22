@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
@@ -33,6 +32,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 public class NextLectureCard extends NotificationAwareCard {
 
@@ -162,28 +162,19 @@ public class NextLectureCard extends NotificationAwareCard {
         return notificationBuilder.build();
     }
 
-    public void setLectures(Cursor cur) {
-        do {
+    public void setLectures(List<de.tum.in.tumcampusapp.models.tumo.CalendarItem> calendarItems) {
+        for (de.tum.in.tumcampusapp.models.tumo.CalendarItem calendarItem: calendarItems) {
             CalendarItem item = new CalendarItem();
-            item.start = Utils.getDateTime(cur.getString(1));
-            item.end = Utils.getDateTime(cur.getString(2));
+            item.start = Utils.getDateTime(calendarItem.getDtstart());
+            item.end = Utils.getDateTime(calendarItem.getDtend());
 
             // Extract course title
-            item.title = cur.getString(0);
-            item.title = item.title.replaceAll("[A-Z, 0-9(LV\\.Nr)=]+$", "");
-            item.title = item.title.replaceAll("\\([A-Z]+[0-9]+\\)", "");
-            item.title = item.title.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
-            item.title = item.title.trim();
+            item.title = calendarItem.getFormattedTitle();
 
             // Handle location
-            item.location = cur.getString(3);
-            if (item.location != null) {
-                item.location = item.location.replaceAll("\\([A-Z0-9\\.]+\\)", "")
-                                             .trim();
-            }
+            item.location = calendarItem.getEventLocation();
             lectures.add(item);
-        } while (cur.moveToNext());
-        cur.close();
+        }
     }
 
     private static class CalendarItem {

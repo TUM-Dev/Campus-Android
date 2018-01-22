@@ -22,17 +22,19 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.managers.CacheManager;
-import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.NewsManager;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
 import de.tum.in.tumcampusapp.managers.SyncManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
+import de.tum.in.tumcampusapp.viewmodel.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.viewmodel.KinoViewModel;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -50,6 +52,7 @@ public class DownloadService extends JobIntentService {
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
     private LocalBroadcastManager broadcastManager;
+    private CafeteriaViewModel cafeteriaViewModel;
 
     private CompositeDisposable mDisposable = new CompositeDisposable();
     private KinoViewModel kinoViewModel;
@@ -163,8 +166,16 @@ public class DownloadService extends JobIntentService {
         super.onCreate();
         Utils.log("DownloadService service has started");
         broadcastManager = LocalBroadcastManager.getInstance(this);
-        // Init sync table
+
         new SyncManager(this);
+
+        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(this));
+        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
+
+        // Init sync table
         KinoLocalRepository.INSTANCE.setDb(TcaDb.getInstance(this));
         KinoRemoteRepository.INSTANCE.setTumCabeClient(TUMCabeClient.getInstance(this));
         kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, mDisposable);
@@ -173,6 +184,7 @@ public class DownloadService extends JobIntentService {
 
     @Override
     public void onDestroy() {
+        mDisposable.clear();
         super.onDestroy();
         Utils.log("DownloadService service has stopped");
     }
@@ -221,16 +233,10 @@ public class DownloadService extends JobIntentService {
     }
 
     private boolean downloadCafeterias(boolean force) {
-        try {
-            CafeteriaManager cm = new CafeteriaManager(this);
-            CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
-            cm.downloadFromExternal(force);
-            cmm.downloadFromExternal(this, force);
-            return true;
-        } catch (JSONException e) {
-            Utils.log(e);
-            return false;
-        }
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
+        cmm.downloadFromExternal(this, force);
+        cafeteriaViewModel.getCafeteriasFromService(force);
+        return true;
     }
 
     private boolean downLoadKino(boolean force) {

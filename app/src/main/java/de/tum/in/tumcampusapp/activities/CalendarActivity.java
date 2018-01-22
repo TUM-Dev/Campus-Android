@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -39,10 +38,14 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
+import de.tum.in.tumcampusapp.fragments.CalendarDetailsFragment;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 import de.tum.in.tumcampusapp.managers.SyncManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
+
+import static de.tum.in.tumcampusapp.auxiliary.Const.CALENDAR_ID_PARAM;
 
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
@@ -370,10 +373,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         //Probably refactor this to a good SQL query
         for (int curDay = 1; curDay <= daysInMonth; curDay++) {
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
-            try (Cursor cEvents = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()))) {
-                while (cEvents.moveToNext()) {
-                    events.add(new IntegratedCalendarEvent(cEvents));
-                }
+            List<CalendarItem> calendarItems = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()));
+            for (CalendarItem calendarItem: calendarItems) {
+                events.add(new IntegratedCalendarEvent(calendarItem));
             }
         }
 
@@ -417,9 +419,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
-        IntegratedCalendarEvent event = (IntegratedCalendarEvent) weekViewEvent;
-        Intent i = new Intent(this, RoomFinderDetailsActivity.class);
-        i.putExtra(RoomFinderDetailsActivity.EXTRA_LOCATION, event.getLocation());
-        this.startActivity(i);
+        CalendarDetailsFragment detailsFragment = new CalendarDetailsFragment();
+        Bundle bundle = new Bundle();
+        CalendarItem item = calendarManager.getCalendarItemByStartAndEndTime(weekViewEvent.getStartTime(), weekViewEvent.getEndTime());
+        bundle.putString(CALENDAR_ID_PARAM, item.getNr());
+        detailsFragment.setArguments(bundle);
+        detailsFragment.show(getSupportFragmentManager(), null);
     }
 }

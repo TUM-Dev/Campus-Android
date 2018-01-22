@@ -1,21 +1,7 @@
 package de.tum.`in`.tumcampusapp.activities
 
 import android.support.v4.view.ViewPager
-import android.util.Log
 import android.view.View
-
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.Robolectric
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
-
-import java.util.concurrent.Executor
-import java.util.concurrent.TimeUnit
-
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.adapters.KinoAdapter
@@ -25,15 +11,19 @@ import de.tum.`in`.tumcampusapp.models.tumcabe.Kino
 import de.tum.`in`.tumcampusapp.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.viewmodel.KinoViewModel
-import io.reactivex.Scheduler
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.internal.schedulers.ExecutorScheduler
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
-
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class)
@@ -42,24 +32,12 @@ class KinoActivityTest {
     private lateinit var dao: KinoDao
     private lateinit var viewModel:KinoViewModel
 
-    private lateinit var immediate: Scheduler
 
     @Before
     fun setUp() {
         val db =  TcaDb.getInstance(RuntimeEnvironment.application)
         KinoLocalRepository.db = db
         viewModel = KinoViewModel(KinoLocalRepository,KinoRemoteRepository, CompositeDisposable())
-        immediate = object : Scheduler() {
-            override fun scheduleDirect(run: Runnable,
-                                        delay: Long, unit: TimeUnit): Disposable {
-                return super.scheduleDirect(run, 0, unit)
-            }
-
-            override fun createWorker(): Scheduler.Worker {
-                return ExecutorScheduler.ExecutorWorker(
-                        Executor { it.run() })
-            }
-        }
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxJavaPlugins.setComputationSchedulerHandler { Schedulers.trampoline()  }
         RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.trampoline()  }
@@ -85,7 +63,6 @@ class KinoActivityTest {
         dao.insert(Kino())
         kinoActivity = Robolectric.buildActivity(KinoActivity::class.java).create().start().get()
         waitForUI()
-
         assertThat(kinoActivity!!.findViewById<View>(R.id.drawer_layout).visibility).isEqualTo(View.VISIBLE)
     }
 
@@ -111,7 +88,7 @@ class KinoActivityTest {
         dao.insert(Kino())
         kinoActivity = Robolectric.buildActivity(KinoActivity::class.java).create().start().get()
         waitForUI()
-
+        Thread.sleep(100)
         assertThat((kinoActivity!!.findViewById<View>(R.id.pager) as ViewPager).adapter!!.javaClass).isEqualTo(KinoAdapter::class.java)
     }
 
