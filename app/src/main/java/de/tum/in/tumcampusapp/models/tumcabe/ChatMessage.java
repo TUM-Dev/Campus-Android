@@ -52,7 +52,7 @@ public class ChatMessage {
 
     /**
      * Called when creating a new chat message
-     * int status
+     *
      * @param text   Chat message text
      * @param member Member who sent the message
      */
