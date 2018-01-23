@@ -8,11 +8,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
+import java.util.Date;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.services.MensaWidgetService;
+import io.reactivex.Flowable;
 
 /**
  * Implementation of Mensa Widget functionality.
@@ -29,12 +36,18 @@ public class MensaWidget extends AppWidgetProvider {
         this.appWidgetManager = appWidgetManager;
 
         for (int appWidgetId : appWidgetIds) {
+
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
 
             // set the header for the Widget layout
             CafeteriaManager mensaManager = new CafeteriaManager(context);
-            String mensaName = mensaManager.getBestMatchMensaName(context);
-            rv.setTextViewText(R.id.mensa_widget_header, mensaName);
+            CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
+            localRepository.setDb(TcaDb.getInstance(context));
+            Flowable<Cafeteria> cafeteria = localRepository.getCafeteria(mensaManager.getBestMatchMensaId(context));
+            String name = cafeteria.map(cafeteria1 -> cafeteria1.getName() + " " + Utils.getDateTimeString(new Date()))
+                                   .blockingFirst();
+            rv.setTextViewText(R.id.mensa_widget_header, name);
+
 
             // set the header on click to open the mensa activity
             Intent mensaIntent = new Intent(context, CafeteriaActivity.class);

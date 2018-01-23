@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -27,6 +28,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
+import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
@@ -64,13 +66,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                 SurveyManager sm = new SurveyManager(getApplicationContext());
                 sm.downloadFacultiesFromExternal();
 
-                try (Cursor cursor = sm.getAllFaculties()) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
-                        } while (cursor.moveToNext());
-                    }
+                List<Faculty> faculties = sm.getAllFaculties();
+                for (Faculty faculty: faculties) {
+                    fetchedFaculties.add(faculty.getName());
                 }
+
                 fetchedFaculties.add(0, getResources().getString(R.string.choose_own_faculty));
                 return fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
             }
@@ -100,13 +100,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         SurveyManager sm = new SurveyManager(getApplicationContext());
-
-                        try (Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i))) {
-                            if (c.moveToFirst()) {
-                                Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
-                                setDefaultCampus( c.getString(c.getColumnIndex("faculty")) );
-                                Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
-                            }
+                        String id = sm.getFacultyID((String) adapterView.getItemAtPosition(i));
+                        if (id != null) {
+                            Utils.setInternalSetting(getApplicationContext(), "user_major", id); // save faculty number in shared preferences
+                            setDefaultCampus( id );
+                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
                         if (selectedItem != null) {

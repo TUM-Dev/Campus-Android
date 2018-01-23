@@ -12,10 +12,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment;
+import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.repository.CafeteriaRemoteRepository;
+import de.tum.in.tumcampusapp.viewmodel.CafeteriaViewModel;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A {@link FragmentStatePagerAdapter} that returns a fragment corresponding to one
@@ -29,20 +34,25 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
      */
     private List<String> dates = new ArrayList<>();
 
+    private final CompositeDisposable mDisposable = new CompositeDisposable();
+
     public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
     public void setCafeteriaId(Context context, int cafeteriaId) {
         mCafeteriaId = cafeteriaId;
-
-        // get all (distinct) dates having menus available
-        dates = TcaDb.getInstance(context)
-                     .cafeteriaMenuDao()
-                     .getAllDates();
-
+        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(context));
+        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(context));
+        CafeteriaViewModel cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
+        cafeteriaViewModel.getAllMenuDates().subscribe(dates -> {
+            this.dates = dates;
+            this.notifyDataSetChanged();
+        });
         // Tell we just update the data
-        this.notifyDataSetChanged();
+
     }
 
     @Override
