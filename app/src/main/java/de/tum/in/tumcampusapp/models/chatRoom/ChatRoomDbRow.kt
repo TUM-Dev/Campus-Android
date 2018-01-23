@@ -15,7 +15,6 @@ data class ChatRoomDbRow(var room: Int = 0,
                          var id: Int = 0,
                          var contributor: String = "",
                          var members : Int = -1)    {
-    @ColumnInfo(name = "ts")
-    var timestamp: String = ""
-    var text: String = ""
+    var timestamp: String? = ""
+    var text: String? = ""
 }

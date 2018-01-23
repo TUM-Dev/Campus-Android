@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.database.dataAccessObjects;
+package de.tum.in.tumcampusapp.database.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
@@ -12,33 +12,17 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 @Dao
 public interface ChatRoomDao {
 
-    @Query("SELECT m.* " +
-           "FROM chat_room r " +
-           "LEFT JOIN (SELECT MAX(timestamp) timestamp, text, room, _id, previous, read, sending FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
-           "WHERE joined=1 " +
-           "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.timestamp) DESC, r.name")
-    List<ChatMessage> getTsAndTextRoomsJoined();
-
-    @Query("SELECT r.* " +
+    @Query("SELECT r.*, m.* " +
            "FROM chat_room r " +
            "LEFT JOIN (SELECT MAX(timestamp) timestamp, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
            "WHERE joined=1 " +
            "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.timestamp) DESC, r.name")
     List<ChatRoomDbRow> getAllRoomsJoinedList();
 
-    @Query("SELECT m.* " +
-           "FROM chat_room r " +
-           "LEFT JOIN (SELECT MAX(timestamp) timestamp, text, room,_id, previous, read, sending FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
-           "WHERE joined=0 OR joined=-1 " +
-           " " +
-           "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.timestamp) DESC, r.name")
-    List<ChatMessage> getTsAndTextRoomsNotJoined();
-
-    @Query("SELECT r.* " +
+    @Query("SELECT r.*, m.* " +
            "FROM chat_room r " +
            "LEFT JOIN (SELECT MAX(timestamp) timestamp, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
            "WHERE joined=0 OR joined=-1 " +
-           " " +
            "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.timestamp) DESC, r.name")
     List<ChatRoomDbRow> getAllRoomsNotJoinedList();
 

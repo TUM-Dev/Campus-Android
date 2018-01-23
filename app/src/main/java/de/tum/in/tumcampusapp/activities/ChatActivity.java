@@ -60,7 +60,11 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.repository.ChatMessageLocalRepository;
+import de.tum.in.tumcampusapp.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.services.SendMessageService;
+import de.tum.in.tumcampusapp.viewmodel.ChatMessageViewModel;
+import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,7 +101,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     private ChatMember currentChatMember;
     private boolean loadingMore;
     private ActionMode mActionMode;
-    private ChatMessageManager chatManager;
     private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         // Called when the action mode is created; startActionMode() was called

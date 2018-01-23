@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.google.common.base.Optional;
 
@@ -17,10 +16,9 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dataAccessObjects.ChatRoomDao;
+import de.tum.in.tumcampusapp.database.dao.ChatRoomDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
@@ -56,29 +54,11 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
 
 
     public List<ChatRoomDbRow> getAllByStatus(int joined) {
-        List<ChatMessage> msgs;
-        List<ChatRoomDbRow> rooms;
-        if (joined == 0) {
-            msgs = chatRoomDao.getTsAndTextRoomsNotJoined();
-            rooms = chatRoomDao.getAllRoomsNotJoinedList();
-            for(int i=0;i<rooms.size();i++) {
-                if(msgs.get(i).getTimestamp()!=null && msgs.get(i).getText()!=null) {
-                    rooms.get(i).setTimestamp(msgs.get(i).getTimestamp());
-                    rooms.get(i).setText(msgs.get(i).getText());
-                }
-            }
-            return rooms;
+        if (joined == 1)    {
+            return chatRoomDao.getAllRoomsJoinedList();
+        } else {
+            return chatRoomDao.getAllRoomsNotJoinedList();
         }
-        msgs = chatRoomDao.getTsAndTextRoomsJoined();
-        rooms = chatRoomDao.getAllRoomsJoinedList();
-        for(int i=0;i<rooms.size();i++) {
-            if (msgs.get(i).getTimestamp()!=null && msgs.get(i).getText()!=null)    {
-                rooms.get(i).setTimestamp(msgs.get(i).getTimestamp());
-                rooms.get(i).setText(msgs.get(i).getText());
-            }
-
-        }
-        return rooms;
     }
 
     /**
@@ -199,8 +179,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
         List<ChatRoomDbRow> rooms = chatRoomDao.getUnreadRooms();
         if (rooms.size() >= 1)  {
             for (ChatRoomDbRow room : rooms) {
-                ChatMessagesCard card = new ChatMessagesCard(context);
-                card.setChatRoom(room.getName(),room.getRoom(),room.getSemesterId() + ':' + room.getName());
+                ChatMessagesCard card = new ChatMessagesCard(context,room);
                 card.apply();
             }
         }

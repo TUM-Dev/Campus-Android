@@ -79,7 +79,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
 
         if(showDateAndNumber)   {
             holder.tvMembers.setText(Integer.toString(room.getMembers()));
-            holder.tvLastmsg.setText(DateUtils.getTimeOrDay(room.getTimestamp(), mContext));
+            holder.tvLastmsg.setText(DateUtils.getTimeOrDayISO(room.getTimestamp(), mContext));
             holder.llAdditionalInfo.setVisibility(View.VISIBLE);
         } else {
             holder.tvDozent.setText(room.getContributor());
@@ -132,7 +132,11 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
 
     @Override
     public long getItemId(int position) {
-        return rooms.get(position).getId();
+        if (rooms != null)  {
+            return rooms.get(position).getId();
+        } else {
+            return -1;
+        }
     }
 
     static class HeaderViewHolder {
