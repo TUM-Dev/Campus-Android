@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.google.common.base.Optional;
 
@@ -17,10 +16,11 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
+import de.tum.in.tumcampusapp.database.dao.ChatRoomDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
@@ -32,17 +32,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
  */
 public class ChatRoomManager extends AbstractManager implements Card.ProvidesCard {
 
-    public static final int COL_ROOM = 0;
-    public static final int COL_NAME = 1;
-    public static final int COL_SEMESTER = 2;
-    public static final int COL_SEMESTER_ID = 3;
-    public static final int COL_JOINED = 4;
-    public static final int COL_LV_NR = 5;
-    public static final int COL_CONTRIBUTOR = 6;
-    public static final int COL_MEMBERS = 7;
-
-    private final ChatMessageDao chatMessageDao;
-
+    private final ChatRoomDao chatRoomDao;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -52,10 +42,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
     public ChatRoomManager(Context context) {
         super(context);
         TcaDb tcaDb = TcaDb.getInstance(context);
-        chatMessageDao = tcaDb.chatMessageDao();
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (room INTEGER, name VARCHAR, " +
-                   "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id))");
+        chatRoomDao = tcaDb.chatRoomDao();
     }
 
     /**
@@ -64,37 +51,27 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      * @param joined chat room 1=joined, 0=not joined/left chat room, -1=not joined
      * @return List of chat messages
      */
-    public Cursor getAllByStatus(int joined) {
-        String condition = "joined=1";
-        if (joined == 0) {
-            condition = "joined=0 OR joined=-1";
-        }
 
-        return db.rawQuery("SELECT r.*, m.ts, m.text " +
-                           "FROM chat_room r " +
-                           "LEFT JOIN (SELECT MAX(timestamp) ts, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
-                           "WHERE " + condition + " " +
-                           " " +
-                           "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.ts) DESC, r.name", null);
+
+    public List<ChatRoomDbRow> getAllByStatus(int joined) {
+        if (joined == 1)    {
+            return chatRoomDao.getAllRoomsJoinedList();
+        } else {
+            return chatRoomDao.getAllRoomsNotJoinedList();
+        }
     }
 
     /**
      * Saves the given lecture into database
      */
     public void replaceInto(LecturesSearchRow lecture) {
-        try (Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?",
-                                      new String[]{lecture.getTitel(), lecture.getSemester_id()})) {
-            cur.moveToFirst();
-            if (cur.getCount() >= 1) {
-                db.execSQL("UPDATE chat_room SET semester=?, _id=?, contributor=? WHERE name=? AND semester_id=?",
-                           new String[]{lecture.getSemester_name(), lecture.getStp_lv_nr(),
-                                        lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id()});
-            } else {
-                db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
-                           "VALUES (-1,?,?,?,-1,?,?,0)",
-                           new String[]{lecture.getTitel(), lecture.getSemester_id(),
-                                        lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
-            }
+        List<Integer> givenLecture = chatRoomDao.getGivenLecture(lecture.getTitel(), lecture.getSemester_id());
+        if (givenLecture.size() >= 1) {
+            chatRoomDao.updateRoom(lecture.getSemester_name(), Integer.valueOf(lecture.getStp_lv_nr()),
+                                   lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id());
+        } else {
+            ChatRoomDbRow room = new ChatRoomDbRow(-1,lecture.getTitel(),lecture.getSemester_name(), lecture.getSemester_id(), -1, Integer.parseInt(lecture.getStp_lv_nr()), lecture.getVortragende_mitwirkende(), 0);
+            chatRoomDao.replaceRoom(room);
         }
     }
 
@@ -102,14 +79,13 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      * Saves the given lectures into database
      */
     public void replaceInto(List<LecturesSearchRow> lectures) {
-        db.beginTransaction();
         Collection<String> set;
-        try (Cursor cur = db.rawQuery("SELECT _id FROM chat_room", null)) {
-            set = new HashSet<>();
-            if (cur.moveToFirst()) {
-                do {
-                    set.add(cur.getString(COL_ROOM));
-                } while (cur.moveToNext());
+        List<Integer> roomIds = chatRoomDao.getIds();
+
+        set = new HashSet<>();
+        if (roomIds.size() >= 1) {
+            for(Integer id : roomIds)   {
+                set.add(String.valueOf(id));
             }
         }
 
@@ -118,8 +94,6 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                 replaceInto(lecture);
             }
         }
-        db.setTransactionSuccessful();
-        db.endTransaction();
     }
 
     /**
@@ -131,48 +105,45 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
             return;
         }
 
-        db.beginTransaction();
-        db.execSQL("UPDATE chat_room SET joined=0 WHERE joined=1");
+        chatRoomDao.markAsNotJoined();
         Utils.log("reset join status of all rooms");
         for (ChatRoom room : rooms) {
             Utils.log("Member of " + room.toString());
             String roomName = room.getName();
             String semester = "ZZZ";
             if (roomName.contains(":")) {
-                semester = roomName.substring(0, 3);
-                roomName = roomName.substring(4);
+                    semester = roomName.substring(0, 3);
+                    roomName = roomName.substring(4);
             }
             Utils.logv("members2 " + room.getMembers());
-            try (Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?", new String[]{roomName, semester})) {
-                cur.moveToFirst();
-                if (cur.getCount() >= 1) {
-                    db.execSQL("UPDATE chat_room SET room=?, joined=1, members=? WHERE name=? AND semester_id=?",
-                               new String[]{String.valueOf(room.getId()), String.valueOf(room.getMembers()), roomName, semester});
-                } else {
-                    db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
-                               "VALUES (?,?,?,'',1,0,'',?)", new String[]{String.valueOf(room.getId()), roomName, semester, String.valueOf(room.getMembers())});
-                }
+            List<Integer> roomIds = chatRoomDao.getGivenLecture(roomName,semester);
+            if (roomIds.size() >= 1) {
+                //in dao
+                chatRoomDao.updateRoomToJoined(room.getId(),room.getMembers(), roomName, semester);
+            } else {
+                ChatRoomDbRow chatRoom = new ChatRoomDbRow(room.getId(),roomName,"",semester,1,0,"",room.getMembers());
+                chatRoomDao.replaceRoom(chatRoom);
             }
         }
-        db.setTransactionSuccessful();
-        db.endTransaction();
+
+
+
     }
 
     public void join(ChatRoom currentChatRoom) {
-        db.execSQL("UPDATE chat_room SET room=?, joined=1 WHERE name=? AND semester_id=?",
-                   new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+        chatRoomDao.updateJoinedRooms(currentChatRoom.getId(),currentChatRoom.getName().substring(4),currentChatRoom.getName().substring(0,3));
     }
 
     public void leave(ChatRoom currentChatRoom) {
-        db.execSQL("UPDATE chat_room SET room=?, joined=0 WHERE name=? AND semester_id=?",
-                   new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+        chatRoomDao.updateLeftRooms(currentChatRoom.getId(),currentChatRoom.getName().substring(4),currentChatRoom.getName().substring(0,3));
     }
 
     @Override
     public void onRequestCard(Context context) {
         ChatRoomManager manager = new ChatRoomManager(context);
 
-        chatMessageDao.deleteOldEntries();
+        //Use this to make sure chat_message table exists (and maybe delete old entries)
+        new ChatMessageManager(context,0);
 
         // Get all of the users lectures and save them as possible chat rooms
         TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), context, true);
@@ -204,41 +175,25 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                 }
             }
         }
-
         // Get all rooms that have unread messages
-        try (Cursor cur = manager.getUnreadRooms()) {
-            if (cur.moveToFirst()) {
-                do {
-                    ChatMessagesCard card = new ChatMessagesCard(context);
-                    card.setChatRoom(cur.getString(0), cur.getInt(1), cur.getString(2) + ':' + cur.getString(0));
-                    card.apply();
-                } while (cur.moveToNext());
+        List<ChatRoomDbRow> rooms = chatRoomDao.getUnreadRooms();
+        if (rooms.size() >= 1)  {
+            for (ChatRoomDbRow room : rooms) {
+                ChatMessagesCard card = new ChatMessagesCard(context,room);
+                card.apply();
             }
         }
     }
 
     private List<String> getNewUnjoined() {
         List<String> list;
-        try (Cursor cursor = db.rawQuery("SELECT r.semester_id, r.name " +
-                                         "FROM chat_room r, (SELECT semester_id FROM chat_room " +
-                                         "WHERE (NOT semester_id IS NULL) AND semester_id!='' AND semester!='' " +
-                                         "ORDER BY semester_id DESC LIMIT 1) AS new " +
-                                         "WHERE r.semester_id=new.semester_id AND r.joined=-1", null)) {
-            list = new ArrayList<>(cursor.getCount());
-            if (cursor.moveToFirst()) {
-                do {
-                    list.add(cursor.getString(0) + ':' + cursor.getString(1));
-                } while (cursor.moveToNext());
+        List<ChatRoomDbRow> rooms = chatRoomDao.getNewUnjoined();
+        list = new ArrayList<>(rooms.size());
+        if (rooms.size() >= 1)  {
+            for(ChatRoomDbRow room : rooms) {
+                list.add(String.valueOf(room.getSemesterId() + ':' + room.getName()));
             }
         }
         return list;
-    }
-
-    private Cursor getUnreadRooms() {
-        return db.rawQuery("SELECT r.name,r.room,r.semester_id " +
-                           "FROM chat_room r, (SELECT room FROM chat_message " +
-                           "WHERE read=0 GROUP BY room) AS c " +
-                           "WHERE r.room=c.room " +
-                           "ORDER BY r.semester_id DESC, r.name", null);
     }
 }

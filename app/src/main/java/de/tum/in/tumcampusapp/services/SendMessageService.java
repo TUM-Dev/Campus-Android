@@ -69,6 +69,7 @@ public class SendMessageService extends JobIntentService {
                     message.setSignature(am.sign(message.getText()));
 
                     // Send the message to the server
+                    ChatMessage createdMessage;
                     if (message.getId() == 0) { //If the id is zero then its an new entry otherwise try to update it
                         chatMessageViewModel.sendMessage(message.getRoom(), message);
                         Utils.logv("successfully sent message: " + message.getText());
