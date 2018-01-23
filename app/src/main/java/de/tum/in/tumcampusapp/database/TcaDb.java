@@ -57,7 +57,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 
-@Database(version = 1, entities = {
+@Database(version = 2, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -140,6 +140,7 @@ public abstract class TcaDb extends RoomDatabase {
         if (instance == null || !instance.isOpen()) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
+                           .fallbackToDestructiveMigration()
                            .build();
         }
         return instance;
