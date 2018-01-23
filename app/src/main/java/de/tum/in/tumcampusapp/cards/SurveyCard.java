@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
+import de.tum.in.tumcampusapp.models.dbEntities.OpenQuestions;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 
 public class SurveyCard extends Card {
@@ -151,10 +152,9 @@ public class SurveyCard extends Card {
         String currentDate = Utils.getDateTimeString(new Date());
         DateTime discardedTill = fmt.parseDateTime(p.getString(SURVEY_CARD_DISCARDED_TILL, DateTime.now()
                                                                                                    .toString(fmt)));
-        try (Cursor cursor = manager.getUnansweredQuestionsSince(currentDate)) {
-            return discardedTill.isBeforeNow() &&
-                   cursor.getCount() >= 1;
-        }
+        List<OpenQuestions> unansweredQuestions = manager.getUnansweredQuestionsSince(currentDate);
+        return discardedTill.isBeforeNow() &&
+                   unansweredQuestions.size() >= 1;
     }
 
     @Override
@@ -170,13 +170,12 @@ public class SurveyCard extends Card {
     /**
      * Sets the open questions (fetched from the server) in the  card
      *
-     * @param cur: comprises the fetched open Questions from the server
      */
-    public void setQuestions(Cursor cur) {
-        do {
-            Question item = new Question(cur.getString(0), cur.getString(1));
+    public void setQuestions(List<OpenQuestions> unansweredQuestions) {
+        for (OpenQuestions unansweredQuestion: unansweredQuestions) {
+            Question item = new Question(Integer.toString(unansweredQuestion.getQuestion()),
+                                         unansweredQuestion.getText());
             questions.add(item);
-        } while (cur.moveToNext());
-        cur.close();
+        }
     }
 }

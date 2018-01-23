@@ -10,12 +10,15 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dao.FacultyDao;
 import de.tum.in.tumcampusapp.database.dao.CalendarDao;
 import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
 import de.tum.in.tumcampusapp.database.dao.KinoDao;
 import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.database.dao.NewsDao;
 import de.tum.in.tumcampusapp.database.dao.NewsSourcesDao;
+import de.tum.in.tumcampusapp.database.dao.OpenQuestionsDao;
+import de.tum.in.tumcampusapp.database.dao.OwnQuestionsDao;
 import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
 import de.tum.in.tumcampusapp.database.dao.NotificationDao;
 import de.tum.in.tumcampusapp.database.dao.RecentsDao;
@@ -31,6 +34,8 @@ import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.models.dbEntities.OpenQuestions;
+import de.tum.in.tumcampusapp.models.dbEntities.OwnQuestions;
 import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
 import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.dbEntities.Sync;
@@ -40,6 +45,7 @@ import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.transport.TransportFavorites;
 import de.tum.in.tumcampusapp.models.transport.WidgetsTransport;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
+import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.News;
@@ -66,6 +72,9 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
         WidgetsTimetableBlacklist.class,
         WifiMeasurement.class,
         Recent.class,
+        Faculty.class,
+        OpenQuestions.class,
+        OwnQuestions.class,
         StudyRoomGroup.class,
         StudyRoom.class,
         GCMNotification.class,
@@ -105,6 +114,12 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract WifiMeasurementDao wifiMeasurementDao();
 
     public abstract RecentsDao recentsDao();
+
+    public abstract FacultyDao facultyDao();
+
+    public abstract OpenQuestionsDao openQuestionsDao();
+
+    public abstract OwnQuestionsDao ownQuestionsDao();
 
     public abstract StudyRoomGroupDao studyRoomGroupDao();
 
