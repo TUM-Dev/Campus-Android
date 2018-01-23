@@ -13,8 +13,8 @@ import de.tum.in.tumcampusapp.models.transport.WidgetsTransport;
 @Dao
 public interface TransportDao {
 
-    @Query("SELECT * FROM transport_favorites WHERE symbol = :symbol")
-    List<TransportFavorites> getFavorites(String symbol);
+    @Query("SELECT EXISTS(SELECT * FROM transport_favorites WHERE symbol = :symbol)")
+    boolean isFavorite(String symbol);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addFavorite(TransportFavorites transportFavorites);
@@ -23,7 +23,7 @@ public interface TransportDao {
     void deleteFavorite(String symbol);
 
     @Query("SELECT * FROM widgets_transport WHERE id = :id")
-    List<WidgetsTransport> getAllWithId(int id);
+    WidgetsTransport getAllWithId(int id);
 
     @Query("DELETE FROM widgets_transport WHERE id = :id")
     void deleteWidget(int id);

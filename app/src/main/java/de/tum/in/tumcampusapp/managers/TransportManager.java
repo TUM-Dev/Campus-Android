@@ -148,8 +148,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @return True, if favorite
      */
     public boolean isFavorite(String symbol) {
-        List<TransportFavorites> favorites = transportDao.getFavorites(symbol);
-        return favorites.size() > 0;
+        return transportDao.isFavorite(symbol);
     }
 
     /**
@@ -212,13 +211,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             return TransportManager.widgetDeparturesList.get(widgetId);
         }
         WidgetDepartures widgetDepartures;
-        List<WidgetsTransport> widgetsTransports = transportDao.getAllWithId(widgetId);
+        WidgetsTransport widgetsTransports = transportDao.getAllWithId(widgetId);
         widgetDepartures = new WidgetDepartures();
-        if(widgetsTransports.size() >= 1)   {
-            widgetDepartures.setStation(widgetsTransports.get(0).getStation());
-            widgetDepartures.setStationId(widgetsTransports.get(0).getStationId());
-            widgetDepartures.setUseLocation(widgetsTransports.get(0).getLocation());
-            widgetDepartures.setAutoReload(widgetsTransports.get(0).getReload());
+        if(widgetsTransports != null)   {
+            widgetDepartures.setStation(widgetsTransports.getStation());
+            widgetDepartures.setStationId(widgetsTransports.getStationId());
+            widgetDepartures.setUseLocation(widgetsTransports.getLocation());
+            widgetDepartures.setAutoReload(widgetsTransports.getReload());
         }
         TransportManager.widgetDeparturesList.put(widgetId, widgetDepartures);
         return widgetDepartures;
