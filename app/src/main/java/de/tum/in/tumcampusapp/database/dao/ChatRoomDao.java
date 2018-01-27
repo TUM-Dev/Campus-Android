@@ -4,10 +4,10 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+
 import java.util.List;
 
 import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
 @Dao
 public interface ChatRoomDao {
@@ -66,4 +66,7 @@ public interface ChatRoomDao {
            "WHERE r.room=c.room " +
            "ORDER BY r.semester_id DESC, r.name")
     List<ChatRoomDbRow> getUnreadRooms();
+
+    @Query("DELETE FROM chat_room")
+    void removeCache();
 }

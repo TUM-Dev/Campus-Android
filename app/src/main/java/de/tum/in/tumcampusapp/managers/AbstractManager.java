@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.io.File;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.services.BackgroundService;
 import de.tum.in.tumcampusapp.services.DownloadService;
 import de.tum.in.tumcampusapp.services.SendMessageService;
@@ -64,32 +65,42 @@ public class AbstractManager {
 
         db.beginTransaction();
         try {
-            db.execSQL("DROP TABLE IF EXISTS cafeterias");
-            db.execSQL("DROP TABLE IF EXISTS cafeterias_menus");
-            db.execSQL("DROP TABLE IF EXISTS calendar");
-            db.execSQL("DROP TABLE IF EXISTS kalendar_events");
-            db.execSQL("DROP TABLE IF EXISTS locations");
-            db.execSQL("DROP TABLE IF EXISTS news");
-            db.execSQL("DROP TABLE IF EXISTS news_sources");
-            db.execSQL("DROP TABLE IF EXISTS recents");
-            db.execSQL("DROP TABLE IF EXISTS room_locations");
-            db.execSQL("DROP TABLE IF EXISTS syncs");
+
             db.execSQL("DROP TABLE IF EXISTS suggestions_lecture");
             db.execSQL("DROP TABLE IF EXISTS suggestions_mvv");
             db.execSQL("DROP TABLE IF EXISTS suggestions_persons");
             db.execSQL("DROP TABLE IF EXISTS suggestions_rooms");
-            db.execSQL("DROP TABLE IF EXISTS unsent_chat_message");
-            db.execSQL("DROP TABLE IF EXISTS chat_message");
-            db.execSQL("DROP TABLE IF EXISTS chat_room");
-            db.execSQL("DROP TABLE IF EXISTS tumLocks");
-            db.execSQL("DROP TABLE IF EXISTS openQuestions");
-            db.execSQL("DROP TABLE IF EXISTS ownQuestions");
-            db.execSQL("DROP TABLE IF EXISTS faculties");
-            db.execSQL("DROP TABLE IF EXISTS transport_favorites");
+
             CacheManager.clearCache(c);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
+
+        TcaDb tdb = TcaDb.getInstance(c);
+        tdb.cafeteriaDao().removeCache();
+        tdb.cafeteriaMenuDao().removeCache();
+        tdb.calendarDao().flush();
+        tdb.locationDao().removeCache();
+        tdb.newsDao().flush();
+        tdb.newsSourcesDao().flush();
+        tdb.recentsDao().removeCache();
+        tdb.roomLocationsDao().flush();
+        tdb.syncDao().removeCache();
+        tdb.chatMessageDao().removeCache();
+        tdb.chatRoomDao().removeCache();
+        tdb.openQuestionsDao().flush();
+        tdb.ownQuestionsDao().flush();
+        tdb.tumLockDao().removeCache();
+        tdb.facultyDao().flush();
+        tdb.transportDao().removeCache();
+        tdb.studyRoomDao().removeCache();
+        tdb.studyRoomGroupDao().removeCache();
+        tdb.kinoDao().flush();
+        tdb.widgetsTimetableBlacklistDao().flush();
+        tdb.notificationDao().cleanup();
+        tdb.favoriteDishDao().removeCache();
+        tdb.buildingToGpsDao().removeCache();
+        tdb.wifiMeasurementDao().cleanup();
     }
 }

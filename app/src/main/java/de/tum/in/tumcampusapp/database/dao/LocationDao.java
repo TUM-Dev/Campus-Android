@@ -23,4 +23,7 @@ public interface LocationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void replaceInto(Location location);
+
+    @Query("DELETE FROM location")
+    void removeCache();
 }

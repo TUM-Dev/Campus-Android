@@ -19,4 +19,7 @@ public interface RecentsDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Recent recent);
+
+    @Query("DELETE FROM recent")
+    void removeCache();
 }
