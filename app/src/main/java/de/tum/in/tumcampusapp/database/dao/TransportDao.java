@@ -5,8 +5,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import java.util.List;
-
 import de.tum.in.tumcampusapp.models.transport.TransportFavorites;
 import de.tum.in.tumcampusapp.models.transport.WidgetsTransport;
 
@@ -30,4 +28,7 @@ public interface TransportDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void replaceWidget(WidgetsTransport widgetsTransport);
+
+    @Query("DELETE FROM transport_favorites")
+    void removeCache();
 }

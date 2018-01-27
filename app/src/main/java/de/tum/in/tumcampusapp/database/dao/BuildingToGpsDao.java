@@ -15,4 +15,7 @@ public interface BuildingToGpsDao {
 
     @Query("SELECT * FROM buildingtogps")
     List<BuildingToGps> getAll();
+
+    @Query("DELETE FROM buildingtogps")
+    void removeCache();
 }
