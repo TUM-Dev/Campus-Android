@@ -137,7 +137,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             }
 
             pref.setTitle(newsSource.getTitle());
-            newsSourcesPreference.addPreference(pref);
+            if(newsSourcesPreference!=null) {
+                newsSourcesPreference.addPreference(pref);
+            }
         }
     }
 
@@ -180,7 +182,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 if (!SilenceService.hasPermissions(mContext)) {
                     // disable until silence service permission is resolved
                     CheckBoxPreference silenceCheckbox = (CheckBoxPreference) findPreference(Const.SILENCE_SERVICE);
-                    silenceCheckbox.setChecked(false);
+                    if(silenceCheckbox!=null) {
+                        silenceCheckbox.setChecked(false);
+                    }
                     Utils.setSetting(mContext, Const.SILENCE_SERVICE, false);
 
                     SilenceService.requestPermissions(mContext);
