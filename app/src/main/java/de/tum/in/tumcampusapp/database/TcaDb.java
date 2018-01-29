@@ -31,6 +31,7 @@ import de.tum.in.tumcampusapp.database.dao.TumLockDao;
 import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
+import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
@@ -141,6 +142,7 @@ public abstract class TcaDb extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
                            .fallbackToDestructiveMigration()
+                           .addMigrations(new Migration1to2())
                            .build();
         }
         return instance;
