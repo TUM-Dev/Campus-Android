@@ -10,6 +10,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.database.dao.ChatRoomDao;
 import de.tum.in.tumcampusapp.database.dao.FacultyDao;
 import de.tum.in.tumcampusapp.database.dao.CalendarDao;
 import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
@@ -25,14 +26,17 @@ import de.tum.in.tumcampusapp.database.dao.RecentsDao;
 import de.tum.in.tumcampusapp.database.dao.StudyRoomDao;
 import de.tum.in.tumcampusapp.database.dao.StudyRoomGroupDao;
 import de.tum.in.tumcampusapp.database.dao.SyncDao;
+import de.tum.in.tumcampusapp.database.dao.TransportDao;
 import de.tum.in.tumcampusapp.database.dao.TumLockDao;
 import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
+import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.dbEntities.OpenQuestions;
 import de.tum.in.tumcampusapp.models.dbEntities.OwnQuestions;
 import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
@@ -41,6 +45,8 @@ import de.tum.in.tumcampusapp.models.dbEntities.Sync;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
 import de.tum.in.tumcampusapp.models.dbEntities.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
+import de.tum.in.tumcampusapp.models.transport.TransportFavorites;
+import de.tum.in.tumcampusapp.models.transport.WidgetsTransport;
 import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
@@ -52,7 +58,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 
-@Database(version = 1, entities = {
+@Database(version = 2, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -74,7 +80,10 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
         OwnQuestions.class,
         StudyRoomGroup.class,
         StudyRoom.class,
-        GCMNotification.class
+        GCMNotification.class,
+        TransportFavorites.class,
+        WidgetsTransport.class,
+        ChatRoomDbRow.class
 }, exportSchema = false) // TODO: probably version schema
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -122,12 +131,18 @@ public abstract class TcaDb extends RoomDatabase {
 
     public abstract NotificationDao notificationDao();
 
+    public abstract TransportDao transportDao();
+
+    public abstract ChatRoomDao chatRoomDao();
+
     private static TcaDb instance;
 
     public static synchronized TcaDb getInstance(Context context) {
         if (instance == null || !instance.isOpen()) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
+                           .fallbackToDestructiveMigration()
+                           .addMigrations(new Migration1to2())
                            .build();
         }
         return instance;

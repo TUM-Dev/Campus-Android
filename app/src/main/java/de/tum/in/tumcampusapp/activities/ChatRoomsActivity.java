@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -30,6 +29,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
@@ -46,7 +46,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Cursor> implements OnItemClickListener {
+public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List<ChatRoomDbRow>> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int CAMERA_REQUEST_CODE = 34;
     private static final int JOIN_ROOM_REQUEST_CODE = 22;
@@ -58,7 +58,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     private TUMOnlineRequest<LecturesSearchRowSet> requestHandler;
     private ChatRoomManager manager;
     private int mCurrentMode = 1;
-    private ChatRoomListAdapter adapter;
+    private ChatRoomListAdapter chatRoomAdapter;
     private boolean firstLoad = true;
 
     public ChatRoomsActivity() {
@@ -231,9 +231,10 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                                  if (mCurrentMode == 1) {
                                      moveToChatActivity();
                                  } else { //Otherwise show a nice information, that we added the room
-                                     final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
+                                     final List<ChatRoomDbRow> rooms = manager.getAllByStatus(mCurrentMode);
+
                                      runOnUiThread(() -> {
-                                         adapter.changeCursor(newCursor);
+                                         chatRoomAdapter.updateRooms(rooms);
                                          Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
                                      });
                                  }
@@ -251,7 +252,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     }
 
     @Override
-    protected Cursor onLoadInBackground(Void... arg) {
+    protected List<ChatRoomDbRow> onLoadInBackground(Void... arg) {
         if (!firstLoad) {
             Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
             if (lecturesList.isPresent()) {
@@ -280,14 +281,14 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     }
 
     @Override
-    protected void onLoadFinished(Cursor result) {
+    protected void onLoadFinished(List<ChatRoomDbRow> result) {
         showLoadingEnded();
-        if (result.getCount() == 0) {
+        if (result.size() == 0) {
             lvMyChatRoomList.setAdapter(new NoResultsAdapter(this));
         } else {
             // set ListView to data via the LecturesListAdapter
-            adapter = new ChatRoomListAdapter(this, result, mCurrentMode);
-            lvMyChatRoomList.setAdapter(adapter);
+            chatRoomAdapter = new ChatRoomListAdapter(this, result, mCurrentMode);
+            lvMyChatRoomList.setAdapter(chatRoomAdapter);
         }
     }
 
@@ -299,14 +300,14 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         if (firstLoad) {
             return;
         }
-        Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
+        ChatRoomDbRow item = (ChatRoomDbRow) lvMyChatRoomList.getItemAtPosition(position);
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();
         final Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtras(bundle);
 
-        String chatRoomUid = item.getString(ChatRoomManager.COL_SEMESTER_ID) + ':' + item.getString(ChatRoomManager.COL_NAME);
+        String chatRoomUid = item.getSemesterId() + ':' + item.getName();
         this.createOrJoinChatRoom(chatRoomUid);
     }
 

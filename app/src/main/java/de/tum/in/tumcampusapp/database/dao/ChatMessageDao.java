@@ -4,7 +4,6 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.database.Cursor;
 
 import java.util.List;
 
@@ -89,4 +88,7 @@ public interface ChatMessageDao {
 
     @Query(SQL_ALL_UNSENT_CURRENT_ROOM)
     Flowable<List<ChatMessage>> getAllUnsentFromCurrentRoomFlow();
+
+    @Query("DELETE FROM chat_message")
+    void removeCache();
 }

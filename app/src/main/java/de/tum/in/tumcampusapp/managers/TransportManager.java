@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.util.Pair;
 import android.util.SparseArray;
 
@@ -29,10 +27,14 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.MVVCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.TransportDao;
 import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.efa.Departure;
 import de.tum.in.tumcampusapp.models.efa.StationResult;
 import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
+import de.tum.in.tumcampusapp.models.transport.TransportFavorites;
+import de.tum.in.tumcampusapp.models.transport.WidgetsTransport;
 
 /**
  * Transport Manager, handles querying data from mvv and card creation
@@ -106,6 +108,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     private static SparseArray<WidgetDepartures> widgetDeparturesList;
     private static final Gson gson = new Gson();
 
+    private final TransportDao transportDao;
+
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
         stationSearch.append(STATION_SEARCH)
@@ -128,17 +132,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
 
     public TransportManager(Context context) {
         super(context);
-
-        // Create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS transport_favorites (" +
-                   "id INTEGER PRIMARY KEY AUTOINCREMENT, symbol VARCHAR)");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS widgets_transport (" +
-                   "id INTEGER PRIMARY KEY, station VARCHAR, station_id VARCHAR, location BOOLEAN, reload BOOLEAN)");
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        transportDao = tcaDb.transportDao();
 
         if (TransportManager.widgetDeparturesList == null) {
             TransportManager.widgetDeparturesList = new SparseArray<>();
         }
+
     }
 
     /**
@@ -148,9 +148,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @return True, if favorite
      */
     public boolean isFavorite(String symbol) {
-        try (Cursor c = db.rawQuery("SELECT * FROM transport_favorites WHERE symbol = ?", new String[]{symbol})) {
-            return c.getCount() > 0;
-        }
+        return transportDao.isFavorite(symbol);
     }
 
     /**
@@ -159,7 +157,9 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @param symbol The transport symbol
      */
     public void addFavorite(String symbol) {
-        db.execSQL("INSERT INTO transport_favorites (symbol) VALUES (?)", new String[]{symbol});
+        TransportFavorites transportFavorites = new TransportFavorites();
+        transportFavorites.setSymbol(symbol);
+        transportDao.addFavorite(transportFavorites);
     }
 
     /**
@@ -168,7 +168,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @param symbol The transport symbol
      */
     public void deleteFavorite(String symbol) {
-        db.execSQL("DELETE FROM transport_favorites WHERE symbol = ?", new String[]{symbol});
+        transportDao.deleteFavorite(symbol);
     }
 
     /**
@@ -176,12 +176,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      */
     public void addWidget(int appWidgetId, WidgetDepartures widgetDepartures) {
         ContentValues values = new ContentValues();
-        values.put("id", appWidgetId);
-        values.put("station", widgetDepartures.getStation());
-        values.put("station_id", widgetDepartures.getStationId());
-        values.put("location", widgetDepartures.getUseLocation());
-        values.put("reload", widgetDepartures.getAutoReload());
-        db.replace("widgets_transport", null, values);
+        WidgetsTransport widgetsTransport = new WidgetsTransport();
+        widgetsTransport.setId(appWidgetId);
+        widgetsTransport.setStation(widgetDepartures.getStation());
+        widgetsTransport.setStationId(widgetDepartures.getStationId());
+        widgetsTransport.setLocation(widgetDepartures.getUseLocation());
+        widgetsTransport.setReload(widgetDepartures.getAutoReload());
+        transportDao.replaceWidget(widgetsTransport);
         TransportManager.widgetDeparturesList.put(appWidgetId, widgetDepartures);
     }
 
@@ -191,7 +192,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @param widgetId The id of the widget
      */
     public void deleteWidget(int widgetId) {
-        db.delete("widgets_transport", "id = ?", new String[]{String.valueOf(widgetId)});
+        transportDao.deleteWidget(widgetId);
         TransportManager.widgetDeparturesList.remove(widgetId);
     }
 
@@ -210,15 +211,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             return TransportManager.widgetDeparturesList.get(widgetId);
         }
         WidgetDepartures widgetDepartures;
-        try (Cursor c = db.rawQuery("SELECT * FROM widgets_transport WHERE id = ?", new String[]{String.valueOf(widgetId)})) {
-            widgetDepartures = new WidgetDepartures();
-            if (c.getCount() >= 1) {
-                c.moveToFirst();
-                widgetDepartures.setStation(c.getString(c.getColumnIndex("station")));
-                widgetDepartures.setStationId(c.getString(c.getColumnIndex("station_id")));
-                widgetDepartures.setUseLocation(c.getInt(c.getColumnIndex("location")) != 0);
-                widgetDepartures.setAutoReload(c.getInt(c.getColumnIndex("reload")) != 0);
-            }
+        WidgetsTransport widgetsTransports = transportDao.getAllWithId(widgetId);
+        widgetDepartures = new WidgetDepartures();
+        if(widgetsTransports != null)   {
+            widgetDepartures.setStation(widgetsTransports.getStation());
+            widgetDepartures.setStationId(widgetsTransports.getStationId());
+            widgetDepartures.setUseLocation(widgetsTransports.getLocation());
+            widgetDepartures.setAutoReload(widgetsTransports.getReload());
         }
         TransportManager.widgetDeparturesList.put(widgetId, widgetDepartures);
         return widgetDepartures;

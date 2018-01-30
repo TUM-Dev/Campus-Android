@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
+import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 
@@ -38,10 +39,11 @@ public class ChatMessagesCard extends NotificationAwareCard {
     private final ChatMessageDao chatMessageDao;
 
 
-    public ChatMessagesCard(Context context) {
+    public ChatMessagesCard(Context context, ChatRoomDbRow room) {
         super(CARD_CHAT, context, "card_chat");
         TcaDb tcaDb = TcaDb.getInstance(context);
         chatMessageDao = tcaDb.chatMessageDao();
+        setChatRoom(room.getName(),room.getRoom(),room.getSemesterId() + ':' + room.getName());
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
