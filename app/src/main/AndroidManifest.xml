@@ -479,6 +479,16 @@
             android:launchMode="singleTop"
             android:parentActivityName=".activities.BarrierFreeInfoActivity">
         </activity>
+        <activity
+            android:name=".activities.OpacActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="Library"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
+        </activity>
 
 
         <!-- receiver for the mensaWidget -->

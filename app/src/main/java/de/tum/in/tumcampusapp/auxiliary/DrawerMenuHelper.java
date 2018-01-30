@@ -19,6 +19,7 @@ import de.tum.in.tumcampusapp.activities.CurriculaActivity;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
 import de.tum.in.tumcampusapp.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.activities.NewsActivity;
+import de.tum.in.tumcampusapp.activities.OpacActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampusapp.activities.PersonsSearchActivity;
 import de.tum.in.tumcampusapp.activities.PlansActivity;
@@ -50,8 +51,8 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.barrier_free, R.drawable.ic_accessible, BarrierFreeInfoActivity.class, false, false),
             new SideNavigationItem(R.string.quiz_title, R.drawable.ic_pie_chart, SurveyActivity.class, true, false),
             new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity.class, false, false),
-            new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)
-
+            new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false),
+            new SideNavigationItem(R.string.opac_library, R.drawable.ic_github, OpacActivity.class, false, false)
     };
 
     private static final SideNavigationItem[] APP = {
