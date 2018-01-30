@@ -42,4 +42,8 @@ public interface FavoriteDishDao {
            "INNER JOIN cafeteriaMenu ON cafeteriaMenu.cafeteriaId = favoriteDish.cafeteriaId " +
            "AND favoriteDish.dishName = cafeteriaMenu.name WHERE cafeteriaMenu.date = :dayMonthYear")
     List<CafeteriaMenu> getFavouritedCafeteriaMenuOnDate(String dayMonthYear);
+
+
+    @Query("DELETE FROM favoriteDish")
+    void removeCache();
 }

@@ -52,6 +52,7 @@ object Const {
     const val TRANSPORT_COLUMN = "transport"
 
     const val API_HOSTNAME = "tumcabe.in.tum.de"
+    const val API_HOSTNAME_NEW = "app.tum.de"
     const val CURRENT_CHAT_ROOM = "current_chat_room"
     const val CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name"
 
@@ -145,4 +146,7 @@ object Const {
   
     const val DATE_AND_TIME = "yyyy-MM-dd HH:mm:ss"
     const val DATE_ONLY = "yyyy-MM-dd"
+
+    const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
+    const val CALENDAR_ID_PARAM = "calendar_id"
 }

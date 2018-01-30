@@ -1,8 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.text.TextUtils;
 
 import java.io.IOException;
@@ -16,6 +14,12 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.FacultyDao;
+import de.tum.in.tumcampusapp.database.dao.OpenQuestionsDao;
+import de.tum.in.tumcampusapp.database.dao.OwnQuestionsDao;
+import de.tum.in.tumcampusapp.models.dbEntities.OpenQuestions;
+import de.tum.in.tumcampusapp.models.dbEntities.OwnQuestions;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import retrofit2.Call;
@@ -27,6 +31,10 @@ import retrofit2.Response;
  */
 public class SurveyManager extends AbstractManager implements Card.ProvidesCard {
 
+    private final FacultyDao facultyDao;
+    private final OpenQuestionsDao openQuestionsDao;
+    private final OwnQuestionsDao ownQuestionsDao;
+
     /**
      * Constructor for creating tables if needed
      *
@@ -34,9 +42,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      */
     public SurveyManager(Context context) {
         super(context);
-        db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)"); // for facultyData
-        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)"); // for SurveyCard
-        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
+        facultyDao = TcaDb.getInstance(context).facultyDao();
+        openQuestionsDao = TcaDb.getInstance(context).openQuestionsDao();
+        ownQuestionsDao = TcaDb.getInstance(context).ownQuestionsDao();
     }
 
     /**
@@ -49,12 +57,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         if (NetUtils.isConnected(mContext)) {
             downLoadOpenQuestions();
         }
-        try (Cursor rows = getUnansweredQuestionsSince(Utils.getDateTimeString(new Date()))) {
-            if (rows.moveToFirst()) {
-                SurveyCard card = new SurveyCard(context);
-                card.setQuestions(rows);
-                card.apply();
-            }
+        List<OpenQuestions> unansweredQuestions = getUnansweredQuestionsSince(Utils.getDateTimeString(new Date()));
+        if ( !unansweredQuestions.isEmpty() ) {
+            SurveyCard card = new SurveyCard(context);
+            card.setQuestions(unansweredQuestions);
+            card.apply();
         }
     }
 
@@ -77,14 +84,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         deleteFlaggedQuestions(openQuestions);
 
         // filters the questions relevant for the user
-        for (int i = 0; i < openQuestions.size(); i++) {
-            List<String> openQuestionFaculties = Arrays.asList(openQuestions.get(i)
-                                                                            .getFacultiesOfOpenQuestions());
+        for (Question openQuestion: openQuestions) {
+            List<String> openQuestionFaculties = Arrays.asList(openQuestion.getFacultiesOfOpenQuestions());
             String userMajor = Utils.getInternalSettingString(mContext, "user_major", "");
 
             // Incase  the user selected the major upon app start, then save the major related questions. Otherwise save all questions
             if ("0".equals(userMajor) || openQuestionFaculties.contains(userMajor)) {
-                replaceIntoDBOpenQuestions(openQuestions.get(i));
+                replaceIntoDBOpenQuestions(openQuestion);
             }
         }
     }
@@ -97,20 +103,15 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      */
     void deleteFlaggedQuestions(List<Question> fetchedOpenedQuestions) {
         List<Question> downloadedQuestionsID = new ArrayList<>(); // get the ids of all fetched openQuestions
-        for (int x = 0; x < fetchedOpenedQuestions.size(); x++) {
-            downloadedQuestionsID.add(new Question(fetchedOpenedQuestions.get(x)
-                                                                         .getQuestion()));
+        for (Question fetchedOpenedQuestion: fetchedOpenedQuestions) {
+            downloadedQuestionsID.add(new Question(fetchedOpenedQuestion.getQuestion()));
         }
 
         // get all already existing openQuestions in db
-        try (Cursor c = db.rawQuery("SELECT question FROM openQuestions", null)) {
-            if (c != null) {
-                while (c.moveToNext()) { // iterates on each question in the db
-                    // Incase the question from the database is not contained in the list with the downloaded questions, the question gets deleted from db
-                    if (!downloadedQuestionsID.contains(new Question(c.getString(c.getColumnIndex("question"))))) {
-                        db.delete("openQuestions", "question = ?", new String[]{c.getString(c.getColumnIndex("question"))});
-                    }
-                }
+        List<OpenQuestions> openQuestions = openQuestionsDao.getAll();
+        for (OpenQuestions openQuestion: openQuestions) {
+            if (!downloadedQuestionsID.contains(new Question(Integer.toString(openQuestion.getQuestion())))) {
+                openQuestionsDao.deleteQuestionById(openQuestion.getQuestion());
             }
         }
     }
@@ -121,25 +122,16 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param q
      */
     void replaceIntoDBOpenQuestions(Question q) {
-        try (Cursor c = db.rawQuery("SELECT answerid FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()})) {
-            // if question doesn't exist, then insert it
-            if (!c.moveToFirst()) {
-                ContentValues cv = new ContentValues();
-                cv.put("question", q.getQuestion());
-                cv.put("text", q.getText());
-                cv.put("created", q.getCreated());
-                cv.put("end", q.getEnd());
-                cv.put("answerid", 0);
-                cv.put("answered", 0);
-                cv.put("synced", 0);
-                try {
-                    db.beginTransaction();
-                    db.insert("openQuestions", null, cv);
-                    db.setTransactionSuccessful();
-                } finally {
-                    db.endTransaction();
-                }
-            }
+        OpenQuestions openQuestion = openQuestionsDao.getQuestionById(Integer.parseInt(q.getQuestion()));
+
+        if (openQuestion != null) {
+            openQuestionsDao.insert(new OpenQuestions(Integer.parseInt(q.getQuestion()),
+                                                      q.getText(),
+                                                      q.getCreated(),
+                                                      q.getEnd(),
+                                                      0,
+                                                      false,
+                                                      false));
         }
     }
 
@@ -151,8 +143,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      *
      * @return all faculties (id and name)
      */
-    public Cursor getAllFaculties() {
-        return db.rawQuery("SELECT * FROM faculties", null);
+    public List<Faculty> getAllFaculties() {
+        return facultyDao.getAll();
     }
 
     /**
@@ -162,8 +154,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param date: is usually today's date
      * @return
      */
-    public Cursor getUnansweredQuestionsSince(String date) {
-        return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0 AND end >= '" + date + "'", null);
+    public List<OpenQuestions> getUnansweredQuestionsSince(String date) {
+        return openQuestionsDao.getUnansweredQuestions(date);
     }
 
     /**
@@ -174,8 +166,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param date: is usually today's date
      * @return relevant ownQuestions
      */
-    public Cursor getMyRelevantOwnQuestionsSince(String date) {
-        return db.rawQuery("SELECT * FROM ownQuestions where deleted = 0 AND end >= '" + date + "'", null);
+    public List<OwnQuestions> getMyRelevantOwnQuestionsSince(String date) {
+        return ownQuestionsDao.getFromEndDate(date);
     }
 
     /**
@@ -196,7 +188,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                              Utils.log(t, "TUMCabeClient_delete_question_failed. ");
                          }
                      });
-        db.execSQL("UPDATE ownQuestions SET deleted=1 WHERE question=" + id); // Marks question as deleted in local db
+        ownQuestionsDao.setDeletedById(id);
     }
 
     /**
@@ -207,25 +199,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param answerTag: yes = 1 || no = 2 || flag = -1 || skip = 3
      */
     public void updateQuestion(Question question, int answerTag) {
-        ContentValues cv = new ContentValues();
-
-        if (answerTag == 3) {
-            cv.put("synced", 1);//Do not sync skipped questions later
-        } else {
-            cv.put("answerid", answerTag);
-        }
-
-        // Set as answered independent of the answerTag
-        cv.put("answered", 1);
-
-        //Commit update to database
-        try {
-            db.beginTransaction();
-            db.update("openQuestions", cv, "question = ?", new String[]{question.getQuestion()});
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
+        openQuestionsDao.insert(new OpenQuestions(Integer.parseInt(question.getQuestion()),
+                                                  question.getText(),
+                                                  question.getCreated(),
+                                                  question.getEnd(),
+                                                  answerTag == 3? 3: 0,
+                                                  true,
+                                                  answerTag != 3));
 
         //Trigger sync if we are currently connected
         if (NetUtils.isConnected(mContext)) {
@@ -238,32 +218,25 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * Syncs answered but not yet synced responses with server
      */
     public void syncOpenQuestionsTable() {
-        try (Cursor cursor = db.rawQuery("SELECT question, answerid FROM openQuestions WHERE synced=0 AND answered=1", null)) {
-            // In case there are answered but not yet synced questions in local db
-            while (cursor.moveToNext()) {
-                Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")), cursor.getInt(cursor.getColumnIndex("answerid")));
+        List<OpenQuestions> answeredNotSyncedQuestions = openQuestionsDao.getAnsweredNotSynced();
+        for (OpenQuestions question: answeredNotSyncedQuestions) {
+            Question answeredQuestion = new Question(Integer.toString(question.getQuestion()), question.getAnswerid());
 
-                // Submit Answer to Serve
-                TUMCabeClient.getInstance(mContext)
-                             .submitAnswer(answeredQuestion, new Callback<Question>() {
-                                 @Override
-                                 public void onResponse(Call<Question> call, Response<Question> response) {
-                                     Utils.log("Test_resp_submitQues Succeeded: " + response.body());
-                                 }
+            // Submit Answer to Serve
+            TUMCabeClient.getInstance(mContext)
+                         .submitAnswer(answeredQuestion, new Callback<Question>() {
+                             @Override
+                             public void onResponse(Call<Question> call, Response<Question> response) {
+                                 Utils.log("Test_resp_submitQues Succeeded: " + response.body());
+                             }
 
-                                 @Override
-                                 public void onFailure(Call<Question> call, Throwable t) {
-                                     Utils.log(t, "Test_resp_submitQues Failure");
-                                 }
-                             });
+                             @Override
+                             public void onFailure(Call<Question> call, Throwable t) {
+                                 Utils.log(t, "Test_resp_submitQues Failure");
+                             }
+                         });
 
-                // Mark as synced in local db
-                ContentValues cv = new ContentValues();
-                cv.put("synced", "1");
-                db.update("openQuestions", cv, "question = ?", new String[]{cursor.getString(cursor.getColumnIndex("question"))});
-            }
-        } catch (Exception e) {
-            Utils.log(e.toString());
+            openQuestionsDao.markSynced(question.getQuestion());
         }
     }
 
@@ -273,8 +246,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param weekAgo
      * @return questions created since a given date
      */
-    public Cursor ownQuestionsSince(String weekAgo) {
-        return db.rawQuery("SELECT created FROM ownQuestions WHERE created >= '" + weekAgo + "'", null);
+    public List<String> ownQuestionsSince(String weekAgo) {
+        return ownQuestionsDao.getFromCreatedDate(weekAgo);
     }
 
     /**
@@ -283,19 +256,19 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param facultyName
      * @return faculty ID for a given faculty name
      */
-    public Cursor getFacultyID(String facultyName) {
-        return db.rawQuery("SELECT faculty FROM faculties WHERE name=?", new String[]{facultyName});
+    public String getFacultyID(String facultyName) {
+        return facultyDao.getFacultyIdByName(facultyName);
     }
 
-    public Cursor getFacultyName(String facultyID) {
-        return db.rawQuery("SELECT name FROM faculties WHERE faculty=?", new String[]{facultyID});
+    public String getFacultyName(String facultyID) {
+        return facultyDao.getFacultyNameById(facultyID);
     }
 
     /**
      * Fetches the facultyData from the server and saves it in the local db
      */
     public void downloadFacultiesFromExternal() {
-        List<Faculty> faculties;
+        List<Faculty> faculties = new ArrayList<>();
         try {
             faculties = TUMCabeClient.getInstance(mContext)
                                      .getFaculties();
@@ -304,19 +277,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             return;
         }
 
-        if (faculties == null) {
-            Utils.logv("No faculties received...");
-            return;
-        }
-
-        db.beginTransaction();
-        try {
-            for (int i = 0; i < faculties.size(); i++) {
-                replaceIntoDb(faculties.get(i));
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
+        for (Faculty faculty: faculties) {
+            replaceIntoDb(faculty);
         }
     }
 
@@ -327,22 +289,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param f: a given faculty
      */
     void replaceIntoDb(Faculty f) {
-        try (Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?", new String[]{f.getFaculty()})) {
-            db.beginTransaction();
-            ContentValues cv = new ContentValues();
-            if (c.moveToFirst()) { // if faculty exists, update name
-                cv.put("name", f.getName());
-                db.update("faculties", cv, "faculty = ?", new String[]{f.getFaculty()});
-                db.setTransactionSuccessful();
-            } else { // else inserts new faculty
-                cv.put("faculty", f.getFaculty());
-                cv.put("name", f.getName());
-                db.insert("faculties", null, cv);
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
+        facultyDao.insert(f);
     }
 
     /**
@@ -357,11 +304,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         } catch (IOException e) {
             Utils.log(e);
         }
-        if (ownQuestions.isEmpty()) {
-            return;
-        }
-        for (int i = 0; i < ownQuestions.size(); i++) {
-            replaceIntoDbOwnQuestions(ownQuestions.get(i));
+
+        for (Question question: ownQuestions) {
+            replaceIntoDbOwnQuestions(question);
         }
     }
 
@@ -371,74 +316,59 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param q
      */
     void replaceIntoDbOwnQuestions(Question q) {
-        try (Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()})) {
-            db.beginTransaction();
-
-            if (c.moveToFirst()) {// update non-exsisting question fields in the db (false means don't update 'delete' and 'synced' fields
-                ContentValues cv = setOwnQuestionFields(q, false);
-                db.update("ownQuestions", cv, "question=" + q.getQuestion(), null);
-            } else { // if question doesn't exist -> insert into DB
-                ContentValues cv = setOwnQuestionFields(q, true);
-                db.insert("ownQuestions", null, cv);
-            }
-
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-
-        }
-    }
-
-    /**
-     * Help function for replaceIntoDBOwnQuestions
-     *
-     * @param q:               question
-     * @param setDeletedSynced a flag whether fields 'deleted' and 'synced' in db should be synced
-     * @return Contentvalues that updates all respective fields of the question in db
-     */
-    public ContentValues setOwnQuestionFields(Question q, boolean setDeletedSynced) {
+        /*
+        @PrimaryKey
+                        var question: Int = -1,
+                        var test: String = "",
+                        var targetFac: String = "",
+                        var created: String = "",
+                        var end: String = "",
+                        var yes: Int = -1,
+                        var no: Int = -1,
+                        var deleted: Boolean = false,
+                        var synced: Boolean = false)
+         */
         Question.Answer[] answers = q.getResults();
-        ContentValues cv = new ContentValues();
-
-        cv.put("question", q.getQuestion());
-        cv.put("text", q.getText());
-        cv.put("created", q.getCreated());
-        cv.put("end", q.getEnd());
-        cv.put("targetFac", TextUtils.join(",", q.getFacultiesOfOpenQuestions()));
-
-        // In case of no votes
+        int yes = 0;
+        int no = 0;
         if (answers.length == 0) {
-            cv.put("yes", 0);
-            cv.put("no", 0);
+            yes = 0;
+            no = 0;
         } else if (answers.length == 1) { // In case of one vote -> get whether it is yes or no
             if (answers[0].getAnswer()
                           .equals("yes")) {
-                cv.put("yes", answers[0].getVotes());
-                cv.put("no", 0);
+                yes = answers[0].getVotes();
+                no = 0;
             } else {
-                cv.put("yes", 0);
-                cv.put("no", answers[0].getVotes());
+                yes = 0;
+                no = answers[0].getVotes();
             }
             // In case there are two votes
         } else {
             if (answers[0].getAnswer()
                           .equals("yes")) {
-                cv.put("yes", answers[0].getVotes());
+                yes = answers[0].getVotes();
             } else {
-                cv.put("no", answers[0].getVotes());
+                no = answers[0].getVotes();
             }
 
             if (answers[1].getAnswer()
                           .equals("yes")) {
-                cv.put("yes", answers[1].getVotes());
+                yes = answers[1].getVotes();
             } else {
-                cv.put("no", answers[1].getVotes());
+                no = answers[1].getVotes();
             }
         }
-        if (setDeletedSynced) { // if question is new then set deleted and synced otherwise no
-            cv.put("deleted", 0);
-            cv.put("synced", 0);
-        }
-        return cv;
+        boolean exists = ownQuestionsDao.getById(Integer.parseInt(q.getQuestion())) != null;
+        ownQuestionsDao.insert(new OwnQuestions(Integer.parseInt(q.getQuestion()),
+                                                q.getText(),
+                                                TextUtils.join(",", q.getFacultiesOfOpenQuestions()),
+                                                q.getCreated(),
+                                                q.getEnd(),
+                                                yes,
+                                                no,
+                                                exists,
+                                                exists
+                                                ));
     }
 }

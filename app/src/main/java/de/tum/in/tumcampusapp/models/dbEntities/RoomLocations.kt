@@ -11,13 +11,13 @@ import de.tum.`in`.tumcampusapp.models.tumo.Geo
 data class RoomLocations(@PrimaryKey
                          var title: String = "",
                          var latitude: String = "",
-                         var longtitude: String = "") {
+                         var longitude: String = "") {
     constructor(title: String, geo: Geo): this(title, geo.latitude, geo.longitude)
 
     /**
      * Retrieve Geo object with related information plugged
      */
     fun toGeo(): Geo {
-        return Geo(latitude, longtitude);
+        return Geo(latitude, longitude);
     }
 }

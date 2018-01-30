@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.api;
 
 import java.util.List;
 
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
@@ -28,6 +29,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -44,6 +46,7 @@ import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_LIST_OF_
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_LIST_OF_TOILETS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_MORE_INFO;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_NERBY_FACILITIES;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CAFETERIAS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CURRICULA;
@@ -96,17 +99,17 @@ public interface TUMCabeAPIService {
 
     //Get/Update single message
     @PUT(API_CHAT_ROOMS + "{room}/message/")
-    Call<ChatMessage> sendMessage(@Path("room") int roomId, @Body ChatMessage message);
+    Observable<ChatMessage> sendMessage(@Path("room") int roomId, @Body ChatMessage message);
 
     @PUT(API_CHAT_ROOMS + "{room}/message/{message}/")
-    Call<ChatMessage> updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body ChatMessage message);
+    Observable<ChatMessage> updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body ChatMessage message);
 
     //Get all recent messages or older ones
     @POST(API_CHAT_ROOMS + "{room}/messages/{page}/")
-    Call<List<ChatMessage>> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body ChatVerification verification);
+    Observable<List<ChatMessage>> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body ChatVerification verification);
 
     @POST(API_CHAT_ROOMS + "{room}/messages/")
-    Call<List<ChatMessage>> getNewMessages(@Path("room") int roomId, @Body ChatVerification verification);
+    Observable<List<ChatMessage>> getNewMessages(@Path("room") int roomId, @Body ChatVerification verification);
 
     @POST(API_CHAT_MEMBERS)
     Call<ChatMember> createMember(@Body ChatMember chatMember);
@@ -199,6 +202,9 @@ public interface TUMCabeAPIService {
     @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
     Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
                                                  @Path("start") String start, @Path("end") String end);
+
+    @GET(API_CAFETERIAS)
+    Observable<List<Cafeteria>> getCafeterias();
 
     @GET(API_KINOS+"{lastId}")
     Observable<List<Kino>> getKinos(@Path("lastId") String lastId);

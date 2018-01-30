@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -13,19 +14,27 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.adapters.CafeteriaDetailsSectionsPagerAdapter;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.repository.CafeteriaRemoteRepository;
+import de.tum.in.tumcampusapp.viewmodel.CafeteriaViewModel;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
@@ -38,7 +47,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
     private ViewPager mViewPager;
     private int mCafeteriaId = -1;
-    private List<Cafeteria> mCafeterias;
+    private CafeteriaViewModel cafeteriaViewModel;
+    private List<Cafeteria> mCafeterias = new ArrayList<>();
+
+    private final CompositeDisposable mDisposable = new CompositeDisposable();
 
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
@@ -62,7 +74,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
          *by default it's 1.
          */
         mViewPager.setOffscreenPageLimit(50);
-
+        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(this));
+        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
     }
 
     @Override
@@ -97,31 +113,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     protected void onStart() {
         super.onStart();
 
-        // Get all available cafeterias from database
-        mCafeterias = new LocationManager(this).getCafeterias();
-
-        // If something went wrong or no cafeterias found
-        if (mCafeterias.isEmpty()) {
-            if (NetUtils.isConnected(this)) {
-                showErrorLayout();
-            } else {
-                showNoInternetLayout();
-            }
-            return;
-        }
-
-        int selIndex = -1;
-        for (int i = 0; i < mCafeterias.size(); i++) {
-            Cafeteria c = mCafeterias.get(i);
-            if (mCafeteriaId == -1 || mCafeteriaId == c.getId()) {
-                mCafeteriaId = c.getId();
-                selIndex = i;
-                break;
-            }
-        }
-
         // Adapter for drop-down navigation
-        SpinnerAdapter adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
+        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
             @Override
@@ -142,11 +135,43 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 return v;
             }
         };
-
         Spinner spinner = findViewById(R.id.spinnerToolbar);
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
-        // Select item
+        Location currLocation = new LocationManager(this).getCurrentOrNextLocation();
+        Flowable<List<Cafeteria>> cafeterias = cafeteriaViewModel.getAllCafeterias(currLocation);
+        mDisposable.add(
+                cafeterias.subscribe(
+                        it -> {
+                            validateList(it);
+                            mCafeterias.clear();
+                            mCafeterias.addAll(it);
+                            adapterCafeterias.notifyDataSetChanged();
+                            setCurrentSelectedCafeteria(spinner);
+                        }, throwable -> Utils.logwithTag("CafeteriaActivity", throwable.getMessage())
+                ));
+    }
+
+    private void validateList(Collection<Cafeteria> cafeterias){
+        if (cafeterias.isEmpty()) {
+            if (NetUtils.isConnected(this)) {
+                showErrorLayout();
+            } else {
+                showNoInternetLayout();
+            }
+        }
+    }
+
+    private void setCurrentSelectedCafeteria(Spinner spinner) {
+        int selIndex = -1;
+        for (int i = 0; i < mCafeterias.size(); i++) {
+            Cafeteria c = mCafeterias.get(i);
+            if (mCafeteriaId == -1 || mCafeteriaId == c.getId()) {
+                mCafeteriaId = c.getId();
+                selIndex = i;
+                break;
+            }
+        }
         if (selIndex > -1) {
             spinner.setSelection(selIndex);
         }
@@ -194,5 +219,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         //Don't change anything
+    }
+
+    @Override
+    protected void onDestroy() {
+        mDisposable.clear();
+        super.onDestroy();
     }
 }

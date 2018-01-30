@@ -76,7 +76,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         }
 
         // Show cafeteria menu
-        cardsViewHolder.setAddedViews(showMenu(mLinearLayout, mCafeteriaId, mDateStr, false));
+        cardsViewHolder.setAddedViews(showMenu(mLinearLayout, mCafeteriaId, mDateStr, false,mMenus));
     }
 
     /**

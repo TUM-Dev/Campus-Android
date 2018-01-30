@@ -27,4 +27,7 @@ public interface TumLockDao {
 
     @Insert
     void setLock(TumLock lock);
+
+    @Query("DELETE FROM tumLock")
+    void removeCache();
 }

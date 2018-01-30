@@ -2,10 +2,13 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
@@ -14,6 +17,8 @@ import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+
+import static de.tum.in.tumcampusapp.auxiliary.Const.CARD_POSITION_PREFERENCE_SUFFIX;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -39,7 +44,7 @@ public final class CardManager {
     public static final int CARD_EDUROAM_FIX = 15;
     private static boolean shouldRefresh;
     private static List<Card> cards;
-    private static List<Card> newCards;
+    private static Collection<Card> newCards = new ConcurrentSkipListSet<>();
 
     /**
      * Adds the specified card to the card manager
@@ -48,6 +53,9 @@ public final class CardManager {
      * @param card Card that should be added
      */
     public static void addCard(Card card) {
+        if (card.getPosition() == -1) {
+            card.setPosition(newCards.size());
+        }
         newCards.add(card);
     }
 
@@ -74,6 +82,16 @@ public final class CardManager {
         return cards.get(pos);
     }
 
+    public static void restorePositions(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Editor editor = preferences.edit();
+        for(String s : preferences.getAll().keySet()){
+            if(s.endsWith(CARD_POSITION_PREFERENCE_SUFFIX))
+                editor.remove(s);
+        }
+        editor.apply();
+    }
+
     /**
      * Refreshes or initialises all cards.
      * WARNING: Must not be called from UI thread.
@@ -90,8 +108,7 @@ public final class CardManager {
      */
     public static synchronized void update(Context context) {
         // Use temporary array to avoid that the main thread is trying to access an empty array
-        newCards = new ArrayList<>();
-
+        newCards.clear();
         new NoInternetCard(context).apply();
         new Support(context).apply();
 
@@ -121,7 +138,7 @@ public final class CardManager {
         new RestoreCard(context).apply();
 
         shouldRefresh = false;
-        cards = newCards;
+        cards = new ArrayList<>(newCards);
     }
 
     /**
@@ -169,6 +186,7 @@ public final class CardManager {
              .apply();
         AbstractManager.getDb(context)
                        .execSQL("UPDATE news SET dismissed=0");
+        restorePositions(context);
     }
 
     public static List<Card> getCards() {

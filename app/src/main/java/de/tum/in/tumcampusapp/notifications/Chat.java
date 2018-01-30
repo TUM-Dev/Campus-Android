@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -15,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.ChatActivity;
@@ -23,11 +23,14 @@ import de.tum.in.tumcampusapp.activities.MainActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 
 public class Chat extends GenericNotification {
@@ -39,6 +42,8 @@ public class Chat extends GenericNotification {
     private ChatRoom chatRoom;
     private String notificationText;
     private TaskStackBuilder sBuilder;
+    private final ChatMessageDao chatMessageDao;
+
 
     public Chat(Bundle extras, Context context, int notfication) {
         super(context, 1, notfication, true);
@@ -62,6 +67,8 @@ public class Chat extends GenericNotification {
         } catch (IOException e) {
             Utils.log(e);
         }
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        chatMessageDao = tcaDb.chatMessageDao();
     }
 
     public Chat(String payload, Context context, int notfication) {
@@ -80,6 +87,8 @@ public class Chat extends GenericNotification {
         } catch (IOException e) {
             Utils.log(e);
         }
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        chatMessageDao = tcaDb.chatMessageDao();
     }
 
     private void prepare() throws IOException {
@@ -91,24 +100,22 @@ public class Chat extends GenericNotification {
                                 .getChatRoom(this.extras.getRoom());
 
         ChatMessageManager manager = new ChatMessageManager(context, chatRoom.getId());
-        try (Cursor messages = manager.getNewMessages(member, this.extras.getMessage())) {
-            // Notify any open chat activity that a message has been received
+        try {
+            List<ChatMessage> messages = manager.getNewMessages(member, this.extras.getMessage());
             Intent intent = new Intent("chat-message-received");
             intent.putExtra("GCMChat", this.extras);
             LocalBroadcastManager.getInstance(context)
                                  .sendBroadcast(intent);
-
             notificationText = null;
-            if (messages != null && messages.moveToFirst()) {
-                do {
+            if (messages != null) {
+                for(ChatMessage msg : messages)    {
                     if (notificationText == null) {
-                        notificationText = messages.getString(3);
+                        notificationText = msg.getText();
                     } else {
-                        notificationText += "\n" + messages.getString(3);
+                        notificationText += "\n" + msg.getText();
                     }
-                } while (messages.moveToNext());
+                }
             }
-
             // Put the data into the intent
             Intent notificationIntent = new Intent(context, ChatActivity.class);
             notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
