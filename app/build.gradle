@@ -94,14 +94,13 @@ dependencies {
     implementation 'com.github.barteksc:android-pdf-viewer:2.5.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.lifecycle:runtime:$roomVersion"
     implementation "android.arch.lifecycle:extensions:$roomVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
-
     //Used for testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.9'
