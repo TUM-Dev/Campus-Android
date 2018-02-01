@@ -8,9 +8,10 @@ android {
     buildToolsVersion '27.0.1'
     buildTypes {
         all {
-            proguardFiles(file('../proguard').listFiles())
-            proguardFile getDefaultProguardFile('proguard-android.txt')
-            minifyEnabled true
+//            proguardFiles(file('../proguard').listFiles())
+//            proguardFile getDefaultProguardFile('proguard-android.txt')
+            minifyEnabled false
+            useProguard false
         }
         debug.debuggable true
         release.debuggable false
@@ -21,6 +22,7 @@ android {
         targetSdkVersion 27
         versionCode 99999
         versionName "1.5.2-dev"
+        multiDexEnabled true
     }
     lintOptions {
         checkAllWarnings true
@@ -38,6 +40,7 @@ android {
         exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
+        pickFirst 'META-INF/DEPENDENCIES'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -55,6 +58,7 @@ android {
             }
         }
     }
+    useLibrary 'org.apache.http.legacy'
 }
 
 def androidSupportVersion = '27.0.1'
@@ -78,6 +82,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.google.guava:guava:23.2-android'
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
+
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
@@ -96,23 +101,33 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
     implementation 'com.github.barteksc:android-pdf-viewer:2.5.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.lifecycle:runtime:$roomVersion"
     implementation "android.arch.lifecycle:extensions:$roomVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
+
+    compile('net.opacapp:libopac:5.2.5') {
+        transitive = false
+    }
+    compile 'org.json:json:20090211'
+    compile 'org.jsoup:jsoup:1.8.3'
+    compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile "com.squareup.okhttp3:okhttp-urlconnection:3.9.0"
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.6.0'
+
     //Used for testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.9'
     testImplementation 'org.assertj:assertj-core:1.7.0'
     testImplementation 'org.robolectric:robolectric:3.5.1'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    implementation project(':libopac')
 }
 
 apply plugin: 'com.google.gms.google-services'

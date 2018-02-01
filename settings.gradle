@@ -1,2 +1,1 @@
-include ':app', ':libopac'
-project(':libopac').projectDir = new File('opacclient/opacclient/libopac')
+include ':app'

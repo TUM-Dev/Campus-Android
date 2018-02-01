@@ -1,3 +1,0 @@
-[submodule "opacclient"]
-	path = opacclient
-	url = https://github.com/opacapp/opacclient.git
