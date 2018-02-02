@@ -2,14 +2,13 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.util.Pair;
 import android.util.SparseArray;
 
 import com.google.common.base.Optional;
 import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,9 +27,14 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.MVVCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.TransportDao;
+import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.efa.Departure;
 import de.tum.in.tumcampusapp.models.efa.StationResult;
 import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
+import de.tum.in.tumcampusapp.models.transport.TransportFavorites;
+import de.tum.in.tumcampusapp.models.transport.WidgetsTransport;
 
 /**
  * Transport Manager, handles querying data from mvv and card creation
@@ -104,6 +108,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     private static SparseArray<WidgetDepartures> widgetDeparturesList;
     private static final Gson gson = new Gson();
 
+    private final TransportDao transportDao;
+
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
         stationSearch.append(STATION_SEARCH)
@@ -126,17 +132,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
 
     public TransportManager(Context context) {
         super(context);
-
-        // Create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS transport_favorites (" +
-                   "id INTEGER PRIMARY KEY AUTOINCREMENT, symbol VARCHAR)");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS widgets_transport (" +
-                   "id INTEGER PRIMARY KEY, station VARCHAR, station_id VARCHAR, location BOOLEAN, reload BOOLEAN)");
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        transportDao = tcaDb.transportDao();
 
         if (TransportManager.widgetDeparturesList == null) {
             TransportManager.widgetDeparturesList = new SparseArray<>();
         }
+
     }
 
     /**
@@ -146,9 +148,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @return True, if favorite
      */
     public boolean isFavorite(String symbol) {
-        try (Cursor c = db.rawQuery("SELECT * FROM transport_favorites WHERE symbol = ?", new String[]{symbol})) {
-            return c.getCount() > 0;
-        }
+        return transportDao.isFavorite(symbol);
     }
 
     /**
@@ -157,7 +157,9 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @param symbol The transport symbol
      */
     public void addFavorite(String symbol) {
-        db.execSQL("INSERT INTO transport_favorites (symbol) VALUES (?)", new String[]{symbol});
+        TransportFavorites transportFavorites = new TransportFavorites();
+        transportFavorites.setSymbol(symbol);
+        transportDao.addFavorite(transportFavorites);
     }
 
     /**
@@ -166,7 +168,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @param symbol The transport symbol
      */
     public void deleteFavorite(String symbol) {
-        db.execSQL("DELETE FROM transport_favorites WHERE symbol = ?", new String[]{symbol});
+        transportDao.deleteFavorite(symbol);
     }
 
     /**
@@ -174,12 +176,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      */
     public void addWidget(int appWidgetId, WidgetDepartures widgetDepartures) {
         ContentValues values = new ContentValues();
-        values.put("id", appWidgetId);
-        values.put("station", widgetDepartures.getStation());
-        values.put("station_id", widgetDepartures.getStationId());
-        values.put("location", widgetDepartures.getUseLocation());
-        values.put("reload", widgetDepartures.getAutoReload());
-        db.replace("widgets_transport", null, values);
+        WidgetsTransport widgetsTransport = new WidgetsTransport();
+        widgetsTransport.setId(appWidgetId);
+        widgetsTransport.setStation(widgetDepartures.getStation());
+        widgetsTransport.setStationId(widgetDepartures.getStationId());
+        widgetsTransport.setLocation(widgetDepartures.getUseLocation());
+        widgetsTransport.setReload(widgetDepartures.getAutoReload());
+        transportDao.replaceWidget(widgetsTransport);
         TransportManager.widgetDeparturesList.put(appWidgetId, widgetDepartures);
     }
 
@@ -189,7 +192,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @param widgetId The id of the widget
      */
     public void deleteWidget(int widgetId) {
-        db.delete("widgets_transport", "id = ?", new String[]{String.valueOf(widgetId)});
+        transportDao.deleteWidget(widgetId);
         TransportManager.widgetDeparturesList.remove(widgetId);
     }
 
@@ -208,15 +211,13 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             return TransportManager.widgetDeparturesList.get(widgetId);
         }
         WidgetDepartures widgetDepartures;
-        try (Cursor c = db.rawQuery("SELECT * FROM widgets_transport WHERE id = ?", new String[]{String.valueOf(widgetId)})) {
-            widgetDepartures = new WidgetDepartures();
-            if (c.getCount() >= 1) {
-                c.moveToFirst();
-                widgetDepartures.setStation(c.getString(c.getColumnIndex("station")));
-                widgetDepartures.setStationId(c.getString(c.getColumnIndex("station_id")));
-                widgetDepartures.setUseLocation(c.getInt(c.getColumnIndex("location")) != 0);
-                widgetDepartures.setAutoReload(c.getInt(c.getColumnIndex("reload")) != 0);
-            }
+        WidgetsTransport widgetsTransports = transportDao.getAllWithId(widgetId);
+        widgetDepartures = new WidgetDepartures();
+        if(widgetsTransports != null)   {
+            widgetDepartures.setStation(widgetsTransports.getStation());
+            widgetDepartures.setStationId(widgetsTransports.getStationId());
+            widgetDepartures.setUseLocation(widgetsTransports.getLocation());
+            widgetDepartures.setAutoReload(widgetsTransports.getReload());
         }
         TransportManager.widgetDeparturesList.put(widgetId, widgetDepartures);
         return widgetDepartures;
@@ -285,7 +286,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      * @param prefix Name prefix
      * @return Database Cursor (name, _id)
      */
-    public static Optional<Cursor> getStationsFromExternal(Context context, String prefix) {
+    public static List<StationResult> getStationsFromExternal(Context context, String prefix) {
         prefix = Utils.escapeUmlauts(prefix);
         try {
             String language = LANGUAGE + Locale.getDefault()
@@ -301,7 +302,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             // Download possible stations
             Optional<JSONObject> jsonObj = net.downloadJsonObject(query, CacheManager.VALIDITY_DO_NOT_CACHE, true);
             if (!jsonObj.isPresent()) {
-                return Optional.absent();
+                return Collections.emptyList();
             }
 
             List<StationResult> results = new ArrayList<>();
@@ -313,7 +314,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             if (pointsArray == null) {
                 JSONObject points = stopfinder.optJSONObject(POINTS);
                 if (points == null) {
-                    return Optional.absent();
+                    return Collections.emptyList();
                 }
                 JSONObject point = points.getJSONObject("point");
                 addStationResult(results, point);
@@ -327,16 +328,11 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             //Sort by quality
             Collections.sort(results, (lhs, rhs) -> rhs.getQuality() - lhs.getQuality());
 
-            MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
-            for (StationResult result : results) {
-                String jsonStationResult = gson.toJson(result, StationResult.class);
-                mc.addRow(new String[]{jsonStationResult, String.valueOf(RecentsManager.STATIONS)});
-            }
-            return Optional.of(mc);
+            return results;
         } catch (JSONException e) {
             Utils.log(e, ERROR_INVALID_JSON + STATION_SEARCH);
         }
-        return Optional.absent();
+        return Collections.emptyList();
     }
 
     private static void addStationResult(Collection<StationResult> results, JSONObject point) throws JSONException {
@@ -371,5 +367,19 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         card.setDepartures(cur);
         card.apply();
 
+    }
+
+
+    public static List<StationResult> getRecentStations(RecentsManager recentsManager) {
+        List<Recent> recentList = recentsManager.getAllFromDb();
+        List<StationResult> stationResults = new ArrayList<>(recentList.size());
+        for (Recent r : recentList) {
+            try {
+                stationResults.add(StationResult.Companion.fromRecent(r));
+            } catch (JsonSyntaxException ignore) {
+                //We don't care about deserialization errors
+            }
+        }
+        return stationResults;
     }
 }

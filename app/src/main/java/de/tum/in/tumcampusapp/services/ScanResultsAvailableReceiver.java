@@ -26,7 +26,6 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.WifiMeasurementLocationListener;
 import de.tum.in.tumcampusapp.managers.EduroamManager;
-import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 
 /**
@@ -67,7 +66,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
 
         //Check if locations are enabled
         boolean locationsEnabled = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean wifiScansEnabled = Utils.getInternalSettingBool(context, WifiMeasurementManager.WIFI_SCANS_ALLOWED, false);
+        boolean wifiScansEnabled = Utils.getInternalSettingBool(context, Const.WIFI_SCANS_ALLOWED, false);
         boolean nextScanScheduled = false;
 
         if (!locationsEnabled) {
@@ -100,7 +99,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             //scheduled. This setting can be used as additional way to limit battery consumption and leaves
             //the user more freedom in deciding, when to scan.
             float currentBattery = Utils.getBatteryLevel(context);
-            float minimumBattery = Utils.getInternalSettingFloat(context, WifiMeasurementManager.WIFI_SCAN_MINIMUM_BATTERY_LEVEL, 50.0f);
+            float minimumBattery = Utils.getInternalSettingFloat(context, Const.INSTANCE.WIFI_SCAN_MINIMUM_BATTERY_LEVEL, 50.0f);
             if (currentBattery > minimumBattery) {
                 wifiScanHandler.startRepetition();
                 Utils.log("WifiScanHandler rescheduled");

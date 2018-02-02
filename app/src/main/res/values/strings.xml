@@ -55,7 +55,7 @@
     <string name="semester">Semester</string>
     <string name="examiner">Examiner</string>
     <string name="mode">Mode</string>
-    <string name="all_programs">All programs</string>
+    <string name="all_programs">All Grades</string>
     <string name="date">Date</string>
     <string name="credits" translatable="false">ECTS</string>
     <string name="no_grades">You don\'t have any grades yet.</string>
@@ -84,7 +84,7 @@
     <string name="silence_phone">Silent Service</string>
     <string name="silence_phone_info">The device will be automatically put into silent mode during a lecture.</string>
     <string name="background_mode">Background Mode (Recommended)</string>
-    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don’t open the app.</string>
+    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don’t open the app. If you’re more than 50km outside of munich it’ll automatically turned off/on</string>
     <string name="mode_background_mode">Background Mode activation</string>
     <string name="always">Always</string>
     <string name="wifi_only">WiFi only</string>
@@ -558,23 +558,10 @@ Signature: %5$s</string>
         <item>@string/general</item>
         <item>@string/tca</item>
     </string-array>
+    <string name="grades_without_weight">Grades without weights</string>
+    <string name="study_program">Program %s</string>
+    <string name="summer_semester">Summer term %d</string>
+    <string name="winter_semester">Winter term %d/%d</string>
+    <string name="show_list">&#032;Show List</string>
+    <string name="show_chart">&#032;Show Chart</string>
 </resources>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

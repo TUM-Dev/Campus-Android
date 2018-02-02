@@ -2,11 +2,17 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import java.io.IOException;
+
+import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
@@ -24,6 +30,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Feedback;
+import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
@@ -36,10 +43,12 @@ import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 
@@ -78,35 +87,23 @@ public class TUMCabeClient {
     static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
     static final String API_FEEDBACK = "feedback/";
+    static final String API_CAFETERIAS = "mensen/";
+    static final String API_KINOS = "kino/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
 
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://" + API_HOSTNAME + API_BASEURL)
-                .addConverterFactory(GsonConverterFactory.create());
-
+                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
+        Gson gson = new GsonBuilder().
+                registerTypeAdapter(Date.class,new DateSerializer())
+                .create();
+        builder.addConverterFactory(GsonConverterFactory.create(gson));
         builder.client(Helper.getOkClient(c));
         service = builder.build()
                          .create(TUMCabeAPIService.class);
-
-        /*
-        TODO port the error handler to Retrofit 2
-        ErrorHandler errorHandler = new ErrorHandler() {
-            @Override
-            public Throwable handleError(RetrofitError cause) {
-                Throwable t = cause.getCause();
-                if (t instanceof SSLPeerUnverifiedException) {
-                    //TODO show a error message
-                    //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
-                }
-
-                //Return the same cause, so it can be handled by other activities
-                return cause;
-            }
-        }; */
-
     }
 
     public static synchronized TUMCabeClient getInstance(Context c) {
@@ -185,28 +182,21 @@ public class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public ChatMessage sendMessage(int roomId, ChatMessage chatMessageCreate) throws IOException {
-        return service.sendMessage(roomId, chatMessageCreate)
-                      .execute()
-                      .body();
+    public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessageCreate) throws IOException {
+        return service.sendMessage(roomId, chatMessageCreate);
+
     }
 
-    public ChatMessage updateMessage(int roomId, ChatMessage message) throws IOException {
-        return service.updateMessage(roomId, message.getId(), message)
-                      .execute()
-                      .body();
+    public Observable<ChatMessage> updateMessage(int roomId, ChatMessage message) throws IOException {
+        return service.updateMessage(roomId, message.getId(), message);
+    }
+    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
+        return service.getMessages(roomId, messageId, verification);
     }
 
-    public List<ChatMessage> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
-        return service.getMessages(roomId, messageId, verification)
-                      .execute()
-                      .body();
-    }
+    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
+        return service.getNewMessages(roomId, verification);
 
-    public List<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
-        return service.getNewMessages(roomId, verification)
-                      .execute()
-                      .body();
     }
 
     public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) throws IOException {
@@ -287,7 +277,7 @@ public class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public void createMeasurements(WifiMeasurement[] wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
+    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
         service.createMeasurements(wifiMeasurementList)
                .enqueue(cb);
     }
@@ -366,5 +356,12 @@ public class TUMCabeClient {
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
             service.sendFeedbackImage(body, i+1, feedback.getId()).enqueue(cb);
         }
+    }
+    public Observable<List<Cafeteria>> getCafeterias() {
+        return service.getCafeterias();
+    }
+
+    public Observable<List<Kino>> getKinos(String lastId){
+        return service.getKinos(lastId);
     }
 }

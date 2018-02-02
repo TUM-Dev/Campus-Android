@@ -263,13 +263,17 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                   .smoothScrollToPosition(mCardsView, null, 0);
     }
 
+    public interface ItemTouchHelperAdapter {
+        void onItemMove(int fromPosition, int toPosition);
+    }
+
     /**
      * A touch helper class, Handles swipe to dismiss events
      */
     private class MainActivityTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
         public MainActivityTouchHelperCallback() {
-            super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+            super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         }
 
         @Override
@@ -284,13 +288,13 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            //Moving is not allowed as per flags
-            return false;
+            mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+            return true;
         }
 
         @Override
         public boolean isLongPressDragEnabled() {
-            return false;
+            return true;
         }
 
         @Override
