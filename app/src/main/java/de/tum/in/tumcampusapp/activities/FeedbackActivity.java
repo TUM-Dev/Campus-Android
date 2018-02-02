@@ -47,6 +47,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.models.tumcabe.Feedback;
+import de.tum.in.tumcampusapp.models.tumcabe.Success;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -285,19 +286,26 @@ public class FeedbackActivity extends BaseActivity {
         try {
             showProgressBarDialog();
             TUMCabeClient client = TUMCabeClient.getInstance(this);
-            client.sendFeedback(getFeedback(), picPaths.toArray(new String[0]), new Callback<String>() {
+
+            client.sendFeedback(getFeedback(), picPaths.toArray(new String[0]), new Callback<Success>() {
                  @Override
-                 public void onResponse(Call<String> call, Response<String> response) {
-                     sentCount++;
-                     if(sentCount == picPaths.size() + 1){
-                         progress.cancel();
-                         finish();
-                         Toast.makeText(feedbackView.getContext(), R.string.feedback_send_success, Toast.LENGTH_SHORT).show();
+                 public void onResponse(Call<Success> call, Response<Success> response) {
+                     Success success = response.body();
+                     if(success != null && success.wasSuccessfullySent()){
+                         sentCount++;
+                         Utils.log(success.getSuccess());
+                         if(sentCount == picPaths.size() + 1){
+                             progress.cancel();
+                             finish();
+                             Toast.makeText(feedbackView.getContext(), R.string.feedback_send_success, Toast.LENGTH_SHORT).show();
+                         }
+                         Utils.log("sent " + sentCount + " of " + (picPaths.size()+1) + " message parts");
+                     } else {
+                         showErrorDialog();
                      }
-                     Utils.log("sent " + sentCount + " of " + (picPaths.size()+1) + " message parts");
                  }
                  @Override
-                 public void onFailure(Call<String> call, Throwable t) {
+                 public void onFailure(Call<Success> call, Throwable t) {
                      showErrorDialog();
                  }
             });
@@ -367,23 +375,20 @@ public class FeedbackActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK){
             if (requestCode == REQUEST_TAKE_PHOTO) {
+                // get picture, resize it and write back the image
+                rescaleBitmap(Uri.fromFile(new File(mCurrentPhotoPath)), new File(mCurrentPhotoPath));
+
                 picPaths.add(mCurrentPhotoPath);
                 thumbAdapter.notifyDataSetChanged();
             } else if(requestCode == REQUEST_GALLERY) {
-                File destination = null;
 
+                File destination = null;
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, Const.FEEDBACK_IMG_COMPRESSION_QUALITY, out);
                     destination = createImageFile();
-                    FileOutputStream fileOut = new FileOutputStream(destination);
-                    fileOut.write(out.toByteArray());
-                    fileOut.close();
-                    out.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                rescaleBitmap(data.getData(), destination);
 
                 if (destination != null) {
                     picPaths.add(destination.getAbsolutePath());
@@ -392,6 +397,52 @@ public class FeedbackActivity extends BaseActivity {
             }
         }
 
+    }
+
+    /**
+     * scales down the image and writes it to the destination file
+     * @param src
+     * @param destination
+     */
+    private void rescaleBitmap(Uri src, File destination){
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), src);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Utils.log("img before: " + bitmap.getWidth() + " x " + bitmap.getHeight());
+            bitmap = getResizedBitmap(bitmap, 1000);
+            Utils.log("img after: " + bitmap.getWidth() + " x " + bitmap.getHeight());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, Const.FEEDBACK_IMG_COMPRESSION_QUALITY, out);
+            FileOutputStream fileOut = new FileOutputStream(destination);
+            fileOut.write(out.toByteArray());
+            fileOut.close();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * scales the bitmap down if it's bigger than maxSize
+     * @param image
+     * @param maxSize
+     * @return
+     */
+    private Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        if(width < maxSize && height < maxSize){
+            return image;
+        }
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
     private void startTakingPicture(){

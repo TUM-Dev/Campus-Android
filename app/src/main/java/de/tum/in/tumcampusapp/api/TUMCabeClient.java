@@ -30,6 +30,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
+import de.tum.in.tumcampusapp.models.tumcabe.Success;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 import okhttp3.MediaType;
@@ -83,7 +84,7 @@ public class TUMCabeClient {
 
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
+                .baseUrl("http://" + API_HOSTNAME + API_BASEURL)
                 .addConverterFactory(GsonConverterFactory.create());
 
         builder.client(Helper.getOkClient(c));
@@ -357,13 +358,13 @@ public class TUMCabeClient {
                       .body();
     }
 
-    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<String> cb) throws IOException {
+    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) throws IOException {
         service.sendFeedback(feedback).enqueue(cb);
         for(int i = 0; i < imagePaths.length; i++){
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", file.getName(), reqFile);
-            service.sendFeedbackImage(body, i, feedback.getId()).enqueue(cb);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
+            service.sendFeedbackImage(body, i+1, feedback.getId()).enqueue(cb);
         }
     }
 }

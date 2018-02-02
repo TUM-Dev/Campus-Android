@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
+import de.tum.in.tumcampusapp.models.tumcabe.Success;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 import okhttp3.MultipartBody;
@@ -203,9 +204,9 @@ public interface TUMCabeAPIService {
                                                  @Path("start") String start, @Path("end") String end);
 
     @POST(API_FEEDBACK)
-    Call<String> sendFeedback(@Body Feedback feedback);
+    Call<Success> sendFeedback(@Body Feedback feedback);
 
     @Multipart
-    @POST(API_FEEDBACK + "{id}/{image}")
-    Call<String> sendFeedbackImage(@Part MultipartBody.Part image, @Path("image") int imageNr, @Path("id") String feedbackId);
+    @POST(API_FEEDBACK + "{id}/{image}/")
+    Call<Success> sendFeedbackImage(@Part MultipartBody.Part image, @Path("image") int imageNr, @Path("id") String feedbackId);
 }

@@ -115,7 +115,7 @@ object Const {
     const val POSITION = "position"
 
     const val PREF_UNIQUE_ID = "PREF_UNIQUE_ID"
-    const val CHATTERMS_URL = "https://tumcabe.in.tum.de/landing/chatterms/"
+    const val CHATTERMS_URL = "https://$API_HOSTNAME/landing/chatterms/"
 
     const val URL_ROOM_FINDER_API = "/Api/roomfinder/room/"
     const val URL_DEFAULT_MAP_IMAGE = "https://$API_HOSTNAME${URL_ROOM_FINDER_API}defaultMap/"
