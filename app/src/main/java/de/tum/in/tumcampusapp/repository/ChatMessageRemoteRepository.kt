@@ -4,7 +4,6 @@ import de.tum.`in`.tumcampusapp.api.TUMCabeClient
 import de.tum.`in`.tumcampusapp.models.tumcabe.ChatMessage
 import de.tum.`in`.tumcampusapp.models.tumcabe.ChatVerification
 import io.reactivex.Observable
-import kotlin.properties.Delegates
 
 object ChatMessageRemoteRepository {
 

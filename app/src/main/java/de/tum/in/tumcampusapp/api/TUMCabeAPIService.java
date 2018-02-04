@@ -29,7 +29,6 @@ import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;

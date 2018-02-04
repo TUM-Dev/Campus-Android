@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.activities.ChatActivity;
@@ -57,7 +59,6 @@ public class SendMessageService extends JobIntentService {
         if (unsentMsg.isEmpty()) {
             return;
         }
-
         int numberOfAttempts = 0;
         AuthenticationManager am = new AuthenticationManager(this);
 
@@ -69,25 +70,21 @@ public class SendMessageService extends JobIntentService {
                     message.setSignature(am.sign(message.getText()));
 
                     // Send the message to the server
-                    ChatMessage createdMessage;
                     if (message.getId() == 0) { //If the id is zero then its an new entry otherwise try to update it
                         chatMessageViewModel.sendMessage(message.getRoom(), message);
                         Utils.logv("successfully sent message: " + message.getText());
                     } else {
                         chatMessageViewModel.updateMessage(message.getRoom(), message);
-
                         Utils.logv("successfully updated message: " + message.getText());
                     }
+                    chatMessageViewModel.deleteOldEntries();
+                    chatMessageViewModel.removeUnsentMessage(message.internalID);
 
-                   /* try {
+                    try {
                         Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         Utils.log(e);
-                    }*/
-                    //Update the status on the ui
-                    chatMessageViewModel.deleteOldEntries();
-
-                    chatMessageViewModel.removeUnsentMessage(message.internalID);
+                    }
 
                     // Send broadcast to eventually open ChatActivity
                     Intent i = new Intent("chat-message-received");
@@ -104,6 +101,7 @@ public class SendMessageService extends JobIntentService {
             } catch (NoPrivateKey noPrivateKey) {
                 return; //Nothing can be done, just exit
             } catch (Exception e) {
+                Utils.log(e);
                 numberOfAttempts++;
             }
 
