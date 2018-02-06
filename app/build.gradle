@@ -8,9 +8,10 @@ android {
     buildToolsVersion '27.0.1'
     buildTypes {
         all {
-            proguardFiles(file('../proguard').listFiles())
-            proguardFile getDefaultProguardFile('proguard-android.txt')
-            minifyEnabled true
+//            proguardFiles(file('../proguard').listFiles())
+//            proguardFile getDefaultProguardFile('proguard-android.txt')
+            minifyEnabled false
+            useProguard false
         }
         debug.debuggable true
         release.debuggable false
@@ -21,6 +22,7 @@ android {
         targetSdkVersion 27
         versionCode 99999
         versionName "1.5.2-dev"
+        multiDexEnabled true
     }
     lintOptions {
         checkAllWarnings true
@@ -36,6 +38,9 @@ android {
     packagingOptions {
         exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
         exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        pickFirst 'META-INF/DEPENDENCIES'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -53,6 +58,7 @@ android {
             }
         }
     }
+    useLibrary 'org.apache.http.legacy'
 }
 
 def androidSupportVersion = '27.0.1'
@@ -106,6 +112,15 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
 
+    compile('net.opacapp:libopac:5.2.5') {
+        transitive = false
+    }
+    compile 'org.json:json:20090211'
+    compile 'org.jsoup:jsoup:1.8.3'
+    compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile "com.squareup.okhttp3:okhttp-urlconnection:3.9.0"
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.6.0'
 
     //Used for testing
     testImplementation 'junit:junit:4.12'

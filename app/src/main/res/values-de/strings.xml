@@ -129,6 +129,7 @@
     <string name="tum_common">TUM Allgemein</string>
     <string name="menues">Mensen</string>
     <string name="study_plans">Studienpläne</string>
+    <string name="opac_library">Bibliothek</string>
     <string name="person_search">Personensuche</string>
     <string name="plans">Pläne</string>
     <string name="roomfinder">Roomfinder</string>

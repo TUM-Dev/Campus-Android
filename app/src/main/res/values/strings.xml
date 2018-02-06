@@ -133,6 +133,7 @@
     <string name="tum_common">General TUM</string>
     <string name="menues">Cafeterias</string>
     <string name="study_plans">Study Plans</string>
+    <string name="opac_library">Library</string>
     <string name="person_search">Person Search</string>
     <string name="plans">Plans</string>
     <string name="roomfinder">Roomfinder</string>
