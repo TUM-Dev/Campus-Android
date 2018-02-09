@@ -487,4 +487,6 @@ Signatur: %5$s</string>
     <string name="study_program">Studiengang %s</string>
     <string name="summer_semester">Sommersemester %d</string>
     <string name="winter_semester">Wintersemester %d/%d</string>
+    <string name="location_services_off_title">Standortfreigabe ist ausgeschaltet</string>
+    <string name="location_services_off_message">Schalte deinen Standort in den Einstellungen an um deinen Standort mitzusenden</string>
 </resources>

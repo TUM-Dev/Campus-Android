@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -68,6 +69,8 @@ public class FeedbackActivity extends BaseActivity {
     private String email;
     private String lrzId;
     private Location location;
+    private LocationListener locationListener;
+    private LocationManager locationManager;
 
     private ArrayList<String> picPaths;
 
@@ -114,9 +117,10 @@ public class FeedbackActivity extends BaseActivity {
     @SuppressLint("NewApi")
     private void initIncludeLocation(Bundle savedInstanceState){
         includeLocation.setOnClickListener(view -> {
-            if(includeLocation.isChecked() && location == null
-               && checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
+            if(includeLocation.isChecked() && checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
                 saveLocation();
+            } else if(!includeLocation.isChecked()){
+                stopListeningForLocation();
             }
         });
 
@@ -157,9 +161,52 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void saveLocation(){
-        location = new LocationManager(this).getLastLocation();
-        if(location == null){
+        Utils.log("saveLocation");
+
+        locationManager = new LocationManager(this);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location gps) {
+                location = gps; // just take the newest location
+                Utils.log("location (" + gps.getProvider() + "): " + location.getLatitude() + " " + location.getLongitude());
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {}
+            @Override
+            public void onProviderEnabled(String s) {}
+            @Override
+            public void onProviderDisabled(String s) {
+                Utils.log("Provider " + s + " disabled");
+            }
+        };
+        locationManager.getLocationUpdates(locationListener);
+
+        // if the feedback is sent before we received a location
+        getBackupLocation();
+    }
+
+    private void stopListeningForLocation(){
+        Utils.log("Stop listening for location");
+        if(locationManager != null && locationListener != null){
+            locationManager.stopReceivingUpdates(locationListener);
+        }
+    }
+
+    private void getBackupLocation(){
+        Location backup = new LocationManager(this).getLastLocation();
+        if(backup != null){
+            location = backup;
+        }
+        if(location == null){ // we don't know anything about the location
             includeLocation.setChecked(false);
+
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setIcon(R.drawable.ic_location);
+            dialog.setTitle(R.string.location_services_off_title);
+            dialog.setMessage(R.string.location_services_off_message);
+            dialog.setPositiveButton(R.string.ok, null);
+            dialog.show();
         }
     }
 
@@ -216,11 +263,17 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     @Override
-    public void onDestroy(){
+    protected void onDestroy(){
         super.onDestroy();
         for(String path: picPaths){
             new File(path).delete();
         }
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        stopListeningForLocation();
     }
 
     @Override
@@ -278,6 +331,7 @@ public class FeedbackActivity extends BaseActivity {
 
     public void sendFeedback(View view){
         sentCount = 0;
+        stopListeningForLocation();
 
         if(includeEmail.isChecked() && Strings.isNullOrEmpty(lrzId) && !isValidEmail()){
             return;
