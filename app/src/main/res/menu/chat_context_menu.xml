@@ -11,7 +11,7 @@
 
     <item
         android:id="@+id/action_info"
-        android:icon="@drawable/ic_action_about"
+        android:icon="@drawable/ic_action_info_white"
         android:title="@string/information"
         tumcampus:showAsAction="ifRoom"/>
 </menu>
