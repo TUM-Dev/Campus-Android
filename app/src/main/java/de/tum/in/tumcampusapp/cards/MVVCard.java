@@ -123,7 +123,7 @@ public class MVVCard extends NotificationAwareCard {
             }
 
             NotificationCompat.Builder pageNotification =
-                    new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT)
+                    new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_MVV)
                             .setContentTitle(d.getCountDown() + "min")
                             .setContentText(d.getServingLine() + " " + d.getDirection());
             morePageNotification.addPage(pageNotification.build());

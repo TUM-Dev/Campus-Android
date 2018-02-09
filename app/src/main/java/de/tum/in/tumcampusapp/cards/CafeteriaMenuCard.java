@@ -137,9 +137,10 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                 continue;
             }
 
-            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.getTypeLong())
-                                                                                                                                                              .replaceAll("")
-                                                                                                                                                              .trim());
+            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_CAFETERIA)
+                    .setContentTitle(PATTERN.matcher(menu.getTypeLong())
+                    .replaceAll("")
+                    .trim());
 
             StringBuilder content = new StringBuilder(menu.getName());
             if (rolePrices.containsKey(menu.getTypeLong())) {

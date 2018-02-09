@@ -541,6 +541,11 @@ Signature: %5$s</string>
     <string name="winter_semester">Winter term %d/%d</string>
     <string name="show_list">&#032;Show List</string>
     <string name="show_chart">&#032;Show Chart</string>
+    <string name="channel_general">General</string>
+    <string name="channel_cafeteria">Cafeteria</string>
+    <string name="channel_chat">Chat</string>
+    <string name="channel_mvv">Public Transport</string>
+    <string name="channel_tum_alarmierung">TUM Emergency Notifications</string>
 </resources>
 
 

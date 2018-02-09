@@ -463,4 +463,9 @@ Signatur: %5$s</string>
     <string name="study_program">Studiengang %s</string>
     <string name="summer_semester">Sommersemester %d</string>
     <string name="winter_semester">Wintersemester %d/%d</string>
+    <string name="channel_general">Allgemein</string>
+    <string name="channel_cafeteria">Mensa</string>
+    <string name="channel_chat">Chat</string>
+    <string name="channel_mvv">MVV</string>
+    <string name="channel_tum_alarmierung">TUM Alarmierung (für Katastrophen)</string>
 </resources>
