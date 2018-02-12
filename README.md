@@ -25,14 +25,14 @@ Just don't forget: Be excellent to each other :heart:
 + Camera: So you can join chat rooms by scanning a QR code
 
 ## Disclaimer:
-This is not an official app of the Technische Universität München. There's no support or warranty (you can however send us an email [tca-support.os.in@tum.de](mailto:tca-support.os.in@tum.de) or open an issue here on Github). The app is developed by students and for students, so use it at your own risk. We try to keep your data safe with only using TUMonline tokens and not saving your password. For further information you should have a look at our privacy policy and the terms and conditions of the lecture chat.
+This is not an official app of the Technische Universität München. There's no support or warranty (you can however send us an email [app@tum.de](mailto:app@tum.de) or open an issue here on Github). The app is developed by students and for students, so use it at your own risk. We try to keep your data safe with only using TUMonline tokens and not saving your password. For further information you should have a look at our privacy policy and the terms and conditions of the lecture chat.
 
 ## Policies:
-[Privacy policy](https://tumcabe.in.tum.de/landing/privacy/)  
-[T&Cs of the lecture chat](https://tumcabe.in.tum.de/landing/chatterms/)
+[Privacy policy](https://app.tum.de/landing/privacy/)  
+[T&Cs of the lecture chat](https://app.tum.de/landing/chatterms/)
 
 ## Support:
-You can reach us on [Facebook](https://www.facebook.com/TUMCampus), [Github](https://github.com/TCA-Team/TumCampusApp) or via E-Mail [tca-support.os.in@tum.de](mailto:tca-support.os.in@tum.de)
+You can reach us on [Facebook](https://www.facebook.com/TUMCampus), [Github](https://github.com/TCA-Team/TumCampusApp) or via E-Mail [app@tum.de](mailto:app@tum.de)
 
 ## License:
 Dual licensed under  
