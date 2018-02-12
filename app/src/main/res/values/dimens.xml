@@ -23,4 +23,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="dimen_buttonHeight_in_dp">21dp</dimen>
     <dimen name="dimen_progressHeight_in_dp">50dp</dimen>
+    <dimen name="thumb_size">75dp</dimen>
+    <dimen name="feedback_img_big">300dp</dimen>
 </resources>

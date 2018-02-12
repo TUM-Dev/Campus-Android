@@ -19,6 +19,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
+import de.tum.in.tumcampusapp.models.tumcabe.Feedback;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
@@ -26,16 +27,20 @@ import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
+import de.tum.in.tumcampusapp.models.tumcabe.Success;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import okhttp3.MultipartBody;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ANSWER_QUESTION;
@@ -65,6 +70,7 @@ import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ROOM_FINDER_SEARCH;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_STATISTICS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_WIFI_HEATMAP;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_FEEDBACK;
 
 public interface TUMCabeAPIService {
 
@@ -203,10 +209,17 @@ public interface TUMCabeAPIService {
     Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
                                                  @Path("start") String start, @Path("end") String end);
 
+    @POST(API_FEEDBACK)
+    Call<Success> sendFeedback(@Body Feedback feedback);
+
+    @Multipart
+    @POST(API_FEEDBACK + "{id}/{image}/")
+    Call<Success> sendFeedbackImage(@Part MultipartBody.Part image, @Path("image") int imageNr, @Path("id") String feedbackId);
+
     @GET(API_CAFETERIAS)
     Observable<List<Cafeteria>> getCafeterias();
 
     @GET(API_KINOS+"{lastId}")
     Observable<List<Kino>> getKinos(@Path("lastId") String lastId);
-
+  
 }

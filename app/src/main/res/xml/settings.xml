@@ -342,6 +342,7 @@
             android:key="github"
             android:title="@string/github"/>
         <Preference
+            android:icon="@drawable/ic_feedback"
             android:key="feedback"
             android:title="@string/show_feedback"/>
         <Preference

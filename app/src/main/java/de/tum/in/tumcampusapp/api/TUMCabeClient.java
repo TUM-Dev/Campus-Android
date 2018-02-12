@@ -5,7 +5,9 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.io.IOException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +29,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
+import de.tum.in.tumcampusapp.models.tumcabe.Feedback;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderCoordinate;
@@ -34,8 +37,12 @@ import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderMap;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
+import de.tum.in.tumcampusapp.models.tumcabe.Success;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,6 +86,7 @@ public class TUMCabeClient {
     static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
     static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
+    static final String API_FEEDBACK = "feedback/";
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
 
@@ -93,7 +101,6 @@ public class TUMCabeClient {
                 registerTypeAdapter(Date.class,new DateSerializer())
                 .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
-
         builder.client(Helper.getOkClient(c));
         service = builder.build()
                          .create(TUMCabeAPIService.class);
@@ -341,6 +348,15 @@ public class TUMCabeClient {
                       .body();
     }
 
+    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) throws IOException {
+        service.sendFeedback(feedback).enqueue(cb);
+        for(int i = 0; i < imagePaths.length; i++){
+            File file = new File(imagePaths[i]);
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
+            service.sendFeedbackImage(body, i+1, feedback.getId()).enqueue(cb);
+        }
+    }
     public Observable<List<Cafeteria>> getCafeterias() {
         return service.getCafeterias();
     }
@@ -348,5 +364,4 @@ public class TUMCabeClient {
     public Observable<List<Kino>> getKinos(String lastId){
         return service.getKinos(lastId);
     }
-
 }
