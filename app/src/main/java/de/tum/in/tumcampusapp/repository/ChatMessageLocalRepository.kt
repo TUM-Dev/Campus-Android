@@ -21,11 +21,11 @@ object ChatMessageLocalRepository {
 
     //ChatMessage methods
 
-    fun markAsRead(room: Int) =
-            executor.execute { db.chatMessageDao().markAsRead(room) }
+    fun getRead(id: Int): Int = db.chatMessageDao().getRead(id)
 
-    fun deleteOldEntries() =
-            executor.execute { db.chatMessageDao().deleteOldEntries() }
+    fun markAsRead(room: Int) = { db.chatMessageDao().markAsRead(room) }
+
+    fun deleteOldEntries() = db.chatMessageDao().deleteOldEntries()
 
     fun addToUnsent(message: ChatMessage) =
             executor.execute { db.chatMessageDao().addToUnsent(message) }
@@ -53,9 +53,6 @@ object ChatMessageLocalRepository {
 
     fun getAllUnsentFromCurrentRoomList(): List<ChatMessage> =
             db.chatMessageDao().allUnsentFromCurrentRoom
-
-    fun addChatMessage(chatMessage: ChatMessage) =
-            executor.execute { db.chatMessageDao().addToUnsent(chatMessage) }
 
     fun replaceMessage(chatMessage: ChatMessage) =
             executor.execute { db.chatMessageDao().replaceMessage(chatMessage) }

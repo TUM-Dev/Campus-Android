@@ -60,9 +60,11 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.notifications.Chat;
 import de.tum.in.tumcampusapp.repository.ChatMessageLocalRepository;
 import de.tum.in.tumcampusapp.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.services.SendMessageService;
+import de.tum.in.tumcampusapp.trace.Util;
 import de.tum.in.tumcampusapp.viewmodel.ChatMessageViewModel;
 import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
@@ -84,10 +86,10 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     public static ChatRoom mCurrentOpenChatRoom;
     private final Handler mUpdateHandler = new Handler();
     private ChatMessageViewModel chatMessageViewModel;
-    private ChatMessageManager chatManager;
     private ChatMessageRemoteRepository remoteRepository;
     private ChatMessageLocalRepository localRepository;
     private final CompositeDisposable mDisposable = new CompositeDisposable();
+    private ChatMessageManager chatManager;
 
     /**
      * UI elements
@@ -210,8 +212,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         }
 
         //Update the history
-        chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
         chatMessageViewModel.markAsRead(currentChatRoom.getId());
+        chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
     }
 
     @SuppressWarnings("deprecation")
@@ -455,6 +457,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 if (chatHistoryAdapter == null) {
                     chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, msgs, currentChatMember);
                     lvMessageHistory.setAdapter(chatHistoryAdapter);
+                    chatHistoryAdapter.notifyDataSetChanged();
                 } else {
                     chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
                 }

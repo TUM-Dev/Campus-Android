@@ -40,10 +40,13 @@ import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.Success;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import io.reactivex.Flowable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.internal.operators.observable.ObservableError;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -182,21 +185,21 @@ public class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessageCreate) throws IOException {
+    public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessageCreate) {
         return service.sendMessage(roomId, chatMessageCreate);
 
     }
 
-    public Observable<ChatMessage> updateMessage(int roomId, ChatMessage message) throws IOException {
+    public Observable<ChatMessage> updateMessage(int roomId, ChatMessage message) {
         return service.updateMessage(roomId, message.getId(), message);
     }
-    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
+
+    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body ChatVerification verification) {
         return service.getMessages(roomId, messageId, verification);
     }
 
-    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
+    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body ChatVerification verification) {
         return service.getNewMessages(roomId, verification);
-
     }
 
     public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) throws IOException {
