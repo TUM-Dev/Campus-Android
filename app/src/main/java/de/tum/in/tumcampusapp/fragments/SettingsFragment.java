@@ -27,6 +27,7 @@ import java.util.List;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.FeedbackActivity;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.activities.StartupActivity;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
@@ -271,14 +272,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                         .show();
                 break;
             case FEEDBACK:
-            /* Create the Intent */
-                Uri uri = Uri.parse("mailto:tca-support.os.in@tum.de?subject=" + getString(R.string.feedbackSubj));
-
-                Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
-                sendIntent.setData(uri);
-
-		    /* Send it off to the Activity-Chooser */
-                startActivity(Intent.createChooser(sendIntent, getString(R.string.send_email)));
+                startActivity(new Intent(mContext, FeedbackActivity.class));
                 break;
             case PRIVACY:
                 Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)));

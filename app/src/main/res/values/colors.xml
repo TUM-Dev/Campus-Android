@@ -40,6 +40,9 @@
     <color name="star_selected">#ffd600</color>
     <color name="star_unselected">@color/text_light_gray</color>
 
+    <color name="error">#FFFF0000</color>
+    <color name="valid">#7cbc49</color>
+  
     <color name="grade_1.0">#318f11</color>
     <color name="grade_1.3">#5dab12</color>
     <color name="grade_1.4">#5dab12</color>

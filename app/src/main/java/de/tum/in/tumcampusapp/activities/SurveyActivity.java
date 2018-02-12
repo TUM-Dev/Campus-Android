@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
@@ -234,7 +233,7 @@ public class SurveyActivity extends ProgressActivity {
             LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels, (int) inPixels);
             infoButtonParams.setMargins(0, 15, 0, 0);
             infoButton.setLayoutParams(infoButtonParams);
-            infoButton.setBackgroundResource(R.drawable.ic_action_about_blue);
+            infoButton.setBackgroundResource(R.drawable.ic_action_info_blue);
             infoButton.setOnClickListener(showFaculties);
             infoButton.setTag(targetFacsNames);
             l2.addView(infoButton);

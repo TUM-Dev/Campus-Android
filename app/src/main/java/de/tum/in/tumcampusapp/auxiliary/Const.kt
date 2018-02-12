@@ -116,7 +116,7 @@ object Const {
     const val POSITION = "position"
 
     const val PREF_UNIQUE_ID = "PREF_UNIQUE_ID"
-    const val CHATTERMS_URL = "https://tumcabe.in.tum.de/landing/chatterms/"
+    const val CHATTERMS_URL = "https://$API_HOSTNAME/landing/chatterms/"
 
     const val URL_ROOM_FINDER_API = "/Api/roomfinder/room/"
     const val URL_DEFAULT_MAP_IMAGE = "https://$API_HOSTNAME${URL_ROOM_FINDER_API}defaultMap/"
@@ -132,12 +132,21 @@ object Const {
     const val DOWNLOAD_SERVICE_JOB_ID = 1004
     const val FILL_CACHE_SERVICE_JOB_ID = 1005
 
+    const val FEEDBACK_MESSAGE = "feedback_message"
+    const val FEEDBACK_PIC_PATHS = "feedback_paths"
+    const val FEEDBACK_INCL_EMAIL = "feedback_include_email"
+    const val FEEDBACK_INCL_LOCATION = "feedback_incl_location"
+    const val FEEDBACK_TOPIC = "feedback_topic"
+    const val FEEDBACK_EMAIL = "feedback_reply_to"
+    const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50;
+    const val FEEDBACK_TOPIC_GENERAL = "general"
+    const val FEEDBACK_TOPIC_APP = "tca"
+    
+    const val EXTRA_FOREIGN_CONFIGURATION_EXISTS = "CONFIGURED_BY_OTHER_APP"
     const val GEOFENCING_SERVICE_JOB_ID = 1006
     const val ADD_GEOFENCE_EXTRA = "AddGeofence"
     const val DISTANCE_IN_METER = 50 * 1000f
     const val MUNICH_GEOFENCE = "geofence_munich_id"
-
-    const val EXTRA_FOREIGN_CONFIGURATION_EXISTS = "CONFIGURED_BY_OTHER_APP"
 
     const val TUM_ID_PATTERN = "^[a-z]{2}[0-9]{2}[a-z]{3}$"
 

@@ -43,7 +43,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
-            android:src="@drawable/ic_info"/>
+            android:src="@drawable/ic_action_info_black"/>
 
         <TextView
             android:layout_width="0px"
