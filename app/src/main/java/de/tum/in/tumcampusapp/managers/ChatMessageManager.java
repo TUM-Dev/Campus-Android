@@ -104,19 +104,11 @@ public class ChatMessageManager extends AbstractManager {
     }
 
     public List<ChatMessage> getNewMessages(ChatMember member, int messageId) throws NoPrivateKey, IOException {
-/*
-        List<ChatMessage> messages;
-*/
         if (messageId == -1) {
             chatMessageViewModel.getNewMessages(mChatRoom, ChatVerification.Companion.getChatVerification(mContext, member));
-/*            messages = TUMCabeClient.getInstance(mContext)
-                                    .getNewMessages(mChatRoom, ChatVerification.Companion.getChatVerification(mContext, member));*/
         } else {
             chatMessageViewModel.getMessages(mChatRoom, messageId, ChatVerification.Companion.getChatVerification(mContext, member));
-/*            messages = TUMCabeClient.getInstance(mContext)
-                                    .getMessages(mChatRoom, messageId, ChatVerification.Companion.getChatVerification(mContext, member));*/
         }
-
         return chatMessageDao.getUnreadList(mChatRoom);
     }
 }

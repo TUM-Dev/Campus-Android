@@ -83,10 +83,10 @@ public class OpeningHoursDetailFragment extends Fragment {
      * change presentation of locations in the list
      */
     public void setViewValue(View view, Location location) {
-        TextView tv1 = view.findViewById(android.R.id.text1);
+        TextView tv1 = view.findViewById(R.id.text1);
         tv1.setText(location.getName());
 
-        TextView tv2 = view.findViewById(android.R.id.text2);
+        TextView tv2 = view.findViewById(R.id.text2);
         String transport = location.getTransport();
         String address = location.getAddress();
         String hours = location.getHours();
@@ -140,7 +140,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                                   .inflate(R.layout.two_line_list_item, parent);
+                                   .inflate(R.layout.two_line_list_item, parent, false);
             return new RecyclerView.ViewHolder(v) {
             };
         }

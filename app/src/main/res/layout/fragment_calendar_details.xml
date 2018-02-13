@@ -101,7 +101,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_info"/>
+                    android:src="@drawable/ic_action_info_black"/>
 
                 <TextView
                     android:id="@+id/bottomSheetDescriptionText"

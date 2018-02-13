@@ -3,10 +3,10 @@ package de.tum.in.tumcampusapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
 
@@ -18,14 +18,16 @@ import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
  * This activity is mostly just a 'shell' activity containing nothing more than
  * a {@link OpeningHoursDetailFragment}.
  */
-public class OpeningHoursDetailActivity extends AppCompatActivity {
+public class OpeningHoursDetailActivity extends BaseActivity {
 
-    //TODO: implement BaseActivity
+    public OpeningHoursDetailActivity() {
+        super(R.layout.activity_openinghoursdetails);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
-        setContentView(R.layout.activity_openinghoursdetails);
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity

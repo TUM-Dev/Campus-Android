@@ -11,6 +11,7 @@ android {
             proguardFiles(file('../proguard').listFiles())
             proguardFile getDefaultProguardFile('proguard-android.txt')
             minifyEnabled true
+            useProguard true
         }
         debug.debuggable true
         release.debuggable false
@@ -19,7 +20,7 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 99999
+        versionCode 999999
         versionName "1.5.2-dev"
     }
     lintOptions {
@@ -55,9 +56,9 @@ android {
     }
 }
 
-def androidSupportVersion = '27.0.1'
+def androidSupportVersion = '27.0.2'
 def retrofitVersion = '2.3.0'
-def firebaseVersion = '11.6.2'
+def firebaseVersion = '11.8.0'
 def roomVersion = '1.0.0'
 
 configurations.all {

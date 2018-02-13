@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/action_ingredients"
-        android:icon="@drawable/ic_action_about"
+        android:icon="@drawable/ic_action_info_white"
         android:title="@string/action_ingredients"
         tumcampus:showAsAction="always"/>
 

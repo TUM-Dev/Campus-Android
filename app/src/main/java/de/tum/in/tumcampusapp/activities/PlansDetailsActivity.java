@@ -1,26 +1,29 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Activity to show plan details.
  */
-public class PlansDetailsActivity extends AppCompatActivity {
+public class PlansDetailsActivity extends BaseActivity {
 
     public static final String PLAN_TITLE_ID = "plan_title_id";
     public static final String PLAN_IMG_ID = "plan_img_id";
+
+    public PlansDetailsActivity() {
+        super(R.layout.activity_plans_details);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
-        setContentView(R.layout.activity_plans_details);
 
         int title = getIntent().getExtras()
                                .getInt(PLAN_TITLE_ID);
