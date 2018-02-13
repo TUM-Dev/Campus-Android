@@ -29,7 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/activity_vertical_margin"
-                    android:src="@drawable/ic_calendar"
+                    android:src="@drawable/ic_calendar_white"
                     app:backgroundTint="@color/color_primary"/>
 
                 <TextView
