@@ -22,7 +22,9 @@ import android.view.View;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.CardsAdapter;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.services.SilenceService;
@@ -36,6 +38,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      */
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean registered;
+
+    /**
+     * easter egg
+     */
+    private int tapCounter;
 
     /**
      * Card list
@@ -118,6 +125,21 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         } else {
             initAdapter();
         }
+
+        tapCounter = 0;
+        findViewById(R.id.main_toolbar).setOnClickListener(view -> {
+            tapCounter++;
+            if(tapCounter == 3){
+                tapCounter = 0;
+                boolean rainbowEnabled = Utils.getSettingBool(this, Const.RAINBOW_MODE, false);
+                if(rainbowEnabled){
+                    headerView.setBackgroundResource(R.drawable.wear_tuition_fee);
+                } else {
+                    headerView.setBackgroundResource(R.drawable.drawer_header_rainbow);
+                }
+                Utils.setSetting(this, Const.RAINBOW_MODE, !rainbowEnabled);
+            }
+        });
     }
 
     @Override
