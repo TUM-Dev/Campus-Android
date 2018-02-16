@@ -143,7 +143,7 @@ public class CacheManager {
         kinoDao.getAll().subscribe(it -> {
         for (Kino kino : it) {
             String imgUrl = kino.getCover();
-            if (!"null".equals(imgUrl)) {
+            if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
                 net.downloadImage(imgUrl);
             }}
         });
