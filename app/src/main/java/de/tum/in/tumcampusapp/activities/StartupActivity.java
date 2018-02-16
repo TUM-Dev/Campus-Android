@@ -160,7 +160,7 @@ public class StartupActivity extends AppCompatActivity {
         View background = findViewById(R.id.startup_background);
         background.setOnClickListener(view -> {
             tapCounter++;
-            if(tapCounter == 3){
+            if(tapCounter % 3 == 0){
                 tapCounter = 0;
 
                 // use the other logo and invert the setting
