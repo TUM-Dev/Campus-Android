@@ -82,6 +82,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             // Set the NavigationDrawer's click listener
             mDrawerList.setNavigationItemSelectedListener(helper);
+
+            if(Utils.getSettingBool(this, Const.RAINBOW_MODE, false)){
+                headerView.setBackgroundResource(R.drawable.drawer_header_rainbow);
+            } else {
+                headerView.setBackgroundResource(R.drawable.wear_tuition_fee);
+            }
         }
 
         String parent = NavUtils.getParentActivityName(this);

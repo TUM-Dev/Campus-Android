@@ -53,6 +53,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  */
 public class StartupActivity extends AppCompatActivity {
 
+    private int tapCounter; // for easter egg
     private static final int REQUEST_LOCATION = 0;
     private static final String[] PERMISSIONS_LOCATION = {ACCESS_COARSE_LOCATION,
                                                           ACCESS_FINE_LOCATION};
@@ -146,6 +147,34 @@ public class StartupActivity extends AppCompatActivity {
 
         //Show a loading screen during boot
         setContentView(R.layout.activity_startup);
+
+        // init easter egg (logo)
+        ImageView tumLogo = findViewById(R.id.startup_tum_logo);
+        if (Utils.getSettingBool(this, Const.RAINBOW_MODE, false)) {
+            tumLogo.setImageResource(R.drawable.tum_logo_rainbow);
+        } else {
+            tumLogo.setImageResource(R.drawable.tum_logo);
+        }
+
+        tapCounter = 0;
+        View background = findViewById(R.id.startup_background);
+        background.setOnClickListener(view -> {
+            tapCounter++;
+            if(tapCounter % 3 == 0){
+                tapCounter = 0;
+
+                // use the other logo and invert the setting
+                boolean rainbowEnabled = Utils.getSettingBool(this, Const.RAINBOW_MODE, false);
+                ImageView logo = findViewById(R.id.startup_tum_logo);
+                if (rainbowEnabled) {
+                    logo.setImageResource(R.drawable.tum_logo);
+                } else {
+                    logo.setImageResource(R.drawable.tum_logo_rainbow);
+                }
+                Utils.setSetting(this, Const.RAINBOW_MODE, !rainbowEnabled);
+            }
+        });
+        background.setSoundEffectsEnabled(false);
 
         new Thread(this::init).start();
     }
