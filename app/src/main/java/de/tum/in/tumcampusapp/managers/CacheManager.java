@@ -134,7 +134,7 @@ public class CacheManager {
         List<News> news = newsManager.getAllFromDb(mContext);
         for (News n: news) {
             String imgUrl = n.getImage();
-            if (!"null".equals(imgUrl)) {
+            if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
                 net.downloadImage(imgUrl);
             }
         }
@@ -143,7 +143,7 @@ public class CacheManager {
         kinoDao.getAll().subscribe(it -> {
         for (Kino kino : it) {
             String imgUrl = kino.getCover();
-            if (!"null".equals(imgUrl)) {
+            if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
                 net.downloadImage(imgUrl);
             }}
         });

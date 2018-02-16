@@ -158,4 +158,6 @@ object Const {
 
     const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
     const val CALENDAR_ID_PARAM = "calendar_id"
+
+    const val RAINBOW_MODE = "rainbow_enabled"
 }

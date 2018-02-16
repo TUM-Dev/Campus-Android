@@ -45,6 +45,7 @@ public final class CardManager {
     private static boolean shouldRefresh;
     private static List<Card> cards;
     private static Collection<Card> newCards = new ConcurrentSkipListSet<>();
+    private static List<OnCardAddedListener> listeners = new ArrayList<>();
 
     /**
      * Adds the specified card to the card manager
@@ -57,6 +58,10 @@ public final class CardManager {
             card.setPosition(newCards.size());
         }
         newCards.add(card);
+        cards = new ArrayList<>(newCards);
+        for (OnCardAddedListener onCardAddedListener : listeners) {
+            onCardAddedListener.onCardAdded();
+        }
     }
 
     /**
@@ -138,7 +143,7 @@ public final class CardManager {
         new RestoreCard(context).apply();
 
         shouldRefresh = false;
-        cards = new ArrayList<>(newCards);
+
     }
 
     /**
@@ -176,6 +181,10 @@ public final class CardManager {
         return index;
     }
 
+    public static void registerUpdateListener(OnCardAddedListener listener){
+        listeners.add(listener);
+    }
+
     /**
      * Resets dismiss settings for all cards
      */
@@ -203,5 +212,9 @@ public final class CardManager {
 
     private CardManager() {
         // CardManager is a utility class
+    }
+
+    public interface OnCardAddedListener {
+        void onCardAdded();
     }
 }
