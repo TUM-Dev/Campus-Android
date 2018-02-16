@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 
 import java.util.List;
 
@@ -40,15 +41,16 @@ public class KinoActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        View noMovies = findViewById(R.id.no_movies_layout);
         // set up ViewPager and adapter
         ViewPager mpager = findViewById(R.id.pager);
         kinoViewModel.getAllKinos()
                      .doOnError(throwable -> setContentView(R.layout.layout_error))
                      .subscribe(kinos -> {
                          if (kinos.isEmpty()) {
-                             setContentView(R.layout.layout_no_movies);
+                             noMovies.setVisibility(View.VISIBLE);
                          } else {
+                             noMovies.setVisibility(View.GONE);
                              KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
                              mpager.setAdapter(kinoAdapter);
                          }
