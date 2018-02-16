@@ -263,6 +263,10 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                   .smoothScrollToPosition(mCardsView, null, 0);
     }
 
+    public interface ItemTouchHelperAdapter {
+        void onItemMove(int fromPosition, int toPosition);
+    }
+
     /**
      * A touch helper class, Handles swipe to dismiss events
      */
