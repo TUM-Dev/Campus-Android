@@ -664,7 +664,8 @@
             </intent-filter>
         </service>
 
-        <service android:name=".services.GeofencingRegistrationService"/>
+        <service android:name=".services.GeofencingRegistrationService"
+                 android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <receiver android:name=".services.GeofencingUpdateReceiver"/>
 
