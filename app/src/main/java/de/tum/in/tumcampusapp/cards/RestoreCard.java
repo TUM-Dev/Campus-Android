@@ -35,4 +35,12 @@ public class RestoreCard extends StickyCard {
     public int getId() {
         return 0;
     }
+
+    /**
+     * Override getPosition, we want the RestoreCard to be the last card.
+     */
+    @Override
+    public int getPosition() {
+        return Integer.MAX_VALUE;
+    }
 }
