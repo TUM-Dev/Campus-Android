@@ -134,7 +134,7 @@ public class CacheManager {
         List<News> news = newsManager.getAllFromDb(mContext);
         for (News n: news) {
             String imgUrl = n.getImage();
-            if (!"null".equals(imgUrl)) {
+            if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
                 net.downloadImage(imgUrl);
             }
         }
