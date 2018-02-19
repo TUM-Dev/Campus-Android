@@ -7,18 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 
-import java.io.IOError;
-import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.activities.ChatActivity;
-import de.tum.in.tumcampusapp.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.repository.ChatMessageLocalRepository;
@@ -55,7 +51,7 @@ public class SendMessageService extends JobIntentService {
         chatMessageViewModel.deleteOldEntries();
 
         // Get all unsent messages from database
-        List<ChatMessage> unsentMsg = chatMessageViewModel.getAllUnsentList();
+        List<ChatMessage> unsentMsg = Collections.emptyList(); //chatMessageViewModel.getAllUnsentList();
         if (unsentMsg.isEmpty()) {
             return;
         }

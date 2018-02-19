@@ -2,30 +2,18 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 
-import com.google.common.base.Optional;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.ChatRoomDao;
-import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
-import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -139,7 +127,8 @@ public class ChatRoomManager implements Card.ProvidesCard {
 
     @Override
     public void onRequestCard(Context context) {
-        ChatRoomManager manager = new ChatRoomManager(context);
+        return;
+        /*ChatRoomManager manager = new ChatRoomManager(context);
 
         //Use this to make sure chat_message table exists (and maybe delete old entries)
         new ChatMessageManager(context,0);
@@ -181,7 +170,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                 ChatMessagesCard card = new ChatMessagesCard(context,room);
                 card.apply();
             }
-        }
+        }*/
     }
 
     private List<String> getNewUnjoined() {
