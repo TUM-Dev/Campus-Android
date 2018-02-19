@@ -104,12 +104,12 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
 
         // get departures from website
-        List<Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, locationID);
-        if (departureCursor.isEmpty()) {
+        List<Departure> departures = TransportManager.getDeparturesFromExternal(this, locationID);
+        if (departures.isEmpty()) {
             showError(R.string.no_departures_found);
         }
 
-        return departureCursor;
+        return departures;
     }
 
     /**

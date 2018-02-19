@@ -93,7 +93,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
     /**
      * Shows all recently used stations
      *
-     * @return Cursor holding the recents information (name, _id)
+     * @return List of StationResult
      */
     @Override
     public Optional<List<StationResult>> onSearchInBackground() {
@@ -104,25 +104,25 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      * Searches the Webservice for stations
      *
      * @param query the text entered by the user
-     * @return Cursor holding the stations (name, _id)
+     * @return List of StationResult
      */
     @Override
     public Optional<List<StationResult>> onSearchInBackground(String query) {
         // Get Information
-        List<StationResult> stationCursor = TransportManager.getStationsFromExternal(this, query);
+        List<StationResult> stations = TransportManager.getStationsFromExternal(this, query);
 
         // Drop results if canceled
         if (asyncTask.isCancelled()) {
             return Optional.absent();
         }
 
-        return Optional.of(stationCursor);
+        return Optional.of(stations);
     }
 
     /**
      * Shows the stations
      *
-     * @param possibleStationList Cursor with stations (name, _id)
+     * @param possibleStationList list of possible StationResult
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Override
