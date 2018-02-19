@@ -30,7 +30,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
-public class ChatRoomManager extends AbstractManager implements Card.ProvidesCard {
+public class ChatRoomManager implements Card.ProvidesCard {
 
     private final ChatRoomDao chatRoomDao;
 
@@ -40,7 +40,6 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      * @param context Context
      */
     public ChatRoomManager(Context context) {
-        super(context);
         TcaDb tcaDb = TcaDb.getInstance(context);
         chatRoomDao = tcaDb.chatRoomDao();
     }

@@ -17,6 +17,7 @@ import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.CARD_POSITION_PREFERENCE_SUFFIX;
 
@@ -193,8 +194,7 @@ public final class CardManager {
         prefs.edit()
              .clear()
              .apply();
-        AbstractManager.getDb(context)
-                       .execSQL("UPDATE news SET dismissed=0");
+        TcaDb.getInstance(context).newsDao().restoreAllNews();
         restorePositions(context);
     }
 

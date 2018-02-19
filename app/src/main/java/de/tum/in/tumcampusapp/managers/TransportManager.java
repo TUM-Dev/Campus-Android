@@ -22,7 +22,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.MVVCard;
@@ -40,7 +39,7 @@ import de.tum.in.tumcampusapp.models.transport.WidgetsTransport;
  * Transport Manager, handles querying data from mvv and card creation
  */
 @SuppressWarnings("StringConcatenationMissingWhitespace")
-public class TransportManager extends AbstractManager implements Card.ProvidesCard {
+public class TransportManager implements Card.ProvidesCard {
 
     /*  Documentation for using efa.mvv-muenchen.de
      *
@@ -131,7 +130,6 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     }
 
     public TransportManager(Context context) {
-        super(context);
         TcaDb tcaDb = TcaDb.getInstance(context);
         transportDao = tcaDb.transportDao();
 

@@ -107,6 +107,8 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
 
+    //DB Debugging
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 
     //Used for testing
     testImplementation 'junit:junit:4.12'

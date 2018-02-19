@@ -267,7 +267,7 @@ public class CacheManager {
         manager.replaceInto(lectures);
     }
 
-    static synchronized void clearCache(Context context) {
+    public static synchronized void clearCache(Context context) {
         cacheDb = null;
         try {
             Process proc = Runtime.getRuntime()
