@@ -11,7 +11,7 @@ The TUM Campus App (TCA) is a open source project, mainly developed by volunteer
 - TUM and related News (mostly in german)
 - Roomfinder
 - automatic muting while lectures are held
-- available in english, french, german, italian, russian and spanish
+- available in english and german
 
 ## [Contributors](https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md)
 Special thanks to everybody that has contributed to this project. If you also want to contribute to the TCA, don't hesitate to ask us about anything, open an issue or just correct our spelling mistakes. We've also collected a bunch of guidelines in the [Wiki](https://github.com/TCA-Team/TumCampusApp/wiki).  

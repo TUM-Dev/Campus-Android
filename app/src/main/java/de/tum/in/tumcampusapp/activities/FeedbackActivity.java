@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.FeedbackThumbAdapter;
@@ -326,7 +327,9 @@ public class FeedbackActivity extends BaseActivity {
                      (includeEmail.isChecked() ? email : ""),
                      (includeLocation.isChecked() ? location.getLatitude() : 0),
                      (includeLocation.isChecked() ? location.getLongitude() : 0),
-                     picPaths == null ? 0 : picPaths.size());
+                     picPaths == null ? 0 : picPaths.size(),
+                     Build.VERSION.RELEASE,
+                     BuildConfig.VERSION_NAME);
     }
 
     public void sendFeedback(View view){
