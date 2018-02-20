@@ -20,11 +20,11 @@
                     android:key="card_cafeteria_wear"
                     android:title="@string/wear"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:dependency="card_cafeteria_wear"
                     android:key="card_cafeteria_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone"/>
+                    android:title="@string/notification"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/default_cafeteria">
                 <ListPreference
@@ -99,11 +99,11 @@
                     android:key="card_mvv_wear"
                     android:title="@string/wear"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:dependency="card_mvv_wear"
                     android:key="card_mvv_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone"/>
+                    android:title="@string/notification"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/default_station">
                 <ListPreference
@@ -143,11 +143,11 @@
                     android:key="card_next_lecture_wear"
                     android:title="@string/wear"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:dependency="card_next_lecture_wear"
                     android:key="card_next_lecture_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone"/>
+                    android:title="@string/notification"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -166,11 +166,11 @@
                     android:key="card_tuition_fee_wear"
                     android:title="@string/wear"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:dependency="card_tuition_fee_wear"
                     android:key="card_tuition_fee_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone"/>
+                    android:title="@string/notification"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -193,7 +193,7 @@
                     android:dependency="card_news_wear"
                     android:key="card_news_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone"/>
+                    android:title="@string/notification"/>
             </PreferenceCategory>
             <PreferenceCategory
                 android:key="card_news_sources"
@@ -235,7 +235,7 @@
                     android:dependency="card_chat_wear"
                     android:key="card_chat_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone"/>
+                    android:title="@string/notification"/>
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -253,7 +253,7 @@
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_eduroam_phone"
-                    android:title="@string/phone"/>
+                    android:title="@string/notification"/>
             </PreferenceCategory>
 
             <PreferenceCategory android:title="@string/extra">
@@ -282,7 +282,7 @@
                     android:dependency="card_survey_wear"
                     android:key="card_survey_phone"
                     android:summary="@string/phone_summary"
-                    android:title="@string/phone"/>
+                    android:title="@string/notification"/>
             </PreferenceCategory>
         </PreferenceScreen>
 

@@ -30,6 +30,9 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.gcm.GCMAlert;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 
+/**
+ * TUM Alarmierung
+ */
 public class Alarm extends GenericNotification {
 
     /**
@@ -145,7 +148,7 @@ public class Alarm extends GenericNotification {
         PendingIntent pending = PendingIntent.getActivity(this.context, 0, alarm, PendingIntent.FLAG_UPDATE_CURRENT);
         String strippedDescription = Utils.stripHtml(info.getDescription()); // Strip any html tags from the description
 
-        return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+        return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_EMERGENCY)
                 .setSmallIcon(this.icon)
                 .setContentTitle(info.getTitle())
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(strippedDescription))

@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -332,7 +333,33 @@ public class StartupActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(
-                    new NotificationChannel(Const.NOTIFICATION_CHANNEL_DEFAULT, Const.NOTIFICATION_CHANNEL_DEFAULT, NotificationManager.IMPORTANCE_DEFAULT));
+                    new NotificationChannel(Const.NOTIFICATION_CHANNEL_DEFAULT,
+                                            getString(R.string.channel_general),
+                                            NotificationManager.IMPORTANCE_DEFAULT));
+
+            notificationManager.createNotificationChannel(
+                    new NotificationChannel(Const.NOTIFICATION_CHANNEL_CAFETERIA,
+                                            getString(R.string.channel_cafeteria),
+                                            NotificationManager.IMPORTANCE_DEFAULT));
+
+            NotificationChannel chat = new NotificationChannel(Const.NOTIFICATION_CHANNEL_CHAT,
+                                            getString(R.string.channel_chat),
+                                            NotificationManager.IMPORTANCE_DEFAULT);
+            chat.enableLights(true);
+            notificationManager.createNotificationChannel(chat);
+
+            notificationManager.createNotificationChannel(
+                    new NotificationChannel(Const.NOTIFICATION_CHANNEL_MVV,
+                                            getString(R.string.channel_mvv),
+                                            NotificationManager.IMPORTANCE_DEFAULT));
+
+            NotificationChannel emergency = new NotificationChannel(Const.NOTIFICATION_CHANNEL_EMERGENCY,
+                                            getString(R.string.channel_tum_alarmierung),
+                                            NotificationManager.IMPORTANCE_HIGH);
+            emergency.enableVibration(true);
+            emergency.enableLights(true);
+            emergency.setLightColor(Color.RED);
+            notificationManager.createNotificationChannel(emergency);
         }
     }
 }

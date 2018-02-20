@@ -123,7 +123,12 @@ object Const {
     const val URL_MAP_IMAGE = "https://$API_HOSTNAME${URL_ROOM_FINDER_API}map/"
     const val ROOM_ID = "room_id"
 
-    const val NOTIFICATION_CHANNEL_DEFAULT = "default"
+    const val NOTIFICATION_CHANNEL_DEFAULT = "general"
+    const val NOTIFICATION_CHANNEL_CHAT = "chat"
+    const val NOTIFICATION_CHANNEL_EDUROAM = "eduroam"
+    const val NOTIFICATION_CHANNEL_CAFETERIA = "cafeteria"
+    const val NOTIFICATION_CHANNEL_MVV = "mvv";
+    const val NOTIFICATION_CHANNEL_EMERGENCY = "emergency"
 
     const val BACKGROUND_SERVICE_JOB_ID = 1000
     const val SEND_MESSAGE_SERVICE_JOB_ID = 1001

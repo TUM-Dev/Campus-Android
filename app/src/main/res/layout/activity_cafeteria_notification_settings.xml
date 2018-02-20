@@ -3,7 +3,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent">
     <!-- The main content view -->
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -13,17 +12,36 @@
             layout="@layout/toolbar"
             android:id="@+id/cafeteria_notifications_toolbar"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_info_black"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textColor="#000000"
+                android:text="@string/favorite_dish_info"/>
+        </LinearLayout>
+
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8"
-            android:id="@+id/activity_notification_settings_listview"></ListView>
+            android:layout_height="wrap_content"
+            android:id="@+id/activity_notification_settings_listview"/>
 
         <Button
             android:id="@+id/notification_settings_save"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/tum_100"
+            android:textColor="#FFFFFF"
+            android:layout_gravity="center"
             android:text="@string/save"/>
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
