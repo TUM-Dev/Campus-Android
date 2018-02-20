@@ -34,7 +34,7 @@ public class RecentsManager {
     /**
      * Get all recents from the database
      *
-     * @return Database cursor (name, _id)
+     * @return List of all Recent items
      */
     public List<Recent> getAllFromDb() {
         return dao.getAll(type);

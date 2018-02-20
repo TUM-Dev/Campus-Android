@@ -110,7 +110,7 @@ public class NewsManager implements Card.ProvidesCard {
     /**
      * Get all news from the database
      *
-     * @return Database cursor (_id, src, title, description, link, image, date, created, icon, source)
+     * @return List of News
      */
     public List<News> getAllFromDb(Context context) {
         int selectedNewspread = Integer.parseInt(Utils.getSetting(mContext, "news_newspread", "7"));

@@ -223,7 +223,6 @@ public class TransportManager implements Card.ProvidesCard {
 
     /**
      * Get all departures for a station.
-     * Cursor includes target station name, departure in remaining minutes.
      *
      * @param stationID Station ID, station name might or might not work
      * @return List of departures
@@ -282,7 +281,7 @@ public class TransportManager implements Card.ProvidesCard {
      * Find stations by station name prefix
      *
      * @param prefix Name prefix
-     * @return Database Cursor (name, _id)
+     * @return List of StationResult
      */
     public static List<StationResult> getStationsFromExternal(Context context, String prefix) {
         prefix = Utils.escapeUmlauts(prefix);

@@ -134,8 +134,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 // Show soft keyboard
                 InputMethodManager imm = (InputMethodManager) ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(etMessage, 0);
-
-                // Set text and set cursor to end of the text
+                
                 etMessage.setText(msg.getText());
                 int position = msg.getText()
                                   .length();
