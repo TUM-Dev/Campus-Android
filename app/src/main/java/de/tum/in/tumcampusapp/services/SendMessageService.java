@@ -74,7 +74,8 @@ public class SendMessageService extends JobIntentService {
                         Utils.logv("successfully updated message: " + message.getText());
                     }
                     chatMessageViewModel.deleteOldEntries();
-                    chatMessageViewModel.removeUnsentMessage(message.getInternalID());
+                    //TODO
+                    //chatMessageViewModel.removeUnsentMessage(message.getInternalID());
 
                     try {
                         Thread.sleep(2000);

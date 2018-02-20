@@ -30,7 +30,7 @@ public interface ChatMessageDao {
                                  "WHERE (c2._id IS NULL OR c1.read=1) AND c1.room=:room " +
                                  SQL_ORDER_BY + " LIMIT 5 ";
 
-    String SQL_ALL_UNSENT_CURRENT_ROOM = "SELECT * FROM chat_message WHERE msg_id=0 AND sending=1 ORDER BY _id";
+    String SQL_ALL_UNSENT_CURRENT_ROOM = "SELECT * FROM chat_message WHERE sending=1 ORDER BY _id";
 
     String SQL_ALL_UNSENT = "SELECT * FROM chat_message WHERE sending=1 ORDER BY _id";
 

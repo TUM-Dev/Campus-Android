@@ -35,6 +35,7 @@ import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
+import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
 import de.tum.in.tumcampusapp.managers.CacheManager;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
@@ -67,7 +68,7 @@ import de.tum.in.tumcampusapp.services.DownloadService;
 import de.tum.in.tumcampusapp.services.SendMessageService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
-@Database(version = 3, entities = {
+@Database(version = 4, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -150,7 +151,7 @@ public abstract class TcaDb extends RoomDatabase {
         if (instance == null || !instance.isOpen()) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
-                           .addMigrations(new Migration1to2(), new Migration2to3())
+                           .addMigrations(new Migration1to2(), new Migration2to3(), new Migration3to4())
                            .build();
         }
         return instance;
