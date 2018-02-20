@@ -20,7 +20,7 @@
                     android:key="card_cafeteria_wear"
                     android:title="@string/wear"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:dependency="card_cafeteria_wear"
                     android:key="card_cafeteria_phone"
                     android:summary="@string/phone_summary"
@@ -99,7 +99,7 @@
                     android:key="card_mvv_wear"
                     android:title="@string/wear"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:dependency="card_mvv_wear"
                     android:key="card_mvv_phone"
                     android:summary="@string/phone_summary"
@@ -143,7 +143,7 @@
                     android:key="card_next_lecture_wear"
                     android:title="@string/wear"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:dependency="card_next_lecture_wear"
                     android:key="card_next_lecture_phone"
                     android:summary="@string/phone_summary"
@@ -166,7 +166,7 @@
                     android:key="card_tuition_fee_wear"
                     android:title="@string/wear"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:dependency="card_tuition_fee_wear"
                     android:key="card_tuition_fee_phone"
                     android:summary="@string/phone_summary"

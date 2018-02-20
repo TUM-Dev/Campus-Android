@@ -119,14 +119,15 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
             intent.putExtra(Const.MENSA_FOR_FAVORITEDISH, mensaId);
             PendingIntent pi = PendingIntent.getActivity(context, mensaId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_notification)
                     .setContentTitle(mensaName + ((menuCount > 1) ? " (" + menuCount + ")" : ""))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setContentText(message)
+                    .setAutoCancel(true)
+                    .setLargeIcon(Utils.getLargeIcon(context, R.drawable.ic_cutlery))
+                    .setContentIntent(pi)
+                    .setDefaults(Notification.DEFAULT_SOUND)
                     .setAutoCancel(true);
-            mBuilder.setContentIntent(pi);
-            mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-            mBuilder.setAutoCancel(true);
             mNotificationManager.notify(IDENTIFIER_STRING, mensaId, mBuilder.build());
         }
     }
