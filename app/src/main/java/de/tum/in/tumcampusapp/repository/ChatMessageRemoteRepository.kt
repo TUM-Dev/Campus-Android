@@ -17,7 +17,4 @@ object ChatMessageRemoteRepository {
 
     fun sendMessage(roomId: Int, chatMessage: ChatMessage): Observable<ChatMessage>
             = tumCabeClient.sendMessage(roomId, chatMessage)
-
-    fun updateMessage(roomId: Int, chatMessage: ChatMessage): Observable<ChatMessage>
-            = tumCabeClient.updateMessage(roomId, chatMessage)
 }
