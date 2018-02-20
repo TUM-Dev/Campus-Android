@@ -154,7 +154,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         PendingIntent hideIntent = PendingIntent.getService(context, 0, hide, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Create GCMNotification using NotificationCompat.Builder
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_EDUROAM)
                 .setSmallIcon(R.drawable.ic_notification_wifi)
                 .setTicker(context.getString(R.string.setup_eduroam))
                 .setContentTitle(context.getString(R.string.setup_eduroam))

@@ -12,7 +12,7 @@ public abstract class GenericNotification {
 
     protected final int type;
     protected final int notification;
-    protected final int icon = R.drawable.tum_logo;
+    protected final int icon = R.drawable.ic_notification;
     protected final boolean confirmation;
 
     protected final Context context;

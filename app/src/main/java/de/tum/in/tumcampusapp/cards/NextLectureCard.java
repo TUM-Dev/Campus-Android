@@ -32,7 +32,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 public class NextLectureCard extends NotificationAwareCard {
 
@@ -157,6 +156,7 @@ public class NextLectureCard extends NotificationAwareCard {
         CalendarItem item = lectures.get(0);
         final String time = DateUtils.getFutureTime(item.start, mContext);
         notificationBuilder.setContentText(item.title + '\n' + time);
+        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
         Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_next_lecture);
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();

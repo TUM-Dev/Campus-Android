@@ -8,6 +8,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -39,6 +42,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.BuildConfig;
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Class for common helper functions used by a lot of classes
@@ -649,6 +653,21 @@ public final class Utils {
         else {
             return location;
         }
+    }
+
+    /**
+     * Creates a bitmap for a vector image (.xml) to be able to use it for notifications
+     * @param c
+     * @param res
+     * @return
+     */
+    public static Bitmap getLargeIcon(Context c, int res){
+        Drawable icon = c.getResources().getDrawable(R.drawable.ic_cutlery);
+        Bitmap bitmap = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        icon.draw(canvas);
+        return bitmap;
     }
 
 }

@@ -71,6 +71,7 @@
     <string name="cards_settings">Cards</string>
     <string name="startpage">Startpage</string>
     <string name="wear">Wearable</string>
+    <string name="notification">Notifications</string>
 
     <string name="extras">Extras</string>
     <string name="open_wizard">Open Startup-Wizard</string>
@@ -564,6 +565,14 @@ Signature: %5$s</string>
     <string name="winter_semester">Winter term %d/%d</string>
     <string name="show_list">&#032;Show List</string>
     <string name="show_chart">&#032;Show Chart</string>
+
+    <string name="channel_general">General</string>
+    <string name="channel_cafeteria">Cafeteria</string>
+    <string name="channel_chat">Chat</string>
+    <string name="channel_mvv">Public Transport</string>
+    <string name="channel_tum_alarmierung">TUM Emergency Notifications</string>
+    
+    <string name="favorite_dish_info">You will get notifications on days your favorite dishes are available in the cafeteria. Enjoy!</string>
     <string name="location_services_off_title">Location Services are Off</string>
     <string name="location_services_off_message">To send your location please turn your phone\'s location services on</string>
 </resources>

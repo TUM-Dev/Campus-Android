@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaPrices;
@@ -137,9 +138,12 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                 continue;
             }
 
-            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT).setContentTitle(PATTERN.matcher(menu.getTypeLong())
-                                                                                                                                                              .replaceAll("")
-                                                                                                                                                              .trim());
+            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_CAFETERIA)
+                    .setContentTitle(PATTERN.matcher(menu.getTypeLong())
+                    .replaceAll("")
+                    .trim());
+            pageNotification.setSmallIcon(R.drawable.ic_notification);
+            pageNotification.setLargeIcon(Utils.getLargeIcon(mContext, R.drawable.ic_cutlery));
 
             StringBuilder content = new StringBuilder(menu.getName());
             if (rolePrices.containsKey(menu.getTypeLong())) {

@@ -53,7 +53,7 @@ public abstract class NotificationAwareCard extends Card {
             notificationBuilder.setGroup("GROUP_" + getType());
             notificationBuilder.setGroupSummary(false);
         } else {
-            notificationBuilder.setSmallIcon(R.drawable.tum_logo);
+            notificationBuilder.setSmallIcon(R.drawable.ic_notification);
         }
 
         // Let the card set detailed information
