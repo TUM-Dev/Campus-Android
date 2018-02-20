@@ -29,7 +29,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.ChatRoomManager;
-import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomAndLastMessage;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
@@ -46,7 +47,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List<ChatRoomDbRow>> implements OnItemClickListener {
+public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List<ChatRoomAndLastMessage>> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int CAMERA_REQUEST_CODE = 34;
     private static final int JOIN_ROOM_REQUEST_CODE = 22;
@@ -231,7 +232,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
                                  if (mCurrentMode == 1) {
                                      moveToChatActivity();
                                  } else { //Otherwise show a nice information, that we added the room
-                                     final List<ChatRoomDbRow> rooms = manager.getAllByStatus(mCurrentMode);
+                                     final List<ChatRoomAndLastMessage> rooms = manager.getAllByStatus(mCurrentMode);
 
                                      runOnUiThread(() -> {
                                          chatRoomAdapter.updateRooms(rooms);
@@ -252,7 +253,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
     }
 
     @Override
-    protected List<ChatRoomDbRow> onLoadInBackground(Void... arg) {
+    protected List<ChatRoomAndLastMessage> onLoadInBackground(Void... arg) {
         if (!firstLoad) {
             Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
             if (lecturesList.isPresent()) {
@@ -281,7 +282,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
     }
 
     @Override
-    protected void onLoadFinished(List<ChatRoomDbRow> result) {
+    protected void onLoadFinished(List<ChatRoomAndLastMessage> result) {
         showLoadingEnded();
         if (result.size() == 0) {
             lvMyChatRoomList.setAdapter(new NoResultsAdapter(this));
@@ -300,14 +301,14 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         if (firstLoad) {
             return;
         }
-        ChatRoomDbRow item = (ChatRoomDbRow) lvMyChatRoomList.getItemAtPosition(position);
+        ChatRoomAndLastMessage item = (ChatRoomAndLastMessage) lvMyChatRoomList.getItemAtPosition(position);
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();
         final Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtras(bundle);
 
-        String chatRoomUid = item.getSemesterId() + ':' + item.getName();
+        String chatRoomUid = item.getChatRoomDbRow().getSemesterId() + ':' + item.getChatRoomDbRow().getName();
         this.createOrJoinChatRoom(chatRoomUid);
     }
 

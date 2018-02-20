@@ -125,7 +125,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             int i = item.getItemId();
             if (i == R.id.action_edit) {// If item is not sent at the moment, stop sending
                 if (msg.getSendingStatus() == ChatMessage.STATUS_SENDING) {
-                    chatMessageViewModel.removeUnsentMessage(msg.internalID);
+                    chatMessageViewModel.removeUnsentMessage(msg.getInternalID());
                     chatHistoryAdapter.removeUnsent(msg);
                 } else { // set editing item
                     chatHistoryAdapter.mEditedItem = msg;
