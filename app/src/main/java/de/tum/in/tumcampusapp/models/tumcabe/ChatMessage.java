@@ -16,7 +16,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 @Entity(tableName = "chat_message")
 public class ChatMessage {
-
     public static final int STATUS_SENDING = 1;
     public static final int STATUS_SENT = 0;
     public static final int STATUS_SENDING_FAILED = -1;
@@ -34,7 +33,7 @@ public class ChatMessage {
     @ColumnInfo(name = "sending")
     private int sendingStatus;
     @ColumnInfo(name = "msg_id")
-    public int internalID;
+    private int internalID;
 
     /**
      * Default constructor: called by gson when parsing an element
@@ -196,5 +195,13 @@ public class ChatMessage {
     @Ignore
     public boolean getRead() {
         return read;
+    }
+
+    public int getInternalID() {
+        return internalID;
+    }
+
+    public void setInternalID(int internalID) {
+        this.internalID = internalID;
     }
 }
