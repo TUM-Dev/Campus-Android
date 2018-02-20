@@ -15,12 +15,13 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
 public class ChatHistoryAdapter extends BaseAdapter {
-    private static Integer MSG_OUTGOING = 0;
-    private static Integer MSG_INCOMING = 1;
+    private static final Integer MSG_OUTGOING = 0;
+    private static final Integer MSG_INCOMING = 1;
 
     private List<ChatMessage> chatHistoryList = new ArrayList<>();
 
@@ -42,11 +43,13 @@ public class ChatHistoryAdapter extends BaseAdapter {
     public ChatHistoryAdapter(Context context, List<ChatMessage> chatHistory, ChatMember member) {
         mContext = context;
         chatHistoryList = chatHistory;
+        Utils.log("History: " + chatHistory.size());
         currentChatMember = member;
     }
 
     public void updateHistory(List<ChatMessage> newHistory) {
         chatHistoryList = newHistory;
+        Utils.log("History: " + chatHistoryList.size());
         notifyDataSetChanged();
     }
 
@@ -72,12 +75,12 @@ public class ChatHistoryAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        int count = getCount();
-        if (position > count) {
+        if (position > getCount()) {
             return 0;
         }
-        ChatMember msg = getItem(position).getMember();
-        return currentChatMember.equals(msg) ? MSG_OUTGOING : MSG_INCOMING;
+
+        ChatMember member = getItem(position).getMember();
+        return currentChatMember.getId() == member.getId() ? MSG_OUTGOING : MSG_INCOMING;
     }
 
     @Override

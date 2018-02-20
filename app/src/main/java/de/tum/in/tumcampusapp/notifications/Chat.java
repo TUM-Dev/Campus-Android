@@ -131,7 +131,6 @@ public class Chat extends GenericNotification {
     }
 
     public List<ChatMessage> getNewMessages(ChatRoom chatRoom, ChatMember member, int messageId) throws NoPrivateKey, IOException {
-
         ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
         localRepository.setDb(TcaDb.getInstance(context));
         ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
@@ -143,7 +142,7 @@ public class Chat extends GenericNotification {
         } else {
             chatMessageViewModel.getMessages(chatRoom.getId(), messageId, ChatVerification.Companion.getChatVerification(context, member));
         }
-        return chatMessageDao.getUnreadList(chatRoom.getId());
+        return chatMessageDao.getAll(chatRoom.getId());
     }
 
     @Override

@@ -7,7 +7,6 @@ import de.tum.`in`.tumcampusapp.models.tumcabe.ChatMessage
 import de.tum.`in`.tumcampusapp.models.tumcabe.ChatVerification
 import de.tum.`in`.tumcampusapp.repository.ChatMessageLocalRepository
 import de.tum.`in`.tumcampusapp.repository.ChatMessageRemoteRepository
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -24,9 +23,6 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
      * Returns a flowable that emits a list of chat messages from the local repository
      */
 
-    fun getRead(id: Int): Int =
-            localRepository.getRead(id)
-
     fun markAsRead(room: Int) =
             localRepository.markAsRead(room)
 
@@ -36,36 +32,8 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
     fun addToUnsent(message: ChatMessage) =
             localRepository.addToUnsent(message)
 
-    fun replaceMessage(message: ChatMessage) =
-            localRepository.replaceMessage(message)
-
-    fun removeUnsentMessage(id: Int) =
-            localRepository.removeUnsentMessage(id)
-
-    fun getAllChatMessages(room: Int): Flowable<List<ChatMessage>> =
-            localRepository.getAllChatMessages(room)
-                    .defaultIfEmpty(emptyList())
-
     fun getAllChatMessagesList(room: Int): List<ChatMessage> =
             localRepository.getAllChatMessagesList(room)
-
-    fun getLastUnread(room: Int): Flowable<List<ChatMessage>> =
-            localRepository.getLastUnread(room)
-                    .defaultIfEmpty(emptyList())
-
-    fun getAllUnsent(): Flowable<List<ChatMessage>> =
-            localRepository.getAllUnsent()
-                    .defaultIfEmpty(emptyList())
-
-    fun getAllUnsentList(): List<ChatMessage> =
-            localRepository.getAllUnsentList()
-
-    fun getAllUnsentFromCurrentRoom(): Flowable<List<ChatMessage>> =
-            localRepository.getAllUnsentFromCurrentRoom()
-                    .defaultIfEmpty(emptyList())
-
-    fun getAllUnsentFromCurrentRoomList(): List<ChatMessage> =
-            localRepository.getAllUnsentFromCurrentRoomList()
 
     fun getMessages(roomId: Int, messageId: Long, verification: ChatVerification): Boolean =
             compositeDisposable.add(Observable.just(1)
