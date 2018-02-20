@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.models.chatRoom
+package de.tum.`in`.tumcampusapp.models.dbEntities
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
@@ -14,7 +14,4 @@ data class ChatRoomDbRow(var room: Int = 0,
                          @ColumnInfo(name = "_id")
                          var id: Int = 0,
                          var contributor: String = "",
-                         var members: Int = -1) {
-    var timestamp: String? = ""
-    var text: String? = ""
-}
+                         var members: Int = -1)

@@ -22,7 +22,7 @@ import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
-import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 

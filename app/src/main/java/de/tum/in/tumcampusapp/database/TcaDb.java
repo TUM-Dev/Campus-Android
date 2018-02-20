@@ -39,7 +39,7 @@ import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
-import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.dbEntities.OpenQuestions;
 import de.tum.in.tumcampusapp.models.dbEntities.OwnQuestions;
 import de.tum.in.tumcampusapp.models.dbEntities.Recent;

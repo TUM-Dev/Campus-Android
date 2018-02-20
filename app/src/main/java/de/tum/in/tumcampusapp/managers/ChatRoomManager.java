@@ -11,7 +11,8 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.ChatRoomDao;
-import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomAndLastMessage;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 
@@ -40,7 +41,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
      */
 
 
-    public List<ChatRoomDbRow> getAllByStatus(int joined) {
+    public List<ChatRoomAndLastMessage> getAllByStatus(int joined) {
         if (joined == 1)    {
             return chatRoomDao.getAllRoomsJoinedList();
         } else {
