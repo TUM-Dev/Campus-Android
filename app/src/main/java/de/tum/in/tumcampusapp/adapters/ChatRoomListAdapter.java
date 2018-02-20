@@ -13,8 +13,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomAndLastMessage;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -27,7 +26,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
-    private List<ChatRoomDbRow> rooms;
+    private List<ChatRoomAndLastMessage> rooms;
     private final LayoutInflater mInflater;
     private final boolean showDateAndNumber;
     private final List<String> filters;
@@ -44,7 +43,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
     }
 
     // constructor
-    public ChatRoomListAdapter(Context context, List<ChatRoomDbRow> results, int mode) {
+    public ChatRoomListAdapter(Context context, List<ChatRoomAndLastMessage> results, int mode) {
         this.mInflater = LayoutInflater.from(context);
         this.filters = new ArrayList<>();
         this.showDateAndNumber = mode == 1;
@@ -56,7 +55,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
     public View getView(int position, View convertView, ViewGroup parent)   {
         View listItem = convertView;
         ViewHolder holder;
-        ChatRoomDbRow room = getItem(position);
+        ChatRoomAndLastMessage room = getItem(position);
 
         if (listItem == null)   {
             listItem = mInflater.inflate(R.layout.activity_lectures_listview, parent, false);
@@ -74,17 +73,16 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         } else {
             holder = (ViewHolder) listItem.getTag();
         }
-        holder.tvLectureName.setText(room.getName());
+        holder.tvLectureName.setText(room.getChatRoomDbRow().getName());
         holder.tvDozent.setText(room.getText());
 
         if(showDateAndNumber)   {
-            holder.tvMembers.setText(Integer.toString(room.getMembers()));
+            holder.tvMembers.setText(Integer.toString(room.getChatRoomDbRow().getMembers()));
             holder.tvLastmsg.setText(DateUtils.getTimeOrDayISO(room.getTimestamp(), mContext));
             holder.llAdditionalInfo.setVisibility(View.VISIBLE);
         } else {
-            holder.tvDozent.setText(room.getContributor());
+            holder.tvDozent.setText(room.getChatRoomDbRow().getContributor());
         }
-        Utils.logv("members " + room.getMembers() + ' ' + room.getTimestamp());
 
         return listItem;
     }
@@ -102,8 +100,8 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
             holder = (HeaderViewHolder) convertview.getTag();
         }
         //set header text as first char in name
-        ChatRoomDbRow item = (ChatRoomDbRow) getItem(pos);
-        String semester = item.getSemester();
+        ChatRoomAndLastMessage item = (ChatRoomAndLastMessage) getItem(pos);
+        String semester = item.getChatRoomDbRow().getSemester();
         if (semester.isEmpty()) {
             semester = mContext.getString(R.string.my_chat_rooms);
         }
@@ -113,8 +111,8 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
 
     @Override
     public long getHeaderId(int i)  {
-        ChatRoomDbRow item = (ChatRoomDbRow) getItem(i);
-        String semester = item.getSemester();
+        ChatRoomAndLastMessage item = (ChatRoomAndLastMessage) getItem(i);
+        String semester = item.getChatRoomDbRow().getSemester();
         if (!filters.contains(semester))    {
             filters.add(semester);
         }
@@ -122,7 +120,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
     }
 
     @Override
-    public ChatRoomDbRow getItem(int position) {
+    public ChatRoomAndLastMessage getItem(int position) {
         if (rooms != null) {
             return rooms.get(position);
         } else {
@@ -133,7 +131,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
     @Override
     public long getItemId(int position) {
         if (rooms != null)  {
-            return rooms.get(position).getId();
+            return rooms.get(position).getChatRoomDbRow().getId();
         } else {
             return -1;
         }
@@ -148,7 +146,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         return rooms.size();
     }
 
-    public void updateRooms(List<ChatRoomDbRow> newRoomlist) {
+    public void updateRooms(List<ChatRoomAndLastMessage> newRoomlist) {
         rooms = newRoomlist;
         notifyDataSetChanged();
     }

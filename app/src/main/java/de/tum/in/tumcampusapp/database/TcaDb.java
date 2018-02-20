@@ -4,6 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.Intent;
 
@@ -33,13 +34,14 @@ import de.tum.in.tumcampusapp.database.dao.TumLockDao;
 import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
+import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.managers.CacheManager;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
-import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.dbEntities.OpenQuestions;
 import de.tum.in.tumcampusapp.models.dbEntities.OwnQuestions;
 import de.tum.in.tumcampusapp.models.dbEntities.Recent;
@@ -65,7 +67,7 @@ import de.tum.in.tumcampusapp.services.DownloadService;
 import de.tum.in.tumcampusapp.services.SendMessageService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
-@Database(version = 2, entities = {
+@Database(version = 3, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -148,8 +150,7 @@ public abstract class TcaDb extends RoomDatabase {
         if (instance == null || !instance.isOpen()) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
-                           .fallbackToDestructiveMigration()
-                           .addMigrations(new Migration1to2())
+                           .addMigrations(new Migration1to2(), new Migration2to3())
                            .build();
         }
         return instance;
@@ -180,29 +181,53 @@ public abstract class TcaDb extends RoomDatabase {
         //Clear the db?
         //TODO remove this, as we want to keep the data
         TcaDb tdb = TcaDb.getInstance(c);
-        tdb.cafeteriaDao().removeCache();
-        tdb.cafeteriaMenuDao().removeCache();
-        tdb.calendarDao().flush();
-        tdb.locationDao().removeCache();
-        tdb.newsDao().flush();
-        tdb.newsSourcesDao().flush();
-        tdb.recentsDao().removeCache();
-        tdb.roomLocationsDao().flush();
-        tdb.syncDao().removeCache();
-        tdb.chatMessageDao().removeCache();
-        tdb.chatRoomDao().removeCache();
-        tdb.openQuestionsDao().flush();
-        tdb.ownQuestionsDao().flush();
-        tdb.tumLockDao().removeCache();
-        tdb.facultyDao().flush();
-        tdb.transportDao().removeCache();
-        tdb.studyRoomDao().removeCache();
-        tdb.studyRoomGroupDao().removeCache();
-        tdb.kinoDao().flush();
-        tdb.widgetsTimetableBlacklistDao().flush();
-        tdb.notificationDao().cleanup();
-        tdb.favoriteDishDao().removeCache();
-        tdb.buildingToGpsDao().removeCache();
-        tdb.wifiMeasurementDao().cleanup();
+        tdb.cafeteriaDao()
+           .removeCache();
+        tdb.cafeteriaMenuDao()
+           .removeCache();
+        tdb.calendarDao()
+           .flush();
+        tdb.locationDao()
+           .removeCache();
+        tdb.newsDao()
+           .flush();
+        tdb.newsSourcesDao()
+           .flush();
+        tdb.recentsDao()
+           .removeCache();
+        tdb.roomLocationsDao()
+           .flush();
+        tdb.syncDao()
+           .removeCache();
+        tdb.chatMessageDao()
+           .removeCache();
+        tdb.chatRoomDao()
+           .removeCache();
+        tdb.openQuestionsDao()
+           .flush();
+        tdb.ownQuestionsDao()
+           .flush();
+        tdb.tumLockDao()
+           .removeCache();
+        tdb.facultyDao()
+           .flush();
+        tdb.transportDao()
+           .removeCache();
+        tdb.studyRoomDao()
+           .removeCache();
+        tdb.studyRoomGroupDao()
+           .removeCache();
+        tdb.kinoDao()
+           .flush();
+        tdb.widgetsTimetableBlacklistDao()
+           .flush();
+        tdb.notificationDao()
+           .cleanup();
+        tdb.favoriteDishDao()
+           .removeCache();
+        tdb.buildingToGpsDao()
+           .removeCache();
+        tdb.wifiMeasurementDao()
+           .cleanup();
     }
 }

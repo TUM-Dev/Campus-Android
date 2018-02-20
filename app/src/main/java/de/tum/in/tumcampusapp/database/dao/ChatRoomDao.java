@@ -7,24 +7,25 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomAndLastMessage;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomDbRow;
 
 @Dao
 public interface ChatRoomDao {
 
-    @Query("SELECT r.*, m.* " +
+    @Query("SELECT r.*, m.timestamp, m.text " +
            "FROM chat_room r " +
            "LEFT JOIN (SELECT MAX(timestamp) timestamp, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
            "WHERE joined=1 " +
            "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.timestamp) DESC, r.name")
-    List<ChatRoomDbRow> getAllRoomsJoinedList();
+    List<ChatRoomAndLastMessage> getAllRoomsJoinedList();
 
-    @Query("SELECT r.*, m.* " +
+    @Query("SELECT r.*, m.timestamp, m.text " +
            "FROM chat_room r " +
            "LEFT JOIN (SELECT MAX(timestamp) timestamp, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
            "WHERE joined=0 OR joined=-1 " +
            "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.timestamp) DESC, r.name")
-    List<ChatRoomDbRow> getAllRoomsNotJoinedList();
+    List<ChatRoomAndLastMessage> getAllRoomsNotJoinedList();
 
     @Query("SELECT _id FROM chat_room WHERE name=:name AND semester_id=:semesterId")
     List<Integer> getGivenLecture(String name, String semesterId);

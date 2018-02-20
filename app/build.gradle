@@ -5,7 +5,7 @@ apply from: '../pmd.gradle'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -21,7 +21,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 27
         versionCode 999999
-        versionName "1.5.2-dev"
+        versionName "1.5.3-dev"
     }
     lintOptions {
         checkAllWarnings true
@@ -107,7 +107,7 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
 
-    //DB Debugging
+    //DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 
     //Used for testing
