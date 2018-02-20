@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -72,6 +73,7 @@ public class LocationManager {
     private final Context mContext;
     private final CafeteriaDao cafeteriaDao;
     private final BuildingToGpsDao buildingToGpsDao;
+    private android.location.LocationManager manager;
 
     public LocationManager(Context c) {
         mContext = c.getApplicationContext();
@@ -81,7 +83,7 @@ public class LocationManager {
     }
 
     /**
-     * Tests if Google Play services is available and than gets last known position
+     * Tests if Google Play services is available and then gets last known position
      *
      * @return Returns the more or less current position or null on failure
      */
@@ -188,11 +190,38 @@ public class LocationManager {
     }
 
     /**
+        This might be battery draining
+        @return false if permission check fails
+     */
+    public boolean getLocationUpdates(LocationListener locationListener){
+        //Check Location permission for Android 6.0
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+
+        // Acquire a reference to the system Location Manager
+        if(manager == null){
+            manager = (android.location.LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        }
+        // Register the listener with the Location Manager to receive location updates
+        manager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+        manager.requestLocationUpdates(android.location.LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+        return true;
+    }
+
+    public void stopReceivingUpdates(LocationListener locationListener){
+        if(manager != null){
+            manager.removeUpdates(locationListener);
+        }
+    }
+
+    /**
      * Returns the last known location of the device
      *
      * @return The last location
      */
-    private Location getLastLocation() {
+    public Location getLastLocation() {
         //Check Location permission for Android 6.0
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

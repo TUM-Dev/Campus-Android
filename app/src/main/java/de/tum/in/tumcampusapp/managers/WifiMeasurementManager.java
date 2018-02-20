@@ -16,13 +16,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class WifiMeasurementManager extends AbstractManager {
+public class WifiMeasurementManager {
     public static final String WIFI_SCAN_MINIMUM_BATTERY_LEVEL = "WIFI_SCAN_MINIMUM_BATTERY_LEVEL";
 
     private final WifiMeasurementDao dao;
+    private final Context mContext;
 
     public WifiMeasurementManager(Context context) {
-        super(context);
+        mContext = context;
         dao = TcaDb.getInstance(context)
                    .wifiMeasurementDao();
     }

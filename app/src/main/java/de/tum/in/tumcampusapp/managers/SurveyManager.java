@@ -29,11 +29,12 @@ import retrofit2.Response;
 /**
  * SurveyManager for handling database access and downloading external information via TUMCabeClient
  */
-public class SurveyManager extends AbstractManager implements Card.ProvidesCard {
+public class SurveyManager implements Card.ProvidesCard {
 
     private final FacultyDao facultyDao;
     private final OpenQuestionsDao openQuestionsDao;
     private final OwnQuestionsDao ownQuestionsDao;
+    private final Context mContext;
 
     /**
      * Constructor for creating tables if needed
@@ -41,7 +42,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param context
      */
     public SurveyManager(Context context) {
-        super(context);
+        mContext = context;
         facultyDao = TcaDb.getInstance(context).facultyDao();
         openQuestionsDao = TcaDb.getInstance(context).openQuestionsDao();
         ownQuestionsDao = TcaDb.getInstance(context).ownQuestionsDao();

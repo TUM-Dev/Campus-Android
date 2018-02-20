@@ -17,6 +17,7 @@ import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.CARD_POSITION_PREFERENCE_SUFFIX;
 
@@ -45,6 +46,7 @@ public final class CardManager {
     private static boolean shouldRefresh;
     private static List<Card> cards;
     private static Collection<Card> newCards = new ConcurrentSkipListSet<>();
+    private static List<OnCardAddedListener> listeners = new ArrayList<>();
 
     /**
      * Adds the specified card to the card manager
@@ -57,6 +59,10 @@ public final class CardManager {
             card.setPosition(newCards.size());
         }
         newCards.add(card);
+        cards = new ArrayList<>(newCards);
+        for (OnCardAddedListener onCardAddedListener : listeners) {
+            onCardAddedListener.onCardAdded();
+        }
     }
 
     /**
@@ -138,7 +144,7 @@ public final class CardManager {
         new RestoreCard(context).apply();
 
         shouldRefresh = false;
-        cards = new ArrayList<>(newCards);
+
     }
 
     /**
@@ -176,6 +182,10 @@ public final class CardManager {
         return index;
     }
 
+    public static void registerUpdateListener(OnCardAddedListener listener){
+        listeners.add(listener);
+    }
+
     /**
      * Resets dismiss settings for all cards
      */
@@ -184,8 +194,7 @@ public final class CardManager {
         prefs.edit()
              .clear()
              .apply();
-        AbstractManager.getDb(context)
-                       .execSQL("UPDATE news SET dismissed=0");
+        TcaDb.getInstance(context).newsDao().restoreAllNews();
         restorePositions(context);
     }
 
@@ -203,5 +212,9 @@ public final class CardManager {
 
     private CardManager() {
         // CardManager is a utility class
+    }
+
+    public interface OnCardAddedListener {
+        void onCardAdded();
     }
 }

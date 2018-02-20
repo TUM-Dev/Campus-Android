@@ -32,6 +32,10 @@ import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.repository.ChatMessageLocalRepository;
+import de.tum.in.tumcampusapp.repository.ChatMessageRemoteRepository;
+import de.tum.in.tumcampusapp.viewmodel.ChatMessageViewModel;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class Chat extends GenericNotification {
 
@@ -42,8 +46,6 @@ public class Chat extends GenericNotification {
     private ChatRoom chatRoom;
     private String notificationText;
     private TaskStackBuilder sBuilder;
-    private final ChatMessageDao chatMessageDao;
-
 
     public Chat(Bundle extras, Context context, int notfication) {
         super(context, 1, notfication, true);
@@ -67,8 +69,6 @@ public class Chat extends GenericNotification {
         } catch (IOException e) {
             Utils.log(e);
         }
-        TcaDb tcaDb = TcaDb.getInstance(context);
-        chatMessageDao = tcaDb.chatMessageDao();
     }
 
     public Chat(String payload, Context context, int notfication) {
@@ -87,8 +87,6 @@ public class Chat extends GenericNotification {
         } catch (IOException e) {
             Utils.log(e);
         }
-        TcaDb tcaDb = TcaDb.getInstance(context);
-        chatMessageDao = tcaDb.chatMessageDao();
     }
 
     private void prepare() throws IOException {

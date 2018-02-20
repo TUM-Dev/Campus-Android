@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
 /**
  * Handles content for the study room feature, fetches external data.
  */
-public class StudyRoomGroupManager extends AbstractManager {
+public class StudyRoomGroupManager {
 
     public static final String STUDYROOM_HOST = "www.devapp.it.tum.de";
     public static final String STUDYROOM_URL = "https://" + STUDYROOM_HOST + "/iris/ris_api.php?format=json";
@@ -33,9 +33,10 @@ public class StudyRoomGroupManager extends AbstractManager {
 
     private final StudyRoomDao dao;
     private final StudyRoomGroupDao groupDao;
+    private final Context mContext;
 
     public StudyRoomGroupManager(Context context) {
-        super(context);
+        mContext = context;
         dao = TcaDb.getInstance(context).studyRoomDao();
         groupDao = TcaDb.getInstance(context).studyRoomGroupDao();
     }

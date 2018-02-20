@@ -40,7 +40,7 @@ import de.tum.in.tumcampusapp.models.tumo.Geo;
 /**
  * Calendar Manager, handles database stuff, external imports
  */
-public class CalendarManager extends AbstractManager implements Card.ProvidesCard {
+public class CalendarManager implements Card.ProvidesCard {
     private static final String[] PROJECTION = {"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
@@ -50,9 +50,10 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
     private final RoomLocationsDao roomLocationsDao;
 
     private final WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao;
+    private final Context mContext;
 
     public CalendarManager(Context context) {
-        super(context);
+        mContext = context;
         calendarDao = TcaDb.getInstance(context).calendarDao();
         roomLocationsDao = TcaDb.getInstance(context).roomLocationsDao();
         widgetsTimetableBlacklistDao = TcaDb.getInstance(context).widgetsTimetableBlacklistDao();

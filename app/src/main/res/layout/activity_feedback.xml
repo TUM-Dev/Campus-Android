@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbars="vertical"
+    tools:context="de.tum.in.tumcampusapp.activities.FeedbackActivity">
+
+    <!-- The toolbar aka SupportActionBar -->
+    <include layout="@layout/toolbar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/feedback_topic_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"/>
+
+            <EditText
+                android:id="@+id/feedback_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/feedback_rounded_background"
+                android:gravity="top"
+                android:hint="@string/feedback_hint"
+                android:inputType="textMultiLine"
+                android:maxHeight="300dp"
+                android:minHeight="200dp"
+                android:padding="5dp"
+                android:scrollbars="vertical"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/feedback_image_list"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:scrollbars="horizontal"/>
+
+                <Button
+                    style="@style/FlatButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:drawableLeft="@drawable/ic_add_photo"
+                    android:onClick="addPicture"
+                    android:text="@string/add_picture_button"/>
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/feedback_include_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/feedback_include_email"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/feedback_email_hint"
+                android:id="@+id/feedback_custom_email"
+                android:inputType="textEmailAddress"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="10dp"
+                android:padding="5dp"
+                android:visibility="gone"/>
+
+            <CheckBox
+                android:id="@+id/feedback_include_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/feedback_include_location"/>
+
+            <Button
+                style="@style/FlatButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:onClick="sendFeedback"
+                android:text="@string/feedback_send_button"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

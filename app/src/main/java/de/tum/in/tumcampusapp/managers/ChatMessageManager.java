@@ -26,9 +26,10 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
-public class ChatMessageManager extends AbstractManager {
+public class ChatMessageManager {
 
     private final int mChatRoom;
+    private Context mContext;
     private final ChatMessageDao chatMessageDao;
     private final ChatMessageViewModel chatMessageViewModel;
     private final CompositeDisposable compositeDisposable;
@@ -39,7 +40,7 @@ public class ChatMessageManager extends AbstractManager {
      * @param context Context
      */
     public ChatMessageManager(Context context, int room) {
-        super(context);
+        mContext = context;
         mChatRoom = room;
         TcaDb tcaDb = TcaDb.getInstance(context);
         chatMessageDao = tcaDb.chatMessageDao();
@@ -104,19 +105,11 @@ public class ChatMessageManager extends AbstractManager {
     }
 
     public List<ChatMessage> getNewMessages(ChatMember member, int messageId) throws NoPrivateKey, IOException {
-/*
-        List<ChatMessage> messages;
-*/
         if (messageId == -1) {
             chatMessageViewModel.getNewMessages(mChatRoom, ChatVerification.Companion.getChatVerification(mContext, member));
-/*            messages = TUMCabeClient.getInstance(mContext)
-                                    .getNewMessages(mChatRoom, ChatVerification.Companion.getChatVerification(mContext, member));*/
         } else {
             chatMessageViewModel.getMessages(mChatRoom, messageId, ChatVerification.Companion.getChatVerification(mContext, member));
-/*            messages = TUMCabeClient.getInstance(mContext)
-                                    .getMessages(mChatRoom, messageId, ChatVerification.Companion.getChatVerification(mContext, member));*/
         }
-
         return chatMessageDao.getUnreadList(mChatRoom);
     }
 }

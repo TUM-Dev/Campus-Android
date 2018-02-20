@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_transport_usage"
-        android:icon="@drawable/ic_action_about"
+        android:icon="@drawable/ic_action_info_white"
         android:title="@string/transport_action_usage"
         tumcampus:showAsAction="always"/>
 

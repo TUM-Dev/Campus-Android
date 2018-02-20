@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -28,7 +27,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
 /**
  * News Manager, handles database stuff, external imports
  */
-public class NewsManager extends AbstractManager implements Card.ProvidesCard {
+public class NewsManager implements Card.ProvidesCard {
 
     private static final int TIME_TO_SYNC = 1800; // 1/2 hour
     private static final String NEWS_URL = "https://tumcabe.in.tum.de/Api/news/";
@@ -43,7 +42,6 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      * @param context Context
      */
     public NewsManager(Context context) {
-        super(context);
         mContext = context;
         newsDao = TcaDb.getInstance(context).newsDao();
         newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();

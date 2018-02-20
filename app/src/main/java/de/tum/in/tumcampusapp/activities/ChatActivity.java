@@ -84,10 +84,10 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     public static ChatRoom mCurrentOpenChatRoom;
     private final Handler mUpdateHandler = new Handler();
     private ChatMessageViewModel chatMessageViewModel;
-    private ChatMessageManager chatManager;
     private ChatMessageRemoteRepository remoteRepository;
     private ChatMessageLocalRepository localRepository;
     private final CompositeDisposable mDisposable = new CompositeDisposable();
+    private ChatMessageManager chatManager;
 
     /**
      * UI elements
@@ -210,8 +210,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         }
 
         //Update the history
-        chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
         chatMessageViewModel.markAsRead(currentChatRoom.getId());
+        chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
     }
 
     @SuppressWarnings("deprecation")
@@ -455,6 +455,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 if (chatHistoryAdapter == null) {
                     chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, msgs, currentChatMember);
                     lvMessageHistory.setAdapter(chatHistoryAdapter);
+                    chatHistoryAdapter.notifyDataSetChanged();
                 } else {
                     chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
                 }

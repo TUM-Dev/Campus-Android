@@ -34,10 +34,10 @@ public class PlansViewFragment extends Fragment {
      * An enum to map urls to local filenames
      */
     private enum PlanFile {
-        SCHNELLBAHNNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Netz_2017_Version_EFA-2.PDF", "Schnellbahnnetz2017.pdf"),
-        NACHTLINIENNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Nachtnetz_2017.pdf", "Nachtliniennetz2017.pdf"),
-        TRAMNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Tramnetz_2017.pdf", "Tramnetz2017.pdf"),
-        GESAMTNETZ("http://www.mvv-muenchen.de/fileadmin/media/Dateien/3_Tickets_Preise/dokumente/TARIFPLAN_2017-Gesamtnetz.PDF", "Gesamtnetz2017.pdf");
+        SCHNELLBAHNNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/2018_MVVnetz_Final_S_U_R_T_screen.pdf", "Schnellbahnnetz2018.pdf"),
+        NACHTLINIENNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Nachtnetz_2018.pdf", "Nachtliniennetz2018.pdf"),
+        TRAMNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Tramnetz2018_screen.pdf", "Tramnetz2018.pdf"),
+        GESAMTNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Gesamtnetz_2018.PDF", "Gesamtnetz2018.pdf");
 
         private final String localName;
         private final String url;
