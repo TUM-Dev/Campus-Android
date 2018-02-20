@@ -5,7 +5,7 @@ apply from: '../pmd.gradle'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
