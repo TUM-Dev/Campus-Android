@@ -1,15 +1,9 @@
 package de.tum.`in`.tumcampusapp.repository
 
 
-import android.support.v7.widget.RecyclerView
-import de.tum.`in`.tumcampusapp.auxiliary.Utils
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import de.tum.`in`.tumcampusapp.managers.ChatMessageManager
 import de.tum.`in`.tumcampusapp.models.tumcabe.ChatMessage
-import de.tum.`in`.tumcampusapp.models.dbEntities.Sync
-import de.tum.`in`.tumcampusapp.notifications.Chat
 import io.reactivex.Flowable
-import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 

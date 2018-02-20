@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.activities;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -52,7 +51,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.managers.ChatRoomManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
@@ -87,7 +85,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     private ChatMessageRemoteRepository remoteRepository;
     private ChatMessageLocalRepository localRepository;
     private final CompositeDisposable mDisposable = new CompositeDisposable();
-    private ChatMessageManager chatManager;
 
     /**
      * UI elements
@@ -127,15 +124,15 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 if (msg.getSendingStatus() == ChatMessage.STATUS_SENDING) {
                     //TODO
                     //chatMessageViewModel.removeUnsentMessage(msg.getInternalID());
-                    chatHistoryAdapter.removeUnsent(msg);
+                    //chatHistoryAdapter.removeUnsent(msg);
                 } else { // set editing item
                     chatHistoryAdapter.mEditedItem = msg;
                 }
 
                 // Show soft keyboard
-                InputMethodManager imm = (InputMethodManager) ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) ChatActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(etMessage, 0);
-                
+
                 etMessage.setText(msg.getText());
                 int position = msg.getText()
                                   .length();
@@ -187,14 +184,21 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         return null;
     }
 
+    /**
+     * Method to handle any incoming GCM/Firebase notifications
+     *
+     * @param extras model that contains infos about the message we should get
+     */
     private void handleRoomBroadcast(GCMChat extras) {
         //If same room just refresh
         if (!(extras.getRoom() == currentChatRoom.getId() && chatHistoryAdapter != null)) {
             return;
         }
+
         if (extras.getMember() == currentChatMember.getId()) {
+            //TODO
             // Remove this message from the adapter
-            chatHistoryAdapter.setUnsentMessages(chatMessageViewModel.getAllUnsentFromCurrentRoomList());
+            //chatHistoryAdapter.setUnsentMessages(chatMessageViewModel.getAllUnsentFromCurrentRoomList());
         } else if (extras.getMessage() == -1) {
             //Check first, if sounds are enabled
             AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -283,7 +287,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                                                                  .substring(4));
             }
             chatHistoryAdapter = null;
-            chatManager = new ChatMessageManager(this, currentChatRoom.getId());
             getNextHistoryFromServer(true);
 
         }
@@ -365,12 +368,15 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             chatHistoryAdapter.mEditedItem.setText(etMessage.getText()
                                                             .toString());
             chatHistoryAdapter.mEditedItem.setRoom(currentChatRoom.getId());
-            chatMessageViewModel.addToUnsent(chatHistoryAdapter.mEditedItem);
             chatHistoryAdapter.mEditedItem.setSendingStatus(ChatMessage.STATUS_SENDING);
-            chatMessageViewModel.replaceMessage(chatHistoryAdapter.mEditedItem);
+            chatHistoryAdapter.mEditedItem.setRead(true);
+            chatMessageViewModel.addToUnsent(chatHistoryAdapter.mEditedItem);
+            //TODO
+            //chatMessageViewModel.replaceMessage(chatHistoryAdapter.mEditedItem);
             chatHistoryAdapter.mEditedItem = null;
-            chatMessageViewModel.markAsRead(currentChatRoom.getId());
-            chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
+            //TODO
+            //chatMessageViewModel.markAsRead(currentChatRoom.getId());
+            //chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
         }
 
         // start service to send the message
@@ -388,7 +394,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             getSupportActionBar().setTitle(currentChatRoom.getName()
                                                           .substring(4));
         }
-        chatManager = new ChatMessageManager(this, currentChatRoom.getId());
 
         CharSequence message = getMessageText(getIntent());
         if (message != null) {
@@ -407,7 +412,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         // Add the button for loading more messages to list header
         bar = new ProgressBar(this);
         lvMessageHistory.addHeaderView(bar);
-        lvMessageHistory.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        lvMessageHistory.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
         etMessage = findViewById(R.id.etMessage);
         btnSend = findViewById(R.id.btnSend);
@@ -461,8 +466,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 }
 
                 // If all messages are loaded hide header view
-                if ((msgs.size() != 0 && msgs.get(0)
-                                             .getPrevious() == 0) || chatHistoryAdapter.getCount() == 0) {
+                if ((!msgs.isEmpty() && msgs.get(0)
+                                            .getPrevious() == 0) || chatHistoryAdapter.getCount() == 0) {
                     lvMessageHistory.removeHeaderView(bar);
                 } else {
                     loadingMore = false;

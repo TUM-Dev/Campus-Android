@@ -2,30 +2,15 @@ package de.tum.`in`.tumcampusapp.viewmodel
 
 
 import android.arch.lifecycle.ViewModel
-import android.content.Context
-import android.location.Location
-import android.util.Log
-import de.tum.`in`.tumcampusapp.activities.ChatActivity
-import de.tum.`in`.tumcampusapp.adapters.ChatHistoryAdapter
-import de.tum.`in`.tumcampusapp.auxiliary.Const
 import de.tum.`in`.tumcampusapp.auxiliary.Utils
-import de.tum.`in`.tumcampusapp.managers.ChatMessageManager
-import de.tum.`in`.tumcampusapp.models.tumcabe.ChatMember
 import de.tum.`in`.tumcampusapp.models.tumcabe.ChatMessage
 import de.tum.`in`.tumcampusapp.models.tumcabe.ChatVerification
 import de.tum.`in`.tumcampusapp.repository.ChatMessageLocalRepository
 import de.tum.`in`.tumcampusapp.repository.ChatMessageRemoteRepository
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.internal.observers.InnerQueuedObserver
 import io.reactivex.schedulers.Schedulers
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * ViewModel for chat messages

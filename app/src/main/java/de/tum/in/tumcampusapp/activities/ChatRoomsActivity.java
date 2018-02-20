@@ -30,7 +30,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.ChatRoomManager;
 import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomAndLastMessage;
-import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
@@ -48,7 +47,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * lectures using the TUMOnline web service
  */
 public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List<ChatRoomAndLastMessage>> implements OnItemClickListener {
-    private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int CAMERA_REQUEST_CODE = 34;
     private static final int JOIN_ROOM_REQUEST_CODE = 22;
 
@@ -60,7 +58,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
     private ChatRoomManager manager;
     private int mCurrentMode = 1;
     private ChatRoomListAdapter chatRoomAdapter;
-    private boolean firstLoad = true;
 
     public ChatRoomsActivity() {
         super(R.layout.activity_chat_rooms);
@@ -86,7 +83,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
             public void onTabSelected(TabLayout.Tab tab) {
                 // show the given tab
                 mCurrentMode = 1 - tab.getPosition();
-                firstLoad = true;
                 startLoading();
             }
 
@@ -110,7 +106,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
     @Override
     protected void onResume() {
         super.onResume();
-        firstLoad = true;
         startLoading();
     }
 
@@ -139,7 +134,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         } else if (i == R.id.action_join_chat_room) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 int permissionCheck = checkSelfPermission(Manifest.permission.CAMERA);
-                if(permissionCheck == PackageManager.PERMISSION_DENIED){
+                if (permissionCheck == PackageManager.PERMISSION_DENIED) {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
                 } else {
                     startJoinRoom();
@@ -153,7 +148,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         }
     }
 
-    private void startJoinRoom(){
+    private void startJoinRoom() {
         startActivityForResult(new Intent(this, JoinRoomScanActivity.class), JOIN_ROOM_REQUEST_CODE);
     }
 
@@ -170,11 +165,11 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-        if(requestCode == CAMERA_REQUEST_CODE
-           && grantResults != null && grantResults.length >= 1
-           && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                startJoinRoom();
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == CAMERA_REQUEST_CODE
+            && grantResults != null && grantResults.length >= 1
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startJoinRoom();
         }
     }
 
@@ -254,19 +249,17 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
     @Override
     protected List<ChatRoomAndLastMessage> onLoadInBackground(Void... arg) {
-        if (!firstLoad) {
-            Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
-            if (lecturesList.isPresent()) {
-                List<LecturesSearchRow> lectures = lecturesList.get()
-                                                               .getLehrveranstaltungen();
-                manager.replaceInto(lectures);
-            }
+        Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
+        if (lecturesList.isPresent()) {
+            List<LecturesSearchRow> lectures = lecturesList.get()
+                                                           .getLehrveranstaltungen();
+            manager.replaceInto(lectures);
         }
 
         this.populateCurrentChatMember();
 
         // Try to restore joined chat rooms from server
-        if (!firstLoad && currentChatMember != null) {
+        if (currentChatMember != null) {
             try {
                 List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
                                                     .getMemberRooms(currentChatMember.getId(), ChatVerification.Companion.getChatVerification(this, currentChatMember));
@@ -277,14 +270,13 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
                 Utils.log(e);
             }
         }
-        firstLoad = false;
         return manager.getAllByStatus(mCurrentMode);
     }
 
     @Override
     protected void onLoadFinished(List<ChatRoomAndLastMessage> result) {
         showLoadingEnded();
-        if (result.size() == 0) {
+        if (result.isEmpty()) {
             lvMyChatRoomList.setAdapter(new NoResultsAdapter(this));
         } else {
             // set ListView to data via the LecturesListAdapter
@@ -298,9 +290,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
      */
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-        if (firstLoad) {
-            return;
-        }
         ChatRoomAndLastMessage item = (ChatRoomAndLastMessage) lvMyChatRoomList.getItemAtPosition(position);
 
         // set bundle for LectureDetails and show it
@@ -308,7 +297,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         final Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtras(bundle);
 
-        String chatRoomUid = item.getChatRoomDbRow().getSemesterId() + ':' + item.getChatRoomDbRow().getName();
+        String chatRoomUid = item.getChatRoomDbRow()
+                                 .getSemesterId() + ':' + item.getChatRoomDbRow()
+                                                              .getName();
         this.createOrJoinChatRoom(chatRoomUid);
     }
 

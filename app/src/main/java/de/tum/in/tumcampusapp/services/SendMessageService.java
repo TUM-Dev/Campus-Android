@@ -42,11 +42,14 @@ public class SendMessageService extends JobIntentService {
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         TcaDb tcaDb = TcaDb.getInstance(this);
+
         final CompositeDisposable mDisposable = new CompositeDisposable();
         ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
         remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+
         ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
         localRepository.setDb(tcaDb);
+
         ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, mDisposable);
         chatMessageViewModel.deleteOldEntries();
 

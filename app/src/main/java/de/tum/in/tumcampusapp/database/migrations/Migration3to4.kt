@@ -2,8 +2,12 @@ package de.tum.`in`.tumcampusapp.database.migrations
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
-import android.database.SQLException
 
+/**
+ * We no longer track msg_id/internalId of the chat messages. Simple recreate done here.
+ * Will destroy any data cached, but at this point the chat was not properly working for some time.
+ * So probably most users won't have any data in it anyway.
+ */
 class Migration3to4 : Migration(3, 4) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("DROP TABLE IF EXISTS  chat_message")
