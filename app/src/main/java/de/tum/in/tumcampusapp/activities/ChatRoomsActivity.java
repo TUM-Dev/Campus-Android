@@ -301,14 +301,14 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         if (firstLoad) {
             return;
         }
-        ChatRoomDbRow item = (ChatRoomDbRow) lvMyChatRoomList.getItemAtPosition(position);
+        ChatRoomAndLastMessage item = (ChatRoomAndLastMessage) lvMyChatRoomList.getItemAtPosition(position);
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();
         final Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtras(bundle);
 
-        String chatRoomUid = item.getSemesterId() + ':' + item.getName();
+        String chatRoomUid = item.getChatRoomDbRow().getSemesterId() + ':' + item.getChatRoomDbRow().getName();
         this.createOrJoinChatRoom(chatRoomUid);
     }
 
