@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.repository
 
 
+import de.tum.`in`.tumcampusapp.R.string.room
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.models.tumcabe.ChatMessage
 import java.util.concurrent.Executor
@@ -21,6 +22,9 @@ object ChatMessageLocalRepository {
 
     fun getAllChatMessagesList(room: Int): List<ChatMessage> =
             db.chatMessageDao().getAll(room)
+
+    fun getUnsent(): List<ChatMessage> =
+            db.chatMessageDao().getUnsent()
 
     fun replaceMessage(chatMessage: ChatMessage) =
             executor.execute { db.chatMessageDao().replaceMessage(chatMessage) }

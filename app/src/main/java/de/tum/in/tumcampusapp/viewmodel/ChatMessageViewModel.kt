@@ -32,8 +32,11 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
     fun addToUnsent(message: ChatMessage) =
             localRepository.addToUnsent(message)
 
-    fun getAllChatMessagesList(room: Int): List<ChatMessage> =
+    fun getAll(room: Int): List<ChatMessage> =
             localRepository.getAllChatMessagesList(room)
+
+    fun getUnsent(): List<ChatMessage> =
+            localRepository.getUnsent()
 
     fun getMessages(roomId: Int, messageId: Long, verification: ChatVerification): Boolean =
             compositeDisposable.add(Observable.just(1)
@@ -41,7 +44,8 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                     .flatMap { remoteRepository.getMessages(roomId, messageId, verification) }
                     .observeOn(Schedulers.io())
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
-                    .subscribe({ t -> t.forEach { localRepository.replaceMessage(it) }
+                    .subscribe({ t ->
+                        t.forEach { localRepository.replaceMessage(it) }
                     })
             )
 
@@ -51,7 +55,8 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                     .flatMap { remoteRepository.getNewMessages(roomId, verification) }
                     .observeOn(Schedulers.io())
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
-                    .subscribe({ t -> t.forEach { localRepository.replaceMessage(it) }
+                    .subscribe({ t ->
+                        t.forEach { localRepository.replaceMessage(it) }
                     })
             )
 
@@ -63,7 +68,8 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
                     .subscribe({
                         it.sendingStatus = ChatMessage.STATUS_SENT
-                        localRepository.replaceMessage(it) })
+                        localRepository.replaceMessage(it)
+                    })
             )
 
     fun updateMessage(roomId: Int, message: ChatMessage): Boolean =
@@ -74,6 +80,7 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
                     .subscribe({
                         it.sendingStatus = ChatMessage.STATUS_SENT
-                        localRepository.replaceMessage(it) })
+                        localRepository.replaceMessage(it)
+                    })
             )
 }

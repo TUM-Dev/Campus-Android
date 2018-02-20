@@ -26,4 +26,7 @@ public interface ChatMessageDao {
 
     @Query("DELETE FROM chat_message")
     void removeCache();
+
+    @Query("SELECT c.* FROM chat_message c WHERE c.sending=1 ORDER BY c._id")
+    List<ChatMessage> getUnsent();
 }

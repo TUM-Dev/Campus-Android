@@ -1,11 +1,8 @@
 package de.tum.in.tumcampusapp.services;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -23,9 +20,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class GcmIdentificationService extends FirebaseInstanceIdService {
-
-    private static final String SENDER_ID = "944892355389";
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private final Context mContext;
 
     public GcmIdentificationService() {
@@ -50,9 +44,6 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
         return token;
     }
 
-    /**
-     * Actual service routine which can use this as a context
-     */
     @Override
     public void onTokenRefresh() {
         String refreshedToken = FirebaseInstanceId.getInstance()
@@ -82,62 +73,27 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
     }
 
     /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-    public static boolean checkPlayServices(final Activity a) {
-        final int resultCode = GoogleApiAvailability.getInstance()
-                                                    .isGooglePlayServicesAvailable(a);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GoogleApiAvailability.getInstance()
-                                     .isUserResolvableError(resultCode)) {
-                a.runOnUiThread(() -> GoogleApiAvailability.getInstance()
-                                                           .getErrorDialog(a, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                                                           .show());
-            } else {
-                Utils.log("This device is not supported by Google Play services.");
-            }
-            return false;
-        }
-        return true;
-
-    }
-
-    /**
      * Registers the application with GCM servers asynchronously.
      * <p>
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
     private void registerInBackground() {
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    //Register a new id
-                    String token = GcmIdentificationService.this.register();
+        try {
+            //Register a new id
+            String token = GcmIdentificationService.this.register();
 
-                    //Reset the lock in case we are updating and maybe failed
-                    Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
-                    Utils.setInternalSetting(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, new Date().getTime());
+            //Reset the lock in case we are updating and maybe failed
+            Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
+            Utils.setInternalSetting(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, new Date().getTime());
 
-                    // Let the server know of our new registration id
-                    GcmIdentificationService.this.sendTokenToBackend(token);
+            // Let the server know of our new registration id
+            GcmIdentificationService.this.sendTokenToBackend(token);
 
-                    return "GCM registration successful";
-                } catch (IOException ex) {
-
-                    //Return the error message
-                    return "Error :" + ex.getMessage();
-                }
-            }
-
-            @Override
-            protected void onPostExecute(String msg) {
-                Utils.log(msg);
-            }
-        }.execute();
+            Utils.log("GCM registration successful");
+        } catch (IOException ex) {
+            Utils.log("Error :" + ex.getMessage());
+        }
     }
 
     /**
@@ -147,7 +103,6 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
      * using the 'from' address in the message.
      */
     private void sendTokenToBackend(String token) {
-        //@todo
         //Check if all parameters are present
         if (token == null || token.isEmpty()) {
             Utils.logv("Parameter missing for sending reg id");
@@ -162,28 +117,29 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
             return;
         }
 
-        TUMCabeClient.getInstance(mContext)
-                     .deviceUploadGcmToken(dgcm, new Callback<TUMCabeStatus>() {
-                         @Override
-                         public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
-                             TUMCabeStatus s = response.body();
-                             if (response.isSuccessful() && s != null) {
-                                 Utils.logv("Success uploading GCM registration id: " + response.body()
-                                                                                                .getStatus());
+        TUMCabeClient
+                .getInstance(mContext)
+                .deviceUploadGcmToken(dgcm, new Callback<TUMCabeStatus>() {
+                    @Override
+                    public void onResponse(@NonNull Call<TUMCabeStatus> call, @NonNull Response<TUMCabeStatus> response) {
+                        TUMCabeStatus s = response.body();
+                        if (response.isSuccessful() && s != null) {
+                            Utils.logv("Success uploading GCM registration id: " + s.getStatus());
 
-                                 // Store in shared preferences the information that the GCM registration id was sent to the TCA server successfully
-                                 Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, true);
-                             } else {
-                                 Utils.logv("Uploading GCM registration failed...");
-                             }
-                         }
+                            // Store in shared preferences the information that the GCM registration id
+                            // was sent to the TCA server successfully
+                            Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, true);
+                        } else {
+                            Utils.logv("Uploading GCM registration failed...");
+                        }
+                    }
 
-                         @Override
-                         public void onFailure(Call<TUMCabeStatus> call, Throwable t) {
-                             Utils.log(t, "Failure uploading GCM registration id");
-                             Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
-                         }
-                     });
+                    @Override
+                    public void onFailure(@NonNull Call<TUMCabeStatus> call, @NonNull Throwable t) {
+                        Utils.log(t, "Failure uploading GCM registration id");
+                        Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
+                    }
+                });
     }
 
     /**

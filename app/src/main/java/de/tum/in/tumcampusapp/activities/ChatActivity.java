@@ -215,7 +215,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
 
         //Update the history
         chatMessageViewModel.markAsRead(currentChatRoom.getId());
-        chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
+        chatHistoryAdapter.updateHistory(chatMessageViewModel.getAll(currentChatRoom.getId()));
     }
 
     @SuppressWarnings("deprecation")
@@ -376,7 +376,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             chatHistoryAdapter.mEditedItem = null;
             //TODO
             //chatMessageViewModel.markAsRead(currentChatRoom.getId());
-            //chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
+            //chatHistoryAdapter.updateHistory(chatMessageViewModel.getAll(currentChatRoom.getId()));
         }
 
         // start service to send the message
@@ -454,7 +454,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 chatMessageViewModel.getMessages(currentChatRoom.getId(), id, verification);
             }
 
-            final List<ChatMessage> msgs = chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId());
+            final List<ChatMessage> msgs = chatMessageViewModel.getAll(currentChatRoom.getId());
             // Update results in UI
             runOnUiThread(() -> {
                 if (chatHistoryAdapter == null) {
@@ -462,7 +462,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                     lvMessageHistory.setAdapter(chatHistoryAdapter);
                     chatHistoryAdapter.notifyDataSetChanged();
                 } else {
-                    chatHistoryAdapter.updateHistory(chatMessageViewModel.getAllChatMessagesList(currentChatRoom.getId()));
+                    chatHistoryAdapter.updateHistory(chatMessageViewModel.getAll(currentChatRoom.getId()));
                 }
 
                 // If all messages are loaded hide header view

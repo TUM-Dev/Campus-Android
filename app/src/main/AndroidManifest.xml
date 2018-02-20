@@ -488,9 +488,9 @@
         </activity>
         <activity
             android:name=".activities.FeedbackActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/feedback"
             android:launchMode="singleTop"
-            android:configChanges="orientation|screenSize"
             android:parentActivityName=".activities.FeedbackActivity">
         </activity>
 
@@ -515,7 +515,7 @@
 
         <receiver
             android:name=".widgets.MVVWidget"
-            android:label="@string/mvv_widget">>
+            android:label="@string/mvv_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
                 <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD"/>
@@ -532,10 +532,10 @@
 
         <activity
             android:name=".widgets.MVVWidgetConfigureActivity"
+            android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
-            android:allowTaskReparenting="false"
             android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
@@ -621,28 +621,28 @@
 
         <service
             android:name=".services.DownloadService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".services.SilenceService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".services.SendMessageService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".services.SendWifiMeasurementService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".services.BackgroundService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".services.FillCacheService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".services.ScanResultsAvailableReceiver$NeverShowAgain"
             android:exported="false"/>
@@ -651,30 +651,33 @@
             android:exported="false"/>
         <service
             android:name=".services.GcmReceiverService"
-            android:exported="false">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service
             android:name=".services.GcmIdentificationService"
-            android:exported="false">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
 
-        <service android:name=".services.GeofencingRegistrationService"
-                 android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".services.GeofencingRegistrationService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <receiver android:name=".services.GeofencingUpdateReceiver"/>
 
         <receiver android:name=".services.GeofencingStartupReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.location.MODE_CHANGED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.location.MODE_CHANGED"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-                <action android:name="android.location.PROVIDERS_CHANGED" />
+                <action android:name="android.location.PROVIDERS_CHANGED"/>
             </intent-filter>
         </receiver>
     </application>

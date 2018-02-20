@@ -15,7 +15,6 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
@@ -43,13 +42,11 @@ public class ChatHistoryAdapter extends BaseAdapter {
     public ChatHistoryAdapter(Context context, List<ChatMessage> chatHistory, ChatMember member) {
         mContext = context;
         chatHistoryList = chatHistory;
-        Utils.log("History: " + chatHistory.size());
         currentChatMember = member;
     }
 
     public void updateHistory(List<ChatMessage> newHistory) {
         chatHistoryList = newHistory;
-        Utils.log("History: " + chatHistoryList.size());
         notifyDataSetChanged();
     }
 
