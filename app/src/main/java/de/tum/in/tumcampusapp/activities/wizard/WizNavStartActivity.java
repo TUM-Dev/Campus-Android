@@ -164,8 +164,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             return;
         }
 
-        lrzId = editTxtLrzId.getText()
-                            .toString();
+        lrzId = enteredId;
         Utils.setSetting(this, Const.LRZ_ID, lrzId);
 
         // is access token already set?
