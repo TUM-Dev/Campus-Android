@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.ImageView;
 import java.io.File;
 
 import de.tum.in.tumcampusapp.R;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageViewTouchFragment extends Fragment {
 
@@ -30,10 +30,9 @@ public class ImageViewTouchFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_view_touch, container, false);
         ImageView mImage = view.findViewById(R.id.image_view_touch_fragment);
-        new PhotoViewAttacher(mImage);
 
         if (getArguments() != null) {
             Uri image = getArguments().getParcelable(URI_ARG);
