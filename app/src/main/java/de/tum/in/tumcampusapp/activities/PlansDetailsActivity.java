@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Activity to show plan details.
@@ -32,9 +31,6 @@ public class PlansDetailsActivity extends BaseActivity {
 
         ImageView imageViewTouch = findViewById(R.id.activity_plans_plan);
         imageViewTouch.setImageResource(img);
-
-        //Attach touch handler to imageView
-        new PhotoViewAttacher(imageViewTouch);
 
         setTitle(getString(title));
     }
