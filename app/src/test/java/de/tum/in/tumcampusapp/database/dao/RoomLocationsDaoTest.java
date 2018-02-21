@@ -13,6 +13,7 @@ import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.component.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 

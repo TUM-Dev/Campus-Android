@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.cafeteria.model.Location;
 import de.tum.in.tumcampusapp.component.openinghour.activity.OpeningHoursDetailActivity;
 import de.tum.in.tumcampusapp.component.openinghour.activity.OpeningHoursListActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -65,8 +65,8 @@ public class OpeningHoursDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
         // click on category in list
-        LocationDao dao = TcaDb.getInstance(getActivity())
-                               .locationDao();
+        CafeteriaLocationDao dao = TcaDb.getInstance(getActivity())
+                                        .locationDao();
         String[] categories = {"library", "info", "cafeteria_gar", "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"};
         List<Location> locations = dao.getAllOfCategory(categories[mItemId]);
         RecyclerView recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);

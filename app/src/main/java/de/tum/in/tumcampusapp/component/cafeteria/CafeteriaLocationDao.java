@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.database.dao;
+package de.tum.in.tumcampusapp.component.cafeteria;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
@@ -10,7 +10,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.component.cafeteria.model.Location;
 
 @Dao
-public interface LocationDao {
+public interface CafeteriaLocationDao {
 
     @Query("SELECT hours FROM location WHERE id = :id")
     String getHoursById(int id);

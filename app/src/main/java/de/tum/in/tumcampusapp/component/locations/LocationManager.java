@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaDao;
 import de.tum.in.tumcampusapp.component.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
 import de.tum.in.tumcampusapp.component.locations.model.BuildingToGps;
@@ -30,7 +29,6 @@ import de.tum.in.tumcampusapp.component.roomfinder.model.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.component.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.StationResult;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -72,14 +70,12 @@ public class LocationManager {
 
     private static final String[] DEFAULT_CAMPUS_CAFETERIA = {"422", null, "423", "421", "414", null, "411", null};
     private final Context mContext;
-    private final CafeteriaDao cafeteriaDao;
     private final BuildingToGpsDao buildingToGpsDao;
     private android.location.LocationManager manager;
 
     public LocationManager(Context c) {
         mContext = c.getApplicationContext();
         TcaDb db = TcaDb.getInstance(c);
-        cafeteriaDao = db.cafeteriaDao();
         buildingToGpsDao = db.buildingToGpsDao();
     }
 
@@ -88,7 +84,7 @@ public class LocationManager {
      *
      * @return Returns the more or less current position or null on failure
      */
-    public Location getCurrentLocation() {
+    private Location getCurrentLocation() {
         if (servicesConnected()) {
             Location loc = getLastLocation();
             if (loc != null) {
@@ -131,7 +127,7 @@ public class LocationManager {
      * @param location The location to search for a campus
      * @return Campus id
      */
-    public static int getCampusFromLocation(Location location) {
+    private static int getCampusFromLocation(Location location) {
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
         float[] results = new float[1];
@@ -158,7 +154,7 @@ public class LocationManager {
      *
      * @return Campus id
      */
-    public List<Cafeteria> getCafeterias() {
+    private List<Cafeteria> getCafeterias() {
         // Get current location
         Location location = getCurrentOrNextLocation();
 

@@ -11,12 +11,11 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 
 public class OpenHoursManager {
 
-    private final LocationDao dao;
+    private final CafeteriaLocationDao dao;
 
     public OpenHoursManager(Context context) {
         dao = TcaDb.getInstance(context)

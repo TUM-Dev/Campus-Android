@@ -17,6 +17,7 @@ import de.tum.in.tumcampusapp.component.calendar.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 

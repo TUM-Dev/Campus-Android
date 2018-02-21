@@ -16,6 +16,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.cafeteria.controller.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.component.cafeteria.model.Location;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
@@ -31,7 +32,6 @@ import de.tum.in.tumcampusapp.component.reporting.bugreport.Util;
 import de.tum.in.tumcampusapp.component.survey.SurveyManager;
 import de.tum.in.tumcampusapp.component.sync.SyncManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -267,8 +267,8 @@ public class DownloadService extends JobIntentService {
      * Import default location and opening hours from assets
      */
     private void importLocationsDefaults() throws IOException {
-        LocationDao dao = TcaDb.getInstance(this)
-                               .locationDao();
+        CafeteriaLocationDao dao = TcaDb.getInstance(this)
+                                        .locationDao();
         if (dao.isEmpty()) {
             AssetManager assetManager = getAssets();
             List<String[]> rows = Utils.readCsv(assetManager.open(CSV_LOCATIONS));

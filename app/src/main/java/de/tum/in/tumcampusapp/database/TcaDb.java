@@ -11,6 +11,7 @@ import de.tum.in.tumcampusapp.api.tumonline.TumLockDao;
 import de.tum.in.tumcampusapp.api.tumonline.model.TumLock;
 import de.tum.in.tumcampusapp.component.alarm.GCMNotification;
 import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaDao;
+import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaMenuDao;
 import de.tum.in.tumcampusapp.component.cafeteria.FavoriteDishDao;
 import de.tum.in.tumcampusapp.component.cafeteria.model.Cafeteria;
@@ -28,6 +29,8 @@ import de.tum.in.tumcampusapp.component.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.component.general.model.Recent;
 import de.tum.in.tumcampusapp.component.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.locations.BuildingToGpsDao;
+import de.tum.in.tumcampusapp.component.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.news.NewsDao;
 import de.tum.in.tumcampusapp.component.news.NewsSourcesDao;
@@ -52,11 +55,8 @@ import de.tum.in.tumcampusapp.component.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.component.wifimeasurement.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.component.wifimeasurement.model.WifiMeasurement;
-import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
-import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.database.dao.NotificationDao;
 import de.tum.in.tumcampusapp.database.dao.RecentsDao;
-import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
@@ -110,7 +110,7 @@ public abstract class TcaDb extends RoomDatabase {
 
     public abstract KinoDao kinoDao();
 
-    public abstract LocationDao locationDao();
+    public abstract CafeteriaLocationDao locationDao();
 
     public abstract ChatMessageDao chatMessageDao();
 

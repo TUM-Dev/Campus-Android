@@ -32,10 +32,10 @@ import de.tum.in.tumcampusapp.component.calendar.model.WidgetsTimetableBlacklist
 import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
 import de.tum.in.tumcampusapp.component.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.sync.SyncManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
