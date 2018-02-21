@@ -1,12 +1,10 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.content.Context;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,6 +22,7 @@ import de.tum.in.tumcampusapp.auxiliary.CafeteriaNotificationSettings;
 public class CafeteriaNotificationSettingsActivity extends BaseActivity {
     private final ArrayList<Pair<Integer, Integer>> dailySchedule = new ArrayList<>();
     private CafeteriaNotificationSettings cafeteriaNotificationSettings;
+    private Button save;
 
     public CafeteriaNotificationSettingsActivity() {
         super(R.layout.activity_cafeteria_notification_settings);
@@ -36,23 +35,20 @@ public class CafeteriaNotificationSettingsActivity extends BaseActivity {
         setupList();
         ListView listView = findViewById(R.id.activity_notification_settings_listview);
         listView.setAdapter(new NotificationSettingsListAdapter(this, dailySchedule));
-        Button save = findViewById(R.id.notification_settings_save);
-        save.setOnClickListener(new SaveButtonListener(this));
-    }
-
-    private class SaveButtonListener implements View.OnClickListener {
-        private final Context context;
-
-        public SaveButtonListener(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public void onClick(View view) {
+        listView.getAdapter().registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                save.setBackgroundColor(getResources().getColor(R.color.tum_300));
+                save.setText(R.string.save);
+            }
+        });
+        save = findViewById(R.id.notification_settings_save);
+        save.setOnClickListener(view -> {
+            save.setBackgroundColor(getResources().getColor(R.color.sections_green));
+            save.setText("Saved");
             cafeteriaNotificationSettings.saveWholeSchedule(dailySchedule);
-            Toast.makeText(context, context.getString(R.string.ok), Toast.LENGTH_SHORT)
-                 .show();
-        }
+        });
     }
 
     @Override

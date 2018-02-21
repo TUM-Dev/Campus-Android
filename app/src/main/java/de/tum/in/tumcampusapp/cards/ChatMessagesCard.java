@@ -92,7 +92,7 @@ public class ChatMessagesCard extends NotificationAwareCard {
         mRoomName = mRoomName.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
         mRoomName = mRoomName.trim();
         chatMessageDao.deleteOldEntries();
-        mUnread = chatMessageDao.getLastUnread(roomId);
+        //mUnread = chatMessageDao.getLastUnread(roomId); TODO
         mRoomIdString = roomIdString;
         mRoomId = roomId;
     }

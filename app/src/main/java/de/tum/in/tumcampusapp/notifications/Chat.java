@@ -27,11 +27,11 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.repository.ChatMessageLocalRepository;
 import de.tum.in.tumcampusapp.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.viewmodel.ChatMessageViewModel;
@@ -47,8 +47,11 @@ public class Chat extends GenericNotification {
     private String notificationText;
     private TaskStackBuilder sBuilder;
 
+    private final ChatMessageDao chatMessageDao;
+
     public Chat(Bundle extras, Context context, int notfication) {
         super(context, 1, notfication, true);
+        chatMessageDao = TcaDb.getInstance(context).chatMessageDao();
 
         //Initialize the object keeping important infos about the update
         this.extras = new GCMChat();
@@ -73,6 +76,7 @@ public class Chat extends GenericNotification {
 
     public Chat(String payload, Context context, int notfication) {
         super(context, 1, notfication, true);
+        chatMessageDao = TcaDb.getInstance(context).chatMessageDao();
 
         //Check if a payload was passed
         if (payload == null) {
@@ -97,9 +101,8 @@ public class Chat extends GenericNotification {
         chatRoom = TUMCabeClient.getInstance(context)
                                 .getChatRoom(this.extras.getRoom());
 
-        ChatMessageManager manager = new ChatMessageManager(context, chatRoom.getId());
         try {
-            List<ChatMessage> messages = manager.getNewMessages(member, this.extras.getMessage());
+            List<ChatMessage> messages = this.getNewMessages(chatRoom, member, this.extras.getMessage());
             Intent intent = new Intent("chat-message-received");
             intent.putExtra("GCMChat", this.extras);
             LocalBroadcastManager.getInstance(context)
@@ -125,6 +128,21 @@ public class Chat extends GenericNotification {
         } catch (NoPrivateKey noPrivateKey) {
             Utils.log(noPrivateKey);
         }
+    }
+
+    public List<ChatMessage> getNewMessages(ChatRoom chatRoom, ChatMember member, int messageId) throws NoPrivateKey, IOException {
+        ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(context));
+        ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(context));
+        ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, new CompositeDisposable());
+
+        if (messageId == -1) {
+            chatMessageViewModel.getNewMessages(chatRoom.getId(), ChatVerification.Companion.getChatVerification(context, member));
+        } else {
+            chatMessageViewModel.getMessages(chatRoom.getId(), messageId, ChatVerification.Companion.getChatVerification(context, member));
+        }
+        return chatMessageDao.getAll(chatRoom.getId());
     }
 
     @Override
@@ -156,7 +174,7 @@ public class Chat extends GenericNotification {
                             .build();
 
             //Create a nice notification
-            return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+            return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CHAT)
                     .setSmallIcon(this.icon)
                     .setContentTitle(chatRoom.getName()
                                              .substring(4))

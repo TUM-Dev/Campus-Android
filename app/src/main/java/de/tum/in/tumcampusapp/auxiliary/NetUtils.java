@@ -186,11 +186,8 @@ public class NetUtils {
             if (file.isPresent()) {
                 File result = new File(file.get());
 
-                // TODO: remove this check when #391 is fixed
                 // The cache could have been cleaned manually, so we need an existence check
-                if (result.exists()) {
-                    return Optional.of(result);
-                }
+                return Optional.of(result);
             }
 
             file = Optional.of(mContext.getCacheDir()

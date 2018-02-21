@@ -106,6 +106,7 @@ public class NewsCard extends NotificationAwareCard {
         notificationBuilder.setContentText(mNews.getTitle());
         notificationBuilder.setContentInfo(newsSource.getTitle());
         notificationBuilder.setTicker(mNews.getTitle());
+        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
         Optional<Bitmap> img = net.downloadImageToBitmap(mNews.getImage());
         if (img.isPresent()) {
             notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img.get()));

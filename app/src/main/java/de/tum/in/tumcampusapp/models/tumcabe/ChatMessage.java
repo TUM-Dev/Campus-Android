@@ -32,8 +32,6 @@ public class ChatMessage {
     private boolean read;
     @ColumnInfo(name = "sending")
     private int sendingStatus;
-    @ColumnInfo(name = "msg_id")
-    private int internalID;
 
     /**
      * Default constructor: called by gson when parsing an element
@@ -195,13 +193,5 @@ public class ChatMessage {
     @Ignore
     public boolean getRead() {
         return read;
-    }
-
-    public int getInternalID() {
-        return internalID;
-    }
-
-    public void setInternalID(int internalID) {
-        this.internalID = internalID;
     }
 }
