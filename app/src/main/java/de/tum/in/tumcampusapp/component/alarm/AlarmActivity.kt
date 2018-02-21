@@ -7,6 +7,7 @@ import android.webkit.WebView
 import android.widget.TextView
 
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.alarm.model.GCMNotification
 import de.tum.`in`.tumcampusapp.component.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.utils.Utils
 

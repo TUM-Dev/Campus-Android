@@ -34,7 +34,7 @@ import de.tum.in.tumcampusapp.component.feedback.FeedbackActivity;
 import de.tum.in.tumcampusapp.component.news.NewsController;
 import de.tum.in.tumcampusapp.component.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.onboarding.StartupActivity;
-import de.tum.in.tumcampusapp.component.onboarding.activity.WizNavStartActivity;
+import de.tum.in.tumcampusapp.component.onboarding.WizNavStartActivity;
 import de.tum.in.tumcampusapp.component.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;

@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.onboarding.activity;
+package de.tum.in.tumcampusapp.component.onboarding;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

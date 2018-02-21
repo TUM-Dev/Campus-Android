@@ -17,7 +17,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.component.studyroom.model.StudyRoom;
 import de.tum.in.tumcampusapp.component.studyroom.model.StudyRoomGroup;
-import de.tum.in.tumcampusapp.component.sync.SyncManager;
+import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.NetUtils;

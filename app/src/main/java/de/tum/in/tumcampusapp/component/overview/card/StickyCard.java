@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.generic.card;
+package de.tum.in.tumcampusapp.component.overview.card;
 
 import android.content.Context;
 import android.content.SharedPreferences;

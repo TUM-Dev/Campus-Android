@@ -21,7 +21,7 @@ import android.view.View;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.settings.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -40,7 +40,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      * Card list
      */
     private RecyclerView mCardsView;
-    private CardsAdapter mAdapter;
+    private CardAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      * Setup cards adapter
      */
     private void initAdapter() {
-        mAdapter = new CardsAdapter();
+        mAdapter = new CardAdapter();
         mCardsView.setAdapter(mAdapter);
     }
 

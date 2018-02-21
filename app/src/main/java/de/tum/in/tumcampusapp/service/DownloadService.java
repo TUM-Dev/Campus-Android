@@ -30,7 +30,7 @@ import de.tum.in.tumcampusapp.component.overview.CardManager;
 import de.tum.in.tumcampusapp.component.reporting.bugreport.G;
 import de.tum.in.tumcampusapp.component.reporting.bugreport.Util;
 import de.tum.in.tumcampusapp.component.survey.SurveyManager;
-import de.tum.in.tumcampusapp.component.sync.SyncManager;
+import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;

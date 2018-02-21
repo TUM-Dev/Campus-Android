@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.component.cafeteria.FavoriteDishDao;
 import de.tum.in.tumcampusapp.component.cafeteria.FavoriteFoodAlarmStorage;
 import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.cafeteria.model.FavoriteDish;
-import de.tum.in.tumcampusapp.component.sync.SyncManager;
+import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;

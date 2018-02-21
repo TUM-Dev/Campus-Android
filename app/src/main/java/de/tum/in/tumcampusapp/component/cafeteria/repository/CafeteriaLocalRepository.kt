@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.component.cafeteria.repository
 import de.tum.`in`.tumcampusapp.component.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.sync.model.Sync
+import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable

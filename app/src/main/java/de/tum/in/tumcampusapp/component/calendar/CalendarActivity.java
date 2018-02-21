@@ -38,7 +38,7 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarRowSet;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForAccessingTumOnline;
-import de.tum.in.tumcampusapp.component.sync.SyncManager;
+import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 

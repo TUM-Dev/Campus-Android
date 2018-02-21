@@ -10,8 +10,8 @@ import java.util.Date;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
 import de.tum.in.tumcampusapp.component.news.NewsCard;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.reporting.stats.model.Statistics;
 import de.tum.in.tumcampusapp.utils.Utils;
 

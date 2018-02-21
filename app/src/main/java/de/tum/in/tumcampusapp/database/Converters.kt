@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.database
 
 import android.arch.persistence.room.TypeConverter
 import com.google.gson.Gson
-import de.tum.`in`.tumcampusapp.component.alarm.GCMNotificationLocation
+import de.tum.`in`.tumcampusapp.component.alarm.model.GCMNotificationLocation
 import de.tum.`in`.tumcampusapp.component.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.utils.Utils
 import java.util.*

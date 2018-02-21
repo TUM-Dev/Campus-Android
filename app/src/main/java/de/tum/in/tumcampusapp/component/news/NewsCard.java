@@ -14,8 +14,8 @@ import android.widget.RemoteViews;
 import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
-import de.tum.in.tumcampusapp.component.generic.card.NotificationAwareCard;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.news.model.News;
 import de.tum.in.tumcampusapp.component.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.overview.CardManager;

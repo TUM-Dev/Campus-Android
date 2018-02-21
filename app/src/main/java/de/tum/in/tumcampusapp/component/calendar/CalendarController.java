@@ -24,15 +24,15 @@ import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarRow;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarRowSet;
 import de.tum.in.tumcampusapp.component.calendar.model.WidgetsTimetableBlacklist;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.locations.model.Geo;
-import de.tum.in.tumcampusapp.component.sync.SyncManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
 /**
  * Calendar Manager, handles database stuff, external imports

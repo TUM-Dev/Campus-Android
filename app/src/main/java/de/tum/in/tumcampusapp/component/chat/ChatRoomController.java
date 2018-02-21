@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.component.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.component.chat.model.ChatVerification;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.lectures.model.LecturesSearchRow;
 import de.tum.in.tumcampusapp.component.lectures.model.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.database.TcaDb;

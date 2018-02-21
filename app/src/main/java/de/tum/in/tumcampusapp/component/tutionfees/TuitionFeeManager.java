@@ -6,7 +6,7 @@ import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.tutionfees.model.TuitionList;
 
 /**

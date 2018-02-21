@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.alarm
+package de.tum.`in`.tumcampusapp.component.alarm.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey

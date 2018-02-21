@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.onboarding.activity;
+package de.tum.in.tumcampusapp.component.onboarding;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +23,6 @@ import de.tum.in.tumcampusapp.component.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
-import de.tum.in.tumcampusapp.component.onboarding.StartupActivity;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;

@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.overview.CardManager;
 import de.tum.in.tumcampusapp.component.survey.model.OpenQuestions;
 import de.tum.in.tumcampusapp.component.survey.model.Question;

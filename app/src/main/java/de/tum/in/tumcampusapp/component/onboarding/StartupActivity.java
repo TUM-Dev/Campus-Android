@@ -33,8 +33,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
-import de.tum.in.tumcampusapp.component.onboarding.activity.WizNavExtrasActivity;
-import de.tum.in.tumcampusapp.component.onboarding.activity.WizNavStartActivity;
 import de.tum.in.tumcampusapp.component.overview.CardManager;
 import de.tum.in.tumcampusapp.component.overview.MainActivity;
 import de.tum.in.tumcampusapp.component.reporting.bugreport.ExceptionHandler;

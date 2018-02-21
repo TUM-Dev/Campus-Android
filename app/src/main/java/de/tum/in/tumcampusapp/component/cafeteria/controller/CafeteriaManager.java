@@ -16,7 +16,7 @@ import de.tum.in.tumcampusapp.component.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.locations.LocationManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;

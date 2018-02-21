@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.alarm
+package de.tum.`in`.tumcampusapp.component.alarm.model
 
 import java.io.Serializable
 

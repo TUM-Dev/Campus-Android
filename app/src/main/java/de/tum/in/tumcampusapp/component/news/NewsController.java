@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.news.model.News;
 import de.tum.in.tumcampusapp.component.news.model.NewsSources;
-import de.tum.in.tumcampusapp.component.sync.SyncManager;
 import de.tum.in.tumcampusapp.component.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
+import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
 /**
  * News Manager, handles database stuff, external imports

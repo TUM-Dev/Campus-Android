@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.news.model.News;
 import de.tum.in.tumcampusapp.component.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.tufilm.FilmCard;

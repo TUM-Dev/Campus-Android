@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.sync;
+package de.tum.in.tumcampusapp.utils.sync;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
@@ -7,7 +7,7 @@ import android.arch.persistence.room.Query;
 
 import javax.annotation.Nullable;
 
-import de.tum.in.tumcampusapp.component.sync.model.Sync;
+import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
 @Dao
 public interface SyncDao {

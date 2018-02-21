@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.about;
+package de.tum.in.tumcampusapp.component.overview;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;

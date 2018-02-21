@@ -23,6 +23,8 @@ import java.security.spec.X509EncodedKeySpec;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.alarm.model.GCMAlert;
+import de.tum.in.tumcampusapp.component.alarm.model.GCMNotification;
 import de.tum.in.tumcampusapp.component.generic.GenericNotification;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;

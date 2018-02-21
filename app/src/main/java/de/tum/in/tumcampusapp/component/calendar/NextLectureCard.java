@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
-import de.tum.in.tumcampusapp.component.generic.card.NotificationAwareCard;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.overview.CardManager;
 import de.tum.in.tumcampusapp.component.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.utils.DateUtils;

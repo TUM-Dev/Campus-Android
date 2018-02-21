@@ -19,8 +19,8 @@ import android.widget.RemoteViews;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
-import de.tum.in.tumcampusapp.component.generic.card.NotificationAwareCard;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;

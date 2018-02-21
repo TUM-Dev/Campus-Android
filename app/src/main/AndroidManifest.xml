@@ -374,7 +374,7 @@
                 android:value="de.tum.in.tumcampusapp.component.overview.MainActivity"/>
         </activity>
         <activity
-            android:name=".component.about.InformationActivity"
+            android:name=".component.overview.InformationActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/information"
             android:launchMode="singleTop"
@@ -394,15 +394,15 @@
                 android:value="de.tum.in.tumcampusapp.component.overview.MainActivity"/>
         </activity>
         <activity
-            android:name=".component.onboarding.activity.WizNavStartActivity"
+            android:name=".component.onboarding.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"/>
         <activity
-            android:name=".component.onboarding.activity.WizNavCheckTokenActivity"
+            android:name=".component.onboarding.WizNavCheckTokenActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"/>
         <activity
-            android:name=".component.onboarding.activity.WizNavExtrasActivity"
+            android:name=".component.onboarding.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden"/>

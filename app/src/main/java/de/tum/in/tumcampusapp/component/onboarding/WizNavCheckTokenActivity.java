@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.onboarding.activity;
+package de.tum.in.tumcampusapp.component.onboarding;
 
 import android.content.Intent;
 import android.os.Bundle;

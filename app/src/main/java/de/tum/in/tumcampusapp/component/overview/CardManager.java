@@ -16,7 +16,7 @@ import de.tum.in.tumcampusapp.component.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.eduroam.EduroamFixCard;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.news.NewsController;
 import de.tum.in.tumcampusapp.component.survey.SurveyManager;
 import de.tum.in.tumcampusapp.component.transportation.TransportController;
@@ -71,7 +71,7 @@ public final class CardManager {
 
     /**
      * Gets the number of cards
-     * HINT: For use in {@link CardsAdapter}
+     * HINT: For use in {@link CardAdapter}
      *
      * @return Card count
      */
@@ -84,7 +84,7 @@ public final class CardManager {
 
     /**
      * Gets the card by index
-     * HINT: For use in {@link CardsAdapter}
+     * HINT: For use in {@link CardAdapter}
      *
      * @return Card
      */

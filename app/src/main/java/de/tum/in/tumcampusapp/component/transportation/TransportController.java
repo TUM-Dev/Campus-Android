@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.component.general.model.Recent;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.transportation.model.WidgetsTransport;

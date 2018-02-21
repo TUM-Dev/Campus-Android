@@ -20,8 +20,8 @@ import de.tum.in.tumcampusapp.component.chat.activity.ChatActivity;
 import de.tum.in.tumcampusapp.component.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.chat.model.ChatRoomDbRow;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
-import de.tum.in.tumcampusapp.component.generic.card.NotificationAwareCard;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
+import de.tum.in.tumcampusapp.component.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 

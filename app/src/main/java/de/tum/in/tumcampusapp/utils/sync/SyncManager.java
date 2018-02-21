@@ -1,10 +1,10 @@
-package de.tum.in.tumcampusapp.component.sync;
+package de.tum.in.tumcampusapp.utils.sync;
 
 import android.content.Context;
 
 import java.util.Date;
 
-import de.tum.in.tumcampusapp.component.sync.model.Sync;
+import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 

@@ -8,8 +8,8 @@ import de.tum.in.tumcampusapp.component.calendar.NextLectureCard;
 import de.tum.in.tumcampusapp.component.chat.ChatMessagesCard;
 import de.tum.in.tumcampusapp.component.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.eduroam.EduroamFixCard;
-import de.tum.in.tumcampusapp.component.generic.card.Card;
 import de.tum.in.tumcampusapp.component.news.NewsCard;
+import de.tum.in.tumcampusapp.component.overview.card.Card;
 import de.tum.in.tumcampusapp.component.survey.SurveyCard;
 import de.tum.in.tumcampusapp.component.transportation.MVVCard;
 import de.tum.in.tumcampusapp.component.tutionfees.TuitionFeesCard;
@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.component.tutionfees.TuitionFeesCard;
 /**
  * Adapter for the cards start page used in {@link MainActivity}
  */
-public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> implements MainActivity.ItemTouchHelperAdapter{
+public class CardAdapter extends RecyclerView.Adapter<Card.CardViewHolder> implements MainActivity.ItemTouchHelperAdapter{
 
     public static Card getItem(int i) {
         return CardManager.getCard(i);

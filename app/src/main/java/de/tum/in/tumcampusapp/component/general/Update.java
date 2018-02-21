@@ -15,7 +15,7 @@ import java.io.IOException;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.alarm.GCMNotification;
+import de.tum.in.tumcampusapp.component.alarm.model.GCMNotification;
 import de.tum.in.tumcampusapp.component.generic.GenericNotification;
 import de.tum.in.tumcampusapp.component.overview.MainActivity;
 import de.tum.in.tumcampusapp.utils.Const;

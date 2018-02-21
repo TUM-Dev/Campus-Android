@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.news.repository
 
-import de.tum.`in`.tumcampusapp.component.sync.model.Sync
+import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import de.tum.`in`.tumcampusapp.component.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils

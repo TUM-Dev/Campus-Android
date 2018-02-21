@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.sync.model
+package de.tum.`in`.tumcampusapp.utils.sync.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
