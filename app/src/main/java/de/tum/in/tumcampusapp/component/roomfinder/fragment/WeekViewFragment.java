@@ -22,10 +22,10 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
-import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderSchedule;
+import de.tum.in.tumcampusapp.component.calendar.IntegratedCalendarEvent;
+import de.tum.in.tumcampusapp.component.roomfinder.model.RoomFinderSchedule;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class WeekViewFragment extends Fragment implements MonthLoader.MonthChangeListener {
 

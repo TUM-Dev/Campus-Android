@@ -29,7 +29,7 @@ class Migration2to3 : Migration(2,3) {
         database.execSQL("ALTER TABLE kino_new RENAME TO kino")
 
 
-        //############################## Chat migrations ##############################
+        //############################## ChatNotification migrations ##############################
         database.execSQL("DROP TABLE IF EXISTS  chat_message")
         database.execSQL("CREATE TABLE chat_message (" +
                 "_id INTEGER NOT NULL PRIMARY KEY," +

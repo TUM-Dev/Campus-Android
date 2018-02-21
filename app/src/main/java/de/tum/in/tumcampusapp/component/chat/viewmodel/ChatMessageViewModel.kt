@@ -6,12 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
-import de.tum.`in`.tumcampusapp.auxiliary.Utils
-import de.tum.`in`.tumcampusapp.models.gcm.GCMChat
-import de.tum.`in`.tumcampusapp.models.tumcabe.ChatMessage
-import de.tum.`in`.tumcampusapp.models.tumcabe.ChatVerification
+import de.tum.`in`.tumcampusapp.component.chat.GCMChat
+import de.tum.`in`.tumcampusapp.component.chat.model.ChatMessage
+import de.tum.`in`.tumcampusapp.component.chat.model.ChatVerification
 import de.tum.`in`.tumcampusapp.component.chat.repository.ChatMessageLocalRepository
 import de.tum.`in`.tumcampusapp.component.chat.repository.ChatMessageRemoteRepository
+import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers

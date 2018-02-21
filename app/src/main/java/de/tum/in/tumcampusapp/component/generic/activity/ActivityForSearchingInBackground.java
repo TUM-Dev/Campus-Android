@@ -5,7 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.google.common.base.Optional;
 
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
+import de.tum.in.tumcampusapp.utils.NetUtils;
 
 /**
  * Generic class which can handle a long running search in background.

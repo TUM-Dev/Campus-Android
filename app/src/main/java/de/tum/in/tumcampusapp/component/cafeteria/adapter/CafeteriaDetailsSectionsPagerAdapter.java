@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.component.cafeteria.fragment.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.viewmodel.CafeteriaViewModel;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**

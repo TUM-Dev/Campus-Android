@@ -4,9 +4,9 @@ import android.content.Context;
 
 import java.util.List;
 
+import de.tum.in.tumcampusapp.component.alarm.GCMNotification;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.NotificationDao;
-import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 
 public class NotificationManager {
 

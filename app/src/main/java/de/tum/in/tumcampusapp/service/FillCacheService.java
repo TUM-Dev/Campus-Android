@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.utils.CacheManager;
+import de.tum.in.tumcampusapp.utils.Utils;
 
-import static de.tum.in.tumcampusapp.auxiliary.Const.FILL_CACHE_SERVICE_JOB_ID;
+import static de.tum.in.tumcampusapp.utils.Const.FILL_CACHE_SERVICE_JOB_ID;
 
 /**
  * Service used to fill caches in background, for faster/offline access

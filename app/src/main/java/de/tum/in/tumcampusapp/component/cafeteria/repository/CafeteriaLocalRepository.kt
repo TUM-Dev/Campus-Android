@@ -1,11 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.cafeteria.repository
 
-import de.tum.`in`.tumcampusapp.auxiliary.Utils
-import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.component.cafeteria.controller.CafeteriaManager
-import de.tum.`in`.tumcampusapp.models.cafeteria.Cafeteria
-import de.tum.`in`.tumcampusapp.models.cafeteria.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.models.dbEntities.Sync
+import de.tum.`in`.tumcampusapp.component.cafeteria.model.Cafeteria
+import de.tum.`in`.tumcampusapp.component.cafeteria.model.CafeteriaMenu
+import de.tum.`in`.tumcampusapp.component.sync.model.Sync
+import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable
 import java.util.*
 import java.util.concurrent.Executor

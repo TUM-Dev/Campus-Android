@@ -4,9 +4,9 @@ import android.content.Context;
 
 import java.util.List;
 
+import de.tum.in.tumcampusapp.component.general.model.Recent;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.RecentsDao;
-import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 
 /**
  * Transport Manager, handles database stuff, internet connections

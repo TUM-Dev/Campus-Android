@@ -7,18 +7,18 @@ import android.support.v4.app.JobIntentService;
 
 import java.util.List;
 
+import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.exception.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
+import de.tum.in.tumcampusapp.component.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.chat.repository.ChatMessageLocalRepository;
 import de.tum.in.tumcampusapp.component.chat.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.component.chat.viewmodel.ChatMessageViewModel;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 
-import static de.tum.in.tumcampusapp.auxiliary.Const.SEND_MESSAGE_SERVICE_JOB_ID;
+import static de.tum.in.tumcampusapp.utils.Const.SEND_MESSAGE_SERVICE_JOB_ID;
 
 /**
  * Service used to silence the mobile during lectures

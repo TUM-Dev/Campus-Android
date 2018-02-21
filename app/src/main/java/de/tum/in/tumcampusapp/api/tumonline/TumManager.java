@@ -4,12 +4,11 @@ import android.content.Context;
 
 import org.simpleframework.xml.core.Persister;
 
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.api.tumonline.model.Error;
+import de.tum.in.tumcampusapp.api.tumonline.model.TumLock;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.TumLockDao;
-import de.tum.in.tumcampusapp.managers.CacheManager;
-import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
-import de.tum.in.tumcampusapp.models.tumo.Error;
+import de.tum.in.tumcampusapp.utils.CacheManager;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * TUMOnline lock manager: prevent too many requests send to TUMO

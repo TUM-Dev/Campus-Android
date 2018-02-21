@@ -12,17 +12,16 @@ import com.google.common.net.UrlEscapers;
 
 import java.util.concurrent.TimeUnit;
 
-import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.trace.G;
+import de.tum.in.tumcampusapp.component.reporting.bugreport.G;
+import de.tum.in.tumcampusapp.utils.Utils;
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-import static de.tum.in.tumcampusapp.auxiliary.Const.API_HOSTNAME;
-import static de.tum.in.tumcampusapp.auxiliary.Const.API_HOSTNAME_NEW;
-import static de.tum.in.tumcampusapp.managers.StudyRoomGroupManager.STUDYROOM_HOST;
+import static de.tum.in.tumcampusapp.component.studyroom.StudyRoomGroupManager.STUDYROOM_HOST;
+import static de.tum.in.tumcampusapp.utils.Const.API_HOSTNAME;
+import static de.tum.in.tumcampusapp.utils.Const.API_HOSTNAME_NEW;
 
 public final class Helper {
     private static final String TAG = "TUM_API_CALL";

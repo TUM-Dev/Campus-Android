@@ -4,8 +4,8 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import de.tum.`in`.tumcampusapp.auxiliary.Const.DATE_AND_TIME
-import de.tum.`in`.tumcampusapp.auxiliary.Const.DATE_ONLY
+import de.tum.`in`.tumcampusapp.utils.Const.DATE_AND_TIME
+import de.tum.`in`.tumcampusapp.utils.Const.DATE_ONLY
 import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*

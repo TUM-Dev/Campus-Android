@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampusapp.component.reporting.stats.ImplicitCounter;
 
 /**
  * Activity to show plan details.

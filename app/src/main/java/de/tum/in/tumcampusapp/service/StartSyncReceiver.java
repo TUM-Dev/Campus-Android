@@ -8,8 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Receives on boot completed broadcast, sets alarm for next sync-try
@@ -42,7 +42,7 @@ public class StartSyncReceiver extends BroadcastReceiver {
         // Look up background service settings
         final boolean backgroundServicePermitted = Utils.isBackgroundServicePermitted(context);
 
-        // Set Alarm for next update, if background service is enabled
+        // Set AlarmNotification for next update, if background service is enabled
         if (backgroundServicePermitted) {
             setAlarm(context);
         }

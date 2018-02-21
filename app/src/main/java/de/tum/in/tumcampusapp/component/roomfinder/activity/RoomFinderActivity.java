@@ -15,16 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.general.model.Recent;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.component.generic.adapter.NoResultsAdapter;
+import de.tum.in.tumcampusapp.component.roomfinder.RoomFinderSuggestionProvider;
 import de.tum.in.tumcampusapp.component.roomfinder.adapter.RoomFinderListAdapter;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
-import de.tum.in.tumcampusapp.models.dbEntities.Recent;
-import de.tum.in.tumcampusapp.models.tumcabe.RoomFinderRoom;
+import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**

@@ -22,21 +22,21 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.component.general.card.MVVCard;
-import de.tum.in.tumcampusapp.component.general.card.generic.Card;
+import de.tum.in.tumcampusapp.component.general.model.Recent;
+import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.transportation.MVVCard;
+import de.tum.in.tumcampusapp.component.transportation.TransportDao;
+import de.tum.in.tumcampusapp.component.transportation.model.TransportFavorites;
+import de.tum.in.tumcampusapp.component.transportation.model.WidgetsTransport;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.Departure;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.StationResult;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.WidgetDepartures;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.TransportDao;
-import de.tum.in.tumcampusapp.managers.CacheManager;
-import de.tum.in.tumcampusapp.managers.LocationManager;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
-import de.tum.in.tumcampusapp.models.dbEntities.Recent;
-import de.tum.in.tumcampusapp.models.efa.Departure;
-import de.tum.in.tumcampusapp.models.efa.StationResult;
-import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
-import de.tum.in.tumcampusapp.models.transport.TransportFavorites;
-import de.tum.in.tumcampusapp.models.transport.WidgetsTransport;
+import de.tum.in.tumcampusapp.utils.CacheManager;
+import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Transport Manager, handles querying data from mvv and card creation

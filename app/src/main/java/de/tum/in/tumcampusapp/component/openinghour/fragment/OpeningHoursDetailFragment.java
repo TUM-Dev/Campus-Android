@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.cafeteria.model.Location;
 import de.tum.in.tumcampusapp.component.openinghour.activity.OpeningHoursDetailActivity;
 import de.tum.in.tumcampusapp.component.openinghour.activity.OpeningHoursListActivity;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.LocationDao;
-import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * A fragment representing a single Item detail screen. This fragment is either

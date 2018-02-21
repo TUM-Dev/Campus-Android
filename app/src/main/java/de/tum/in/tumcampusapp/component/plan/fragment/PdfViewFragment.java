@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class PdfViewFragment extends Fragment {
     private PDFView pdfView;

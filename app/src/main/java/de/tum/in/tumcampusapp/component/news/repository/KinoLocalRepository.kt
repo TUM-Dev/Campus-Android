@@ -1,9 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.news.repository
 
-import de.tum.`in`.tumcampusapp.auxiliary.Utils
+import de.tum.`in`.tumcampusapp.component.sync.model.Sync
+import de.tum.`in`.tumcampusapp.component.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import de.tum.`in`.tumcampusapp.models.dbEntities.Sync
-import de.tum.`in`.tumcampusapp.models.tumcabe.Kino
+import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import java.util.*

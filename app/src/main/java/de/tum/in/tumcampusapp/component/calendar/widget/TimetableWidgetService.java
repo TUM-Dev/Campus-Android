@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.DateUtils;
-import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
+import de.tum.in.tumcampusapp.component.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
+import de.tum.in.tumcampusapp.utils.DateUtils;
 
 @SuppressLint("Registered")
 public class TimetableWidgetService extends RemoteViewsService {

@@ -10,15 +10,15 @@ import android.view.MenuItem;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.chat.model.ChatMember;
+import de.tum.in.tumcampusapp.component.chat.model.ChatVerification;
+import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.component.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.databinding.ActivityCardsDetailBinding;
 import de.tum.in.tumcampusapp.exception.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.cards.StudyCard;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class CardsDetailActivity extends ActivityForLoadingInBackground<Void, StudyCard> {
     StudyCard card;

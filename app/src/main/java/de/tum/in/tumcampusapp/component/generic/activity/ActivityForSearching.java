@@ -13,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Generic class for searching. Provides basic functions for a {@link SearchView}

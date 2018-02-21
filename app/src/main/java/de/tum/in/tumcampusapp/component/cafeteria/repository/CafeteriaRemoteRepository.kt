@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.cafeteria.repository
 
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.models.cafeteria.Cafeteria
+import de.tum.`in`.tumcampusapp.component.cafeteria.model.Cafeteria
 import io.reactivex.Observable
 
 object CafeteriaRemoteRepository {

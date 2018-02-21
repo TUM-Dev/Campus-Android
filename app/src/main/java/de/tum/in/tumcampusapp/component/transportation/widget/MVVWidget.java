@@ -17,7 +17,7 @@ import java.util.TimerTask;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
-import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.WidgetDepartures;
 
 /**
  * Implementation of App Widget functionality.

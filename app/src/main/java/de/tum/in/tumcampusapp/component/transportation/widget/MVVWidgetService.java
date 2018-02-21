@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.MVVSymbolView;
+import de.tum.in.tumcampusapp.component.transportation.MVVSymbolView;
 import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
-import de.tum.in.tumcampusapp.models.efa.Departure;
-import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.Departure;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.WidgetDepartures;
 
 @SuppressLint("Registered")
 public class MVVWidgetService extends RemoteViewsService {

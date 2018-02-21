@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaNotificationSettings;
 import de.tum.in.tumcampusapp.component.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.generic.adapter.NotificationSettingsListAdapter;
-import de.tum.in.tumcampusapp.auxiliary.CafeteriaNotificationSettings;
 
 /**
  * This activity enables the user to set a preferred notification time for a day of the week.

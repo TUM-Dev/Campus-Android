@@ -16,11 +16,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.managers.CacheManager;
-import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
+import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
+import de.tum.in.tumcampusapp.utils.CacheManager;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * This class will handle all action needed to communicate with the TUMOnline

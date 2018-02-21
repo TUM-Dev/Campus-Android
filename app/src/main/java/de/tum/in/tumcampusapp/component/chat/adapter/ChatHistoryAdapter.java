@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.DateUtils;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
+import de.tum.in.tumcampusapp.component.chat.model.ChatMember;
+import de.tum.in.tumcampusapp.component.chat.model.ChatMessage;
+import de.tum.in.tumcampusapp.utils.DateUtils;
 
 public class ChatHistoryAdapter extends BaseAdapter {
     private static final Integer MSG_OUTGOING = 0;

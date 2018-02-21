@@ -12,9 +12,9 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
-import de.tum.`in`.tumcampusapp.auxiliary.Const.ADD_GEOFENCE_EXTRA
-import de.tum.`in`.tumcampusapp.auxiliary.Const.GEOFENCING_SERVICE_JOB_ID
-import de.tum.`in`.tumcampusapp.auxiliary.Utils
+import de.tum.`in`.tumcampusapp.utils.Const.ADD_GEOFENCE_EXTRA
+import de.tum.`in`.tumcampusapp.utils.Const.GEOFENCING_SERVICE_JOB_ID
+import de.tum.`in`.tumcampusapp.utils.Utils
 
 
 /**

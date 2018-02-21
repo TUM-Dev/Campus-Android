@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import de.tum.in.tumcampusapp.models.dbEntities.Recent;
+import de.tum.in.tumcampusapp.component.general.model.Recent;
 
 @Dao
 public interface RecentsDao {

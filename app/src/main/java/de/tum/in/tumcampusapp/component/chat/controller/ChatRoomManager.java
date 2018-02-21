@@ -12,22 +12,22 @@ import java.util.HashSet;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.component.general.card.ChatMessagesCard;
-import de.tum.in.tumcampusapp.component.general.card.generic.Card;
-import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.ChatRoomDao;
-import de.tum.in.tumcampusapp.exception.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomAndLastMessage;
-import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomDbRow;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
-import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
-import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.component.chat.ChatMessagesCard;
+import de.tum.in.tumcampusapp.component.chat.ChatRoomDao;
+import de.tum.in.tumcampusapp.component.chat.model.ChatMember;
+import de.tum.in.tumcampusapp.component.chat.model.ChatRoom;
+import de.tum.in.tumcampusapp.component.chat.model.ChatRoomAndLastMessage;
+import de.tum.in.tumcampusapp.component.chat.model.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.component.chat.model.ChatVerification;
+import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.lectures.model.LecturesSearchRow;
+import de.tum.in.tumcampusapp.component.lectures.model.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests

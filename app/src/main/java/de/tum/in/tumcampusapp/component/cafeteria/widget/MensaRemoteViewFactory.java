@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.cafeteria.controller.CafeteriaManager;
-import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
-import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaPrices;
+import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
+import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaPrices;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {

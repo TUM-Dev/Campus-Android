@@ -28,11 +28,11 @@ import java.io.IOException;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.notifications.Alarm;
-import de.tum.in.tumcampusapp.notifications.Chat;
-import de.tum.in.tumcampusapp.notifications.GenericNotification;
-import de.tum.in.tumcampusapp.notifications.Update;
+import de.tum.in.tumcampusapp.component.alarm.AlarmNotification;
+import de.tum.in.tumcampusapp.component.chat.ChatNotification;
+import de.tum.in.tumcampusapp.component.general.Update;
+import de.tum.in.tumcampusapp.component.generic.GenericNotification;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -66,14 +66,14 @@ public class GcmReceiverService extends FirebaseMessagingService {
 
             //switch on the type as both the type and payload must be present
             switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
-                case 1: //Chat
-                    n = new Chat(payload, this, notification);
+                case 1: //ChatNotification
+                    n = new ChatNotification(payload, this, notification);
                     break;
                 case 2: //Update
                     n = new Update(payload, this, notification);
                     break;
                 case 3: //Alert
-                    n = new Alarm(payload, this, notification);
+                    n = new AlarmNotification(payload, this, notification);
                     break;
                 case 0: //Nothing to do, just confirm the retrieved notification
                 default:
@@ -110,7 +110,7 @@ public class GcmReceiverService extends FirebaseMessagingService {
                 for (String key : data.keySet()) {
                     bundle.putString(key, data.get(key));
                 }
-                this.postNotification(new Chat(bundle, this, -1));
+                this.postNotification(new ChatNotification(bundle, this, -1));
             } catch (Exception e) {
                 //@todo do something
             }

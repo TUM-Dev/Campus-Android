@@ -3,9 +3,9 @@ package de.tum.`in`.tumcampusapp.service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.tum.`in`.tumcampusapp.auxiliary.Const.DISTANCE_IN_METER
-import de.tum.`in`.tumcampusapp.auxiliary.Const.MUNICH_GEOFENCE
-import de.tum.`in`.tumcampusapp.auxiliary.Utils
+import de.tum.`in`.tumcampusapp.utils.Const.DISTANCE_IN_METER
+import de.tum.`in`.tumcampusapp.utils.Const.MUNICH_GEOFENCE
+import de.tum.`in`.tumcampusapp.utils.Utils
 
 
 class GeofencingStartupReceiver : BroadcastReceiver() {

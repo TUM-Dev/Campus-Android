@@ -2,11 +2,11 @@ package de.tum.`in`.tumcampusapp.component.cafeteria.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import android.location.Location
-import de.tum.`in`.tumcampusapp.auxiliary.Utils
-import de.tum.`in`.tumcampusapp.models.cafeteria.Cafeteria
-import de.tum.`in`.tumcampusapp.models.cafeteria.CafeteriaMenu
+import de.tum.`in`.tumcampusapp.component.cafeteria.model.Cafeteria
+import de.tum.`in`.tumcampusapp.component.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.cafeteria.repository.CafeteriaRemoteRepository
+import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.component.chat.activity.ChatRoomsActivity;
-import de.tum.in.tumcampusapp.component.lecture.activity.LecturesPersonalActivity;
-import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomAndLastMessage;
+import de.tum.in.tumcampusapp.component.chat.model.ChatRoomAndLastMessage;
+import de.tum.in.tumcampusapp.component.lectures.activity.LecturesPersonalActivity;
+import de.tum.in.tumcampusapp.utils.DateUtils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**

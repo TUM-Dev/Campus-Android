@@ -18,12 +18,12 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.news.adapter.NewsAdapter;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.component.news.controller.NewsManager;
-import de.tum.in.tumcampusapp.models.tumcabe.News;
-import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
+import de.tum.in.tumcampusapp.component.news.model.News;
+import de.tum.in.tumcampusapp.component.news.model.NewsSources;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Activity to show News (message, image, date)

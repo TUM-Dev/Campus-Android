@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.news.repository
 
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.models.tumcabe.Kino
+import de.tum.`in`.tumcampusapp.component.tufilm.model.Kino
 import io.reactivex.Observable
 
 object KinoRemoteRepository {

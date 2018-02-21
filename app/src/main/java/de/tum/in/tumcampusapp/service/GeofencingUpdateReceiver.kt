@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
-import de.tum.`in`.tumcampusapp.auxiliary.Const
-import de.tum.`in`.tumcampusapp.auxiliary.Utils
+import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**
  * Receiver for Geofencing updates regarding munich.

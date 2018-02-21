@@ -21,12 +21,12 @@ import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.component.general.activity.MainActivity;
+import de.tum.in.tumcampusapp.component.overview.MainActivity;
 import de.tum.in.tumcampusapp.component.plan.activity.PlansDetailsActivity;
 import de.tum.in.tumcampusapp.component.plan.adapter.PlanListAdapter;
 import de.tum.in.tumcampusapp.component.plan.adapter.PlanListAdapter.PlanListEntry;
+import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class PlansViewFragment extends Fragment {
 

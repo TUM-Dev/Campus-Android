@@ -16,14 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.models.tumcabe.Kino;
 import de.tum.in.tumcampusapp.component.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.news.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.component.news.viewmodel.KinoViewModel;
+import de.tum.in.tumcampusapp.component.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**

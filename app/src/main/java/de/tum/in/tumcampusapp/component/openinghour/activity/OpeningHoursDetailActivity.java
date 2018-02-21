@@ -7,8 +7,8 @@ import android.view.MenuItem;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.component.openinghour.fragment.OpeningHoursDetailFragment;
+import de.tum.in.tumcampusapp.component.reporting.stats.ImplicitCounter;
 
 /**
  * An activity representing a single Item detail screen. This activity is only

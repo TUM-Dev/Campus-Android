@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.models.cards.StudyCard;
+import de.tum.in.tumcampusapp.component.studycard.model.StudyCard;
 
 public class StudyCardListAdapter extends BaseAdapter {
     private LayoutInflater inflater;

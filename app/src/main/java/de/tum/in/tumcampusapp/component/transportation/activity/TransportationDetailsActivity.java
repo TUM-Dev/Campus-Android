@@ -14,12 +14,12 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
-import de.tum.in.tumcampusapp.auxiliary.DepartureView;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.component.transportation.DepartureView;
 import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
-import de.tum.in.tumcampusapp.models.efa.Departure;
-import de.tum.in.tumcampusapp.models.efa.StationResult;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.Departure;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.StationResult;
+import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.utils.NetUtils;
 
 /**
  * Activity to show transport departures for a specified station

@@ -10,10 +10,11 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import de.tum.in.tumcampusapp.BuildConfig;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.calendar.CalendarDao;
+import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
+import de.tum.in.tumcampusapp.component.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
-import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

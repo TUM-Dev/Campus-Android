@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.reporting.stats.ImplicitCounter;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
-import static de.tum.in.tumcampusapp.auxiliary.Const.BACKGROUND_SERVICE_JOB_ID;
+import static de.tum.in.tumcampusapp.utils.Const.BACKGROUND_SERVICE_JOB_ID;
 
 /**
  * Service used to sync data in background

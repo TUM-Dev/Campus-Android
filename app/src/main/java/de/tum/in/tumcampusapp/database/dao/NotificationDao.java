@@ -7,7 +7,7 @@ import android.arch.persistence.room.Query;
 
 import javax.annotation.Nullable;
 
-import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
+import de.tum.in.tumcampusapp.component.alarm.GCMNotification;
 
 @Dao
 public interface NotificationDao {

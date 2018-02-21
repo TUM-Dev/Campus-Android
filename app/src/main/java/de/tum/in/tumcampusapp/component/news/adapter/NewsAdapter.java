@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.component.general.card.FilmCard;
-import de.tum.in.tumcampusapp.component.general.card.NewsCard;
-import de.tum.in.tumcampusapp.component.general.card.generic.Card;
+import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.news.NewsCard;
+import de.tum.in.tumcampusapp.component.news.NewsSourcesDao;
+import de.tum.in.tumcampusapp.component.news.model.News;
+import de.tum.in.tumcampusapp.component.news.model.NewsSources;
+import de.tum.in.tumcampusapp.component.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.NewsSourcesDao;
-import de.tum.in.tumcampusapp.models.tumcabe.News;
-import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
+import de.tum.in.tumcampusapp.utils.NetUtils;
 
 public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");

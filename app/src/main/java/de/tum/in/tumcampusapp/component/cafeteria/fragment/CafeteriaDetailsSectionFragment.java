@@ -27,18 +27,18 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.component.general.card.CafeteriaMenuCard;
-import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
-import de.tum.in.tumcampusapp.managers.OpenHoursManager;
-import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
-import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaPrices;
-import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
+import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaMenuCard;
+import de.tum.in.tumcampusapp.component.cafeteria.FavoriteDishDao;
+import de.tum.in.tumcampusapp.component.cafeteria.OpenHoursManager;
+import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
+import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaPrices;
+import de.tum.in.tumcampusapp.component.cafeteria.model.FavoriteDish;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.viewmodel.CafeteriaViewModel;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**

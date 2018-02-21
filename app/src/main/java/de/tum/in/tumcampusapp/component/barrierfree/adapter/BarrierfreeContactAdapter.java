@@ -11,10 +11,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.generic.adapter.SimpleStickyListHeadersAdapter;
-import de.tum.in.tumcampusapp.component.person.activity.PersonsDetailsActivity;
-import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
-import de.tum.in.tumcampusapp.models.tumo.Person;
+import de.tum.in.tumcampusapp.component.person.PersonsDetailsActivity;
+import de.tum.in.tumcampusapp.component.person.model.Person;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**

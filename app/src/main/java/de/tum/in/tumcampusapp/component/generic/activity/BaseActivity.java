@@ -16,14 +16,14 @@ import com.google.common.base.Optional;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.general.activity.MainActivity;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.DrawerMenuHelper;
-import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.tumo.Employee;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.component.generic.DrawerMenuHelper;
+import de.tum.in.tumcampusapp.component.overview.MainActivity;
+import de.tum.in.tumcampusapp.component.person.model.Employee;
+import de.tum.in.tumcampusapp.component.reporting.stats.ImplicitCounter;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Takes care of the navigation drawer which might be attached to the activity and also handles up navigation

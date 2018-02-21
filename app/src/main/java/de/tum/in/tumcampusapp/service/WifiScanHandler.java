@@ -6,7 +6,7 @@ import android.os.Handler;
 
 import java.util.Random;
 
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * This class is responsible for starting repeating wifi scans.

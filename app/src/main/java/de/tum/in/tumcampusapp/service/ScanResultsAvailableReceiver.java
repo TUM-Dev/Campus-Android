@@ -20,13 +20,13 @@ import java.util.Calendar;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.general.activity.SetupEduroamActivity;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.auxiliary.WifiMeasurementLocationListener;
-import de.tum.in.tumcampusapp.component.general.controller.EduroamManager;
-import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import de.tum.in.tumcampusapp.component.eduroam.EduroamController;
+import de.tum.in.tumcampusapp.component.eduroam.SetupEduroamActivity;
+import de.tum.in.tumcampusapp.component.wifimeasurement.WifiMeasurementLocationListener;
+import de.tum.in.tumcampusapp.component.wifimeasurement.model.WifiMeasurement;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Listens for android's ScanResultsAvailable broadcast and checks if eduroam is nearby.
@@ -62,7 +62,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         }
 
         // Test if user has eduroam configured already
-        boolean eduroamConfiguredAlready = EduroamManager.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18;
+        boolean eduroamConfiguredAlready = EduroamController.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18;
 
         //Check if locations are enabled
         boolean locationsEnabled = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;

@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.studycard.adapter.StudyCardListAdapter;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.studycard.model.CardActivityState;
+import de.tum.in.tumcampusapp.component.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.databinding.ActivityCardsBinding;
-import de.tum.in.tumcampusapp.models.cards.CardActivityState;
-import de.tum.in.tumcampusapp.models.cards.StudyCard;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class CardsActivity extends ActivityForLoadingInBackground<Void, List<StudyCard>> implements AdapterView.OnItemClickListener {
 

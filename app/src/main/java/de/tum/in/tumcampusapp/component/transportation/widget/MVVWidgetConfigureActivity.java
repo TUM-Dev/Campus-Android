@@ -17,11 +17,11 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.component.generic.adapter.NoResultsAdapter;
-import de.tum.in.tumcampusapp.auxiliary.MVVStationSuggestionProvider;
-import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.component.transportation.MVVStationSuggestionProvider;
 import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
-import de.tum.in.tumcampusapp.models.efa.StationResult;
-import de.tum.in.tumcampusapp.models.efa.WidgetDepartures;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.StationResult;
+import de.tum.in.tumcampusapp.component.transportation.model.efa.WidgetDepartures;
+import de.tum.in.tumcampusapp.managers.RecentsManager;
 
 public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<List<StationResult>> implements AdapterView.OnItemClickListener {
 

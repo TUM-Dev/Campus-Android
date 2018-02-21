@@ -21,18 +21,18 @@ import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.activity.ActivityForDownloadingExternal;
-import de.tum.in.tumcampusapp.component.cafeteria.adapter.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.managers.LocationManager;
-import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.component.cafeteria.adapter.CafeteriaDetailsSectionsPagerAdapter;
+import de.tum.in.tumcampusapp.component.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.viewmodel.CafeteriaViewModel;
+import de.tum.in.tumcampusapp.component.generic.activity.ActivityForDownloadingExternal;
+import de.tum.in.tumcampusapp.component.locations.LocationManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 

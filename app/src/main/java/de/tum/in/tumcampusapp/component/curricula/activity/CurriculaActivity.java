@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
-import de.tum.in.tumcampusapp.component.curricula.adapter.CurriculumAdapter;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
+import de.tum.in.tumcampusapp.component.curricula.adapter.CurriculumAdapter;
+import de.tum.in.tumcampusapp.component.curricula.model.Curriculum;
+import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.utils.NetUtils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**

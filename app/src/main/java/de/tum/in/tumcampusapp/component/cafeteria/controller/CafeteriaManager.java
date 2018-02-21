@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.component.general.card.CafeteriaMenuCard;
-import de.tum.in.tumcampusapp.component.general.card.generic.Card;
-import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.managers.LocationManager;
-import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
+import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaMenuCard;
+import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.viewmodel.CafeteriaViewModel;
+import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.locations.LocationManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 

@@ -10,9 +10,9 @@ import android.widget.ListView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.lecture.adapter.LectureListSelectionAdapter;
 import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
-import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
+import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
+import de.tum.in.tumcampusapp.component.lectures.adapter.LectureListSelectionAdapter;
 
 public class TimetableWidgetConfigureActivity extends AppCompatActivity {
 

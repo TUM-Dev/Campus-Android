@@ -17,9 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.general.activity.UserPreferencesActivity;
-import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.settings.UserPreferencesActivity;
+import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Generic class which handles can handle a long running background task

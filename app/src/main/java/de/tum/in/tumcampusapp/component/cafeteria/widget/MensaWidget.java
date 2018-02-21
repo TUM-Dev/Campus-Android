@@ -12,13 +12,13 @@ import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.cafeteria.activity.CafeteriaActivity;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.component.cafeteria.controller.CafeteriaManager;
-import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.component.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.MensaWidgetService;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 
 /**

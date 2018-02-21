@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.component.news.fragment.KinoDetailsFragment;
-import de.tum.in.tumcampusapp.models.tumcabe.Kino;
+import de.tum.in.tumcampusapp.component.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.utils.Const;
 
 /**
  * Adapter class for Kino. Handels content for KinoActivity

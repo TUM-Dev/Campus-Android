@@ -19,17 +19,17 @@ import java.util.Iterator;
 import java.util.Set;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaDao;
+import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaNotificationSettings;
 import de.tum.in.tumcampusapp.component.cafeteria.activity.CafeteriaActivity;
-import de.tum.in.tumcampusapp.auxiliary.CafeteriaNotificationSettings;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
 import de.tum.in.tumcampusapp.component.cafeteria.controller.CafeteriaMenuManager;
-import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
+import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
- * Alarm class for scheduling future favorite food notification.
+ * AlarmNotification class for scheduling future favorite food notification.
  * To support backward compatibility, one notification is constructed per
  * found dish. This also ensures that tapping it shows the user the correct
  * cafeteria in the newly opened cafeteria activity. The alarm itself,

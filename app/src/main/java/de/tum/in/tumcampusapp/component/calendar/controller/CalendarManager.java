@@ -20,24 +20,24 @@ import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.auxiliary.calendar.CalendarHelper;
-import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
-import de.tum.in.tumcampusapp.component.general.card.NextLectureCard;
-import de.tum.in.tumcampusapp.component.general.card.generic.Card;
+import de.tum.in.tumcampusapp.component.calendar.CalendarDao;
+import de.tum.in.tumcampusapp.component.calendar.CalendarHelper;
+import de.tum.in.tumcampusapp.component.calendar.IntegratedCalendarEvent;
+import de.tum.in.tumcampusapp.component.calendar.NextLectureCard;
+import de.tum.in.tumcampusapp.component.calendar.WidgetsTimetableBlacklistDao;
+import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
+import de.tum.in.tumcampusapp.component.calendar.model.CalendarRow;
+import de.tum.in.tumcampusapp.component.calendar.model.CalendarRowSet;
+import de.tum.in.tumcampusapp.component.calendar.model.WidgetsTimetableBlacklist;
+import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.locations.model.Geo;
+import de.tum.in.tumcampusapp.component.sync.SyncManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.CalendarDao;
 import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
-import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
-import de.tum.in.tumcampusapp.managers.LocationManager;
-import de.tum.in.tumcampusapp.managers.SyncManager;
-import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
-import de.tum.in.tumcampusapp.models.dbEntities.WidgetsTimetableBlacklist;
-import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
-import de.tum.in.tumcampusapp.models.tumo.CalendarRow;
-import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
-import de.tum.in.tumcampusapp.models.tumo.Geo;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Calendar Manager, handles database stuff, external imports

@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.component.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.databinding.ActivityCardsQuizBinding;
-import de.tum.in.tumcampusapp.models.cards.StudyCard;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class CardsQuizActivity extends ActivityForLoadingInBackground<Void, List<StudyCard>> {
     ActivityCardsQuizBinding binding;

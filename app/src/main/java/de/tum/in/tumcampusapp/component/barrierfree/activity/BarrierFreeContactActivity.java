@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
-import de.tum.in.tumcampusapp.component.barrierfree.adapter.BarrierfreeContactAdapter;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
+import de.tum.in.tumcampusapp.component.barrierfree.adapter.BarrierfreeContactAdapter;
+import de.tum.in.tumcampusapp.component.barrierfree.model.BarrierfreeContact;
+import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.utils.Utils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<Void, List<BarrierfreeContact>> {

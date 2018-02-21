@@ -16,12 +16,12 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
-import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
+import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
-import static de.tum.in.tumcampusapp.auxiliary.Const.SILENCE_SERVICE_JOB_ID;
+import static de.tum.in.tumcampusapp.utils.Const.SILENCE_SERVICE_JOB_ID;
 
 /**
  * Service used to silence the mobile during lectures

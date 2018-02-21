@@ -1,10 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.news.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import de.tum.`in`.tumcampusapp.auxiliary.Utils
-import de.tum.`in`.tumcampusapp.models.tumcabe.Kino
 import de.tum.`in`.tumcampusapp.component.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.news.repository.KinoRemoteRepository
+import de.tum.`in`.tumcampusapp.component.tufilm.model.Kino
+import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Observable
