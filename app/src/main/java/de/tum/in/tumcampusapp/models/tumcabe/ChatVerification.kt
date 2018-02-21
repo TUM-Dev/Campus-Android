@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.models.tumcabe
 
 import android.content.Context
 import de.tum.`in`.tumcampusapp.auxiliary.AuthenticationManager
-import de.tum.`in`.tumcampusapp.exceptions.NoPrivateKey
+import de.tum.`in`.tumcampusapp.exception.NoPrivateKey
 import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*

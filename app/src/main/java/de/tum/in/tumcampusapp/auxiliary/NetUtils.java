@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import de.tum.in.tumcampusapp.api.Helper;
+import de.tum.in.tumcampusapp.api.app.Helper;
 import de.tum.in.tumcampusapp.managers.CacheManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

@@ -7,7 +7,7 @@ import android.arch.persistence.room.Update;
 
 import javax.annotation.Nullable;
 
-import de.tum.in.tumcampusapp.managers.TumManager;
+import de.tum.in.tumcampusapp.api.tumonline.TumManager;
 import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
 
 @Dao

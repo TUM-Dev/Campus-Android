@@ -7,11 +7,11 @@ import android.os.Build;
 import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
-import de.tum.in.tumcampusapp.exceptions.TUMOException;
+import de.tum.in.tumcampusapp.exception.NoPublicKey;
+import de.tum.in.tumcampusapp.exception.TUMOException;
 import de.tum.in.tumcampusapp.models.tumo.AccessToken;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 
 /**
  * Easy accessible class for token management.

@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;

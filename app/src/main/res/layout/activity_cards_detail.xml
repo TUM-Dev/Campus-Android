@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                tools:context="de.tum.in.tumcampusapp.activities.CardsDetailActivity">
+                tools:context="de.tum.in.tumcampusapp.component.studycard.activity.CardsDetailActivity">
 
                 <include
                     layout="@layout/layout_all_errors"

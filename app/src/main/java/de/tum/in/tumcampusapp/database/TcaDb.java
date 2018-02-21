@@ -4,7 +4,6 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
-import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.Intent;
 
@@ -37,7 +36,7 @@ import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
 import de.tum.in.tumcampusapp.managers.CacheManager;
-import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
@@ -63,10 +62,10 @@ import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
 import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
-import de.tum.in.tumcampusapp.services.BackgroundService;
-import de.tum.in.tumcampusapp.services.DownloadService;
-import de.tum.in.tumcampusapp.services.SendMessageService;
-import de.tum.in.tumcampusapp.services.SilenceService;
+import de.tum.in.tumcampusapp.service.BackgroundService;
+import de.tum.in.tumcampusapp.service.DownloadService;
+import de.tum.in.tumcampusapp.service.SendMessageService;
+import de.tum.in.tumcampusapp.service.SilenceService;
 
 @Database(version = 4, entities = {
         Cafeteria.class,

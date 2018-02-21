@@ -4,11 +4,11 @@ import android.content.Context;
 
 import com.google.common.base.Optional;
 
-import de.tum.in.tumcampusapp.cards.TuitionFeesCard;
-import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.component.general.card.TuitionFeesCard;
+import de.tum.in.tumcampusapp.component.general.card.generic.Card;
 import de.tum.in.tumcampusapp.models.tumo.TuitionList;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 
 /**
  * Tuition manager, handles tuition card

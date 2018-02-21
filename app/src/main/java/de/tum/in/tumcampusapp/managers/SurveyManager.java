@@ -9,11 +9,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.cards.SurveyCard;
-import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.component.general.card.SurveyCard;
+import de.tum.in.tumcampusapp.component.general.card.generic.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.FacultyDao;
 import de.tum.in.tumcampusapp.database.dao.OpenQuestionsDao;

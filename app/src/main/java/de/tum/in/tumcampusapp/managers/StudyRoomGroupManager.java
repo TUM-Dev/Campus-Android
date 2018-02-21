@@ -27,8 +27,8 @@ import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
  */
 public class StudyRoomGroupManager {
 
-    public static final String STUDYROOM_HOST = "www.devapp.it.tum.de";
-    public static final String STUDYROOM_URL = "https://" + STUDYROOM_HOST + "/iris/ris_api.php?format=json";
+    public static final String STUDYROOM_HOST = "https://www.devapp.it.tum.de";
+    public static final String STUDYROOM_URL = STUDYROOM_HOST + "/iris/ris_api.php?format=json";
     public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
     private final StudyRoomDao dao;

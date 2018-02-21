@@ -11,24 +11,23 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.BarrierFreeInfoActivity;
-import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
-import de.tum.in.tumcampusapp.activities.CalendarActivity;
-import de.tum.in.tumcampusapp.activities.CardsActivity;
-import de.tum.in.tumcampusapp.activities.ChatRoomsActivity;
-import de.tum.in.tumcampusapp.activities.CurriculaActivity;
-import de.tum.in.tumcampusapp.activities.GradesActivity;
-import de.tum.in.tumcampusapp.activities.LecturesPersonalActivity;
-import de.tum.in.tumcampusapp.activities.NewsActivity;
-import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
-import de.tum.in.tumcampusapp.activities.PersonsSearchActivity;
-import de.tum.in.tumcampusapp.activities.PlansActivity;
-import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
-import de.tum.in.tumcampusapp.activities.StudyRoomsActivity;
-import de.tum.in.tumcampusapp.activities.SurveyActivity;
-import de.tum.in.tumcampusapp.activities.TransportationActivity;
-import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
-import de.tum.in.tumcampusapp.activities.UserPreferencesActivity;
+import de.tum.in.tumcampusapp.component.barrierfree.activity.BarrierFreeInfoActivity;
+import de.tum.in.tumcampusapp.component.cafeteria.activity.CafeteriaActivity;
+import de.tum.in.tumcampusapp.component.general.activity.CalendarActivity;
+import de.tum.in.tumcampusapp.component.chat.activity.ChatRoomsActivity;
+import de.tum.in.tumcampusapp.component.curricula.activity.CurriculaActivity;
+import de.tum.in.tumcampusapp.component.general.activity.GradesActivity;
+import de.tum.in.tumcampusapp.component.lecture.activity.LecturesPersonalActivity;
+import de.tum.in.tumcampusapp.component.news.activity.NewsActivity;
+import de.tum.in.tumcampusapp.component.openinghour.activity.OpeningHoursListActivity;
+import de.tum.in.tumcampusapp.component.person.activity.PersonsSearchActivity;
+import de.tum.in.tumcampusapp.component.plan.activity.PlansActivity;
+import de.tum.in.tumcampusapp.component.roomfinder.activity.RoomFinderActivity;
+import de.tum.in.tumcampusapp.component.general.activity.StudyRoomsActivity;
+import de.tum.in.tumcampusapp.component.general.activity.SurveyActivity;
+import de.tum.in.tumcampusapp.component.transportation.activity.TransportationActivity;
+import de.tum.in.tumcampusapp.component.general.activity.TuitionFeesActivity;
+import de.tum.in.tumcampusapp.component.general.activity.UserPreferencesActivity;
 
 public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelectedListener {
 

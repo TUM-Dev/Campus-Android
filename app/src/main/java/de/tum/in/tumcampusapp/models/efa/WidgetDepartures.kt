@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.models.efa
 
 import android.content.Context
-import de.tum.`in`.tumcampusapp.managers.TransportManager
-import de.tum.`in`.tumcampusapp.widgets.MVVWidget
+import de.tum.`in`.tumcampusapp.component.transportation.controller.TransportManager
+import de.tum.`in`.tumcampusapp.component.transportation.widget.MVVWidget
 import java.util.*
 
 /**

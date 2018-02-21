@@ -8,7 +8,7 @@ import android.support.v7.preference.PreferenceManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.component.cafeteria.controller.CafeteriaMenuManager;
 
 /**
  * This class takes care of saving a user's preferred time for notifying him about a cafeteria's

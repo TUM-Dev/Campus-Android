@@ -9,9 +9,9 @@ import com.google.gson.Gson;
 import java.util.Date;
 import java.util.Map;
 
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
-import de.tum.in.tumcampusapp.cards.NewsCard;
-import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.general.card.NewsCard;
+import de.tum.in.tumcampusapp.component.general.card.generic.Card;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 
 /**

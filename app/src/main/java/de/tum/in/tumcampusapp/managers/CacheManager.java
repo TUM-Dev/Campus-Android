@@ -17,10 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import de.tum.in.tumcampusapp.activities.CurriculaActivity;
+import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
+import de.tum.in.tumcampusapp.component.chat.controller.ChatRoomManager;
+import de.tum.in.tumcampusapp.component.curricula.activity.CurriculaActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.news.controller.NewsManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.KinoDao;
 import de.tum.in.tumcampusapp.models.tumcabe.Kino;
@@ -31,8 +34,8 @@ import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.models.tumo.OrgItemList;
 import de.tum.in.tumcampusapp.models.tumo.TuitionList;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests

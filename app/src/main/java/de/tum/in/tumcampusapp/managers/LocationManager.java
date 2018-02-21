@@ -20,9 +20,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;

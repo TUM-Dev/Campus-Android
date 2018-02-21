@@ -3,7 +3,7 @@ package de.tum.in.tumcampusapp.auxiliary;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import de.tum.in.tumcampusapp.services.FavoriteDishAlarmScheduler;
+import de.tum.in.tumcampusapp.service.FavoriteDishAlarmScheduler;
 
 /**
  * This class is responsible for keeping track of all the scheduled food alarms.

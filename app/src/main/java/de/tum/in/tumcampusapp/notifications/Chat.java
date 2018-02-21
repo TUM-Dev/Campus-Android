@@ -17,24 +17,24 @@ import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.ChatActivity;
-import de.tum.in.tumcampusapp.activities.ChatRoomsActivity;
-import de.tum.in.tumcampusapp.activities.MainActivity;
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.chat.activity.ChatActivity;
+import de.tum.in.tumcampusapp.component.chat.activity.ChatRoomsActivity;
+import de.tum.in.tumcampusapp.component.general.activity.MainActivity;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
-import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.component.general.controller.CardManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
-import de.tum.in.tumcampusapp.repository.ChatMessageLocalRepository;
-import de.tum.in.tumcampusapp.repository.ChatMessageRemoteRepository;
-import de.tum.in.tumcampusapp.viewmodel.ChatMessageViewModel;
+import de.tum.in.tumcampusapp.component.chat.repository.ChatMessageLocalRepository;
+import de.tum.in.tumcampusapp.component.chat.repository.ChatMessageRemoteRepository;
+import de.tum.in.tumcampusapp.component.chat.viewmodel.ChatMessageViewModel;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class Chat extends GenericNotification {

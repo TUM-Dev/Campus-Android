@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.models.tumo
 
 import de.tum.`in`.tumcampusapp.adapters.SimpleStickyListHeadersAdapter
-import de.tum.`in`.tumcampusapp.models.tumcabe.Curriculum
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 import java.util.*
