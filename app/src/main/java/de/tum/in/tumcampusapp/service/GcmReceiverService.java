@@ -28,10 +28,10 @@ import java.io.IOException;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.alarm.AlarmNotification;
-import de.tum.in.tumcampusapp.component.chat.ChatNotification;
-import de.tum.in.tumcampusapp.component.general.Update;
-import de.tum.in.tumcampusapp.component.generic.GenericNotification;
+import de.tum.in.tumcampusapp.component.other.general.Update;
+import de.tum.in.tumcampusapp.component.other.generic.GenericNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.AlarmNotification;
+import de.tum.in.tumcampusapp.component.ui.chat.ChatNotification;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**

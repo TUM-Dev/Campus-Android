@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
-import de.tum.in.tumcampusapp.component.reporting.stats.ImplicitCounter;
+import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 

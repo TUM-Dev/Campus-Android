@@ -16,8 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import de.tum.in.tumcampusapp.component.calendar.CalendarController;
-import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
+import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 

@@ -32,12 +32,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,61 +88,6 @@ public final class Utils {
         }
 
         return text.substring(startPos + startString.length(), endPos);
-    }
-
-    /**
-     * Converts a date-string to Date
-     *
-     * @param str String with ISO-Date (yyyy-mm-dd)
-     * @return Date
-     */
-    public static Date getDate(String str) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-            return dateFormat.parse(str);
-        } catch (ParseException e) {
-            log(e, str);
-        }
-        return new Date();
-    }
-
-    /**
-     * Converts Date to an ISO date-string
-     *
-     * @param d Date
-     * @return String (yyyy-mm-dd)
-     */
-    public static String getDateString(Date d) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        return dateFormat.format(d);
-    }
-
-    /**
-     * Converts Date to an ISO datetime-string
-     *
-     * @param d Date
-     * @return String (yyyy-mm-dd hh:mm:ss)
-     */
-    public static String getDateTimeString(Date d) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        return dateFormat.format(d);
-    }
-
-    /**
-     * Converts a datetime-string to Date
-     *
-     * @param str String with ISO-DateTime (yyyy-mm-dd hh:mm:ss)
-     * @return Date
-     */
-    public static Date getDateTime(String str) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        Date date = new Date();
-        try {
-            date = format.parse(str);
-        } catch (ParseException e) {
-            log(e, str);
-        }
-        return date;
     }
 
     /**

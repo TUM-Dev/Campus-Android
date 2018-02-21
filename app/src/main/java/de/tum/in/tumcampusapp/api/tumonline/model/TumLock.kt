@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.api.tumonline.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.DateUtils
 import java.util.*
 
 @Entity
@@ -14,7 +14,7 @@ data class TumLock(@PrimaryKey
                    var active: Int = 0) {
     companion object {
         fun create(url: String, msg: String, lockTime: Int): TumLock {
-            val now = Utils.getDateTimeString(Date())
+            val now = DateUtils.getDateTimeString(Date())
             return TumLock(url = url, error = msg, timestamp = now, lockedFor = lockTime, active = 1)
         }
     }

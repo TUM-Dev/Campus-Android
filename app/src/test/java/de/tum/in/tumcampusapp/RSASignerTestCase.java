@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
-import de.tum.in.tumcampusapp.component.chat.model.ChatMessage;
+import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
 

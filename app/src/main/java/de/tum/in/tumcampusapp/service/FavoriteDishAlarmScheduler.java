@@ -19,13 +19,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaDao;
-import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaNotificationSettings;
-import de.tum.in.tumcampusapp.component.cafeteria.activity.CafeteriaActivity;
-import de.tum.in.tumcampusapp.component.cafeteria.controller.CafeteriaMenuManager;
-import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDao;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettings;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -97,7 +98,7 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
         }
         String triggeredAt = extra.getStringExtra("triggeredAt");
         Calendar triggeredCal = Calendar.getInstance();
-        triggeredCal.setTime(Utils.getDate(triggeredAt));
+        triggeredCal.setTime(DateUtils.getDate(triggeredAt));
         CafeteriaMenuManager cm = new CafeteriaMenuManager(context);
         HashMap<Integer, HashSet<CafeteriaMenu>> scheduledNow = cm.getServedFavoritesAtDate(triggeredAt);
         if (scheduledNow == null) {
@@ -148,7 +149,7 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
     private Calendar loadTriggerHourAndMinute(Context context, String dateString) {
         CafeteriaNotificationSettings cafeteriaNotificationSettings = new CafeteriaNotificationSettings(context);
         Calendar scheduledAt = Calendar.getInstance();
-        scheduledAt.setTime(Utils.getDate(dateString));
+        scheduledAt.setTime(DateUtils.getDate(dateString));
         Pair<Integer, Integer> hourMinute = cafeteriaNotificationSettings.retrieveHourMinute(scheduledAt);
         if (hourMinute == null || hourMinute.first == -1) {
             return null;

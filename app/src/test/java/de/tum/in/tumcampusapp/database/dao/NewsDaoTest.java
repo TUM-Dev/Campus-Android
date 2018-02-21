@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.BuildConfig;
-import de.tum.in.tumcampusapp.component.news.NewsDao;
-import de.tum.in.tumcampusapp.component.news.model.News;
+import de.tum.in.tumcampusapp.component.ui.news.NewsDao;
+import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
 import static org.assertj.core.api.Assertions.assertThat;

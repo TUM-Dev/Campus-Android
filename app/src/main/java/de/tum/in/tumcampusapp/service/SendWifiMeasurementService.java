@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
-import de.tum.in.tumcampusapp.component.wifimeasurement.WifiMeasurementManager;
+import de.tum.in.tumcampusapp.component.other.wifimeasurement.WifiMeasurementManager;
 
 import static de.tum.in.tumcampusapp.utils.Const.SEND_WIFI_SERVICE_JOB_ID;
 

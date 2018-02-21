@@ -2,17 +2,17 @@ package de.tum.`in`.tumcampusapp.api.tumonline
 
 import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
-import de.tum.`in`.tumcampusapp.component.calendar.model.CalendarRowSet
-import de.tum.`in`.tumcampusapp.component.departments.model.OrgDetailItemList
-import de.tum.`in`.tumcampusapp.component.departments.model.OrgItemList
-import de.tum.`in`.tumcampusapp.component.grades.model.ExamList
-import de.tum.`in`.tumcampusapp.component.lectures.model.LectureAppointmentsRowSet
-import de.tum.`in`.tumcampusapp.component.lectures.model.LectureDetailsRowSet
-import de.tum.`in`.tumcampusapp.component.lectures.model.LecturesSearchRowSet
-import de.tum.`in`.tumcampusapp.component.person.model.Employee
-import de.tum.`in`.tumcampusapp.component.person.model.IdentitySet
-import de.tum.`in`.tumcampusapp.component.person.model.PersonList
-import de.tum.`in`.tumcampusapp.component.tutionfees.model.TuitionList
+import de.tum.`in`.tumcampusapp.component.other.departments.model.OrgDetailItemList
+import de.tum.`in`.tumcampusapp.component.other.departments.model.OrgItemList
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarRowSet
+import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsRowSet
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetailsRowSet
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet
+import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
+import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
+import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
+import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 
 /**

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.widget.RemoteViewsService;
 
-import de.tum.in.tumcampusapp.component.cafeteria.widget.MensaRemoteViewFactory;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.widget.MensaRemoteViewFactory;
 
 @SuppressLint("Registered")
 public class MensaWidgetService extends RemoteViewsService {

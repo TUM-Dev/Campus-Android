@@ -22,7 +22,7 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
-import de.tum.in.tumcampusapp.component.chat.model.ChatMember;
+import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.service.GcmIdentificationService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;

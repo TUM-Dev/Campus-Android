@@ -4,9 +4,9 @@ import android.content.Context;
 
 import java.util.Date;
 
-import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.Utils;
+import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
 /**
  * Sync Manager, tracks last successful syncs
@@ -67,7 +67,7 @@ public class SyncManager {
         if (id.isEmpty()) {
             return;
         }
-        String now = Utils.getDateTimeString(new Date());
+        String now = DateUtils.getDateTimeString(new Date());
         dao.insert(new Sync(id, now));
     }
 

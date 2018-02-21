@@ -12,14 +12,14 @@ import com.google.common.net.UrlEscapers;
 
 import java.util.concurrent.TimeUnit;
 
-import de.tum.in.tumcampusapp.component.reporting.bugreport.G;
+import de.tum.in.tumcampusapp.component.other.reporting.bugreport.G;
 import de.tum.in.tumcampusapp.utils.Utils;
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-import static de.tum.in.tumcampusapp.component.studyroom.StudyRoomGroupManager.STUDYROOM_HOST;
+import static de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomGroupManager.STUDYROOM_HOST;
 import static de.tum.in.tumcampusapp.utils.Const.API_HOSTNAME;
 import static de.tum.in.tumcampusapp.utils.Const.API_HOSTNAME_NEW;
 

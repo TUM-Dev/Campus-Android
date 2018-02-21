@@ -20,10 +20,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.eduroam.EduroamController;
-import de.tum.in.tumcampusapp.component.eduroam.SetupEduroamActivity;
-import de.tum.in.tumcampusapp.component.wifimeasurement.WifiMeasurementLocationListener;
-import de.tum.in.tumcampusapp.component.wifimeasurement.model.WifiMeasurement;
+import de.tum.in.tumcampusapp.component.other.wifimeasurement.WifiMeasurementLocationListener;
+import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
+import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamController;
+import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
