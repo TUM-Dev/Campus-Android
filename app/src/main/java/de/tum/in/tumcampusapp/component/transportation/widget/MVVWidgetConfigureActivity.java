@@ -15,20 +15,21 @@ import com.google.common.base.Optional;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.general.RecentsDao;
+import de.tum.in.tumcampusapp.component.general.model.Recent;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.component.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.transportation.MVVStationSuggestionProvider;
 import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.StationResult;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.WidgetDepartures;
-import de.tum.in.tumcampusapp.managers.RecentsManager;
 
 public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<List<StationResult>> implements AdapterView.OnItemClickListener {
 
     private int appWidgetId;
     private ListView listViewResults;
     private ArrayAdapter<StationResult> adapterStations;
-    private RecentsManager recentsManager;
+    private RecentsDao recentsDao;
 
     private WidgetDepartures widgetDepartures;
 
@@ -61,14 +62,12 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         autoReloadSwitch.setOnCheckedChangeListener((compoundButton, checked) -> widgetDepartures.setAutoReload(checked));
         // TODO add handling for use location
 
-        // Det all stations from db
-        recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
-
         listViewResults = findViewById(R.id.activity_transport_listview_result);
         listViewResults.setOnItemClickListener(this);
 
         // Initialize stations adapter
-        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportManager.getRecentStations(recentsManager));
+        List<Recent> recentStations = recentsDao.getAll(RecentsDao.STATIONS);
+        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportManager.getRecentStations(recentStations));
 
         if (adapterStations.getCount() == 0) {
             openSearch();
@@ -97,7 +96,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      */
     @Override
     public Optional<List<StationResult>> onSearchInBackground() {
-        return Optional.of(TransportManager.getRecentStations(recentsManager));
+        return Optional.of(TransportManager.getRecentStations(recentsDao.getAll(RecentsDao.STATIONS)));
     }
 
     /**

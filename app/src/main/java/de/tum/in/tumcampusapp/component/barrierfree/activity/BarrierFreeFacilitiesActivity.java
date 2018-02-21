@@ -13,12 +13,14 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.general.RecentsDao;
+import de.tum.in.tumcampusapp.component.general.model.Recent;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.roomfinder.activity.RoomFinderDetailsActivity;
 import de.tum.in.tumcampusapp.component.roomfinder.adapter.RoomFinderListAdapter;
 import de.tum.in.tumcampusapp.component.roomfinder.model.RoomFinderRoom;
-import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -30,7 +32,7 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
     private StickyListHeadersListView stickyList;
     private List<RoomFinderRoom> facilities;
 
-    private RecentsManager recentsManager;
+    private RecentsDao recents;
     private LocationManager locationManager;
 
     public BarrierFreeFacilitiesActivity() {
@@ -46,7 +48,8 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
         spinner.setOnItemSelectedListener(this);
 
         // manager
-        recentsManager = new RecentsManager(this, RecentsManager.ROOMS);
+        recents = TcaDb.getInstance(this)
+                       .recentsDao();
         locationManager = new LocationManager(this);
 
         stickyList = findViewById(R.id.activity_barrier_free_facilities_list_view);
@@ -120,7 +123,7 @@ public class BarrierFreeFacilitiesActivity extends ActivityForLoadingInBackgroun
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         RoomFinderRoom facility = facilities.get(position);
 
-        recentsManager.replaceIntoDb(facility.toString());
+        recents.insert(new Recent(facility.toString(), RecentsDao.ROOMS));
 
         // Start detail activity
         Intent intent = new Intent(this, RoomFinderDetailsActivity.class);

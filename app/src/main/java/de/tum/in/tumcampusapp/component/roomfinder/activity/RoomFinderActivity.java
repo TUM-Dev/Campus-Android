@@ -16,13 +16,14 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.general.RecentsDao;
 import de.tum.in.tumcampusapp.component.general.model.Recent;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.component.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.roomfinder.RoomFinderSuggestionProvider;
 import de.tum.in.tumcampusapp.component.roomfinder.adapter.RoomFinderListAdapter;
 import de.tum.in.tumcampusapp.component.roomfinder.model.RoomFinderRoom;
-import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -33,7 +34,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 public class RoomFinderActivity extends ActivityForSearchingInBackground<List<RoomFinderRoom>>
         implements OnItemClickListener {
 
-    private RecentsManager recentsManager;
+    private RecentsDao recentsDao;
     private StickyListHeadersListView list;
     private RoomFinderListAdapter adapter;
 
@@ -47,7 +48,8 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
 
         list = findViewById(R.id.list);
         list.setOnItemClickListener(this);
-        recentsManager = new RecentsManager(this, RecentsManager.ROOMS);
+        recentsDao = TcaDb.getInstance(this)
+                          .recentsDao();
         adapter = new RoomFinderListAdapter(this, getRecents());
 
         Intent intent = getIntent();
@@ -113,7 +115,7 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
      * a given room. Also adds this room to the recent queries.
      */
     private void openRoomDetails(Serializable room) {
-        recentsManager.replaceIntoDb(room.toString());
+        recentsDao.insert(new Recent(room.toString(), RecentsDao.ROOMS));
 
         // Start detail activity
         Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
@@ -125,7 +127,7 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
      * Reconstruct recents from String
      */
     private List<RoomFinderRoom> getRecents() {
-        List<Recent> recentList = recentsManager.getAllFromDb();
+        List<Recent> recentList = recentsDao.getAll(RecentsDao.ROOMS);
         List<RoomFinderRoom> roomList = new ArrayList<>(recentList.size());
         for (Recent r : recentList) {
             try {

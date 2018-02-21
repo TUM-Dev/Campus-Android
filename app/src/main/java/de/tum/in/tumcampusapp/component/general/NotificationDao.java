@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.database.dao;
+package de.tum.in.tumcampusapp.component.general;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;

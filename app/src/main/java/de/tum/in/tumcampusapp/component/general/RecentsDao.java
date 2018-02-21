@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.database.dao;
+package de.tum.in.tumcampusapp.component.general;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
@@ -13,6 +13,10 @@ import de.tum.in.tumcampusapp.component.general.model.Recent;
 
 @Dao
 public interface RecentsDao {
+    int STATIONS = 1;
+    int ROOMS = 2;
+    int PERSONS = 3;
+
     @Nullable
     @Query("SELECT * FROM recent WHERE type=:type")
     List<Recent> getAll(Integer type);

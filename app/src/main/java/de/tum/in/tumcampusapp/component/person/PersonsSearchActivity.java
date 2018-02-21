@@ -14,12 +14,13 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.component.general.RecentsDao;
 import de.tum.in.tumcampusapp.component.general.model.Recent;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForSearchingTumOnline;
 import de.tum.in.tumcampusapp.component.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.person.model.Person;
 import de.tum.in.tumcampusapp.component.person.model.PersonList;
-import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
 
 /**
  * Activity to search for employees.
@@ -31,7 +32,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
      * List to display the results
      */
     private ListView lvPersons;
-    private RecentsManager recentsManager;
+    private RecentsDao recentsDao;
 
     public PersonsSearchActivity() {
         super(TUMOnlineConst.Companion.getPERSON_SEARCH(), R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY, 3);
@@ -43,8 +44,8 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
         lvPersons = findViewById(R.id.lstPersons);
         lvPersons.setOnItemClickListener(this);
 
-        // get all stations from db
-        recentsManager = new RecentsManager(this, RecentsManager.PERSONS);
+        recentsDao = TcaDb.getInstance(this)
+                          .recentsDao();
 
         ArrayAdapter<Person> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, getRecents());
 
@@ -58,7 +59,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
     }
 
     private ArrayList<Person> getRecents() {
-        List<Recent> recentList = recentsManager.getAllFromDb();
+        List<Recent> recentList = recentsDao.getAll(RecentsDao.PERSONS);
         ArrayList<Person> personList = new ArrayList<>(recentList.size());
         for (Recent r : recentList) {
             personList.add(Person.Companion.fromRecent(r));
@@ -79,8 +80,9 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
         intent.putExtras(bundle);
         startActivity(intent);
 
-        recentsManager.replaceIntoDb(person.getId() + "$" + person.toString()
-                                                                  .trim());
+        String lastSearch = person.getId() + "$" + person.toString()
+                                                         .trim();
+        recentsDao.insert(new Recent(lastSearch, RecentsDao.PERSONS));
     }
 
     @Override

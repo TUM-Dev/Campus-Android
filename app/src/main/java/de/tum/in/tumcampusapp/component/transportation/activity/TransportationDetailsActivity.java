@@ -13,12 +13,14 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.general.RecentsDao;
+import de.tum.in.tumcampusapp.component.general.model.Recent;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.transportation.DepartureView;
 import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.StationResult;
-import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 
 /**
@@ -31,7 +33,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     public static final String EXTRA_STATION_ID = "stationID";
 
     private LinearLayout mViewResults;
-    private RecentsManager recentsManager;
+    private RecentsDao recentsDao;
     private TransportManager transportManager;
     private Gson gson;
 
@@ -44,7 +46,8 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         super.onCreate(savedInstanceState);
 
         // get all stations from db
-        recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
+        recentsDao = TcaDb.getInstance(this)
+                          .recentsDao();
         transportManager = new TransportManager(this);
         gson = new Gson();
         mViewResults = this.findViewById(R.id.activity_transport_result);
@@ -95,7 +98,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         final String jsonStationResult = gson.toJson(stationResult);
 
         // save clicked station into db
-        recentsManager.replaceIntoDb(jsonStationResult);
+        recentsDao.insert(new Recent(jsonStationResult, RecentsDao.STATIONS));
 
         // Check for internet connectivity
         if (!NetUtils.isConnected(this)) {

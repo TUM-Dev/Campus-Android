@@ -33,7 +33,6 @@ import de.tum.in.tumcampusapp.component.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.StationResult;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.WidgetDepartures;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -214,7 +213,7 @@ public class TransportManager implements Card.ProvidesCard {
         WidgetDepartures widgetDepartures;
         WidgetsTransport widgetsTransports = transportDao.getAllWithId(widgetId);
         widgetDepartures = new WidgetDepartures();
-        if(widgetsTransports != null)   {
+        if (widgetsTransports != null) {
             widgetDepartures.setStation(widgetsTransports.getStation());
             widgetDepartures.setStationId(widgetsTransports.getStationId());
             widgetDepartures.setUseLocation(widgetsTransports.getLocation());
@@ -369,15 +368,13 @@ public class TransportManager implements Card.ProvidesCard {
 
     }
 
-
-    public static List<StationResult> getRecentStations(RecentsManager recentsManager) {
-        List<Recent> recentList = recentsManager.getAllFromDb();
-        List<StationResult> stationResults = new ArrayList<>(recentList.size());
-        for (Recent r : recentList) {
+    public static List<StationResult> getRecentStations(List<Recent> recents) {
+        List<StationResult> stationResults = new ArrayList<>(recents.size());
+        for (Recent r : recents) {
             try {
                 stationResults.add(StationResult.Companion.fromRecent(r));
             } catch (JsonSyntaxException ignore) {
-                //We don't care about deserialization errors
+                // We don't care about deserialization errors
             }
         }
         return stationResults;
