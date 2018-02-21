@@ -107,7 +107,7 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'openinghours
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     //DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
