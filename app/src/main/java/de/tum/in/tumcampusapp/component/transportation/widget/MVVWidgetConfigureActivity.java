@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.component.general.model.Recent;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.component.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.transportation.MVVStationSuggestionProvider;
-import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
+import de.tum.in.tumcampusapp.component.transportation.TransportController;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.StationResult;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.WidgetDepartures;
 
@@ -54,7 +54,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        TransportManager tm = new TransportManager(this);
+        TransportController tm = new TransportController(this);
         this.widgetDepartures = tm.getWidget(appWidgetId);
 
         Switch autoReloadSwitch = findViewById(R.id.mvv_widget_auto_reload);
@@ -67,7 +67,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
 
         // Initialize stations adapter
         List<Recent> recentStations = recentsDao.getAll(RecentsDao.STATIONS);
-        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportManager.getRecentStations(recentStations));
+        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportController.getRecentStations(recentStations));
 
         if (adapterStations.getCount() == 0) {
             openSearch();
@@ -96,7 +96,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      */
     @Override
     public Optional<List<StationResult>> onSearchInBackground() {
-        return Optional.of(TransportManager.getRecentStations(recentsDao.getAll(RecentsDao.STATIONS)));
+        return Optional.of(TransportController.getRecentStations(recentsDao.getAll(RecentsDao.STATIONS)));
     }
 
     /**
@@ -108,7 +108,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
     @Override
     public Optional<List<StationResult>> onSearchInBackground(String query) {
         // Get Information
-        List<StationResult> stations = TransportManager.getStationsFromExternal(this, query);
+        List<StationResult> stations = TransportController.getStationsFromExternal(this, query);
 
         // Drop results if canceled
         if (asyncTask.isCancelled()) {
@@ -169,7 +169,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      */
     private void saveAndReturn() {
         // save the settings
-        TransportManager transportManager = new TransportManager(this);
+        TransportController transportManager = new TransportController(this);
         transportManager.addWidget(appWidgetId, this.widgetDepartures);
 
         // update alarms

@@ -18,9 +18,9 @@ import de.tum.in.tumcampusapp.component.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.cafeteria.model.FavoriteDish;
 import de.tum.in.tumcampusapp.component.cafeteria.model.Location;
+import de.tum.in.tumcampusapp.component.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.calendar.WidgetsTimetableBlacklistDao;
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.chat.ChatMessageDao;
@@ -166,7 +166,7 @@ public abstract class TcaDb extends RoomDatabase {
     public static void resetDb(Context c) {
         // Stop all services, since they might have instantiated Managers and cause SQLExceptions
         Class<?>[] services = new Class<?>[]{
-                CalendarManager.QueryLocationsService.class,
+                CalendarController.QueryLocationsService.class,
                 SendMessageService.class,
                 SilenceService.class,
                 DownloadService.class,

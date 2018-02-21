@@ -16,7 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
+import de.tum.in.tumcampusapp.component.transportation.TransportController;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.WidgetDepartures;
 
 /**
@@ -29,7 +29,7 @@ public class MVVWidget extends AppWidgetProvider {
     private static final String BROADCAST_RELOAD_ALL = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL";
     static final String MVV_WIDGET_FORCE_RELOAD = "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD";
     private static Timer timer;
-    private static TransportManager transportManager;
+    private static TransportController transportManager;
 
     public static final int UPDATE_ALARM_DELAY = 60 * 1000;
     public static final int UPDATE_TRIGGER_DELAY = 20 * 1000;
@@ -38,7 +38,7 @@ public class MVVWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         if (transportManager == null) {
-            transportManager = new TransportManager(context);
+            transportManager = new TransportController(context);
         }
         updateAppWidgets(context, appWidgetManager, appWidgetIds);
         setAlarm(context);
@@ -48,7 +48,7 @@ public class MVVWidget extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         if (transportManager == null) {
-            transportManager = new TransportManager(context);
+            transportManager = new TransportController(context);
         }
         // When the user deletes the widget, delete the associated setting from the database.
         for (int appWidgetId : appWidgetIds) {
@@ -61,7 +61,7 @@ public class MVVWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         if (transportManager == null) {
-            transportManager = new TransportManager(context);
+            transportManager = new TransportController(context);
         }
         // Enter relevant functionality for when the first widget is created
         setAlarm(context);
@@ -178,7 +178,7 @@ public class MVVWidget extends AppWidgetProvider {
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         if (transportManager == null) {
-            transportManager = new TransportManager(context);
+            transportManager = new TransportController(context);
         }
 
         String action = intent.getAction();

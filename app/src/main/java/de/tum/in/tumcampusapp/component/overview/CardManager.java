@@ -12,14 +12,14 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.cafeteria.controller.CafeteriaManager;
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
-import de.tum.in.tumcampusapp.component.chat.controller.ChatRoomManager;
+import de.tum.in.tumcampusapp.component.calendar.CalendarController;
+import de.tum.in.tumcampusapp.component.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.eduroam.EduroamFixCard;
-import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
-import de.tum.in.tumcampusapp.component.news.controller.NewsManager;
+import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.news.NewsController;
 import de.tum.in.tumcampusapp.component.survey.SurveyManager;
-import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
+import de.tum.in.tumcampusapp.component.transportation.TransportController;
 import de.tum.in.tumcampusapp.component.tutionfees.TuitionFeeManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
@@ -129,16 +129,16 @@ public final class CardManager {
 
         // Add those managers only if valid access token is available
         if (new AccessTokenManager(context).hasValidAccessToken()) {
-            managers.add(new CalendarManager(context));
+            managers.add(new CalendarController(context));
             managers.add(new TuitionFeeManager());
-            managers.add(new ChatRoomManager(context));
+            managers.add(new ChatRoomController(context));
             managers.add(new SurveyManager(context));
         }
 
         // Those don't need TUMOnline access
         managers.add(new CafeteriaManager(context));
-        managers.add(new TransportManager(context));
-        managers.add(new NewsManager(context));
+        managers.add(new TransportController(context));
+        managers.add(new NewsController(context));
 
         for (Card.ProvidesCard manager : managers) {
             manager.onRequestCard(context);

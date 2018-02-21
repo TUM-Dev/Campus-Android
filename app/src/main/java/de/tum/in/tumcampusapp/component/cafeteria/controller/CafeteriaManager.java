@@ -12,11 +12,11 @@ import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaMenuCard;
+import de.tum.in.tumcampusapp.component.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.component.cafeteria.viewmodel.CafeteriaViewModel;
-import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.generic.card.Card;
 import de.tum.in.tumcampusapp.component.locations.LocationManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;

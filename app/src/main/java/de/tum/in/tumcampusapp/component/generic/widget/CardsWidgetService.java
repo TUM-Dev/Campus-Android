@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.generic.card.Card;
 import de.tum.in.tumcampusapp.component.overview.CardManager;
 
 @SuppressLint("Registered")

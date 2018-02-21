@@ -13,7 +13,7 @@
 
         <variable
             name="handler"
-            type="de.tum.in.tumcampusapp.component.studycard.activity.CardsQuizActivity" />
+            type="de.tum.in.tumcampusapp.component.studycard.CardsQuizActivity"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout

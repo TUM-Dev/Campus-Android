@@ -17,7 +17,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.calendar.CalendarActivity;
-import de.tum.in.tumcampusapp.component.roomfinder.activity.RoomFinderActivity;
+import de.tum.in.tumcampusapp.component.roomfinder.RoomFinderActivity;
 
 public class TimetableWidget extends AppWidgetProvider {
 

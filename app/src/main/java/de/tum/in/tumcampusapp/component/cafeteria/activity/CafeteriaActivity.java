@@ -22,11 +22,11 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.cafeteria.adapter.CafeteriaDetailsSectionsPagerAdapter;
+import de.tum.in.tumcampusapp.component.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
+import de.tum.in.tumcampusapp.component.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.component.cafeteria.viewmodel.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.locations.LocationManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
@@ -36,7 +36,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 
-import static de.tum.in.tumcampusapp.component.cafeteria.fragment.CafeteriaDetailsSectionFragment.menuToSpan;
+import static de.tum.in.tumcampusapp.component.cafeteria.details.CafeteriaDetailsSectionFragment.menuToSpan;
 
 /**
  * Lists all dishes at selected cafeteria

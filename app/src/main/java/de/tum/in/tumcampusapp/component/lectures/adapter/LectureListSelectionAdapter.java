@@ -11,20 +11,20 @@ import android.widget.CompoundButton;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
+import de.tum.in.tumcampusapp.component.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class LectureListSelectionAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener {
     private final int appWidgetId;
-    private final CalendarManager calendarManager;
+    private final CalendarController calendarController;
     private final List<CalendarItem> calendarItems;
     private final LayoutInflater mInflater;
 
     public LectureListSelectionAdapter(Context context, List<CalendarItem> cItems, int appWidgetId) {
         calendarItems = cItems;
         this.appWidgetId = appWidgetId;
-        this.calendarManager = new CalendarManager(context);
+        this.calendarController = new CalendarController(context);
         mInflater = LayoutInflater.from(context);
     }
 
@@ -33,9 +33,9 @@ public class LectureListSelectionAdapter extends BaseAdapter implements Compound
         // save new preferences
         Utils.logv("Widget asked to change " + buttonView.getText().toString() + " to " + isChecked);
         if (isChecked) {
-            calendarManager.deleteLectureFromBlacklist(this.appWidgetId, (String) buttonView.getText());
+            calendarController.deleteLectureFromBlacklist(this.appWidgetId, (String) buttonView.getText());
         } else {
-            calendarManager.addLectureToBlacklist(this.appWidgetId, (String) buttonView.getText());
+            calendarController.addLectureToBlacklist(this.appWidgetId, (String) buttonView.getText());
         }
     }
 

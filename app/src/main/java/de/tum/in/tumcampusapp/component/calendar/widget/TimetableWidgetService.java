@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.calendar.IntegratedCalendarEvent;
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 
 @SuppressLint("Registered")
@@ -48,8 +48,8 @@ public class TimetableWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             // get events
-            CalendarManager calendarManager = new CalendarManager(this.applicationContext);
-            calendarEvents = calendarManager.getNextDaysFromDb(14, this.appWidgetID);
+            CalendarController calendarController = new CalendarController(this.applicationContext);
+            calendarEvents = calendarController.getNextDaysFromDb(14, this.appWidgetID);
 
             // set isFirstOnDay flags
             Calendar currentDate = Calendar.getInstance();

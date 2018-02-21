@@ -15,15 +15,15 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
-import de.tum.in.tumcampusapp.component.chat.controller.ChatRoomManager;
+import de.tum.in.tumcampusapp.component.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.onboarding.StartupActivity;
-import de.tum.in.tumcampusapp.exception.NoPrivateKey;
-import de.tum.in.tumcampusapp.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -145,7 +145,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         try {
             List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
                                                 .getMemberRooms(member.getId(), ChatVerification.Companion.getChatVerification(this, member));
-            new ChatRoomManager(this).replaceIntoRooms(rooms);
+            new ChatRoomController(this).replaceIntoRooms(rooms);
 
             //Store that this key was activated
             Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);

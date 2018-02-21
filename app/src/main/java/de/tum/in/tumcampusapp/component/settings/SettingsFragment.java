@@ -28,10 +28,10 @@ import java.util.List;
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
+import de.tum.in.tumcampusapp.component.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.eduroam.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.component.feedback.FeedbackActivity;
-import de.tum.in.tumcampusapp.component.news.controller.NewsManager;
+import de.tum.in.tumcampusapp.component.news.NewsController;
 import de.tum.in.tumcampusapp.component.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.onboarding.StartupActivity;
 import de.tum.in.tumcampusapp.component.onboarding.activity.WizNavStartActivity;
@@ -116,8 +116,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     private void populateNewsSources() {
         PreferenceCategory newsSourcesPreference = (PreferenceCategory) findPreference("card_news_sources");
 
-        NewsManager newsManager = new NewsManager(mContext);
-        List<NewsSources> newsSources = newsManager.getNewsSources();
+        NewsController newsController = new NewsController(mContext);
+        List<NewsSources> newsSources = newsController.getNewsSources();
         final NetUtils net = new NetUtils(mContext);
         for (NewsSources newsSource: newsSources) {
             final CheckBoxPreference pref = new CheckBoxPreference(mContext);
@@ -295,7 +295,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         Utils.setInternalSetting(mContext, Const.SYNC_CALENDAR, false);
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            CalendarManager.deleteLocalCalendar(mContext);
+            CalendarController.deleteLocalCalendar(mContext);
         }
 
         Utils.showToast(mContext, R.string.success_clear_cache);

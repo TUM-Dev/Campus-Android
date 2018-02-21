@@ -35,7 +35,6 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarRowSet;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForAccessingTumOnline;
@@ -61,7 +60,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
                                                           Manifest.permission.WRITE_CALENDAR};
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
-    private CalendarManager calendarManager;
+    private CalendarController calendarController;
 
     /**
      * Used as a flag, if there are results fetched from internet
@@ -102,7 +101,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         this.mWeekMode = Utils.getInternalSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
         this.refreshWeekView();
 
-        calendarManager = new CalendarManager(this);
+        calendarController = new CalendarController(this);
 
         // Set the time space between now and after this date and before this
         // Dates before the current date
@@ -128,7 +127,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
             @Override
             protected Void doInBackground(Void... params) {
-                calendarManager.importCalendar(rawResponse);
+                calendarController.importCalendar(rawResponse);
                 return null;
             }
 
@@ -137,7 +136,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 showLoadingEnded();
                 // update the action bar to display the enabled menu options
                 CalendarActivity.this.invalidateOptionsMenu();
-                startService(new Intent(CalendarActivity.this, CalendarManager.QueryLocationsService.class));
+                startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
             }
         }.execute();
     }
@@ -239,7 +238,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         backgroundTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
-                CalendarManager.syncCalendar(CalendarActivity.this);
+                CalendarController.syncCalendar(CalendarActivity.this);
                 return true;
             }
 
@@ -343,7 +342,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_delete_calendar))
                .setPositiveButton(getString(R.string.yes), (arg0, arg1) -> {
-                   int deleted = CalendarManager.deleteLocalCalendar(CalendarActivity.this);
+                   int deleted = CalendarController.deleteLocalCalendar(CalendarActivity.this);
                    Utils.setInternalSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
                    CalendarActivity.this.invalidateOptionsMenu();
                    if (deleted > 0) {
@@ -371,7 +370,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         //Probably refactor this to a good SQL query
         for (int curDay = 1; curDay <= daysInMonth; curDay++) {
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
-            List<CalendarItem> calendarItems = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()));
+            List<CalendarItem> calendarItems = calendarController.getFromDbForDate(new Date(calendar.getTimeInMillis()));
             for (CalendarItem calendarItem: calendarItems) {
                 events.add(new IntegratedCalendarEvent(calendarItem));
             }
@@ -419,7 +418,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
         CalendarDetailsFragment detailsFragment = new CalendarDetailsFragment();
         Bundle bundle = new Bundle();
-        CalendarItem item = calendarManager.getCalendarItemByStartAndEndTime(weekViewEvent.getStartTime(), weekViewEvent.getEndTime());
+        CalendarItem item = calendarController.getCalendarItemByStartAndEndTime(weekViewEvent.getStartTime(), weekViewEvent.getEndTime());
         bundle.putString(CALENDAR_ID_PARAM, item.getNr());
         detailsFragment.setArguments(bundle);
         detailsFragment.show(getSupportFragmentManager(), null);

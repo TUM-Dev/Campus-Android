@@ -18,14 +18,14 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.cafeteria.controller.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.component.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.cafeteria.model.Location;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.cafeteria.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.component.cafeteria.viewmodel.CafeteriaViewModel;
-import de.tum.in.tumcampusapp.component.news.controller.NewsManager;
+import de.tum.in.tumcampusapp.component.news.KinoViewModel;
+import de.tum.in.tumcampusapp.component.news.NewsController;
 import de.tum.in.tumcampusapp.component.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.news.repository.KinoRemoteRepository;
-import de.tum.in.tumcampusapp.component.news.viewmodel.KinoViewModel;
 import de.tum.in.tumcampusapp.component.overview.CardManager;
 import de.tum.in.tumcampusapp.component.reporting.bugreport.G;
 import de.tum.in.tumcampusapp.component.reporting.bugreport.Util;
@@ -246,7 +246,7 @@ public class DownloadService extends JobIntentService {
 
     private boolean downloadNews(boolean force) {
         try {
-            NewsManager nm = new NewsManager(this);
+            NewsController nm = new NewsController(this);
             nm.downloadFromExternal(force);
             return true;
         } catch (JSONException e) {

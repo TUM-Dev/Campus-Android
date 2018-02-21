@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
+import de.tum.in.tumcampusapp.component.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -86,8 +86,8 @@ public class SilenceService extends JobIntentService {
         long waitDuration = CHECK_INTERVAL;
         Utils.log("SilenceService enabled, checking for lectures …");
 
-        CalendarManager calendarManager = new CalendarManager(this);
-        if (!calendarManager.hasLectures()) {
+        CalendarController calendarController = new CalendarController(this);
+        if (!calendarController.hasLectures()) {
             Utils.logv("No lectures available");
             alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
             return;
@@ -97,7 +97,7 @@ public class SilenceService extends JobIntentService {
         if (am == null) {
             return;
         }
-        List<CalendarItem> currentLectures = calendarManager.getCurrentFromDb();
+        List<CalendarItem> currentLectures = calendarController.getCurrentFromDb();
         Utils.log("Current lectures: " + currentLectures.size());
 
         if (currentLectures.size() == 0 || isDoNotDisturbMode()) {
@@ -109,7 +109,7 @@ public class SilenceService extends JobIntentService {
                                          Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
                 Utils.setInternalSetting(this, Const.SILENCE_ON, false);
 
-                List<CalendarItem> nextCalendarItems = calendarManager.getNextCalendarItems();
+                List<CalendarItem> nextCalendarItems = calendarController.getNextCalendarItems();
                 if (nextCalendarItems.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
                     // refresh when next event has started
                     waitDuration = getWaitDuration(nextCalendarItems.get(0).getDtstart());

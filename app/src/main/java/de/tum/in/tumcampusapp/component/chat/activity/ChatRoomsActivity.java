@@ -22,10 +22,11 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.component.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.chat.adapter.ChatRoomListAdapter;
-import de.tum.in.tumcampusapp.component.chat.controller.ChatRoomManager;
 import de.tum.in.tumcampusapp.component.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.chat.model.ChatRoomAndLastMessage;
@@ -34,7 +35,6 @@ import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBac
 import de.tum.in.tumcampusapp.component.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.lectures.model.LecturesSearchRow;
 import de.tum.in.tumcampusapp.component.lectures.model.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -55,7 +55,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
     private TUMOnlineRequest<LecturesSearchRowSet> requestHandler;
-    private ChatRoomManager manager;
+    private ChatRoomController manager;
     private int mCurrentMode = 1;
     private ChatRoomListAdapter chatRoomAdapter;
 
@@ -71,7 +71,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         lvMyChatRoomList = findViewById(R.id.lvMyChatRoomList);
         lvMyChatRoomList.setOnItemClickListener(this);
 
-        manager = new ChatRoomManager(this);
+        manager = new ChatRoomController(this);
 
         //Load the lectures list
         requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), this, true);

@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.generic.card.Card;
 import de.tum.in.tumcampusapp.component.person.FacultyDao;
 import de.tum.in.tumcampusapp.component.person.model.Faculty;
 import de.tum.in.tumcampusapp.component.survey.model.OpenQuestions;

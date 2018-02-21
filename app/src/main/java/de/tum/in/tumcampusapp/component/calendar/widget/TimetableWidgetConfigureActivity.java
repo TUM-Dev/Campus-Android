@@ -10,7 +10,7 @@ import android.widget.ListView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
+import de.tum.in.tumcampusapp.component.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.lectures.adapter.LectureListSelectionAdapter;
 
@@ -41,8 +41,8 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
         ListView listViewLectures = findViewById(R.id.activity_timetable_lectures);
 
         // Initialize stations adapter
-        CalendarManager calendarManager = new CalendarManager(this);
-        List<CalendarItem> lectures = calendarManager.getLecturesForWidget(this.appWidgetId);
+        CalendarController calendarController = new CalendarController(this);
+        List<CalendarItem> lectures = calendarController.getLecturesForWidget(this.appWidgetId);
         listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectures, this.appWidgetId));
         listViewLectures.requestFocus();
     }

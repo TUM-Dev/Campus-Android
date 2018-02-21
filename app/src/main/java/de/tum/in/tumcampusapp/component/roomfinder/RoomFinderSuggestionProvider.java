@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.component.roomfinder;
 
 import android.content.SearchRecentSuggestionsProvider;
 
-import de.tum.in.tumcampusapp.component.roomfinder.activity.RoomFinderActivity;
-
 /**
  * Suggestion provider for {@link RoomFinderActivity}
  */

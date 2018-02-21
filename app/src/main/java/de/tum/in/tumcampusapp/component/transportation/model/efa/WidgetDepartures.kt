@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.transportation.model.efa
 
 import android.content.Context
-import de.tum.`in`.tumcampusapp.component.transportation.controller.TransportManager
+import de.tum.`in`.tumcampusapp.component.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.transportation.widget.MVVWidget
 import java.util.*
 
@@ -58,7 +58,7 @@ class WidgetDepartures(station: String = "",
     fun getDepartures(context: Context, forceServerLoad: Boolean): List<Departure> {
         // download only id there is no data or the last loading is more than X min ago
         if (this.departures.isEmpty() || forceServerLoad || this.autoReload && System.currentTimeMillis() - this.lastLoad > MVVWidget.DOWNLOAD_DELAY) {
-            val departures = TransportManager.getDeparturesFromExternal(context, this.stationId)
+            val departures = TransportController.getDeparturesFromExternal(context, this.stationId)
             if (departures.isEmpty()) {
                 this.isOffline = true
             } else {

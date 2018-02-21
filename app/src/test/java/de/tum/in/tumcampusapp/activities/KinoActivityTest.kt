@@ -4,11 +4,11 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.news.adapter.KinoAdapter
+import de.tum.`in`.tumcampusapp.component.news.KinoViewModel
 import de.tum.`in`.tumcampusapp.component.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.news.repository.KinoRemoteRepository
-import de.tum.`in`.tumcampusapp.component.news.viewmodel.KinoViewModel
 import de.tum.`in`.tumcampusapp.component.tufilm.KinoActivity
+import de.tum.`in`.tumcampusapp.component.tufilm.KinoAdapter
 import de.tum.`in`.tumcampusapp.component.tufilm.KinoDao
 import de.tum.`in`.tumcampusapp.component.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.database.TcaDb

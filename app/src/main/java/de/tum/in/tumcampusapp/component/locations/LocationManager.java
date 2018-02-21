@@ -22,7 +22,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.cafeteria.model.Cafeteria;
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
+import de.tum.in.tumcampusapp.component.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.roomfinder.model.RoomFinderCoordinate;
@@ -332,7 +332,7 @@ public class LocationManager {
      * @return Location of the next lecture room
      */
     private Location getNextLocation() {
-        CalendarManager manager = new CalendarManager(mContext);
+        CalendarController manager = new CalendarController(mContext);
         Geo geo = manager.getNextCalendarItemGeo();
         Location location = new Location("roomfinder");
         if (geo == null) {

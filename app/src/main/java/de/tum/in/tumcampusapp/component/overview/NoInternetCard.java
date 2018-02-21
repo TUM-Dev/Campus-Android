@@ -13,8 +13,8 @@ import android.widget.TextView;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
-import de.tum.in.tumcampusapp.component.generic.card.generic.StickyCard;
+import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.generic.card.StickyCard;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 

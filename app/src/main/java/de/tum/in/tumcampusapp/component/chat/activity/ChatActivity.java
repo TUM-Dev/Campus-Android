@@ -41,10 +41,12 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.chat.ChatMessageValidator;
+import de.tum.in.tumcampusapp.component.chat.ChatMessageViewModel;
+import de.tum.in.tumcampusapp.component.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.chat.GCMChat;
 import de.tum.in.tumcampusapp.component.chat.adapter.ChatHistoryAdapter;
-import de.tum.in.tumcampusapp.component.chat.controller.ChatRoomManager;
 import de.tum.in.tumcampusapp.component.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.chat.model.ChatPublicKey;
@@ -52,12 +54,10 @@ import de.tum.in.tumcampusapp.component.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.chat.repository.ChatMessageLocalRepository;
 import de.tum.in.tumcampusapp.component.chat.repository.ChatMessageRemoteRepository;
-import de.tum.in.tumcampusapp.component.chat.viewmodel.ChatMessageViewModel;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.overview.CardManager;
 import de.tum.in.tumcampusapp.component.reporting.stats.ImplicitCounter;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -499,7 +499,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                          public void onResponse(Call<ChatRoom> call, Response<ChatRoom> room) {
                              Utils.logv("Success leaving chat room: " + room.body()
                                                                             .getName());
-                             new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
+                             new ChatRoomController(ChatActivity.this).leave(currentChatRoom);
 
                              // Move back to ChatRoomsActivity
                              Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);

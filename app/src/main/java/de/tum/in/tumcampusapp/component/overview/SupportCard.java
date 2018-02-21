@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.generic.card.Card;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**

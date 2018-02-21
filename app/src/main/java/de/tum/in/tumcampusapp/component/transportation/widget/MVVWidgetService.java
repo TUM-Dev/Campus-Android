@@ -12,7 +12,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.transportation.MVVSymbolView;
-import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
+import de.tum.in.tumcampusapp.component.transportation.TransportController;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.WidgetDepartures;
 
@@ -44,7 +44,7 @@ public class MVVWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             // load the departures for the widget
-            TransportManager transportManager = new TransportManager(applicationContext);
+            TransportController transportManager = new TransportController(applicationContext);
             WidgetDepartures wd = transportManager.getWidget(this.appWidgetID);
 
             this.departures = wd.getDepartures(applicationContext, this.forceLoadDepartures);

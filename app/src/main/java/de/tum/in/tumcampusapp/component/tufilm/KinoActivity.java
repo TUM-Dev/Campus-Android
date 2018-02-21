@@ -6,10 +6,9 @@ import android.view.View;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.news.adapter.KinoAdapter;
+import de.tum.in.tumcampusapp.component.news.KinoViewModel;
 import de.tum.in.tumcampusapp.component.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.news.repository.KinoRemoteRepository;
-import de.tum.in.tumcampusapp.component.news.viewmodel.KinoViewModel;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import io.reactivex.disposables.CompositeDisposable;
 

@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.component.chat.model
 
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
-import de.tum.`in`.tumcampusapp.exception.NoPrivateKey
+import de.tum.`in`.tumcampusapp.api.app.exception.NoPrivateKey
 import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*

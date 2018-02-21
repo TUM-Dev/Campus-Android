@@ -14,10 +14,8 @@ import android.widget.RemoteViews;
 import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
-import de.tum.in.tumcampusapp.component.generic.card.generic.NotificationAwareCard;
-import de.tum.in.tumcampusapp.component.news.adapter.NewsAdapter;
-import de.tum.in.tumcampusapp.component.news.controller.NewsManager;
+import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.generic.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.news.model.News;
 import de.tum.in.tumcampusapp.component.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.overview.CardManager;
@@ -77,14 +75,14 @@ public class NewsCard extends NotificationAwareCard {
 
     @Override
     protected void discard(SharedPreferences.Editor editor) {
-        NewsManager newsManager = new NewsManager(mContext);
-        newsManager.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
+        NewsController newsController = new NewsController(mContext);
+        newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
     }
 
     @Override
     protected void discardNotification(SharedPreferences.Editor editor) {
-        NewsManager newsManager = new NewsManager(mContext);
-        newsManager.setDismissed(mNews.getId(), mNews.getDismissed() | 2);
+        NewsController newsController = new NewsController(mContext);
+        newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 2);
     }
 
     @Override

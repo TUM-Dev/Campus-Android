@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.calendar.model.CalendarItem
-import de.tum.`in`.tumcampusapp.component.roomfinder.activity.RoomFinderActivity
+import de.tum.`in`.tumcampusapp.component.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils

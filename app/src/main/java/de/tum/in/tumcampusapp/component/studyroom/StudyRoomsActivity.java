@@ -21,7 +21,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.generic.activity.ActivityForLoadingInBackground;
-import de.tum.in.tumcampusapp.component.roomfinder.activity.RoomFinderActivity;
+import de.tum.in.tumcampusapp.component.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.studyroom.model.StudyRoom;
 import de.tum.in.tumcampusapp.component.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.utils.NetUtils;

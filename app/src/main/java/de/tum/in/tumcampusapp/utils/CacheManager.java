@@ -20,14 +20,14 @@ import java.util.WeakHashMap;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.component.calendar.controller.CalendarManager;
+import de.tum.in.tumcampusapp.component.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.calendar.model.CalendarRowSet;
-import de.tum.in.tumcampusapp.component.chat.controller.ChatRoomManager;
-import de.tum.in.tumcampusapp.component.curricula.activity.CurriculaActivity;
+import de.tum.in.tumcampusapp.component.chat.ChatRoomController;
+import de.tum.in.tumcampusapp.component.curricula.CurriculaActivity;
 import de.tum.in.tumcampusapp.component.departments.model.OrgItemList;
 import de.tum.in.tumcampusapp.component.lectures.model.LecturesSearchRow;
 import de.tum.in.tumcampusapp.component.lectures.model.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.component.news.controller.NewsManager;
+import de.tum.in.tumcampusapp.component.news.NewsController;
 import de.tum.in.tumcampusapp.component.news.model.News;
 import de.tum.in.tumcampusapp.component.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.tufilm.KinoDao;
@@ -122,8 +122,8 @@ public class CacheManager {
         }
 
         // Cache news source images
-        NewsManager newsManager = new NewsManager(mContext);
-        List<NewsSources> newsSources = newsManager.getNewsSources();
+        NewsController newsController = new NewsController(mContext);
+        List<NewsSources> newsSources = newsController.getNewsSources();
         for (NewsSources newsSource: newsSources) {
             String imgUrl = newsSource.getIcon();
             if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
@@ -132,7 +132,7 @@ public class CacheManager {
         }
 
         // Cache news images
-        List<News> news = newsManager.getAllFromDb(mContext);
+        List<News> news = newsController.getAllFromDb(mContext);
         for (News n: news) {
             String imgUrl = n.getImage();
             if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
@@ -182,9 +182,9 @@ public class CacheManager {
         if (shouldRefresh(requestHandler.getRequestURL())) {
             Optional<CalendarRowSet> set = requestHandler.fetch();
             if (set.isPresent()) {
-                CalendarManager calendarManager = new CalendarManager(mContext);
-                calendarManager.importCalendar(set.get());
-                CalendarManager.QueryLocationsService.loadGeo(mContext);
+                CalendarController calendarController = new CalendarController(mContext);
+                calendarController.importCalendar(set.get());
+                CalendarController.QueryLocationsService.loadGeo(mContext);
             }
         }
     }
@@ -264,7 +264,7 @@ public class CacheManager {
         if (lectures == null) {
             return;
         }
-        ChatRoomManager manager = new ChatRoomManager(mContext);
+        ChatRoomController manager = new ChatRoomController(mContext);
         manager.replaceInto(lectures);
     }
 

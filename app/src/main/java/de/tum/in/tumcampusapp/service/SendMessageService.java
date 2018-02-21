@@ -9,12 +9,12 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.component.chat.ChatMessageViewModel;
 import de.tum.in.tumcampusapp.component.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.chat.repository.ChatMessageLocalRepository;
 import de.tum.in.tumcampusapp.component.chat.repository.ChatMessageRemoteRepository;
-import de.tum.in.tumcampusapp.component.chat.viewmodel.ChatMessageViewModel;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 

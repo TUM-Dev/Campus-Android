@@ -19,10 +19,8 @@ import android.widget.RemoteViews;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
-import de.tum.in.tumcampusapp.component.generic.card.generic.NotificationAwareCard;
-import de.tum.in.tumcampusapp.component.transportation.activity.TransportationDetailsActivity;
-import de.tum.in.tumcampusapp.component.transportation.controller.TransportManager;
+import de.tum.in.tumcampusapp.component.generic.card.Card;
+import de.tum.in.tumcampusapp.component.generic.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -71,7 +69,7 @@ public class MVVCard extends NotificationAwareCard {
         }
 
         // Fetch transport favorites, can only be updated in the detailed view
-        TransportManager transportManager = new TransportManager(mContext);
+        TransportController transportManager = new TransportController(mContext);
         for (int i = 0; i < mDepartures.size() && i < 5; i++) {
             Departure curr = mDepartures.get(i);
             DepartureView view = new DepartureView(mContext);

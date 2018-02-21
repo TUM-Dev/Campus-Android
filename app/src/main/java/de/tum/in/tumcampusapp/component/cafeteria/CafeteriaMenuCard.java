@@ -25,11 +25,11 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.cafeteria.model.CafeteriaPrices;
-import de.tum.in.tumcampusapp.component.generic.card.generic.NotificationAwareCard;
+import de.tum.in.tumcampusapp.component.generic.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-import static de.tum.in.tumcampusapp.component.cafeteria.fragment.CafeteriaDetailsSectionFragment.showMenu;
+import static de.tum.in.tumcampusapp.component.cafeteria.details.CafeteriaDetailsSectionFragment.showMenu;
 import static de.tum.in.tumcampusapp.component.overview.CardManager.CARD_CAFETERIA;
 
 /**

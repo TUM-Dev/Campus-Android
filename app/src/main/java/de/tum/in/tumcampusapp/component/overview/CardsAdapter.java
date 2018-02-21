@@ -8,7 +8,7 @@ import de.tum.in.tumcampusapp.component.calendar.NextLectureCard;
 import de.tum.in.tumcampusapp.component.chat.ChatMessagesCard;
 import de.tum.in.tumcampusapp.component.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.eduroam.EduroamFixCard;
-import de.tum.in.tumcampusapp.component.generic.card.generic.Card;
+import de.tum.in.tumcampusapp.component.generic.card.Card;
 import de.tum.in.tumcampusapp.component.news.NewsCard;
 import de.tum.in.tumcampusapp.component.survey.SurveyCard;
 import de.tum.in.tumcampusapp.component.transportation.MVVCard;
