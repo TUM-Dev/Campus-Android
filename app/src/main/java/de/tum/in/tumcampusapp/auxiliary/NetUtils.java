@@ -204,6 +204,9 @@ public class NetUtils {
         } catch (IOException e) {
             Utils.log(e, pUrl);
             return Optional.absent();
+        } catch (IllegalArgumentException e) {
+            Utils.log(e, pUrl);
+            return Optional.absent();
         }
     }
 
