@@ -54,11 +54,9 @@ android {
             }
         }
     }
-
     dataBinding {
         enabled = true
     }
-    publishNonDefault true
 }
 
 def androidSupportVersion = '27.0.2'
