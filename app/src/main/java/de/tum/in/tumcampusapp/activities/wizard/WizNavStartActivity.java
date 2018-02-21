@@ -66,7 +66,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                 sm.downloadFacultiesFromExternal();
 
                 List<Faculty> faculties = sm.getAllFaculties();
-                for (Faculty faculty: faculties) {
+                for (Faculty faculty : faculties) {
                     fetchedFaculties.add(faculty.getName());
                 }
 
@@ -102,7 +102,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                         String id = sm.getFacultyID((String) adapterView.getItemAtPosition(i));
                         if (id != null) {
                             Utils.setInternalSetting(getApplicationContext(), "user_major", id); // save faculty number in shared preferences
-                            setDefaultCampus( id );
+                            setDefaultCampus(id);
                             Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
@@ -154,25 +154,29 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             return;
         }
 
-        lrzId = editTxtLrzId.getText()
-                            .toString();
-        Utils.setSetting(this, Const.LRZ_ID, lrzId);
+        String enteredId = editTxtLrzId.getText()
+                                       .toString()
+                                       .toLowerCase();
 
         // check if lrz could be valid?
-        if (lrzId.length() >= AccessTokenManager.MIN_LRZ_LENGTH) {
-            // is access token already set?
-            if (accessTokenManager.hasValidAccessToken()) {
-                // show Dialog first
-                new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.dialog_new_token))
-                        .setPositiveButton(getString(R.string.yes), this)
-                        .setNegativeButton(getString(R.string.no), this)
-                        .show();
-            } else {
-                startLoading(lrzId);
-            }
-        } else {
+        if (!enteredId.matches(Const.TUM_ID_PATTERN)) {
             Utils.showToast(this, R.string.error_lrz_wrong);
+            return;
+        }
+
+        lrzId = enteredId;
+        Utils.setSetting(this, Const.LRZ_ID, lrzId);
+
+        // is access token already set?
+        if (accessTokenManager.hasValidAccessToken()) {
+            // show Dialog first
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.dialog_new_token))
+                    .setPositiveButton(getString(R.string.yes), this)
+                    .setNegativeButton(getString(R.string.no), this)
+                    .show();
+        } else {
+            startLoading(lrzId);
         }
     }
 
@@ -194,10 +198,9 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         }
     }
 
-    private void setDefaultCampus(String faculty_number) {
-
+    private void setDefaultCampus(String facultyNumber) {
         String Campus = "0";
-        switch (faculty_number) {
+        switch (facultyNumber) {
             case "5":   // TUM School of Education
             case "6":   // Architektur
             case "7":   // Elektrotechnik und Informationstechnik
@@ -234,7 +237,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
         }
 
-        if ( "0".equals(Campus) ) {
+        if ("0".equals(Campus)) {
             Utils.setSetting(getApplicationContext(), Const.DEFAULT_CAMPUS, Campus);
         }
     }
