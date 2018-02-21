@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.models.tumcabe
 
-import de.tum.`in`.tumcampusapp.adapters.SimpleStickyListHeadersAdapter.SimpleStickyListItem
+import de.tum.`in`.tumcampusapp.component.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.models.dbEntities.Recent
 import java.io.Serializable
 
@@ -13,7 +13,7 @@ data class RoomFinderRoom(var campus: String = "",
                           var info: String = "",
                           var arch_id: String = "",
                           var room_id: String = "",
-                          private val name: String = "") : SimpleStickyListItem, Serializable {
+                          private val name: String = "") : SimpleStickyListHeadersAdapter.SimpleStickyListItem, Serializable {
 
     fun getName(): String =
             if (name == "null")

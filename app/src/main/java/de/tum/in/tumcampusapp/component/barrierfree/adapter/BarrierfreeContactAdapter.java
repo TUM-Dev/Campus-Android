@@ -11,8 +11,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.generic.adapter.SimpleStickyListHeadersAdapter;
 import de.tum.in.tumcampusapp.component.person.activity.PersonsDetailsActivity;
-import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
 import de.tum.in.tumcampusapp.models.tumo.Person;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;

@@ -33,7 +33,7 @@ public class SyncManager {
      * @param seconds Sync period, e.g. 86400 for 1 day
      * @return true if sync is needed, else false
      */
-    boolean needSync(Object obj, int seconds) {
+    public boolean needSync(Object obj, int seconds) {
         return needSync(obj.getClass()
                            .getName(), seconds);
     }

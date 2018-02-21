@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.models.tumcabe
 
-import de.tum.`in`.tumcampusapp.adapters.SimpleStickyListHeadersAdapter
+import de.tum.`in`.tumcampusapp.component.generic.adapter.SimpleStickyListHeadersAdapter
+
 
 /**
  * Presents the faculty model that is used in fetching the facultyData from server

@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.models.tumcabe
 
-import de.tum.`in`.tumcampusapp.adapters.SimpleStickyListHeadersAdapter
+import de.tum.`in`.tumcampusapp.component.generic.adapter.SimpleStickyListHeadersAdapter
 
 /**
  * The model used to display more infromation in barrier free page

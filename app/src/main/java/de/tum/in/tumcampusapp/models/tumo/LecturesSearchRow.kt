@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.models.tumo
 
-import de.tum.`in`.tumcampusapp.adapters.SimpleStickyListHeadersAdapter
+import de.tum.`in`.tumcampusapp.component.generic.adapter.SimpleStickyListHeadersAdapter
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 

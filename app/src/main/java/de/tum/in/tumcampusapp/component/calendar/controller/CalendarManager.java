@@ -243,7 +243,7 @@ public class CalendarManager implements Card.ProvidesCard {
      * Gets the coordinates of the next lecture or the current running lecture,
      * if it started during the last 30 minutes
      */
-    Geo getNextCalendarItemGeo() {
+    public Geo getNextCalendarItemGeo() {
         Geo geo = null;
         RoomLocations roomLocation = roomLocationsDao.getNextLectureCoordinates();
         if (roomLocation != null) {

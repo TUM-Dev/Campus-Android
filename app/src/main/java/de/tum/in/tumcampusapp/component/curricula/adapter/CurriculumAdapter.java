@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
+import de.tum.in.tumcampusapp.component.generic.adapter.SimpleStickyListHeadersAdapter;
 import de.tum.in.tumcampusapp.models.tumcabe.Curriculum;
 
 public class CurriculumAdapter extends SimpleStickyListHeadersAdapter<Curriculum> {

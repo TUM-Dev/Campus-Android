@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.adapters;
+package de.tum.in.tumcampusapp.component.generic.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

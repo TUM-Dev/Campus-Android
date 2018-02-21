@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
+import de.tum.in.tumcampusapp.component.generic.adapter.SimpleStickyListHeadersAdapter;
 import de.tum.in.tumcampusapp.models.tumo.Exam;
 
 /**
@@ -47,7 +47,7 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
     }
 
     @Override
-    String genenrateHeaderName(Exam item) {
+    public String genenrateHeaderName(Exam item) {
         String headerText = super.genenrateHeaderName(item);
         int year = Integer.parseInt(headerText.substring(0, 2));
         if (headerText.charAt(2) == 'W') {

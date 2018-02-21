@@ -8,7 +8,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.adapters.SimpleStickyListHeadersAdapter;
+import de.tum.in.tumcampusapp.component.generic.adapter.SimpleStickyListHeadersAdapter;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeMoreInfo;
 
 public class BarrierfreeMoreInfoAdapter extends SimpleStickyListHeadersAdapter<BarrierfreeMoreInfo> {

@@ -416,7 +416,7 @@ public class LocationManager {
      * @param roomTitle Room title
      * @return Location or null on failure
      */
-    Optional<Geo> roomLocationStringToGeo(String roomTitle) {
+    public Optional<Geo> roomLocationStringToGeo(String roomTitle) {
         String loc = roomTitle;
         if (loc.contains("(")) {
             loc = loc.substring(0, loc.indexOf('('))
