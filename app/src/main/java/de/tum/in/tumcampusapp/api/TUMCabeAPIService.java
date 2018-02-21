@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.api;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.models.cards.StudyCard;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
@@ -30,8 +31,8 @@ import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.Success;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
-import okhttp3.MultipartBody;
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -51,11 +52,13 @@ import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_LIST_OF_
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_MORE_INFO;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_BARRIER_FREE_NERBY_FACILITIES;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CAFETERIAS;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CARD;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_CURRICULA;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_FACULTY;
+import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_LOCATIONS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_NOTIFICATIONS;
@@ -69,7 +72,6 @@ import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_ROOM_FINDER_SEARCH;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_STATISTICS;
 import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_WIFI_HEATMAP;
-import static de.tum.in.tumcampusapp.api.TUMCabeClient.API_FEEDBACK;
 
 public interface TUMCabeAPIService {
 
@@ -220,5 +222,10 @@ public interface TUMCabeAPIService {
 
     @GET(API_KINOS+"{lastId}")
     Observable<List<Kino>> getKinos(@Path("lastId") String lastId);
-  
+
+    @GET(API_CARD)
+    Call<List<StudyCard>> getStudyCards();
+
+    @PUT(API_CARD)
+    Call<StudyCard> addStudyCard(@Body ChatVerification verification);
 }

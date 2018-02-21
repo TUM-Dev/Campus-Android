@@ -53,8 +53,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
-        setContentView(mLayoutId);
 
+        setUpLayout();
+        setUpDrawer();
+        setUpToolbar();
+    }
+
+    public void setUpLayout() {
+        setContentView(mLayoutId);
+    }
+
+    public void setUpDrawer() {
         // Get handles to navigation drawer
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerList = findViewById(R.id.left_drawer);
@@ -89,7 +98,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 headerView.setBackgroundResource(R.drawable.wear_tuition_fee);
             }
         }
+    }
 
+    public void setUpToolbar() {
         String parent = NavUtils.getParentActivityName(this);
 
         Toolbar toolbar = findViewById(R.id.main_toolbar);

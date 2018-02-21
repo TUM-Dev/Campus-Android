@@ -202,7 +202,7 @@
     <!-- Opening hours -->
     <string name="libraries">Libraries</string>
     <string name="mensa_garching">Cafeteria Garching</string>
-    <string name="mensa_grosshadern">Cafeteria Großhadern</string>
+    <string name="mensa_großhadern">Cafeteria Großhadern</string>
     <string name="mensa_city">Cafeteria Main Campus</string>
     <string name="mensa_pasing">Cafeteria Pasing</string>
     <string name="mensa_weihenstephan">Cafeteria Weihenstephan</string>
@@ -571,8 +571,22 @@ Signature: %5$s</string>
     <string name="channel_chat">Chat</string>
     <string name="channel_mvv">Public Transport</string>
     <string name="channel_tum_alarmierung">TUM Emergency Notifications</string>
-    
+
     <string name="favorite_dish_info">You will get notifications on days your favorite dishes are available in the cafeteria. Enjoy!</string>
     <string name="location_services_off_title">Location Services are Off</string>
     <string name="location_services_off_message">To send your location please turn your phone\'s location services on</string>
+    <string name="title_activity_cards">Study Cards</string>
+    <string name="study_cards_title">Cards</string>
+    <string name="create_card">create card</string>
+    <string name="card_title">Title</string>
+    <string name="card_front_text">Front text</string>
+    <string name="card_back_text">Back text</string>
+    <string name="title_activity_cards_detail">Add Card</string>
+    <string name="title_activity_cards_quiz">CardsQuizActivity</string>
+    <string name="card_question">Question</string>
+    <string name="card_answer">Answer</string>
+    <string name="filter_lecture_ALL_LECTURES">All Lectures</string>
+    <string name="filter_lecture_OWN_LECTURES">Own Lectures</string>
+    <string name="filter_lecture_SELECTED_LECTURES">Selected Lectures</string>
+    <string name="show_answer">Show Answer</string>
 </resources>

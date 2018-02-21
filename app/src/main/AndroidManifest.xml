@@ -493,6 +493,35 @@
             android:launchMode="singleTop"
             android:parentActivityName=".activities.FeedbackActivity">
         </activity>
+        <activity
+            android:name=".activities.CardsActivity"
+            android:label="@string/title_activity_cards"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.CardsDetailActivity"
+            android:label="@string/title_activity_cards_detail"
+            android:parentActivityName=".activities.CardsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.CardsActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.CardsQuizActivity"
+            android:label="@string/title_activity_cards_quiz"
+            android:parentActivityName=".activities.CardsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.CardsActivity" />
+        </activity>
 
         <!-- receiver for the mensaWidget -->
         <receiver
@@ -575,7 +604,7 @@
 
         <receiver
             android:name=".widgets.TimetableWidget"
-            android:label="@string/timetable_widget">>
+            android:label="@string/timetable_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>

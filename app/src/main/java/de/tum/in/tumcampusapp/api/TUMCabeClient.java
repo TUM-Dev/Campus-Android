@@ -13,6 +13,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.models.cards.StudyCard;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BarrierfreeContact;
@@ -89,6 +90,7 @@ public class TUMCabeClient {
     static final String API_FEEDBACK = "feedback/";
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
+    static final String API_CARD = "cards/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -175,6 +177,15 @@ public class TUMCabeClient {
         return service.createMember(chatMember)
                       .execute()
                       .body();
+    }
+
+    public List<StudyCard> getStudyCards() throws IOException {
+        return service.getStudyCards().execute().body();
+    }
+
+    public StudyCard addStudyCard(StudyCard card, ChatVerification verification) throws IOException {
+        verification.setData(card);
+        return service.addStudyCard(verification).execute().body();
     }
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
@@ -360,6 +371,7 @@ public class TUMCabeClient {
     public Observable<List<Cafeteria>> getCafeterias() {
         return service.getCafeterias();
     }
+
 
     public Observable<List<Kino>> getKinos(String lastId){
         return service.getKinos(lastId);

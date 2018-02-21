@@ -196,7 +196,7 @@
     <!-- Opening hours -->
     <string name="libraries">Bibliotheken</string>
     <string name="mensa_garching">Mensa Garching</string>
-    <string name="mensa_grosshadern">Mensa Großhadern</string>
+    <string name="mensa_großhadern">Mensa Großhadern</string>
     <string name="mensa_city">Mensa Stammgelände</string>
     <string name="mensa_pasing">Mensa Pasing</string>
     <string name="mensa_weihenstephan">Mensa Weihenstephan</string>
@@ -441,7 +441,7 @@ Signatur: %5$s</string>
     <string name="mvv_widget_auto_reload_hint">Erhöht Strom und Datenverbrauch</string>
     <string name="timetable_widget">Stundenplan Widget TUM</string>
     <string name="timetable_widget_select_lectures">Vorlesungen auswählen</string>
-    <string name="timetable_widget_no_lectures">KeineVorlesungen geplant :)</string>
+    <string name="timetable_widget_no_lectures">Keine Vorlesungen geplant :)</string>
     <string name="eduroam_not_valid_id">Keine gültige TUM-Kennung</string>
     <string name="eduroam_please_enter_password">Bitte Passwort eingeben. Dieses wird nicht gespeichert.</string>
     <string name="barrier_free">Barrierefreiheit</string>
@@ -481,7 +481,7 @@ Signatur: %5$s</string>
     <string name="try_again">Erneut versuchen</string>
     <string name="feedback_sending">Feedback wird gesendet…</string>
     <string name="feedback_send_success">Feedback erfolgreich versandt!</string>
-  
+
     <string name="grades_without_weight">Noten sind ungewichtet</string>
     <string name="show_list">&#032;Liste anzeigen</string>
     <string name="show_chart">&#032;Diagramm anzeigen</string>
@@ -498,4 +498,17 @@ Signatur: %5$s</string>
     <string name="favorite_dish_info">Du bekommst an Tagen, an denen es eines deiner Lieblingsgerichte in der Mensa gibt eine Benachrichtigung. Guten Appetit!</string>
     <string name="location_services_off_title">Standortfreigabe ist ausgeschaltet</string>
     <string name="location_services_off_message">Schalte deinen Standort in den Einstellungen an um deinen Standort mitzusenden</string>
+    <string name="study_cards_title">Cards</string>
+    <string name="card_title">Titel</string>
+    <string name="create_card">Karte hinzufügen</string>
+    <string name="title_activity_cards">Karteikarten</string>
+    <string name="card_front_text">Vorderseite</string>
+    <string name="card_back_text">Hinterseite</string>
+    <string name="title_activity_cards_detail">Karte hinzufügen</string>
+    <string name="card_question">Frage</string>
+    <string name="card_answer">Antwort</string>
+    <string name="filter_lecture_ALL_LECTURES">Alle Vorlesungen</string>
+    <string name="filter_lecture_OWN_LECTURES">Eigene Vorlesungen</string>
+    <string name="filter_lecture_SELECTED_LECTURES">Ausgewählte Vorlesungen</string>
+    <string name="show_answer">Antwort anzeigen</string>
 </resources>

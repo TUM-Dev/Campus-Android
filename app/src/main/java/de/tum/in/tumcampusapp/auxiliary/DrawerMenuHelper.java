@@ -14,6 +14,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.BarrierFreeInfoActivity;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
+import de.tum.in.tumcampusapp.activities.CardsActivity;
 import de.tum.in.tumcampusapp.activities.ChatRoomsActivity;
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
