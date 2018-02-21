@@ -17,7 +17,6 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
  * Easy accessible class for token management.
  */
 public class AccessTokenManager {
-    public static final int MIN_LRZ_LENGTH = 7;
     private final Context context;
 
     public AccessTokenManager(Context context) {
