@@ -17,11 +17,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
-import io.reactivex.disposables.CompositeDisposable;
 
 public class ChatHistoryAdapter extends BaseAdapter {
-    private List<ChatMessage> chatHistoryList;
-    private List<ChatMessage> unsentMessages = new ArrayList<>();
+    private static final Integer MSG_OUTGOING = 0;
+    private static final Integer MSG_INCOMING = 1;
+
+    private List<ChatMessage> chatHistoryList = new ArrayList<>();
 
     private ChatMember currentChatMember;
     private Context mContext;
@@ -51,32 +52,18 @@ public class ChatHistoryAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return chatHistoryList.size() + unsentMessages.size();
-    }
-
-    public int getSentCount() {
         return chatHistoryList.size();
     }
 
     @Override
     public ChatMessage getItem(int position) {
-        int count = getSentCount();
-        if (position < count) {
-            return chatHistoryList.get(position);
-        } else {
-            return unsentMessages.get(position - count);
-        }
+        return chatHistoryList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        int count = getSentCount();
-        if (position < count) {
-            return chatHistoryList.get(position)
-                                  .getId();
-        } else {
-            return 0;
-        }
+        return chatHistoryList.get(position)
+                              .getId();
     }
 
     public int getViewTypeCount() {
@@ -85,24 +72,23 @@ public class ChatHistoryAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        int count = getSentCount();
-        if (position > count) {
+        if (position > getCount()) {
             return 0;
         }
-        ChatMessage msg = (ChatMessage) getItem(position);
-        return currentChatMember.getId() == msg.getMember()
-                                               .getId() ? 0 : 1;
+
+        ChatMember member = getItem(position).getMember();
+        return currentChatMember.getId() == member.getId() ? MSG_OUTGOING : MSG_INCOMING;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        boolean outgoing;
-        outgoing = getItemViewType(position) == 0;
-
+        boolean outgoing = getItemViewType(position) == MSG_OUTGOING;
         int layout = outgoing ? R.layout.activity_chat_history_row_outgoing : R.layout.activity_chat_history_row_incoming;
+
         ChatMessage msg = getItem(position);
         ViewHolder holder;
         View listItem = convertView;
+
         if (listItem == null) {
             listItem = LayoutInflater.from(mContext)
                                      .inflate(layout, parent, false);
@@ -127,7 +113,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
         holder.tvMessage.setText(msg.getText());
         holder.tvTimestamp.setText(DateUtils.getTimeOrDayISO(msg.getTimestamp(), mContext));
 
-        if (holder.ivSent == null) {
+        if (!outgoing) {
             holder.tvUser.setText(msg.getMember()
                                      .getDisplayName());
         } else {// Set status for outgoing messages (ivSent is not null)
@@ -150,24 +136,15 @@ public class ChatHistoryAdapter extends BaseAdapter {
                 && mEditedItem.getId() == msg.getId()
                 && mEditedItem.getSendingStatus() == msg.getSendingStatus())) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing_selected);
-        } else if (holder.ivSent != null) {
+        } else if (outgoing) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing);
         }
-        removeUnsent(msg);
+
         return listItem;
     }
 
     public void add(ChatMessage unsentMessage) {
-        unsentMessages.add(unsentMessage);
+        chatHistoryList.add(unsentMessage);
         notifyDataSetChanged();
     }
-
-    public void setUnsentMessages(List<ChatMessage> unsent) {
-        unsentMessages = unsent;
-    }
-
-    public void removeUnsent(ChatMessage msg) {
-        unsentMessages.remove(msg);
-    }
-
 }

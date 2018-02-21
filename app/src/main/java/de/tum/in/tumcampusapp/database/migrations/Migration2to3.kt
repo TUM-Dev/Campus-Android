@@ -4,6 +4,9 @@ import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
 import android.database.SQLException
 
+/**
+ * Make our schema room compliant - so we have to recreate all the tables, just to be sure
+ */
 class Migration2to3 : Migration(2,3) {
     override fun migrate(database: SupportSQLiteDatabase) {
 

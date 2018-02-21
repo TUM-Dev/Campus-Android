@@ -140,8 +140,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                     gradeSum += grade;
                     grades++;
                 }
-            } catch (ParseException e) {
-                Utils.log(e);
+            } catch (ParseException ignore) {
             }
         }
         return gradeSum / grades;

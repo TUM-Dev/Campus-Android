@@ -9,8 +9,12 @@ object ChatMessageRemoteRepository {
 
     lateinit var tumCabeClient: TUMCabeClient
 
-    fun getMessages(roomId: Int, messageId: Long, verification: ChatVerification): Observable<List<ChatMessage>> = tumCabeClient.getMessages(roomId, messageId, verification)
-    fun getNewMessages(roomId: Int, verification: ChatVerification): Observable<List<ChatMessage>> = tumCabeClient.getNewMessages(roomId, verification)
-    fun sendMessage(roomId: Int, chatMessageCreate: ChatMessage): Observable<ChatMessage> = tumCabeClient.sendMessage(roomId, chatMessageCreate)
-    fun updateMessage(roomId: Int, message: ChatMessage): Observable<ChatMessage> = tumCabeClient.updateMessage(roomId, message)
+    fun getMessages(roomId: Int, messageId: Long, verification: ChatVerification): Observable<List<ChatMessage>>
+            = tumCabeClient.getMessages(roomId, messageId, verification)
+
+    fun getNewMessages(roomId: Int, verification: ChatVerification): Observable<List<ChatMessage>>
+            = tumCabeClient.getNewMessages(roomId, verification)
+
+    fun sendMessage(roomId: Int, chatMessage: ChatMessage): Observable<ChatMessage>
+            = tumCabeClient.sendMessage(roomId, chatMessage)
 }

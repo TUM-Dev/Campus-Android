@@ -7,11 +7,11 @@ import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
@@ -40,13 +40,10 @@ import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.Success;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.internal.operators.observable.ObservableError;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -185,13 +182,13 @@ public class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessageCreate) {
-        return service.sendMessage(roomId, chatMessageCreate);
-
-    }
-
-    public Observable<ChatMessage> updateMessage(int roomId, ChatMessage message) {
-        return service.updateMessage(roomId, message.getId(), message);
+    public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessage) {
+        //If the id is zero then its an new entry otherwise try to update it
+        Utils.log("Sending: " + chatMessage.getId() + " " + chatMessage.getText());
+        if (chatMessage.getId() == 0) {
+            return service.sendMessage(roomId, chatMessage);
+        }
+        return service.updateMessage(roomId, chatMessage.getId(), chatMessage);
     }
 
     public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body ChatVerification verification) {
