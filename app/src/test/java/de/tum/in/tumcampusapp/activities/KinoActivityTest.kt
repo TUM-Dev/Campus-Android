@@ -4,13 +4,14 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.adapters.KinoAdapter
+import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel
+import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoAdapter
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDao
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import de.tum.`in`.tumcampusapp.database.dao.KinoDao
-import de.tum.`in`.tumcampusapp.models.tumcabe.Kino
-import de.tum.`in`.tumcampusapp.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.repository.KinoRemoteRepository
-import de.tum.`in`.tumcampusapp.viewmodel.KinoViewModel
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
@@ -30,14 +31,14 @@ import org.robolectric.annotation.Config
 class KinoActivityTest {
     private var kinoActivity: KinoActivity? = null
     private lateinit var dao: KinoDao
-    private lateinit var viewModel:KinoViewModel
+    private lateinit var viewModel: KinoViewModel
 
 
     @Before
     fun setUp() {
         val db =  TcaDb.getInstance(RuntimeEnvironment.application)
         KinoLocalRepository.db = db
-        viewModel = KinoViewModel(KinoLocalRepository,KinoRemoteRepository, CompositeDisposable())
+        viewModel = KinoViewModel(KinoLocalRepository, KinoRemoteRepository, CompositeDisposable())
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxJavaPlugins.setComputationSchedulerHandler { Schedulers.trampoline()  }
         RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.trampoline()  }

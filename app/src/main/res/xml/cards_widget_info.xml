@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
-                    android:configure="de.tum.in.tumcampusapp.widgets.CardsWidgetConfigureActivity"
+                    android:configure="de.tum.in.tumcampusapp.component.other.generic.widget.CardsWidgetConfigureActivity"
                     android:initialKeyguardLayout="@layout/cards_widget"
                     android:initialLayout="@layout/cards_widget"
                     android:minHeight="80dp"

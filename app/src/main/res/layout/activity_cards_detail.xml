@@ -7,7 +7,7 @@
 
         <variable
             name="card"
-            type="de.tum.in.tumcampusapp.models.cards.StudyCard" />
+            type="de.tum.in.tumcampusapp.component.studycard.model.StudyCard"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                tools:context="de.tum.in.tumcampusapp.activities.CardsDetailActivity">
+                tools:context=".component.ui.studycard.CardsDetailActivity">
 
                 <include
                     layout="@layout/layout_all_errors"

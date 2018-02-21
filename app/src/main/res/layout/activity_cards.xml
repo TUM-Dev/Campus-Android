@@ -7,7 +7,7 @@
 
         <variable
             name="state"
-            type="de.tum.in.tumcampusapp.models.cards.CardActivityState" />
+            type="de.tum.in.tumcampusapp.component.studycard.model.CardActivityState"/>
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="de.tum.in.tumcampusapp.activities.CardsActivity">
+        tools:context=".component.ui.studycard.CardsActivity">
 
         <!-- The main content view -->
         <android.support.design.widget.CoordinatorLayout

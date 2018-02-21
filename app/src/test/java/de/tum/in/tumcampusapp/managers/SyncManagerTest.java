@@ -11,10 +11,11 @@ import org.robolectric.annotation.Config;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.BuildConfig;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.database.dao.SyncDao;
-import de.tum.in.tumcampusapp.models.dbEntities.Sync;
+import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.sync.SyncDao;
+import de.tum.in.tumcampusapp.utils.sync.SyncManager;
+import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,7 +65,7 @@ public class SyncManagerTest {
     @Test
     public void needSyncTooEarlyTest() {
         String sync_id = "needSyncTooEarlyTest";
-        String now = Utils.getDateTimeString(new Date());
+        String now = DateUtils.getDateTimeString(new Date());
         dao.insert(new Sync(sync_id, now));
         assertThat(syncManager.needSync(sync_id, 1234)).isFalse();
     }
