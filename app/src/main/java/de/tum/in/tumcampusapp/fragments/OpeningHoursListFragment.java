@@ -92,7 +92,7 @@ public class OpeningHoursListFragment extends ListFragment {
         String[] names = {getString(R.string.libraries),
                           getString(R.string.information),
                           getString(R.string.mensa_garching),
-                          getString(R.string.mensa_grosshadern),
+                          getString(R.string.mensa_großhadern),
                           getString(R.string.mensa_city),
                           getString(R.string.mensa_pasing),
                           getString(R.string.mensa_weihenstephan)};

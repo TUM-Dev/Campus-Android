@@ -79,13 +79,14 @@ public class CardsDetailActivity extends ActivityForLoadingInBackground<Void, St
             return null;
         }
         try {
-            final ChatVerification v = new ChatVerification(this, Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class));
+            ChatMember chatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
+            final ChatVerification v = ChatVerification.Companion.getChatVerification(this.getApplicationContext(), chatMember);
             final Context c = this;
             return TUMCabeClient.getInstance(c).addStudyCard(card, v);
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoPrivateKey noPrivateKey) {
-            noPrivateKey.printStackTrace();
+            Utils.log(e);
+        } catch (NoPrivateKey e) {
+            Utils.log(e);
         }
         return null;
     }

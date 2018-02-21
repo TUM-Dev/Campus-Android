@@ -90,33 +90,7 @@ public class TUMCabeClient {
     static final String API_FEEDBACK = "feedback/";
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
-    private static final String API_HOSTNAME = Const.API_HOSTNAME;
-    private static final String API_BASEURL = "/Api/";
-    private static final String API_CARD = "cards/";
-    private static final String API_CHAT = "chat/";
-    private static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
-    private static final String API_CHAT_MEMBERS = API_CHAT + "members/";
-    //private static final String API_SESSION = "session/";
-    //private static final String API_NEWS = "news/";
-    //private static final String API_MENSA = "mensen/";
-    //private static final String API_CURRICULA = "curricula/";
-    private static final String API_REPORT = "report/";
-    private static final String API_STATISTICS = "statistics/";
-    //private static final String API_CINEMA = "kino/";
-    private static final String API_NOTIFICATIONS = "notifications/";
-    private static final String API_LOCATIONS = "locations/";
-    private static final String API_DEVICE = "device/";
-    private static final String API_QUESTION = "question/";
-    private static final String API_ANSWER_QUESTION = "question/answer/";
-    private static final String API_OWN_QUESTIONS = "question/my/";
-    private static final String API_FACULTY = "faculty/";
-    private static final String API_WIFI_HEATMAP = "wifimap/";
-    private static final String API_ROOM_FINDER = "roomfinder/room/";
-    private static final String API_ROOM_FINDER_SEARCH= "search/";
-    private static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
-    private static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
-    private static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
-
+    static final String API_CARD = "cards/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;

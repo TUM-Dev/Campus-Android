@@ -202,7 +202,7 @@
     <!-- Opening hours -->
     <string name="libraries">Libraries</string>
     <string name="mensa_garching">Cafeteria Garching</string>
-    <string name="mensa_grosshadern">Cafeteria Großhadern</string>
+    <string name="mensa_großhadern">Cafeteria Großhadern</string>
     <string name="mensa_city">Cafeteria Main Campus</string>
     <string name="mensa_pasing">Cafeteria Pasing</string>
     <string name="mensa_weihenstephan">Cafeteria Weihenstephan</string>

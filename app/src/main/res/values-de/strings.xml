@@ -196,7 +196,7 @@
     <!-- Opening hours -->
     <string name="libraries">Bibliotheken</string>
     <string name="mensa_garching">Mensa Garching</string>
-    <string name="mensa_grosshadern">Mensa Großhadern</string>
+    <string name="mensa_großhadern">Mensa Großhadern</string>
     <string name="mensa_city">Mensa Stammgelände</string>
     <string name="mensa_pasing">Mensa Pasing</string>
     <string name="mensa_weihenstephan">Mensa Weihenstephan</string>
