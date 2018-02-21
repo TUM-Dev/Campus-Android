@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/no_internet_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:onClick="onClick">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/no_internet_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:onClick="onClick">
 
     <ImageView
         android:id="@+id/no_internet_image"
@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:alpha="0.5"
         android:src="@drawable/ic_no_wifi"
-        tools:ignore="UnusedAttribute" />
+        tools:ignore="UnusedAttribute"/>
 
     <TextView
         android:id="@+id/textView"
@@ -27,7 +27,7 @@
         android:gravity="center"
         android:text="@string/no_internet_connection"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp" />
+        android:textSize="12sp"/>
 
     <Button
         android:id="@+id/button_enable_wifi"
@@ -36,7 +36,7 @@
         android:layout_alignRight="@id/textView"
         android:layout_below="@+id/no_internet_image"
         android:onClick="onEnableWifi"
-        android:text="@string/enable_wifi" />
+        android:text="@string/enable_wifi"/>
 
     <ProgressBar
         android:id="@+id/progressWifi"
@@ -48,6 +48,6 @@
         android:layout_alignStart="@id/no_internet_image"
         android:layout_below="@id/button_enable_wifi"
         android:layout_marginTop="5dp"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
 </RelativeLayout>

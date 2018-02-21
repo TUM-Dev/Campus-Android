@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -17,6 +19,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
 import de.tum.in.tumcampusapp.models.efa.Departure;
+import de.tum.in.tumcampusapp.models.efa.StationResult;
 
 /**
  * Activity to show transport departures for a specified station
@@ -30,6 +33,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     private LinearLayout mViewResults;
     private RecentsManager recentsManager;
     private TransportManager transportManager;
+    private Gson gson;
 
     public TransportationDetailsActivity() {
         super(R.layout.activity_transportation_detail);
@@ -42,7 +46,8 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         // get all stations from db
         recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
         transportManager = new TransportManager(this);
-        mViewResults = (LinearLayout) this.findViewById(R.id.activity_transport_result);
+        gson = new Gson();
+        mViewResults = this.findViewById(R.id.activity_transport_result);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -69,7 +74,8 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
                     .setTitle(R.string.transport_action_usage)
                     .setMessage(R.string.transport_help_text)
                     .setPositiveButton(android.R.string.ok, null)
-                    .create().show();
+                    .create()
+                    .show();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -84,9 +90,12 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     @Override
     protected List<Departure> onLoadInBackground(String... arg) {
         final String location = arg[0];
+        final String locationID = arg[1];
+        final StationResult stationResult = new StationResult(location, locationID, Integer.MAX_VALUE); // Quality is always 100% hit
+        final String jsonStationResult = gson.toJson(stationResult);
 
         // save clicked station into db
-        recentsManager.replaceIntoDb(location);
+        recentsManager.replaceIntoDb(jsonStationResult);
 
         // Check for internet connectivity
         if (!NetUtils.isConnected(this)) {
@@ -95,13 +104,12 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
 
         // get departures from website
-        final String locationID = arg[1];
-        List<Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, locationID);
-        if (departureCursor.isEmpty()) {
+        List<Departure> departures = TransportManager.getDeparturesFromExternal(this, locationID);
+        if (departures.isEmpty()) {
             showError(R.string.no_departures_found);
         }
 
-        return departureCursor;
+        return departures;
     }
 
     /**
@@ -119,38 +127,36 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         for (Departure d : result) {
             DepartureView view = new DepartureView(this, true);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DepartureView departureView = (DepartureView) v;
-                    String symbol = departureView.getSymbol();
-                    boolean highlight;
-                    if (transportManager.isFavorite(symbol)) {
-                        transportManager.deleteFavorite(symbol);
-                        highlight = false;
-                    } else {
-                        transportManager.addFavorite(symbol);
-                        highlight = true;
-                    }
+            view.setOnClickListener(v -> {
+                DepartureView departureView = (DepartureView) v;
+                String symbol = departureView.getSymbol();
+                boolean highlight;
+                if (transportManager.isFavorite(symbol)) {
+                    transportManager.deleteFavorite(symbol);
+                    highlight = false;
+                } else {
+                    transportManager.addFavorite(symbol);
+                    highlight = true;
+                }
 
-                    // Update the other views with the same symbol
-                    for (int i = 0; i < mViewResults.getChildCount(); i++) {
-                        DepartureView child = (DepartureView) mViewResults.getChildAt(i);
-                        if (child.getSymbol().equals(symbol)) {
-                            child.setSymbol(symbol, highlight);
-                        }
+                // Update the other views with the same symbol
+                for (int i = 0; i < mViewResults.getChildCount(); i++) {
+                    DepartureView child = (DepartureView) mViewResults.getChildAt(i);
+                    if (child.getSymbol()
+                             .equals(symbol)) {
+                        child.setSymbol(symbol, highlight);
                     }
                 }
             });
 
-            if (transportManager.isFavorite(d.symbol)) {
-                view.setSymbol(d.symbol, true);
+            if (transportManager.isFavorite(d.getSymbol())) {
+                view.setSymbol(d.getSymbol(), true);
             } else {
-                view.setSymbol(d.symbol, false);
+                view.setSymbol(d.getSymbol(), false);
             }
 
-            view.setLine(d.direction);
-            view.setTime(d.countDown);
+            view.setLine(d.getDirection());
+            view.setTime(d.getDepartureTime());
             mViewResults.addView(view);
         }
     }

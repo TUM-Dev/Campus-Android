@@ -5,11 +5,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -28,6 +27,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
+import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
@@ -49,12 +49,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
         setUpSpinner(); // Faculty selector
 
-        editTxtLrzId = (EditText) findViewById(R.id.lrd_id);
+        editTxtLrzId = findViewById(R.id.lrd_id);
         editTxtLrzId.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
     }
 
     public void setUpSpinner() {
-        final Spinner userMajorSpinner = (Spinner) findViewById(R.id.majorSpinner);
+        final Spinner userMajorSpinner = findViewById(R.id.majorSpinner);
 
         new AsyncTask<Void, Void, String[]>() {
 
@@ -65,13 +65,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                 SurveyManager sm = new SurveyManager(getApplicationContext());
                 sm.downloadFacultiesFromExternal();
 
-                Cursor cursor = sm.getAllFaculties();
-                if (cursor.moveToFirst()) {
-                    do {
-                        fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
-                    } while (cursor.moveToNext());
-
+                List<Faculty> faculties = sm.getAllFaculties();
+                for (Faculty faculty : faculties) {
+                    fetchedFaculties.add(faculty.getName());
                 }
+
                 fetchedFaculties.add(0, getResources().getString(R.string.choose_own_faculty));
                 return fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
             }
@@ -88,14 +86,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                 userMajorSpinner.setSelection(Integer.parseInt(Utils.getInternalSettingString(getApplicationContext(), "user_faculty_number", "0")));
 
                 // Upon clicking on the faculty spinner and there is no internet connection -> toast to the user.
-                userMajorSpinner.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if (!NetUtils.isConnected(getApplicationContext())) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
-                        }
-                        return view.performClick();
+                userMajorSpinner.setOnTouchListener((view, motionEvent) -> {
+                    if (!NetUtils.isConnected(getApplicationContext())) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
+                             .show();
                     }
+                    return view.performClick();
                 });
 
                 // When the user chooses a faculty
@@ -103,11 +99,10 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         SurveyManager sm = new SurveyManager(getApplicationContext());
-
-                        Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i)); // Get the faculty number from DB for the chosen faculty name
-
-                        if (c.moveToFirst()) {
-                            Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
+                        String id = sm.getFacultyID((String) adapterView.getItemAtPosition(i));
+                        if (id != null) {
+                            Utils.setInternalSetting(getApplicationContext(), "user_major", id); // save faculty number in shared preferences
+                            setDefaultCampus(id);
                             Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
@@ -135,7 +130,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     public void onClickSkip(View skip) {
         // Upon clicking on the skip button and there is no internet connection -> toast to the user
         if (!NetUtils.isConnected(getApplicationContext())) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
+                 .show();
             return;
         }
 
@@ -153,28 +149,34 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     public void onClickNext(View next) {
         // Upon clicking on next button and there is no internet connection -> toast to the user.
         if (!NetUtils.isConnected(getApplicationContext())) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
+                 .show();
             return;
         }
 
-        lrzId = editTxtLrzId.getText().toString();
-        Utils.setSetting(this, Const.LRZ_ID, lrzId);
+        String enteredId = editTxtLrzId.getText()
+                                       .toString()
+                                       .toLowerCase();
 
         // check if lrz could be valid?
-        if (lrzId.length() >= AccessTokenManager.MIN_LRZ_LENGTH) {
-            // is access token already set?
-            if (accessTokenManager.hasValidAccessToken()) {
-                // show Dialog first
-                new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.dialog_new_token))
-                        .setPositiveButton(getString(R.string.yes), this)
-                        .setNegativeButton(getString(R.string.no), this)
-                        .show();
-            } else {
-                startLoading(lrzId);
-            }
-        } else {
+        if (!enteredId.matches(Const.TUM_ID_PATTERN)) {
             Utils.showToast(this, R.string.error_lrz_wrong);
+            return;
+        }
+
+        lrzId = enteredId;
+        Utils.setSetting(this, Const.LRZ_ID, lrzId);
+
+        // is access token already set?
+        if (accessTokenManager.hasValidAccessToken()) {
+            // show Dialog first
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.dialog_new_token))
+                    .setPositiveButton(getString(R.string.yes), this)
+                    .setNegativeButton(getString(R.string.no), this)
+                    .show();
+        } else {
+            startLoading(lrzId);
         }
     }
 
@@ -193,6 +195,50 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             startLoading(lrzId);
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             onLoadFinished(true);
+        }
+    }
+
+    private void setDefaultCampus(String facultyNumber) {
+        String Campus = "0";
+        switch (facultyNumber) {
+            case "5":   // TUM School of Education
+            case "6":   // Architektur
+            case "7":   // Elektrotechnik und Informationstechnik
+            case "8":   // Ingenieurfakultät Bau Geo Umwelt
+            case "14":  // Wirtschaftswissenschaften
+            case "17":  // Andere Einrichtungen
+                Campus = "C"; // Stammgelände
+                break;
+
+            case "16":  // TUM School of Governance
+                // Unklar, nicht weit vom Stammgelände, aber nicht Stammgelände ??
+                break;
+            case "1":   // Mathematik
+            case "2":   // Physik
+            case "3":   // Chemie
+            case "4":   // Informatik
+            case "11":  // Maschinenwesen
+                Campus = "G"; // Garching-FZ
+                break;
+
+            case "13":  // Sport-und Gesundheitswissenschaften
+                // Olympiapark, hat aber keine Zuordnung ??
+                break;
+
+            case "12":  // Medizin
+                Campus = "I"; // Klinikum rechts der Isar
+                break;
+
+            case "15":  // Wissenschaftszentrum Weihenstephan
+                Campus = "W"; // Weihenstephan
+                break;
+            default:
+                break;
+
+        }
+
+        if ("0".equals(Campus)) {
+            Utils.setSetting(getApplicationContext(), Const.DEFAULT_CAMPUS, Campus);
         }
     }
 

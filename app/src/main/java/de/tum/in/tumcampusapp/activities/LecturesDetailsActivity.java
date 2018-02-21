@@ -51,7 +51,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     private TextView tvLDetailsZiele;
 
     public LecturesDetailsActivity() {
-        super(TUMOnlineConst.LECTURES_DETAILS, R.layout.activity_lecturedetails);
+        super(TUMOnlineConst.Companion.getLECTURES_DETAILS(), R.layout.activity_lecturedetails);
     }
 
     @Override
@@ -74,21 +74,22 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        tvLDetailsName = (TextView) findViewById(R.id.tvLDetailsName);
-        tvLDetailsSWS = (TextView) findViewById(R.id.tvLDetailsSWS);
-        tvLDetailsSemester = (TextView) findViewById(R.id.tvLDetailsSemester);
-        tvLDetailsDozent = (TextView) findViewById(R.id.tvLDetailsDozent);
-        tvLDetailsOrg = (TextView) findViewById(R.id.tvLDetailsOrg);
-        tvLDetailsInhalt = (TextView) findViewById(R.id.tvLDetailInhalt);
-        tvLDetailsMethode = (TextView) findViewById(R.id.tvLDetailsMethode);
-        tvLDetailsZiele = (TextView) findViewById(R.id.tvLDetailsZiele);
-        tvLDetailsTermin = (TextView) findViewById(R.id.tvLDetailsTermin);
-        tvLDetailsLiteratur = (TextView) findViewById(R.id.tvLDetailsLiteratur);
-        btnLDetailsTermine = (Button) findViewById(R.id.btnLDetailsTermine);
+        tvLDetailsName = findViewById(R.id.tvLDetailsName);
+        tvLDetailsSWS = findViewById(R.id.tvLDetailsSWS);
+        tvLDetailsSemester = findViewById(R.id.tvLDetailsSemester);
+        tvLDetailsDozent = findViewById(R.id.tvLDetailsDozent);
+        tvLDetailsOrg = findViewById(R.id.tvLDetailsOrg);
+        tvLDetailsInhalt = findViewById(R.id.tvLDetailInhalt);
+        tvLDetailsMethode = findViewById(R.id.tvLDetailsMethode);
+        tvLDetailsZiele = findViewById(R.id.tvLDetailsZiele);
+        tvLDetailsTermin = findViewById(R.id.tvLDetailsTermin);
+        tvLDetailsLiteratur = findViewById(R.id.tvLDetailsLiteratur);
+        btnLDetailsTermine = findViewById(R.id.btnLDetailsTermine);
         btnLDetailsTermine.setOnClickListener(this);
 
         // Reads lecture id from bundle
-        Bundle bundle = this.getIntent().getExtras();
+        Bundle bundle = this.getIntent()
+                            .getExtras();
         requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
         super.requestFetch();
@@ -102,12 +103,15 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     @Override
     public void onFetch(LectureDetailsRowSet xmllv) {
         // we got exactly one row, that's fine
-        currentItem = xmllv.getLehrveranstaltungenDetails().get(0);
-        tvLDetailsName.setText(currentItem.getStp_sp_titel().toUpperCase(Locale.getDefault()));
+        currentItem = xmllv.getLehrveranstaltungenDetails()
+                           .get(0);
+        tvLDetailsName.setText(currentItem.getStp_sp_titel()
+                                          .toUpperCase(Locale.getDefault()));
 
         StringBuilder strLectureLanguage = new StringBuilder(currentItem.getSemester_name());
         if (currentItem.getHaupt_unterrichtssprache() != null) {
-            strLectureLanguage.append(" - ").append(currentItem.getHaupt_unterrichtssprache());
+            strLectureLanguage.append(" - ")
+                              .append(currentItem.getHaupt_unterrichtssprache());
         }
         tvLDetailsSemester.setText(strLectureLanguage);
         tvLDetailsSWS.setText(String.format("%s - %s SWS", currentItem.getStp_lv_art_name(), currentItem.getDauer_info()));

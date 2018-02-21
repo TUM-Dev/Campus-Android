@@ -1,8 +1,11 @@
 package de.tum.in.tumcampusapp.services;
+
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
+
 import java.util.Random;
+
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
@@ -13,7 +16,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 
 public class WifiScanHandler extends Handler {
-    private static WifiScanHandler singleton = new WifiScanHandler();
+    private static final WifiScanHandler singleton = new WifiScanHandler();
     private static PeriodicalScan periodicalScan;
     private static Context context;
 
@@ -21,8 +24,10 @@ public class WifiScanHandler extends Handler {
     private static final int MIN_TIME_PASSED_IN_SECONDS = 5;
     private static final int MAX_TIME_PASSED_IN_SECONDS = 420;
 
-    private WifiScanHandler(){}
-    public static WifiScanHandler getInstance(Context context){
+    private WifiScanHandler() {
+    }
+
+    public static WifiScanHandler getInstance(Context context) {
         WifiScanHandler.context = context;
         singleton.removeCallbacksAndMessages(null);
         periodicalScan = new PeriodicalScan();
@@ -30,20 +35,22 @@ public class WifiScanHandler extends Handler {
     }
 
     public void startRepetition() {
-        this.postDelayed(periodicalScan,generateRandomScanInterval(MIN_TIME_PASSED_IN_SECONDS, MAX_TIME_PASSED_IN_SECONDS - MIN_TIME_PASSED_IN_SECONDS));
-    }
-    private static int generateRandomScanInterval(int minimumSeconds, int range){
-        Random random = new Random();
-        return 1000*minimumSeconds+random.nextInt(range*1000);
+        this.postDelayed(periodicalScan, generateRandomScanInterval(MIN_TIME_PASSED_IN_SECONDS, MAX_TIME_PASSED_IN_SECONDS - MIN_TIME_PASSED_IN_SECONDS));
     }
 
-    private static class PeriodicalScan implements Runnable{
-        private PeriodicalScan(){
+    private static int generateRandomScanInterval(int minimumSeconds, int range) {
+        Random random = new Random();
+        return 1000 * minimumSeconds + random.nextInt(range * 1000);
+    }
+
+    private static class PeriodicalScan implements Runnable {
+        private PeriodicalScan() {
         }
 
         @Override
         public void run() {
-            WifiManager wifiManager = (WifiManager)context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) context.getApplicationContext()
+                                                           .getSystemService(Context.WIFI_SERVICE);
             wifiManager.startScan();
             Utils.log("WifiScanHandler started");
         }

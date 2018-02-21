@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,10 +38,14 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
+import de.tum.in.tumcampusapp.fragments.CalendarDetailsFragment;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 import de.tum.in.tumcampusapp.managers.SyncManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
+
+import static de.tum.in.tumcampusapp.auxiliary.Const.CALENDAR_ID_PARAM;
 
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
@@ -59,7 +61,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
-            Manifest.permission.WRITE_CALENDAR};
+                                                          Manifest.permission.WRITE_CALENDAR};
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
     private CalendarManager calendarManager;
 
@@ -73,7 +75,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private WeekView mWeekView;
 
     public CalendarActivity() {
-        super(TUMOnlineConst.CALENDER, R.layout.activity_calendar);
+        super(TUMOnlineConst.Companion.getCALENDER(), R.layout.activity_calendar);
     }
 
     @Override
@@ -81,17 +83,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         super.onCreate(savedInstanceState);
 
         // Get a reference for the week view in the layout.
-        mWeekView = (WeekView) findViewById(R.id.weekView);
+        mWeekView = findViewById(R.id.weekView);
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(this);
         mWeekView.setOnEventClickListener(this);
 
-
         // Get time to show e.g. a lectures starting time or 0 for now
         Intent i = getIntent();
-        mShowDate = GregorianCalendar.getInstance();
+        mShowDate = Calendar.getInstance();
         if (i != null && i.hasExtra(EVENT_TIME)) {
             long time = i.getLongExtra(EVENT_TIME, 0);
             mShowDate.setTime(new Date(time));
@@ -250,8 +251,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 if (!CalendarActivity.this.isFinishing()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
                     builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
-                            .setPositiveButton(CalendarActivity.this.getString(R.string.yes), CalendarActivity.this)
-                            .setNegativeButton(CalendarActivity.this.getString(R.string.no), CalendarActivity.this).show();
+                           .setPositiveButton(CalendarActivity.this.getString(R.string.yes), CalendarActivity.this)
+                           .setNegativeButton(CalendarActivity.this.getString(R.string.no), CalendarActivity.this)
+                           .show();
                     showLoadingEnded();
                 }
             }
@@ -272,25 +274,21 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      */
     private boolean isPermissionGranted(int id) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
             // For example, if the request has been denied previously.
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CALENDAR) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
+                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
 
                 // Display an AlertDialog with an explanation and a button to trigger the request.
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.permission_calendar_explanation))
-                        .setPositiveButton(R.string.ok, new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                ActivityCompat
-                                        .requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id);
-                            }
-                        }).show();
+                        .setPositiveButton(R.string.ok, (dialog, id1) -> ActivityCompat
+                                .requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id1))
+                        .show();
             } else {
                 ActivityCompat.requestPermissions(this, PERMISSIONS_CALENDAR, id);
             }
@@ -345,20 +343,19 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.dialog_delete_calendar)).setPositiveButton(getString(R.string.yes), new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                int deleted = CalendarManager.deleteLocalCalendar(CalendarActivity.this);
-                Utils.setInternalSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
-                CalendarActivity.this.invalidateOptionsMenu();
-                if (deleted > 0) {
-                    Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
-                } else {
-                    Utils.showToast(CalendarActivity.this, R.string.calendar_not_existing_toast);
-                }
-            }
-        }).setNegativeButton(getString(R.string.no), null).show();
+        builder.setMessage(getString(R.string.dialog_delete_calendar))
+               .setPositiveButton(getString(R.string.yes), (arg0, arg1) -> {
+                   int deleted = CalendarManager.deleteLocalCalendar(CalendarActivity.this);
+                   Utils.setInternalSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
+                   CalendarActivity.this.invalidateOptionsMenu();
+                   if (deleted > 0) {
+                       Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
+                   } else {
+                       Utils.showToast(CalendarActivity.this, R.string.calendar_not_existing_toast);
+                   }
+               })
+               .setNegativeButton(getString(R.string.no), null)
+               .show();
     }
 
     @Override
@@ -376,10 +373,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         //Probably refactor this to a good SQL query
         for (int curDay = 1; curDay <= daysInMonth; curDay++) {
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
-            Cursor cEvents = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()));
-
-            while (cEvents.moveToNext()) {
-                events.add(new IntegratedCalendarEvent(cEvents));
+            List<CalendarItem> calendarItems = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()));
+            for (CalendarItem calendarItem: calendarItems) {
+                events.add(new IntegratedCalendarEvent(calendarItem));
             }
         }
 
@@ -405,7 +401,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat(weekDayFormat, Locale.getDefault());
                 String weekday = weekdayNameFormat.format(date.getTime());
                 String dateString = DateUtils.formatDateTime(getApplicationContext(),
-                        date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
+                                                             date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
 
                 return weekday.toUpperCase(Locale.getDefault()) + ' ' + dateString;
             }
@@ -423,9 +419,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
-        IntegratedCalendarEvent event = (IntegratedCalendarEvent) weekViewEvent;
-        Intent i = new Intent(this, RoomFinderDetailsActivity.class);
-        i.putExtra(RoomFinderDetailsActivity.EXTRA_LOCATION, event.getLocation());
-        this.startActivity(i);
+        CalendarDetailsFragment detailsFragment = new CalendarDetailsFragment();
+        Bundle bundle = new Bundle();
+        CalendarItem item = calendarManager.getCalendarItemByStartAndEndTime(weekViewEvent.getStartTime(), weekViewEvent.getEndTime());
+        bundle.putString(CALENDAR_ID_PARAM, item.getNr());
+        detailsFragment.setArguments(bundle);
+        detailsFragment.show(getSupportFragmentManager(), null);
     }
 }

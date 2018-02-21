@@ -21,9 +21,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.IOException;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -39,49 +41,45 @@ import de.tum.in.tumcampusapp.notifications.Update;
  * service is finished, it calls {@code completeWakefulIntent()} to release the
  * wake lock.
  */
-public class GcmReceiverService extends GcmListenerService {
+public class GcmReceiverService extends FirebaseMessagingService {
 
     private static final String PAYLOAD = "payload";
 
     /**
      * Called when message is received.
-     *
-     * @param from   SenderID of the sender.
-     * @param extras Data bundle containing message data as key/value pairs.
      */
     // [START receive_message]
     @Override
-    public void onMessageReceived(String from, Bundle extras) {
-        //Check that we have some data and the intent was indeed a gcm message (gcm might be subject to change in the future)
-        if (extras.isEmpty()) {
-            return;
-        }  // has effect of un-parcelling Bundle
+    public void onMessageReceived(RemoteMessage message) {
+        Utils.log("Notification received...");
+        Map<String, String> data = message.getData();
         //Legacy messages need to be handled - maybe some data is missing?
-        if (extras.containsKey(PAYLOAD) && extras.containsKey("type")) {
+        if (data.containsKey(PAYLOAD) && data.containsKey("type")) {
             //Get some important values
-            int notification = Integer.parseInt(extras.getString("notification"));
-            int type = Integer.parseInt(extras.getString("type"));
+            int notification = Integer.parseInt(data.get("notification"));
+            int type = Integer.parseInt(data.get("type"));
+            String payload = data.get(PAYLOAD);
 
             //Initialize our outputs
             GenericNotification n = null;
-
-            Utils.logv("Notification recieved: " + extras);
+            Utils.log("Notification received: " + data);
 
             //switch on the type as both the type and payload must be present
             switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
                 case 1: //Chat
-                    n = new Chat(extras.getString(PAYLOAD), this, notification);
+                    n = new Chat(payload, this, notification);
                     break;
                 case 2: //Update
-                    n = new Update(extras.getString(PAYLOAD), this, notification);
+                    n = new Update(payload, this, notification);
                     break;
                 case 3: //Alert
-                    n = new Alarm(extras.getString(PAYLOAD), this, notification);
+                    n = new Alarm(payload, this, notification);
                     break;
                 case 0: //Nothing to do, just confirm the retrieved notification
                 default:
                     try {
-                        TUMCabeClient.getInstance(this).confirm(notification);
+                        TUMCabeClient.getInstance(this)
+                                     .confirm(notification);
                     } catch (IOException e) {
                         Utils.log(e);
                     }
@@ -99,14 +97,20 @@ public class GcmReceiverService extends GcmListenerService {
                     Utils.log(e);
                 }
 
-                //de.tum.in.tumcampusapp.managers.NotificationManager man = new de.tum.in.tumcampusapp.managers.NotificationManager(this);
-                //@todo save to our notificationmanager
+                //TODO
+                //de.tum.in.tumcampusapp.managers.NotificationManager notificationManager
+                //        = new de.tum.in.tumcampusapp.managers.NotificationManager(this);
+                //notificationManager.replaceInto(n);
             }
         } else {
 
             //Try to match it as a legacy chat notification
             try {
-                this.postNotification(new Chat(extras, this, -1));
+                Bundle bundle = new Bundle();
+                for (String key : data.keySet()) {
+                    bundle.putString(key, data.get(key));
+                }
+                this.postNotification(new Chat(bundle, this, -1));
             } catch (Exception e) {
                 //@todo do something
             }
@@ -125,6 +129,5 @@ public class GcmReceiverService extends GcmListenerService {
             }
         }
     }
-
 
 }

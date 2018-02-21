@@ -1,21 +1,23 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingTumOnline;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.PersonSearchSuggestionProvider;
 import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.models.dbEntities.Recent;
 import de.tum.in.tumcampusapp.models.tumo.Person;
 import de.tum.in.tumcampusapp.models.tumo.PersonList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
@@ -26,48 +28,43 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonList> implements OnItemClickListener {
     private static final String P_SUCHE = "pSuche";
 
-    /** List to display the results */
+    /**
+     * List to display the results
+     */
     private ListView lvPersons;
     private RecentsManager recentsManager;
 
     public PersonsSearchActivity() {
-        super(TUMOnlineConst.PERSON_SEARCH, R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY, 3);
+        super(TUMOnlineConst.Companion.getPERSON_SEARCH(), R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY, 3);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lvPersons = (ListView) findViewById(R.id.lstPersons);
+        lvPersons = findViewById(R.id.lstPersons);
         lvPersons.setOnItemClickListener(this);
 
         // get all stations from db
         recentsManager = new RecentsManager(this, RecentsManager.PERSONS);
 
-        // Initialize persons adapter
-        Cursor personsCursor = recentsManager.getAllFromDb();
-        ArrayList<Person> list = new ArrayList<>(personsCursor.getCount());
-        if(personsCursor.moveToFirst()) {
-            do {
-                String recent = personsCursor.getString(0);
-                String[] t = recent.split("\\$");
-                Person p = new Person();
-                p.setId(t[0]);
-                p.setName(t[1]);
-                list.add(p);
-            } while(personsCursor.moveToNext());
-        }
-        personsCursor.close();
+        ArrayAdapter<Person> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, getRecents());
 
-        ArrayAdapter<Person> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, list);
-
-        if(adapter.getCount()==0) {
+        if (adapter.getCount() == 0) {
             openSearch();
         } else {
             lvPersons.setAdapter(adapter);
             lvPersons.setOnItemClickListener(this);
             lvPersons.requestFocus();
         }
+    }
+
+    private ArrayList<Person> getRecents() {
+        List<Recent> recentList = recentsManager.getAllFromDb();
+        ArrayList<Person> personList = new ArrayList<>(recentList.size());
+        for (Recent r : recentList) {
+            personList.add(Person.Companion.fromRecent(r));
+        }
+        return personList;
     }
 
     @Override
@@ -83,33 +80,13 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
         intent.putExtras(bundle);
         startActivity(intent);
 
-        recentsManager.replaceIntoDb(person.getId()+"$"+person.toString().trim());
+        recentsManager.replaceIntoDb(person.getId() + "$" + person.toString()
+                                                                  .trim());
     }
 
     @Override
     protected void onStartSearch() {
-        Cursor personsCursor = recentsManager.getAllFromDb();
-
-        if(personsCursor.getCount()==0) {
-            finish();
-            return;
-        }
-
-        ArrayList<Person> list = new ArrayList<>(personsCursor.getCount());
-        if(personsCursor.moveToFirst()) {
-            do {
-                String recent = personsCursor.getString(0);
-                String[] t = recent.split("\\$");
-                Person p = new Person();
-                p.setId(t[0]);
-                p.setName(t[1]);
-                list.add(p);
-            } while(personsCursor.moveToNext());
-        }
-        personsCursor.close();
-
-        ArrayAdapter<Person> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, list);
+        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, getRecents());
         lvPersons.setAdapter(adapter);
     }
 
@@ -117,6 +94,16 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
     public void onStartSearch(String query) {
         requestHandler.setParameter(P_SUCHE, query);
         requestFetch();
+    }
+
+    private void proceedToPersonDetails(PersonList response) {
+        lvPersons.setAdapter(null);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("personObject", response.getPersons()
+                                                       .get(0));
+        Intent intent = new Intent(this, PersonsDetailsActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     /**
@@ -127,11 +114,14 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
      */
     @Override
     public void onLoadFinished(PersonList response) {
-        if(response.getPersons()==null) {
+        if (response.getPersons() == null || response.getPersons()
+                                                     .isEmpty()) {
             lvPersons.setAdapter(new NoResultsAdapter(this));
+        } else if (response.getPersons()
+                           .size() == 1) {
+            proceedToPersonDetails(response);
         } else {
-            ArrayAdapter<Person> adapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, response.getPersons());
+            ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, response.getPersons());
             lvPersons.setAdapter(adapter);
         }
     }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/widget_margin"
-    android:theme="@style/AppTheme.WhiteBackground">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/widget_margin"
+                android:theme="@style/AppTheme.WhiteBackground">
 
     <RelativeLayout
         android:id="@+id/mvv_widget_header"
@@ -23,7 +23,7 @@
             android:padding="10dp"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:typeface="sans" />
+            android:typeface="sans"/>
 
         <ImageView
             android:id="@+id/mvv_widget_reload"
@@ -66,7 +66,7 @@
         android:layout_below="@+id/mvv_widget_header"
         android:gravity="center"
         android:text="@string/mvv_widget_no_data"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/mvv_widget_offline"
@@ -76,6 +76,6 @@
         android:background="@android:color/transparent"
         android:padding="10dp"
         android:src="@drawable/ic_cloud_off"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
 </RelativeLayout>

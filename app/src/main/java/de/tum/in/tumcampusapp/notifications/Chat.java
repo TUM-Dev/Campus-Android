@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -15,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.ChatActivity;
@@ -23,16 +23,23 @@ import de.tum.in.tumcampusapp.activities.MainActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.repository.ChatMessageLocalRepository;
+import de.tum.in.tumcampusapp.repository.ChatMessageRemoteRepository;
+import de.tum.in.tumcampusapp.viewmodel.ChatMessageViewModel;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class Chat extends GenericNotification {
 
-    public static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
+    private static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
 
     private final GCMChat extras;
 
@@ -40,22 +47,24 @@ public class Chat extends GenericNotification {
     private String notificationText;
     private TaskStackBuilder sBuilder;
 
+    private final ChatMessageDao chatMessageDao;
 
     public Chat(Bundle extras, Context context, int notfication) {
         super(context, 1, notfication, true);
+        chatMessageDao = TcaDb.getInstance(context).chatMessageDao();
 
         //Initialize the object keeping important infos about the update
         this.extras = new GCMChat();
 
         //Get the update details
-        this.extras.room = Integer.parseInt(extras.getString("room"));
-        this.extras.member = Integer.parseInt(extras.getString("member"));
+        this.extras.setRoom(Integer.parseInt(extras.getString("room")));
+        this.extras.setMember(Integer.parseInt(extras.getString("member")));
 
         //Message part is only present if we have a updated message
         if (extras.containsKey("message")) {
-            this.extras.message = Integer.parseInt(extras.getString("message"));
+            this.extras.setMessage(Integer.parseInt(extras.getString("message")));
         } else {
-            this.extras.message = -1;
+            this.extras.setMessage(-1);
         }
 
         try {
@@ -67,6 +76,7 @@ public class Chat extends GenericNotification {
 
     public Chat(String payload, Context context, int notfication) {
         super(context, 1, notfication, true);
+        chatMessageDao = TcaDb.getInstance(context).chatMessageDao();
 
         //Check if a payload was passed
         if (payload == null) {
@@ -84,61 +94,73 @@ public class Chat extends GenericNotification {
     }
 
     private void prepare() throws IOException {
-        Utils.logv("Received GCM notification: room=" + this.extras.room + " member=" + this.extras.member + " message=" + this.extras.message);
+        Utils.logv("Received GCM notification: room=" + this.extras.getRoom() + " member=" + this.extras.getMember() + " message=" + this.extras.getMessage());
 
         // Get the data necessary for the ChatActivity
         ChatMember member = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
-        chatRoom = TUMCabeClient.getInstance(context).getChatRoom(this.extras.room);
+        chatRoom = TUMCabeClient.getInstance(context)
+                                .getChatRoom(this.extras.getRoom());
 
-        ChatMessageManager manager = new ChatMessageManager(context, chatRoom.getId());
-        Cursor messages = null;
         try {
-            messages = manager.getNewMessages(member, this.extras.message);
+            List<ChatMessage> messages = this.getNewMessages(chatRoom, member, this.extras.getMessage());
+            Intent intent = new Intent("chat-message-received");
+            intent.putExtra("GCMChat", this.extras);
+            LocalBroadcastManager.getInstance(context)
+                                 .sendBroadcast(intent);
+            notificationText = null;
+            if (messages != null) {
+                for(ChatMessage msg : messages)    {
+                    if (notificationText == null) {
+                        notificationText = msg.getText();
+                    } else {
+                        notificationText += "\n" + msg.getText();
+                    }
+                }
+            }
+            // Put the data into the intent
+            Intent notificationIntent = new Intent(context, ChatActivity.class);
+            notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
+
+            sBuilder = TaskStackBuilder.create(context);
+            sBuilder.addNextIntent(new Intent(context, MainActivity.class));
+            sBuilder.addNextIntent(new Intent(context, ChatRoomsActivity.class));
+            sBuilder.addNextIntent(notificationIntent);
         } catch (NoPrivateKey noPrivateKey) {
             Utils.log(noPrivateKey);
         }
+    }
 
-        // Notify any open chat activity that a message has been received
-        Intent intent = new Intent("chat-message-received");
-        intent.putExtra("GCMChat", this.extras);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    public List<ChatMessage> getNewMessages(ChatRoom chatRoom, ChatMember member, int messageId) throws NoPrivateKey, IOException {
+        ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(context));
+        ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(context));
+        ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, new CompositeDisposable());
 
-        notificationText = null;
-        if (messages != null && messages.moveToFirst()) {
-            do {
-                if (notificationText == null) {
-                    notificationText = messages.getString(3);
-                } else {
-                    notificationText += "\n" + messages.getString(3);
-                }
-            } while (messages.moveToNext());
+        if (messageId == -1) {
+            chatMessageViewModel.getNewMessages(chatRoom.getId(), ChatVerification.Companion.getChatVerification(context, member));
+        } else {
+            chatMessageViewModel.getMessages(chatRoom.getId(), messageId, ChatVerification.Companion.getChatVerification(context, member));
         }
-
-        // Put the data into the intent
-        Intent notificationIntent = new Intent(context, ChatActivity.class);
-        notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
-
-        sBuilder = TaskStackBuilder.create(context);
-        sBuilder.addNextIntent(new Intent(context, MainActivity.class));
-        sBuilder.addNextIntent(new Intent(context, ChatRoomsActivity.class));
-        sBuilder.addNextIntent(notificationIntent);
+        return chatMessageDao.getAll(chatRoom.getId());
     }
 
     @Override
     public Notification getNotification() {
         //Check if chat is currently open then don't show a notification if it is
-        if (ChatActivity.mCurrentOpenChatRoom != null && this.extras.room == ChatActivity.mCurrentOpenChatRoom.getId()) {
+        if (ChatActivity.mCurrentOpenChatRoom != null && this.extras.getRoom() == ChatActivity.mCurrentOpenChatRoom.getId()) {
             return null;
         }
 
-        if (Utils.getSettingBool(context, "card_chat_phone", true) && this.extras.message == -1) {
+        if (Utils.getSettingBool(context, "card_chat_phone", true) && this.extras.getMessage() == -1) {
 
             PendingIntent contentIntent = sBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
             // GCMNotification sound
             Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
 
-            String replyLabel = context.getResources().getString(R.string.reply_label);
+            String replyLabel = context.getResources()
+                                       .getString(R.string.reply_label);
 
             RemoteInput remoteInput = new RemoteInput.Builder(ChatActivity.EXTRA_VOICE_REPLY)
                     .setLabel(replyLabel)
@@ -147,14 +169,15 @@ public class Chat extends GenericNotification {
             // Create the reply action and add the remote input
             NotificationCompat.Action action =
                     new NotificationCompat.Action.Builder(R.drawable.ic_reply,
-                            context.getString(R.string.reply_label), contentIntent)
+                                                          context.getString(R.string.reply_label), contentIntent)
                             .addRemoteInput(remoteInput)
                             .build();
 
             //Create a nice notification
-            return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+            return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CHAT)
                     .setSmallIcon(this.icon)
-                    .setContentTitle(chatRoom.getName().substring(4))
+                    .setContentTitle(chatRoom.getName()
+                                             .substring(4))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
                     .setContentText(notificationText)
                     .setContentIntent(contentIntent)
@@ -171,6 +194,6 @@ public class Chat extends GenericNotification {
 
     @Override
     public int getNotificationIdentification() {
-        return (this.extras.room << 4) + Chat.NOTIFICATION_ID;
+        return (this.extras.getRoom() << 4) + Chat.NOTIFICATION_ID;
     }
 }

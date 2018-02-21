@@ -1,46 +1,45 @@
 package de.tum.in.tumcampusapp.services;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.media.AudioManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
+
+import static de.tum.in.tumcampusapp.auxiliary.Const.SILENCE_SERVICE_JOB_ID;
 
 /**
  * Service used to silence the mobile during lectures
  */
-public class SilenceService extends IntentService {
+public class SilenceService extends JobIntentService {
 
     /**
      * Interval in milliseconds to check for current lectures
      */
     private static final int CHECK_INTERVAL = 60000 * 15; // 15 Minutes
     private static final int CHECK_DELAY = 10000; // 10 Seconds after Calendar changed
-    private static final String SILENCE_SERVICE = "SilenceService";
 
-    /**
-     * default init (run intent in new thread)
-     */
-    public SilenceService() {
-        super(SILENCE_SERVICE);
-    }
 
     private static long getWaitDuration(String timeToEventString) {
         long timeToEvent = Long.MAX_VALUE;
         try {
-            timeToEvent = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString).getTime();
+            timeToEvent = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString)
+                                                                                  .getTime();
         } catch (ParseException e) {
             Utils.log(e, "");
         }
@@ -59,15 +58,27 @@ public class SilenceService extends IntentService {
         Utils.log("SilenceService has stopped");
     }
 
+    static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, SilenceService.class, SILENCE_SERVICE_JOB_ID, work);
+    }
+
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         //Abort, if the settings changed
         if (!Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
             // Don't schedule a new run, since the service is disabled
             return;
         }
 
+        if (!hasPermissions(this)) {
+            Utils.setSetting(this, Const.SILENCE_SERVICE, false);
+            return;
+        }
+
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager == null) {
+            return;
+        }
         Intent newIntent = new Intent(this, SilenceService.class);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -83,25 +94,26 @@ public class SilenceService extends IntentService {
         }
 
         AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        Cursor cursor = calendarManager.getCurrentFromDb();
-        Utils.log("Current lectures: " + cursor.getCount());
+        if (am == null) {
+            return;
+        }
+        List<CalendarItem> currentLectures = calendarManager.getCurrentFromDb();
+        Utils.log("Current lectures: " + currentLectures.size());
 
-        if (cursor.getCount() == 0 || isDoNotDisturbMode()) {
+        if (currentLectures.size() == 0 || isDoNotDisturbMode()) {
             if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
                 // default: old state
                 Utils.log("set ringer mode to old state");
                 am.setRingerMode(Integer.parseInt(
                         Utils.getSetting(this, Const.SILENCE_OLD_STATE,
-                                Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
+                                         Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
                 Utils.setInternalSetting(this, Const.SILENCE_ON, false);
 
-
-                Cursor cursor2 = calendarManager.getNextCalendarItem();
-                if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+                List<CalendarItem> nextCalendarItems = calendarManager.getNextCalendarItems();
+                if (nextCalendarItems.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
                     // refresh when next event has started
-                    waitDuration = getWaitDuration(cursor2.getString(1));
+                    waitDuration = getWaitDuration(nextCalendarItems.get(0).getDtstart());
                 }
-                cursor2.close();
             }
         } else {
             // remember old state if just activated ; in doubt dont change
@@ -122,10 +134,8 @@ public class SilenceService extends IntentService {
                 am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             }
             // refresh when event has ended
-            cursor.moveToFirst();
-            waitDuration = getWaitDuration(cursor.getString(3));
+            waitDuration = getWaitDuration(currentLectures.get(0).getDtstart());
         }
-        cursor.close();
 
         alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
     }
@@ -149,5 +159,25 @@ public class SilenceService extends IntentService {
             }
         }
         return false;
+    }
+
+    /**
+     * Check if the app has the permissions to enable "Do Not Disturb".
+     */
+    public static boolean hasPermissions(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        return !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                 && !notificationManager.isNotificationPolicyAccessGranted());
+    }
+
+    /**
+     * Request the "Do Not Disturb" permissions for android version >= N.
+     */
+    public static void requestPermissions(Context context) {
+        if (hasPermissions(context)) {
+            return;
+        }
+        Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        context.startActivity(intent);
     }
 }

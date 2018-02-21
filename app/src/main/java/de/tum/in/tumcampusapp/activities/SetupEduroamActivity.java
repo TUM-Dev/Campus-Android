@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
@@ -41,26 +42,49 @@ public class SetupEduroamActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
-        setContentView(R.layout.activity_setup_eduroam);
+
+        if(getIntent().getBooleanExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, false)){
+            showDeleteProfileDialog(true);
+        }
 
         // Enable 'More Info' links
-        ((TextView) findViewById(R.id.text_with_link_1)).setMovementMethod(LinkMovementMethod.getInstance());
         ((TextView) findViewById(R.id.text_with_link_2)).setMovementMethod(LinkMovementMethod.getInstance());
 
         if (Build.VERSION.SDK_INT >= 18) {
             findViewById(R.id.certificate).setVisibility(View.GONE);
         }
 
-        lrz = (EditText) findViewById(R.id.wifi_lrz_id);
+        lrz = findViewById(R.id.wifi_lrz_id);
         lrz.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
-        password = (EditText) findViewById(R.id.wifi_password);
+        password = findViewById(R.id.wifi_password);
 
         //Set the focus for improved UX experience
-        if(lrz.getText().length() == 0) {
+        if (lrz.getText()
+               .length() == 0) {
             lrz.requestFocus();
-        }else{
+        } else {
             password.requestFocus();
         }
+
+        findViewById(R.id.eduroam_config_error).setOnClickListener(view -> {
+            showDeleteProfileDialog(false);
+        });
+    }
+
+    private void showDeleteProfileDialog(boolean showAtStart){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(R.string.eduroam_dialog_title);
+        View content = getLayoutInflater().inflate(R.layout.delete_wifi_config, null);
+        content.findViewById(R.id.button_open_wifi_preferences)
+               .setOnClickListener(view1 -> startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)));
+        if(showAtStart){
+            content.findViewById(R.id.eduroam_delete_info).setVisibility(View.VISIBLE);
+        } else {
+            content.findViewById(R.id.eduroam_delete_info).setVisibility(View.GONE);
+        }
+        dialog.setView(content);
+        dialog.setPositiveButton(R.string.done, null);
+        dialog.show();
     }
 
     /**
@@ -71,29 +95,32 @@ public class SetupEduroamActivity extends BaseActivity {
     @SuppressWarnings("UnusedParameters")
     public void onClickSetup(View v) {
         //Verify that we have a valid LRZ / TUM ID
-        final Pattern pattern = Pattern.compile("^[a-z]{2}[0-9]{2}[a-z]{3}$");
-        if (!pattern.matcher(lrz.getText()).matches()) {
+        final Pattern pattern = Pattern.compile(Const.TUM_ID_PATTERN);
+        if (!pattern.matcher(lrz.getText())
+                    .matches()) {
             Utils.showToast(this, getString(R.string.eduroam_not_valid_id));
             return;
         }
 
         //We need some sort of password
-        if(password.getText().length() == 0) {
+        if (password.getText()
+                    .length() == 0) {
             Utils.showToast(this, getString(R.string.eduroam_please_enter_password));
             return;
         }
 
         //Do Setup
         EduroamManager manager = new EduroamManager(getApplicationContext());
-        boolean success = manager.configureEduroam(lrz.getText().toString(), password.getText().toString());
+        boolean success = manager.configureEduroam(lrz.getText()
+                                                      .toString(), password.getText()
+                                                                           .toString());
         if (success) {
             Utils.showToast(this, R.string.eduroam_success);
             finish();
 
             CardManager.setShouldRefresh();
         } else {
-            ((TextView) findViewById(R.id.pin_lock)).setTextColor(0xFFFF0000);
-            findViewById(R.id.pin_lock_rem).setVisibility(View.VISIBLE);
+            findViewById(R.id.eduroam_config_error).setVisibility(View.VISIBLE);
         }
     }
 

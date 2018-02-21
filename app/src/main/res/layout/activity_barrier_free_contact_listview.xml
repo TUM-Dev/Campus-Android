@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="@dimen/padding_default"
+              android:baselineAligned="false">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".80">
+
+        <TextView
+            android:id="@+id/barrierfreeContactListViewName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/large_text_size"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:text=""/>
+
+        <TextView
+            android:id="@+id/barrierfreeContactListViewPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/semilarge_text_size"
+            android:autoLink="phone"
+            android:text=""/>
+
+        <TextView
+            android:id="@+id/barrierfreeContactListViewEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/semilarge_text_size"
+            android:autoLink="email"
+            android:text=""/>
+
+        <TextView
+            android:id="@+id/barrierfreeContactListViewTumOnlineMore"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/semilarge_text_size"
+            android:onClick="onClick"
+            android:clickable="true"
+            android:visibility="gone"
+            android:text=""/>
+    </LinearLayout>
+</LinearLayout>

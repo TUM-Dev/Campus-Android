@@ -1,23 +1,26 @@
 package de.tum.in.tumcampusapp.adapters;
 
-import android.app.Activity;
-import android.database.Cursor;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment;
-import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.repository.CafeteriaRemoteRepository;
+import de.tum.in.tumcampusapp.viewmodel.CafeteriaViewModel;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A {@link FragmentStatePagerAdapter} that returns a fragment corresponding to one
@@ -25,36 +28,36 @@ import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
  */
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdapter {
     private int mCafeteriaId;
-    private Cursor cursorCafeteriaDates;
 
-    /** Current Date selected (ISO format) */
-    private final List<String> dates = new ArrayList<>();
+    /**
+     * Current Date selected (ISO format)
+     */
+    private List<String> dates = new ArrayList<>();
+
+    private final CompositeDisposable mDisposable = new CompositeDisposable();
 
     public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    @SuppressWarnings("deprecation")
-    public void setCafeteriaId(Activity mainActivity, int cafeteriaId) {
+    public void setCafeteriaId(Context context, int cafeteriaId) {
         mCafeteriaId = cafeteriaId;
-
-        // get all (distinct) dates having menus available
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(mainActivity);
-        cursorCafeteriaDates = cmm.getDatesFromDb();
-        mainActivity.startManagingCursor(cursorCafeteriaDates);
-
-        for (int position = 0; position < getCount(); position++) {
-            cursorCafeteriaDates.moveToPosition(position);
-            dates.add(cursorCafeteriaDates.getString(cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN)));
-        }
-
+        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(context));
+        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(context));
+        CafeteriaViewModel cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
+        cafeteriaViewModel.getAllMenuDates().subscribe(dates -> {
+            this.dates = dates;
+            this.notifyDataSetChanged();
+        });
         // Tell we just update the data
-        this.notifyDataSetChanged();
+
     }
 
     @Override
     public int getCount() {
-        return cursorCafeteriaDates.getCount();
+        return dates.size();
     }
 
     @Override
@@ -72,8 +75,9 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     public CharSequence getPageTitle(int position) {
         Date date = Utils.getDate(dates.get(position));
 
-        DateFormat formatDate = SimpleDateFormat.getDateInstance(SimpleDateFormat.FULL);
-        return formatDate.format(date).toUpperCase(Locale.getDefault());
+        DateFormat formatDate = DateFormat.getDateInstance(DateFormat.FULL);
+        return formatDate.format(date)
+                         .toUpperCase(Locale.getDefault());
     }
 
     @Override

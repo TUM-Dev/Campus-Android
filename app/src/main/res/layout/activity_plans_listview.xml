@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/list_menu_icon"
@@ -12,7 +12,7 @@
         android:layout_centerVertical="true"
         android:layout_margin="8dp"
         android:gravity="center_vertical"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/ic_launcher"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@android:string/untitled"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/list_menu_detail"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:text="@android:string/untitled"
             android:textColor="@color/text_light_blue"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
@@ -69,7 +70,8 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * @param force force reload
      */
     void requestFetch(boolean force) {
-        String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
+        String accessToken = PreferenceManager.getDefaultSharedPreferences(this)
+                                              .getString(Const.ACCESS_TOKEN, null);
         if (accessToken == null) {
             showNoTokenLayout();
             return;
@@ -119,5 +121,10 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     @Override
     public void onRefresh() {
         requestFetch(true);
+    }
+
+    @Override
+    public void onNoDataToShow() {
+        showError(R.string.no_data_to_show);
     }
 }

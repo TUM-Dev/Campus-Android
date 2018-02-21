@@ -76,13 +76,13 @@ public class MVVWidgetService extends RemoteViewsService {
             }
 
             // Setup the line symbol
-            rv.setTextViewText(R.id.line_symbol, currentItem.symbol);
-            MVVSymbolView d = new MVVSymbolView(currentItem.symbol);
+            rv.setTextViewText(R.id.line_symbol, currentItem.getSymbol());
+            MVVSymbolView d = new MVVSymbolView(currentItem.getSymbol());
             rv.setTextColor(R.id.line_symbol, d.getTextColor());
             rv.setInt(R.id.line_symbol, "setBackgroundColor", d.getBackgroundColor());
 
             // Setup the line name and the departure time
-            rv.setTextViewText(R.id.line_name, currentItem.direction);
+            rv.setTextViewText(R.id.line_name, currentItem.getDirection());
             rv.setTextViewText(R.id.departure_time, currentItem.getCalculatedCountDown() + " min");
 
             return rv;

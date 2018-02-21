@@ -1,15 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <!-- The toolbar aka SupportActionBar -->
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
     <include
         layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         <TextView
             android:id="@+id/pager_title_strip"
             style="@style/SectionHeadline"
-            android:text="@string/startup_wizard_uppercase" />
+            android:text="@string/startup_wizard_uppercase"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
@@ -42,13 +42,13 @@
                         style="?android:attr/listSeparatorTextViewStyle"
                         android:layout_height="wrap_content"
                         android:text="@string/step_2"
-                        android:textColor="@color/text_light_gray" />
+                        android:textColor="@color/text_light_gray"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="2dp"
-                        android:text="@string/need_to_enable" />
+                        android:text="@string/need_to_enable"/>
 
                     <TextView
                         android:id="@+id/tvBrowse"
@@ -56,7 +56,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:padding="2dp"
-                        android:text="@string/tumonline_link" />
+                        android:text="@string/tumonline_link"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                         android:layout_gravity="center"
                         android:paddingBottom="2dp"
                         android:paddingTop="2dp"
-                        android:src="@drawable/tokenmanagement" />
+                        android:src="@drawable/tokenmanagement"/>
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -72,13 +72,13 @@
                         android:layout_gravity="center"
                         android:paddingBottom="4dp"
                         android:paddingTop="4dp"
-                        android:src="@drawable/wizz_activate_token" />
+                        android:src="@drawable/wizz_activate_token"/>
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/wizz_activate_rights" />
+                        android:src="@drawable/wizz_activate_rights"/>
 
                 </LinearLayout>
             </ScrollView>
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@+id/buttonBar"
-            android:background="?android:attr/listDivider" />
+            android:background="?android:attr/listDivider"/>
 
         <LinearLayout
             android:id="@+id/buttonBar"
@@ -107,12 +107,12 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="onClickSkip"
-                android:text="@string/button_skip" />
+                android:text="@string/button_skip"/>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="?android:attr/listDivider" />
+                android:background="?android:attr/listDivider"/>
 
             <Button
                 style="@style/ButtonBarButton"
@@ -121,7 +121,7 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="onClickNext"
-                android:text="@string/button_next" />
+                android:text="@string/button_next"/>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

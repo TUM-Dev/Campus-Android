@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <!-- The toolbar aka SupportActionBar -->
-    <include layout="@layout/toolbar" android:id="@+id/toolbar"/>
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -18,14 +20,14 @@
         <include
             layout="@layout/layout_all_errors"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"/>
 
         <ListView
             android:id="@+id/activity_transport_listview_result"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:padding="8dp"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"/>
 
     </LinearLayout>
 
@@ -52,7 +54,7 @@
             android:layout_toLeftOf="@+id/mvv_widget_auto_reload"
             android:layout_toStartOf="@id/mvv_widget_auto_reload"
             android:text="@string/mvv_widget_auto_reload"
-            android:textSize="17sp" />
+            android:textSize="17sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,7 +65,7 @@
             android:layout_toLeftOf="@+id/mvv_widget_auto_reload"
             android:layout_toStartOf="@id/mvv_widget_auto_reload"
             android:text="@string/mvv_widget_auto_reload_hint"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
         <Switch
             android:id="@+id/mvv_widget_auto_reload"
@@ -71,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
 </RelativeLayout>

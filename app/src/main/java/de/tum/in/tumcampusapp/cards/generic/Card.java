@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -28,10 +29,12 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.managers.CardManager;
 
+import static de.tum.in.tumcampusapp.auxiliary.Const.CARD_POSITION_PREFERENCE_SUFFIX;
+
 /**
  * Base class for all cards
  */
-public abstract class Card {
+public abstract class Card implements Comparable<Card> {
     public static final String DISCARD_SETTINGS_START = "discard_settings_start";
     public static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
 
@@ -118,7 +121,8 @@ public abstract class Card {
         textview.setText(text);
 
         //Give some space to the other stuff on the card
-        int padding = (int) mContext.getResources().getDimension(R.dimen.card_text_padding);
+        int padding = (int) mContext.getResources()
+                                    .getDimension(R.dimen.card_text_padding);
         textview.setPadding(padding, 0, padding, 0);
 
         mLinearLayout.addView(textview);
@@ -208,6 +212,25 @@ public abstract class Card {
      */
     public abstract int getId();
 
+    public int getPosition() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return prefs.getInt(String.format("%s%s", this.getClass()
+                                                      .getSimpleName(), CARD_POSITION_PREFERENCE_SUFFIX), -1);
+    }
+
+    public void setPosition(int position) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Editor e = prefs.edit();
+        e.putInt(String.format("%s%s", this.getClass()
+                                           .getSimpleName(), CARD_POSITION_PREFERENCE_SUFFIX), position);
+        e.apply();
+    }
+
+    @Override
+    public int compareTo(@NonNull Card card) {
+        return Integer.compare(getPosition(),card.getPosition());
+    }
+
     @Nullable
     public RemoteViews getRemoteViews(Context context) {
         return null;
@@ -263,7 +286,7 @@ public abstract class Card {
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         mActivity, v, transitionName
                 );
-                ActivityCompat.startActivity(mActivity, i, options.toBundle());
+                ContextCompat.startActivity(mActivity, i, options.toBundle());
             }
         }
 
@@ -293,7 +316,8 @@ public abstract class Card {
 
                 Intent intent = new Intent(itemView.getContext(), UserPreferencesActivity.class);
                 intent.putExtra(Const.PREFERENCE_SCREEN, key);
-                itemView.getContext().startActivity(intent);
+                itemView.getContext()
+                        .startActivity(intent);
                 return true;
             } else if (i == R.id.always_hide_card) {
                 current.hideAlways();

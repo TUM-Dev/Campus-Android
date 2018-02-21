@@ -27,6 +27,7 @@ import de.tum.in.tumcampusapp.managers.ChatRoomManager;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.services.SilenceService;
 
 public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
@@ -63,21 +64,28 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         }
 
         // Get handles to all UI elements
-        checkSilentMode = (CheckBox) findViewById(R.id.chk_silent_mode);
-        bugReport = (CheckBox) findViewById(R.id.chk_bug_reports);
+        checkSilentMode = findViewById(R.id.chk_silent_mode);
+        bugReport = findViewById(R.id.chk_bug_reports);
         bugReport.setChecked(preferences.getBoolean(Const.BUG_REPORTS, true));
 
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, true));
+            checkSilentMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (checkSilentMode.isChecked() &&
+                    !SilenceService.hasPermissions(WizNavExtrasActivity.this)) {
+                    SilenceService.requestPermissions(WizNavExtrasActivity.this);
+                    checkSilentMode.setChecked(false);
+                }
+            });
         } else {
             checkSilentMode.setChecked(false);
             checkSilentMode.setEnabled(false);
         }
 
         // Get handles to all UI elements
-        groupChatMode = (CheckBox) findViewById(R.id.chk_group_chat);
+        groupChatMode = findViewById(R.id.chk_group_chat);
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
         } else {
@@ -92,7 +100,6 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         startActivity(intent);
     }
 
-
     @Override
     protected ChatMember onLoadInBackground(Void... arg) {
         if (!NetUtils.isConnected(this)) {
@@ -104,7 +111,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         ChatMember currentChatMember = new ChatMember(Utils.getSetting(this, Const.LRZ_ID, ""));
         currentChatMember.setDisplayName(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, ""));
 
-        if (currentChatMember.getLrzId().equals("")) {
+        if (currentChatMember.getLrzId()
+                             .equals("")) {
             return currentChatMember;
         }
 
@@ -112,7 +120,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         ChatMember member;
         try {
             // After the user has entered their display name, send a request to the server to create the new member
-            member = TUMCabeClient.getInstance(this).createMember(currentChatMember);
+            member = TUMCabeClient.getInstance(this)
+                                  .createMember(currentChatMember);
         } catch (IOException e) {
             Utils.log(e);
             Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
@@ -134,7 +143,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Try to restore already joined chat rooms from server
         try {
-            List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(this, member));
+            List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
+                                                .getMemberRooms(member.getId(), ChatVerification.Companion.getChatVerification(this, member));
             new ChatRoomManager(this).replaceIntoRooms(rooms);
 
             //Store that this key was activated
@@ -162,7 +172,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         editor.putBoolean(Const.BUG_REPORTS, bugReport.isChecked());
         editor.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, true);
 
-        if (!member.getLrzId().equals("")) {
+        if (!member.getLrzId()
+                   .equals("")) {
             Utils.setSetting(this, Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
             Utils.setSetting(this, Const.AUTO_JOIN_NEW_ROOMS, groupChatMode.isChecked());
             Utils.setSetting(this, Const.CHAT_MEMBER, member);

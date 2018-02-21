@@ -31,11 +31,14 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Str
         super.onCreate(savedInstanceState);
 
         net = new NetUtils(this);
-        browser = (WebView) findViewById(R.id.activity_curricula_web_view);
-        browser.getSettings().setBuiltInZoomControls(true);
+        browser = findViewById(R.id.activity_curricula_web_view);
+        browser.getSettings()
+               .setBuiltInZoomControls(true);
 
-        String url = getIntent().getExtras().getString(CurriculaActivity.URL);
-        String name = getIntent().getExtras().getString(CurriculaActivity.NAME);
+        String url = getIntent().getExtras()
+                                .getString(CurriculaActivity.URL);
+        String name = getIntent().getExtras()
+                                 .getString(CurriculaActivity.NAME);
 
         setTitle(name);
         startLoading(url);

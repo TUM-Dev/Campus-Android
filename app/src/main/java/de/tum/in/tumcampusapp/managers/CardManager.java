@@ -2,27 +2,29 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
 import de.tum.in.tumcampusapp.cards.EduroamFixCard;
-import de.tum.in.tumcampusapp.cards.FirstUseCard1;
-import de.tum.in.tumcampusapp.cards.FirstUseCard2;
 import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.database.TcaDb;
+
+import static de.tum.in.tumcampusapp.auxiliary.Const.CARD_POSITION_PREFERENCE_SUFFIX;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
  */
 public final class CardManager {
-    public static final String SHOW_TUTORIAL_1 = "show_tutorial_1";
-    public static final String SHOW_TUTORIAL_2 = "show_tutorial_2";
     public static final String SHOW_SUPPORT = "show_support";
 
     /**
@@ -32,8 +34,6 @@ public final class CardManager {
     public static final int CARD_TUITION_FEE = 2;
     public static final int CARD_NEXT_LECTURE = 3;
     public static final int CARD_RESTORE = 4;
-    public static final int CARD_FIRST_USE_1 = 5;
-    public static final int CARD_FIRST_USE_2 = 6;
     public static final int CARD_NO_INTERNET = 7;
     public static final int CARD_MVV = 8;
     public static final int CARD_NEWS = 9;
@@ -45,7 +45,8 @@ public final class CardManager {
     public static final int CARD_EDUROAM_FIX = 15;
     private static boolean shouldRefresh;
     private static List<Card> cards;
-    private static List<Card> newCards;
+    private static Collection<Card> newCards = new ConcurrentSkipListSet<>();
+    private static List<OnCardAddedListener> listeners = new ArrayList<>();
 
     /**
      * Adds the specified card to the card manager
@@ -54,7 +55,14 @@ public final class CardManager {
      * @param card Card that should be added
      */
     public static void addCard(Card card) {
+        if (card.getPosition() == -1) {
+            card.setPosition(newCards.size());
+        }
         newCards.add(card);
+        cards = new ArrayList<>(newCards);
+        for (OnCardAddedListener onCardAddedListener : listeners) {
+            onCardAddedListener.onCardAdded();
+        }
     }
 
     /**
@@ -80,6 +88,16 @@ public final class CardManager {
         return cards.get(pos);
     }
 
+    public static void restorePositions(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Editor editor = preferences.edit();
+        for(String s : preferences.getAll().keySet()){
+            if(s.endsWith(CARD_POSITION_PREFERENCE_SUFFIX))
+                editor.remove(s);
+        }
+        editor.apply();
+    }
+
     /**
      * Refreshes or initialises all cards.
      * WARNING: Must not be called from UI thread.
@@ -95,16 +113,9 @@ public final class CardManager {
      * 6. Add an instance of the manager class to the managers list below
      */
     public static synchronized void update(Context context) {
-        // Use temporary array to avoid that the main thread is
-        // trying to access an empty array
-        newCards = new ArrayList<>();
-
-        // Add no internet card
+        // Use temporary array to avoid that the main thread is trying to access an empty array
+        newCards.clear();
         new NoInternetCard(context).apply();
-
-        // Add first use tutorial
-        new FirstUseCard1(context).apply();
-        new FirstUseCard2(context).apply();
         new Support(context).apply();
 
         new EduroamCard(context).apply();
@@ -133,7 +144,7 @@ public final class CardManager {
         new RestoreCard(context).apply();
 
         shouldRefresh = false;
-        cards = newCards;
+
     }
 
     /**
@@ -171,13 +182,20 @@ public final class CardManager {
         return index;
     }
 
+    public static void registerUpdateListener(OnCardAddedListener listener){
+        listeners.add(listener);
+    }
+
     /**
      * Resets dismiss settings for all cards
      */
     public static void restoreCards(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
-        prefs.edit().clear().apply();
-        AbstractManager.getDb(context).execSQL("UPDATE news SET dismissed=0");
+        prefs.edit()
+             .clear()
+             .apply();
+        TcaDb.getInstance(context).newsDao().restoreAllNews();
+        restorePositions(context);
     }
 
     public static List<Card> getCards() {
@@ -194,5 +212,9 @@ public final class CardManager {
 
     private CardManager() {
         // CardManager is a utility class
+    }
+
+    public interface OnCardAddedListener {
+        void onCardAdded();
     }
 }

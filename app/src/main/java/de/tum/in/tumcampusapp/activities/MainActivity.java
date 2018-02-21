@@ -48,12 +48,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         public void onReceive(Context context, Intent intent) {
             if (NetUtils.isConnected(context)) {
                 refreshCards();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        unregisterReceiver(connectivityChangeReceiver);
-                        registered = false;
-                    }
+                runOnUiThread(() -> {
+                    unregisterReceiver(connectivityChangeReceiver);
+                    registered = false;
                 });
             }
         }
@@ -68,7 +65,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         super.onCreate(savedInstanceState);
 
         // Setup pull to refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
+        mSwipeRefreshLayout = findViewById(R.id.ptr_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.color_primary,
@@ -76,7 +73,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 R.color.tum_A200);
 
         // Setup card RecyclerView
-        mCardsView = (RecyclerView) findViewById(R.id.cards_view);
+        mCardsView = findViewById(R.id.cards_view);
         registerForContextMenu(mCardsView);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -115,7 +112,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-
+        CardManager.registerUpdateListener(() -> {
+            if(mAdapter!=null) {
+                runOnUiThread(()-> mAdapter.notifyDataSetChanged());
+            }
+        });
         if (CardManager.getShouldRefresh() || CardManager.getCards() == null) {
             refreshCards();
         } else {
@@ -126,7 +127,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        this.getMenuInflater().inflate(R.menu.menu_settings, menu);
+        this.getMenuInflater()
+            .inflate(R.menu.menu_settings, menu);
         return true;
     }
 
@@ -157,7 +159,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_settings)
+            .setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -236,7 +239,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!registered && !NetUtils.isConnected(MainActivity.this)) {
                     registerReceiver(connectivityChangeReceiver,
-                            new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+                                     new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
                     registered = true;
                 }
             }
@@ -260,7 +263,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mCardsView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
         mCardsView.dispatchNestedFling(0, Integer.MIN_VALUE, true);
         mCardsView.stopNestedScroll();
-        mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, 0);
+        mCardsView.getLayoutManager()
+                  .smoothScrollToPosition(mCardsView, null, 0);
+    }
+
+    public interface ItemTouchHelperAdapter {
+        void onItemMove(int fromPosition, int toPosition);
     }
 
     /**
@@ -269,13 +277,14 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     private class MainActivityTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
         public MainActivityTouchHelperCallback() {
-            super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+            super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         }
 
         @Override
         public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
-            if (!cardViewHolder.getCurrentCard().isDismissible()) {
+            if (!cardViewHolder.getCurrentCard()
+                               .isDismissible()) {
                 return 0;
             }
             return super.getSwipeDirs(recyclerView, viewHolder);
@@ -283,13 +292,13 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            //Moving is not allowed as per flags
-            return false;
+            mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+            return true;
         }
 
         @Override
         public boolean isLongPressDragEnabled() {
-            return false;
+            return true;
         }
 
         @Override
@@ -300,24 +309,22 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             final View coordinatorLayoutView = findViewById(R.id.coordinator);
 
             Snackbar.make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo, new View.OnClickListener() {
+                    .setAction(R.string.undo, v -> {
+                        mAdapter.insert(lastPos, card);
+                        mCardsView.getLayoutManager()
+                                  .smoothScrollToPosition(mCardsView, null, lastPos);
+                    })
+                    .addCallback(new Snackbar.Callback() {
                         @Override
-                        public void onClick(View v) {
-                            mAdapter.insert(lastPos, card);
-                            mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, lastPos);
+                        public void onDismissed(Snackbar snackbar, int event) {
+                            super.onDismissed(snackbar, event);
+                            if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                                //DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
+                                //and therefore, we didn't really dismiss the card
+                                card.discardCard();
+                            }
                         }
-
-                    }).addCallback(new Snackbar.Callback() {
-                @Override
-                public void onDismissed(Snackbar snackbar, int event) {
-                    super.onDismissed(snackbar, event);
-                    if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                        //DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
-                        //and therefore, we didn't really dismiss the card
-                        card.discardCard();
-                    }
-                }
-            })
+                    })
                     .show();
         }
     }

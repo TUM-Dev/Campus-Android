@@ -1,9 +1,10 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
@@ -44,8 +46,9 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Cursor> implements OnItemClickListener {
-    private static final String PROPERTY_APP_VERSION = "appVersion";
+public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List<ChatRoomAndLastMessage>> implements OnItemClickListener {
+    private static final int CAMERA_REQUEST_CODE = 34;
+    private static final int JOIN_ROOM_REQUEST_CODE = 22;
 
     private StickyListHeadersListView lvMyChatRoomList;
 
@@ -54,9 +57,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     private TUMOnlineRequest<LecturesSearchRowSet> requestHandler;
     private ChatRoomManager manager;
     private int mCurrentMode = 1;
-    private ChatRoomListAdapter adapter;
-    private boolean firstLoad = true;
-
+    private ChatRoomListAdapter chatRoomAdapter;
 
     public ChatRoomsActivity() {
         super(R.layout.activity_chat_rooms);
@@ -67,22 +68,21 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         super.onCreate(savedInstanceState);
 
         // bind UI elements
-        lvMyChatRoomList = (StickyListHeadersListView) findViewById(R.id.lvMyChatRoomList);
+        lvMyChatRoomList = findViewById(R.id.lvMyChatRoomList);
         lvMyChatRoomList.setOnItemClickListener(this);
 
         manager = new ChatRoomManager(this);
 
         //Load the lectures list
-        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
+        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), this, true);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.chat_rooms_tabs);
+        TabLayout tabLayout = findViewById(R.id.chat_rooms_tabs);
         // Create a tab listener that is called when the user changes tabs.
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 // show the given tab
                 mCurrentMode = 1 - tab.getPosition();
-                firstLoad = true;
                 startLoading();
             }
 
@@ -97,14 +97,15 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             }
         });
 
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.joined));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.not_joined));
+        tabLayout.addTab(tabLayout.newTab()
+                                  .setText(R.string.joined));
+        tabLayout.addTab(tabLayout.newTab()
+                                  .setText(R.string.not_joined));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        firstLoad = true;
         startLoading();
     }
 
@@ -131,11 +132,24 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             newChatRoom();
             return true;
         } else if (i == R.id.action_join_chat_room) {
-            startActivityForResult(new Intent(this, JoinRoomScanActivity.class), 1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                int permissionCheck = checkSelfPermission(Manifest.permission.CAMERA);
+                if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+                } else {
+                    startJoinRoom();
+                }
+            } else {
+                startJoinRoom();
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void startJoinRoom() {
+        startActivityForResult(new Intent(this, JoinRoomScanActivity.class), JOIN_ROOM_REQUEST_CODE);
     }
 
     @Override
@@ -150,6 +164,15 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == CAMERA_REQUEST_CODE
+            && grantResults != null && grantResults.length >= 1
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startJoinRoom();
+        }
+    }
+
     /**
      * Prompt the user to type in a name for the new chat room
      */
@@ -161,15 +184,14 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 .setTitle(R.string.new_chat_room)
                 .setMessage(R.string.new_chat_room_desc)
                 .setView(input)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String value = input.getText().toString();
-                        String randId = Integer.toHexString((int) (Math.random() * 4096));
-                        createOrJoinChatRoom(randId + ':' + value);
-                    }
+                .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+                    String value = input.getText()
+                                        .toString();
+                    String randId = Integer.toHexString((int) (Math.random() * 4096));
+                    createOrJoinChatRoom(randId + ':' + value);
                 })
-                .setNegativeButton(android.R.string.cancel, null).show();
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     /**
@@ -186,62 +208,61 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         currentChatRoom = new ChatRoom(name);
 
         try {
-            TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
-                @Override
-                public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
-                    if (!response.isSuccessful()) {
-                        Utils.logv("Error creating&joining chat room: " + response.message());
-                        return;
-                    }
+            TUMCabeClient.getInstance(this)
+                         .createRoom(currentChatRoom, ChatVerification.Companion.getChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
+                             @Override
+                             public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
+                                 if (!response.isSuccessful()) {
+                                     Utils.logv("Error creating&joining chat room: " + response.message());
+                                     return;
+                                 }
 
-                    // The POST request is successful: go to room. API should have auto joined it
-                    Utils.logv("Success creating&joining chat room: " + response.body());
-                    currentChatRoom = response.body();
+                                 // The POST request is successful: go to room. API should have auto joined it
+                                 Utils.logv("Success creating&joining chat room: " + response.body());
+                                 currentChatRoom = response.body();
 
-                    manager.join(currentChatRoom);
+                                 manager.join(currentChatRoom);
 
-                    // When we show joined chat rooms open chat room directly
-                    if (mCurrentMode == 1) {
-                        moveToChatActivity();
-                    } else { //Otherwise show a nice information, that we added the room
-                        final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.changeCursor(newCursor);
-                                Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
-                            }
-                        });
-                    }
-                }
+                                 // When we show joined chat rooms open chat room directly
+                                 if (mCurrentMode == 1) {
+                                     moveToChatActivity();
+                                 } else { //Otherwise show a nice information, that we added the room
+                                     final List<ChatRoomAndLastMessage> rooms = manager.getAllByStatus(mCurrentMode);
 
-                @Override
-                public void onFailure(Call<ChatRoom> call, Throwable t) {
-                    Utils.log(t, "Failure creating/joining chat room - trying to GET it from the server");
-                    Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
-                }
-            });
+                                     runOnUiThread(() -> {
+                                         chatRoomAdapter.updateRooms(rooms);
+                                         Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
+                                     });
+                                 }
+                             }
+
+                             @Override
+                             public void onFailure(Call<ChatRoom> call, Throwable t) {
+                                 Utils.log(t, "Failure creating/joining chat room - trying to GET it from the server");
+                                 Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
+                             }
+                         });
         } catch (NoPrivateKey noPrivateKey) {
             this.finish();
         }
     }
 
     @Override
-    protected Cursor onLoadInBackground(Void... arg) {
-        if (!firstLoad) {
-            Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
-            if (lecturesList.isPresent()) {
-                List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
-                manager.replaceInto(lectures);
-            }
+    protected List<ChatRoomAndLastMessage> onLoadInBackground(Void... arg) {
+        Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
+        if (lecturesList.isPresent()) {
+            List<LecturesSearchRow> lectures = lecturesList.get()
+                                                           .getLehrveranstaltungen();
+            manager.replaceInto(lectures);
         }
 
         this.populateCurrentChatMember();
 
         // Try to restore joined chat rooms from server
-        if (!firstLoad && currentChatMember != null) {
+        if (currentChatMember != null) {
             try {
-                List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(this, currentChatMember));
+                List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
+                                                    .getMemberRooms(currentChatMember.getId(), ChatVerification.Companion.getChatVerification(this, currentChatMember));
                 manager.replaceIntoRooms(rooms);
             } catch (NoPrivateKey e) {
                 this.finish();
@@ -249,19 +270,18 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 Utils.log(e);
             }
         }
-        firstLoad = false;
         return manager.getAllByStatus(mCurrentMode);
     }
 
     @Override
-    protected void onLoadFinished(Cursor result) {
+    protected void onLoadFinished(List<ChatRoomAndLastMessage> result) {
         showLoadingEnded();
-        if (result.getCount() == 0) {
+        if (result.isEmpty()) {
             lvMyChatRoomList.setAdapter(new NoResultsAdapter(this));
         } else {
             // set ListView to data via the LecturesListAdapter
-            adapter = new ChatRoomListAdapter(this, result, mCurrentMode);
-            lvMyChatRoomList.setAdapter(adapter);
+            chatRoomAdapter = new ChatRoomListAdapter(this, result, mCurrentMode);
+            lvMyChatRoomList.setAdapter(chatRoomAdapter);
         }
     }
 
@@ -270,17 +290,16 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      */
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-        if (firstLoad) {
-            return;
-        }
-        Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
+        ChatRoomAndLastMessage item = (ChatRoomAndLastMessage) lvMyChatRoomList.getItemAtPosition(position);
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();
         final Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtras(bundle);
 
-        String chatRoomUid = item.getString(ChatRoomManager.COL_SEMESTER_ID) + ':' + item.getString(ChatRoomManager.COL_NAME);
+        String chatRoomUid = item.getChatRoomDbRow()
+                                 .getSemesterId() + ':' + item.getChatRoomDbRow()
+                                                              .getName();
         this.createOrJoinChatRoom(chatRoomUid);
     }
 

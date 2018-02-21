@@ -37,6 +37,7 @@
     <string name="dialog_access_token_invalid">TUMonline-Access-Token nicht aktiviert</string>
     <string name="dialog_no_rights_function">Keine Rechte für diese Funktion</string>
     <string name="empty_result">Die Anfrage lieferte ein fehlerhaftes Ergebnis</string>
+    <string name="no_data_to_show">Es sind keine Daten vorhanden.</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Durchschnittsnote</string>
@@ -46,8 +47,9 @@
     <string name="semester">Semester</string>
     <string name="examiner">Prüfer</string>
     <string name="mode">Modus</string>
-    <string name="all_programs">Alle Programme</string>
+    <string name="all_programs">Alle Noten</string>
     <string name="date">Datum</string>
+    <string name="no_grades">Du hast noch keine Noten, die angezeigt werden könnten.</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Kennung</string>
@@ -60,6 +62,7 @@
     <string name="cards_settings">Karten</string>
     <string name="startpage">Startseite</string>
     <string name="wear">Wearable</string>
+    <string name="notification">Benachrichtigungen</string>
 
     <string name="extras">Extras</string>
     <string name="open_wizard">Öffne Startup-Wizard</string>
@@ -73,7 +76,7 @@
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
     <string name="background_mode">Hintergrundmodus (empfohlen)</string>
-    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
+    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist. Wird automatisch abgeschalten, wenn du dich mehr als 50km außerhalb von München befindest.</string>
     <string name="mode_background_mode">Aktivierung des Hintergrundmodus</string>
     <string name="always">Immer</string>
     <string name="wifi_only">Nur bei WLAN-Verbindung</string>
@@ -131,7 +134,6 @@
     <string name="plans">Pläne</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="opening_hours">Öffnungszeiten</string>
-    <string name="organisations">Organisationsbaum</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
 
@@ -139,11 +141,9 @@
     <string name="lectures_information">Vorlesungsinformationen</string>
     <string name="lectures_appointments">Vorlesungstermine</string>
     <string name="person_information">Personeninformationen</string>
-    <string name="organisation_details">Organisationsdetails</string>
 
     <!-- Organisations -->
     <string name="tum">Technische Universität München</string>
-    <string name="invalid_organisation">Fehlerhafte Organisation!</string>
     <string name="contact_person">Kontaktperson</string>
     <string name="secretary">Sekretariat</string>
     <string name="bib">Bibliothek</string>
@@ -269,7 +269,7 @@
     <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
     <string name="default_cafeteria">Standardmensa</string>
     <string name="default_station">Standardhaltestelle</string>
-    <string name="campus_klinikum_grosshadern">Klinikum Großhadern</string>
+    <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
     <string name="cafeteria">Mensa</string>
     <string name="card_cafeteria_summary">Zeigt den Mensa-Speiseplan an</string>
     <string name="card_mvv_summary">Zeigt die Abfahrtszeiten der öffentlich Verkehrmittel an</string>
@@ -289,6 +289,7 @@
     <!-- Eduroam card -->
     <string name="setup">Einrichten</string>
     <string name="setup_eduroam">Eduroam einrichten</string>
+    <string name="setup_eduroam_now">Jetzt Eduroam einrichten</string>
     <string name="password">Passwort</string>
     <string name="not_ask_again">Nicht mehr fragen</string>
     <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
@@ -303,7 +304,7 @@
         Dazu unter ‘Sichern &amp; zurücksetzen’ > ‘Meine Daten sichern’ deaktivieren.</string>
     <string name="disable_data_backup">Daten-Backup deaktivieren</string>
     <string name="eduroam_success">Eduroam wurde erfolgreich eingerichtet</string>
-    <string name="pin_lock_rem"><b>Konfiguration fehlgeschlagen!</b>\nHast du eine PIN-Sperre eingerichtet?\nManuell angelegtes Profil gelöscht? Wir können wlan Profile nicht überschreiben!</string>
+    <string name="pin_lock_rem"><b>Konfiguration fehlgeschlagen!</b>\nHast du dein manuell angelegtes Profil gelöscht? Wir können wlan Profile nicht überschreiben!</string>
     <string name="install_certificate">Zertifikat installieren</string>
     <string name="certificate">Zertifikat</string>
     <string name="certificate_desc">Du musst ein CA-Root-Zertifikat installieren um eine sichere Verbindung mit dem Server aufbauen zu können. Tippe einfach auf ‘Zertifikat installieren’ und bestätige mit ‘OK’.</string>
@@ -376,6 +377,9 @@ Signatur: %5$s</string>
     <string name="support_us_title">Unterstütze uns!</string>
     <string name="permission_calendar_explanation">Diese App braucht die Erlaubnis auf deinen Standort zugreifen zu können um nützliche Informationen, zum Beispiel zum Anzeigen der Mensa Speisepläne in deiner nähe oder von Fahrplänen der nächstgelegenen MVV Station. \n Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
     <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zuzugreifen, um sie diesen mit deinem TUM-Kalender abzugleichen.</string>
+    <string name="permission_contacts_explanation">Diese App braucht die Erlaubnis auf deine Kontakte zuzugreifen, um diese Person hizufügen zu können.</string>
+    <string name="cancel">Abbruch</string>
+    <string name="grant_permission">Erlauben</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Veröffentlicht am:</string>
     <string name="free">Frei</string>
@@ -423,7 +427,8 @@ Signatur: %5$s</string>
     <string name="eduroam_fix">Jetzt reparieren!</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">Eduroam Reparieren</string>
-    <string name="wifi_identity_zone">Identität enthält keine Zone</string>
+    <string name="wifi_identity_zone">Identität enthält keine Zone (z.B. @eduroam.mwn.de). Dies kann zu Problemen führen und sollte deshalb geändert werden!</string>
+    <string name="eduroam_realm_comment">\@eduroam.mwn.de wird automatisch angehängt</string>
     <string name="wifi_dns_name_not_set">DNS-Name ist nicht festgelegt</string>
     <string name="wifi_anonymous_identity_not_set">Anonyme Identität nicht korrekt</string>
 
@@ -439,6 +444,60 @@ Signatur: %5$s</string>
     <string name="timetable_widget_no_lectures">Keine Vorlesungen geplant :)</string>
     <string name="eduroam_not_valid_id">Keine gültige TUM-Kennung</string>
     <string name="eduroam_please_enter_password">Bitte Passwort eingeben. Dieses wird nicht gespeichert.</string>
+    <string name="barrier_free">Barrierefreiheit</string>
+    <string name="barrierfree_toilets">Berrierefreie Toiletten</string>
+    <string name="elevators">Aufzüge</string>
+    <string name="facilities">Einrichtungen</string>
+    <string name="nerby_facilities">Einrichtungen in der Nähe</string>
+
+    <string name="eduroam_dialog_title">Altes Eduroam Profil Löschen</string>
+    <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
+    <string name="done">Fertig</string>
+    <string name="eduroam_dialgo_step_1">1.</string>
+    <string name="eduroam_dialog_step_2">2. Auf \'eduroam\' klicken</string>
+    <string name="eduroam_dialog_step_3">3. Auf \'Entfernen\' klicken</string>
+    <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann.</string>
+
+    <!-- Feedback Activity -->
+    <string name="feedback">Feedback</string>
+    <string name="general">Allgemein (IT-Support)</string>
+    <string name="tca">TUM Campus App</string>
+    <string-array name="feedback_options">
+        <item>@string/general</item>
+        <item>@string/tca</item>
+    </string-array>
+    <string name="feedback_hint">Hier ist Platz für dein Feedback…</string>
+    <string name="add_picture_button">&#160;&#160;Bild hinzufügen</string>
+    <string name="feedback_include_email">Email mitversenden um eine Antwort zu erhalten</string>
+    <string name="feedback_include_email_tum_id">Email mitversenden um eine Antwort zu erhalten (%s)</string>
+    <string name="feedback_email_hint">E-Mail-Adresse</string>
+    <string name="feedback_include_location">Standort beifügen</string>
+    <string name="feedback_send_button">Feedback abschicken</string>
+    <string name="feedback_add_picture">Foto hinzufügen</string>
+    <string name="feedback_take_picture">Kamera</string>
+    <string name="gallery">Galerie</string>
+    <string name="feedback_remove_image">Bild löschen</string>
+    <string name="feedback_sending_error">Es ist ein Fehler aufgetreten</string>
+    <string name="try_again">Erneut versuchen</string>
+    <string name="feedback_sending">Feedback wird gesendet…</string>
+    <string name="feedback_send_success">Feedback erfolgreich versandt!</string>
+
+    <string name="grades_without_weight">Noten sind ungewichtet</string>
+    <string name="show_list">&#032;Liste anzeigen</string>
+    <string name="show_chart">&#032;Diagramm anzeigen</string>
+    <string name="study_program">Studiengang %s</string>
+    <string name="summer_semester">Sommersemester %d</string>
+    <string name="winter_semester">Wintersemester %d/%d</string>
+
+    <string name="channel_general">Allgemein</string>
+    <string name="channel_cafeteria">Mensa</string>
+    <string name="channel_chat">Chat</string>
+    <string name="channel_mvv">MVV</string>
+    <string name="channel_tum_alarmierung">TUM Alarmierung (für Katastrophen)</string>
+
+    <string name="favorite_dish_info">Du bekommst an Tagen, an denen es eines deiner Lieblingsgerichte in der Mensa gibt eine Benachrichtigung. Guten Appetit!</string>
+    <string name="location_services_off_title">Standortfreigabe ist ausgeschaltet</string>
+    <string name="location_services_off_message">Schalte deinen Standort in den Einstellungen an um deinen Standort mitzusenden</string>
     <string name="study_cards_title">Cards</string>
     <string name="card_title">Titel</string>
     <string name="create_card">Karte hinzufügen</string>

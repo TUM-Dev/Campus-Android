@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/line_symbol_ll"
@@ -17,7 +17,7 @@
             android:layout_height="20dp"
             android:gravity="center"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <TextView
@@ -34,7 +34,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/departure_time"
@@ -47,5 +47,5 @@
         android:gravity="end"
         android:minWidth="40dp"
         android:textAlignment="textEnd"
-        android:textColor="@color/sections_green" />
+        android:textColor="@color/sections_green"/>
 </RelativeLayout>

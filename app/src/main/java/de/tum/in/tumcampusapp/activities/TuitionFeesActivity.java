@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -24,16 +24,16 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
     private TextView semesterTextView;
 
     public TuitionFeesActivity() {
-        super(TUMOnlineConst.TUITION_FEE_STATUS, R.layout.activity_tuitionfees);
+        super(TUMOnlineConst.Companion.getTUITION_FEE_STATUS(), R.layout.activity_tuitionfees);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        amountTextView = (TextView) findViewById(R.id.soll);
-        deadlineTextView = (TextView) findViewById(R.id.frist);
-        semesterTextView = (TextView) findViewById(R.id.semester);
+        amountTextView = findViewById(R.id.soll);
+        deadlineTextView = findViewById(R.id.frist);
+        semesterTextView = findViewById(R.id.semester);
         ((TextView) findViewById(R.id.fees_aid)).setMovementMethod(LinkMovementMethod.getInstance());
 
         requestFetch();
@@ -46,10 +46,18 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
      */
     @Override
     public void onFetch(TuitionList tuitionList) {
-        amountTextView.setText(String.format("%s€", tuitionList.getTuitions().get(0).getSoll()));
-        Date date = Utils.getDate(tuitionList.getTuitions().get(0).getFrist());
-        deadlineTextView.setText(SimpleDateFormat.getDateInstance().format(date));
-        semesterTextView.setText(tuitionList.getTuitions().get(0).getSemesterBez().toUpperCase(Locale.getDefault()));
+        amountTextView.setText(String.format("%s€", tuitionList.getTuitions()
+                                                               .get(0)
+                                                               .getSoll()));
+        Date date = Utils.getDate(tuitionList.getTuitions()
+                                             .get(0)
+                                             .getFrist());
+        deadlineTextView.setText(DateFormat.getDateInstance()
+                                           .format(date));
+        semesterTextView.setText(tuitionList.getTuitions()
+                                            .get(0)
+                                            .getSemesterBez()
+                                            .toUpperCase(Locale.getDefault()));
 
         showLoadingEnded();
     }

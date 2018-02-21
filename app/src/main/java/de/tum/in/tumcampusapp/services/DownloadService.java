@@ -1,57 +1,61 @@
 package de.tum.in.tumcampusapp.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.os.Handler;
-import android.os.HandlerThread;
+import android.content.res.AssetManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.LocationDao;
 import de.tum.in.tumcampusapp.managers.CacheManager;
-import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.managers.KinoManager;
 import de.tum.in.tumcampusapp.managers.NewsManager;
-import de.tum.in.tumcampusapp.managers.OpenHoursManager;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
 import de.tum.in.tumcampusapp.managers.SyncManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.repository.CafeteriaRemoteRepository;
+import de.tum.in.tumcampusapp.repository.KinoLocalRepository;
+import de.tum.in.tumcampusapp.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
+import de.tum.in.tumcampusapp.viewmodel.CafeteriaViewModel;
+import de.tum.in.tumcampusapp.viewmodel.KinoViewModel;
+import io.reactivex.disposables.CompositeDisposable;
+
+import static de.tum.in.tumcampusapp.auxiliary.Const.DOWNLOAD_SERVICE_JOB_ID;
 
 /**
  * Service used to download files from external pages
  */
-public class DownloadService extends IntentService {
+public class DownloadService extends JobIntentService {
 
     /**
      * Download broadcast identifier
      */
     public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
-    private static final String DOWNLOAD_SERVICE = "DownloadService";
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
     private LocalBroadcastManager broadcastManager;
+    private CafeteriaViewModel cafeteriaViewModel;
 
-    /**
-     * default init (run intent in new thread)
-     */
-    public DownloadService() {
-        super(DOWNLOAD_SERVICE);
-    }
+    private CompositeDisposable mDisposable = new CompositeDisposable();
+    private KinoViewModel kinoViewModel;
 
     /**
      * Gets the time when BackgroundService was called last time
@@ -134,7 +138,9 @@ public class DownloadService extends IntentService {
             }
             if (successful) {
                 SharedPreferences prefs = service.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-                prefs.edit().putLong(LAST_UPDATE, System.currentTimeMillis()).apply();
+                prefs.edit()
+                     .putLong(LAST_UPDATE, System.currentTimeMillis())
+                     .apply();
             }
             CardManager.update(service);
             successful = true;
@@ -145,12 +151,13 @@ public class DownloadService extends IntentService {
         if (successful) {
             service.broadcastDownloadCompleted();
         } else {
-            service.broadcastError(service.getResources().getString(R.string.exception_unknown));
+            service.broadcastError(service.getResources()
+                                          .getString(R.string.exception_unknown));
         }
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
         if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
-            service.startService(new Intent(service, FillCacheService.class));
+            FillCacheService.enqueueWork(service.getBaseContext(), new Intent());
         }
     }
 
@@ -160,24 +167,35 @@ public class DownloadService extends IntentService {
         Utils.log("DownloadService service has started");
         broadcastManager = LocalBroadcastManager.getInstance(this);
 
-        // Init sync table
         new SyncManager(this);
+
+        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(this));
+        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
+
+        // Init sync table
+        KinoLocalRepository.INSTANCE.setDb(TcaDb.getInstance(this));
+        KinoRemoteRepository.INSTANCE.setTumCabeClient(TUMCabeClient.getInstance(this));
+        kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, mDisposable);
+
     }
 
     @Override
     public void onDestroy() {
+        mDisposable.clear();
         super.onDestroy();
         Utils.log("DownloadService service has stopped");
     }
 
+    static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, DownloadService.class, DOWNLOAD_SERVICE_JOB_ID, work);
+    }
+
     @Override
-    protected void onHandleIntent(final Intent intent) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                download(intent, DownloadService.this);
-            }
-        }).start();
+    protected void onHandleWork(@NonNull final Intent intent) {
+        new Thread(() -> download(intent, DownloadService.this)).start();
     }
 
     private void broadcastDownloadCompleted() {
@@ -215,26 +233,15 @@ public class DownloadService extends IntentService {
     }
 
     private boolean downloadCafeterias(boolean force) {
-        try {
-            CafeteriaManager cm = new CafeteriaManager(this);
-            CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
-            cm.downloadFromExternal(force);
-            cmm.downloadFromExternal(this, force);
-            return true;
-        } catch (JSONException e) {
-            Utils.log(e);
-            return false;
-        }
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
+        cmm.downloadFromExternal(this, force);
+        cafeteriaViewModel.getCafeteriasFromService(force);
+        return true;
     }
+
     private boolean downLoadKino(boolean force) {
-        try {
-            KinoManager km = new KinoManager(this);
-            km.downloadFromExternal(force);
-            return true;
-        } catch (JSONException e) {
-            Utils.log(e);
-            return false;
-        }
+        kinoViewModel.getKinosFromService(force);
+        return true;
     }
 
     private boolean downloadNews(boolean force) {
@@ -256,18 +263,18 @@ public class DownloadService extends IntentService {
         return true;
     }
 
-
     /**
      * Import default location and opening hours from assets
      */
     private void importLocationsDefaults() throws IOException {
-        OpenHoursManager lm = new OpenHoursManager(this);
-        if (lm.empty()) {
-            List<String[]> rows = Utils.readCsv(getAssets().open(CSV_LOCATIONS));
-
+        LocationDao dao = TcaDb.getInstance(this)
+                               .locationDao();
+        if (dao.isEmpty()) {
+            AssetManager assetManager = getAssets();
+            List<String[]> rows = Utils.readCsv(assetManager.open(CSV_LOCATIONS));
             for (String[] row : rows) {
-                lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1],
-                        row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
+                dao.replaceInto(new Location(Integer.parseInt(row[0]), row[1],
+                                             row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
         }
     }

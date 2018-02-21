@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -12,12 +11,15 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
-import de.tum.in.tumcampusapp.models.cafeteria.Location;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.LocationDao;
 
 /**
  * Location manager, handles database stuff
  */
-public class OpenHoursManager extends AbstractManager {
+public class OpenHoursManager {
+
+    private final LocationDao dao;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -25,59 +27,8 @@ public class OpenHoursManager extends AbstractManager {
      * @param context Context
      */
     public OpenHoursManager(Context context) {
-        super(context);
-
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS locations (id INTEGER PRIMARY KEY, category VARCHAR, "
-                + "name VARCHAR, address VARCHAR, room VARCHAR, transport VARCHAR, "
-                + "hours VARCHAR, remark VARCHAR, url VARCHAR)");
-    }
-
-    /**
-     * Checks if the locations table is empty
-     *
-     * @return true if no locations are available, else false
-     */
-    public boolean empty() {
-        boolean result = true;
-        Cursor c = db.rawQuery("SELECT id FROM locations LIMIT 1", null);
-        if (c.moveToNext()) {
-            result = false;
-        }
-        c.close();
-        return result;
-    }
-
-    /**
-     * Get all locations by category from the database
-     *
-     * @param category String Location category, e.g. library, cafeteria
-     * @return Database cursor (name, address, room, transport, hours, remark,
-     * url, _id)
-     */
-    public Cursor getAllHoursFromDb(String category) {
-        return db.rawQuery(
-                "SELECT name, address, room, transport, hours, remark, url, id as _id "
-                        + "FROM locations WHERE category=? ORDER BY name",
-                new String[]{category});
-    }
-
-    /**
-     * Get opening hours for a specific location
-     *
-     * @param id Location ID, e.g. 100
-     * @return hours
-     */
-    String getHoursById(int id) {
-        String result = "";
-        Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?",
-                new String[]{String.valueOf(id)});
-
-        if (c.moveToNext()) {
-            result = c.getString(0);
-        }
-        c.close();
-        return result;
+        dao = TcaDb.getInstance(context)
+                   .locationDao();
     }
 
     /**
@@ -92,7 +43,7 @@ public class OpenHoursManager extends AbstractManager {
      * @return Readable opening string
      */
     public String getHoursByIdAsString(Context context, int id, Date date) {
-        String result = this.getHoursById(id);
+        String result = dao.getHoursById(id);
 
         //Check which week day we have
         Calendar cal = new GregorianCalendar();
@@ -100,7 +51,8 @@ public class OpenHoursManager extends AbstractManager {
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
         //Split up the data string from the database with regex which has the format: "Mo-Do 11-14, Fr 11-13.45" or "Mo-Fr 9-20"
-        Matcher m = Pattern.compile("([a-z]{2}?)[-]?([a-z]{2}?)? ([0-9]{1,2}(?:[\\.][0-9]{2}?)?)-([0-9]{1,2}(?:[\\.][0-9]{2}?)?)", Pattern.CASE_INSENSITIVE).matcher(result);
+        Matcher m = Pattern.compile("([a-z]{2}?)[-]?([a-z]{2}?)? ([0-9]{1,2}(?:[\\.][0-9]{2}?)?)-([0-9]{1,2}(?:[\\.][0-9]{2}?)?)", Pattern.CASE_INSENSITIVE)
+                           .matcher(result);
 
         //Capture groups for: Mo-Do 9-21.30
         //#0	Mo-Do 9-21.30
@@ -113,7 +65,8 @@ public class OpenHoursManager extends AbstractManager {
         String[] time = new String[2];
         if (m.find()) {
             //We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
-            if (dayOfWeek <= Calendar.THURSDAY || m.group(2).equalsIgnoreCase("fr")) {
+            if (dayOfWeek <= Calendar.THURSDAY || m.group(2)
+                                                   .equalsIgnoreCase("fr")) {
                 time[0] = m.group(3);
                 time[1] = m.group(4);
             } else {
@@ -155,7 +108,8 @@ public class OpenHoursManager extends AbstractManager {
         String relStr = DateUtils.getFutureTime(relativeTo.getTime(), context);
 
         //Return an assembly
-        return context.getString(relation) + " " + relStr.substring(0, 1).toLowerCase(Locale.getDefault()) + relStr.substring(1);
+        return context.getString(relation) + " " + relStr.substring(0, 1)
+                                                         .toLowerCase(Locale.getDefault()) + relStr.substring(1);
 
     }
 
@@ -172,24 +126,5 @@ public class OpenHoursManager extends AbstractManager {
             opens.set(Calendar.MINUTE, 0);
         }
         return opens;
-    }
-
-    /**
-     * Replaces a location in the database
-     *
-     * @param l Location object
-     */
-    public void replaceIntoDb(Location l) {
-        if (l.id <= 0) {
-            throw new IllegalArgumentException("Invalid id.");
-        }
-        if (l.name.isEmpty()) {
-            throw new IllegalArgumentException("Invalid name.");
-        }
-        db.execSQL("REPLACE INTO locations (id, category, name, address, room, "
-                        + "transport, hours, remark, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                new String[]{String.valueOf(l.id), l.category, l.name,
-                        l.address, l.room, l.transport, l.hours, l.remark,
-                        l.url});
     }
 }

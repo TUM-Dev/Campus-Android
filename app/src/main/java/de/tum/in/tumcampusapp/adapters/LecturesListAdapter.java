@@ -1,18 +1,14 @@
 package de.tum.in.tumcampusapp.adapters;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * This class handles the view output of the results for finding lectures via
@@ -49,12 +45,9 @@ public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<Lectures
             holder = new ViewHolder();
 
             // set UI elements
-            holder.tvLectureName = (TextView) convertView
-                    .findViewById(R.id.tvLectureName);
-            holder.tvTypeSWSSemester = (TextView) convertView
-                    .findViewById(R.id.tvTypeSWSSemester);
-            holder.tvDozent = (TextView) convertView
-                    .findViewById(R.id.tvDozent);
+            holder.tvLectureName = convertView.findViewById(R.id.tvLectureName);
+            holder.tvTypeSWSSemester = convertView.findViewById(R.id.tvTypeSWSSemester);
+            holder.tvDozent = convertView.findViewById(R.id.tvDozent);
 
             convertView.setTag(holder);
         } else {

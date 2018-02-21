@@ -9,9 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -22,7 +20,9 @@ import de.tum.in.tumcampusapp.activities.ChatActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
-import de.tum.in.tumcampusapp.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
+import de.tum.in.tumcampusapp.models.dbEntities.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 
@@ -33,17 +33,22 @@ import static de.tum.in.tumcampusapp.managers.CardManager.CARD_CHAT;
  */
 public class ChatMessagesCard extends NotificationAwareCard {
     private List<ChatMessage> mUnread;
-    private ChatMessageManager manager;
     private String mRoomName;
     private int mRoomId;
     private String mRoomIdString;
+    private final ChatMessageDao chatMessageDao;
 
-    public ChatMessagesCard(Context context) {
+
+    public ChatMessagesCard(Context context, ChatRoomDbRow room) {
         super(CARD_CHAT, context, "card_chat");
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        chatMessageDao = tcaDb.chatMessageDao();
+        setChatRoom(room.getName(),room.getRoom(),room.getSemesterId() + ':' + room.getName());
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_item, parent, false);
         return new Card.CardViewHolder(view);
     }
 
@@ -58,8 +63,8 @@ public class ChatMessagesCard extends NotificationAwareCard {
         CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
         List<View> addedViews = cardsViewHolder.getAddedViews();
 
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
+        mLinearLayout = mCard.findViewById(R.id.card_view);
+        mTitleView = mCard.findViewById(R.id.card_title);
         mTitleView.setText(mRoomName);
 
         //Remove additional views
@@ -69,7 +74,8 @@ public class ChatMessagesCard extends NotificationAwareCard {
 
         // Show cafeteria menu
         for (ChatMessage message : mUnread) {
-            addedViews.add(addTextView(message.getMember().getDisplayName() + ": " + message.getText()));
+            addedViews.add(addTextView(message.getMember()
+                                              .getDisplayName() + ": " + message.getText()));
         }
     }
 
@@ -85,8 +91,8 @@ public class ChatMessagesCard extends NotificationAwareCard {
         mRoomName = mRoomName.replaceAll("\\([A-Z]+[0-9]+\\)", "");
         mRoomName = mRoomName.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
         mRoomName = mRoomName.trim();
-        manager = new ChatMessageManager(mContext, roomId);
-        mUnread = manager.getLastUnread();
+        chatMessageDao.deleteOldEntries();
+        //mUnread = chatMessageDao.getLastUnread(roomId); TODO
         mRoomIdString = roomIdString;
         mRoomId = roomId;
     }
@@ -109,7 +115,7 @@ public class ChatMessagesCard extends NotificationAwareCard {
 
     @Override
     protected void discard(Editor editor) {
-        manager.markAsRead();
+        chatMessageDao.markAsRead(getId());
     }
 
     @Override

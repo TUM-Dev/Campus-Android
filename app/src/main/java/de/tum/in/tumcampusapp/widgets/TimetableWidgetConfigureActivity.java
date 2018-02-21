@@ -2,16 +2,17 @@ package de.tum.in.tumcampusapp.widgets;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
+
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.LectureListSelectionAdapter;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
 
 public class TimetableWidgetConfigureActivity extends AppCompatActivity {
 
@@ -24,7 +25,7 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timetable_widget_configure);
 
         // Setup toolbar and save button
-        setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
+        setSupportActionBar(findViewById(R.id.main_toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_check);
 
@@ -37,12 +38,12 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        ListView listViewLectures = (ListView) findViewById(R.id.activity_timetable_lectures);
+        ListView listViewLectures = findViewById(R.id.activity_timetable_lectures);
 
         // Initialize stations adapter
         CalendarManager calendarManager = new CalendarManager(this);
-        Cursor lectureCursor = calendarManager.getLecturesFromWidget(this.appWidgetId);
-        listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectureCursor, true, this.appWidgetId));
+        List<CalendarItem> lectures = calendarManager.getLecturesForWidget(this.appWidgetId);
+        listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectures, this.appWidgetId));
         listViewLectures.requestFocus();
     }
 

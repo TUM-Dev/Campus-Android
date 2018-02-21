@@ -1,16 +1,16 @@
 package de.tum.in.tumcampusapp.adapters;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.google.common.collect.ImmutableMap;
 
 import java.text.DateFormat;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.tumo.Exam;
@@ -18,33 +18,42 @@ import de.tum.in.tumcampusapp.models.tumo.Exam;
 /**
  * Custom UI adapter for a list of exams.
  */
-public class ExamListAdapter extends BaseAdapter {
-    private List<Exam> exams;
+public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
     private static final DateFormat DF = DateFormat.getDateInstance(DateFormat.MEDIUM);
-    private final Context context;
-    private final LayoutInflater mInflater;
+    private static final Map<String, Integer> GRADE_DRAWABLE = ImmutableMap.<String, Integer>builder()
+            .put("1,0", R.drawable.grade_1_0)
+            .put("1,3", R.drawable.grade_1_3)
+            .put("1,4", R.drawable.grade_1_3)
+            .put("1,7", R.drawable.grade_1_7)
+            .put("2,0", R.drawable.grade_2_0)
+            .put("2,3", R.drawable.grade_2_3)
+            .put("2,4", R.drawable.grade_2_3)
+            .put("2,7", R.drawable.grade_2_7)
+            .put("3,0", R.drawable.grade_3_0)
+            .put("3,3", R.drawable.grade_3_3)
+            .put("3,4", R.drawable.grade_3_3)
+            .put("3,7", R.drawable.grade_3_7)
+            .put("4,0", R.drawable.grade_4_0)
+            .put("4,3", R.drawable.grade_4_3)
+            .put("4,4", R.drawable.grade_4_3)
+            .put("4,7", R.drawable.grade_4_7)
+            .put("5,0", R.drawable.grade_5_0)
+            .build();
 
     public ExamListAdapter(Context context, List<Exam> results) {
-        exams = results;
-        Collections.sort(exams, new Comparator<Exam>() {
-            @Override
-            public int compare(Exam exam, Exam other) {
-                // note the "-" to get a descending ordering
-                return -exam.getDate().compareTo(other.getDate());
-            }
-        });
-        mInflater = LayoutInflater.from(context);
-        this.context = context;
+        super(context, results);
+        Collections.sort(infoList);
     }
 
     @Override
-    public int getCount() {
-        return exams.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return exams.get(position);
+    String genenrateHeaderName(Exam item) {
+        String headerText = super.genenrateHeaderName(item);
+        int year = Integer.parseInt(headerText.substring(0, 2));
+        if (headerText.charAt(2) == 'W') {
+            return context.getString(R.string.winter_semester, year, year + 1);
+        } else {
+            return context.getString(R.string.summer_semester, year);
+        }
     }
 
     @Override
@@ -61,38 +70,40 @@ public class ExamListAdapter extends BaseAdapter {
         if (view == null) {
             view = mInflater.inflate(R.layout.activity_grades_listview, parent, false);
             holder = new ViewHolder();
-            holder.tvName = (TextView) view.findViewById(R.id.name);
-            holder.tvGrade = (TextView) view.findViewById(R.id.grade);
-            holder.tvDetails1 = (TextView) view.findViewById(R.id.tv1);
-            holder.tvDetails2 = (TextView) view.findViewById(R.id.tv2);
-
+            holder.tvName = view.findViewById(R.id.name);
+            holder.tvGrade = view.findViewById(R.id.grade);
+            holder.tvDetails1 = view.findViewById(R.id.tv1);
+            holder.tvDetails2 = view.findViewById(R.id.tv2);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
         // fill UI with data
-        Exam exam = exams.get(position);
+        Exam exam = infoList.get(position);
         if (exam != null) {
             holder.tvName.setText(exam.getCourse());
             holder.tvGrade.setText(exam.getGrade());
+            if(GRADE_DRAWABLE.containsKey(exam.getGrade())){
+                holder.tvGrade.setBackgroundResource(GRADE_DRAWABLE.get(exam.getGrade()));
+            } else {
+                holder.tvGrade.setBackgroundResource(R.drawable.grade_background);
+            }
+
+
             holder.tvDetails1.setText(
-                    String.format("%s: %s, " +
-                                    "%s: %s, " +
-                                    "%s: %s",
-                            context.getString(R.string.date), DF.format(exam.getDate()),
-                            context.getString(R.string.semester), exam.getSemester(),
-                            context.getString(R.string.credits), exam.getCredits()));
+                    String.format("%s: %s, ",
+                                  context.getString(R.string.date), DF.format(exam.getDate())));
 
             holder.tvDetails2
                     .setText(String.format("%s: %s, " +
-                                    "%s: %s",
-                            context.getString(R.string.examiner), exam.getExaminer(),
-                            context.getString(R.string.mode), exam.getModus()));
+                                           "%s: %s",
+                                           context.getString(R.string.examiner), exam.getExaminer(),
+                                           context.getString(R.string.mode), exam.getModus()));
         }
 
         return view;
     }
-
+    
     static class ViewHolder {
         TextView tvDetails1;
         TextView tvDetails2;

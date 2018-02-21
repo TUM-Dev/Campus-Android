@@ -24,12 +24,15 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.AlarmActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.RSASigner;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.gcm.GCMAlert;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 
+/**
+ * TUM Alarmierung
+ */
 public class Alarm extends GenericNotification {
 
     /**
@@ -57,7 +60,8 @@ public class Alarm extends GenericNotification {
 
     private GCMNotification getNotificationFromServer() {
         try {
-            return TUMCabeClient.getInstance(this.context).getNotification(this.notification);
+            return TUMCabeClient.getInstance(this.context)
+                                .getNotification(this.notification);
         } catch (IOException e) {
             Utils.log(e);
             return null;
@@ -126,7 +130,7 @@ public class Alarm extends GenericNotification {
 
     @Override
     public Notification getNotification() {
-        if (alert.silent || info == null) {
+        if (alert.getSilent() || info == null) {
             //Do nothing
             return null;
         }
@@ -136,7 +140,6 @@ public class Alarm extends GenericNotification {
             return null;
         }
 
-
         // GCMNotification sound
         Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
         Intent alarm = new Intent(this.context, AlarmActivity.class);
@@ -145,7 +148,7 @@ public class Alarm extends GenericNotification {
         PendingIntent pending = PendingIntent.getActivity(this.context, 0, alarm, PendingIntent.FLAG_UPDATE_CURRENT);
         String strippedDescription = Utils.stripHtml(info.getDescription()); // Strip any html tags from the description
 
-        return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+        return new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_EMERGENCY)
                 .setSmallIcon(this.icon)
                 .setContentTitle(info.getTitle())
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(strippedDescription))

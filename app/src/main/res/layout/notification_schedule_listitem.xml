@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="@dimen/padding_default"
-    android:paddingLeft="@dimen/padding_default"
-    android:paddingRight="@dimen/padding_default"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingTop="@dimen/padding_default"
+              android:paddingLeft="@dimen/padding_default"
+              android:paddingRight="@dimen/padding_default"
     >
+
     <TextView
         android:id="@+id/weekday"
         android:layout_width="0dp"
@@ -24,12 +26,12 @@
         android:inputType="number"
         android:selectAllOnFocus="true"
         android:text="20:20"
-        android:textSize="@dimen/large_text_size" />
+        android:textSize="@dimen/large_text_size"/>
 
     <CheckBox
         android:id="@+id/notification_active"
         android:layout_height="match_parent"
         android:layout_width="0dp"
         android:layout_weight="2"
-         />
+        />
 </LinearLayout>

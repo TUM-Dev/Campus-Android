@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="de.tum.in.tumcampusapp.fragments.PdfViewFragment"
-    android:id="@+id/pdf_viewer"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="de.tum.in.tumcampusapp.fragments.PdfViewFragment"
+                android:id="@+id/pdf_viewer"
     >
 
     <com.github.barteksc.pdfviewer.PDFView

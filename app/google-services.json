@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "944892355389",
+    "firebase_url": "https://tca-backend-0001.firebaseio.com",
+    "project_id": "tca-backend-0001",
+    "storage_bucket": "tca-backend-0001.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944892355389:android:3fec122c5eb51ef4",
+        "android_client_info": {
+          "package_name": "de.tum.in.tumcampus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944892355389-t2igukqg4jjlhac5ejhbno14tig805f8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.tum.in.tumcampus",
+            "certificate_hash": "52d9be542408f7bc4473aae24107f0cdd4dd6905"
+          }
+        },
+        {
+          "client_id": "944892355389-hqu03lgnd7oig4tc66007rrooklaq467.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "944892355389-5ql9uckm68cmeejqqvqujj6e9atd6b80.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "944892355389-o1so4eun2gaitb9s7dj0hqjr45b6at7k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1tF7vRPJsKmBJ7VUgsFsPBiFxd1YqLxk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944892355389-hqu03lgnd7oig4tc66007rrooklaq467.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "944892355389-l9qq6ekquoal46shionj0utr7sjbg4lp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "de.tum.campusapp"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

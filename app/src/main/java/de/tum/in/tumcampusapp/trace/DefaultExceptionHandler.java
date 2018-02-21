@@ -20,8 +20,8 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
     private final UncaughtExceptionHandler mDefaultExceptionHandler;
 
     // constructor
-    public DefaultExceptionHandler(UncaughtExceptionHandler pDefaultExceptionHandler) {
-        mDefaultExceptionHandler = pDefaultExceptionHandler;
+    public DefaultExceptionHandler(UncaughtExceptionHandler handler) {
+        mDefaultExceptionHandler = handler;
     }
 
     // Default exception handler
@@ -42,21 +42,15 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
             String filename = G.appVersion + '-' + Integer.toString(random);
 
             // Write the stacktrace to disk
-            BufferedWriter bos = new BufferedWriter(getFileWriter(G.filesPath + '/' + filename + ExceptionHandler.STACKTRACE_ENDING));
-            try {
+            try (BufferedWriter bos = new BufferedWriter(getFileWriter(G.filesPath + '/' + filename + ExceptionHandler.STACKTRACE_ENDING))) {
                 bos.write(result.toString());
                 bos.flush();
-            } finally {
-                bos.close();
             }
 
             //Write the current log to file
-            bos = new BufferedWriter(getFileWriter(G.filesPath + '/' + filename + ".stacktrace.log"));
-            try {
+            try (BufferedWriter bos = new BufferedWriter(getFileWriter(G.filesPath + '/' + filename + ".stacktrace.log"))) {
                 bos.write(Util.getLog());
                 bos.flush();
-            } finally {
-                bos.close();
             }
 
         } catch (IOException ebos) {

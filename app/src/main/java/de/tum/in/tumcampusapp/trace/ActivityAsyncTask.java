@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.trace;
 
-
 import android.os.AsyncTask;
 
 /**

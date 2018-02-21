@@ -19,6 +19,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * getCount, getItem and getItemId.
  * By extending this class, only getView need to implement.
  * On the other hand this class requires the data model implementing its interface to get header name and id.
+ *
  * @param <T> The model of data
  */
 abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListHeadersAdapter.SimpleStickyListItem>
@@ -28,7 +29,7 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
     private final List<String> filters;
     final LayoutInflater mInflater;
 
-    SimpleStickyListHeadersAdapter(Context context, List<T> infos){
+    SimpleStickyListHeadersAdapter(Context context, List<T> infos) {
         this.context = context;
         this.infoList = infos;
         this.mInflater = LayoutInflater.from(context);
@@ -46,7 +47,7 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
     @Override
     abstract public View getView(int position, View convertView, ViewGroup parent);
 
-    public List<T> getInfoList(){
+    public List<T> getInfoList() {
         return infoList;
     }
 
@@ -57,10 +58,11 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
     /**
      * Genernate header for this item.
      * This methoded can be override if header name need to be modified.
+     *
      * @param item the item
      * @return the header for this item
      */
-    String genenrateHeaderName(T item){
+    String genenrateHeaderName(T item) {
         return item.getHeadName();
     }
 
@@ -72,7 +74,7 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
         if (view == null) {
             holder = new HeaderViewHolder();
             view = mInflater.inflate(R.layout.header, partent, false);
-            holder.text = (TextView) view.findViewById(R.id.lecture_header);
+            holder.text = view.findViewById(R.id.lecture_header);
             view.setTag(holder);
         } else {
             holder = (HeaderViewHolder) view.getTag();
@@ -84,10 +86,10 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
         return view;
     }
 
-
     @Override
     public long getHeaderId(int i) {
-        return filters.indexOf(infoList.get(i).getHeaderId());
+        return filters.indexOf(infoList.get(i)
+                                       .getHeaderId());
     }
 
     @Override
@@ -112,6 +114,7 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
 
     public interface SimpleStickyListItem {
         String getHeadName();
+
         String getHeaderId();
     }
 }

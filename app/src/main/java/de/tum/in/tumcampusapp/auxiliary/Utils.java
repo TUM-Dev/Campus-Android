@@ -8,6 +8,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -18,6 +21,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.common.base.Charsets;
+import com.google.common.escape.CharEscaperBuilder;
+import com.google.common.escape.Escaper;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 
@@ -33,8 +38,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.BuildConfig;
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Class for common helper functions used by a lot of classes
@@ -55,11 +63,12 @@ public final class Utils {
      */
     public static String buildHTMLDocument(String css, String body) {
         String header = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"de\" lang=\"de\">" +
-                "<head><meta name=\"viewport\" content=\"width=device-width\" />" +
-                "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>";
+                        "<head><meta name=\"viewport\" content=\"width=device-width\" />" +
+                        "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>";
         String resultCss = "<style type=\"text/css\">" + css + "</style>";
         String resultBody = "<body>" + body + "</body>";
         String footer = "</html>";
+        //noinspection StringConcatenationMissingWhitespace
         return header + resultCss + resultBody + footer;
     }
 
@@ -129,14 +138,15 @@ public final class Utils {
      * @param str String with ISO-DateTime (yyyy-mm-dd hh:mm:ss)
      * @return Date
      */
-    public static Date getISODateTime(String str) {
+    public static Date getDateTime(String str) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        Date date = new Date();
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-            return dateFormat.parse(str);
+            date = format.parse(str);
         } catch (ParseException e) {
             log(e, str);
         }
-        return new Date();
+        return date;
     }
 
     /**
@@ -186,31 +196,41 @@ public final class Utils {
      * Logs an exception and additional information
      * Use this anywhere in the app when a fatal error occurred.
      * If you can give a better description of what went wrong
-     * use {@link #log(Exception, String)} instead.
+     * use {@link #log(Throwable, String)} instead.
      *
      * @param e Exception (source for message and stack trace)
      */
     public static void log(Throwable e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
-        Log.e(s, e + "\n" + sw);
+        try (StringWriter sw = new StringWriter()) {
+            e.printStackTrace(new PrintWriter(sw));
+            String s = Thread.currentThread()
+                             .getStackTrace()[3].getClassName()
+                                                .replaceAll(LOGGING_REGEX, "");
+            Log.e(s, e + "\n" + sw);
+        } catch (IOException e1) {
+            // there is a time to stop logging errors
+        }
     }
 
     /**
      * Logs an exception and additional information
      * Use this anywhere in the app when a fatal error occurred.
      * If you can't give an exact error description simply use
-     * {@link #log(Exception)} instead.
+     * {@link #log(Throwable)} instead.
      *
      * @param e       Exception (source for message and stack trace)
      * @param message Additional information for exception message
      */
     public static void log(Throwable e, String message) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
-        Log.e(s, e + " " + message + '\n' + sw);
+        try (StringWriter sw = new StringWriter()) {
+            e.printStackTrace(new PrintWriter(sw));
+            String s = Thread.currentThread()
+                             .getStackTrace()[3].getClassName()
+                                                .replaceAll(LOGGING_REGEX, "");
+            Log.e(s, e + " " + message + '\n' + sw);
+        } catch (IOException e1) {
+            // there is a time to stop logging errors
+        }
     }
 
     /**
@@ -223,7 +243,9 @@ public final class Utils {
         if (!BuildConfig.DEBUG) {
             return;
         }
-        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
+        String s = Thread.currentThread()
+                         .getStackTrace()[3].getClassName()
+                                            .replaceAll(LOGGING_REGEX, "");
         Log.d(s, message);
     }
 
@@ -237,7 +259,9 @@ public final class Utils {
         if (!BuildConfig.DEBUG) {
             return;
         }
-        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
+        String s = Thread.currentThread()
+                         .getStackTrace()[3].getClassName()
+                                            .replaceAll(LOGGING_REGEX, "");
         Log.v(s, message);
     }
 
@@ -260,8 +284,10 @@ public final class Utils {
      * @param str String to hash
      * @return hash hash as string
      */
-    public static String hash(String str) {
-        return Hashing.murmur3_128().hashBytes(str.getBytes(Charsets.UTF_8)).toString();
+    static String hash(String str) {
+        return Hashing.murmur3_128()
+                      .hashBytes(str.getBytes(Charsets.UTF_8))
+                      .toString();
     }
 
     /**
@@ -273,14 +299,11 @@ public final class Utils {
     public static List<String[]> readCsv(InputStream fin) {
         List<String[]> list = new ArrayList<>(64);
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.UTF_8));
-            try {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.UTF_8))) {
                 String reader;
                 while ((reader = in.readLine()) != null) {
                     list.add(splitCsvLine(reader));
                 }
-            } finally {
-                in.close();
             }
         } catch (IOException e) {
             log(e);
@@ -296,7 +319,9 @@ public final class Utils {
      */
     public static void setSetting(Context c, String key, boolean value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-        sp.edit().putBoolean(key, value).apply();
+        sp.edit()
+          .putBoolean(key, value)
+          .apply();
     }
 
     /**
@@ -308,7 +333,9 @@ public final class Utils {
      */
     public static void setSetting(Context c, String key, String value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-        sp.edit().putString(key, value).apply();
+        sp.edit()
+          .putString(key, value)
+          .apply();
     }
 
     /**
@@ -319,7 +346,9 @@ public final class Utils {
      */
     public static void setSetting(Context c, String key, Object value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-        sp.edit().putString(key, new Gson().toJson(value)).apply();
+        sp.edit()
+          .putString(key, new Gson().toJson(value))
+          .apply();
     }
 
     /**
@@ -329,7 +358,8 @@ public final class Utils {
      * @param msg     The toast message id
      */
     public static void showToast(Context context, int msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, msg, Toast.LENGTH_LONG)
+             .show();
     }
 
     /**
@@ -339,7 +369,8 @@ public final class Utils {
      * @param msg     The toast message
      */
     public static void showToast(Context context, CharSequence msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, msg, Toast.LENGTH_LONG)
+             .show();
     }
 
     /**
@@ -367,7 +398,8 @@ public final class Utils {
         }
         // fix trailing ";", e.g. ";;;".split().length = 0
         result.append("; ");
-        return result.toString().split(";");
+        return result.toString()
+                     .split(";");
     }
 
     /**
@@ -376,6 +408,7 @@ public final class Utils {
      * @param meters Meters to represent
      * @return Formatted meters. e.g. 10m, 12.5km
      */
+    @SuppressWarnings("StringConcatenationMissingWhitespace")
     public static String formatDist(float meters) {
         if (meters < 1000) {
             return ((int) meters) + "m";
@@ -397,7 +430,9 @@ public final class Utils {
      */
     public static void setInternalSetting(Context context, String key, boolean value) {
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit().putBoolean(key, value).apply();
+        prefs.edit()
+             .putBoolean(key, value)
+             .apply();
     }
 
     /**
@@ -409,7 +444,9 @@ public final class Utils {
      */
     public static void setInternalSetting(Context context, String key, int value) {
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit().putInt(key, value).apply();
+        prefs.edit()
+             .putInt(key, value)
+             .apply();
     }
 
     /**
@@ -421,7 +458,9 @@ public final class Utils {
      */
     public static void setInternalSetting(Context context, String key, long value) {
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit().putLong(key, value).apply();
+        prefs.edit()
+             .putLong(key, value)
+             .apply();
     }
 
     /**
@@ -433,7 +472,9 @@ public final class Utils {
      */
     public static void setInternalSetting(Context context, String key, String value) {
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit().putString(key, value).apply();
+        prefs.edit()
+             .putString(key, value)
+             .apply();
     }
 
     /**
@@ -445,7 +486,9 @@ public final class Utils {
      */
     public static void setInternalSetting(Context context, String key, float value) {
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit().putFloat(key, value).apply();
+        prefs.edit()
+             .putFloat(key, value)
+             .apply();
     }
 
     /**
@@ -524,7 +567,7 @@ public final class Utils {
     public static int getAppVersion(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
+                                             .getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             // should never happen
@@ -533,21 +576,11 @@ public final class Utils {
     }
 
     public static void showToastOnUIThread(final Activity activity, final int s) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.showToast(activity, s);
-            }
-        });
+        activity.runOnUiThread(() -> Utils.showToast(activity, s));
     }
 
-    public static void showToastOnUIThread(final Activity activity, final String s) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.showToast(activity, s);
-            }
-        });
+    public static void showToastOnUIThread(final Activity activity, final CharSequence s) {
+        activity.runOnUiThread(() -> Utils.showToast(activity, s));
     }
 
     /**
@@ -580,17 +613,61 @@ public final class Utils {
     @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String source) {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
-                Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY) :
-                Html.fromHtml(source);
+               Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY) :
+               Html.fromHtml(source);
+    }
+
+    private static Escaper umlautEscaper() {
+        return new CharEscaperBuilder()
+                .addEscape('ä', "&auml;")
+                .addEscape('ö', "&ouml;")
+                .addEscape('ü', "&uuml;")
+                .toEscaper();
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static String escapeUmlauts(String text) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return Html.escapeHtml(text);
+        }
+        // Just escape umlauts for older devices, MVV should be happy with that
+        return umlautEscaper().escape(text);
     }
 
     public static float getBatteryLevel(Context context) {
         Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-        if(level == -1 || scale == -1) {
+        if (level == -1 || scale == -1) {
             return -1;
         }
-        return ((float)level / (float)scale) * 100.0f;
+        return ((float) level / (float) scale) * 100.0f;
     }
+
+    public static String extractRoomNumberFromLocation(String location){
+        Pattern pattern = Pattern.compile("\\((.*?)\\)");
+        Matcher matcher = pattern.matcher(location);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        else {
+            return location;
+        }
+    }
+
+    /**
+     * Creates a bitmap for a vector image (.xml) to be able to use it for notifications
+     * @param c
+     * @param res
+     * @return
+     */
+    public static Bitmap getLargeIcon(Context c, int res){
+        Drawable icon = c.getResources().getDrawable(R.drawable.ic_cutlery);
+        Bitmap bitmap = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        icon.draw(canvas);
+        return bitmap;
+    }
+
 }

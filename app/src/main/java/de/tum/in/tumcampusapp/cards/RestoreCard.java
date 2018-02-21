@@ -21,7 +21,8 @@ public class RestoreCard extends StickyCard {
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_restore, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.card_restore, parent, false);
         return new Card.CardViewHolder(view);
     }
 
@@ -33,5 +34,13 @@ public class RestoreCard extends StickyCard {
     @Override
     public int getId() {
         return 0;
+    }
+
+    /**
+     * Override getPosition, we want the RestoreCard to be the last card.
+     */
+    @Override
+    public int getPosition() {
+        return Integer.MAX_VALUE;
     }
 }

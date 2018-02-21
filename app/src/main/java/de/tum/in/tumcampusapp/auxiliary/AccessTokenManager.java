@@ -8,8 +8,8 @@ import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
+import de.tum.in.tumcampusapp.exceptions.TUMOException;
 import de.tum.in.tumcampusapp.models.tumo.AccessToken;
-import de.tum.in.tumcampusapp.tumonline.TUMOException;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
@@ -17,7 +17,6 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
  * Easy accessible class for token management.
  */
 public class AccessTokenManager {
-    public static final int MIN_LRZ_LENGTH = 7;
     private final Context context;
 
     public AccessTokenManager(Context context) {
@@ -35,7 +34,7 @@ public class AccessTokenManager {
      */
     String generateAccessToken(String lrzId) throws TUMOException {
         // we don't have an access token yet, though we take the constructor with only one parameter to set the method
-        TUMOnlineRequest<AccessToken> request = new TUMOnlineRequest<>(TUMOnlineConst.REQUEST_TOKEN, context, false);
+        TUMOnlineRequest<AccessToken> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getREQUEST_TOKEN(), context, false);
         request.setParameter("pUsername", lrzId); // add lrzId to parameters
         request.setParameter("pTokenName", "TUMCampusApp-" + Build.PRODUCT); // add readable name for TUMOnline
 
@@ -45,7 +44,8 @@ public class AccessTokenManager {
             throw new TUMOException(request.getLastError());
         }
 
-        return token.get().getToken();
+        return token.get()
+                    .getToken();
     }
 
     /**
@@ -89,11 +89,11 @@ public class AccessTokenManager {
 
             return true;
         } catch (TUMOException ex) {
-            Utils.log(ex, context.getString(R.string.access_token_wasnt_generated) + ex.errorMessage);
+            Utils.log(ex, context.getString(R.string.access_token_wasnt_generated) + ex.getMessage());
             // set access token to null
             Utils.setSetting(context, Const.ACCESS_TOKEN, null);
 
-            Utils.showToastOnUIThread(activity, ex.errorMessage);
+            Utils.showToastOnUIThread(activity, ex.getMessage());
         } catch (Exception ex) { //NOPMD
             Utils.log(ex, context.getString(R.string.access_token_wasnt_generated));
             // set access token to null

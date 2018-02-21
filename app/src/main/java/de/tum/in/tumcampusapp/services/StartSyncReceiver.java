@@ -10,14 +10,13 @@ import android.os.Build;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.managers.WifiMeasurementManager;
 
 /**
  * Receives on boot completed broadcast, sets alarm for next sync-try
  * and start BackgroundService if enabled in settings
  */
 public class StartSyncReceiver extends BroadcastReceiver {
-    private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR*3;
+    private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR * 3;
 
     private static void setAlarm(Context context) {
         // Intent to call on alarm
@@ -27,9 +26,9 @@ public class StartSyncReceiver extends BroadcastReceiver {
         // Set alarm
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pendingIntent);
-        if(Build.VERSION.SDK_INT < 19) {
+        if (Build.VERSION.SDK_INT < 19) {
             alarm.set(AlarmManager.RTC, System.currentTimeMillis() + StartSyncReceiver.START_INTERVAL, pendingIntent);
-        }else{
+        } else {
             alarm.setExact(AlarmManager.RTC, System.currentTimeMillis() + StartSyncReceiver.START_INTERVAL, pendingIntent);
         }
     }
@@ -51,17 +50,16 @@ public class StartSyncReceiver extends BroadcastReceiver {
         // Start BackgroundService
         if (launch || backgroundServicePermitted) {
             Utils.logv("Start background service...");
-            Intent i = new Intent(context, BackgroundService.class);
+            Intent i = new Intent();
             i.putExtra(Const.APP_LAUNCHES, launch);
-            context.startService(i);
+            BackgroundService.enqueueWork(context, i);
         }
-
-        context.startService(new Intent(context, SendMessageService.class));
+        SendMessageService.enqueueWork(context, new Intent());
 
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
-        context.startService(new Intent(context, SilenceService.class));
-        if (intent.getAction() != "android.net.wifi.WIFI_STATE_CHANGED" && Utils.getInternalSettingBool(context, WifiMeasurementManager.WIFI_SCANS_ALLOWED,false)){
-            context.startService(new Intent(context, SendWifiMeasurementService.class));
+        SilenceService.enqueueWork(context, new Intent());
+        if (intent.getAction() != "android.net.wifi.WIFI_STATE_CHANGED" && Utils.getInternalSettingBool(context, Const.WIFI_SCANS_ALLOWED, false)) {
+            SendWifiMeasurementService.enqueueWork(context, new Intent());
         }
     }
 }
