@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.eduroam;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.content.Context;
@@ -143,9 +142,9 @@ public class EduroamFixCard extends NotificationAwareCard {
             int phase2 = eduroam.enterpriseConfig.getPhase2Method();
 
             if ((eapMethod == WifiEnterpriseConfig.Eap.TTLS
-                 && (phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2 || phase2 == WifiEnterpriseConfig.Phase2.PAP)
+                 && (phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2 || phase2 == WifiEnterpriseConfig.Phase2.PAP))
                  || (eapMethod == WifiEnterpriseConfig.Eap.PEAP
-                     && phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2))) {
+                     && phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2)) {
 
                 checkDNSName();
                 checkAnonymousIdentity();
@@ -169,20 +168,16 @@ public class EduroamFixCard extends NotificationAwareCard {
         }
     }
 
-    @SuppressLint("NewApi")
     private void checkDNSName(){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-            && !isValidSubjectMatchAPI18(eduroam)) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !isValidSubjectMatchAPI18(eduroam)) {
             errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
-        } else {
-            if ((!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS)
-                 || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))
-                && !isValidSubjectMatchAPI18(eduroam)) {
-                errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
-            } else {
-                Utils.log("AltSubjectMatch: " + eduroam.enterpriseConfig.getAltSubjectMatch());
-                Utils.log("DomainSuffixMatch: " + eduroam.enterpriseConfig.getDomainSuffixMatch());
-            }
+
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            &&(!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS)
+               || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))
+            && !isValidSubjectMatchAPI18(eduroam)) {
+
+            errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
         }
     }
 
@@ -194,7 +189,6 @@ public class EduroamFixCard extends NotificationAwareCard {
     }
 
     @SuppressWarnings("deprecation")
-    @SuppressLint("NewApi")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private boolean isValidSubjectMatchAPI18(WifiConfiguration eduroam) {
         Utils.log("SubjectMatch: " + eduroam.enterpriseConfig.getSubjectMatch());
