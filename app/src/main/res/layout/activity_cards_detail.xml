@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="card"
-            type="de.tum.in.tumcampusapp.component.studycard.model.StudyCard"/>
+            type="de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
