@@ -9,11 +9,11 @@
 
         <variable
             name="card"
-            type="de.tum.in.tumcampusapp.component.studycard.model.StudyCard"/>
+            type="de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard"/>
 
         <variable
             name="handler"
-            type="de.tum.in.tumcampusapp.component.studycard.CardsQuizActivity"/>
+            type="de.tum.in.tumcampusapp.component.ui.studycard.CardsQuizActivity"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
