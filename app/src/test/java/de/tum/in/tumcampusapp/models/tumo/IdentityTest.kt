@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.models.tumo
 
-import de.tum.`in`.tumcampusapp.tumonline.TUMOnlineConst
+import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineConst
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner

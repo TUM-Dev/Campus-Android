@@ -5,60 +5,69 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
+import android.content.Intent;
 
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.database.dao.BuildingToGpsDao;
-import de.tum.in.tumcampusapp.database.dao.CafeteriaDao;
-import de.tum.in.tumcampusapp.database.dao.CafeteriaMenuDao;
-import de.tum.in.tumcampusapp.database.dao.ChatRoomDao;
-import de.tum.in.tumcampusapp.database.dao.FacultyDao;
-import de.tum.in.tumcampusapp.database.dao.CalendarDao;
-import de.tum.in.tumcampusapp.database.dao.FavoriteDishDao;
-import de.tum.in.tumcampusapp.database.dao.KinoDao;
-import de.tum.in.tumcampusapp.database.dao.LocationDao;
-import de.tum.in.tumcampusapp.database.dao.NewsDao;
-import de.tum.in.tumcampusapp.database.dao.NewsSourcesDao;
-import de.tum.in.tumcampusapp.database.dao.OpenQuestionsDao;
-import de.tum.in.tumcampusapp.database.dao.OwnQuestionsDao;
-import de.tum.in.tumcampusapp.database.dao.RoomLocationsDao;
-import de.tum.in.tumcampusapp.database.dao.NotificationDao;
-import de.tum.in.tumcampusapp.database.dao.RecentsDao;
-import de.tum.in.tumcampusapp.database.dao.StudyRoomDao;
-import de.tum.in.tumcampusapp.database.dao.StudyRoomGroupDao;
-import de.tum.in.tumcampusapp.database.dao.SyncDao;
-import de.tum.in.tumcampusapp.database.dao.TransportDao;
-import de.tum.in.tumcampusapp.database.dao.TumLockDao;
-import de.tum.in.tumcampusapp.database.dao.WidgetsTimetableBlacklistDao;
-import de.tum.in.tumcampusapp.database.dao.WifiMeasurementDao;
-import de.tum.in.tumcampusapp.database.dao.ChatMessageDao;
+import de.tum.in.tumcampusapp.api.tumonline.TumLockDao;
+import de.tum.in.tumcampusapp.api.tumonline.model.TumLock;
+import de.tum.in.tumcampusapp.component.other.general.NotificationDao;
+import de.tum.in.tumcampusapp.component.other.general.RecentsDao;
+import de.tum.in.tumcampusapp.component.other.general.model.Recent;
+import de.tum.in.tumcampusapp.component.other.locations.BuildingToGpsDao;
+import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
+import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
+import de.tum.in.tumcampusapp.component.other.wifimeasurement.WifiMeasurementDao;
+import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
+import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
+import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
+import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.tumui.person.FacultyDao;
+import de.tum.in.tumcampusapp.component.tumui.person.model.Faculty;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDao;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.FavoriteDishDao;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.FavoriteDish;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Location;
+import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageDao;
+import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomDao;
+import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
+import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.component.ui.news.NewsDao;
+import de.tum.in.tumcampusapp.component.ui.news.NewsSourcesDao;
+import de.tum.in.tumcampusapp.component.ui.news.model.News;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
+import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomDao;
+import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomGroupDao;
+import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
+import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
+import de.tum.in.tumcampusapp.component.ui.survey.OpenQuestionsDao;
+import de.tum.in.tumcampusapp.component.ui.survey.OwnQuestionsDao;
+import de.tum.in.tumcampusapp.component.ui.survey.model.OpenQuestions;
+import de.tum.in.tumcampusapp.component.ui.survey.model.OwnQuestions;
+import de.tum.in.tumcampusapp.component.ui.transportation.TransportDao;
+import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
+import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
+import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
+import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
-import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
-import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
-import de.tum.in.tumcampusapp.models.cafeteria.FavoriteDish;
-import de.tum.in.tumcampusapp.models.cafeteria.Location;
-import de.tum.in.tumcampusapp.models.chatRoom.ChatRoomDbRow;
-import de.tum.in.tumcampusapp.models.dbEntities.OpenQuestions;
-import de.tum.in.tumcampusapp.models.dbEntities.OwnQuestions;
-import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
-import de.tum.in.tumcampusapp.models.dbEntities.Recent;
-import de.tum.in.tumcampusapp.models.dbEntities.Sync;
-import de.tum.in.tumcampusapp.models.dbEntities.TumLock;
-import de.tum.in.tumcampusapp.models.dbEntities.WidgetsTimetableBlacklist;
-import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
-import de.tum.in.tumcampusapp.models.transport.TransportFavorites;
-import de.tum.in.tumcampusapp.models.transport.WidgetsTransport;
-import de.tum.in.tumcampusapp.models.tumcabe.BuildingToGps;
-import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
-import de.tum.in.tumcampusapp.models.tumcabe.Kino;
-import de.tum.in.tumcampusapp.models.tumcabe.News;
-import de.tum.in.tumcampusapp.models.tumcabe.NewsSources;
-import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
-import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
-import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
-import de.tum.in.tumcampusapp.models.tumcabe.WifiMeasurement;
+import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
+import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
+import de.tum.in.tumcampusapp.service.BackgroundService;
+import de.tum.in.tumcampusapp.service.DownloadService;
+import de.tum.in.tumcampusapp.service.SendMessageService;
+import de.tum.in.tumcampusapp.service.SilenceService;
+import de.tum.in.tumcampusapp.utils.CacheManager;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.sync.SyncDao;
+import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 2, entities = {
+@Database(version = 4, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -101,7 +110,7 @@ public abstract class TcaDb extends RoomDatabase {
 
     public abstract KinoDao kinoDao();
 
-    public abstract LocationDao locationDao();
+    public abstract CafeteriaLocationDao locationDao();
 
     public abstract ChatMessageDao chatMessageDao();
 
@@ -141,10 +150,84 @@ public abstract class TcaDb extends RoomDatabase {
         if (instance == null || !instance.isOpen()) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
-                           .fallbackToDestructiveMigration()
-                           .addMigrations(new Migration1to2())
+                           .addMigrations(new Migration1to2(), new Migration2to3(), new Migration3to4())
                            .build();
         }
         return instance;
+    }
+
+    /**
+     * Drop all tables, so we can do a complete clean start
+     * Careful: After executing this method, almost all the managers are in an illegal state, and
+     * can't do any SQL anymore. So take care to actually reinitialize all Managers
+     *
+     * @param c context
+     */
+    public static void resetDb(Context c) {
+        // Stop all services, since they might have instantiated Managers and cause SQLExceptions
+        Class<?>[] services = new Class<?>[]{
+                CalendarController.QueryLocationsService.class,
+                SendMessageService.class,
+                SilenceService.class,
+                DownloadService.class,
+                BackgroundService.class};
+        for (Class<?> service : services) {
+            c.stopService(new Intent(c, service));
+        }
+
+        //Clear our cache table
+        CacheManager.clearCache(c);
+
+        //Clear the db?
+        //TODO remove this, as we want to keep the data
+        TcaDb tdb = TcaDb.getInstance(c);
+        tdb.cafeteriaDao()
+           .removeCache();
+        tdb.cafeteriaMenuDao()
+           .removeCache();
+        tdb.calendarDao()
+           .flush();
+        tdb.locationDao()
+           .removeCache();
+        tdb.newsDao()
+           .flush();
+        tdb.newsSourcesDao()
+           .flush();
+        tdb.recentsDao()
+           .removeCache();
+        tdb.roomLocationsDao()
+           .flush();
+        tdb.syncDao()
+           .removeCache();
+        tdb.chatMessageDao()
+           .removeCache();
+        tdb.chatRoomDao()
+           .removeCache();
+        tdb.openQuestionsDao()
+           .flush();
+        tdb.ownQuestionsDao()
+           .flush();
+        tdb.tumLockDao()
+           .removeCache();
+        tdb.facultyDao()
+           .flush();
+        tdb.transportDao()
+           .removeCache();
+        tdb.studyRoomDao()
+           .removeCache();
+        tdb.studyRoomGroupDao()
+           .removeCache();
+        tdb.kinoDao()
+           .flush();
+        tdb.widgetsTimetableBlacklistDao()
+           .flush();
+        tdb.notificationDao()
+           .cleanup();
+        tdb.favoriteDishDao()
+           .removeCache();
+        tdb.buildingToGpsDao()
+           .removeCache();
+        tdb.wifiMeasurementDao()
+           .cleanup();
     }
 }

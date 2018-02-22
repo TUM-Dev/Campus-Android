@@ -10,10 +10,12 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import de.tum.in.tumcampusapp.BuildConfig;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
+import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.models.dbEntities.RoomLocations;
-import de.tum.in.tumcampusapp.models.tumo.CalendarItem;
+import de.tum.in.tumcampusapp.utils.DateUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,8 +46,8 @@ public class RoomLocationsDaoTest {
                                              "dummy url",
                                              "title " + Integer.toString(nr),
                                              "dummy description",
-                                             Utils.getDateTimeString(startDate.toDate()),
-                                             Utils.getDateTimeString(startDate.toDate()),
+                                             DateUtils.getDateTimeString(startDate.toDate()),
+                                             DateUtils.getDateTimeString(startDate.toDate()),
                                              location,
                                              false);
         nr++;

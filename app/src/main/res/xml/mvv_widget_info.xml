@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
-                    android:configure="de.tum.in.tumcampusapp.widgets.MVVWidgetConfigureActivity"
+                    android:configure="de.tum.in.tumcampusapp.component.ui.transportation.widget.MVVWidgetConfigureActivity"
                     android:initialKeyguardLayout="@layout/mvv_widget"
                     android:initialLayout="@layout/mvv_widget"
                     android:minHeight="110dp"
