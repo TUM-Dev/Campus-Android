@@ -22,6 +22,7 @@ android {
         targetSdkVersion 27
         versionCode 999999
         versionName "1.5.4-dev"
+        vectorDrawables.useSupportLibrary = true
     }
     lintOptions {
         checkAllWarnings true

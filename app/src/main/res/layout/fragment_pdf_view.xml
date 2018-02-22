@@ -2,9 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".component.ui.plan.PdfViewFragment"
-                android:id="@+id/pdf_viewer"
-    >
+                tools:context=".component.ui.plan.PdfViewFragment">
 
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdf_view"

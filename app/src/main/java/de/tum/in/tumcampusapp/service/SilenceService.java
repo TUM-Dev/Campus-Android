@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.JobIntentService;
 
 import java.text.ParseException;
@@ -173,6 +174,7 @@ public class SilenceService extends JobIntentService {
     /**
      * Request the "Do Not Disturb" permissions for android version >= N.
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     public static void requestPermissions(Context context) {
         if (hasPermissions(context)) {
             return;

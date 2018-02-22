@@ -532,8 +532,8 @@ Signature: %5$s</string>
     <string name="done">Done</string>
     <string name="eduroam_dialgo_step_1">1.</string>
     <string name="eduroam_dialog_preferences">Open Wi-Fi Preferences</string>
-    <string name="eduroam_dialog_step_2">2. Click on \'eduroam\'</string>
-    <string name="eduroam_dialog_step_3">3. Click on \'Forget\'</string>
+    <string name="eduroam_dialog_step_2">2. Click on \‘eduroam\’</string>
+    <string name="eduroam_dialog_step_3">3. Click on \‘Forget\’</string>
     <string name="eduroam_dialog_info_text">The wifi profile has to be deleted because the app doesn\'t have permission to overwrite configurations.</string>
 
     <!-- Feedback Activity -->
@@ -553,7 +553,7 @@ Signature: %5$s</string>
     <string name="feedback_remove_image">Remove Image</string>
     <string name="feedback_sending_error">There was an error sending your feedback</string>
     <string name="try_again">Try Again</string>
-    <string name="feedback_sending">Sending...</string>
+    <string name="feedback_sending">Sending…</string>
     <string name="feedback_send_success">Your feedback was successfully sent!</string>
     <string-array name="feedback_options">
         <item>@string/general</item>

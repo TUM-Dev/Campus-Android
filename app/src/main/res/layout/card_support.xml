@@ -56,7 +56,7 @@
                 android:clickable="false"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
-                android:src="@drawable/github"/>
+                card_view:srcCompat="@drawable/github"/>
         </LinearLayout>
 
         <TextView

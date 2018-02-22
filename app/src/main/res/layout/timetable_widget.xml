@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/widget_margin"
@@ -11,7 +13,8 @@
         android:layout_height="wrap_content"
         android:background="@color/color_primary"
         android:elevation="2dp"
-        android:padding="10dp">
+        android:padding="10dp"
+        tools:ignore="UnusedAttribute">
 
         <TextView
             android:id="@+id/timetable_widget_day"
@@ -32,7 +35,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:background="@color/color_primary"
-            android:src="@drawable/ic_action_settings"
+            app:srcCompat="@drawable/ic_action_settings"
             android:typeface="sans"/>
     </RelativeLayout>
 
