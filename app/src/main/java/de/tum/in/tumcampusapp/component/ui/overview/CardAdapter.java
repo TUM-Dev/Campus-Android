@@ -46,7 +46,7 @@ public class CardAdapter extends RecyclerView.Adapter<Card.CardViewHolder> imple
             case CardManager.CARD_EDUROAM_FIX:
                 return EduroamFixCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_CHAT:
-                return ChatMessagesCard.inflateViewHolder(viewGroup);
+                return ChatMessagesCard.Companion.inflateViewHolder(viewGroup);
             case CardManager.CARD_SUPPORT:
                 return SupportCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_SURVEY:
