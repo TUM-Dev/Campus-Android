@@ -177,7 +177,7 @@ public class CacheManager {
 
     public void syncCalendar() {
         TUMOnlineRequest<CalendarRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getCALENDER(), mContext);
-        requestHandler.setParameter("pMonateVor", "0");
+        requestHandler.setParameter("pMonateVor", "2");
         requestHandler.setParameter("pMonateNach", "3");
         if (shouldRefresh(requestHandler.getRequestURL())) {
             Optional<CalendarRowSet> set = requestHandler.fetch();
