@@ -100,6 +100,8 @@ dependencies {
     implementation 'com.github.barteksc:android-pdf-viewer:2.5.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.1'
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "android.arch.lifecycle:runtime:$roomVersion"
