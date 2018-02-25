@@ -53,26 +53,11 @@
                         android:text="@string/welcome_msg"/>
 
                     <EditText
-                        android:id="@+id/lrd_id"
+                        android:id="@+id/lrz_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:padding="@dimen/padding_default"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/welcome_faculty"
-                        />
-
-                    <Spinner
-                        android:id="@+id/majorSpinner"
-                        android:padding="@dimen/padding_default"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    </Spinner>
 
                 </LinearLayout>
             </ScrollView>

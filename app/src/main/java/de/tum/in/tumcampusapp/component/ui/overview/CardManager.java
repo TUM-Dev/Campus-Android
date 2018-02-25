@@ -19,7 +19,6 @@ import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamFixCard;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
-import de.tum.in.tumcampusapp.component.ui.survey.SurveyManager;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
@@ -132,7 +131,6 @@ public final class CardManager {
             managers.add(new CalendarController(context));
             managers.add(new TuitionFeeManager());
             managers.add(new ChatRoomController(context));
-            managers.add(new SurveyManager(context));
         }
 
         // Those don't need TUMOnline access
