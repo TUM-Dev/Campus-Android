@@ -8,7 +8,7 @@ import de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonal
  * Suggestion provider for {@link LecturesPersonalActivity}
  */
 public class LectureSearchSuggestionProvider extends SearchRecentSuggestionsProvider {
-    public final static String AUTHORITY = "de.tum.in.tumcampusapp.component.officialtum.lectures.LectureSearchSuggestionProvider";
+    public final static String AUTHORITY = "de.tum.in.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider";
 
     public LectureSearchSuggestionProvider() {
         setupSuggestions(AUTHORITY, 1);
