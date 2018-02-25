@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 
@@ -86,7 +87,7 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
         Calendar it = Calendar.getInstance();
         it.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         it.add(Calendar.DAY_OF_WEEK, position);
-        SimpleDateFormat format = new SimpleDateFormat("EEEE");
+        SimpleDateFormat format = new SimpleDateFormat("EEEE", Locale.getDefault());
         String dayOfWeekString = format.format(it.getTime());
         viewHolder.weekday.setText(dayOfWeekString);
         viewHolder.isActive.setOnClickListener(new AlarmActivatedListener(position));

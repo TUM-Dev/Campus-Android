@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -76,7 +77,7 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
             calendar.set(newYear, newMonth - 1, 1);
             int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
             String startTime = format.format(calendar.getTime());
 
             calendar.set(newYear, newMonth - 1, daysInMonth);

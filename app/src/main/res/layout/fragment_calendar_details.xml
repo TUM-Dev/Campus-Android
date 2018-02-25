@@ -2,20 +2,17 @@
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottomSheet"
     android:layout_width="match_parent"
     android:layout_height="300dp"
     >
 
     <LinearLayout
-        android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
         <LinearLayout
-            android:id="@+id/bottomSheetHeadingLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp">
@@ -29,7 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/activity_vertical_margin"
-                    android:src="@drawable/ic_calendar_white"
+                    app:srcCompat="@drawable/ic_calendar_white"
                     app:backgroundTint="@color/color_primary"/>
 
                 <TextView
@@ -57,7 +54,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_location"/>
+                    app:srcCompat="@drawable/ic_location"/>
 
                 <TextView
                     android:id="@+id/bottomSheetLocationText"
@@ -79,7 +76,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_time"/>
+                    app:srcCompat="@drawable/ic_time"/>
 
                 <TextView
                     android:id="@+id/bottomSheetDateText"
@@ -101,7 +98,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_action_info_black"/>
+                    app:srcCompat="@drawable/ic_action_info_black"/>
 
                 <TextView
                     android:id="@+id/bottomSheetDescriptionText"

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                                        xmlns:tools="http://schemas.android.com/tools"
                                         android:id="@+id/drawer_layout"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent">
@@ -14,7 +16,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:transitionName="@string/transition_card">
+            android:transitionName="@string/transition_card"
+            tools:ignore="UnusedAttribute">
 
             <ListView
                 android:id="@+id/lvMessageHistory"
@@ -63,12 +66,9 @@
                     android:contentDescription="@string/send"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:src="@drawable/ic_action_send_now"/>
-
+                    app:srcCompat="@drawable/ic_action_send_now"/>
             </RelativeLayout>
-
         </RelativeLayout>
     </LinearLayout>
-
     <include layout="@layout/navigation_drawer"/>
 </android.support.v4.widget.DrawerLayout>

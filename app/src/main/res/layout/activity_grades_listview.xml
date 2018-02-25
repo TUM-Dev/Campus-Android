@@ -16,8 +16,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_light_blue"
             android:textSize="@dimen/large_text_size"
-            android:textStyle="bold"
-            android:text="Grundlagen Algorithmen und Datenstrukturen"/>
+            android:textStyle="bold"/>
         <TextView
             android:id="@+id/tv1"
             android:layout_width="fill_parent"
@@ -32,8 +31,6 @@
         android:id="@+id/grade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1,0"
-        android:layout_centerInParent="true"
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:textSize="22sp"
