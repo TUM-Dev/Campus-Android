@@ -6,20 +6,19 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
-import io.reactivex.disposables.CompositeDisposable;
 
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
     private final Context applicationContext;
     private List<CafeteriaMenu> mensaMenu;
-    CompositeDisposable mDisposable = new CompositeDisposable();
 
     public MensaRemoteViewFactory(Context applicationContext, Intent intent) {
         this.applicationContext = applicationContext.getApplicationContext();
@@ -28,23 +27,10 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
     @Override
     public void onCreate() {
         CafeteriaManager mensaManager = new CafeteriaManager(applicationContext);
+        Map<String, List<CafeteriaMenu>> menus = mensaManager.getBestMatchMensaInfo(applicationContext)
+                                                             .blockingFirst();
+        mensaMenu = menus.get(menus.keySet().iterator().next());
 
-        // Map of the name of the best mensa and list of its Menu
-        mDisposable.add(mensaManager.getBestMatchMensaInfo(applicationContext)
-                .subscribe(s -> {
-                    String mensaName = s.keySet()
-                                                   .iterator()
-                                                   .next();
-                    mensaMenu = s.get(mensaName);
-                }));
-//        if (currentMensa == null) {
-//            Utils.log("Error! Could not get list of menus for the mensa widget ");
-//        } else {
-//            String mensaName = currentMensa.keySet()
-//                                           .iterator()
-//                                           .next();
-//            mensaMenu = currentMensa.get(mensaName);
-//        }
     }
 
     @Override
@@ -54,8 +40,7 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public void onDestroy() {
-        // Noop
-        mDisposable.clear();
+        // Noop 
     }
 
     @Override
@@ -68,6 +53,7 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public RemoteViews getViewAt(int position) {
+
         CafeteriaMenu currentItem = mensaMenu.get(position);
         if (currentItem == null) {
             return null;
