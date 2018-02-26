@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -185,6 +186,14 @@ public final class TUMOnlineRequest<T> {
         return Optional.fromNullable(res);
     }
 
+    private <S> ObservableTransformer<S, S> handleLifecycle() {
+        if (provider.isPresent()) {
+            return provider.get()
+                           .bindToLifecycle();
+        }
+        return observable -> observable;
+    }
+
     /**
      * this fetch method will fetch the data from the TUMOnline Request and will
      * address the listeners onFetch if the fetch succeeded, else the
@@ -200,12 +209,9 @@ public final class TUMOnlineRequest<T> {
         }
 
         // fetch information in a background task and show progress dialog in meantime
-        Observable<Optional<T>> observable = Observable.fromCallable(this::fetch);
-        if (provider.isPresent()) {
-            observable = observable.compose(provider.get()
-                                                    .bindToLifecycle());
-        }
-        observable.subscribeOn(Schedulers.io())
+        Observable.fromCallable(this::fetch)
+                  .compose(handleLifecycle())
+                  .subscribeOn(Schedulers.io())
                   .observeOn(AndroidSchedulers.mainThread())
                   .subscribe((result) -> {
                       if (result.isPresent()) {
