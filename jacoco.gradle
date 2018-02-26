@@ -3,7 +3,7 @@ apply plugin: 'jacoco'
 jacoco {
     // Use this version for upper ones are broken (with Gradle)
     // https://github.com/jacoco/jacoco/issues/288
-    toolVersion = "0.8.0"
+    toolVersion = "0.7.2.201409121644"
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
