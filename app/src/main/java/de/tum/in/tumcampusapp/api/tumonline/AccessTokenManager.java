@@ -50,7 +50,7 @@ public class AccessTokenManager {
     }
 
     /**
-     * SurveyCard if a valid access token already exists
+     * If a valid access token already exists
      *
      * @return True, if access token is set
      */
