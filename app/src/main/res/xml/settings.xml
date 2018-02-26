@@ -263,29 +263,6 @@
             </PreferenceCategory>
         </PreferenceScreen>
 
-        <!-- Survey fee card -->
-        <PreferenceScreen
-            android:key="card_survey"
-            android:summary="@string/card_survey_summary"
-            android:title="@string/research_quiz">
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="card_survey_start"
-                    android:title="@string/startpage"/>
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="card_survey_wear"
-                    android:title="@string/wear"/>
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:dependency="card_survey_wear"
-                    android:key="card_survey_phone"
-                    android:summary="@string/phone_summary"
-                    android:title="@string/notification"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
-
         <ListPreference
             android:defaultValue="G"
             android:entries="@array/default_campus_entries"

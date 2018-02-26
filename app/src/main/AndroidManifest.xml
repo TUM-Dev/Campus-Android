@@ -197,15 +197,6 @@
                 android:value=".component.ui.openinghour.OpeningHoursListActivity"/>
         </activity>
         <activity
-            android:name="de.tum.in.tumcampusapp.component.ui.survey.SurveyActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="Survey"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.survey.SurveyActivity"/>
-        </activity>
-        <activity
             android:name=".component.ui.openinghour.OpeningHoursListActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/opening_hours"

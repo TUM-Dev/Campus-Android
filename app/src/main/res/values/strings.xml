@@ -26,7 +26,6 @@
     <string name="calendar_not_existing_toast">No local calendar existing</string>
     <string name="semester_summer">Summer term</string>
     <string name="semester_winter">Winter term</string>
-    <string name="quiz_title" translatable="false">Quiz</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>
@@ -462,37 +461,10 @@ Signature: %5$s</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
     <string name="www" translatable="false">www</string>
-    <string name="quiz">Research Survey</string>
-    <string name="research_quiz" translatable="false">Research Quiz</string>
-    <string name="no_questions_available">No Questions are available!</string>
-    <string name="one_question_left">Only 1 question left</string>
-    <string name="next_possible_survey_date">You have reached the maximum number of questions per week. Next possible survey date is</string>
-    <string name="flag_inappropriate">Flag inappropriate question</string>
-    <string name="survey_yes">Yes</string>
-    <string name="select_target_faculties_survey">Select Target Faculties</string>
-    <string name="survey_no">No</string>
-    <string name="select_number_of_questions_survey">Select  number of questions</string>
-    <string name="survey_skip">Skip</string>
-    <string name="enter_first_question_survey">Please enter your first question</string>
-    <string name="enter_second_question_survey">Please enter your second question</string>
-    <string name="enter_third_question_survey">Please enter your third question</string>
-    <string name="enter_question_survey">Please enter question</string>
-    <string name="submit_question_survey">Submit Question</string>
-    <string name="quiz_target_faculty">Please choose your target audience:</string>
-    <string name="tab_survey">Survey</string>
-    <string name="tab_responses">Responses</string>
-    <string name="survey_submitted">Survey has been submitted</string>
-    <string name="complete_question_form">Please complete question form</string>
-    <string name="select_one_faculty">At least select one faculty</string>
-    <string name="question_deleted">Question has been deleted</string>
-    <string name="choose_own_faculty">Please choose your faculty</string>
     <string name="mvv_download">Please press OK to download MVV-Plans otherwise you can\'t use this feature</string>
     <string name="more_info">More Information</string>
-    <string name="welcome_faculty">To deliver the best possible experience please provide us with your best matching faculty:</string>
     <string name="event_plan">Event plan</string>
     <string name="please_connect_to_internet">Please connect to internet in order to proceed the first app start</string>
-    <string name="card_survey_summary">enables you to participate in research related survey questions</string>
-    <string name="selected_target_faculties">Selected target faculties:</string>
     <string name="transition_card" translatable="false">card_transition</string>
     <string name="tumonline_link" translatable="false"><a href="http://campus.tum.de">TUMonline</a></string>
     <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>

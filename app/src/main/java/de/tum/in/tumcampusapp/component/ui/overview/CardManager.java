@@ -44,7 +44,6 @@ public final class CardManager {
     public static final int CARD_EDUROAM = 11;
     public static final int CARD_CHAT = 12;
     public static final int CARD_SUPPORT = 13;
-    public static final int CARD_SURVEY = 14;
     public static final int CARD_EDUROAM_FIX = 15;
     private static boolean shouldRefresh;
     private static List<Card> cards;
