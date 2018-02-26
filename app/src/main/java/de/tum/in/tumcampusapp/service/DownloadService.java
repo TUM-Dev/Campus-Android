@@ -29,7 +29,6 @@ import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
-import de.tum.in.tumcampusapp.component.ui.survey.SurveyManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -101,9 +100,6 @@ public class DownloadService extends JobIntentService {
             switch (action) {
                 case Const.NEWS:
                     successful = service.downloadNews(force);
-                    break;
-                case Const.FACULTIES:
-                    successful = service.downloadFacultiesAndSurveyData();
                     break;
                 case Const.CAFETERIAS:
                     successful = service.downloadCafeterias(force);
@@ -228,8 +224,7 @@ public class DownloadService extends JobIntentService {
         final boolean cafe = downloadCafeterias(force);
         final boolean kino = downLoadKino(force);
         final boolean news = downloadNews(force);
-        final boolean faculties = downloadFacultiesAndSurveyData();
-        return cafe && kino && news && faculties;
+        return cafe && kino && news;
     }
 
     private boolean downloadCafeterias(boolean force) {
@@ -253,14 +248,6 @@ public class DownloadService extends JobIntentService {
             Utils.log(e);
             return false;
         }
-    }
-
-    private boolean downloadFacultiesAndSurveyData() {
-        SurveyManager sm = new SurveyManager(this);
-        sm.downloadFacultiesFromExternal(); // Downloads the facultyData from the server in local db
-        sm.downLoadOpenQuestions(); // Downloads openQuestions relevant for the survey card
-        sm.downLoadOwnQuestions(); // Downloads ownQuestions relevant for displaying responses in surveyActivity
-        return true;
     }
 
     /**

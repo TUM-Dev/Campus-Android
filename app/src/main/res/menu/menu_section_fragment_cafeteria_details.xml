@@ -6,12 +6,12 @@
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_notifications"
         android:title="@string/action_ingredients"
-        tumcampus:showAsAction="always"/>
+        tumcampus:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_ingredients"
         android:icon="@drawable/ic_action_info_white"
         android:title="@string/action_ingredients"
-        tumcampus:showAsAction="always"/>
+        tumcampus:showAsAction="ifRoom"/>
 
 </menu>

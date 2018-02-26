@@ -45,6 +45,7 @@
             android:onClick="onClick"
             android:clickable="true"
             android:visibility="gone"
-            android:text=""/>
+            android:text=""
+            android:focusable="true"/>
     </LinearLayout>
 </LinearLayout>

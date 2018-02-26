@@ -1,4 +1,5 @@
 <android.support.v4.widget.DrawerLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -85,7 +86,7 @@
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
                             android:layout_margin="10dp"
-                            android:src="@drawable/ic_help_red"/>
+                            app:srcCompat="@drawable/ic_help_red"/>
                     </LinearLayout>
 
                     <LinearLayout

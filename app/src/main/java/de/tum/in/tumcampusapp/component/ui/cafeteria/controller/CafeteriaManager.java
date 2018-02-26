@@ -83,7 +83,7 @@ public class CafeteriaManager implements Card.ProvidesCard {
             return Flowable.just(Collections.emptyMap());
         }
 
-        return createCafeteriaObservable(cafeteriaId)
+        return createCafeteriaObservableForNonUIThreads(cafeteriaId)
                 .map(cafeteria -> {
                     String mensaKey = cafeteria.name + ' ' + cafeteria.dateStr;
                     Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>(1);
@@ -122,6 +122,29 @@ public class CafeteriaManager implements Card.ProvidesCard {
             dateStr = cafeteriaDates.get(1);
         }
         return dateStr;
+    }
+
+
+    private Flowable<Cafeteria> createCafeteriaObservableForNonUIThreads(int cafeteriaId) {
+        Cafeteria cafeteria = new Cafeteria();
+        cafeteria.id = cafeteriaId;
+
+        return CafeteriaLocalRepository.INSTANCE
+                .getCafeteria(cafeteriaId)
+                .doOnError(throwable -> Utils.log(throwable.getMessage()))
+                .flatMap(cafeteria1 -> {
+                    cafeteria.name = cafeteria1.getName();
+                    return CafeteriaLocalRepository.INSTANCE.getAllMenuDates();
+                })
+                .flatMap(menuDates -> {
+                    cafeteria.menuDates = menuDates;
+                    cafeteria.dateStr = createDateString(menuDates);
+                    return  CafeteriaLocalRepository.INSTANCE.getCafeteriaMenu(cafeteria.id, cafeteria.dateStr);
+                })
+                .map(menus -> {
+                    cafeteria.menus = menus;
+                    return cafeteria;
+                });
     }
 
     private Flowable<Cafeteria> createCafeteriaObservable(int cafeteriaId) {

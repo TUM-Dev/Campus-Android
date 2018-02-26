@@ -61,7 +61,7 @@ public class CafeteriaNotificationSettings {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt(PREFIX + dayOfWeek + HOUR, hour);
             editor.putInt(PREFIX + dayOfWeek + MINUTE, minute);
-            editor.commit();
+            editor.apply();
         }
     }
 

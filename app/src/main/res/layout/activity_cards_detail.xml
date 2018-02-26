@@ -59,7 +59,6 @@
                         style="?android:attr/spinnerStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Android Praktikum"
                         android:textSize="20sp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp" />
@@ -68,7 +67,6 @@
                         style="?android:attr/spinnerStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Q|A"
                         android:textSize="20sp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"/>

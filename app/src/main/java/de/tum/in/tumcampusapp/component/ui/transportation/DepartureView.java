@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import de.tum.in.tumcampusapp.R;
 
 /**
@@ -135,7 +137,7 @@ public class DepartureView extends LinearLayout {
 
     private void updateDepartureTime() {
         long departureOffset = (mDepartureTime - System.currentTimeMillis()) / 1000;
-        String text = String.format("%2d:%02d", departureOffset / 60, departureOffset % 60);
+        String text = String.format(Locale.getDefault(), "%2d:%02d", departureOffset / 60, departureOffset % 60);
         if (departureOffset > 0) {
             mTimeSwitcher.setCurrentText(text);
         } else {

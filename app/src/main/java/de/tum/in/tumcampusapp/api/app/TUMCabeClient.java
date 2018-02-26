@@ -19,7 +19,6 @@ import de.tum.in.tumcampusapp.component.other.reporting.stats.model.Statistics;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
-import de.tum.in.tumcampusapp.component.tumui.person.model.Faculty;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
@@ -37,7 +36,6 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
-import de.tum.in.tumcampusapp.component.ui.survey.model.Question;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -60,20 +58,12 @@ public class TUMCabeClient {
     static final String API_CHAT = "chat/";
     static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
-    //static final String API_SESSION = "session/";
-    //static final String API_NEWS = "news/";
-    //static final String API_MENSA = "mensen/";
     static final String API_CURRICULA = "curricula/";
     static final String API_REPORT = "report/";
     static final String API_STATISTICS = "statistics/";
-    //static final String API_CINEMA = "kino/";
     static final String API_NOTIFICATIONS = "notifications/";
     static final String API_LOCATIONS = "locations/";
     static final String API_DEVICE = "device/";
-    static final String API_QUESTION = "question/";
-    static final String API_ANSWER_QUESTION = "question/answer/";
-    static final String API_OWN_QUESTIONS = "question/my/";
-    static final String API_FACULTY = "faculty/";
     static final String API_WIFI_HEATMAP = "wifimap/";
     static final String API_BARRIER_FREE = "barrierfree/";
     static final String API_BARRIER_FREE_CONTACT = "contacts/";
@@ -113,45 +103,6 @@ public class TUMCabeClient {
             instance = new TUMCabeClient(c.getApplicationContext());
         }
         return instance;
-    }
-
-    // Fetches faculty data (facname, id).Relevant for the user to select own major in majorSpinner in WizNavStartActivity
-    public List<Faculty> getFaculties() throws IOException {
-        return service.getFaculties()
-                      .execute()
-                      .body();
-    }
-
-    // Deletes ownQuestion..Relevant for allowing the user to delete own questions under responses in SurveyActivity
-    public void deleteOwnQuestion(int question, Callback<Question> cb) {
-        service.deleteOwnQuestion(question)
-               .enqueue(cb);
-    }
-
-    // Fetches users ownQuestions and responses.Relevant for displaying results on ownQuestion under responses in SurveyActivity
-    public List<Question> getOwnQuestions() throws IOException {
-        return service.getOwnQuestions()
-                      .execute()
-                      .body();
-    }
-
-    // Submits user's answer on a given question.Gets triggered through in the survey card.
-    public void submitAnswer(Question question, Callback<Question> cb) {
-        service.answerQuestion(question)
-               .enqueue(cb);
-    }
-
-    // Fetches openQuestions which are relevant for the surveyCard.
-    public List<Question> getOpenQuestions() throws IOException {
-        return service.getOpenQuestions()
-                      .execute()
-                      .body();
-    }
-
-    // Submits user's own question. Gets triggered from the SurveyActivity
-    public void createQuestion(Question question, Callback<Question> cb) {
-        service.createQuestion(question)
-               .enqueue(cb);
     }
 
     public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {

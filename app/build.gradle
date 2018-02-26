@@ -22,6 +22,7 @@ android {
         targetSdkVersion 27
         versionCode 999999
         versionName "1.5.4-dev"
+        vectorDrawables.useSupportLibrary = true
     }
     lintOptions {
         checkAllWarnings true
@@ -81,7 +82,7 @@ dependencies {
     implementation 'com.google.guava:guava:23.2-android'
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
@@ -102,8 +103,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
-    implementation "android.arch.lifecycle:runtime:$roomVersion"
-    implementation "android.arch.lifecycle:extensions:$roomVersion"
+    implementation "android.arch.lifecycle:runtime:1.1.0"
+    implementation "android.arch.lifecycle:extensions:1.1.0"
     annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
@@ -114,9 +115,9 @@ dependencies {
 
     //Used for testing
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.13.0'
-    testImplementation 'org.assertj:assertj-core:3.9.0'
-    testImplementation 'org.robolectric:robolectric:3.5.1'
+    testImplementation 'org.mockito:mockito-core:2.15.0'
+    testImplementation 'org.assertj:assertj-core:3.9.1'
+    testImplementation 'org.robolectric:robolectric:3.7.1'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
 

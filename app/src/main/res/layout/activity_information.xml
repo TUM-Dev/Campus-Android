@@ -39,7 +39,8 @@
                     android:autoLink="all"
                     android:clickable="true"
                     android:text="@string/add_info"
-                    android:textSize="@dimen/large_text_size"/>
+                    android:textSize="@dimen/large_text_size"
+                    android:focusable="true"/>
 
                 <TextView
                     android:layout_width="match_parent"

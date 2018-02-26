@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <gradient xmlns:android="http://schemas.android.com/apk/res/android"
-          android:endColor="#001A237E"
+          xmlns:tools="http://schemas.android.com/tools" android:endColor="#001A237E"
           android:endX="108"
           android:endY="108"
           android:startColor="#331A237E"
           android:startX="54"
           android:startY="54"
-          android:type="linear"/>
+          android:type="linear" tools:ignore="UnusedAttribute"/>

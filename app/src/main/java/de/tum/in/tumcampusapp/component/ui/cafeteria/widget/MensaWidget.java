@@ -44,9 +44,9 @@ public class MensaWidget extends AppWidgetProvider {
             CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
             localRepository.setDb(TcaDb.getInstance(context));
             Flowable<Cafeteria> cafeteria = localRepository.getCafeteria(mensaManager.getBestMatchMensaId(context));
-            String name = cafeteria.map(cafeteria1 -> cafeteria1.getName() + " " + DateUtils.getDateTimeString(new Date()))
-                                   .blockingFirst();
-            rv.setTextViewText(R.id.mensa_widget_header, name);
+
+            cafeteria.map(cafeteria1 -> cafeteria1.getName() + " " + DateUtils.getDateTimeString(new Date()))
+                     .subscribe(mensaName -> rv.setTextViewText(R.id.mensa_widget_header, mensaName));
 
             // set the header on click to open the mensa activity
             Intent mensaIntent = new Intent(context, CafeteriaActivity.class);
