@@ -92,7 +92,7 @@ public class MVVWidget extends AppWidgetProvider {
         am.cancel(sender);
         if (autoReload) {
             intent.setAction(MVVWidget.BROADCAST_RELOAD_ALL_ALARM);
-            am.setRepeating(AlarmManager.RTC, 0, UPDATE_ALARM_DELAY, sender);
+            am.setRepeating(AlarmManager.RTC, 5000, UPDATE_ALARM_DELAY, sender);
         }
     }
 

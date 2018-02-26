@@ -47,7 +47,7 @@ public class CafeteriaNotificationSettingsActivity extends BaseActivity {
         save = findViewById(R.id.notification_settings_save);
         save.setOnClickListener(view -> {
             save.setBackgroundColor(getResources().getColor(R.color.sections_green));
-            save.setText("Saved");
+            save.setText(R.string.ok);
             cafeteriaNotificationSettings.saveWholeSchedule(dailySchedule);
         });
     }

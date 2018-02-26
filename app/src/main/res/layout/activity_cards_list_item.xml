@@ -6,8 +6,6 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <!-- TODO remove placeholders -->
-
     <TextView
         android:id="@+id/card_type"
         android:layout_width="wrap_content"
@@ -16,7 +14,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:gravity="center"
-        android:text="Q|A"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,14 +36,12 @@
         tools:text="titel" />
 
     <TextView
-        android:id="@+id/card_lecture"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
-        android:text="Android Praktikum"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/card_type"
