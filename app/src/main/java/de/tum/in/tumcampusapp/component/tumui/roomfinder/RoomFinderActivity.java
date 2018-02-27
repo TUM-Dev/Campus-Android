@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.component.tumui.roomfinder;
 
 import android.app.SearchManager;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,8 +26,6 @@ import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-import static android.view.View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS;
-
 /**
  * Activity to show a convenience interface for using the MyTUM room finder.
  */
@@ -49,9 +46,6 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
 
         list = findViewById(R.id.list);
         list.setOnItemClickListener(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            list.setImportantForAutofill(IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS);
-        }
         recentsDao = TcaDb.getInstance(this)
                           .recentsDao();
         adapter = new RoomFinderListAdapter(this, getRecents());
