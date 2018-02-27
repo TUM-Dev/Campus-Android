@@ -24,7 +24,9 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.settings.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.service.SilenceService;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
@@ -145,6 +147,16 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         if (registered) {
             unregisterReceiver(connectivityChangeReceiver);
             registered = false;
+        }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        if(Utils.getSettingBool(this, Const.REFRESH_CARDS, false)){
+            refreshCards();
+            Utils.setSetting(this, Const.REFRESH_CARDS, false);
         }
     }
 
