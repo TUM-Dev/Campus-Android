@@ -88,7 +88,7 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         TransportFavorites.class,
         WidgetsTransport.class,
         ChatRoomDbRow.class
-}, exportSchema = false) // TODO: probably version schema
+})
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
     public abstract CafeteriaDao cafeteriaDao();

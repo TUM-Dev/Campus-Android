@@ -25,6 +25,7 @@ android {
         versionCode 999999
         versionName "1.5.4-dev"
         vectorDrawables.useSupportLibrary = true
+        javaCompileOptions.annotationProcessorOptions.arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
     }
     lintOptions {
         checkAllWarnings true
@@ -51,6 +52,7 @@ android {
         }
     }
     sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
         unitTest {
             java {
                 srcDir 'src/test/java'
@@ -122,6 +124,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.15.0'
     testImplementation 'org.assertj:assertj-core:3.9.1'
     testImplementation 'org.robolectric:robolectric:3.7.1'
+    testImplementation "android.arch.persistence.room:testing:$roomVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
 
