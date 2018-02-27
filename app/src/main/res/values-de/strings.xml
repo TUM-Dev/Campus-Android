@@ -401,7 +401,7 @@ Signatur: %5$s</string>
     <string name="eduroam_fix">Jetzt reparieren!</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">eduroam reparieren</string>
-    <string name="wifi_identity_zone">Du hast eduroam ohne Angabe der Heimateinrichtung (z.B. \“@eduroam.mwn.de\”) im Benutzernamen konfiguriert. Die Verbindung zu eduroam wird daher insbesondere abseits des Campus fehlschlagen.</string>
+    <string name="wifi_identity_zone">Du hast eduroam ohne Angabe der Heimateinrichtung (z.B. \“@eduroam.mwn.de\”) im Benutzernamen konfiguriert. Dadurch wird eduroam abseits der TUM nicht funktionieren.</string>
     <string name="wifi_dns_name_not_set">DNS-Name ist nicht festgelegt</string>
     <string name="wifi_anonymous_identity_not_set">Anonyme Identität nicht korrekt</string>
 

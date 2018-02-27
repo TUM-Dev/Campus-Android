@@ -476,7 +476,7 @@ Signature: %5$s</string>
     <string name="eduroam_fix">Click to fix it now!</string>
     <string name="eduroam_insecure_configuration">We have detected an insecure eduroam wifi configuration. You are subject to leaking information about you and your account.</string>
     <string name="wifi_dns_name_not_set">DNS Name is not set</string>
-    <string name="wifi_identity_zone">You have configured eduroam without specifying the home institution (e.g. @eduroam.mwn.de) in your username. This may result in connection failures, especially when you\'re not on the TUM campus.</string>
+    <string name="wifi_identity_zone">You have configured eduroam without specifying the home institution (e.g. @eduroam.mwn.de) in your username. This means that eduroam won\'t work when you\'re not on the TUM campus.</string>
     <string name="wifi_anonymous_identity_not_set">Anonymous Identity not correct</string>
 
     <string name="transport_action_usage">Usage</string>
