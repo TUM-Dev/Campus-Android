@@ -127,4 +127,5 @@ object Const {
 
     const val RAINBOW_MODE = "rainbow_enabled"
     const val REFRESH_CARDS = "refresh_cards"
+    const val EDUROAM_SSID = "eduroam"
 }
