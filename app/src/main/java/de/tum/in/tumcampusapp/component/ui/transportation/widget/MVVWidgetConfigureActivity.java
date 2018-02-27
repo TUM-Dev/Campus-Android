@@ -110,11 +110,6 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         // Get Information
         List<StationResult> stations = TransportController.getStationsFromExternal(this, query);
 
-        // Drop results if canceled
-        if (asyncTask.isCancelled()) {
-            return Optional.absent();
-        }
-
         return Optional.of(stations);
     }
 

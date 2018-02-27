@@ -1,18 +1,25 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.os.AsyncTask;
+import android.arch.lifecycle.Lifecycle;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.google.common.base.Optional;
+import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
+import com.trello.rxlifecycle2.LifecycleProvider;
+
+import javax.annotation.Nullable;
 
 import de.tum.in.tumcampusapp.utils.NetUtils;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Generic class which can handle a long running search in background.
  * Class parameter should be the class that holds the results of the background task.
  */
 public abstract class ActivityForSearchingInBackground<T> extends ActivityForSearching {
-    protected AsyncTask<String, Void, Optional<T>> asyncTask;
+    protected final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
 
     /**
      * Initializes an activity for searching in background.
@@ -33,7 +40,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      * This method is always called from a thread that is not the UI thread, so long running
      * operations can be invoked directly in this method.
      * To bring the loaded results to the UI return the results and apply it in
-     * {@link ActivityForSearchingInBackground#onSearchFinished(Object)}
+     * {@link ActivityForSearchingInBackground#onSearchFinished(Optional)}
      */
     protected abstract Optional<T> onSearchInBackground();
 
@@ -42,7 +49,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      * This method is always called from a thread that is not the UI thread, so long running
      * operations can be invoked directly in this method.
      * To bring the loaded results to the UI return the results and apply it in
-     * {@link ActivityForSearchingInBackground#onSearchFinished(Object)}
+     * {@link ActivityForSearchingInBackground#onSearchFinished(Optional)}
      *
      * @param query Query to search for
      * @return Loaded results
@@ -60,34 +67,29 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
 
     @Override
     public final void onStartSearch() {
-        if (asyncTask != null) {
-            asyncTask.cancel(true);
-        }
-
-        asyncTask = new BackgroundSearch();
-        asyncTask.execute();
+        onStartSearch(null);
     }
 
     @Override
-    public final void onStartSearch(final String query) {
-        if (asyncTask != null) {
-            asyncTask.cancel(true);
+    public final void onStartSearch(@Nullable String query) {
+        if (!NetUtils.isConnected(ActivityForSearchingInBackground.this)) {
+            showNoInternetLayout();
+            return;
         }
 
-        asyncTask = new BackgroundSearch();
-        asyncTask.execute(query);
-    }
+        showLoadingStart();
 
-    void onCancelLoading() {
-        if (asyncTask != null) {
-            asyncTask.cancel(true);
+        Observable<Optional<T>> observable;
+        if (query == null) {
+            observable = Observable.fromCallable(this::onSearchInBackground);
+        } else {
+            observable = Observable.fromCallable(() -> onSearchInBackground(query));
         }
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        onCancelLoading();
+        observable.compose(provider.bindToLifecycle())
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(this::onSearchFinished);
     }
 
     /**
@@ -145,33 +147,5 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
     @Override
     protected void showNoInternetLayout() {
         runOnUiThread(ActivityForSearchingInBackground.super::showNoInternetLayout);
-    }
-
-    private class BackgroundSearch extends AsyncTask<String, Void, Optional<T>> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            if (!NetUtils.isConnected(ActivityForSearchingInBackground.this)) {
-                showNoInternetLayout();
-                return;
-            }
-
-            showLoadingStart();
-        }
-
-        @Override
-        protected Optional<T> doInBackground(String... arg) {
-            if (arg.length == 0) {
-                return onSearchInBackground();
-            }
-            return onSearchInBackground(arg[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Optional<T> result) {
-            onSearchFinished(result);
-            asyncTask = null;
-        }
     }
 }

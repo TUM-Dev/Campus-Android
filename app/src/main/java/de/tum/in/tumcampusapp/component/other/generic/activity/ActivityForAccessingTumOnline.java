@@ -85,12 +85,6 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        requestHandler.cancelRequest(true);
-    }
-
-    @Override
     public void onFetchCancelled() {
         finish();
     }

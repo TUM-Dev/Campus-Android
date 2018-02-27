@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.arch.lifecycle.Lifecycle;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -9,7 +10,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.RectF;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
@@ -24,6 +24,8 @@ import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
+import com.trello.rxlifecycle2.LifecycleProvider;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -41,6 +43,9 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
 
@@ -61,6 +66,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                                                           Manifest.permission.WRITE_CALENDAR};
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
     private CalendarController calendarController;
+    private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
 
     /**
      * Used as a flag, if there are results fetched from internet
@@ -119,26 +125,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     @Override
     public void onFetch(final CalendarRowSet rawResponse) {
         // parsing and saving xml response
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                isFetched = true;
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                calendarController.importCalendar(rawResponse);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                showLoadingEnded();
-                // update the action bar to display the enabled menu options
-                CalendarActivity.this.invalidateOptionsMenu();
-                startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
-            }
-        }.execute();
+        isFetched = true;
+        Completable.fromAction(() -> calendarController.importCalendar(rawResponse))
+                   .compose(provider.bindToLifecycle())
+                   .subscribeOn(Schedulers.io())
+                   .observeOn(AndroidSchedulers.mainThread())
+                   .subscribe(() -> {
+                       showLoadingEnded();
+                       // update the action bar to display the enabled menu options
+                       CalendarActivity.this.invalidateOptionsMenu();
+                       startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
+                   });
     }
 
     @Override
@@ -233,34 +230,21 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             return;
         }
 
-        AsyncTask<Void, Void, Boolean> backgroundTask;
-
-        backgroundTask = new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                CalendarController.syncCalendar(CalendarActivity.this);
-                return true;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                // Informs the user about the ongoing action
-                if (!CalendarActivity.this.isFinishing()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-                    builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
-                           .setPositiveButton(CalendarActivity.this.getString(R.string.yes), CalendarActivity.this)
-                           .setNegativeButton(CalendarActivity.this.getString(R.string.no), CalendarActivity.this)
-                           .show();
-                    showLoadingEnded();
-                }
-            }
-
-            @Override
-            protected void onPreExecute() {
-                showLoadingStart();
-            }
-        };
-        backgroundTask.execute();
+        showLoadingStart();
+        Completable.fromAction(() -> CalendarController.syncCalendar(this))
+                   .compose(provider.bindToLifecycle())
+                   .subscribeOn(Schedulers.io())
+                   .observeOn(AndroidSchedulers.mainThread())
+                   .subscribe(() -> {
+                       if (!isFinishing()) {
+                           AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                           builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
+                                  .setPositiveButton(CalendarActivity.this.getString(R.string.yes), this)
+                                  .setNegativeButton(CalendarActivity.this.getString(R.string.no), this)
+                                  .show();
+                           showLoadingEnded();
+                       }
+                   });
     }
 
     /**
