@@ -32,6 +32,7 @@ public class SetupEduroamActivity extends BaseActivity {
 
     private EditText lrz;
     private EditText password;
+    private boolean foreignConfigExists;
 
     public SetupEduroamActivity() {
         super(R.layout.activity_setup_eduroam);
@@ -42,7 +43,8 @@ public class SetupEduroamActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
 
-        if (getIntent().getBooleanExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, false)) {
+        foreignConfigExists = getIntent().getBooleanExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, false);
+        if (foreignConfigExists) {
             showDeleteProfileDialog(true);
         }
 
@@ -117,6 +119,9 @@ public class SetupEduroamActivity extends BaseActivity {
                                                                            .toString());
         if (success) {
             Utils.showToast(this, R.string.eduroam_success);
+            if(foreignConfigExists){
+                Utils.setSetting(this, Const.REFRESH_CARDS, true);
+            }
             finish();
 
             CardManager.setShouldRefresh();
@@ -170,6 +175,9 @@ public class SetupEduroamActivity extends BaseActivity {
 
     @SuppressWarnings("UnusedParameters")
     public void onClickCancel(View v) {
+        if(foreignConfigExists){
+            Utils.setSetting(this, Const.REFRESH_CARDS, true);
+        }
         finish();
     }
 }

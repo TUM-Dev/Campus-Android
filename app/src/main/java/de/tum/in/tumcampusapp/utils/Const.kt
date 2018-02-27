@@ -126,4 +126,5 @@ object Const {
     const val CALENDAR_ID_PARAM = "calendar_id"
 
     const val RAINBOW_MODE = "rainbow_enabled"
+    const val REFRESH_CARDS = "refresh_cards"
 }
