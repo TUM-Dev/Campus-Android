@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -17,6 +18,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
+import de.tum.in.tumcampusapp.utils.Const;
 
 /**
  * Card that can start {@link SetupEduroamActivity}
@@ -41,13 +43,20 @@ public class EduroamCard extends NotificationAwareCard {
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         //Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        WifiManager wifi = (WifiManager) mContext.getApplicationContext()
-                                                 .getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (!wifi.isWifiEnabled()) {
             return false;
         }
+        return EduroamController.getEduroamConfig(mContext) == null && eduroamAvailable(wifi);
+    }
 
-        return EduroamController.getEduroamConfig(mContext) == null;
+    private boolean eduroamAvailable(WifiManager wifi){
+        for(ScanResult scan: wifi.getScanResults()){
+            if(scan.SSID.equals(Const.EDUROAM_SSID)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

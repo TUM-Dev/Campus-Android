@@ -1,7 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.plan;
 
+import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.common.collect.ImmutableList;
+import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
+import com.trello.rxlifecycle2.LifecycleProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +27,9 @@ import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.component.ui.plan.PlanListAdapter.PlanListEntry;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class PlansViewFragment extends Fragment {
 
@@ -54,6 +59,8 @@ public class PlansViewFragment extends Fragment {
         }
     }
 
+    private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
+
     private String fileDirectory;
     private PlanListAdapter mListAdapter;
     private ListView list;
@@ -64,38 +71,32 @@ public class PlansViewFragment extends Fragment {
      * The actual downloading of the pdf files occurs here. Until the download process is finished
      * the listview is disabled and the progressbar is shown.
      */
-    private final AsyncTask<PlanFile, Integer, Void> pdfDownloader = new AsyncTask<PlanFile, Integer, Void>() {
-        @Override
-        protected Void doInBackground(PlanFile... files) {
-            Utils.log("Starting download.");
-            NetUtils netUtils = new NetUtils(getContext().getApplicationContext());
-            int progressPerFile = 100 / files.length;
-            int i = 0;
-            for (PlanFile file : files) {
-                try {
-                    String localFile = fileDirectory + '/' + file.getLocalName();
-                    netUtils.downloadToFile(file.getUrl(), localFile);
-                    publishProgress((++i) * progressPerFile);
-                    Utils.log(localFile);
-                } catch (IOException e) {
-                    Utils.log(e);
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            progressBar.setProgress(values[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            progressBar.setVisibility(View.GONE);
-            list.setEnabled(true);
-        }
-    };
+    private void downloadAll() {
+        final NetUtils netUtils = new NetUtils(getContext());
+        final PlanFile[] files = PlanFile.values();
+        final int progressPerFile = 100 / files.length;
+        Observable.fromArray(files)
+                  .compose(provider.bindToLifecycle())
+                  .subscribeOn(Schedulers.io())
+                  .zipWith(Observable.range(1, files.length), (file, i) -> {
+                      try {
+                          String localFile = fileDirectory + '/' + file.getLocalName();
+                          netUtils.downloadToFile(file.getUrl(), localFile);
+                      } catch (IOException e) {
+                          Utils.log(e);
+                      }
+                      return i;
+                  })
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(i -> {
+                      if (i < files.length) {
+                          progressBar.setProgress(i * progressPerFile);
+                      } else {
+                          progressBar.setVisibility(View.GONE);
+                          list.setEnabled(true);
+                      }
+                  });
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -174,8 +175,8 @@ public class PlansViewFragment extends Fragment {
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> startActivity(back_intent))
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     progressBar.setVisibility(View.VISIBLE);
-                    pdfDownloader.execute(PlanFile.values());
                     list.setEnabled(false);
+                    downloadAll();
                 })
                 .show();
     }
