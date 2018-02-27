@@ -375,9 +375,9 @@ Signatur: %5$s</string>
     <string name="update_notification_description">Eine neue Version der Tum Campus App wurde am %s released. Hier tippen zum herunterladen.</string>
     <string name="support_us">Hilf uns die TUM Campus App besser zu machen! Gib’ uns ein ‘Gefällt mir’ auf Facebook, schlag’ uns neue Ideen auf Github vor oder sag’ uns deine Meinung per E-Mail!</string>
     <string name="support_us_title">Unterstütze uns!</string>
-    <string name="permission_calendar_explanation">Diese App braucht die Erlaubnis auf deinen Standort zugreifen zu können um nützliche Informationen, zum Beispiel zum Anzeigen der Mensa Speisepläne in deiner nähe oder von Fahrplänen der nächstgelegenen MVV Station. \n Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
-    <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zuzugreifen, um sie diesen mit deinem TUM-Kalender abzugleichen.</string>
-    <string name="permission_contacts_explanation">Diese App braucht die Erlaubnis auf deine Kontakte zuzugreifen, um diese Person hizufügen zu können.</string>
+    <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Standort zugreifen zu dürfen, um zum Beispiel Mensa Speisepläne in deiner Nähe oder Fahrpläne der nächstgelegenen MVV Station anzeigen zu können. \n Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
+    <string name="permission_calendar_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zugreifen zu dürfen, um diesen mit deinem TUM-Kalender abgleichen zu können.</string>
+    <string name="permission_contacts_explanation">Diese App braucht die Erlaubnis auf deine Kontakte zugreifen zu dürfen, um diese Person hinzufügen zu können.</string>
     <string name="cancel">Abbruch</string>
     <string name="grant_permission">Erlauben</string>
     <string name="ok">OK</string>
