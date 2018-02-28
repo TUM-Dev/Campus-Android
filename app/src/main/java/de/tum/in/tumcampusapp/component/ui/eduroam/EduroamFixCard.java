@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.eduroam;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,10 +28,9 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-import static de.tum.in.tumcampusapp.component.ui.eduroam.EduroamController.RADIUS_DNS;
-
 public class EduroamFixCard extends NotificationAwareCard {
 
+    private static final String RADIUS_DNS = "radius.lrz.de";
     private final List<String> errors;
     private TextView errorsTv;
     private WifiConfiguration eduroam;
