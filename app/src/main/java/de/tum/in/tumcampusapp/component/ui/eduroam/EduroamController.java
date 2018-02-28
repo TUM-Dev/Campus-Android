@@ -18,12 +18,6 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Eduroam manager, manages connecting to eduroam wifi network
  */
 public class EduroamController {
-
-    private static final String INT_PASSWORD = "password";
-    private static final String INT_IDENTITY = "identity";
-    private static final String INT_EAP = "eap";
-    private static final String INT_ENTERPRISE_FIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
-
     private final Context mContext;
 
     EduroamController(Context context) {
@@ -60,7 +54,7 @@ public class EduroamController {
      * @param networkPass User's lrz password
      * @return Returns true if configuration was successful, false otherwise
      */
-    public boolean configureEduroam(String lrzId, String networkPass) {
+    boolean configureEduroam(String lrzId, String networkPass) {
         // Configure Wifi
         boolean update = true;
         WifiConfiguration conf = getEduroamConfig(mContext);
