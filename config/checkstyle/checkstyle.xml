@@ -52,16 +52,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
       <property name="severity" value="warning"/>
     </module>
 
-    <module name="ImportOrder">
-      <!-- Checks for out of order import statements. -->
-
-      <property name="severity" value="warning"/>
-      <property name="groups" value="com.google,android,junit,net,org,java,javax"/>
-      <!-- This ensures that static imports go first. -->
-      <property name="option" value="top"/>
-      <property name="tokens" value="STATIC_IMPORT, IMPORT"/>
-    </module>
-
     <!--
 
     JAVADOC CHECKS
@@ -186,7 +176,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
     <module name="LineLength">
       <!-- Checks if a line is too long. -->
-      <property name="max" value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.max}" default="100"/>
+      <property name="max" value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.max}" default="140"/>
       <property name="severity" value="warning"/>
 
       <!--
