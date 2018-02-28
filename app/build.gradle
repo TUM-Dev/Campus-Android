@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply from: '../findbugs.gradle'
 apply from: '../pmd.gradle'
 apply from: '../jacoco.gradle'
+apply from: '../checkstyle.gradle'
 
 android {
     compileSdkVersion 27
