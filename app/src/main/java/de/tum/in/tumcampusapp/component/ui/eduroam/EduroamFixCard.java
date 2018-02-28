@@ -32,7 +32,6 @@ public class EduroamFixCard extends NotificationAwareCard {
 
     private static final String RADIUS_DNS = "radius.lrz.de";
     private final List<String> errors;
-    private TextView errorsTv;
     private WifiConfiguration eduroam;
     private static final String atSign = "@";
 
@@ -52,9 +51,8 @@ public class EduroamFixCard extends NotificationAwareCard {
         super.updateViewHolder(viewHolder);
         mCard = viewHolder.itemView;
         mLinearLayout = mCard.findViewById(R.id.card_view);
-        errorsTv = mCard.findViewById(R.id.eduroam_errors);
-        errorsTv.setText(Joiner.on("\n")
-                               .join(errors));
+        TextView errorsTv = mCard.findViewById(R.id.eduroam_errors);
+        errorsTv.setText(Joiner.on("\n").join(errors));
 
         // only error is missing realm which is not insecure per se but also not right
         if (errors.size() == 1 && errors.get(0)

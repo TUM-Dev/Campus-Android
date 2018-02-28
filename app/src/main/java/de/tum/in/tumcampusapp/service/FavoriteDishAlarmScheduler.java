@@ -42,10 +42,6 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
     private static final Set<Integer> activeNotifications = Collections.synchronizedSet(new HashSet<Integer>());
     private static final String IDENTIFIER_STRING = "TCA_FAV_FOOD";
-    public static final String INTENT_CANCEL_ALL_NOTIFICATIONS = "cancelNotifications";
-
-    public FavoriteDishAlarmScheduler() {
-    }
 
     public void setFoodAlarm(Context context, String dateString) {
         Calendar scheduledAt = loadTriggerHourAndMinute(context, dateString);
@@ -58,11 +54,7 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
         }
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent schedule = constructAlarmIntent(context, dateString);
-        if (Build.VERSION.SDK_INT < 19) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), schedule);
-        } else {
-            alarmManager.setWindow(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), 1000, schedule);
-        }
+        alarmManager.setWindow(AlarmManager.RTC_WAKEUP, scheduledAt.getTimeInMillis(), 1000, schedule);
     }
 
     public void cancelFoodAlarm(Context context, String dateString) {
@@ -108,10 +100,11 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
         CafeteriaDao dao = TcaDb.getInstance(context)
                                 .cafeteriaDao();
         for (Integer mensaId : scheduledNow.keySet()) {
-            String message = "";
+            StringBuilder message = new StringBuilder();
             int menuCount = 0;
             for (CafeteriaMenu menu : scheduledNow.get(mensaId)) {
-                message += menu.getName() + '\n';
+                message.append(menu.getName())
+                       .append('\n');
                 menuCount++;
             }
             activeNotifications.add(mensaId);
@@ -122,8 +115,8 @@ public class FavoriteDishAlarmScheduler extends BroadcastReceiver {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentTitle(mensaName + ((menuCount > 1) ? " (" + menuCount + ")" : ""))
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                    .setContentText(message)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message.toString()))
+                    .setContentText(message.toString())
                     .setAutoCancel(true)
                     .setLargeIcon(Utils.getLargeIcon(context, R.drawable.ic_cutlery))
                     .setContentIntent(pi)

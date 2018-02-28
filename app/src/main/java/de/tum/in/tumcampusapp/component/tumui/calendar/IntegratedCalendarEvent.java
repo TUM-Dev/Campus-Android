@@ -18,7 +18,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private final String location;
     private boolean isFirstOnDay;
 
-    public IntegratedCalendarEvent(CalendarItem calendarItem) {
+    IntegratedCalendarEvent(CalendarItem calendarItem) {
         super(Long.parseLong(calendarItem.getNr()),
               calendarItem.getFormattedTitle(),
               calendarItem.getEventStart(),
@@ -35,15 +35,11 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     }
 
     public static int getDisplayColorFromColor(int color) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            return color;
-        } else {
-            float[] hsv = new float[3];
-            Color.colorToHSV(color, hsv);
-            hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
-            hsv[2] *= INTENSITY_ADJUST;
-            return Color.HSVToColor(hsv);
-        }
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
+        hsv[2] *= INTENSITY_ADJUST;
+        return Color.HSVToColor(hsv);
     }
 
     @Override
