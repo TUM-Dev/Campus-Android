@@ -25,7 +25,8 @@ import de.tum.in.tumcampusapp.utils.Utils;
  */
 public class InformationActivity extends BaseActivity {
 
-    private final TableRow.LayoutParams rowParams = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    private final TableRow.LayoutParams rowParams = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                              ViewGroup.LayoutParams.MATCH_PARENT);
     private int debugOptionsCount;
 
     public InformationActivity() {
@@ -85,9 +86,16 @@ public class InformationActivity extends BaseActivity {
         this.addDebugRow(table, "TUM Access token", sp.getString(Const.ACCESS_TOKEN, ""));
         this.addDebugRow(table, "Bugreports", sp.getBoolean(Const.BUG_REPORTS, false) + " ");
         this.addDebugRow(table, "REG ID", Utils.getInternalSettingString(this, Const.GCM_REG_ID, ""));
-        this.addDebugRow(table, "REG Transmission", DateUtils.getRelativeDateTimeString(this, Utils.getInternalSettingLong(this, Const.GCM_REG_ID_LAST_TRANSMISSION, 0),
-                                                                                        DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0)
-                                                             .toString());
+        this.addDebugRow(table,
+                        "REG Transmission",
+                        DateUtils.getRelativeDateTimeString(this,
+                                                            Utils.getInternalSettingLong(this,
+                                                                                         Const.GCM_REG_ID_LAST_TRANSMISSION,
+                                                                                         0),
+                                                            DateUtils.MINUTE_IN_MILLIS,
+                                                            DateUtils.DAY_IN_MILLIS * 2,
+                                                            0)
+                                                            .toString());
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             this.addDebugRow(table, "VersionCode", String.valueOf(packageInfo.versionCode));

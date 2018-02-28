@@ -297,9 +297,9 @@ public class RoomFinderDetailsActivity
         }
 
         // Build get directions intent and see if some app can handle it
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + result.get()
-                                                                                                .getLatitude() + ',' + result.get()
-                                                                                                                             .getLongitude()));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + 
+                                                                 result.get().getLatitude() + 
+                                                                 ',' + result.get().getLongitude()));
         List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager()
                                                                .queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
 
@@ -314,7 +314,8 @@ public class RoomFinderDetailsActivity
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps")));
         } catch (ActivityNotFoundException e) {
             Utils.log(e);
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                                     Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));  
         }
     }
 }

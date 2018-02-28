@@ -174,7 +174,9 @@ public abstract class ActivityForSearching extends ProgressActivity {
         }*/
 
         // Add query to recents
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, mAuthority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                                                                          mAuthority,
+                                                                          SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
         suggestions.saveRecentQuery(query, null);
 
         // Tell activity to start searching

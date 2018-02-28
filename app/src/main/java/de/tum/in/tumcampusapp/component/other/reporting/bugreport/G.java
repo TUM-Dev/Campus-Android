@@ -39,7 +39,8 @@ public final class G {
     public static final String TAG = "TCA Error Reporting";
     public static final int MAX_TRACES = 5;
 
-    // Since the exception handler doesn't have access to the context, or anything really, the library prepares these values for when the handler needs them.
+    // Since the exception handler doesn't have access to the context, or anything really, 
+    // the library prepares these values for when the handler needs them.
     public static String filesPath;
     public static String appVersion = UNKNOWN;
     public static String appPackage = UNKNOWN;

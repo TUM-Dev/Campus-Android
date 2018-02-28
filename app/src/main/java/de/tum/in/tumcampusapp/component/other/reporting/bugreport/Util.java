@@ -25,7 +25,8 @@ public final class Util {
         try {
             Process process = Runtime.getRuntime()
                                      .exec("logcat -d");
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset()))) {
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(),
+                                                                                          Charset.defaultCharset()))) {
                 StringBuilder log = new StringBuilder();
                 String line;
                 String newLine = System.getProperty(ExceptionHandler.LINE_SEPARATOR);

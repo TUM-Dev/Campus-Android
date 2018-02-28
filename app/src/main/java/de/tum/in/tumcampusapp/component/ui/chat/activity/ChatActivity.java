@@ -73,7 +73,10 @@ import retrofit2.Response;
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
-public class ChatActivity extends ActivityForDownloadingExternal implements DialogInterface.OnClickListener, OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemLongClickListener {
+public class ChatActivity extends ActivityForDownloadingExternal implements DialogInterface.OnClickListener,
+                                                                            OnClickListener,
+                                                                            AbsListView.OnScrollListener,
+                                                                            AdapterView.OnItemLongClickListener {
 
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
@@ -109,7 +112,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             return true;
         }
 
-        // Called each time the action mode is shown. Always called after onCreateActionMode, but may be called multiple times if the mode is invalidated.
+        // Called each time the action mode is shown. Always called after onCreateActionMode, 
+        // but may be called multiple times if the mode is invalidated.
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false; // Return false if nothing is done
@@ -534,9 +538,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(positionActual);
 
         // If we are in a certain timespan and its the users own message allow editing
-        if ((System.currentTimeMillis() - message.getTimestampDate()
-                                                 .getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember()
-                                                                                                        .getId() == currentChatMember.getId()) {
+        if ((System.currentTimeMillis() - message.getTimestampDate().getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && 
+                message.getMember().getId() == currentChatMember.getId()) {
 
             // Hide keyboard if opened
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

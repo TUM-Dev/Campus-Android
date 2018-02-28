@@ -43,7 +43,8 @@ public class OpenHoursHelper {
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
         //Split up the data string from the database with regex which has the format: "Mo-Do 11-14, Fr 11-13.45" or "Mo-Fr 9-20"
-        Matcher m = Pattern.compile("([a-z]{2}?)[-]?([a-z]{2}?)? ([0-9]{1,2}(?:[\\.][0-9]{2}?)?)-([0-9]{1,2}(?:[\\.][0-9]{2}?)?)", Pattern.CASE_INSENSITIVE)
+        Matcher m = Pattern.compile("([a-z]{2}?)[-]?([a-z]{2}?)? ([0-9]{1,2}(?:[\\.][0-9]{2}?)?)-([0-9]{1,2}(?:[\\.][0-9]{2}?)?)",
+                                    Pattern.CASE_INSENSITIVE)
                            .matcher(result);
 
         //Capture groups for: Mo-Do 9-21.30
@@ -56,7 +57,8 @@ public class OpenHoursHelper {
         //Find the first part
         String[] time = new String[2];
         if (m.find()) {
-            //We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
+            //We are currently in Mo-Do/Fr, when this weekday is in that range we have our result 
+            //or we check if the current range is valid for fridays also
             if (dayOfWeek <= Calendar.THURSDAY || m.group(2)
                                                    .equalsIgnoreCase("fr")) {
                 time[0] = m.group(3);

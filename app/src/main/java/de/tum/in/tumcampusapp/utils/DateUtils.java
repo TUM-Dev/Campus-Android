@@ -44,7 +44,10 @@ public final class DateUtils {
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
             return context.getString(R.string.AT) + ' ' + formatter.format(time);
         } else {
-            return android.text.format.DateUtils.getRelativeTimeSpanString(timeInMillis, now, android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE)
+            return android.text.format.DateUtils.getRelativeTimeSpanString(timeInMillis,
+                                                                           now,
+                                                                           android.text.format.DateUtils.MINUTE_IN_MILLIS,
+                                                                           android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE)
                                                 .toString();
         }
     }

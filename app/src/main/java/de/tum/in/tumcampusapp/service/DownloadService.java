@@ -142,7 +142,8 @@ public class DownloadService extends JobIntentService {
             successful = true;
         }
 
-        // After done the job, create an broadcast intent and send it. The receivers will be informed that the download service has finished.
+        // After done the job, create an broadcast intent and send it. 
+        // The receivers will be informed that the download service has finished.
         Utils.logv("Downloadservice was " + (successful ? "" : "not ") + "successful");
         if (successful) {
             service.broadcastDownloadCompleted();

@@ -42,7 +42,8 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
             String filename = G.appVersion + '-' + Integer.toString(random);
 
             // Write the stacktrace to disk
-            try (BufferedWriter bos = new BufferedWriter(getFileWriter(G.filesPath + '/' + filename + ExceptionHandler.STACKTRACE_ENDING))) {
+            String filePath = G.filesPath + '/' + filename + ExceptionHandler.STACKTRACE_ENDING;
+            try (BufferedWriter bos = new BufferedWriter(getFileWriter(filePath))) {
                 bos.write(result.toString());
                 bos.flush();
             }

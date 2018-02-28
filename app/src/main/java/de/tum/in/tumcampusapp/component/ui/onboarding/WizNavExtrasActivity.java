@@ -136,14 +136,16 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // Generate the private key and upload the public key to the server
         AuthenticationManager am = new AuthenticationManager(this);
         if (!am.generatePrivateKey(member)) {
-            Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key)); //We cannot continue if the upload of the Public Key does not work
+            //We cannot continue if the upload of the Public Key does not work
+            Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key)); 
             return null;
         }
 
         // Try to restore already joined chat rooms from server
         try {
             List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
-                                                .getMemberRooms(member.getId(), ChatVerification.Companion.getChatVerification(this, member));
+                                                .getMemberRooms(member.getId(), 
+                                                                ChatVerification.Companion.getChatVerification(this, member));
             new ChatRoomController(this).replaceIntoRooms(rooms);
 
             //Store that this key was activated

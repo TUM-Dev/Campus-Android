@@ -21,7 +21,9 @@ public class TuitionFeeManager implements Card.ProvidesCard {
      */
     @Override
     public void onRequestCard(Context context) {
-        TUMOnlineRequest<TuitionList> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTUITION_FEE_STATUS(), context, true);
+        TUMOnlineRequest<TuitionList> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTUITION_FEE_STATUS(), 
+                                                                              context,
+                                                                              true);
         Optional<TuitionList> tuitionList = requestHandler.fetch();
         if (!tuitionList.isPresent()) {
             return;

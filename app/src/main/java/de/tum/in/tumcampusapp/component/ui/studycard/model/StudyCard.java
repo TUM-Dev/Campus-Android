@@ -31,7 +31,15 @@ public class StudyCard extends BaseObservable {
         this.setCan_shift(false);
     }
 
-    public StudyCard(int id, int member, int lecture, String title, String front_text, String front_image, String back_text, String back_image, boolean can_shift) {
+    public StudyCard(int id,
+                     int member,
+                     int lecture,
+                     String title,
+                     String front_text,
+                     String front_image,
+                     String back_text,
+                     String back_image,
+                     boolean can_shift) {
         this.setId(id);
         this.setMember(member);
         this.setLecture(lecture);

@@ -209,7 +209,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
         try {
             TUMCabeClient.getInstance(this)
-                         .createRoom(currentChatRoom, ChatVerification.Companion.getChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
+                         .createRoom(currentChatRoom, 
+                                     ChatVerification.Companion.getChatVerification(this, this.currentChatMember),
+                                     new Callback<ChatRoom>() {
                              @Override
                              public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
                                  if (!response.isSuccessful()) {
@@ -262,7 +264,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         if (currentChatMember != null) {
             try {
                 List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
-                                                    .getMemberRooms(currentChatMember.getId(), ChatVerification.Companion.getChatVerification(this, currentChatMember));
+                                                    .getMemberRooms(currentChatMember.getId(), 
+                                                                    ChatVerification.Companion.getChatVerification(this, 
+                                                                                                                   currentChatMember));
                 manager.replaceIntoRooms(rooms);
             } catch (NoPrivateKey e) {
                 this.finish();

@@ -92,7 +92,9 @@ public class TimetableWidgetService extends RemoteViewsService {
             // Setup the date
             if (currentItem.isFirstOnDay()) {
                 rv.setTextViewText(R.id.timetable_widget_date_day, String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
-                rv.setTextViewText(R.id.timetable_widget_date_weekday, calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+                rv.setTextViewText(R.id.timetable_widget_date_weekday, calendar.getDisplayName(Calendar.DAY_OF_WEEK, 
+                                                                                               Calendar.SHORT,
+                                                                                               Locale.getDefault()));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     rv.setViewPadding(R.id.timetable_widget_item, 0, 15, 0, 0);
                 }

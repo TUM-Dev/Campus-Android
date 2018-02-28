@@ -110,7 +110,8 @@ public class SilenceService extends JobIntentService {
                 Utils.setInternalSetting(this, Const.SILENCE_ON, false);
 
                 List<CalendarItem> nextCalendarItems = calendarController.getNextCalendarItems();
-                if (nextCalendarItems.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+                //Check if we have a "next" item in the database and update the refresh interval until then, otherwise use default interval
+                if (nextCalendarItems.size() != 0) { 
                     // refresh when next event has started
                     waitDuration = getWaitDuration(nextCalendarItems.get(0)
                                                                     .getDtstart());
