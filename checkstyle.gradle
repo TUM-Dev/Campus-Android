@@ -8,6 +8,7 @@ task checkstyle(type: Checkstyle) {
     exclude '**/gen/**'
     exclude '**/R.java'
     exclude '**/BuildConfig.java'
+    exclude '**/res/**'
 
     // empty classpath
     classpath = files()
