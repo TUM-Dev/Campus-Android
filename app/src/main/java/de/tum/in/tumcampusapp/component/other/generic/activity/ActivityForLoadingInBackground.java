@@ -1,14 +1,25 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.os.AsyncTask;
+import android.arch.lifecycle.Lifecycle;
 import android.support.v4.widget.SwipeRefreshLayout;
+
+import com.google.common.base.Optional;
+import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
+import com.trello.rxlifecycle2.LifecycleProvider;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Generic class which handles can handle a long running background task
  */
 public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity {
 
-    private AsyncTask<S, Void, T> asyncTask;
+    private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
+    private AtomicBoolean isRunning = new AtomicBoolean(false);
     private S[] lastArg;
 
     /**
@@ -49,40 +60,23 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
     @SafeVarargs
     @SuppressWarnings("varargs")
     protected final void startLoading(final S... arg) {
-        if (asyncTask != null) {
-            asyncTask.cancel(true);
+        // No concurrent background activity
+        if (!isRunning.compareAndSet(false, true)) {
+            return;
         }
 
         lastArg = arg;
 
-        asyncTask = new AsyncTask<S, Void, T>() {
-            @Override
-            protected void onPreExecute() {
-                showLoadingStart();
-            }
-
-            @SafeVarargs
-            @Override
-            protected final T doInBackground(S... arg) {
-                return onLoadInBackground(arg);
-            }
-
-            @Override
-            protected void onPostExecute(T result) {
-                showLoadingEnded();
-                onLoadFinished(result);
-                asyncTask = null;
-            }
-        };
-        asyncTask.execute(arg);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (asyncTask != null) {
-            asyncTask.cancel(true);
-        }
+        showLoadingStart();
+        Observable.fromCallable(() -> Optional.fromNullable(onLoadInBackground(arg)))
+                  .compose(provider.bindToLifecycle())
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe((result) -> {
+                      showLoadingEnded();
+                      onLoadFinished(result.orNull());
+                      isRunning.set(false);
+                  });
     }
 
     @Override

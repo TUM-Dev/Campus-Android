@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.other.reporting.bugreport;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.Build;
@@ -7,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.common.base.Charsets;
+import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,15 +28,16 @@ import de.tum.in.tumcampusapp.component.other.reporting.bugreport.model.BugRepor
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.FileUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.Completable;
+import io.reactivex.CompletableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public final class ExceptionHandler {
-
     public static final String STACKTRACE_ENDING = ".stacktrace";
     public static final String LINE_SEPARATOR = "line.separator";
     // Stores loaded stack traces in memory. Each element is contains a full stacktrace
     private static List<String[]> sStackTraces;
-    private static ActivityAsyncTask<Processor, Void, Void, Void> sTask;
-    private static final int S_MIN_DELAY = 0;
     private static boolean sSetupCalled;
 
     private ExceptionHandler() {
@@ -45,23 +48,12 @@ public final class ExceptionHandler {
      * Setup the handler for unhandled exceptions, and submit stack
      * traces from a previous crash.
      *
-     * @param context   context
-     * @param processor processor
+     * @param context context
      */
-    public static boolean setup(Context context, final Processor processor) {
-
+    public static void setup(Context context) {
         // Make sure this is only called once.
         if (sSetupCalled) {
-
-            // Tell the task that it now has a new context.
-            if (sTask != null && !sTask.postProcessingDone()) {
-
-                // We don't want to force the user to call our notifyContextGone() if he doesn't care about that functionality anyway, so in order to avoid the
-                // InvalidStateException, ensure first that we are disconnected.
-                sTask.connectTo(null);
-                sTask.connectTo(processor);
-            }
-            return false;
+            return;
         }
         sSetupCalled = true;
 
@@ -93,50 +85,30 @@ public final class ExceptionHandler {
 
         // Second, install the exception handler
         installHandler();
-        processor.handlerInstalled();
 
         // Third, submit any traces we may have found
-        return submit(processor, context);
+        submit(context);
     }
 
-    /**
-     * Setup the handler for unhandled exceptions, and submit stack
-     * traces from a previous crash.
-     * <p>
-     * Simplified version that uses a default processor.
-     *
-     * @param context context
-     */
-    public static boolean setup(Context context) {
-        return setup(context, new Processor() {
-            @Override
-            public boolean beginSubmit() {
-                return true;
-            }
-
-            @Override
-            public void submitDone() {
-                // NOP
-            }
-
-            @Override
-            public void handlerInstalled() {
-                // NOP
-            }
-        });
+    private static CompletableTransformer handleLifecycle(Context context) {
+        if (context instanceof LifecycleOwner) {
+            return AndroidLifecycle.createLifecycleProvider((LifecycleOwner) context)
+                                   .bindToLifecycle();
+        }
+        return observable -> observable;
     }
 
     /**
      * Submit stack traces.
      * This is public because in some cases you might want to manually ask the traces to be submitted, for example after asking the user's permission.
      */
-    public static boolean submit(final Processor processor, final Context context) {
+    private static void submit(final Context context) {
         if (!sSetupCalled) {
             throw new IllegalStateException("you need to call setup() first");
         }
 
         // If traces exist, we need to submit them
-        if (ExceptionHandler.hasStrackTraces() && processor.beginSubmit()) {
+        if (ExceptionHandler.hasStrackTraces()) {
             // Move the list of traces to a private variable. This ensures that subsequent calls to hasStackTraces()
             // while the submission thread is ongoing, will return false, or at least would refer to some new set of traces.
             //
@@ -145,40 +117,12 @@ public final class ExceptionHandler {
             final List<String[]> tracesNowSubmitting = sStackTraces;
             sStackTraces = null;
 
-            sTask = new ActivityAsyncTask<Processor, Void, Void, Void>(processor) {
-
-                private long mTimeStarted;
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    mTimeStarted = System.currentTimeMillis();
-                }
-
-                @Override
-                protected Void doInBackground(Void... params) {
-                    ExceptionHandler.submitStackTraces(tracesNowSubmitting, context);
-
-                    long rest = S_MIN_DELAY - System.currentTimeMillis() + mTimeStarted;
-                    if (rest > 0) {
-                        try {
-                            Thread.sleep(rest);
-                        } catch (InterruptedException e) {
-                            Utils.log(e);
-                        }
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void processPostExecute(Void result) {
-                    mWrapped.submitDone();
-                }
-            };
-            sTask.execute();
+            Completable.fromAction(() -> ExceptionHandler.submitStackTraces(tracesNowSubmitting, context))
+                       .compose(handleLifecycle(context))
+                       .subscribeOn(Schedulers.io())
+                       .observeOn(AndroidSchedulers.mainThread())
+                       .subscribe(() -> Utils.logv(tracesNowSubmitting.size() + " stacktraces submitted!"));
         }
-
-        return ExceptionHandler.hasStrackTraces();
     }
 
     /**
@@ -188,7 +132,7 @@ public final class ExceptionHandler {
      * before submitting. You can then use Processor.beginSubmit() to
      * stop the submission from occurring.
      */
-    public static boolean hasStrackTraces() {
+    private static boolean hasStrackTraces() {
         return !getStackTraces().isEmpty();
     }
 
@@ -284,13 +228,12 @@ public final class ExceptionHandler {
 
         //Otherwise do some hard work and submit all of them after eachother
         try {
-
-            for (int i = 0; i < list.size(); i++) {
-                String stacktrace = list.get(i)[0];
+            for (String[] array : list) {
+                String stacktrace = array[0];
 
                 // Transmit stack trace with PUT request
                 TUMCabeClient client = TUMCabeClient.getInstance(context);
-                BugReport r = BugReport.Companion.getBugReport(context, stacktrace, list.get(i)[1]);
+                BugReport r = BugReport.Companion.getBugReport(context, stacktrace, array[1]);
                 client.putBugReport(r);
                 // We don't care about the response, so we just hope it went well and on with it.
             }
@@ -307,14 +250,6 @@ public final class ExceptionHandler {
             // Register our default exceptions handler
             Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(currentHandler));
         }
-    }
-
-    public interface Processor {
-        boolean beginSubmit();
-
-        void submitDone();
-
-        void handlerInstalled();
     }
 
     private static Reader getFileReader(String path) throws FileNotFoundException {

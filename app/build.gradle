@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: '../findbugs.gradle'
 apply from: '../pmd.gradle'
+apply from: '../jacoco.gradle'
 
 android {
     compileSdkVersion 27
@@ -14,6 +15,7 @@ android {
             useProguard true
         }
         debug.debuggable true
+        debug.testCoverageEnabled true
         release.debuggable false
     }
     defaultConfig {
@@ -98,9 +100,11 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'net.danlew:android.joda:2.9.9.2'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
-    implementation 'com.github.barteksc:android-pdf-viewer:2.5.1'
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.1'
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "android.arch.lifecycle:runtime:1.1.0"

@@ -472,12 +472,11 @@ Signature: %5$s</string>
     <string name="MINUTES">minutes</string>
     <string name="AT">at</string>
     <string name="startup_motto">By students - For students</string>
-    <string name="fix_eduroam">Fix Eduroam</string>
+    <string name="fix_eduroam">Fix eduroam</string>
     <string name="eduroam_fix">Click to fix it now!</string>
-    <string name="eduroam_realm_comment">\@eduroam.mwn.de is added automatically</string>
     <string name="eduroam_insecure_configuration">We have detected an insecure eduroam wifi configuration. You are subject to leaking information about you and your account.</string>
     <string name="wifi_dns_name_not_set">DNS Name is not set</string>
-    <string name="wifi_identity_zone">Identity does not contain zone (e.g. @eduroam.mwn.de). This may not always work and should be updated!</string>
+    <string name="wifi_identity_zone">You have configured eduroam without specifying the home institution (e.g. @eduroam.mwn.de) in your username. This means that eduroam won\'t work when you\'re not on the TUM campus.</string>
     <string name="wifi_anonymous_identity_not_set">Anonymous Identity not correct</string>
 
     <string name="transport_action_usage">Usage</string>

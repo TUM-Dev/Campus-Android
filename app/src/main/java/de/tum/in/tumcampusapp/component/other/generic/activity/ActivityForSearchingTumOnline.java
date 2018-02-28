@@ -103,12 +103,6 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        requestHandler.cancelRequest(true);
-    }
-
-    @Override
     public void onFetchCancelled() {
         finish();
     }

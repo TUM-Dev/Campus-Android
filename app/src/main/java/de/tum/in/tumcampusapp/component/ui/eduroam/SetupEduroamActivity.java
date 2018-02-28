@@ -117,6 +117,7 @@ public class SetupEduroamActivity extends BaseActivity {
                                                                            .toString());
         if (success) {
             Utils.showToast(this, R.string.eduroam_success);
+            Utils.setSetting(this, Const.REFRESH_CARDS, true);
             finish();
 
             CardManager.setShouldRefresh();
@@ -170,6 +171,7 @@ public class SetupEduroamActivity extends BaseActivity {
 
     @SuppressWarnings("UnusedParameters")
     public void onClickCancel(View v) {
+        Utils.setSetting(this, Const.REFRESH_CARDS, true);
         finish();
     }
 }

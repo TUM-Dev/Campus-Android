@@ -1,16 +1,19 @@
 package de.tum.in.tumcampusapp.utils;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
+import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
+import com.trello.rxlifecycle2.LifecycleProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +24,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.app.Helper;
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -30,6 +37,7 @@ public class NetUtils {
     private final Context mContext;
     private final CacheManager cacheManager;
     private final OkHttpClient client;
+    private final Optional<LifecycleProvider<Lifecycle.Event>> lifecycleProvider;
 
     public NetUtils(Context context) {
         //Manager caches all requests
@@ -38,6 +46,12 @@ public class NetUtils {
 
         //Set our max wait time for each request
         client = Helper.getOkClient(context);
+
+        if (context instanceof LifecycleOwner) {
+            lifecycleProvider = Optional.of(AndroidLifecycle.createLifecycleProvider((LifecycleOwner) context));
+        } else {
+            lifecycleProvider = Optional.absent();
+        }
     }
 
     public static Optional<JSONObject> downloadJson(Context context, String url) {
@@ -235,33 +249,34 @@ public class NetUtils {
                 return;
             }
         }
-        new AsyncTask<Void, Void, Optional<Bitmap>>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                CacheManager.IMAGE_VIEWS.put(imageView, url);
-                imageView.setImageBitmap(null);
-            }
+        CacheManager.IMAGE_VIEWS.put(imageView, url);
+        imageView.setImageBitmap(null);
 
-            @Override
-            protected Optional<Bitmap> doInBackground(Void... voids) {
-                return downloadImageToBitmap(url);
-            }
+        Observable.just(url)
+                  .map(this::downloadImageToBitmap)
+                  .compose(handleLifecycle())
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe((bitmap) -> {
+                      if (!bitmap.isPresent()) {
+                          return;
+                      }
+                      synchronized (CacheManager.BITMAP_CACHE) {
+                          CacheManager.BITMAP_CACHE.put(url, bitmap.get());
+                      }
+                      String tag = CacheManager.IMAGE_VIEWS.get(imageView);
+                      if (tag != null && tag.equals(url)) {
+                          imageView.setImageBitmap(bitmap.get());
+                      }
+                  });
+    }
 
-            @Override
-            protected void onPostExecute(Optional<Bitmap> bitmap) {
-                if (!bitmap.isPresent()) {
-                    return;
-                }
-                synchronized (CacheManager.BITMAP_CACHE) {
-                    CacheManager.BITMAP_CACHE.put(url, bitmap.get());
-                }
-                String tag = CacheManager.IMAGE_VIEWS.get(imageView);
-                if (tag != null && tag.equals(url)) {
-                    imageView.setImageBitmap(bitmap.get());
-                }
-            }
-        }.execute();
+    private <T> ObservableTransformer<T, T> handleLifecycle() {
+        if (lifecycleProvider.isPresent()) {
+            return lifecycleProvider.get()
+                                    .bindToLifecycle();
+        }
+        return observable -> observable;
     }
 
     /**

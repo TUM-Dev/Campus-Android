@@ -28,7 +28,9 @@
                 android:layout_height="match_parent"
                 android:divider="#b5b5b5"
                 android:dividerHeight="1dp"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical"
+                android:importantForAutofill="noExcludeDescendants"/>
+            <!-- TODO remove importantForAutofill (workaround) once library is fixed -->
 
         </LinearLayout>
 
