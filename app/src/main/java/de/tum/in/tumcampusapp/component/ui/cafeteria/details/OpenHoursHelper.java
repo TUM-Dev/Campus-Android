@@ -47,7 +47,7 @@ public class OpenHoursHelper {
                            .matcher(result);
 
         //Capture groups for: Mo-Do 9-21.30
-        //#0	Mo-Do 9-21.30
+        //#0    Mo-Do 9-21.30
         //#1	Mo
         //#2	Do
         //#3	9
