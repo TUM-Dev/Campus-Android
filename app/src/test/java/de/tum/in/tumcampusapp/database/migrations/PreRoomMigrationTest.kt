@@ -1,10 +1,10 @@
 package de.tum.`in`.tumcampusapp.database.migrations
 
-import android.arch.persistence.db.SupportSQLiteDatabase
-import android.arch.persistence.db.SupportSQLiteOpenHelper
-import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory
-import com.google.common.collect.ImmutableList
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
 import de.tum.`in`.tumcampusapp.BuildConfig
+import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.utils.Const
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -47,34 +47,28 @@ class PreRoomMigrationTest {
                CREATE TABLE study_room_groups (id INTEGER PRIMARY KEY, name VARCHAR, details VARCHAR);
                CREATE TABLE study_rooms (id INTEGER PRIMARY KEY, code VARCHAR, name VARCHAR, location VARCHAR, occupied_till VARCHAR, group_id INTEGER);"""
 
-    private lateinit var db: SupportSQLiteDatabase
+    private lateinit var db: SQLiteDatabase
 
     @Before
     fun setUp() {
-        val config = SupportSQLiteOpenHelper.Configuration
-                .builder(RuntimeEnvironment.application)
-                .name("test.db")
-                .callback(object : SupportSQLiteOpenHelper.Callback(1) {
-                    override fun onCreate(db: SupportSQLiteDatabase?) = Unit
-                    override fun onUpgrade(db: SupportSQLiteDatabase?, oldVersion: Int, newVersion: Int) = Unit
-                })
-                .build()
-        db = FrameworkSQLiteOpenHelperFactory().create(config).writableDatabase
-        preRoomSchema.splitToSequence('\n').forEach {
-            db.execSQL(it)
+        val openHelper = object : SQLiteOpenHelper(RuntimeEnvironment.application, Const.DATABASE_NAME, null, 1) {
+            override fun onCreate(db: SQLiteDatabase?) {
+                preRoomSchema.splitToSequence('\n').forEach {
+                    db!!.execSQL(it)
+                }
+            }
+
+            override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) = Unit
         }
+
+        db = openHelper.writableDatabase
     }
 
     @Test
-    fun migrate() {
-        ImmutableList.of(
-                Migration1to2(),
-                Migration2to3(),
-                Migration3to4(),
-                Migration4to5()
-        ).forEach {
-            it.migrate(db)
-        }
+    fun simpleTcaDbMigration() {
+        db.close()
+        val tcadb = TcaDb.getInstance(RuntimeEnvironment.application)
+        assert(tcadb.newsSourcesDao().getNewsSources("test").isEmpty())
     }
 
     @After
