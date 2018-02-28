@@ -8,7 +8,7 @@ what the following rules do, please see the checkstyle configuration
 page at http://checkstyle.sourceforge.net/config.html -->
 
 <module name="Checker">
-
+  <property name="severity" value="warning"/>
   <module name="FileTabCharacter">
     <!-- Checks that there are no tab characters in the file.
     -->
@@ -49,7 +49,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
     <module name="RedundantImport">
       <!-- Checks for redundant import statements. -->
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
 
     <module name="ImportOrder">
@@ -83,7 +83,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
     <module name="JavadocType">
       <property name="scope" value="protected"/>
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
 
     <module name="JavadocStyle">
@@ -187,7 +187,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
     <module name="LineLength">
       <!-- Checks if a line is too long. -->
       <property name="max" value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.max}" default="100"/>
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
 
       <!--
         The default ignore pattern exempts the following elements:
@@ -234,7 +234,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
     <module name="UpperEll">
       <!-- Checks that long constants are defined with an upper ell.-->
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
 
     <module name="FallThrough">
@@ -245,7 +245,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
       -->
       <property name="reliefPattern"
        value="fall through|Fall through|fallthru|Fallthru|falls through|Falls through|fallthrough|Fallthrough|No break|NO break|no break|continue on"/>
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
 
 
@@ -282,7 +282,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
         LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, LOR, LT, MINUS,
         MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION,
         SL, SL_ASSIGN, SR_ASSIGN, STAR, STAR_ASSIGN"/>
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
 
     <module name="WhitespaceAfter">
@@ -299,7 +299,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
       <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS,
         UNARY_PLUS"/>
       <property name="allowLineBreaks" value="true"/>
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
 
     <module name="NoWhitespaceBefore">
@@ -308,7 +308,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
       -->
       <property name="tokens" value="SEMI, DOT, POST_DEC, POST_INC"/>
       <property name="allowLineBreaks" value="true"/>
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
 
     <module name="ParenPad">
