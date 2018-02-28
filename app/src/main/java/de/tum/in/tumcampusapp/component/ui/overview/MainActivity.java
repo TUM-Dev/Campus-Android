@@ -1,12 +1,12 @@
 package de.tum.in.tumcampusapp.component.ui.overview;
 
+import android.arch.lifecycle.Lifecycle;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
@@ -19,12 +19,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
+import com.trello.rxlifecycle2.LifecycleProvider;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.settings.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.service.SilenceService;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
@@ -54,6 +62,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             }
         }
     };
+
+    private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
 
     public MainActivity() {
         super(R.layout.activity_main);
@@ -148,6 +158,16 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         }
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        if(Utils.getSettingBool(this, Const.REFRESH_CARDS, false)){
+            refreshCards();
+            Utils.setSetting(this, Const.REFRESH_CARDS, false);
+        }
+    }
+
     /**
      * If drawer is expanded hide settings icon
      *
@@ -218,31 +238,24 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      */
     @Override
     public void onRefresh() {
-        new AsyncTask<Void, Void, Void>() {
+        Completable.fromAction(() -> CardManager.update(this))
+                   .compose(provider.bindToLifecycle())
+                   .subscribeOn(Schedulers.io())
+                   .observeOn(AndroidSchedulers.mainThread())
+                   .subscribe(() -> {
+                       if (mAdapter == null) {
+                           initAdapter();
+                       } else {
+                           mAdapter.notifyDataSetChanged();
+                       }
 
-            @Override
-            protected Void doInBackground(Void... params) {
-                CardManager.update(MainActivity.this);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
-                if (mAdapter == null) {
-                    initAdapter();
-                } else {
-                    mAdapter.notifyDataSetChanged();
-                }
-
-                mSwipeRefreshLayout.setRefreshing(false);
-                if (!registered && !NetUtils.isConnected(MainActivity.this)) {
-                    registerReceiver(connectivityChangeReceiver,
-                                     new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-                    registered = true;
-                }
-            }
-        }.execute();
+                       mSwipeRefreshLayout.setRefreshing(false);
+                       if (!registered && !NetUtils.isConnected(MainActivity.this)) {
+                           registerReceiver(connectivityChangeReceiver,
+                                            new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+                           registered = true;
+                       }
+                   });
     }
 
     /**
