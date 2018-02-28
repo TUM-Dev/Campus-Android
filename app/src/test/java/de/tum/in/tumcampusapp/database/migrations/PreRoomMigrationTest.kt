@@ -1,7 +1,9 @@
 package de.tum.`in`.tumcampusapp.database.migrations
 
+import android.arch.persistence.room.util.TableInfo
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Build
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -12,6 +14,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import org.robolectric.util.ReflectionHelpers
 import java.io.File
 
 @RunWith(RobolectricTestRunner::class)
@@ -67,6 +70,11 @@ class PreRoomMigrationTest {
     @Test
     fun simpleTcaDbMigration() {
         db.close()
+        /** @see TableInfo.Column.primaryKeyPosition
+         *  Room checks primaryKeyPosition on SDK >= 20 and notes: "custom SQLite deployments may return false positives"
+         *  Roboelectric is such a custom deployment, so work around that
+         */
+        ReflectionHelpers.setStaticField(Build.VERSION::class.java, "SDK_INT", 19)
         val tcadb = TcaDb.getInstance(RuntimeEnvironment.application)
         assert(tcadb.newsSourcesDao().getNewsSources("test").isEmpty())
     }
