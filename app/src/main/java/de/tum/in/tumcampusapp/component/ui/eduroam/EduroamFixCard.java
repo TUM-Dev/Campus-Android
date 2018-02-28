@@ -141,18 +141,15 @@ public class EduroamFixCard extends NotificationAwareCard {
         int eapMethod = eduroam.enterpriseConfig.getEapMethod();
         int phase2 = eduroam.enterpriseConfig.getPhase2Method();
 
-        if ((eapMethod == WifiEnterpriseConfig.Eap.TTLS
-             && (phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2 || phase2 == WifiEnterpriseConfig.Phase2.PAP))
-            || (eapMethod == WifiEnterpriseConfig.Eap.PEAP
-                && phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2)) {
+        if (eapMethod == WifiEnterpriseConfig.Eap.TTLS &&
+            (phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2 || phase2 == WifiEnterpriseConfig.Phase2.PAP)
+            || eapMethod == WifiEnterpriseConfig.Eap.PEAP && phase2 == WifiEnterpriseConfig.Phase2.MSCHAPV2) {
 
             checkDNSName();
             checkAnonymousIdentity();
-
             // note: checking the certificate does not seem possible
-        } else {
-            // PWD or unknown authentication method (we don't know if that method is safe or not -> ignore)
         }
+        // else: PWD or unknown authentication method (we don't know if that method is safe or not -> ignore)
 
         return errors.isEmpty();
     }
@@ -161,9 +158,9 @@ public class EduroamFixCard extends NotificationAwareCard {
     private void checkAnonymousIdentity() {
         String anonymousIdentity = eduroam.enterpriseConfig.getAnonymousIdentity();
         if (anonymousIdentity != null
-            && (!anonymousIdentity.equals("anonymous@mwn.de")
+            && !anonymousIdentity.equals("anonymous@mwn.de")
                 && !anonymousIdentity.equals("anonymous@eduroam.mwn.de")
-                && !anonymousIdentity.equals("anonymous@mytum.de"))) {
+                && !anonymousIdentity.equals("anonymous@mytum.de")) {
             errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set));
         }
     }
@@ -184,9 +181,10 @@ public class EduroamFixCard extends NotificationAwareCard {
 
     private boolean isTumEduroam(String identity) {
         Pattern pattern = Pattern.compile(Const.TUM_ID_PATTERN);
-        return identity.endsWith("@mwn.de") || identity.endsWith("@mytum.de")
-               || identity.endsWith("@tum.de") || ((identity.endsWith(".mwn.de")
-               || identity.endsWith(".tum.de")) && identity.contains(atSign))
+        return identity.endsWith("@mwn.de")
+               || identity.endsWith("@mytum.de")
+               || identity.endsWith("@tum.de")
+               || (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(atSign)
                || pattern.matcher(identity)
                          .matches();
     }
