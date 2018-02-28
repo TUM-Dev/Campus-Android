@@ -89,31 +89,6 @@
                             app:srcCompat="@drawable/ic_help_red"/>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/certificate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/SmallListSeparatorTextViewStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/certificate"/>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:text="@string/certificate_desc"/>
-
-                        <Button
-                            style="@style/FlatButton"
-                            android:onClick="onInstallCertificate"
-                            android:text="@string/install_certificate"/>
-                    </LinearLayout>
-
-
                     <TextView
                         style="@style/SmallListSeparatorTextViewStyle"
                         android:layout_width="wrap_content"

@@ -49,10 +49,6 @@ public class SetupEduroamActivity extends BaseActivity {
         // Enable 'More Info' links
         ((TextView) findViewById(R.id.text_with_link_2)).setMovementMethod(LinkMovementMethod.getInstance());
 
-        if (Build.VERSION.SDK_INT >= 18) {
-            findViewById(R.id.certificate).setVisibility(View.GONE);
-        }
-
         lrz = findViewById(R.id.wifi_lrz_id);
         lrz.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
         password = findViewById(R.id.wifi_password);
@@ -124,39 +120,6 @@ public class SetupEduroamActivity extends BaseActivity {
         } else {
             findViewById(R.id.eduroam_config_error).setVisibility(View.VISIBLE);
         }
-    }
-
-    /**
-     * Prompts the user with an install certificate dialog.
-     * This is only needed for API level lower than 18.
-     * API 18 and above allow automatic installation of certificate
-     *
-     * @param v Certificate install button handle
-     */
-    @SuppressWarnings("UnusedParameters")
-    public void onInstallCertificate(View v) {
-        Intent intent = new Intent("android.credentials.INSTALL");
-        intent.setClassName("com.android.certinstaller", "com.android.certinstaller.CertInstallerMain");
-        try {
-            InputStream is = getResources().openRawResource(R.raw.rootcert);
-            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-            X509Certificate cert = (X509Certificate) certFactory.generateCertificate(is);
-            intent.putExtra("name", "eduroam");
-            intent.putExtra("CERT", cert.getEncoded());
-            startActivityForResult(intent, 0);
-        } catch (Resources.NotFoundException | CertificateException e) {
-            Utils.log(e);
-        }
-    }
-
-    /**
-     * Open security settings
-     *
-     * @param v Security settings button handle
-     */
-    @SuppressWarnings("UnusedParameters")
-    public void openSecuritySettings(View v) {
-        startActivity(new Intent(Settings.ACTION_SECURITY_SETTINGS));
     }
 
     /**

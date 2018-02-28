@@ -133,8 +133,7 @@ public class EduroamFixCard extends NotificationAwareCard {
         // Check attributes - check newer match for the radius server
         // for all configurations
         // Check that the full quantifier is used (we already know it's a tum config)
-        if (!eduroam.enterpriseConfig.getIdentity()
-                                     .contains(atSign)) {
+        if (!eduroam.enterpriseConfig.getIdentity().contains(atSign)) {
             errors.add(mContext.getString(R.string.wifi_identity_zone));
         }
 
@@ -154,7 +153,6 @@ public class EduroamFixCard extends NotificationAwareCard {
         return errors.isEmpty();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void checkAnonymousIdentity() {
         String anonymousIdentity = eduroam.enterpriseConfig.getAnonymousIdentity();
         if (anonymousIdentity != null
@@ -169,12 +167,9 @@ public class EduroamFixCard extends NotificationAwareCard {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !isValidSubjectMatchAPI18(eduroam)) {
             errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                   && (!eduroam.enterpriseConfig.getAltSubjectMatch()
-                                                .equals("DNS:" + RADIUS_DNS)
-                       || !eduroam.enterpriseConfig.getDomainSuffixMatch()
-                                                   .equals(RADIUS_DNS))
+                   && (!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS)
+                       || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))
                    && !isValidSubjectMatchAPI18(eduroam)) {
-
             errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
         }
     }
@@ -185,15 +180,11 @@ public class EduroamFixCard extends NotificationAwareCard {
                || identity.endsWith("@mytum.de")
                || identity.endsWith("@tum.de")
                || (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(atSign)
-               || pattern.matcher(identity)
-                         .matches();
+               || pattern.matcher(identity).matches();
     }
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private boolean isValidSubjectMatchAPI18(WifiConfiguration eduroam) {
         Utils.log("SubjectMatch: " + eduroam.enterpriseConfig.getSubjectMatch());
-        return eduroam.enterpriseConfig.getSubjectMatch()
-                                       .equals(RADIUS_DNS);
+        return eduroam.enterpriseConfig.getSubjectMatch().equals(RADIUS_DNS);
     }
 }
