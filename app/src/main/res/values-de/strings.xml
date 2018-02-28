@@ -486,4 +486,9 @@ Signatur: %5$s</string>
     <string name="filter_lecture_SELECTED_LECTURES">Ausgewählte Vorlesungen</string>
     <string name="show_answer">Antwort anzeigen</string>
     <string name="title_activity_cards_quiz">Lernkarten</string>
+
+    <string name="create_event">Termin erstellen</string>
+    <string name="comment">Anmerkung</string>
+    <string name="from">von</string>
+    <string name="to">bis</string>
 </resources>

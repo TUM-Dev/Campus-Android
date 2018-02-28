@@ -186,6 +186,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         } else if (i == R.id.action_delete_calendar) {
             deleteCalendarFromGoogle();
             return true;
+        } else if (i == R.id.action_create_event){
+            //new CreateEventDialogFragment().show(getSupportFragmentManager(), "CreateEventDialog");
+            startActivity(new Intent(this, CreateEventActivity.class));
+            return true;
         } else {
             isFetched = false;
             return super.onOptionsItemSelected(item);

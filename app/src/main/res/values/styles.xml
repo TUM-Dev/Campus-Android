@@ -51,6 +51,16 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="CalendarElement" parent="AppTheme">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/color_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="PreferenceThemeOverlay">
         <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
         <item name="preferenceFragmentStyle">@style/PreferenceFragment</item>
