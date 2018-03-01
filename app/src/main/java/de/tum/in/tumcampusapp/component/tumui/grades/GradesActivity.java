@@ -43,7 +43,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
     private static final String SHOW_PIE_CHART = "showPieChart"; // show pie or bar chart after rotation
-    private static final String[] GRADES = {"1,0", "1,3", "1,4", "1,7", "2,0", "2,3", "2,4", "2,7", "3,0", "3,3", "3,4", "3,7", "4,0", "4,3", "4,4", "4,7", "5,0"};
+    private static final String[] GRADES = {"1,0", "1,3", "1,4", "1,7", "2,0", "2,3", "2,4", "2,7", "3,0",
+                                            "3,3", "3,4", "3,7", "4,0", "4,3", "4,4", "4,7", "5,0"};
     private static final int[] GRADE_COLORS = {R.color.grade_1_0, R.color.grade_1_3, R.color.grade_1_4, R.color.grade_1_7,
                                                R.color.grade_2_0, R.color.grade_2_3, R.color.grade_2_4, R.color.grade_2_7,
                                                R.color.grade_3_0, R.color.grade_3_3, R.color.grade_3_4, R.color.grade_3_7,

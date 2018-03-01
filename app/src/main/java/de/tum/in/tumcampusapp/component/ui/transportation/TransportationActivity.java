@@ -47,7 +47,9 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Lis
 
         // Initialize stations adapter
         List<Recent> recentStations = recentsDao.getAll(RecentsDao.STATIONS);
-        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportController.getRecentStations(recentStations));
+        adapterStations = new ArrayAdapter<>(this,
+                                             android.R.layout.simple_list_item_1,
+                                             TransportController.getRecentStations(recentStations));
 
         if (adapterStations.getCount() == 0) {
             openSearch();

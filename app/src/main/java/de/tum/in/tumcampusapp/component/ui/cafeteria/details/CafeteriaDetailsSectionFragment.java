@@ -71,7 +71,11 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * @param big         True to show big lines
      */
     @SuppressLint("ShowToast")
-    public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big, List<CafeteriaMenu> cafeteriaMenus) {
+    public static List<View> showMenu(LinearLayout rootView,
+                                      int cafeteriaId,
+                                      String dateStr,
+                                      boolean big,
+                                      List<CafeteriaMenu> cafeteriaMenus) {
         // initialize a few often used things
         final Context context = rootView.getContext();
         final Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(context);

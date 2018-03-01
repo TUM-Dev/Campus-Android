@@ -188,7 +188,8 @@ public class CalendarController implements Card.ProvidesCard {
     }
 
     public CalendarItem getCalendarItemByStartAndEndTime(Calendar start, Calendar end) {
-        return calendarDao.getCalendarItemByStartAndEndTime(DateUtils.getDateTimeString(start.getTime()), DateUtils.getDateTimeString(end.getTime()));
+        return calendarDao.getCalendarItemByStartAndEndTime(DateUtils.getDateTimeString(start.getTime()), 
+                                                            DateUtils.getDateTimeString(end.getTime()));
     }
 
     public void importCalendar(CalendarRowSet myCalendarList) {
@@ -296,8 +297,8 @@ public class CalendarController implements Card.ProvidesCard {
             }
 
             // Do sync of google calendar if necessary
-            boolean syncCalendar = Utils.getInternalSettingBool(c, Const.SYNC_CALENDAR, false)
-                                   && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED;
+            boolean syncCalendar = Utils.getInternalSettingBool(c, Const.SYNC_CALENDAR, false);
+            syncCalendar &= ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED;
             if (syncCalendar && new SyncManager(c).needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
                 syncCalendar(c);
                 new SyncManager(c).replaceIntoDb(Const.SYNC_CALENDAR);

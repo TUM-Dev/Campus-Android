@@ -250,7 +250,8 @@ public class CacheManager {
      */
     private void importLecturesFromTUMOnline() {
         // get my lectures
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), mContext);
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(),
+                                                                                       mContext);
         if (!shouldRefresh(requestHandler.getRequestURL())) {
             return;
         }

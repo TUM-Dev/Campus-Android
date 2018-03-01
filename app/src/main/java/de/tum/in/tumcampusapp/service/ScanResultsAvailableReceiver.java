@@ -62,10 +62,13 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         }
 
         // Test if user has eduroam configured already
-        boolean eduroamConfiguredAlready = EduroamController.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18;
+        boolean eduroamConfiguredAlready = EduroamController.getEduroamConfig(context) != null ||
+                                           NetUtils.isConnected(context) ||
+                                           Build.VERSION.SDK_INT < 18;
 
         //Check if locations are enabled
-        boolean locationsEnabled = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean locationsEnabled = 
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         boolean wifiScansEnabled = Utils.getInternalSettingBool(context, Const.WIFI_SCANS_ALLOWED, false);
         boolean nextScanScheduled = false;
 
@@ -131,8 +134,9 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         criteria.setAltitudeRequired(false);
         criteria.setSpeedRequired(false);
         WifiMeasurement wifiMeasurement = new WifiMeasurement("", scanResult.SSID, scanResult.BSSID, scanResult.level, -1, -1, -1);
-        locationManager.requestSingleUpdate(criteria, new WifiMeasurementLocationListener(context, wifiMeasurement, Calendar.getInstance()
-                                                                                                                            .getTimeInMillis()), null);
+        locationManager.requestSingleUpdate(criteria, new WifiMeasurementLocationListener(context,
+                                                                                          wifiMeasurement,
+                                                                                          Calendar.getInstance().getTimeInMillis()), null);
     }
 
     /**

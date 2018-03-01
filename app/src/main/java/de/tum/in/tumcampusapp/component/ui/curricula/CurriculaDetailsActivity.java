@@ -59,7 +59,9 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Str
      */
     private Optional<String> fetchCurriculum(String url) {
         Optional<String> results = extractResultsFromURL(url);
-        Optional<String> css = net.downloadStringAndCache("http://www.in.tum.de/fileadmin/_src/add.css", CacheManager.VALIDITY_ONE_MONTH, false);
+        Optional<String> css = net.downloadStringAndCache("http://www.in.tum.de/fileadmin/_src/add.css",
+                                                          CacheManager.VALIDITY_ONE_MONTH,
+                                                          false);
         if (!results.isPresent() || !css.isPresent()) {
             return Optional.absent();
         }

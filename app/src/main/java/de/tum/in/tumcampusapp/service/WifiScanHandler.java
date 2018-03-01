@@ -35,7 +35,8 @@ public class WifiScanHandler extends Handler {
     }
 
     public void startRepetition() {
-        this.postDelayed(periodicalScan, generateRandomScanInterval(MIN_TIME_PASSED_IN_SECONDS, MAX_TIME_PASSED_IN_SECONDS - MIN_TIME_PASSED_IN_SECONDS));
+        this.postDelayed(periodicalScan, generateRandomScanInterval(MIN_TIME_PASSED_IN_SECONDS, 
+                                                                    MAX_TIME_PASSED_IN_SECONDS - MIN_TIME_PASSED_IN_SECONDS));
     }
 
     private static int generateRandomScanInterval(int minimumSeconds, int range) {

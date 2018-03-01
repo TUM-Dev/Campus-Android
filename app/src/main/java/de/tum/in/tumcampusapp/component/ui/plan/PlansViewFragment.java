@@ -37,10 +37,14 @@ public class PlansViewFragment extends Fragment {
      * An enum to map urls to local filenames
      */
     private enum PlanFile {
-        SCHNELLBAHNNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/2018_MVVnetz_Final_S_U_R_T_screen.pdf", "Schnellbahnnetz2018.pdf"),
-        NACHTLINIENNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Nachtnetz_2018.pdf", "Nachtliniennetz2018.pdf"),
-        TRAMNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Tramnetz2018_screen.pdf", "Tramnetz2018.pdf"),
-        GESAMTNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Gesamtnetz_2018.PDF", "Gesamtnetz2018.pdf");
+        SCHNELLBAHNNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/2018_MVVnetz_Final_S_U_R_T_screen.pdf",
+                        "Schnellbahnnetz2018.pdf"),
+        NACHTLINIENNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Nachtnetz_2018.pdf",
+                        "Nachtliniennetz2018.pdf"),
+        TRAMNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Tramnetz2018_screen.pdf",
+                 "Tramnetz2018.pdf"),
+        GESAMTNETZ("https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Gesamtnetz_2018.PDF",
+                   "Gesamtnetz2018.pdf");
 
         private final String localName;
         private final String url;
@@ -117,12 +121,30 @@ public class PlansViewFragment extends Fragment {
                 .add(new PlanListEntry(R.drawable.plan_mvv_night_icon, R.string.mvv_nightlines, R.string.empty_string, 0))
                 .add(new PlanListEntry(R.drawable.plan_tram_icon, R.string.mvv_tram, R.string.empty_string, 0))
                 .add(new PlanListEntry(R.drawable.mvv_entire_net_icon, R.string.mvv_entire_net, R.string.empty_string, 0))
-                .add(new PlanListEntry(R.drawable.plan_campus_garching_icon, R.string.campus_garching, R.string.campus_garching_adress, R.drawable.campus_garching))
-                .add(new PlanListEntry(R.drawable.plan_campus_klinikum_icon, R.string.campus_klinikum, R.string.campus_klinikum_adress, R.drawable.campus_klinikum))
-                .add(new PlanListEntry(R.drawable.plan_campus_olympiapark_icon, R.string.campus_olympiapark, R.string.campus_olympiapark_adress, R.drawable.campus_olympiapark))
-                .add(new PlanListEntry(R.drawable.plan_campus_olympiapark_hallenplan_icon, R.string.campus_olympiapark_gyms, R.string.campus_olympiapark_adress, R.drawable.campus_olympiapark_hallenplan))
-                .add(new PlanListEntry(R.drawable.plan_campus_stammgelaende__icon, R.string.campus_main, R.string.campus_main_adress, R.drawable.campus_stammgelaende))
-                .add(new PlanListEntry(R.drawable.plan_campus_weihenstephan_icon, R.string.campus_weihenstephan, R.string.campus_weihenstephan_adress, R.drawable.campus_weihenstephan))
+                .add(new PlanListEntry(R.drawable.plan_campus_garching_icon,
+                                       R.string.campus_garching,
+                                       R.string.campus_garching_adress,
+                                       R.drawable.campus_garching))
+                .add(new PlanListEntry(R.drawable.plan_campus_klinikum_icon,
+                                       R.string.campus_klinikum,
+                                       R.string.campus_klinikum_adress,
+                                       R.drawable.campus_klinikum))
+                .add(new PlanListEntry(R.drawable.plan_campus_olympiapark_icon,
+                                       R.string.campus_olympiapark,
+                                       R.string.campus_olympiapark_adress,
+                                       R.drawable.campus_olympiapark))
+                .add(new PlanListEntry(R.drawable.plan_campus_olympiapark_hallenplan_icon,
+                                       R.string.campus_olympiapark_gyms,
+                                       R.string.campus_olympiapark_adress,
+                                       R.drawable.campus_olympiapark_hallenplan))
+                .add(new PlanListEntry(R.drawable.plan_campus_stammgelaende__icon,
+                                       R.string.campus_main,
+                                       R.string.campus_main_adress,
+                                       R.drawable.campus_stammgelaende))
+                .add(new PlanListEntry(R.drawable.plan_campus_weihenstephan_icon,
+                                       R.string.campus_weihenstephan,
+                                       R.string.campus_weihenstephan_adress,
+                                       R.drawable.campus_weihenstephan))
                 .build();
 
         //Check if there are any new files to download
@@ -138,7 +160,9 @@ public class PlansViewFragment extends Fragment {
                 File pdfFile = new File(fileDirectory, currentLocalName);
                 if (pdfFile.exists()) {
                     if (!openPdfViewer(pdfFile)) {
-                        Toast.makeText(getContext(), "Invalid file format, please let us know of this bug - plans have probably been updated.", Toast.LENGTH_LONG)
+                        Toast.makeText(getContext(),
+                                      "Invalid file format, please let us know of this bug - plans have probably been updated.",
+                                       Toast.LENGTH_LONG)
                              .show();
                     }
                 } else {

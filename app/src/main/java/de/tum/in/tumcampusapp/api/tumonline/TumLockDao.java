@@ -12,7 +12,8 @@ import de.tum.in.tumcampusapp.api.tumonline.model.TumLock;
 
 @Dao
 public interface TumLockDao {
-    @Query("DELETE FROM tumLock WHERE datetime() > datetime(strftime('%s',timestamp) + " + TumManager.MAX_AGE + ", 'unixepoch') AND active=0")
+    @Query("DELETE FROM tumLock WHERE datetime() > " +
+           "datetime(strftime('%s',timestamp) + " + TumManager.MAX_AGE + ", 'unixepoch') AND active=0")
     void deleteObsolete();
 
     @Query("UPDATE tumLock SET active=0 WHERE datetime() > datetime(strftime('%s',timestamp) + lockedFor, 'unixepoch') AND active=1")

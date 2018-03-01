@@ -221,8 +221,13 @@ public class AuthenticationManager {
         Thread thread = new Thread() {
             @Override
             public void run() {
-                //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
-                TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getSECRET_UPLOAD(), AuthenticationManager.this.mContext, false);
+                //Upload the Private key to the tumo server: 
+                //we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
+                TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(
+                    TUMOnlineConst.Companion.getSECRET_UPLOAD(),
+                    AuthenticationManager.this.mContext,
+                    false
+                );
                 requestSavePublicKey.setParameter("pToken", Utils.getSetting(AuthenticationManager.this.mContext, Const.ACCESS_TOKEN, ""));
                 requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
                 requestSavePublicKey.fetch();
@@ -234,8 +239,8 @@ public class AuthenticationManager {
     private void tryToUploadGcmToken() {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         // Can only be done after the public key has been uploaded
-        if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false) && GoogleApiAvailability.getInstance()
-                                                                                                             .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
+        if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false) && 
+                GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
             GcmIdentificationService idService = new GcmIdentificationService(mContext);
             idService.checkSetup();
         }

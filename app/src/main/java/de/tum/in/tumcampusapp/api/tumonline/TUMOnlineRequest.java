@@ -108,7 +108,9 @@ public final class TUMOnlineRequest<T> {
     }
 
     public static boolean checkTokenInactive(Context c) {
-        TUMOnlineRequest<TokenConfirmation> checkActiveToken = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTOKEN_CONFIRMED(), c, true);
+        TUMOnlineRequest<TokenConfirmation> checkActiveToken = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTOKEN_CONFIRMED(),
+                                                                                      c,
+                                                                                      true);
         Optional<TokenConfirmation> tc = checkActiveToken.fetch();
         if (tc.isPresent()) { //Check that the token is actually active
             if (tc.get()

@@ -94,7 +94,9 @@ public class ChatNotification extends GenericNotification {
     }
 
     private void prepare() throws IOException {
-        Utils.logv("Received GCM notification: room=" + this.extras.getRoom() + " member=" + this.extras.getMember() + " message=" + this.extras.getMessage());
+        Utils.logv("Received GCM notification: room=" + this.extras.getRoom() +
+                   " member=" + this.extras.getMember() +
+                   " message=" + this.extras.getMessage());
 
         // Get the data necessary for the ChatActivity
         ChatMember member = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);

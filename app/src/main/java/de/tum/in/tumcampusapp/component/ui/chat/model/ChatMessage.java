@@ -154,7 +154,8 @@ public class ChatMessage {
 
         Calendar today = Calendar.getInstance(); // today
 
-        return today.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR);
+        return today.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) &&
+               today.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR);
     }
 
     private static boolean isYesterday(Date date) {
@@ -164,7 +165,8 @@ public class ChatMessage {
         Calendar yesterday = Calendar.getInstance(); // today
         yesterday.add(Calendar.DAY_OF_YEAR, -1); // yesterday
 
-        return yesterday.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && yesterday.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR);
+        return yesterday.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) &&
+               yesterday.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR);
     }
 
     public int getStatusStringRes() {

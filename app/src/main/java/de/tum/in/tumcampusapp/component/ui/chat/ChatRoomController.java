@@ -67,7 +67,14 @@ public class ChatRoomController implements Card.ProvidesCard {
             chatRoomDao.updateRoom(lecture.getSemester_name(), Integer.valueOf(lecture.getStp_lv_nr()),
                                    lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id());
         } else {
-            ChatRoomDbRow room = new ChatRoomDbRow(-1, lecture.getTitel(), lecture.getSemester_name(), lecture.getSemester_id(), -1, Integer.parseInt(lecture.getStp_lv_nr()), lecture.getVortragende_mitwirkende(), 0);
+            ChatRoomDbRow room = new ChatRoomDbRow(-1,
+                                                   lecture.getTitel(),
+                                                   lecture.getSemester_name(),
+                                                   lecture.getSemester_id(),
+                                                   -1,
+                                                   Integer.parseInt(lecture.getStp_lv_nr()),
+                                                   lecture.getVortragende_mitwirkende(),
+                                                   0);
             chatRoomDao.replaceRoom(room);
         }
     }
@@ -136,7 +143,9 @@ public class ChatRoomController implements Card.ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
         // Get all of the users lectures and save them as possible chat rooms
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), context, true);
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(),
+                                                                                       context,
+                                                                                       true);
         Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
         if (lecturesList.isPresent() && lecturesList.get()
                                                     .getLehrveranstaltungen() != null) {
@@ -154,7 +163,8 @@ public class ChatRoomController implements Card.ProvidesCard {
                 try {
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
                     currentChatRoom = TUMCabeClient.getInstance(context)
-                                                   .createRoom(currentChatRoom, ChatVerification.Companion.getChatVerification(context, currentChatMember));
+                                                   .createRoom(currentChatRoom, 
+                                                               ChatVerification.Companion.getChatVerification(context, currentChatMember));
                     if (currentChatRoom != null) {
                         this.join(currentChatRoom);
                     }

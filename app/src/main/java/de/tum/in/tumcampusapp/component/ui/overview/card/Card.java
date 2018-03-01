@@ -250,7 +250,9 @@ public abstract class Card implements Comparable<Card> {
         void onRequestCard(Context context);
     }
 
-    public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
+    public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+                                                                                  View.OnLongClickListener,
+                                                                                  PopupMenu.OnMenuItemClickListener {
         private Card current;
         private List<View> addedViews = new ArrayList<>();
         private final Activity mActivity;

@@ -153,7 +153,10 @@ public class MVVWidget extends AppWidgetProvider {
         Intent reloadIntent = new Intent(context, MVVWidget.class);
         reloadIntent.setAction(MVVWidget.MVV_WIDGET_FORCE_RELOAD);
         reloadIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(context, appWidgetId, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(context,
+                                                                       appWidgetId,
+                                                                       reloadIntent,
+                                                                       PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.mvv_widget_reload, pendingReloadIntent);
         rv.setViewVisibility(R.id.mvv_widget_reload, widgetDepartures.getAutoReload() ? View.GONE : View.VISIBLE);
 

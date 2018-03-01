@@ -52,7 +52,9 @@ import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener {
+public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, 
+                                                                                               MonthLoader.MonthChangeListener,
+                                                                                               WeekView.EventClickListener {
 
     /**
      * The space between the first and the last date
@@ -382,7 +384,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat(weekDayFormat, Locale.getDefault());
                 String weekday = weekdayNameFormat.format(date.getTime());
                 String dateString = DateUtils.formatDateTime(getApplicationContext(),
-                                                             date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
+                                                             date.getTimeInMillis(), 
+                                                             DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
 
                 return weekday.toUpperCase(Locale.getDefault()) + ' ' + dateString;
             }

@@ -100,7 +100,8 @@ public final class ExceptionHandler {
 
     /**
      * Submit stack traces.
-     * This is public because in some cases you might want to manually ask the traces to be submitted, for example after asking the user's permission.
+     * This is public because in some cases you might want to manually ask the traces to be submitted,
+     * for example after asking the user's permission.
      */
     private static void submit(final Context context) {
         if (!sSetupCalled) {
@@ -112,8 +113,9 @@ public final class ExceptionHandler {
             // Move the list of traces to a private variable. This ensures that subsequent calls to hasStackTraces()
             // while the submission thread is ongoing, will return false, or at least would refer to some new set of traces.
             //
-            // Yes, it would not be a problem from our side to have two of these submission threads ongoing at the same time (although it wouldn't currently happen as no new
-            // traces can be added to the list besides through crashing the process); however, the user's callback processor might not be written to deal with that scenario.
+            // Yes, it would not be a problem from our side to have two of these submission threads ongoing at the same time 
+            // (although it wouldn't currently happen as no new traces can be added to the list besides through crashing the process);
+            // however, the user's callback processor might not be written to deal with that scenario.
             final List<String[]> tracesNowSubmitting = sStackTraces;
             sStackTraces = null;
 
@@ -198,7 +200,8 @@ public final class ExceptionHandler {
 
             return sStackTraces;
         } finally {
-            // Delete ALL the stack traces, even those not read (if there were too many), and do this within a finally clause so that even if something very unexpected went
+            // Delete ALL the stack traces, even those not read (if there were too many), 
+            // and do this within a finally clause so that even if something very unexpected went
             // wrong above, it hopefully won't happen again the next time around (because the offending files are gone).
             for (String aList : list) {
                 try {

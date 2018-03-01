@@ -68,7 +68,9 @@ public class TransportController implements Card.ProvidesCard {
      *  &stateless=1&coordOutputFormat=WGS84 // Common parameters. They are reasonable, so don't change
      *  &type_dm=stop // Station type.
      *  &name_dm=Freising // This is the actual query string
-     *  &itOptionsActive=1&ptOptionsActive=1&mergeDep=1&useAllStops=1&mode=direct // No idea what these parameters actually do. Feel free to experiment with them, just don't blame me if anything breaks
+     *  &itOptionsActive=1&ptOptionsActive=1&mergeDep=1&useAllStops=1&mode=direct // No idea what these parameters actually do. 
+     *                                                                               Feel free to experiment with them, 
+     *                                                                               just don't blame me if anything breaks
      */
 
     private static final String MVV_API_BASE = "http://efa.mvv-muenchen.de/mobile/"; // No HTTPS support :(
@@ -257,7 +259,11 @@ public class TransportController implements Card.ProvidesCard {
                 JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
                 JSONObject time = departure.getJSONObject("dateTime");
-                Date date = new GregorianCalendar(time.getInt("year"), time.getInt("month") - 1, time.getInt("day"), time.getInt("hour"), time.getInt("minute")).getTime();
+                Date date = new GregorianCalendar(time.getInt("year"),
+                                                  time.getInt("month") - 1,
+                                                  time.getInt("day"),
+                                                  time.getInt("hour"),
+                                                  time.getInt("minute")).getTime();
                 result.add(new Departure(
                         servingLine.getString("name"),
                         servingLine.getString("direction"),

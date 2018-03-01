@@ -66,7 +66,11 @@ public class CafeteriaManager implements Card.ProvidesCard {
         compositeDisposable.add(createCafeteriaObservable(cafeteriaId)
                                         .take(1)
                                         .subscribe(cafeteria -> {
-                                            card.setCardMenus(cafeteria.id, cafeteria.name, cafeteria.dateStr, de.tum.in.tumcampusapp.utils.DateUtils.getDate(cafeteria.dateStr), cafeteria.menus);
+                                            card.setCardMenus(cafeteria.id,
+                                                              cafeteria.name,
+                                                              cafeteria.dateStr,
+                                                              de.tum.in.tumcampusapp.utils.DateUtils.getDate(cafeteria.dateStr),
+                                                              cafeteria.menus);
                                             card.apply();
                                         }, throwable -> Utils.log(throwable.getMessage())));
 
@@ -116,7 +120,10 @@ public class CafeteriaManager implements Card.ProvidesCard {
 
     private String createDateString(List<String> cafeteriaDates) {
         Calendar now = Calendar.getInstance();
-        String dateStr = cafeteriaDates.isEmpty() ? de.tum.in.tumcampusapp.utils.DateUtils.getDateTimeString(new Date()) : cafeteriaDates.get(0);
+        String dateStr = de.tum.in.tumcampusapp.utils.DateUtils.getDateTimeString(new Date());
+        if (!cafeteriaDates.isEmpty()) {
+            dateStr = cafeteriaDates.get(0);
+        }
         Date date = de.tum.in.tumcampusapp.utils.DateUtils.getDate(dateStr);
         if (DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY) >= 15 && cafeteriaDates.size() > 1) {
             dateStr = cafeteriaDates.get(1);

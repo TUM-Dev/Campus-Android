@@ -22,7 +22,8 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 public class TimetableWidget extends AppWidgetProvider {
 
     public final static int UPDATE_ALARM_DELAY = 30 * 60 * 1000;
-    public static final String BROADCAST_UPDATE_TIMETABLE_WIDGETS = "de.tum.in.tumcampusapp.intent.action.BROADCAST_UPDATE_TIMETABLE_WIDGETS";
+    public static final String BROADCAST_UPDATE_TIMETABLE_WIDGETS = 
+        "de.tum.in.tumcampusapp.intent.action.BROADCAST_UPDATE_TIMETABLE_WIDGETS";
     private static boolean alarmIsSet;
 
     /**
@@ -70,18 +71,27 @@ public class TimetableWidget extends AppWidgetProvider {
         // Set up the configuration activity listeners
         Intent configIntent = new Intent(context, TimetableWidgetConfigureActivity.class);
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingConfigIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingConfigIntent = PendingIntent.getActivity(context,
+                                                                      appWidgetId,
+                                                                      configIntent,
+                                                                      PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.timetable_widget_setting, pendingConfigIntent);
 
         // Set up the calendar activity listeners
         Intent calendarIntent = new Intent(context, CalendarActivity.class);
-        PendingIntent pendingCalendarIntent = PendingIntent.getActivity(context, appWidgetId, calendarIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingCalendarIntent = PendingIntent.getActivity(context,
+                                                                        appWidgetId,
+                                                                        calendarIntent,
+                                                                        PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.timetable_widget_day, pendingCalendarIntent);
 
         // Set up the roomFinder activity listeners
         Intent roomFinderIntent = new Intent(context, RoomFinderActivity.class);
         roomFinderIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent roomFinderPendingIntent = PendingIntent.getActivity(context, appWidgetId, roomFinderIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent roomFinderPendingIntent = PendingIntent.getActivity(context,
+                                                                          appWidgetId,
+                                                                          roomFinderIntent,
+                                                                          PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setPendingIntentTemplate(R.id.timetable_widget_listview, roomFinderPendingIntent);
 
         // Set up the intent that starts the TimetableWidgetService, which will

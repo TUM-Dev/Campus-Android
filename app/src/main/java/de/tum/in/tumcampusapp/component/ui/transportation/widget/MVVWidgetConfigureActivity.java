@@ -24,7 +24,8 @@ import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.StationResult;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures;
 
-public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<List<StationResult>> implements AdapterView.OnItemClickListener {
+public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<List<StationResult>> 
+                                        implements AdapterView.OnItemClickListener {
 
     private int appWidgetId;
     private ListView listViewResults;
@@ -67,7 +68,9 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
 
         // Initialize stations adapter
         List<Recent> recentStations = recentsDao.getAll(RecentsDao.STATIONS);
-        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportController.getRecentStations(recentStations));
+        adapterStations = new ArrayAdapter<>(this,
+                                             android.R.layout.simple_list_item_1,
+                                             TransportController.getRecentStations(recentStations));
 
         if (adapterStations.getCount() == 0) {
             openSearch();

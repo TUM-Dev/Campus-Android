@@ -114,7 +114,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         super.onStart();
 
         // Adapter for drop-down navigation
-        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
+        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this,
+                                                                                R.layout.simple_spinner_item_actionbar,
+                                                                                android.R.id.text1,
+                                                                                mCafeterias) {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
             @Override
