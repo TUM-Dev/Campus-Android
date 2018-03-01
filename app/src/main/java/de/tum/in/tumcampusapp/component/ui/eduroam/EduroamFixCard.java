@@ -33,7 +33,7 @@ public class EduroamFixCard extends NotificationAwareCard {
     private static final String RADIUS_DNS = "radius.lrz.de";
     private final List<String> errors;
     private WifiConfiguration eduroam;
-    private static final String atSign = "@";
+    private static final String AT_SIGN = "@";
 
     public EduroamFixCard(Context context) {
         super(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start", false, true);
@@ -128,7 +128,7 @@ public class EduroamFixCard extends NotificationAwareCard {
         // Check attributes - check newer match for the radius server
         // for all configurations
         // Check that the full quantifier is used (we already know it's a tum config)
-        if (!eduroam.enterpriseConfig.getIdentity().contains(atSign)) {
+        if (!eduroam.enterpriseConfig.getIdentity().contains(AT_SIGN)) {
             errors.add(mContext.getString(R.string.wifi_identity_zone));
         }
 
@@ -174,7 +174,7 @@ public class EduroamFixCard extends NotificationAwareCard {
         return identity.endsWith("@mwn.de")
                || identity.endsWith("@mytum.de")
                || identity.endsWith("@tum.de")
-               || (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(atSign)
+               || (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(AT_SIGN)
                || pattern.matcher(identity).matches();
     }
 

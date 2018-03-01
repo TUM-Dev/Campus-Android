@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.graphics.Color;
-import android.os.Build;
 
 import com.alamkanak.weekview.WeekViewEvent;
 
@@ -16,7 +15,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private static final float SATURATION_ADJUST = 1.3f;
     private static final float INTENSITY_ADJUST = 0.8f;
     private final String location;
-    private boolean isFirstOnDay;
+    private boolean firstOnDay;
 
     IntegratedCalendarEvent(CalendarItem calendarItem) {
         super(Long.parseLong(calendarItem.getNr()),
@@ -48,10 +47,10 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     }
 
     public boolean isFirstOnDay() {
-        return this.isFirstOnDay;
+        return firstOnDay;
     }
 
     public void setIsFirstOnDay(Boolean isFirstOnDay) {
-        this.isFirstOnDay = isFirstOnDay;
+        this.firstOnDay = isFirstOnDay;
     }
 }
