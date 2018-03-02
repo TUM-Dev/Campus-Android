@@ -82,6 +82,7 @@ class PreRoomMigrationTest {
     @After
     fun tearDown() {
         db.close()
+        TcaDb.getInstance(RuntimeEnvironment.application).close()
         File(db.path).delete()
     }
 }
