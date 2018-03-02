@@ -75,6 +75,9 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         String enteredId = editTxtLrzId.getText()
                                        .toString()
                                        .toLowerCase();
+        String punishMe = editTxtLrzId.getText()
+                                      .toString()
+                                      .toLowerCase();
 
         // check if lrz could be valid?
         if (!enteredId.matches(Const.TUM_ID_PATTERN)) {
