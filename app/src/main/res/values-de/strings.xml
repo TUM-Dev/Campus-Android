@@ -491,4 +491,5 @@ Signatur: %5$s</string>
     <string name="from">von</string>
     <string name="to">bis</string>
     <string name="activity_create_event_title">Neuer persönlicher Termin</string>
+    <string name="event_title">Titel</string>
 </resources>

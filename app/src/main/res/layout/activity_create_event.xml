@@ -25,7 +25,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
+                android:hint="@string/event_title"
                 android:id="@+id/event_title"
                 android:textSize="24sp"
                 android:layout_weight="1"
@@ -43,12 +43,10 @@
                     android:text="@string/from"/>
                 <TextView
                     style="@style/CalendarElement"
-                    android:id="@+id/event_start_date"
-                    android:text="13.03.18"/>
+                    android:id="@+id/event_start_date"/>
                 <TextView
                     style="@style/CalendarElement"
-                    android:id="@+id/event_start_time"
-                    android:text="8:00"/>
+                    android:id="@+id/event_start_time"/>
             </LinearLayout>
 
             <LinearLayout
@@ -63,12 +61,10 @@
                     android:text="@string/to"/>
                 <TextView
                     style="@style/CalendarElement"
-                    android:id="@+id/event_end_date"
-                    android:text="13.03.18"/>
+                    android:id="@+id/event_end_date"/>
                 <TextView
                     style="@style/CalendarElement"
-                    android:id="@+id/event_end_time"
-                    android:text="8:00"/>
+                    android:id="@+id/event_end_time"/>
             </LinearLayout>
         </LinearLayout>
 

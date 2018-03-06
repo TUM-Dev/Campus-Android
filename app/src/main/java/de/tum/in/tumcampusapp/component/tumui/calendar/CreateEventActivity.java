@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -20,10 +19,10 @@ import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
-    Calendar start, end;
+    private Calendar start, end;
 
     public CreateEventActivity(){
-        super(TUMOnlineConst.Companion.getCREATE_EVENT(), R.layout.create_event_dialog);
+        super(TUMOnlineConst.Companion.getCREATE_EVENT(), R.layout.activity_create_event);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         findViewById(R.id.event_start_date).setOnClickListener(view -> {
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
                 start.set(year, month, dayOfMonth);
-                if(end.before(start)){
+                if (end.before(start)){
                     end.set(year, month, dayOfMonth);
                 }
                 updateDateViews();
@@ -113,7 +112,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
     private void createEvent(){
         // do another check
-        if(!start.before(end) && start.before(new Date())){
+        if (!start.before(end) && start.before(new Date())){
             showError();
             return;
         }
@@ -121,12 +120,12 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         String from = DateUtils.getDateTimeString(start.getTime());
         String to = DateUtils.getDateTimeString(end.getTime());
 
-        String title = ((EditText)findViewById(R.id.event_title)).getText().toString();
-        if(title.length() > 255){
+        String title = ((TextView) findViewById(R.id.event_title)).getText().toString();
+        if (title.length() > 255){
             title = title.substring(0, 255);
         }
-        String description = ((EditText)findViewById(R.id.event_description)).getText().toString();
-        if(description.length() > 4000){
+        String description = ((TextView) findViewById(R.id.event_description)).getText().toString();
+        if (description.length() > 4000){
             description = description.substring(0, 4000);
         }
 

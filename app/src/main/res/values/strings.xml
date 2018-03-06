@@ -567,4 +567,5 @@ Signature: %5$s</string>
     <string name="to">to</string>
     <string name="create_event">Create appointment</string>
     <string name="activity_create_event_title">New Personal Appointment</string>
+    <string name="event_title">Title</string>
 </resources>
