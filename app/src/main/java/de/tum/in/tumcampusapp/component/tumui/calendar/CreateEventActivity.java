@@ -37,7 +37,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
     @Override
     public void onFetch(CreateEvent response) {
-        Utils.log("Nr of newly created event: " + response.getNr());
+        Utils.log("Nr of newly created event: " + response.getEventNr());
         finish();
     }
 
@@ -51,6 +51,9 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         end = Calendar.getInstance();
         end.setTimeInMillis(start.getTimeInMillis());
         end.add(Calendar.HOUR_OF_DAY, 1);
+
+        updateDateViews();
+        updateTimeViews();
     }
 
     private void setDateAndTimeListeners(){
@@ -68,11 +71,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
         findViewById(R.id.event_end_date).setOnClickListener(view -> {
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
-                long oldValue = end.getTimeInMillis();
                 end.set(year, month, dayOfMonth);
-                if(end.before(start)){
-                    end.setTimeInMillis(oldValue);
-                }
                 updateDateViews();
             }, start.get(Calendar.YEAR), start.get(Calendar.MONTH), start.get(Calendar.DAY_OF_MONTH)).show();
         });
@@ -90,29 +89,24 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
         findViewById(R.id.event_end_time).setOnClickListener(view -> {
             new TimePickerDialog(this, (timePicker, hour, minute) -> {
-                long oldValue = end.getTimeInMillis();
                 end.set(Calendar.HOUR_OF_DAY, hour);
                 end.set(Calendar.MINUTE, minute);
-                if(end.before(start)){
-                    end.setTimeInMillis(oldValue);
-                }
                 updateTimeViews();
             }, end.get(Calendar.HOUR_OF_DAY), end.get(Calendar.MINUTE), true).show();
         });
     }
 
     private void updateTimeViews(){
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.GERMANY);
         ((TextView)findViewById(R.id.event_start_time))
-                .setText(getString(start.get(Calendar.HOUR_OF_DAY), start.get(Calendar.MINUTE)));
+                .setText(format.format(start.getTime()));
         ((TextView)findViewById(R.id.event_end_time))
-                .setText(getString(R.string.time, end.get(Calendar.HOUR_OF_DAY), end.get(Calendar.MINUTE)));
+                .setText(format.format(end.getTime()));
     }
     private void updateDateViews(){
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
-
         ((TextView)findViewById(R.id.event_start_date))
                 .setText(format.format(start.getTime()));
-
         ((TextView)findViewById(R.id.event_end_date))
                 .setText(format.format(end.getTime()));
     }
@@ -136,10 +130,11 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
             description = description.substring(0, 4000);
         }
 
-        finish(); // only for testing, later on only finish the activity after request was sent
-
-        // TODO create Event (see wiki)
-        // + add to db ? or refresh (this might take too long for the user)?
+        requestHandler.setParameter("pTitel", title);
+        requestHandler.setParameter("pAnmerkung", description);
+        requestHandler.setParameter("pVon", from);
+        requestHandler.setParameter("pBis", to);
+        requestFetch();
     }
 
     private void showError(){
