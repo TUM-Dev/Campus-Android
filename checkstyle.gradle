@@ -1,0 +1,21 @@
+apply plugin: 'checkstyle'
+
+task checkstyle(type: Checkstyle) {
+    showViolations = true
+    configFile file("../config/checkstyle/checkstyle.xml")
+    source 'src/main/java'
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+    exclude '**/res/**'
+
+    // empty classpath
+    classpath = files()
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/checkstyle/checkstyle-result.xml")
+    }
+}
+
+check.dependsOn('checkstyle')

@@ -31,7 +31,9 @@
                     android:id="@+id/lvMyLecturesList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical"
+                    android:importantForAutofill="noExcludeDescendants"/>
+                <!-- TODO remove importantForAutofill (workaround) once library is fixed -->
 
             </android.support.v4.widget.SwipeRefreshLayout>
 
