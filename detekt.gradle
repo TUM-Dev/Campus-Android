@@ -9,4 +9,4 @@ detekt {
     }
 }
 
-check.dependsOn('detekt')
+check.dependsOn('detektCheck')
