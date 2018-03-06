@@ -44,6 +44,9 @@ public interface CalendarDao {
     @Query("DELETE FROM calendar")
     void flush();
 
+    @Query("DELETE FROM calendar WHERE nr=:eventNr")
+    void delete(String eventNr);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(CalendarItem cal);
 

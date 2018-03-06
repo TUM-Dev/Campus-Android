@@ -4,9 +4,11 @@ import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
@@ -33,18 +35,42 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
         updateView(calendarItem, view)
     }
 
-
     private fun updateView(calendarItem: CalendarItem, view: View) {
         val titleTextView = view.findViewById<TextView>(R.id.bottomSheetHeading)
         val dateTextView = view.findViewById<TextView>(R.id.bottomSheetDateText)
         val locationTextView = view.findViewById<TextView>(R.id.bottomSheetLocationText)
         val descriptionTextView = view.findViewById<TextView>(R.id.bottomSheetDescriptionText)
+        val deleteButton = view.findViewById<Button>(R.id.bottomSheetDeleteEvent)
+        val editButton = view.findViewById<Button>(R.id.bottomSheetEditEvent)
+        val buttons = view.findViewById<View>(R.id.bottomSheetEditButtons);
 
+        Log.v("CalendarDetailsFragment", calendarItem.status + " " + calendarItem.url)
         titleTextView.text = calendarItem.title
         dateTextView.text = calendarItem.getEventDateString()
         locationTextView.text = calendarItem.location
-        descriptionTextView.text = calendarItem.description
+        if (calendarItem.location.isEmpty()) {
+            view.findViewById<View>(R.id.bottomSheetLocation).visibility = View.GONE
+        } else {
+            view.findViewById<View>(R.id.bottomSheetLocation).visibility = View.VISIBLE
+        }
+
+        if (calendarItem.description.isEmpty()){
+            view.findViewById<View>(R.id.bottomSheetDescription).visibility = View.GONE
+        } else {
+            descriptionTextView.text = calendarItem.description
+        }
+
         locationTextView.setOnClickListener { onLocationClicked(calendarItem.location) }
+
+        if (calendarItem.url.isEmpty()) {
+            buttons.visibility = View.VISIBLE
+            deleteButton.setOnClickListener {
+                (activity as CalendarActivity).deleteEvent(calendarItem.nr)
+            }
+            editButton.setOnClickListener { (activity as CalendarActivity).editEvent(calendarItem)}
+        } else {
+            buttons.visibility = View.GONE
+        }
     }
 
     private fun onLocationClicked(location: String) {

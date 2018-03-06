@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
-    >
+    android:layout_height="300dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,8 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:textAppearance="@android:style/TextAppearance.Large"
-                    />
+                    android:textAppearance="@android:style/TextAppearance.Large"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -44,12 +42,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="28dp">
+            android:padding="15dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/bottomSheetLocation">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -93,7 +92,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="22dp">
+                android:paddingTop="22dp"
+                android:id="@+id/bottomSheetDescription">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -110,6 +110,27 @@
                     />
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/bottomSheetEditButtons"
+            android:orientation="horizontal"
+            android:gravity="right">
+            <Button
+                android:id="@+id/bottomSheetDeleteEvent"
+                style="@style/FlatButton"
+                android:text="@string/delete_event_button"
+                android:drawableLeft="@drawable/ic_delete"/>
+            <Button
+                android:id="@+id/bottomSheetEditEvent"
+                style="@style/FlatButton"
+                android:text="@string/edit_event_button"
+                android:drawableLeft="@drawable/ic_action_edit"/>
+        </LinearLayout>
+
+
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

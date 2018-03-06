@@ -16,14 +16,17 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.google.common.base.Optional;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
@@ -37,9 +40,13 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEvent;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
@@ -58,7 +65,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      * The space between the first and the last date
      */
     public static final int MONTH_AFTER = 3;
-    public static final int MONTH_BEFORE = 0;
+    public static final int MONTH_BEFORE = 1;
     public static final String EVENT_TIME = "event_time";
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
@@ -76,6 +83,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private Calendar mShowDate;
     private MenuItem menuItemSwitchView;
     private WeekView mWeekView;
+
+    private CalendarDetailsFragment detailsFragment;
 
     public CalendarActivity() {
         super(TUMOnlineConst.Companion.getCALENDER(), R.layout.activity_calendar);
@@ -183,7 +192,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         } else if (i == R.id.action_delete_calendar) {
             deleteCalendarFromGoogle();
             return true;
-        } else if (i == R.id.action_create_event){
+        } else if (i == R.id.action_create_event) {
             startActivity(new Intent(this, CreateEventActivity.class));
             return true;
         } else {
@@ -403,11 +412,73 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
-        CalendarDetailsFragment detailsFragment = new CalendarDetailsFragment();
+        detailsFragment = new CalendarDetailsFragment();
         Bundle bundle = new Bundle();
         CalendarItem item = calendarController.getCalendarItemByStartAndEndTime(weekViewEvent.getStartTime(), weekViewEvent.getEndTime());
         bundle.putString(CALENDAR_ID_PARAM, item.getNr());
         detailsFragment.setArguments(bundle);
         detailsFragment.show(getSupportFragmentManager(), null);
+    }
+
+    /**
+     * option to delete is shown to the user for every event that does not contain a url
+     * (assumed that this is actually an event that was created by the user)
+     * @param nr
+     */
+    protected void deleteEvent(final String nr){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(R.string.event_delete_title);
+        dialog.setMessage(R.string.delete_event_info);
+        dialog.setPositiveButton(R.string.delete, (dialog1, which) -> {
+            TUMOnlineRequest<DeleteEvent> request = new TUMOnlineRequest<>(
+                    TUMOnlineConst.Companion.getDELETE_EVENT(), this, true);
+            request.setParameter("pTerminNr", nr);
+            request.fetchInteractive(this, new TUMOnlineRequestFetchListener<DeleteEvent>() {
+                @Override
+                public void onNoInternetError() {
+                    Toast.makeText(getApplicationContext(), "Error: you are not connected to the internet", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFetch(DeleteEvent response) {
+                    Utils.log("Delete Event result: " + response.getDelete());
+                    detailsFragment.dismiss();
+                    TcaDb.getInstance(getApplicationContext()).calendarDao().delete(nr);
+                    refreshWeekView();
+                    Toast.makeText(getApplicationContext(), R.string.delete_event_confirmation, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFetchCancelled() {}
+
+                @Override
+                public void onFetchError(String errorReason) {
+                    Toast.makeText(getApplicationContext(), R.string.delete_event_error, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onNoDataToShow() {}
+            });
+        });
+        dialog.setNegativeButton(R.string.cancel, null);
+        dialog.show();
+    }
+
+    protected void editEvent(final CalendarItem calendarItem){
+        Bundle bundle = new Bundle();
+        bundle.putString(Const.EVENT_TITLE, calendarItem.getTitle());
+        bundle.putString(Const.EVENT_COMMENT, calendarItem.getDescription());
+        bundle.putString(Const.EVENT_START, calendarItem.getDtstart());
+        bundle.putString(Const.EVENT_END, calendarItem.getDtend());
+        bundle.putString(Const.EVENT_NR, calendarItem.getNr());
+        Intent intent = new Intent(this, CreateEventActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        detailsFragment.dismiss();
+    }
+
+    protected void onResume(){
+        super.onResume();
+        refreshWeekView();
     }
 }

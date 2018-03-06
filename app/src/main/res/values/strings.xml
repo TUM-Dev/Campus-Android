@@ -568,4 +568,15 @@ Signature: %5$s</string>
     <string name="create_event">Create appointment</string>
     <string name="activity_create_event_title">New Personal Appointment</string>
     <string name="event_title">Title</string>
+    <string name="calendar_refresh">Refresh</string>
+    <string name="event_delete_title">Delete Appointment?</string>
+    <string name="delete_event_info">The appointment will be deleted from TUMonline.</string>
+    <string name="delete_event_confirmation">Event was deleted</string>
+    <string name="delete_event_error">Error: Event could not be deleted</string>
+    <string name="delete">Delete</string>
+    <string name="delete_event_button">Delete</string>
+    <string name="event_save_edit_button">Save changes</string>
+    <string name="create_event_time_error">Please make sure the start time of the event is before the end time</string>
+    <string name="error">Error</string>
+    <string name="edit_event_button">Edit</string>
 </resources>

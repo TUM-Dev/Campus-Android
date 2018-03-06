@@ -22,5 +22,4 @@
         android:icon="@drawable/ic_stop_sync_cloud"
         android:title="@string/delete_from_google"
         tumcampus:showAsAction="ifRoom"/>
-
 </menu>
