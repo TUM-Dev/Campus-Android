@@ -16,7 +16,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +25,6 @@ import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
-import com.google.common.base.Optional;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
@@ -421,8 +419,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     }
 
     /**
-     * option to delete is shown to the user for every event that does not contain a url
-     * (assumed that this is actually an event that was created by the user)
+     * option to delete is shown to the user for every event that does not contain a url.
+     * (it is assumed that this is actually an event that was created by the user)
      * @param nr
      */
     protected void deleteEvent(final String nr){
@@ -441,7 +439,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
                 @Override
                 public void onFetch(DeleteEvent response) {
-                    Utils.log("Delete Event result: " + response.getDelete());
                     detailsFragment.dismiss();
                     TcaDb.getInstance(getApplicationContext()).calendarDao().delete(nr);
                     refreshWeekView();
@@ -449,7 +446,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 }
 
                 @Override
-                public void onFetchCancelled() {}
+                public void onFetchCancelled() {
+                    Toast.makeText(getApplicationContext(), R.string.something_wrong, Toast.LENGTH_SHORT).show();
+                }
 
                 @Override
                 public void onFetchError(String errorReason) {
@@ -457,7 +456,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 }
 
                 @Override
-                public void onNoDataToShow() {}
+                public void onNoDataToShow() {
+                    Toast.makeText(getApplicationContext(), R.string.something_wrong, Toast.LENGTH_SHORT).show();
+                }
             });
         });
         dialog.setNegativeButton(R.string.cancel, null);

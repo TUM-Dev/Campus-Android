@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -25,17 +24,19 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
+/**
+ * Allows the user to create (and edit) a private event in TUMonline
+ */
 public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
     private Calendar start, end;
+    private boolean editing;
+    private TextView titleView, descriptionView, startDateView, startTimeView, endDateView, endTimeView;
+    private Button createButton;
+    private CalendarItem event;
 
     public CreateEventActivity(){
         super(TUMOnlineConst.Companion.getCREATE_EVENT(), R.layout.activity_create_event);
     }
-    private boolean editing;
-
-    private TextView titleView, descriptionView, startDateView, startTimeView, endDateView, endTimeView;
-    private Button createButton;
-    private CalendarItem event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         initViews();
 
         Bundle extras = getIntent().getExtras();
-        if(extras != null){
+        if (extras != null){
             editing = true;
             titleView.setText(extras.getString(Const.EVENT_TITLE));
             descriptionView.setText(extras.getString(Const.EVENT_COMMENT));
@@ -56,7 +57,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
                 showErrorDialog(getString(R.string.create_event_time_error));
                 return;
             }
-            if(editing){
+            if (editing){
                 editEvent();
             } else {
                 createEvent();
@@ -78,7 +79,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         start = Calendar.getInstance();
         end = Calendar.getInstance();
 
-        if(extras != null){
+        if (editing){
             start.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_START)));
             end.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_END)));
         } else {
@@ -165,14 +166,19 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
             }
 
             @Override
-            public void onFetchCancelled() {}
+            public void onFetchCancelled() {
+                showErrorDialog(getString(R.string.error_something_wrong));
+            }
 
             @Override
             public void onFetchError(String errorReason) {
                 showErrorDialog(errorReason);
             }
+
             @Override
-            public void onNoDataToShow() {}
+            public void onNoDataToShow() {
+                showErrorDialog(getString(R.string.error_something_wrong));
+            }
         });
     }
 
@@ -203,7 +209,6 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     @Override
     public void onFetch(CreateEvent response) {
         String nr = response.getEventNr();
-        Utils.log("Nr of newly created event: " + nr);
         event.setNr(nr);
         TcaDb.getInstance(this).calendarDao().insert(event);
         finish();

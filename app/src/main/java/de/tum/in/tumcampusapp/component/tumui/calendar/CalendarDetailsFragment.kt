@@ -49,13 +49,13 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
         dateTextView.text = calendarItem.getEventDateString()
         locationTextView.text = calendarItem.location
         if (calendarItem.location.isEmpty()) {
-            view.findViewById<View>(R.id.bottomSheetLocation).visibility = View.GONE
+            locationTextView.visibility = View.GONE
         } else {
-            view.findViewById<View>(R.id.bottomSheetLocation).visibility = View.VISIBLE
+            locationTextView.visibility = View.VISIBLE
         }
 
         if (calendarItem.description.isEmpty()){
-            view.findViewById<View>(R.id.bottomSheetDescription).visibility = View.GONE
+            descriptionTextView.visibility = View.GONE
         } else {
             descriptionTextView.text = calendarItem.description
         }
