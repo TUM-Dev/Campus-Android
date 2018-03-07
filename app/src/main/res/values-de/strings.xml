@@ -504,4 +504,5 @@ Signatur: %5$s</string>
     <string name="create_event_time_error">Stelle sicher, dass der Anfang des Termins vor dessen Ende liegt.</string>
     <string name="error">Fehler</string>
     <string name="edit_event_button">Editieren</string>
+    <string name="event_canceled">Gelöscht</string>
 </resources>

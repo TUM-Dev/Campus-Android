@@ -579,4 +579,5 @@ Signature: %5$s</string>
     <string name="create_event_time_error">Please make sure the start time of the event is before the end time</string>
     <string name="error">Error</string>
     <string name="edit_event_button">Edit</string>
+    <string name="event_canceled">Canceled</string>
 </resources>

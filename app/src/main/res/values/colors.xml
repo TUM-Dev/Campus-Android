@@ -61,5 +61,7 @@
     <color name="grade_4.7">#b71c1c</color>
     <color name="grade_5.0">#000000</color>
     <color name="grade_default">@color/sections_gray</color>
+    
+    <color name="event_canceled">@color/grade_4.0</color>
 
 </resources>

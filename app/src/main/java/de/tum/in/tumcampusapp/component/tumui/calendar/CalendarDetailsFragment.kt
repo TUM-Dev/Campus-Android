@@ -2,9 +2,10 @@ package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.app.SearchManager
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment
-import android.util.Log
+import android.support.design.widget.FloatingActionButton
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,9 +43,16 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
         val descriptionTextView = view.findViewById<TextView>(R.id.bottomSheetDescriptionText)
         val deleteButton = view.findViewById<Button>(R.id.bottomSheetDeleteEvent)
         val editButton = view.findViewById<Button>(R.id.bottomSheetEditEvent)
-        val buttons = view.findViewById<View>(R.id.bottomSheetEditButtons);
+        val buttons = view.findViewById<View>(R.id.bottomSheetEditButtons)
+        val floatingButton = view.findViewById<FloatingActionButton>(R.id.bottomSheetFloatingButton)
+        val floatingButtonCanceled = view.findViewById<View>(R.id.bottomSheetFloatingButtonCanceled)
 
-        Log.v("CalendarDetailsFragment", calendarItem.status + " " + calendarItem.url)
+        if(calendarItem.status.equals("CANCEL")) {
+            floatingButton.visibility = View.GONE
+            floatingButtonCanceled.visibility = View.VISIBLE
+            descriptionTextView.setTextColor(Color.RED)
+        }
+
         titleTextView.text = calendarItem.title
         dateTextView.text = calendarItem.getEventDateString()
         locationTextView.text = calendarItem.location

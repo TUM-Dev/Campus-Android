@@ -22,7 +22,30 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_vertical_margin"
                 app:srcCompat="@drawable/ic_calendar_white"
-                app:backgroundTint="@color/color_primary"/>
+                app:backgroundTint="@color/color_primary"
+                android:id="@+id/bottomSheetFloatingButton"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/bottomSheetFloatingButtonCanceled"
+                android:visibility="gone"
+                android:gravity="center_horizontal">
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_vertical_margin"
+                    app:srcCompat="@drawable/ic_action_cancel"
+                    app:backgroundTint="@color/event_canceled"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@string/event_canceled"
+                    android:textAllCaps="true"
+                    android:textColor="@color/event_canceled"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/bottomSheetHeading"

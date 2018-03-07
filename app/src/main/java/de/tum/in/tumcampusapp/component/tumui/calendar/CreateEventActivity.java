@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
- * Allows the user to create (and edit) a private event in TUMonline
+ * Allows the user to create (and edit) a private event in TUMonline.
  */
 public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
     private Calendar start, end;

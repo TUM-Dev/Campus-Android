@@ -14,8 +14,8 @@ public interface CalendarDao {
     @Query("SELECT c.* FROM calendar c WHERE status != 'CANCEL'")
     List<CalendarItem> getAllNotCancelled();
 
-    @Query("SELECT c.* FROM calendar c WHERE dtstart LIKE '%' || :date || '%' AND status != 'CANCEL' ORDER BY dtstart ASC")
-    List<CalendarItem> getAllByDateNotCancelled(String date);
+    @Query("SELECT c.* FROM calendar c WHERE dtstart LIKE '%' || :date || '%' ORDER BY dtstart ASC")
+    List<CalendarItem> getAllByDate(String date);
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
            + "AND STATUS != 'CANCEL'"
