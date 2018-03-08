@@ -1,3 +1,6 @@
+plugins {
+    id 'de.aaschmid.cpd' version '1.0'
+}
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: '../findbugs.gradle'

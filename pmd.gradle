@@ -43,3 +43,21 @@ afterEvaluate {
         tasks.getByName('check').dependsOn(task)
     }
 }
+
+// PMD's duplicate code tool
+cpd {
+    language = 'java'
+}
+
+cpdCheck {
+    reports {
+        text.enabled = false
+        xml.enabled = true
+        xml.destination file("${buildDir}/reports/pmd/duplicates.xml")
+    }
+    source = 'src/main/java'
+    exclude "**/*.kt"
+    ignoreFailures = true
+}
+
+check.dependsOn('cpdCheck')
