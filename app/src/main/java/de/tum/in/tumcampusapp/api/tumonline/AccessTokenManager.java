@@ -90,7 +90,7 @@ public class AccessTokenManager {
             return true;
         } catch (TUMOException ex) {
             String tokenError;
-            if(ex.getMessage() == null || !ex.getMessage().isEmpty()){
+            if (ex.getMessage() == null || !ex.getMessage().isEmpty()){
                 if (ex.getMessage().startsWith("Token-Limit")){
                     tokenError = context.getString(R.string.token_limit_reached);
                 } else {

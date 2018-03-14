@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
@@ -62,7 +64,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     }
 
     /**
-     * Handle click on next button
+     * Handle click on next button.
      *
      * @param next Next button handle
      */
@@ -75,7 +77,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             return;
         }
 
-        String enteredId = editTxtLrzId.getText().toString().toLowerCase();
+        String enteredId = editTxtLrzId.getText().toString().toLowerCase(Locale.GERMANY);
 
         // check if lrz could be valid?
         if (!enteredId.matches(Const.TUM_ID_PATTERN)) {
@@ -100,7 +102,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     }
 
     /**
-     * Handle click in dialog buttons
+     * Handle click in dialog buttons.
      *
      * @param dialog Dialog handle
      * @param which  Button clicked
@@ -118,7 +120,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     }
 
     /**
-     * Requests an access-token from the TumOnline server in background
+     * Requests an access-token from the TumOnline server in background.
      *
      * @param arg Unused
      * @return True if the access token was successfully created
@@ -129,7 +131,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     }
 
     /**
-     * Opens second wizard page if access token available
+     * Opens second wizard page if access token available.
      *
      * @param result Was access token successfully created
      */
