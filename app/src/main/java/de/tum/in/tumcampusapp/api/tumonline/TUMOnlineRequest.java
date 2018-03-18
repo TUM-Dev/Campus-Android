@@ -132,24 +132,28 @@ public final class TUMOnlineRequest<T> {
         // set parameter on the TUMOnline request an fetch the results
         String url = this.getRequestURL();
 
-        //If there were some requests that failed and we verified that the token is not active anymore, block all requests directly
-        if (!method.equals(TUMOnlineConst.Companion.getTOKEN_CONFIRMED()) && Utils.getSettingBool(mContext, Const.TUMO_DISABLED, false)) {
-            Utils.log("aborting fetch URL, as the token is not active any longer " + url);
-            return Optional.absent();
-        }
-
-        //Check for error lock
-        String lockedError = this.tumManager.checkLock(url);
-        if (lockedError != null) {
-            //If the token is not active, then fail hard and do not allow any further requests
-            if ("Token ist nicht bestätigt oder ungültig!".equals(lockedError)) {
-                TUMOnlineRequest.checkTokenInactive(mContext);
+        if (!TUMOnlineConst.Companion.getREQUEST_TOKEN().equals(method)){
+            //If there were some requests that failed and we verified that the token is not active anymore, block all requests directly
+            if (!method.equals(TUMOnlineConst.Companion.getTOKEN_CONFIRMED())
+                && Utils.getSettingBool(mContext, Const.TUMO_DISABLED, false)
+                /*&& !Utils.getSettingBool(mContext, Const.IN_WIZARD, false)*/) {
+                Utils.log("aborting fetch URL, as the token is not active any longer " + url);
+                return Optional.absent();
             }
 
-            //Set the error and return
-            Utils.log("aborting fetch URL (" + lockedError + ") " + url);
-            lastError = lockedError;
-            return Optional.absent();
+            //Check for error lock
+            String lockedError = this.tumManager.checkLock(url);
+            if (lockedError != null) {
+                //If the token is not active, then fail hard and do not allow any further requests
+                if ("Token ist nicht bestätigt oder ungültig!".equals(lockedError)) {
+                    TUMOnlineRequest.checkTokenInactive(mContext);
+                }
+
+                //Set the error and return
+                Utils.log("aborting fetch URL (" + lockedError + ") " + url);
+                lastError = lockedError;
+                return Optional.absent();
+            }
         }
 
         Utils.log("fetching URL " + url);
@@ -197,7 +201,7 @@ public final class TUMOnlineRequest<T> {
     /**
      * this fetch method will fetch the data from the TUMOnline Request and will
      * address the listeners onFetch if the fetch succeeded, else the
-     * onFetchError will be called
+     * onFetchError will be called.
      *
      * @param context  the current context (may provide the current activity)
      * @param listener the listener, which takes the result
@@ -260,7 +264,7 @@ public final class TUMOnlineRequest<T> {
     }
 
     /**
-     * This will return the URL to the TUMOnlineRequest with regard to the set parameters
+     * This will return the URL to the TUMOnlineRequest with regard to the set parameters.
      *
      * @return a String URL
      */
@@ -299,7 +303,7 @@ public final class TUMOnlineRequest<T> {
     }
 
     /**
-     * Reset parameters to an empty Map
+     * Reset parameters to an empty Map.
      */
     void resetParameters() {
         parameters = new HashMap<>();
@@ -310,7 +314,7 @@ public final class TUMOnlineRequest<T> {
     }
 
     /**
-     * Sets one parameter name to its given value
+     * Sets one parameter name to its given value.
      *
      * @param name  identifier of the parameter
      * @param value value of the parameter
