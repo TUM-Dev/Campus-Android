@@ -275,7 +275,8 @@
     <string name="show_feedback">Send feedback</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="app_info_text" translatable="false">
-        Die TUM Campus App wird von Freiwilligen Helfern, Studierenden des Android Praktikums und Lehrstuhlmitarbeitern entwickelt.
+        Die TUM Campus App wird von Freiwilligen Helfern, Studierenden des Android Praktikums und Lehrstuhlmitarbeitern des Informatik Fachgebiet 13 unter
+        Professor Dr. Baumgarten entwickelt.
         Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird vom TCA-Team für Android und iOS bereitgestellt.\n\n
         Für besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
     </string>

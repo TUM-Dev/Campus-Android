@@ -58,8 +58,8 @@ android {
             includeAndroidResources = true
         }
     }
-    
     sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/src/test/java".toString())
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 
