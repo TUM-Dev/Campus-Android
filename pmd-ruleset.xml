@@ -20,6 +20,7 @@
         <exclude name="GodClass" />
         <exclude name="UseVarargs" />
         <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
+        <exclude name="AccessorMethodGeneration" />
     </rule>
     <rule ref="rulesets/java/empty.xml" />
     <rule ref="rulesets/java/finalizers.xml" />
