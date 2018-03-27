@@ -106,8 +106,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
-                android:onClick="onClickSkip"
-                android:text="@string/button_skip"/>
+                android:onClick="onBackButtonPressed"
+                android:text="@string/back"/>
 
             <View
                 android:layout_width="1dp"

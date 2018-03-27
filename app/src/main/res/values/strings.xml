@@ -107,7 +107,7 @@
     <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
-    <string name="need_to_enable"><b>The TUMonline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMonline via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>
+    <string name="need_to_enable"><b>The TUMonline-Access-Token was successfully generated</b>\n\nPlease enable the Token in TUMonline now via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>
     <string name="step_1">Step 1</string>
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
@@ -560,4 +560,27 @@ Signature: %5$s</string>
     <string name="filter_lecture_OWN_LECTURES">Own Lectures</string>
     <string name="filter_lecture_SELECTED_LECTURES">Selected Lectures</string>
     <string name="show_answer">Show Answer</string>
+
+    <!-- Create personal Appointment (Calendar) -->
+    <string name="comment">Comment</string>
+    <string name="from">from</string>
+    <string name="to">to</string>
+    <string name="create_event">Create appointment</string>
+    <string name="activity_create_event_title">New Personal Appointment</string>
+    <string name="event_title">Title</string>
+    <string name="calendar_refresh">Refresh</string>
+    <string name="event_delete_title">Delete Appointment?</string>
+    <string name="delete_event_info">The appointment will be deleted from TUMonline.</string>
+    <string name="delete_event_confirmation">Event was deleted</string>
+    <string name="delete_event_error">Error: Event could not be deleted</string>
+    <string name="delete">Delete</string>
+    <string name="delete_event_button">Delete</string>
+    <string name="event_save_edit_button">Save changes</string>
+    <string name="create_event_time_error">Please make sure the start time of the event is before the end time</string>
+    <string name="error">Error</string>
+    <string name="edit_event_button">Edit</string>
+    <string name="event_canceled">Canceled</string>
+
+    <string name="token_limit_reached">Token limit was reached (max 10). You have delete a Token in TUMonline before you can continue.</string>
+    <string name="back">Back</string>
 </resources>

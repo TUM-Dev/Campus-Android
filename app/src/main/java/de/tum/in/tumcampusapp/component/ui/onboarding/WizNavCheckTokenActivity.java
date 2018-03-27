@@ -34,7 +34,15 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     }
 
     /**
-     * If back key is pressed start previous activity
+     * Just like pressing the system back button.
+     * @param view
+     */
+    public void onBackButtonPressed(View view){
+        onBackPressed();
+    }
+
+    /**
+     * If back key is pressed start previous activity.
      */
     @Override
     public void onBackPressed() {
@@ -44,19 +52,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     }
 
     /**
-     * Open next activity on skip
-     *
-     * @param skip Skip button handle
-     */
-    @SuppressWarnings("UnusedParameters")
-    public void onClickSkip(View skip) {
-        finish();
-        startActivity(new Intent(this, WizNavExtrasActivity.class));
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-    }
-
-    /**
-     * If next is pressed, check if token has been activated
+     * If next is pressed, check if token has been activated.
      *
      * @param next Next button handle
      */
@@ -70,7 +66,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     }
 
     /**
-     * Check in background if token has been enabled and get identity for enabling chat
+     * Check in background if token has been enabled and get identity for enabling chat.
      */
     @Override
     protected Integer onLoadInBackground(Void... arg) {
@@ -81,7 +77,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             } else {
                 return R.string.no_internet_connection;
             }
-        } else {
+        } else { // Token was activated
             // Get users full name
             TUMOnlineRequest<IdentitySet> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getIDENTITY(), this, true);
             Optional<IdentitySet> id = request.fetch();
@@ -113,7 +109,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
 
     /**
      * If everything worked, start the next activity page
-     * otherwise give the user the possibility to retry
+     * otherwise give the user the possibility to retry.
      */
     @Override
     protected void onLoadFinished(Integer errorMessageStrResId) {
@@ -128,7 +124,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     }
 
     /**
-     * Adds clickable link to activity
+     * Adds clickable link to activity.
      */
     @Override
     protected void onStart() {

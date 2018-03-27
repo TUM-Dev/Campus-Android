@@ -5,6 +5,8 @@ import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
 import de.tum.`in`.tumcampusapp.component.other.departments.model.OrgDetailItemList
 import de.tum.`in`.tumcampusapp.component.other.departments.model.OrgItemList
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarRowSet
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEvent
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEvent
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsRowSet
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetailsRowSet
@@ -26,6 +28,8 @@ class TUMOnlineConst<T> private constructor(private val webservice: String, val 
 
     companion object {
         val CALENDER = TUMOnlineConst("kalender", CacheManager.VALIDITY_FIFE_DAYS, CalendarRowSet::class.java)
+        val CREATE_EVENT = TUMOnlineConst("terminCreate", CacheManager.VALIDITY_DO_NOT_CACHE, CreateEvent::class.java)
+        val DELETE_EVENT = TUMOnlineConst("terminDelete", CacheManager.VALIDITY_DO_NOT_CACHE, DeleteEvent::class.java)
         val TUITION_FEE_STATUS = TUMOnlineConst("studienbeitragsstatus", CacheManager.VALIDITY_TWO_DAYS, TuitionList::class.java)
         val LECTURES_PERSONAL = TUMOnlineConst("veranstaltungenEigene", CacheManager.VALIDITY_FIFE_DAYS, LecturesSearchRowSet::class.java)
         val LECTURES_DETAILS = TUMOnlineConst("veranstaltungenDetails", CacheManager.VALIDITY_TEN_DAYS, LectureDetailsRowSet::class.java)

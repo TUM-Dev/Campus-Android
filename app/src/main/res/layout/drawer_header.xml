@@ -12,7 +12,9 @@
         android:id="@+id/profile_image"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
         android:elevation="4dp"
         android:src="@drawable/photo_not_available"
         tools:ignore="UnusedAttribute"/>
@@ -21,7 +23,7 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/email"
+        android:layout_below="@id/profile_image"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
@@ -30,6 +32,7 @@
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/name"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"

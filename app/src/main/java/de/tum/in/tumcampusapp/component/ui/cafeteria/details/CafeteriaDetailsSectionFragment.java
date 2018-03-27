@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -58,6 +60,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
         localRepository.setDb(TcaDb.getInstance(getContext()));
         cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
+        JodaTimeAndroid.init(getContext());
     }
 
     /**

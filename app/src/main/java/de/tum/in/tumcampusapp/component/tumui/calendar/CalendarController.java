@@ -36,7 +36,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
 /**
- * Calendar Manager, handles database stuff, external imports
+ * Calendar Manager, handles database stuff, external imports.
  */
 public class CalendarController implements Card.ProvidesCard {
     private static final String[] PROJECTION = {"_id", "name"};
@@ -61,7 +61,7 @@ public class CalendarController implements Card.ProvidesCard {
     }
 
     /**
-     * Replaces the current TUM_CAMPUS_APP calendar with a new version
+     * Replaces the current TUM_CAMPUS_APP calendar with a new version.
      *
      * @param c Context
      */
@@ -108,11 +108,11 @@ public class CalendarController implements Card.ProvidesCard {
     }
 
     public List<CalendarItem> getFromDbForDate(Date date) {
-        return calendarDao.getAllByDateNotCancelled(DateUtils.getDateString(date));
+        return calendarDao.getAllByDate(DateUtils.getDateString(date));
     }
 
     /**
-     * Returns all stored events in the next days from db
+     * Returns all stored events in the next days from db.
      * If there is a valid widget id (> 0) the events are filtered by the widgets blacklist
      *
      * @param dayCount The number of days

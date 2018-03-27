@@ -3,6 +3,11 @@
       xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_create_event"
+        android:icon="@drawable/ic_add"
+        android:title="@string/create_event"
+        tumcampus:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_switch_view_mode"
         android:icon="@drawable/ic_action_week_view"
         android:title="@string/view_mode"
@@ -17,5 +22,4 @@
         android:icon="@drawable/ic_stop_sync_cloud"
         android:title="@string/delete_from_google"
         tumcampus:showAsAction="ifRoom"/>
-
 </menu>
