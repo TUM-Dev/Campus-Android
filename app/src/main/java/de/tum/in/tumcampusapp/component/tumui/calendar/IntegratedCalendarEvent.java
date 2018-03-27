@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.graphics.Color;
-import android.os.Build;
 
 import com.alamkanak.weekview.WeekViewEvent;
 
@@ -16,9 +15,9 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private static final float SATURATION_ADJUST = 1.3f;
     private static final float INTENSITY_ADJUST = 0.8f;
     private final String location;
-    private boolean isFirstOnDay;
+    private boolean firstOnDay;
 
-    public IntegratedCalendarEvent(CalendarItem calendarItem) {
+    IntegratedCalendarEvent(CalendarItem calendarItem) {
         super(Long.parseLong(calendarItem.getNr()),
               calendarItem.getFormattedTitle(),
               calendarItem.getEventStart(),
@@ -35,15 +34,11 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     }
 
     public static int getDisplayColorFromColor(int color) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            return color;
-        } else {
-            float[] hsv = new float[3];
-            Color.colorToHSV(color, hsv);
-            hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
-            hsv[2] *= INTENSITY_ADJUST;
-            return Color.HSVToColor(hsv);
-        }
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
+        hsv[2] *= INTENSITY_ADJUST;
+        return Color.HSVToColor(hsv);
     }
 
     @Override
@@ -52,10 +47,10 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     }
 
     public boolean isFirstOnDay() {
-        return this.isFirstOnDay;
+        return firstOnDay;
     }
 
     public void setIsFirstOnDay(Boolean isFirstOnDay) {
-        this.isFirstOnDay = isFirstOnDay;
+        this.firstOnDay = isFirstOnDay;
     }
 }

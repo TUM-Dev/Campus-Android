@@ -36,7 +36,6 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
     private static final String SHOULD_SHOW = "wifi_setup_notification_dismissed";
     private static LocationManager locationManager;
 
-    @Override
     /**
      * This method either gets called by broadcast directly or gets repeatedly triggered by the
      * WifiScanHandler, which starts scans at time periods, as long as an eduroam or lrz network is
@@ -44,6 +43,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
      * The SyncManager then takes care of sending the Wifi measurements to the server in a given time
      * interval.
      */
+    @Override
     public void onReceive(Context context, Intent intent) {
         if (!intent.getAction()
                    .equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
@@ -61,28 +61,28 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
                                                        .getSystemService(Context.LOCATION_SERVICE);
         }
 
-        // Test if user has eduroam configured already
-        boolean eduroamConfiguredAlready = EduroamController.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18;
-
         //Check if locations are enabled
         boolean locationsEnabled = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean wifiScansEnabled = Utils.getInternalSettingBool(context, Const.WIFI_SCANS_ALLOWED, false);
-        boolean nextScanScheduled = false;
-
         if (!locationsEnabled) {
             //Stop here as wifi.getScanResults will either return an empty list or throw an exception (on android 6.0.0)
             return;
         }
 
+        // Test if user has eduroam configured already
+        boolean eduroamConfiguredAlready = EduroamController.getEduroamConfig(context) != null || NetUtils.isConnected(context);
+
+        boolean wifiScansEnabled = Utils.getInternalSettingBool(context, Const.WIFI_SCANS_ALLOWED, false);
+        boolean nextScanScheduled = false;
+
         WifiScanHandler wifiScanHandler = WifiScanHandler.getInstance(context);
         List<ScanResult> scan = wifi.getScanResults();
         for (final ScanResult network : scan) {
             //skips if network is not either eduroam or lrz network
-            if (!(network.SSID.equals("eduroam") || network.SSID.equals("lrz"))) {
+            if (!(Const.EDUROAM_SSID.equals(network.SSID) || "lrz".equals(network.SSID))) {
                 continue;
             }
             //if eduroam is not configured, set it up
-            if (network.SSID.equals("eduroam") && !eduroamConfiguredAlready) {
+            if (Const.EDUROAM_SSID.equals(network.SSID) && !eduroamConfiguredAlready) {
                 showNotification(context);
             }
 
@@ -99,7 +99,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             //scheduled. This setting can be used as additional way to limit battery consumption and leaves
             //the user more freedom in deciding, when to scan.
             float currentBattery = Utils.getBatteryLevel(context);
-            float minimumBattery = Utils.getInternalSettingFloat(context, Const.INSTANCE.WIFI_SCAN_MINIMUM_BATTERY_LEVEL, 50.0f);
+            float minimumBattery = Utils.getInternalSettingFloat(context, Const.WIFI_SCAN_MINIMUM_BATTERY_LEVEL, 50.0f);
             if (currentBattery > minimumBattery) {
                 wifiScanHandler.startRepetition();
                 Utils.log("WifiScanHandler rescheduled");

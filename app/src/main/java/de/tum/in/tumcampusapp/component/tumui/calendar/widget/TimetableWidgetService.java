@@ -93,16 +93,12 @@ public class TimetableWidgetService extends RemoteViewsService {
             if (currentItem.isFirstOnDay()) {
                 rv.setTextViewText(R.id.timetable_widget_date_day, String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
                 rv.setTextViewText(R.id.timetable_widget_date_weekday, calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    rv.setViewPadding(R.id.timetable_widget_item, 0, 15, 0, 0);
-                }
+                rv.setViewPadding(R.id.timetable_widget_item, 0, 15, 0, 0);
             } else {
                 // overwrite unused parameters, as the elements are reused they may could be filled with old parameters
                 rv.setTextViewText(R.id.timetable_widget_date_day, "");
                 rv.setTextViewText(R.id.timetable_widget_date_weekday, "");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    rv.setViewPadding(R.id.timetable_widget_item, 0, 0, 0, 0);
-                }
+                rv.setViewPadding(R.id.timetable_widget_item, 0, 0, 0, 0);
             }
             // TODO add month labels every new month
 

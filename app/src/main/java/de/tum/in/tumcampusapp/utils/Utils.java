@@ -558,21 +558,8 @@ public final class Utils {
                Html.fromHtml(source);
     }
 
-    private static Escaper umlautEscaper() {
-        return new CharEscaperBuilder()
-                .addEscape('ä', "&auml;")
-                .addEscape('ö', "&ouml;")
-                .addEscape('ü', "&uuml;")
-                .toEscaper();
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static String escapeUmlauts(String text) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            return Html.escapeHtml(text);
-        }
-        // Just escape umlauts for older devices, MVV should be happy with that
-        return umlautEscaper().escape(text);
+        return Html.escapeHtml(text);
     }
 
     public static float getBatteryLevel(Context context) {

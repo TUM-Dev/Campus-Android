@@ -21,10 +21,10 @@ android {
     }
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 999999
-        versionName "1.5.4-dev"
+        versionName "1.6.0-dev"
         vectorDrawables.useSupportLibrary = true
     }
     lintOptions {

@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.eduroam;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiConfiguration.GroupCipher;
@@ -9,28 +8,20 @@ import android.net.wifi.WifiConfiguration.PairwiseCipher;
 import android.net.wifi.WifiConfiguration.Protocol;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Eduroam manager, manages connecting to eduroam wifi network
  */
 public class EduroamController {
-    public static final String NETWORK_SSID = "eduroam";
-    public static final String RADIUS_DNS = "radius.lrz.de";
-    private static final String INT_PASSWORD = "password";
-    private static final String INT_IDENTITY = "identity";
-    private static final String INT_EAP = "eap";
-    private static final String INT_ENTERPRISE_FIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
 
     private final Context mContext;
 
-    public EduroamController(Context context) {
+    EduroamController(Context context) {
         mContext = context;
     }
 
@@ -50,7 +41,7 @@ public class EduroamController {
         }
 
         for (WifiConfiguration config : list) {
-            if (config.SSID != null && config.SSID.equals("\"" + NETWORK_SSID + "\"")) {
+            if (config.SSID != null && config.SSID.equals("\"" + Const.EDUROAM_SSID + "\"")) {
                 return config;
             }
         }
@@ -64,7 +55,7 @@ public class EduroamController {
      * @param networkPass User's lrz password
      * @return Returns true if configuration was successful, false otherwise
      */
-    public boolean configureEduroam(String lrzId, String networkPass) {
+    boolean configureEduroam(String lrzId, String networkPass) {
         // Configure Wifi
         boolean update = true;
         WifiConfiguration conf = getEduroamConfig(mContext);
@@ -74,7 +65,7 @@ public class EduroamController {
             conf = new WifiConfiguration();
         }
 
-        conf.SSID = "\"" + NETWORK_SSID + "\"";
+        conf.SSID = "\"" + Const.EDUROAM_SSID + "\"";
         conf.allowedKeyManagement.set(KeyMgmt.WPA_EAP);
         conf.allowedKeyManagement.set(KeyMgmt.IEEE8021X);
         conf.allowedGroupCiphers.set(GroupCipher.TKIP);
@@ -86,13 +77,7 @@ public class EduroamController {
         conf.allowedProtocols.set(Protocol.RSN);
         conf.status = WifiConfiguration.Status.ENABLED;
 
-        if (Build.VERSION.SDK_INT >= 18) {
-            setupEnterpriseConfigAPI18(conf, lrzId, networkPass);
-        } else {
-            if (!setupEnterpriseConfigOld(conf, lrzId, networkPass)) {
-                return false;
-            }
-        }
+        setupEnterpriseConfigAPI18(conf, lrzId, networkPass);
 
         // Add eduroam to wifi networks
         WifiManager wifiManager = (WifiManager) mContext.getApplicationContext()
@@ -116,54 +101,10 @@ public class EduroamController {
         return true;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void setupEnterpriseConfigAPI18(WifiConfiguration conf, String lrzId, String networkPass) {
         conf.enterpriseConfig.setIdentity(lrzId + "@eduroam.mwn.de");
         conf.enterpriseConfig.setPassword(networkPass);
         conf.enterpriseConfig.setEapMethod(WifiEnterpriseConfig.Eap.PWD);
     }
 
-    private boolean setupEnterpriseConfigOld(WifiConfiguration conf, String lrzId, String networkPass) {
-        try {
-            // Get class instance for enterprise field class and than find setValue Method
-            Method wcefSetValue = null;
-            Class<?>[] wcClasses = WifiConfiguration.class.getClasses();
-            for (Class<?> wcClass : wcClasses) {
-                if (wcClass.getName()
-                           .equals(INT_ENTERPRISE_FIELD_NAME)) {
-                    for (Method m : wcClass.getMethods()) {
-                        if (m.getName()
-                             .trim()
-                             .equals("setValue")) {
-                            wcefSetValue = m;
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-
-            if (wcefSetValue == null) {
-                return false;
-            }
-
-            Field[] wcefFields = WifiConfiguration.class.getFields();
-            for (Field wcefField : wcefFields) {
-
-                if (wcefField.getName().trim().equals(INT_EAP)) {
-                    wcefSetValue.invoke(wcefField.get(conf), "PWD");
-
-                } else if (wcefField.getName().trim().equals(INT_IDENTITY)) {
-                    wcefSetValue.invoke(wcefField.get(conf), lrzId + "@eduroam.mwn.de");
-
-                } else if (wcefField.getName().trim().equals(INT_PASSWORD)) {
-                    wcefSetValue.invoke(wcefField.get(conf), networkPass);
-                }
-            }
-        } catch (Exception e) {
-            Utils.log(e);
-            return false;
-        }
-        return true;
-    }
 }
