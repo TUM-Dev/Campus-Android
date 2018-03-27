@@ -10,6 +10,7 @@ import android.arch.persistence.room.migration.Migration
  */
 class Migration3to4 : Migration(3, 4) {
     override fun migrate(database: SupportSQLiteDatabase) {
+        Migration2to3().migrate(database)
         database.execSQL("DROP TABLE IF EXISTS  chat_message")
         database.execSQL("CREATE TABLE chat_message (" +
                 "_id INTEGER NOT NULL PRIMARY KEY," +
