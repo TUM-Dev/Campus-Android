@@ -54,19 +54,12 @@ android {
             includeAndroidResources = true
         }
     }
-    sourceSets {
-        unitTest {
-            java {
-                srcDir 'src/test/java'
-            }
-        }
-    }
     dataBinding {
         enabled = true
     }
 }
 
-def androidSupportVersion = '27.0.2'
+def androidSupportVersion = '27.1.0'
 def retrofitVersion = '2.3.0'
 def firebaseVersion = '11.8.0'
 def roomVersion = '1.0.0'
@@ -111,8 +104,8 @@ dependencies {
     implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.1'
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
-    implementation "android.arch.lifecycle:runtime:1.1.0"
-    implementation "android.arch.lifecycle:extensions:1.1.0"
+    implementation "android.arch.lifecycle:runtime:1.1.1"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
     annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
@@ -125,7 +118,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.15.0'
     testImplementation 'org.assertj:assertj-core:3.9.1'
-    testImplementation 'org.robolectric:robolectric:3.7.1'
+    testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
 
