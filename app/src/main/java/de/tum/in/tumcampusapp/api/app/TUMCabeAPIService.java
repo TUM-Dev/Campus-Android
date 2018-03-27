@@ -11,7 +11,6 @@ import de.tum.in.tumcampusapp.component.other.reporting.stats.model.Statistics;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
-import de.tum.in.tumcampusapp.component.tumui.person.model.Faculty;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
@@ -29,13 +28,11 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
-import de.tum.in.tumcampusapp.component.ui.survey.model.Question;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -43,7 +40,6 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ANSWER_QUESTION;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_BUILDINGS_TO_GPS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_CONTACT;
@@ -57,13 +53,10 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CURRICULA;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FACULTY;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_OWN_QUESTIONS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_QUESTION;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_REPORT;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
@@ -74,25 +67,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STATISTICS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_WIFI_HEATMAP;
 
 public interface TUMCabeAPIService {
-
-    @GET(API_FACULTY)
-    Call<List<Faculty>> getFaculties();
-
-    @DELETE(API_QUESTION + "{question}")
-    Call<Question> deleteOwnQuestion(@Path("question") int question);
-
-    @GET(API_OWN_QUESTIONS)
-    Call<List<Question>> getOwnQuestions();
-
-    @POST(API_ANSWER_QUESTION)
-    Call<Question> answerQuestion(@Body Question question);
-
-    //Questions
-    @POST(API_QUESTION)
-    Call<Question> createQuestion(@Body Question question);
-
-    @GET(API_QUESTION)
-    Call<List<Question>> getOpenQuestions();
 
     //Group chat
     @POST(API_CHAT_ROOMS)

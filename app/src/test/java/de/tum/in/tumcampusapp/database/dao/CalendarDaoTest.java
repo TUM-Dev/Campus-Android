@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.database.dao;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -37,6 +39,7 @@ public class CalendarDaoTest {
         wtbDao = TcaDb.getInstance(RuntimeEnvironment.application).widgetsTimetableBlacklistDao();
         rlDao = TcaDb.getInstance(RuntimeEnvironment.application).roomLocationsDao();
         nr = 0;
+        JodaTimeAndroid.init(RuntimeEnvironment.application);
     }
 
     @After

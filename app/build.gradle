@@ -1,7 +1,12 @@
+plugins {
+    id 'de.aaschmid.cpd' version '1.0'
+}
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: '../findbugs.gradle'
 apply from: '../pmd.gradle'
+apply from: '../jacoco.gradle'
+apply from: '../checkstyle.gradle'
 
 android {
     compileSdkVersion 27
@@ -14,6 +19,7 @@ android {
             useProguard true
         }
         debug.debuggable true
+        debug.testCoverageEnabled true
         release.debuggable false
     }
     defaultConfig {
@@ -22,6 +28,7 @@ android {
         targetSdkVersion 27
         versionCode 999999
         versionName "1.5.4-dev"
+        vectorDrawables.useSupportLibrary = true
     }
     lintOptions {
         checkAllWarnings true
@@ -47,19 +54,12 @@ android {
             includeAndroidResources = true
         }
     }
-    sourceSets {
-        unitTest {
-            java {
-                srcDir 'src/test/java'
-            }
-        }
-    }
     dataBinding {
         enabled = true
     }
 }
 
-def androidSupportVersion = '27.0.2'
+def androidSupportVersion = '27.1.0'
 def retrofitVersion = '2.3.0'
 def firebaseVersion = '11.8.0'
 def roomVersion = '1.0.0'
@@ -81,7 +81,7 @@ dependencies {
     implementation 'com.google.guava:guava:23.2-android'
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
@@ -97,13 +97,15 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'net.danlew:android.joda:2.9.9.2'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
-    implementation 'com.github.barteksc:android-pdf-viewer:2.5.1'
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.1'
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
-    implementation "android.arch.lifecycle:runtime:$roomVersion"
-    implementation "android.arch.lifecycle:extensions:$roomVersion"
+    implementation "android.arch.lifecycle:runtime:1.1.1"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
     annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
@@ -114,9 +116,9 @@ dependencies {
 
     //Used for testing
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.13.0'
-    testImplementation 'org.assertj:assertj-core:3.9.0'
-    testImplementation 'org.robolectric:robolectric:3.5.1'
+    testImplementation 'org.mockito:mockito-core:2.15.0'
+    testImplementation 'org.assertj:assertj-core:3.9.1'
+    testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
 

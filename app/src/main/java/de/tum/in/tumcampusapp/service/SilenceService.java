@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.JobIntentService;
 
 import java.text.ParseException;
@@ -33,7 +34,6 @@ public class SilenceService extends JobIntentService {
      */
     private static final int CHECK_INTERVAL = 60000 * 15; // 15 Minutes
     private static final int CHECK_DELAY = 10000; // 10 Seconds after Calendar changed
-
 
     private static long getWaitDuration(String timeToEventString) {
         long timeToEvent = Long.MAX_VALUE;
@@ -112,7 +112,8 @@ public class SilenceService extends JobIntentService {
                 List<CalendarItem> nextCalendarItems = calendarController.getNextCalendarItems();
                 if (nextCalendarItems.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
                     // refresh when next event has started
-                    waitDuration = getWaitDuration(nextCalendarItems.get(0).getDtstart());
+                    waitDuration = getWaitDuration(nextCalendarItems.get(0)
+                                                                    .getDtstart());
                 }
             }
         } else {
@@ -134,7 +135,8 @@ public class SilenceService extends JobIntentService {
                 am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             }
             // refresh when event has ended
-            waitDuration = getWaitDuration(currentLectures.get(0).getDtstart());
+            waitDuration = getWaitDuration(currentLectures.get(0)
+                                                          .getDtstart());
         }
 
         alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
@@ -174,9 +176,17 @@ public class SilenceService extends JobIntentService {
      * Request the "Do Not Disturb" permissions for android version >= N.
      */
     public static void requestPermissions(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return;
+        }
         if (hasPermissions(context)) {
             return;
         }
+        requestPermissionsSDK23(context);
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private static void requestPermissionsSDK23(Context context) {
         Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
         context.startActivity(intent);
     }

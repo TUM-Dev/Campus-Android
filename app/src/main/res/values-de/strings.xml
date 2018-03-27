@@ -95,7 +95,7 @@
     <string name="welcome_msg"><b>Willkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
     <string name="button_skip">Überspringen</string>
     <string name="button_next">Weiter</string>
-    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nDu kannst das Token nun in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
+    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nBitte aktiviere jetzt das Token in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
     <string name="step_1">Schritt 1</string>
     <string name="step_2">Schritt 2</string>
     <string name="step_3">Schritt 3</string>
@@ -375,9 +375,9 @@ Signatur: %5$s</string>
     <string name="update_notification_description">Eine neue Version der Tum Campus App wurde am %s released. Hier tippen zum herunterladen.</string>
     <string name="support_us">Hilf uns die TUM Campus App besser zu machen! Gib’ uns ein ‘Gefällt mir’ auf Facebook, schlag’ uns neue Ideen auf Github vor oder sag’ uns deine Meinung per E-Mail!</string>
     <string name="support_us_title">Unterstütze uns!</string>
-    <string name="permission_calendar_explanation">Diese App braucht die Erlaubnis auf deinen Standort zugreifen zu können um nützliche Informationen, zum Beispiel zum Anzeigen der Mensa Speisepläne in deiner nähe oder von Fahrplänen der nächstgelegenen MVV Station. \n Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
-    <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zuzugreifen, um sie diesen mit deinem TUM-Kalender abzugleichen.</string>
-    <string name="permission_contacts_explanation">Diese App braucht die Erlaubnis auf deine Kontakte zuzugreifen, um diese Person hizufügen zu können.</string>
+    <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Standort zugreifen zu dürfen, um zum Beispiel Mensa Speisepläne in deiner Nähe oder Fahrpläne der nächstgelegenen MVV Station anzeigen zu können. \n Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
+    <string name="permission_calendar_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zugreifen zu dürfen, um diesen mit deinem TUM-Kalender abgleichen zu können.</string>
+    <string name="permission_contacts_explanation">Diese App braucht die Erlaubnis auf deine Kontakte zugreifen zu dürfen, um diese Person hinzufügen zu können.</string>
     <string name="cancel">Abbruch</string>
     <string name="grant_permission">Erlauben</string>
     <string name="ok">OK</string>
@@ -385,39 +385,13 @@ Signatur: %5$s</string>
     <string name="free">Frei</string>
     <string name="occupied">Belegt bis</string>
     <string name="study_rooms">Lernräume</string>
-    <string name="next_possible_survey_date">Du hast die maximale Anzahl an Fragen diese Woche erreicht. Das Datum für die nächste Eingabe ist</string>
-    <string name="no_questions_available">Keine Fragen verfügbar</string>
-    <string name="one_question_left">Nur eine Frage übrig</string>
-    <string name="quiz_target_faculty">Bitte wähle die Zielfakultäten aus:</string>
-    <string name="select_number_of_questions_survey">Wähle die Anzahl der Fragen</string>
-    <string name="select_target_faculties_survey">Wähle die Zielfakultäten aus: </string>
-    <string name="submit_question_survey">Frage einreichen</string>
-    <string name="survey_no">Nein</string>
-    <string name="survey_yes">Ja</string>
-    <string name="survey_skip">Überspringen</string>
-    <string name="enter_first_question_survey">Bitte gebe deine erste Frage ein</string>
-    <string name="enter_second_question_survey">Bitte gebe deine zweite Frage ein</string>
-    <string name="enter_third_question_survey">Bitte gebe deine dritte Frage ein</string>
-    <string name="enter_question_survey">Stelle bitte frage Nummer</string>
-    <string name="complete_question_form">Bitte fulle das Formular aus</string>
-    <string name="question_deleted">Die Frage wurde geloscht</string>
-    <string name="select_one_faculty">Wahle bitte mindestens eine Fakultat aus</string>
-    <string name="survey_submitted">Die Umfrage wurde eingereicht</string>
-    <string name="tab_responses">Antworten</string>
-    <string name="tab_survey">Umfrage</string>
     <string name="more_info">Mehr Informationen</string>
-    <string name="welcome_faculty">Um die bestmögliche Erfahrung zu liefern, teile uns bitte deine Fakultät mit:</string>
     <string name="event_plan">Tagesablauf</string>
-    <string name="choose_own_faculty">Bitte wähle deine Fakultät aus</string>
     <string name="add_widget">Widget hinzufügen</string>
     <string name="my_grades">Meine Noten</string>
     <string name="widget_configure_description">Anzeige der Karten einstellen</string>
     <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
-    <string name="quiz">Umfrage</string>
-    <string name="selected_target_faculties">Ausgewählte Fakultät:</string>
-    <string name="card_survey_summary">Ermöglicht es Ihnen, an forschungsbezogenen Umfragen teilzunehmen</string>
     <string name="chat_not_setup">Chat ist nicht richtig eingerichtet, bitte den Assistenten über die Einstellungen neu starten!</string>
-    <string name="flag_inappropriate">Unangemessene Frage melden</string>
     <string name="mvv_download">Bitte klicken Sie auf OK, um MVV-Pläne herunterzuladen, sonst können Sie diese Funktion nicht verwenden</string>
     <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
     <string name="IN">in</string>
@@ -426,9 +400,8 @@ Signatur: %5$s</string>
     <string name="startup_motto">Von Studierenden - Für Studierende</string>
     <string name="eduroam_fix">Jetzt reparieren!</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
-    <string name="fix_eduroam">Eduroam Reparieren</string>
-    <string name="wifi_identity_zone">Identität enthält keine Zone (z.B. @eduroam.mwn.de). Dies kann zu Problemen führen und sollte deshalb geändert werden!</string>
-    <string name="eduroam_realm_comment">\@eduroam.mwn.de wird automatisch angehängt</string>
+    <string name="fix_eduroam">eduroam reparieren</string>
+    <string name="wifi_identity_zone">Du hast eduroam ohne Angabe der Heimateinrichtung (z.B. \“@eduroam.mwn.de\”) im Benutzernamen konfiguriert. Dadurch wird eduroam abseits der TUM nicht funktionieren.</string>
     <string name="wifi_dns_name_not_set">DNS-Name ist nicht festgelegt</string>
     <string name="wifi_anonymous_identity_not_set">Anonyme Identität nicht korrekt</string>
 
@@ -454,8 +427,8 @@ Signatur: %5$s</string>
     <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
     <string name="done">Fertig</string>
     <string name="eduroam_dialgo_step_1">1.</string>
-    <string name="eduroam_dialog_step_2">2. Auf \'eduroam\' klicken</string>
-    <string name="eduroam_dialog_step_3">3. Auf \'Entfernen\' klicken</string>
+    <string name="eduroam_dialog_step_2">2. Auf \‘eduroam\’ klicken</string>
+    <string name="eduroam_dialog_step_3">3. Auf \‘Entfernen\’ klicken</string>
     <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann.</string>
 
     <!-- Feedback Activity -->
@@ -511,4 +484,7 @@ Signatur: %5$s</string>
     <string name="filter_lecture_OWN_LECTURES">Eigene Vorlesungen</string>
     <string name="filter_lecture_SELECTED_LECTURES">Ausgewählte Vorlesungen</string>
     <string name="show_answer">Antwort anzeigen</string>
+    <string name="title_activity_cards_quiz">Lernkarten</string>
+    <string name="token_limit_reached">Token-Limit erreicht (10 Stück). Du musst ein Token in TUMonline löschen um fortzufahren.</string>
+    <string name="back">Zurück</string>
 </resources>

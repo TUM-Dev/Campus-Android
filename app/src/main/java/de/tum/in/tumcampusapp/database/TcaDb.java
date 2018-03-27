@@ -46,10 +46,6 @@ import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomGroupDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
-import de.tum.in.tumcampusapp.component.ui.survey.OpenQuestionsDao;
-import de.tum.in.tumcampusapp.component.ui.survey.OwnQuestionsDao;
-import de.tum.in.tumcampusapp.component.ui.survey.model.OpenQuestions;
-import de.tum.in.tumcampusapp.component.ui.survey.model.OwnQuestions;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportDao;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
@@ -58,6 +54,7 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
+import de.tum.in.tumcampusapp.database.migrations.Migration4to5;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
@@ -67,7 +64,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 4, entities = {
+@Database(version = 5, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -85,8 +82,6 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         WifiMeasurement.class,
         Recent.class,
         Faculty.class,
-        OpenQuestions.class,
-        OwnQuestions.class,
         StudyRoomGroup.class,
         StudyRoom.class,
         GCMNotification.class,
@@ -130,10 +125,6 @@ public abstract class TcaDb extends RoomDatabase {
 
     public abstract FacultyDao facultyDao();
 
-    public abstract OpenQuestionsDao openQuestionsDao();
-
-    public abstract OwnQuestionsDao ownQuestionsDao();
-
     public abstract StudyRoomGroupDao studyRoomGroupDao();
 
     public abstract StudyRoomDao studyRoomDao();
@@ -150,7 +141,7 @@ public abstract class TcaDb extends RoomDatabase {
         if (instance == null || !instance.isOpen()) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
-                           .addMigrations(new Migration1to2(), new Migration2to3(), new Migration3to4())
+                           .addMigrations(new Migration1to2(), new Migration2to3(), new Migration3to4(), new Migration4to5())
                            .build();
         }
         return instance;
@@ -203,10 +194,6 @@ public abstract class TcaDb extends RoomDatabase {
            .removeCache();
         tdb.chatRoomDao()
            .removeCache();
-        tdb.openQuestionsDao()
-           .flush();
-        tdb.ownQuestionsDao()
-           .flush();
         tdb.tumLockDao()
            .removeCache();
         tdb.facultyDao()

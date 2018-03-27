@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/widget_margin"
@@ -10,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_primary"
-        android:elevation="2dp">
+        android:elevation="2dp"
+        tools:ignore="UnusedAttribute">
 
         <TextView
             android:id="@+id/mvv_widget_station"
@@ -33,7 +36,7 @@
             android:layout_toStartOf="@+id/mvv_widget_setting"
             android:background="@color/color_primary"
             android:padding="10dp"
-            android:src="@drawable/ic_autorenew"
+            app:srcCompat="@drawable/ic_autorenew"
             android:typeface="sans"
             android:layout_centerVertical="true"/>
 
@@ -45,7 +48,7 @@
             android:layout_alignParentRight="true"
             android:background="@color/color_primary"
             android:padding="10dp"
-            android:src="@drawable/ic_action_settings"
+            app:srcCompat="@drawable/ic_action_settings"
             android:typeface="sans"
             android:layout_centerVertical="true"/>
     </RelativeLayout>
@@ -75,7 +78,7 @@
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
         android:padding="10dp"
-        android:src="@drawable/ic_cloud_off"
+        app:srcCompat="@drawable/ic_cloud_off"
         android:visibility="invisible"/>
 
 </RelativeLayout>

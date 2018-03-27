@@ -70,7 +70,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
         if (new AccessTokenManager(this).hasValidAccessToken()) {
-            checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, true));
+            checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, false));
             checkSilentMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (checkSilentMode.isChecked() &&
                     !SilenceService.hasPermissions(WizNavExtrasActivity.this)) {
