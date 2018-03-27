@@ -4,6 +4,7 @@ plugins {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply from: '../findbugs.gradle'
 apply from: '../pmd.gradle'
 apply from: '../jacoco.gradle'
@@ -57,8 +58,8 @@ android {
             includeAndroidResources = true
         }
     }
-    
     sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/src/test/java".toString())
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 

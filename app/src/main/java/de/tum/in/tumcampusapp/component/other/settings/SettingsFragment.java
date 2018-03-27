@@ -49,11 +49,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     public static final String FRAGMENT_TAG = "my_preference_fragment";
     private static final String BUTTON_WIZARD = "button_wizard";
     private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
-    private static final String FACEBOOK = "facebook";
-    private static final String GITHUB = "github";
-    private static final String LICENSES = "licenses";
-    private static final String FEEDBACK = "feedback";
-    private static final String PRIVACY = "privacy";
     private static final String SETUP_EDUROAM = "card_eduroam_setup";
     private FragmentActivity mContext;
 
@@ -75,11 +70,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             // (since it is not possible to add a button to the preferences screen)
             findPreference(BUTTON_WIZARD).setOnPreferenceClickListener(this);
             findPreference(BUTTON_CLEAR_CACHE).setOnPreferenceClickListener(this);
-            findPreference(FACEBOOK).setOnPreferenceClickListener(this);
-            findPreference(GITHUB).setOnPreferenceClickListener(this);
-            findPreference(LICENSES).setOnPreferenceClickListener(this);
-            findPreference(FEEDBACK).setOnPreferenceClickListener(this);
-            findPreference(PRIVACY).setOnPreferenceClickListener(this);
 
             // Set summary for these preferences
             setSummary("card_cafeteria_default_G");
@@ -243,40 +233,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                         .setNegativeButton(R.string.no, null)
                         .show();
 
-                break;
-            case FACEBOOK:
-                // Open the facebook app or view in a browser when not installed
-                Intent facebook;
-                try {
-                    //Try to get facebook package to check if fb app is installed
-                    mContext.getPackageManager()
-                            .getPackageInfo("com.facebook.katana", 0);
-                    facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)));
-                } catch (PackageManager.NameNotFoundException e) {
-                    //otherwise just open the normal url
-                    facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)));
-                }
-                startActivity(facebook);
-                break;
-            case GITHUB:
-                // Open TCA-github web page
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
-                break;
-            case LICENSES:
-                // Show licences
-                new LicensesDialog.Builder(mContext)
-                        .setNotices(R.raw.notices)
-                        .setShowFullLicenseText(false)
-                        .setIncludeOwnLicense(true)
-                        .build()
-                        .show();
-                break;
-            case FEEDBACK:
-                startActivity(new Intent(mContext, FeedbackActivity.class));
-                break;
-            case PRIVACY:
-                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)));
-                startActivity(myIntent);
                 break;
             default:
                 return false;

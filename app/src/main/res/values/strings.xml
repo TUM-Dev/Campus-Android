@@ -91,7 +91,7 @@
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
 
-    <string name="about_tca">About TCA</string>
+    <string name="about_tca">About the TCA</string>
     <string name="information">Information</string>
     <string name="facebook" translatable="false">Facebook</string>
     <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
@@ -130,7 +130,7 @@
     <string name="my_grades">My Grades</string>
     <string name="chat_rooms">Chat rooms</string>
     <string name="tuition_fees">Tuition Fees</string>
-    <string name="tum_common">General TUM</string>
+    <string name="common_info">General Information</string>
     <string name="menues">Cafeterias</string>
     <string name="study_plans">Study Plans</string>
     <string name="person_search">Person Search</string>
@@ -189,7 +189,7 @@
     <string name="function">Function</string>
     <string name="group">Group</string>
     <string name="mobile_phone">Mobile phone</string>
-    <string name="add_info">Additional infos</string>
+    <string name="add_info">Debug Information</string>
     <string name="office_hours">Office hours</string>
     <string name="room">Room</string>
     <string name="add_contact">Add to contacts</string>
@@ -270,56 +270,15 @@
     <string name="invalid_notification_time">Invalid time. Please pick a time ranging from:</string>
 
     <!-- Information -->
-    <string name="version">Version</string>
+    <string name="version">Version: %1$s</string>
     <string name="send_email">Send e-mail feedback</string>
     <string name="show_feedback">Send feedback</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="app_info_text" translatable="false">
-        Die inoffizielle TUM Campus App (kein Support/Haftung durch die TU München) wird von Studierenden des Android Praktikums, freiwilligen
-        Helfern und Lehrstuhlmitarbeitern entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und bietet folgende
-        \n\n
-        Funktionen (exemplarisch):
-        \nPersönliche Vorlesungstermine, Nachrichten der TUM und anderer Quellen, Veranstaltungshinweise, Mensa Speiseplan, MVV Abfahrtszeiten, Umgebungspläne und viele weiteren Informationen. Die App ist sowohl für Studierende, wie auch Mitarbeiter gedacht.
-        \n\nProjektmanagement:
-        \nTUM - Fakultät für Informatik / F13
-        \nProf. Dr. Uwe Baumgarten
-        \nNils T. Kannengiesser
-        \n\nDerzeitige Entwickler (2014):
-        \nKordian Bruck
-        \nFlorian Dreier
-        \n\nWeitere Entwickler und involvierte Personen:
-        \nSepideh Mesbah, Shabnam Najafian, Sascha Moecker, Haris Iltifat, Anas
-        Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley,
-        Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl
-        Malinskyi, Andreas Bernhofer (IT-Support/TUMonline), Paul Nieleck
-        (Administrator), Nils T. Kannengiesser (F13)
-        \n\nWichtiger Hinweis:
-        \nDies ist keine offizielle App der Technischen Universität München. Es
-        erfolgt daher auch kein offizieller Support oder eine Haftung. Die App
-        wird von und für Studierende entwickelt. Die Benutzung erfolgt auf
-        eigene Gefahr und eine Haftung ist ausgeschlossen. Aus
-        Sicherheitsgründen wird der Zugriff auf private Daten in TUMonline über
-        Tokens realisiert, die jeweils in TUMonline durch den Nutzer freigegeben
-        und mit den jeweiligen Rechten versehen werden müssen. Für die Nutzung
-        der neuen Chat-Funktionen gelten nachfolgende Bedingungen, denen Sie
-        separat auch in der App zustimmen müssen. Mit der Installation der App
-        akzeptieren Sie zudem die Erfassung diverser, technischer Daten.
-
-        \n\nWeitere Hinweise finden Sie unten unter ‘Datenschutzerklärung’.
-        \n\nSupport:
-        \nhttps://www.facebook.com/TUMCampus
-        \n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter
-        \n‘tca-support.os.in AT tum.de’
-        \n\nBitte gehen Sie von mehreren Wochen Bearbeitungszeit aus. Die E-Mails werden nur sporadisch abgerufen.
-        \n\nDatenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
-        \n\nChatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
-        \n\nLizenz:
-        \nGNU GPL v3 - https://www.gnu.org/licenses/gpl.html oder
-        \nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
-        \n\n\nDer Quellcode kann hier bezogen werden:
-        \nhttps://github.com/TCA-Team/
-        \n\nWir suchen weiterhin Unterstuetzung! Bitte melden Sie sich unter:
-        \n‘tca-support.os.in AT tum.de’
+        Die TUM Campus App wird von Freiwilligen Helfern, Studierenden des Android Praktikums und Lehrstuhlmitarbeitern des Informatik Fachgebiet 13 unter
+        Professor Dr. Baumgarten entwickelt.
+        Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird vom TCA-Team für Android und iOS bereitgestellt.\n\n
+        Für besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
     </string>
 
     <!-- END Translated, please do not change identifiers -->
@@ -404,7 +363,8 @@
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
     <string name="mode_silent_mode">State during lectures</string>
-    <string name="url_privacy_policy" translatable="false">https://tumcabe.in.tum.de/landing/privacy/</string>
+    <string name="url_privacy_policy" translatable="false">https://app.tum.de/landing/privacy/</string>
+    <string name="url_chat_terms" translatable="false">https://app.tum.de/landing/chatterms/</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="message_details">Message info</string>
     <string name="message_detail_text">&lt;b>Sender&lt;/b>&lt;br>
