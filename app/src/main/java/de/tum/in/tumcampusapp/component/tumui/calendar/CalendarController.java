@@ -297,7 +297,9 @@ public class CalendarController implements Card.ProvidesCard {
 
             // Do sync of google calendar if necessary
             boolean syncCalendar = Utils.getSettingBool(c, Const.SYNC_CALENDAR, false)
-                                   && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED;
+                                   && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) ==
+                                      PackageManager.PERMISSION_GRANTED;
+
             if (syncCalendar && new SyncManager(c).needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
                 syncCalendar(c);
                 new SyncManager(c).replaceIntoDb(Const.SYNC_CALENDAR);

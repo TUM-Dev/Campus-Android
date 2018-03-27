@@ -100,7 +100,7 @@ public class SilenceService extends JobIntentService {
         List<CalendarItem> currentLectures = calendarController.getCurrentFromDb();
         Utils.log("Current lectures: " + currentLectures.size());
 
-        if (currentLectures.size() == 0 || isDoNotDisturbMode()) {
+        if (currentLectures.isEmpty() || isDoNotDisturbMode()) {
             if (Utils.getSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
                 // default: old state
                 Utils.log("set ringer mode to old state");
@@ -110,7 +110,10 @@ public class SilenceService extends JobIntentService {
                 Utils.setSetting(this, Const.SILENCE_ON, false);
 
                 List<CalendarItem> nextCalendarItems = calendarController.getNextCalendarItems();
-                if (nextCalendarItems.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+
+                //Check if we have a "next" item in the database and
+                // update the refresh interval until then. Otherwise use default interval.
+                if (!nextCalendarItems.isEmpty()) {
                     // refresh when next event has started
                     waitDuration = getWaitDuration(nextCalendarItems.get(0)
                                                                     .getDtstart());

@@ -142,7 +142,7 @@ public final class Utils {
     }
 
     /**
-     * Get a value from the default shared preferences
+     * Get a value from the default shared preferences.
      *
      * @param c          Context
      * @param key        setting name
@@ -156,13 +156,14 @@ public final class Utils {
         } catch (ClassCastException ignore) {
             try {
                 return Long.valueOf(sp.getString(key, null));
-            } catch(NumberFormatException ignore2){ }
+            } catch (NumberFormatException ignore2) {
+            }
         }
         return defaultVal;
     }
 
     /**
-     * Get a value from the default shared preferences
+     * Get a value from the default shared preferences.
      *
      * @param c          Context
      * @param key        setting name
@@ -176,13 +177,14 @@ public final class Utils {
         } catch (ClassCastException ignore) {
             try {
                 return Float.valueOf(sp.getString(key, null));
-            } catch(NumberFormatException ignore2){ }
+            } catch (NumberFormatException ignore2) {
+            }
         }
         return defaultVal;
     }
 
     /**
-     * Get a value from the default shared preferences
+     * Get a value from the default shared preferences.
      *
      * @param c          Context
      * @param key        setting name
@@ -196,13 +198,14 @@ public final class Utils {
         } catch (ClassCastException ignore) {
             try {
                 return Integer.valueOf(sp.getString(key, null));
-            } catch(NumberFormatException ignore2){ }
+            } catch (NumberFormatException ignore2) {
+            }
         }
         return defaultVal;
     }
 
     /**
-     * Get a value from the default shared preferences
+     * Get a value from the default shared preferences.
      *
      * @param c         Context
      * @param key       setting name
@@ -219,7 +222,7 @@ public final class Utils {
     }
 
     /**
-     * Return the boolean value of a setting
+     * Return the boolean value of a setting.
      *
      * @param c          Context
      * @param name       setting name
@@ -541,7 +544,7 @@ public final class Utils {
     }
 
     /**
-     * Creates a bitmap for a vector image (.xml) to be able to use it for notifications
+     * Creates a bitmap for a vector image (.xml) to be able to use it for notifications.
      *
      * @param c
      * @param res

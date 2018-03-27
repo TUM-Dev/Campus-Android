@@ -45,8 +45,8 @@ public class AuthenticationManager {
     }
 
     /**
-     * Gets an unique id that identifies this device
-     * should only reset after a reinstall or wiping of the settings
+     * Gets an unique id that identifies this device.
+     * Should only reset after a reinstall or wiping of the settings
      *
      * @return Unique device id
      */
@@ -81,7 +81,7 @@ public class AuthenticationManager {
     }
 
     /**
-     * Get the private key as string
+     * Get the private key as string.
      *
      * @return
      * @throws NoPrivateKey
@@ -95,7 +95,7 @@ public class AuthenticationManager {
     }
 
     /**
-     * Gets the public key as string
+     * Gets the public key as string.
      *
      * @return
      * @throws NoPublicKey
@@ -109,7 +109,7 @@ public class AuthenticationManager {
     }
 
     /**
-     * Loads the private key as an object
+     * Loads the private key as an object.
      *
      * @return The private key object
      */
@@ -124,7 +124,7 @@ public class AuthenticationManager {
     }
 
     /**
-     * Sign a message with the currently stored private key
+     * Sign a message with the currently stored private key.
      *
      * @param data String to be signed
      * @return signature used to verify this request
@@ -174,7 +174,7 @@ public class AuthenticationManager {
     }
 
     /**
-     * Try to upload the public key to the server and remember that state
+     * Try to upload the public key to the server and remember that state.
      *
      * @param publicKey
      */
@@ -234,15 +234,16 @@ public class AuthenticationManager {
     private void tryToUploadGcmToken() {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         // Can only be done after the public key has been uploaded
-        if (Utils.getSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false) && GoogleApiAvailability.getInstance()
-                                                                                                             .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
+        if (Utils.getSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)
+            && GoogleApiAvailability.getInstance()
+                                    .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
             GcmIdentificationService idService = new GcmIdentificationService(mContext);
             idService.checkSetup();
         }
     }
 
     /**
-     * Convert a byte array to a more manageable base64 string to store it in the preferences
+     * Convert a byte array to a more manageable base64 string to store it in the preferences.
      */
     private static String keyToBase64(byte[] key) {
         return Base64.encodeToString(key, Base64.DEFAULT);
@@ -258,7 +259,7 @@ public class AuthenticationManager {
     }
 
     /**
-     * Save private key in shared preferences
+     * Save private key in shared preferences.
      */
     private void saveKeys(String privateKeyString, String publicKeyString) {
         Utils.setSetting(mContext, Const.PRIVATE_KEY, privateKeyString);
@@ -267,7 +268,7 @@ public class AuthenticationManager {
     }
 
     /**
-     * Reset all keys generated - this should actually never happen other than when a token is reset
+     * Reset all keys generated - this should actually never happen other than when a token is reset.
      */
     public void clearKeys() {
         this.saveKeys("", "");

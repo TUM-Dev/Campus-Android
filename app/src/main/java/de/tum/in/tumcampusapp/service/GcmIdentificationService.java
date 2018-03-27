@@ -62,7 +62,8 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
         if (token.isEmpty()) {
             this.registerInBackground();
         } else {
-            // If the regId is not empty, we still need to check whether it was successfully sent to the TCA server, because this can fail due to user not confirming their private key
+            // If the regId is not empty, we still need to check whether it was successfully sent to the
+            // TCA server, because this can fail due to user not confirming their private key
             if (!Utils.getSettingBool(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false)) {
                 this.sendTokenToBackend(token);
             }
