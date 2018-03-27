@@ -47,7 +47,7 @@ public final class TUMOnlineRequest<T> {
     /**
      * Valid response (no TUMOnline error) but no data available (e.g. no grades yet)
      */
-    public static final String NO_ENTRIES = "<rowset>\n</rowset>";
+    static final String NO_ENTRIES = "<rowset>\n</rowset>";
 
     /**
      * String possibly contained in response from server
@@ -165,7 +165,6 @@ public final class TUMOnlineRequest<T> {
                 result = net.downloadStringHttp(url);
             }
         } catch (IOException e) {
-            Utils.log(e, "FetchError");
             lastError = e.getMessage();
             result = Optional.absent();
         }
@@ -305,7 +304,7 @@ public final class TUMOnlineRequest<T> {
     /**
      * Reset parameters to an empty Map.
      */
-    void resetParameters() {
+    private void resetParameters() {
         parameters = new HashMap<>();
         // set accessToken as parameter if available
         if (accessToken != null) {
@@ -331,7 +330,7 @@ public final class TUMOnlineRequest<T> {
         fillCache = force;
     }
 
-    public String getLastError() {
+    String getLastError() {
         return this.lastError;
     }
 }

@@ -368,7 +368,7 @@
         <activity
             android:name=".component.ui.overview.InformationActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/information"
+            android:label="@string/about_tca"
             android:launchMode="singleTop"
             android:parentActivityName=".component.other.settings.UserPreferencesActivity">
             <meta-data
