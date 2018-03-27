@@ -38,7 +38,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.BuildConfig;
-import de.tum.in.tumcampusapp.R;
 
 /**
  * Class for common helper functions used by a lot of classes
@@ -512,8 +511,8 @@ public final class Utils {
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             // should never happen
-            throw new AssertionError("Could not get package name: " + e);
         }
+        return 0;
     }
 
     public static void showToastOnUIThread(final Activity activity, final int s) {
@@ -577,6 +576,9 @@ public final class Utils {
 
     public static float getBatteryLevel(Context context) {
         Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        if (batteryIntent == null) {
+            return -1;
+        }
         int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
         if (level == -1 || scale == -1) {
@@ -585,25 +587,26 @@ public final class Utils {
         return ((float) level / (float) scale) * 100.0f;
     }
 
-    public static String extractRoomNumberFromLocation(String location){
+    public static String extractRoomNumberFromLocation(String location) {
         Pattern pattern = Pattern.compile("\\((.*?)\\)");
         Matcher matcher = pattern.matcher(location);
         if (matcher.find()) {
             return matcher.group(1);
-        }
-        else {
+        } else {
             return location;
         }
     }
 
     /**
      * Creates a bitmap for a vector image (.xml) to be able to use it for notifications
-     * @param c
-     * @param res
-     * @return
+     *
+     * @param c   the current context
+     * @param res the resource id of the drawable we want
+     * @return bitmap of the xml vector graphic
      */
-    public static Bitmap getLargeIcon(Context c, int res){
-        Drawable icon = c.getResources().getDrawable(R.drawable.ic_cutlery);
+    public static Bitmap getLargeIcon(Context c, int res) {
+        Drawable icon = c.getResources()
+                         .getDrawable(res);
         Bitmap bitmap = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
