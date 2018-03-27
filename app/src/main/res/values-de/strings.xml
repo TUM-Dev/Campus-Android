@@ -83,7 +83,7 @@
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
 
-    <string name="about_tca">Über TCA</string>
+    <string name="about_tca">Über die TCA</string>
     <string name="information">Informationen</string>
     <string name="github">Mitmachen auf Github</string>
     <string name="licences">Open Source-Lizenzen</string>
@@ -127,7 +127,7 @@
     <string name="my_lectures">Meine Vorlesungen</string>
     <string name="chat_rooms">Chatrooms</string>
     <string name="tuition_fees">Rückmeldung</string>
-    <string name="tum_common">TUM Allgemein</string>
+    <string name="common_info">Allgemeine Informationen</string>
     <string name="menues">Mensen</string>
     <string name="study_plans">Studienpläne</string>
     <string name="person_search">Personensuche</string>
@@ -260,7 +260,7 @@
     <string name="invalid_notification_time">Ungültige Zeit ausgewählt. Bitte eine Uhrzeit im folgenden Intervall wählen:</string>
 
     <!-- Information -->
-    <string name="version">Version</string>
+    <string name="version">Version: %1$s</string>
     <string name="send_email">E-Mail Feedback senden</string>
     <string name="show_feedback">Feedback senden</string>
     <string name="feedbackSubj">Feedback für TUM Campus App</string>

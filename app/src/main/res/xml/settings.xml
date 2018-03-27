@@ -308,35 +308,4 @@
             android:summary="@string/clear_cache_detail"
             android:title="@string/clear_cache"/>
     </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/about_tca">
-        <Preference
-            android:icon="@drawable/ic_facebook"
-            android:key="facebook"
-            android:title="@string/facebook"/>
-        <Preference
-            android:icon="@drawable/ic_github"
-            android:key="github"
-            android:title="@string/github"/>
-        <Preference
-            android:icon="@drawable/ic_feedback"
-            android:key="feedback"
-            android:title="@string/show_feedback"/>
-        <Preference
-            android:key="about"
-            android:title="@string/information">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:targetPackage="de.tum.in.tumcampus"
-                android:targetClass="de.tum.in.tumcampusapp.activities.InformationActivity"/>
-        </Preference>
-        <Preference
-            android:key="privacy"
-            android:title="@string/privacy_policy"/>
-        <Preference
-            android:key="licenses"
-            android:summary="@string/licences_summary"
-            android:title="@string/licences"/>
-    </PreferenceCategory>
-
 </PreferenceScreen>

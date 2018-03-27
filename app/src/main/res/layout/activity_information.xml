@@ -26,11 +26,52 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TableLayout
-                    android:id="@+id/debugInfos"
-                    android:layout_width="fill_parent"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"/>
+                    android:autoLink="all"
+                    android:text="@string/app_info_text"/>
+
+                <Button
+                    android:id="@+id/button_facebook"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_facebook_white"
+                    android:drawableStart="@drawable/ic_facebook_white"
+                    android:text="@string/facebook"/>
+
+                <Button
+                    android:id="@+id/button_github"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_github_white"
+                    android:drawableStart="@drawable/ic_github_white"
+                    android:text="@string/github"/>
+
+                <Button
+                    android:id="@+id/button_privacy"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/privacy_policy"/>
+                
+                <Button
+                    android:id="@+id/button_chat_terms"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/open_chat_terms"/>
+
+                <Button
+                    android:id="@+id/button_licenses"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/licences"/>
+
+
 
                 <TextView
                     android:id="@+id/txt_version"
@@ -38,15 +79,15 @@
                     android:layout_height="wrap_content"
                     android:autoLink="all"
                     android:clickable="true"
+                    android:focusable="true"
                     android:text="@string/add_info"
-                    android:textSize="@dimen/large_text_size"
-                    android:focusable="true"/>
+                    android:textSize="@dimen/large_text_size"/>
 
-                <TextView
-                    android:layout_width="match_parent"
+                <TableLayout
+                    android:id="@+id/debugInfos"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:autoLink="all"
-                    android:text="@string/app_info_text"/>
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 
