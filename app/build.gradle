@@ -1,4 +1,5 @@
 plugins {
+    id 'io.gitlab.arturbosch.detekt' version "1.0.0.RC6-3"
     id 'de.aaschmid.cpd' version '1.0'
 }
 apply plugin: 'com.android.application'
@@ -7,6 +8,7 @@ apply from: '../findbugs.gradle'
 apply from: '../pmd.gradle'
 apply from: '../jacoco.gradle'
 apply from: '../checkstyle.gradle'
+apply from: '../detekt.gradle'
 
 android {
     compileSdkVersion 27
