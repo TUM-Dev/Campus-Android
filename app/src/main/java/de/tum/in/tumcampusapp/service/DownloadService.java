@@ -111,14 +111,14 @@ public class DownloadService extends JobIntentService {
                 default:
                     successful = service.downloadAll(force);
 
-                    boolean isSetup = Utils.getInternalSettingBool(service, Const.EVERYTHING_SETUP, false);
+                    boolean isSetup = Utils.getSettingBool(service, Const.EVERYTHING_SETUP, false);
                     if (isSetup) {
                         break;
                     }
                     CacheManager cm = new CacheManager(service);
                     cm.syncCalendar();
                     if (successful) {
-                        Utils.setInternalSetting(service, Const.EVERYTHING_SETUP, true);
+                        Utils.setSetting(service, Const.EVERYTHING_SETUP, true);
                     }
                     break;
             }

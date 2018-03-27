@@ -80,6 +80,9 @@ public class StartupActivity extends AppCompatActivity {
         //Our own Custom exception handler
         ExceptionHandler.setup(getApplicationContext());
 
+        //Migrate all settings - we somehow ended up having two different shared prefs: join them back together
+        Utils.migrateSharedPreferences(this.getApplicationContext());
+
         //Check that we have a private key setup in order to authenticate this device
         AuthenticationManager am = new AuthenticationManager(this);
         am.generatePrivateKey(null);
@@ -89,14 +92,14 @@ public class StartupActivity extends AppCompatActivity {
         ImplicitCounter.submitCounter(this);
 
         // For compatibility reasons: big update happened with version 35
-        int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
+        int prevVersion = Utils.getSettingInt(this, Const.APP_VERSION, 35);
 
         // get current app version
         int currentVersion = Utils.getAppVersion(this);
         boolean newVersion = prevVersion < currentVersion;
         if (newVersion) {
             this.setupNewVersion();
-            Utils.setInternalSetting(this, Const.APP_VERSION, currentVersion);
+            Utils.setSetting(this, Const.APP_VERSION, currentVersion);
         }
 
         // Also First run wizard for setup of id and token
@@ -120,7 +123,7 @@ public class StartupActivity extends AppCompatActivity {
         }
 
         // On first setup show remark that loading could last longer than normally
-        boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
+        boolean isSetup = Utils.getSettingBool(this, Const.EVERYTHING_SETUP, false);
         if (!isSetup) {
             this.runOnUiThread(() -> findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE));
         }
@@ -311,7 +314,7 @@ public class StartupActivity extends AppCompatActivity {
         FileUtils.deleteRecursive(f);
 
         // Load all on start
-        Utils.setInternalSetting(this, Const.EVERYTHING_SETUP, false);
+        Utils.setSetting(this, Const.EVERYTHING_SETUP, false);
 
         // rename hide_wizzard_on_startup
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);

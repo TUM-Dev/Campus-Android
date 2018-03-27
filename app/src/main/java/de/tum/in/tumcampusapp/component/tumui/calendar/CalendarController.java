@@ -285,7 +285,7 @@ public class CalendarController implements Card.ProvidesCard {
             List<CalendarItem> calendarItems = calendarDao.getLecturesWithoutCoordinates();
             for (CalendarItem calendarItem : calendarItems) {
                 String location = calendarItem.getLocation();
-                if (location == null || location.isEmpty()) {
+                if (location.isEmpty()) {
                     continue;
                 }
                 Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
@@ -296,7 +296,7 @@ public class CalendarController implements Card.ProvidesCard {
             }
 
             // Do sync of google calendar if necessary
-            boolean syncCalendar = Utils.getInternalSettingBool(c, Const.SYNC_CALENDAR, false)
+            boolean syncCalendar = Utils.getSettingBool(c, Const.SYNC_CALENDAR, false)
                                    && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED;
             if (syncCalendar && new SyncManager(c).needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
                 syncCalendar(c);

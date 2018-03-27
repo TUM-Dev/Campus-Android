@@ -111,7 +111,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         }
 
         //Get setting from sharedprefs and refresh the view with everything
-        this.mWeekMode = Utils.getInternalSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
+        this.mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
         this.refreshWeekView();
 
         calendarController = new CalendarController(this);
@@ -166,7 +166,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         menuItemExportGoogle.setEnabled(isFetched);
         menuItemDeleteCalendar.setEnabled(isFetched);
 
-        boolean bed = Utils.getInternalSettingBool(this, Const.SYNC_CALENDAR, false);
+        boolean bed = Utils.getSettingBool(this, Const.SYNC_CALENDAR, false);
         menuItemExportGoogle.setVisible(!bed);
         menuItemDeleteCalendar.setVisible(bed);
         return super.onPrepareOptionsMenu(menu);
@@ -177,14 +177,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         int i = item.getItemId();
         if (i == R.id.action_switch_view_mode) {
             mWeekMode = !mWeekMode;
-            Utils.setInternalSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
+            Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
             this.refreshWeekView();
             return true;
         } else if (i == R.id.action_export_calendar) {
             exportCalendarToGoogle();
 
             // Enable automatic calendar synchronisation
-            Utils.setInternalSetting(this, Const.SYNC_CALENDAR, true);
+            Utils.setSetting(this, Const.SYNC_CALENDAR, true);
             supportInvalidateOptionsMenu();
             return true;
         } else if (i == R.id.action_delete_calendar) {
@@ -337,7 +337,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         builder.setMessage(getString(R.string.dialog_delete_calendar))
                .setPositiveButton(getString(R.string.yes), (arg0, arg1) -> {
                    int deleted = CalendarController.deleteLocalCalendar(CalendarActivity.this);
-                   Utils.setInternalSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
+                   Utils.setSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
                    CalendarActivity.this.invalidateOptionsMenu();
                    if (deleted > 0) {
                        Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
