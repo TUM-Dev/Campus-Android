@@ -485,6 +485,27 @@ Signatur: %5$s</string>
     <string name="filter_lecture_SELECTED_LECTURES">Ausgewählte Vorlesungen</string>
     <string name="show_answer">Antwort anzeigen</string>
     <string name="title_activity_cards_quiz">Lernkarten</string>
+  
+    <!-- Create personal Appointment (Calendar) -->
+    <string name="create_event">Termin erstellen</string>
+    <string name="comment">Anmerkung</string>
+    <string name="from">von</string>
+    <string name="to">bis</string>
+    <string name="activity_create_event_title">Neuer persönlicher Termin</string>
+    <string name="event_title">Titel</string>
+    <string name="calendar_refresh">Aktualisieren</string>
+    <string name="event_delete_title">Termin löschen?</string>
+    <string name="delete_event_info">Der Termin wird in TUMonline gelöscht.</string>
+    <string name="delete_event_confirmation">Termin wurde gelöscht</string>
+    <string name="delete_event_error">Fehler: Termin konnte nicht gelöscht werden</string>
+    <string name="delete">Löschen</string>
+    <string name="delete_event_button">Termin löschen</string>
+    <string name="event_save_edit_button">Änderungen speichern</string>
+    <string name="create_event_time_error">Stelle sicher, dass der Anfang des Termins vor dessen Ende liegt.</string>
+    <string name="error">Fehler</string>
+    <string name="edit_event_button">Editieren</string>
+    <string name="event_canceled">Gelöscht</string>
+  
     <string name="token_limit_reached">Token-Limit erreicht (10 Stück). Du musst ein Token in TUMonline löschen um fortzufahren.</string>
     <string name="back">Zurück</string>
 </resources>

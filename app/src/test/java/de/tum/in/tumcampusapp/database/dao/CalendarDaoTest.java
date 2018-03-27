@@ -114,36 +114,6 @@ public class CalendarDaoTest {
     }
 
     /**
-     * Get all events that are on given date and not cancelled
-     * Expected output: all items are returned
-     */
-    @Test
-    public void getAllByDateNotCancelledAll() {
-        DateTime now = DateTime.now();
-        dao.insert(createCalendarItem("OPEN", now));
-        dao.insert(createCalendarItem("OK", now));
-        dao.insert(createCalendarItem("OTHER", now));
-        dao.insert(createCalendarItem("DUNNO", now));
-
-        assertThat(dao.getAllByDateNotCancelled(DateUtils.getDateString(now.toDate()))).hasSize(4);
-    }
-
-    /**
-     * Some statuses are CANCEL
-     * Expected output: some items are returned
-     */
-    @Test
-    public void getAllByDateNotCancelledSomeStatuses() {
-        DateTime now = DateTime.now();
-        dao.insert(createCalendarItem("CANCEL", now));
-        dao.insert(createCalendarItem("OK", now));
-        dao.insert(createCalendarItem("CANCEL", now));
-        dao.insert(createCalendarItem("CANCEL", now));
-
-        assertThat(dao.getAllByDateNotCancelled(DateUtils.getDateString(now.toDate()))).hasSize(1);
-    }
-
-    /**
      * Some dates are different
      * Expected output: some items are returned
      */
@@ -155,7 +125,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("OTHER", now.minusMonths(10)));
         dao.insert(createCalendarItem("COOL", now));
 
-        assertThat(dao.getAllByDateNotCancelled(DateUtils.getDateString(now.toDate()))).hasSize(2);
+        assertThat(dao.getAllByDate(DateUtils.getDateString(now.toDate()))).hasSize(2);
     }
 
     /**
@@ -170,22 +140,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("OTHER", now.minusMonths(10)));
         dao.insert(createCalendarItem("COOL", now.minusDays(123)));
 
-        assertThat(dao.getAllByDateNotCancelled(DateUtils.getDateString(now.toDate()))).hasSize(0);
-    }
-
-    /**
-     * All statuses are CANCEL 
-     * Expected output: no items are returned
-     */
-    @Test
-    public void getAllByDateNotCancelledNoneStatuses() {
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-        dao.insert(createCalendarItem("CANCEL", DateTime.now()));
-
-        assertThat(dao.getAllByDateNotCancelled(DateUtils.getDateString(DateTime.now()
-                                                                                .toDate()))).hasSize(0);
+        assertThat(dao.getAllByDate(DateUtils.getDateString(now.toDate()))).hasSize(0);
     }
 
     /**
@@ -200,7 +155,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(123)));
         dao.insert(createCalendarItem("CANCEL", now));
 
-        assertThat(dao.getAllByDateNotCancelled(DateUtils.getDateString(now.toDate()))).hasSize(1);
+        assertThat(dao.getAllByDate(DateUtils.getDateString(now.toDate()))).hasSize(2);
     }
 
     /**

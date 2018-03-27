@@ -5,6 +5,7 @@ import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.content.ContentValues
 import android.provider.CalendarContract
+import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent
 import de.tum.`in`.tumcampusapp.utils.DateUtils
 import java.text.SimpleDateFormat
@@ -30,12 +31,14 @@ data class CalendarItem(@PrimaryKey
      * Returns the color of the event
      */
     fun getEventColor(): Int {
-        return if (title.endsWith("VO") || title.endsWith("VU")) {
-            IntegratedCalendarEvent.getDisplayColorFromColor(-0xd76de1)
+        return if(status.equals("CANCEL")){
+            IntegratedCalendarEvent.getDisplayColorFromColor(R.color.event_canceled)
+        } else if (title.endsWith("VO") || title.endsWith("VU")) {
+            IntegratedCalendarEvent.getDisplayColorFromColor(R.color.event_lecture)
         } else if (title.endsWith("UE")) {
-            IntegratedCalendarEvent.getDisplayColorFromColor(-0x8000)
+            IntegratedCalendarEvent.getDisplayColorFromColor(R.color.event_exercise)
         } else {
-            IntegratedCalendarEvent.getDisplayColorFromColor(-0xffff01)
+            IntegratedCalendarEvent.getDisplayColorFromColor(R.color.event_other)
         }
     }
 

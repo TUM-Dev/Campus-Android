@@ -320,8 +320,7 @@ public final class TUMOnlineRequest<T> {
      * @param value value of the parameter
      */
     public void setParameter(String name, String value) {
-        parameters.put(name, UrlEscapers.urlPathSegmentEscaper()
-                                        .escape(value));
+        parameters.put(name, UrlEscapers.urlPathSegmentEscaper().escape(value));
     }
 
     public void setParameterEncoded(String name, String value) {

@@ -14,8 +14,8 @@ public interface CalendarDao {
     @Query("SELECT c.* FROM calendar c WHERE status != 'CANCEL'")
     List<CalendarItem> getAllNotCancelled();
 
-    @Query("SELECT c.* FROM calendar c WHERE dtstart LIKE '%' || :date || '%' AND status != 'CANCEL' ORDER BY dtstart ASC")
-    List<CalendarItem> getAllByDateNotCancelled(String date);
+    @Query("SELECT c.* FROM calendar c WHERE dtstart LIKE '%' || :date || '%' ORDER BY dtstart ASC")
+    List<CalendarItem> getAllByDate(String date);
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
            + "AND STATUS != 'CANCEL'"
@@ -43,6 +43,9 @@ public interface CalendarDao {
 
     @Query("DELETE FROM calendar")
     void flush();
+
+    @Query("DELETE FROM calendar WHERE nr=:eventNr")
+    void delete(String eventNr);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(CalendarItem cal);
