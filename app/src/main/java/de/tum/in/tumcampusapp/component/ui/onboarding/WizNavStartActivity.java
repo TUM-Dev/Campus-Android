@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
@@ -53,13 +55,16 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             return;
         }
 
+        Utils.setSetting(this, Const.LRZ_ID, null);
+        Utils.setSetting(this, Const.ACCESS_TOKEN, null);
+
         finish();
         startActivity(new Intent(this, WizNavExtrasActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     /**
-     * Handle click on next button
+     * Handle click on next button.
      *
      * @param next Next button handle
      */
@@ -72,9 +77,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             return;
         }
 
-        String enteredId = editTxtLrzId.getText()
-                                       .toString()
-                                       .toLowerCase();
+        String enteredId = editTxtLrzId.getText().toString().toLowerCase(Locale.GERMANY);
 
         // check if lrz could be valid?
         if (!enteredId.matches(Const.TUM_ID_PATTERN)) {
@@ -94,12 +97,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                     .setNegativeButton(getString(R.string.no), this)
                     .show();
         } else {
-            startLoading(lrzId);
+            startLoading(lrzId); // create a new token
         }
     }
 
     /**
-     * Handle click in dialog buttons
+     * Handle click in dialog buttons.
      *
      * @param dialog Dialog handle
      * @param which  Button clicked
@@ -110,58 +113,14 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             AuthenticationManager am = new AuthenticationManager(this);
             am.clearKeys();
             am.generatePrivateKey(null);
-            startLoading(lrzId);
+            startLoading(lrzId); // create a new token
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             onLoadFinished(true);
         }
     }
 
-    private void setDefaultCampus(String facultyNumber) {
-        String Campus = "0";
-        switch (facultyNumber) {
-            case "5":   // TUM School of Education
-            case "6":   // Architektur
-            case "7":   // Elektrotechnik und Informationstechnik
-            case "8":   // Ingenieurfakultät Bau Geo Umwelt
-            case "14":  // Wirtschaftswissenschaften
-            case "17":  // Andere Einrichtungen
-                Campus = "C"; // Stammgelände
-                break;
-
-            case "16":  // TUM School of Governance
-                // Unklar, nicht weit vom Stammgelände, aber nicht Stammgelände ??
-                break;
-            case "1":   // Mathematik
-            case "2":   // Physik
-            case "3":   // Chemie
-            case "4":   // Informatik
-            case "11":  // Maschinenwesen
-                Campus = "G"; // Garching-FZ
-                break;
-
-            case "13":  // Sport-und Gesundheitswissenschaften
-                // Olympiapark, hat aber keine Zuordnung ??
-                break;
-
-            case "12":  // Medizin
-                Campus = "I"; // Klinikum rechts der Isar
-                break;
-
-            case "15":  // Wissenschaftszentrum Weihenstephan
-                Campus = "W"; // Weihenstephan
-                break;
-            default:
-                break;
-
-        }
-
-        if ("0".equals(Campus)) {
-            Utils.setSetting(getApplicationContext(), Const.DEFAULT_CAMPUS, Campus);
-        }
-    }
-
     /**
-     * Requests an access-token from the TumOnline server in background
+     * Requests an access-token from the TumOnline server in background.
      *
      * @param arg Unused
      * @return True if the access token was successfully created
@@ -172,7 +131,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     }
 
     /**
-     * Opens second wizard page if access token available
+     * Opens second wizard page if access token available.
      *
      * @param result Was access token successfully created
      */
