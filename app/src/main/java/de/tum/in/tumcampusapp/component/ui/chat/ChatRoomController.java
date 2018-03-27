@@ -17,15 +17,19 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRow;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
+import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -33,6 +37,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class ChatRoomController implements Card.ProvidesCard {
 
     private final ChatRoomDao chatRoomDao;
+    private Context context;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -40,8 +45,9 @@ public class ChatRoomController implements Card.ProvidesCard {
      * @param context Context
      */
     public ChatRoomController(Context context) {
-        chatRoomDao = TcaDb.getInstance(context)
-                           .chatRoomDao();
+        TcaDb db = TcaDb.getInstance(context);
+        chatRoomDao = db.chatRoomDao();
+        this.context = context;
     }
 
     /**
@@ -67,7 +73,7 @@ public class ChatRoomController implements Card.ProvidesCard {
             chatRoomDao.updateRoom(lecture.getSemester_name(), Integer.valueOf(lecture.getStp_lv_nr()),
                                    lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id());
         } else {
-            ChatRoomDbRow room = new ChatRoomDbRow(-1, lecture.getTitel(), lecture.getSemester_name(), lecture.getSemester_id(), -1, Integer.parseInt(lecture.getStp_lv_nr()), lecture.getVortragende_mitwirkende(), 0);
+            ChatRoomDbRow room = new ChatRoomDbRow(-1, lecture.getTitel(), lecture.getSemester_name(), lecture.getSemester_id(), -1, Integer.parseInt(lecture.getStp_lv_nr()), lecture.getVortragende_mitwirkende(), 0, -1);
             chatRoomDao.replaceRoom(room);
         }
     }
@@ -105,6 +111,22 @@ public class ChatRoomController implements Card.ProvidesCard {
         chatRoomDao.markAsNotJoined();
         Utils.log("reset join status of all rooms");
 
+        /* TODO load the last messages when joining the chat (here or somewhere else?)
+        ChatVerification verification;
+        try {
+            ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
+            verification = ChatVerification.Companion.getChatVerification(context, currentChatMember);
+        } catch (NoPrivateKey noPrivateKey) {
+            return; //In this case we simply cannot do anything
+        }
+
+        ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
+        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(context));
+        ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
+        localRepository.setDb(TcaDb.getInstance(context));
+        ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, new CompositeDisposable());
+        */
+
         for (ChatRoom room : rooms) {
             String roomName = room.getActualName();
             String semester = room.getSemester();
@@ -113,8 +135,13 @@ public class ChatRoomController implements Card.ProvidesCard {
             if (roomIds.size() >= 1) {
                 //in dao
                 chatRoomDao.updateRoomToJoined(room.getId(), room.getMembers(), roomName, semester);
+                /* TODO load the last messages when joining the chat
+                chatMessageViewModel.getNewMessages(room.getId(), verification,
+                                                    context instanceof ChatMessageViewModel.DataLoadInterface ?
+                                                    (ChatMessageViewModel.DataLoadInterface)context : null);
+                Utils.log("Loading some messages for a newly joined chatroom");*/
             } else {
-                ChatRoomDbRow chatRoom = new ChatRoomDbRow(room.getId(), roomName, "", semester, 1, 0, "", room.getMembers());
+                ChatRoomDbRow chatRoom = new ChatRoomDbRow(room.getId(), roomName, "", semester, 1, 0, "", room.getMembers(), -1);
                 chatRoomDao.replaceRoom(chatRoom);
             }
         }
@@ -138,10 +165,8 @@ public class ChatRoomController implements Card.ProvidesCard {
         // Get all of the users lectures and save them as possible chat rooms
         TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), context, true);
         Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
-        if (lecturesList.isPresent() && lecturesList.get()
-                                                    .getLehrveranstaltungen() != null) {
-            List<LecturesSearchRow> lectures = lecturesList.get()
-                                                           .getLehrveranstaltungen();
+        if (lecturesList.isPresent()) {
+            List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
             this.replaceInto(lectures);
         }
 

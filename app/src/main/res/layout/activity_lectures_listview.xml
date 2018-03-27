@@ -16,26 +16,41 @@
             android:id="@+id/tvLectureName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/text_light_blue"
+            android:textColor="@color/tum_300"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:ellipsize="end"
-            android:maxLines="1"/>
+            android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/tvTypeSWSSemester"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text=""/>
+            android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/tvDozent"
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:ellipsize="end"
-            android:maxLines="1"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/nrUnreadMessages"
+                android:visibility="gone"
+                android:background="@drawable/unread_messages_bg"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:layout_margin="3dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@android:color/white"/>
+            <TextView
+                android:id="@+id/tvDozent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 
@@ -45,8 +60,7 @@
         android:layout_weight=".20"
         android:layout_width="0dp"
         android:id="@+id/llAdditionalInfo"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <TextView
             android:layout_height="wrap_content"
@@ -62,7 +76,9 @@
             android:id="@+id/tvMembers"
             android:gravity="center"
             android:textStyle="bold"
-            android:background="#cc000000"
+            android:background="@color/tum_300"
+            android:drawableRight="@drawable/ic_users_white"
+            android:drawablePadding="3dp"
             android:textColor="@android:color/white"
             android:layout_gravity="right"
             android:paddingTop="@dimen/padding_chat"

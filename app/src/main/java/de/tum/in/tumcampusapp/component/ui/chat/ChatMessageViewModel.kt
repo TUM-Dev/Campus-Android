@@ -10,6 +10,7 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatVerification
 import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository
+import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -22,6 +23,10 @@ import io.reactivex.schedulers.Schedulers
 class ChatMessageViewModel(private val localRepository: ChatMessageLocalRepository,
                            private val remoteRepository: ChatMessageRemoteRepository,
                            private val compositeDisposable: CompositeDisposable) : ViewModel() {
+
+    interface DataLoadInterface {
+        fun onDataLoaded()
+    }
 
     /**
      * Returns a flowable that emits a list of chat messages from the local repository
@@ -42,7 +47,10 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
     fun getUnsent(): List<ChatMessage> =
             localRepository.getUnsent()
 
-    fun getMessages(roomId: Int, messageId: Long, verification: ChatVerification): Boolean =
+    fun removeUnsent(chatMessage: ChatMessage) =
+            localRepository.removeUnsent(chatMessage)
+
+    fun getOlderMessages(roomId: Int, messageId: Long, verification: ChatVerification, callback: DataLoadInterface?): Boolean =
             compositeDisposable.add(Observable.just(1)
                     .subscribeOn(Schedulers.computation())
                     .flatMap { remoteRepository.getMessages(roomId, messageId, verification) }
@@ -50,10 +58,11 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
                     .subscribe({ t ->
                         t.forEach { localRepository.replaceMessage(it) }
+                        callback?.onDataLoaded()
                     })
             )
 
-    fun getNewMessages(roomId: Int, verification: ChatVerification): Boolean =
+    fun getNewMessages(roomId: Int, verification: ChatVerification, callback: DataLoadInterface?): Boolean =
             compositeDisposable.add(Observable.just(1)
                     .subscribeOn(Schedulers.computation())
                     .flatMap { remoteRepository.getNewMessages(roomId, verification) }
@@ -61,6 +70,7 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                     .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
                     .subscribe({ t ->
                         t.forEach { localRepository.replaceMessage(it) }
+                        callback?.onDataLoaded()
                     })
             )
 
@@ -73,11 +83,12 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                     .subscribe({
                         it.sendingStatus = ChatMessage.STATUS_SENT
                         localRepository.replaceMessage(it)
+                        localRepository.removeUnsent(chatMessage)
 
                         // Send broadcast to eventually open ChatActivity
                         val extras = Bundle()
                         extras.putSerializable("GCMChat", GCMChat(it.getRoom(), it.getMember().id, 0))
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent("chat-message-received").putExtras(extras))
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(Const.CHAT_BROADCAST_NAME).putExtras(extras))
                     })
             )
 }

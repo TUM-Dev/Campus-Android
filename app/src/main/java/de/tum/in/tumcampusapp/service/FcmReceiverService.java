@@ -35,13 +35,13 @@ import de.tum.in.tumcampusapp.component.ui.chat.ChatNotification;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
- * This {@code IntentService} does the actual handling of the GCM message.
- * {@code GcmBroadcastReceiver} (a {@code WakefulBroadcastReceiver}) holds a
+ * This {@code IntentService} does the actual handling of the FCM message.
+ * {@code FcmBroadcastReceiver} (a {@code WakefulBroadcastReceiver}) holds a
  * partial wake lock for this service while the service does its work. When the
  * service is finished, it calls {@code completeWakefulIntent()} to release the
  * wake lock.
  */
-public class GcmReceiverService extends FirebaseMessagingService {
+public class FcmReceiverService extends FirebaseMessagingService {
 
     private static final String PAYLOAD = "payload";
 
