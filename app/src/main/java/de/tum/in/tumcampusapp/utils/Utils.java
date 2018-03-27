@@ -52,7 +52,7 @@ public final class Utils {
     }
 
     public static void migrateSharedPreferences(Context context) {
-        SharedPreferences prefsLegacy = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences prefsLegacy = context.getSharedPreferences("internal_prefs", Context.MODE_PRIVATE);
         Map<String, ?> entries = prefsLegacy.getAll();
 
         if (entries.isEmpty()) {
@@ -157,9 +157,9 @@ public final class Utils {
             try {
                 return Long.valueOf(sp.getString(key, null));
             } catch (NumberFormatException ignore2) {
+                return defaultVal;
             }
         }
-        return defaultVal;
     }
 
     /**
@@ -178,9 +178,9 @@ public final class Utils {
             try {
                 return Float.valueOf(sp.getString(key, null));
             } catch (NumberFormatException ignore2) {
+                return defaultVal;
             }
         }
-        return defaultVal;
     }
 
     /**
@@ -199,9 +199,9 @@ public final class Utils {
             try {
                 return Integer.valueOf(sp.getString(key, null));
             } catch (NumberFormatException ignore2) {
+                return defaultVal;
             }
         }
-        return defaultVal;
     }
 
     /**

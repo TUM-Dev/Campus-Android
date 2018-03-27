@@ -336,13 +336,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_delete_calendar))
                .setPositiveButton(getString(R.string.yes), (arg0, arg1) -> {
-                   int deleted = CalendarController.deleteLocalCalendar(CalendarActivity.this);
+                   int deleted = CalendarController.deleteLocalCalendar(this);
                    Utils.setSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
-                   CalendarActivity.this.invalidateOptionsMenu();
+                   this.invalidateOptionsMenu();
                    if (deleted > 0) {
-                       Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
+                       Utils.showToast(this, R.string.calendar_deleted_toast);
                    } else {
-                       Utils.showToast(CalendarActivity.this, R.string.calendar_not_existing_toast);
+                       Utils.showToast(this, R.string.calendar_not_existing_toast);
                    }
                })
                .setNegativeButton(getString(R.string.no), null)

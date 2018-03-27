@@ -32,7 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * This provides methods to authenticate this app installation with the tumcabe server and other instances requiring a pki
+ * This provides methods to authenticate this app installation with the tumcabe server and other instances requiring a pki.
  */
 public class AuthenticationManager {
     private final static String ALGORITHM = "RSA";
@@ -46,7 +46,7 @@ public class AuthenticationManager {
 
     /**
      * Gets an unique id that identifies this device.
-     * Should only reset after a reinstall or wiping of the settings
+     * Should only reset after a reinstall or wiping of the settings.
      *
      * @return Unique device id
      */

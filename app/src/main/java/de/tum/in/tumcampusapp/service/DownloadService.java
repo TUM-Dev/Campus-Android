@@ -59,12 +59,11 @@ public class DownloadService extends JobIntentService {
     /**
      * Gets the time when BackgroundService was called last time
      *
-     * @param c Context
+     * @param context Context
      * @return time when BackgroundService was executed last time
      */
-    public static long lastUpdate(Context c) {
-        SharedPreferences prefs = c.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        return prefs.getLong(LAST_UPDATE, 0);
+    public static long lastUpdate(Context context) {
+        return Utils.getSettingLong(context, LAST_UPDATE, 0L);
     }
 
     /**
@@ -133,10 +132,7 @@ public class DownloadService extends JobIntentService {
                 successful = false;
             }
             if (successful) {
-                SharedPreferences prefs = service.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-                prefs.edit()
-                     .putLong(LAST_UPDATE, System.currentTimeMillis())
-                     .apply();
+                Utils.setSetting(service, LAST_UPDATE, System.currentTimeMillis());
             }
             CardManager.update(service);
             successful = true;

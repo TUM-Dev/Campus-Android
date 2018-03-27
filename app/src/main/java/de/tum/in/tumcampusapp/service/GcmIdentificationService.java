@@ -82,14 +82,14 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
     private void registerInBackground() {
         try {
             //Register a new id
-            String token = GcmIdentificationService.this.register();
+            String token = this.register();
 
             //Reset the lock in case we are updating and maybe failed
             Utils.setSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
             Utils.setSetting(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, new Date().getTime());
 
             // Let the server know of our new registration id
-            GcmIdentificationService.this.sendTokenToBackend(token);
+            this.sendTokenToBackend(token);
 
             Utils.log("GCM registration successful");
         } catch (IOException ex) {
