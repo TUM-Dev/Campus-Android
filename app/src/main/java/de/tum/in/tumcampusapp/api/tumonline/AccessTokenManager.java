@@ -28,7 +28,7 @@ public class AccessTokenManager {
      * get a new access token for TUMOnline by passing the lrz ID due to the
      * simplicity of the given xml file we only need to parse the &lt;token&gt;
      * element using an xml-parser is simply to much... just extract the pattern
-     * via regex
+     * via regex.
      *
      * @param lrzId lrz user id
      * @return the access token
@@ -45,12 +45,11 @@ public class AccessTokenManager {
             throw new TUMOException(request.getLastError());
         }
 
-        return token.get()
-                    .getToken();
+        return token.get().getToken();
     }
 
     /**
-     * If a valid access token already exists
+     * If a valid access token already exists.
      *
      * @return True, if access token is set
      */
@@ -90,11 +89,22 @@ public class AccessTokenManager {
 
             return true;
         } catch (TUMOException ex) {
-            Utils.log(ex, context.getString(R.string.access_token_wasnt_generated) + ex.getMessage());
+            String tokenError;
+            if (ex.getMessage() == null || !ex.getMessage().isEmpty()){
+                if (ex.getMessage().startsWith("Token-Limit")){
+                    tokenError = context.getString(R.string.token_limit_reached);
+                } else {
+                    tokenError = ex.getMessage();
+                }
+            } else {
+                // default message so we don't get an empty Toast
+                tokenError = context.getString(R.string.access_token_wasnt_generated);
+            }
+
             // set access token to null
             Utils.setSetting(context, Const.ACCESS_TOKEN, null);
 
-            Utils.showToastOnUIThread(activity, ex.getMessage());
+            Utils.showToastOnUIThread(activity, tokenError);
         } catch (Exception ex) { //NOPMD
             Utils.log(ex, context.getString(R.string.access_token_wasnt_generated));
             // set access token to null
