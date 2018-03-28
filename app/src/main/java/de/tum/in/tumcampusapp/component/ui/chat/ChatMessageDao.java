@@ -37,7 +37,8 @@ public interface ChatMessageDao {
     @Query("SELECT c.* FROM chat_message c WHERE c.sending=1 ORDER BY c.timestamp")
     List<ChatMessage> getUnsent();
 
-    @Query("SELECT c.* FROM chat_message c, chat_room r WHERE c.room=:room AND c.room = r.room AND c._id > r.last_read ORDER BY c.timestamp DESC LIMIT 5")
+    @Query("SELECT c.* FROM chat_message c, chat_room r "
+           + "WHERE c.room=:room AND c.room = r.room AND c._id > r.last_read ORDER BY c.timestamp DESC LIMIT 5")
     List<ChatMessage> getLastUnread(int room);
 
     @Query("SELECT count(*) FROM chat_message c, chat_room r WHERE c.room=:room AND c.room = r.room AND c._id > r.last_read")

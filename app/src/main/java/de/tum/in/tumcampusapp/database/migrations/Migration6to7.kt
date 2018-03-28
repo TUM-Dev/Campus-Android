@@ -6,7 +6,7 @@ import android.arch.persistence.room.migration.Migration
 /**
  * We removed the quiz function from the app
  */
-class Migration5to6 : Migration(5, 6) {
+class Migration6to7 : Migration(6, 7) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE chat_room ADD last_read INTEGER NOT NULL DEFAULT -1")
 

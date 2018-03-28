@@ -55,7 +55,7 @@ import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
 import de.tum.in.tumcampusapp.database.migrations.Migration4to5;
-import de.tum.in.tumcampusapp.database.migrations.Migration5to6;
+import de.tum.in.tumcampusapp.database.migrations.Migration6to7;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
@@ -142,7 +142,7 @@ public abstract class TcaDb extends RoomDatabase {
         if (instance == null || !instance.isOpen()) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
-                           .addMigrations(new Migration1to2(), new Migration2to3(), new Migration3to4(), new Migration4to5(), new Migration5to6())
+                           .addMigrations(new Migration1to2(), new Migration2to3(), new Migration3to4(), new Migration4to5(), new Migration6to7())
                            .build();
         }
         return instance;

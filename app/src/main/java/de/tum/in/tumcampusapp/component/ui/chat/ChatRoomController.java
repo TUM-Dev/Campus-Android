@@ -17,19 +17,15 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRow;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
-import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -37,7 +33,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public class ChatRoomController implements Card.ProvidesCard {
 
     private final ChatRoomDao chatRoomDao;
-    private Context context;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -47,7 +42,6 @@ public class ChatRoomController implements Card.ProvidesCard {
     public ChatRoomController(Context context) {
         TcaDb db = TcaDb.getInstance(context);
         chatRoomDao = db.chatRoomDao();
-        this.context = context;
     }
 
     /**
@@ -73,7 +67,10 @@ public class ChatRoomController implements Card.ProvidesCard {
             chatRoomDao.updateRoom(lecture.getSemester_name(), Integer.valueOf(lecture.getStp_lv_nr()),
                                    lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id());
         } else {
-            ChatRoomDbRow room = new ChatRoomDbRow(-1, lecture.getTitel(), lecture.getSemester_name(), lecture.getSemester_id(), -1, Integer.parseInt(lecture.getStp_lv_nr()), lecture.getVortragende_mitwirkende(), 0, -1);
+            ChatRoomDbRow room = new ChatRoomDbRow(-1, lecture.getTitel(), lecture.getSemester_name(),
+                                                   lecture.getSemester_id(), -1,
+                                                   Integer.parseInt(lecture.getStp_lv_nr()),
+                                                   lecture.getVortragende_mitwirkende(), 0, -1);
             chatRoomDao.replaceRoom(room);
         }
     }
@@ -141,7 +138,8 @@ public class ChatRoomController implements Card.ProvidesCard {
                                                     (ChatMessageViewModel.DataLoadInterface)context : null);
                 Utils.log("Loading some messages for a newly joined chatroom");*/
             } else {
-                ChatRoomDbRow chatRoom = new ChatRoomDbRow(room.getId(), roomName, "", semester, 1, 0, "", room.getMembers(), -1);
+                ChatRoomDbRow chatRoom = new ChatRoomDbRow(room.getId(), roomName, "", semester, 1, 0,
+                                                           "", room.getMembers(), -1);
                 chatRoomDao.replaceRoom(chatRoom);
             }
         }

@@ -15,7 +15,10 @@ public interface ChatRoomDao {
 
     @Query("SELECT r.*, m.timestamp, m.text, unread.count as nr_unread " +
            "FROM chat_room r " +
-           "LEFT JOIN (SELECT count(*) as count, c.room FROM chat_message c, chat_room cr WHERE c.room = cr.room AND c._id > cr.last_read GROUP BY c.room) unread on (unread.room=r.room) " +
+           "LEFT JOIN (SELECT count(*) as count, c.room "
+                    + "FROM chat_message c, chat_room cr "
+                    + "WHERE c.room = cr.room AND c._id > cr.last_read "
+                    + "GROUP BY c.room) unread on (unread.room=r.room) " +
            "LEFT JOIN (SELECT MAX(timestamp) timestamp, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
            "WHERE joined=1 " +
            "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.timestamp) DESC, r.name")

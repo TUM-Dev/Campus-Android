@@ -527,8 +527,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
 
         // TODO If we are in a certain timespan and its the users own message allow editing
         /*if ((System.currentTimeMillis() - message.getTimestampDate()
-                                                 .getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember()
-                                                                                                        .getId() == currentChatMember.getId()) {
+                           .getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember()
+                           .getId() == currentChatMember.getId()) {
 
             // Hide keyboard if opened
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

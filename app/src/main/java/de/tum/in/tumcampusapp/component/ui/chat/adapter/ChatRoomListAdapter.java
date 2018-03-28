@@ -82,7 +82,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
                                          .getName());
         holder.tvDozent.setText(room.getText());
 
-        if(room.getNrUnread() > 0 && holder.tvUnreadCounter != null){
+        if (room.getNrUnread() > 0 && holder.tvUnreadCounter != null){
             holder.tvUnreadCounter.setVisibility(View.VISIBLE);
             holder.tvUnreadCounter.setText(room.getNrUnread() >= 25 ? "25+" : (room.getNrUnread()+""));
         } else {

@@ -117,10 +117,15 @@ public class ChatNotification extends GenericNotification implements ChatMessage
         ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, new CompositeDisposable());
 
         if (messageId == -1) {
-            chatMessageViewModel.getNewMessages(chatRoom.getId(), ChatVerification.Companion.getChatVerification(context, member), this);
+            chatMessageViewModel.getNewMessages(chatRoom.getId(),
+                                                ChatVerification.Companion.getChatVerification(context, member),
+                                                this);
         } else {
             // edit
-            chatMessageViewModel.getOlderMessages(chatRoom.getId(), messageId, ChatVerification.Companion.getChatVerification(context, member), null);
+            chatMessageViewModel.getOlderMessages(chatRoom.getId(),
+                                                  messageId,
+                                                  ChatVerification.Companion.getChatVerification(context, member),
+                                                  null);
         }
     }
 
@@ -165,11 +170,9 @@ public class ChatNotification extends GenericNotification implements ChatMessage
             // GCMNotification sound
             Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
 
-            String replyLabel = context.getResources()
-                                       .getString(R.string.reply_label);
-
-
             /* TODO Create the reply action and add the remote input
+
+            String replyLabel = context.getResources().getString(R.string.reply_label);
 
             RemoteInput remoteInput = new RemoteInput.Builder(ChatActivity.EXTRA_VOICE_REPLY)
                     .setLabel(replyLabel)
