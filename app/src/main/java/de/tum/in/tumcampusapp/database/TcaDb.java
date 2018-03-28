@@ -4,6 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.Intent;
 
@@ -56,6 +57,7 @@ import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
 import de.tum.in.tumcampusapp.database.migrations.Migration4to5;
 import de.tum.in.tumcampusapp.database.migrations.Migration6to7;
+import de.tum.in.tumcampusapp.database.migrations.Migration5to6;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
@@ -89,9 +91,30 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         TransportFavorites.class,
         WidgetsTransport.class,
         ChatRoomDbRow.class
-}, exportSchema = false) // TODO: probably version schema
+})
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
+    private static final Migration[] migrations = {
+            new Migration1to2(),
+            new Migration2to3(),
+            new Migration3to4(),
+            new Migration4to5(),
+            new Migration5to6(),
+            new Migration6to7()
+    };
+
+    private static TcaDb instance;
+
+    public static synchronized TcaDb getInstance(Context context) {
+        if (instance == null || !instance.isOpen()) {
+            instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
+                           .allowMainThreadQueries()
+                           .addMigrations(migrations)
+                           .build();
+        }
+        return instance;
+    }
+
     public abstract CafeteriaDao cafeteriaDao();
 
     public abstract CafeteriaMenuDao cafeteriaMenuDao();
@@ -135,18 +158,6 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract TransportDao transportDao();
 
     public abstract ChatRoomDao chatRoomDao();
-
-    private static TcaDb instance;
-
-    public static synchronized TcaDb getInstance(Context context) {
-        if (instance == null || !instance.isOpen()) {
-            instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
-                           .allowMainThreadQueries()
-                           .addMigrations(new Migration1to2(), new Migration2to3(), new Migration3to4(), new Migration4to5(), new Migration6to7())
-                           .build();
-        }
-        return instance;
-    }
 
     /**
      * Drop all tables, so we can do a complete clean start

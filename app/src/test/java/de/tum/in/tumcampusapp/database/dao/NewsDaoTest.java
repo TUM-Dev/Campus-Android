@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.database.dao;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -29,6 +31,7 @@ public class NewsDaoTest {
     public void setUp() {
         dao = TcaDb.getInstance(RuntimeEnvironment.application).newsDao();
         newsIdx = 0;
+        JodaTimeAndroid.init(RuntimeEnvironment.application);
     }
 
     @After

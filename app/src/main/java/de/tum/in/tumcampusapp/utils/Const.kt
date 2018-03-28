@@ -77,7 +77,6 @@ object Const {
     const val POSITION = "position"
 
     const val PREF_UNIQUE_ID = "PREF_UNIQUE_ID"
-    const val CHATTERMS_URL = "https://$API_HOSTNAME/landing/chatterms/"
 
     const val URL_ROOM_FINDER_API = "/Api/roomfinder/room/"
     const val URL_DEFAULT_MAP_IMAGE = "https://$API_HOSTNAME${URL_ROOM_FINDER_API}defaultMap/"
@@ -130,4 +129,10 @@ object Const {
     const val EDUROAM_SSID = "eduroam"
 
     const val CHAT_BROADCAST_NAME = "chat-message-received"
+  
+    const val EVENT_TITLE = "pTitel"
+    const val EVENT_COMMENT = "pAnmerkung"
+    const val EVENT_START = "pVon"
+    const val EVENT_END = "pBis"
+    const val EVENT_NR = "pTerminNr"
 }
