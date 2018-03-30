@@ -10,6 +10,9 @@ import java.util.List;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 
+/**
+ * Queries needed for the ChatRoomActivity/Controller.
+ */
 @Dao
 public interface ChatRoomDao {
 

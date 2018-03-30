@@ -45,7 +45,7 @@ public class ChatRoomController implements Card.ProvidesCard {
     }
 
     /**
-     * Gets all chat rooms that you have joined(1)/not joined(0) for the specified room
+     * Gets all chat rooms that you have joined(1)/not joined(0) for the specified room.
      *
      * @param joined chat room 1=joined, 0=not joined/left chat room, -1=not joined
      * @return List of chat messages
@@ -108,7 +108,7 @@ public class ChatRoomController implements Card.ProvidesCard {
         chatRoomDao.markAsNotJoined();
         Utils.log("reset join status of all rooms");
 
-        /* TODO load the last messages when joining the chat (here or somewhere else?)
+        /* TODO(jacqueline8711): load the last messages when joining the chat (here or somewhere else?)
         ChatVerification verification;
         try {
             ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
@@ -129,18 +129,18 @@ public class ChatRoomController implements Card.ProvidesCard {
             String semester = room.getSemester();
 
             List<Integer> roomIds = chatRoomDao.getGivenLecture(roomName, semester);
-            if (roomIds.size() >= 1) {
+            if (roomIds.isEmpty()) {
+                ChatRoomDbRow chatRoom = new ChatRoomDbRow(room.getId(), roomName, "", semester, 1, 0,
+                                                           "", room.getMembers(), -1);
+                chatRoomDao.replaceRoom(chatRoom);
+            } else {
                 //in dao
                 chatRoomDao.updateRoomToJoined(room.getId(), room.getMembers(), roomName, semester);
-                /* TODO load the last messages when joining the chat
+                /* TODO(jacqueline8711) load the last messages when joining the chat
                 chatMessageViewModel.getNewMessages(room.getId(), verification,
                                                     context instanceof ChatMessageViewModel.DataLoadInterface ?
                                                     (ChatMessageViewModel.DataLoadInterface)context : null);
                 Utils.log("Loading some messages for a newly joined chatroom");*/
-            } else {
-                ChatRoomDbRow chatRoom = new ChatRoomDbRow(room.getId(), roomName, "", semester, 1, 0,
-                                                           "", room.getMembers(), -1);
-                chatRoomDao.replaceRoom(chatRoom);
             }
         }
 
@@ -161,7 +161,8 @@ public class ChatRoomController implements Card.ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
         // Get all of the users lectures and save them as possible chat rooms
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), context, true);
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler =
+                new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), context, true);
         Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
         if (lecturesList.isPresent()) {
             List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();

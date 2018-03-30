@@ -68,7 +68,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Shows an ongoing chat conversation
+ * Shows an ongoing chat conversation.
  * <p/>
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
@@ -77,7 +77,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
 
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
-    private static final int MAX_EDIT_TIMESPAN = 120000;
+    //private static final int MAX_EDIT_TIMESPAN = 120000;
 
     public static ChatRoom mCurrentOpenChatRoom; // determines whether there will be a notification or not
     private final Handler mUpdateHandler = new Handler();
@@ -85,7 +85,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     private final CompositeDisposable mDisposable = new CompositeDisposable();
 
     /**
-     * UI elements
+     * UI elements.
      */
     private ListView lvMessageHistory;
     private ChatHistoryAdapter chatHistoryAdapter;
@@ -188,7 +188,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
      */
     private void handleRoomBroadcast(GCMChat extras) {
 
-        if ((extras.getRoom() != currentChatRoom.getId() || chatHistoryAdapter == null)) {
+        if (extras.getRoom() != currentChatRoom.getId() || chatHistoryAdapter == null) {
             return;
         }
 
@@ -353,7 +353,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     }
 
     private void sendMessage(String text) {
-        Utils.log(currentChatRoom.getId() + "");
 
         if (chatHistoryAdapter.mEditedItem == null) {
             final ChatMessage message = new ChatMessage(text, currentChatMember);
@@ -376,7 +375,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     }
 
     /**
-     * Sets the actionbar title to the current chat room
+     * Sets the actionbar title to the current chat room.
      */
     private void getIntentData() {
         Bundle extras = getIntent().getExtras();
@@ -469,7 +468,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     }
 
     /**
-     * When user confirms the leave dialog send the request to the server
+     * When user confirms the leave dialog send the request to the server.
      *
      * @param dialog Dialog handle
      * @param which  The users choice (ignored because this is only called when the user confirms)
@@ -525,7 +524,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         //Get the correct message
         ChatMessage message = chatHistoryAdapter.getItem(positionActual);
 
-        // TODO If we are in a certain timespan and its the users own message allow editing
+        // TODO(jacqueline8711): If we are in a certain timespan and its the users own message allow editing
         /*if ((System.currentTimeMillis() - message.getTimestampDate()
                            .getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember()
                            .getId() == currentChatMember.getId()) {

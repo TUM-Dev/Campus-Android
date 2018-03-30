@@ -37,6 +37,9 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 
+/**
+ * Creates/modifies the notification when there is a new chat message.
+ */
 public class ChatNotification extends GenericNotification implements ChatMessageViewModel.DataLoadInterface {
 
     private static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
@@ -170,7 +173,7 @@ public class ChatNotification extends GenericNotification implements ChatMessage
             // GCMNotification sound
             Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
 
-            /* TODO Create the reply action and add the remote input
+            /* TODO(jacqueline8711): Create the reply action and add the remote input
 
             String replyLabel = context.getResources().getString(R.string.reply_label);
 
@@ -178,7 +181,9 @@ public class ChatNotification extends GenericNotification implements ChatMessage
                     .setLabel(replyLabel)
                     .build();
 
-            NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.ic_reply, context.getString(R.string.reply_label), contentIntent)
+            NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.ic_reply,
+                                                                                    context.getString(R.string.reply_label),
+                                                                                    contentIntent)
                             .addRemoteInput(remoteInput)
                             .build();*/
 
