@@ -16,8 +16,6 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.other.reporting.bugreport.G;
-import de.tum.in.tumcampusapp.component.other.reporting.bugreport.Util;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
@@ -72,14 +70,6 @@ public class DownloadService extends JobIntentService {
      * note, that only one concurrent download() is possible with a static synchronized method!
      */
     private static synchronized void download(Intent intent, DownloadService service) {
-        //Set the app version if not set
-        PackageInfo pi = Util.getPackageInfo(service);
-        if (pi != null) {
-            G.appVersion = pi.versionName; // Version
-            G.appPackage = pi.packageName; // Package name
-            G.appVersionCode = pi.versionCode; //Version code e.g.: 45
-        }
-
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
 
         // No action: leave service
