@@ -42,6 +42,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         TextView tvMembers;
         TextView tvLastmsg;
         LinearLayout llAdditionalInfo;
+        TextView tvUnreadCounter;
 
     }
 
@@ -69,6 +70,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
             holder.tvMembers = listItem.findViewById(R.id.tvMembers);
             holder.tvLastmsg = listItem.findViewById(R.id.tvLastmsg);
             holder.llAdditionalInfo = listItem.findViewById(R.id.llAdditionalInfo);
+            holder.tvUnreadCounter = listItem.findViewById(R.id.nrUnreadMessages);
             listItem.findViewById(R.id.tvTypeSWSSemester)
                     .setVisibility(View.GONE);
 
@@ -79,6 +81,13 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         holder.tvLectureName.setText(room.getChatRoomDbRow()
                                          .getName());
         holder.tvDozent.setText(room.getText());
+
+        if (room.getNrUnread() > 0 && holder.tvUnreadCounter != null){
+            holder.tvUnreadCounter.setVisibility(View.VISIBLE);
+            holder.tvUnreadCounter.setText(room.getNrUnread() >= 25 ? "25+" : room.getNrUnread() + "");
+        } else {
+            holder.tvUnreadCounter.setVisibility(View.GONE);
+        }
 
         if (showDateAndNumber) {
             holder.tvMembers.setText(String.format(Locale.getDefault(), "%d", room.getChatRoomDbRow()
@@ -106,7 +115,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
             holder = (HeaderViewHolder) convertview.getTag();
         }
         //set header text as first char in name
-        ChatRoomAndLastMessage item = (ChatRoomAndLastMessage) getItem(pos);
+        ChatRoomAndLastMessage item = getItem(pos);
         String semester = item.getChatRoomDbRow()
                               .getSemester();
         if (semester.isEmpty()) {
@@ -118,7 +127,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
 
     @Override
     public long getHeaderId(int i) {
-        ChatRoomAndLastMessage item = (ChatRoomAndLastMessage) getItem(i);
+        ChatRoomAndLastMessage item = getItem(i);
         String semester = item.getChatRoomDbRow()
                               .getSemester();
         if (!filters.contains(semester)) {

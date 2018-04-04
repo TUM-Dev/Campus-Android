@@ -127,10 +127,11 @@ object Const {
     const val REFRESH_CARDS = "refresh_cards"
     const val EDUROAM_SSID = "eduroam"
 
+    const val CHAT_BROADCAST_NAME = "chat-message-received"
+  
     const val EVENT_TITLE = "pTitel"
     const val EVENT_COMMENT = "pAnmerkung"
     const val EVENT_START = "pVon"
     const val EVENT_END = "pBis"
     const val EVENT_NR = "pTerminNr"
-
 }

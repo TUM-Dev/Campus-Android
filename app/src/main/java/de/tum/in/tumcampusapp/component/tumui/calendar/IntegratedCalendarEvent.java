@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
+import android.content.Context;
 import android.graphics.Color;
 
 import com.alamkanak.weekview.WeekViewEvent;
@@ -17,14 +18,14 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private final String location;
     private boolean firstOnDay;
 
-    IntegratedCalendarEvent(CalendarItem calendarItem) {
+    public IntegratedCalendarEvent(CalendarItem calendarItem, Context context) {
         super(Long.parseLong(calendarItem.getNr()),
               calendarItem.getFormattedTitle(),
               calendarItem.getEventStart(),
               calendarItem.getEventEnd());
 
         this.location = calendarItem.getEventLocation();
-        this.setColor(calendarItem.getEventColor());
+        this.setColor(calendarItem.getEventColor(context));
     }
 
     public IntegratedCalendarEvent(long id, String title, Calendar startTime, Calendar endTime, String location, int color) {

@@ -366,7 +366,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
             List<CalendarItem> calendarItems = calendarController.getFromDbForDate(new Date(calendar.getTimeInMillis()));
             for (CalendarItem calendarItem : calendarItems) {
-                events.add(new IntegratedCalendarEvent(calendarItem));
+                events.add(new IntegratedCalendarEvent(calendarItem, this));
             }
         }
 

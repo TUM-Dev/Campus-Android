@@ -33,7 +33,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
-import de.tum.in.tumcampusapp.component.other.reporting.bugreport.ExceptionHandler;
 import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
@@ -77,8 +76,6 @@ public class StartupActivity extends AppCompatActivity {
     };
 
     private void init() {
-        //Our own Custom exception handler
-        ExceptionHandler.setup(getApplicationContext());
 
         //Migrate all settings - we somehow ended up having two different shared prefs: join them back together
         Utils.migrateSharedPreferences(this.getApplicationContext());

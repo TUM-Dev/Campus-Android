@@ -128,7 +128,7 @@ public class CalendarController implements Card.ProvidesCard {
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
         List<CalendarItem> calendarItems = calendarDao.getNextDays(from, to, String.valueOf(widgetId));
         for (CalendarItem calendarItem : calendarItems) {
-            calendarEvents.add(new IntegratedCalendarEvent(calendarItem));
+            calendarEvents.add(new IntegratedCalendarEvent(calendarItem, mContext));
         }
 
         return calendarEvents;

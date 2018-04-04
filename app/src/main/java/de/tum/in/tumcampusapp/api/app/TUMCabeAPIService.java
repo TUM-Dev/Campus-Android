@@ -6,7 +6,6 @@ import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.other.reporting.bugreport.model.BugReport;
 import de.tum.in.tumcampusapp.component.other.reporting.stats.model.Statistics;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
@@ -57,7 +56,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_REPORT;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_COORDINATES;
@@ -123,10 +121,6 @@ public interface TUMCabeAPIService {
 
     @GET(API_LOCATIONS + "{locationId}/")
     Call<GCMNotificationLocation> getLocation(@Path("locationId") int locationId);
-
-    //Bug Reports
-    @PUT(API_REPORT)
-    Call<List<String>> putBugReport(@Body BugReport r);
 
     //Statistics
     @PUT(API_STATISTICS)
