@@ -604,6 +604,7 @@ public final class Utils {
      * @param res the resource id of the drawable we want
      * @return bitmap of the xml vector graphic
      */
+
     public static Bitmap getLargeIcon(Context c, int res) {
         Drawable icon = c.getResources()
                          .getDrawable(res);
