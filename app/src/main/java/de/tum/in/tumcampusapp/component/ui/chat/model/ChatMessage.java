@@ -29,7 +29,6 @@ public class ChatMessage {
     private String timestamp;
     private String signature;
     private ChatMember member;
-    private boolean read;
     @ColumnInfo(name = "sending")
     private int sendingStatus;
 
@@ -180,18 +179,5 @@ public class ChatMessage {
     public final void setNow() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
         timestamp = formatter.format(new Date());
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    @Ignore
-    public boolean getRead() {
-        return read;
     }
 }

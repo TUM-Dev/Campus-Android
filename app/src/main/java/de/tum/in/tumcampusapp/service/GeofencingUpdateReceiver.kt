@@ -28,8 +28,7 @@ class GeofencingUpdateReceiver : BroadcastReceiver() {
         val geofenceTransition = geofencingEvent.geofenceTransition
 
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-            val service = Intent(context, BackgroundService::class.java)
-            context.startService(service)
+            BackgroundService.enqueueWork(context, Intent())
             Utils.setSetting(context, Const.BACKGROUND_MODE, true)
             Utils.logwithTag(TAG, "Geofencing detected user entering munich, " +
                     "enabling Auto updates")

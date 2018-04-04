@@ -603,7 +603,7 @@ public final class Utils {
      * @return
      */
     public static Bitmap getLargeIcon(Context c, int res){
-        Drawable icon = c.getResources().getDrawable(R.drawable.ic_cutlery);
+        Drawable icon = c.getResources().getDrawable(res);
         Bitmap bitmap = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());

@@ -21,7 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import static de.tum.in.tumcampusapp.utils.Const.SEND_MESSAGE_SERVICE_JOB_ID;
 
 /**
- * Service used to silence the mobile during lectures
+ * Service used to send chat messages.
  */
 public class SendMessageService extends JobIntentService {
 
@@ -31,7 +31,7 @@ public class SendMessageService extends JobIntentService {
      * Interval in milliseconds to check for current lectures
      */
 
-    static void enqueueWork(Context context, Intent work) {
+    public static void enqueueWork(Context context, Intent work) {
         enqueueWork(context, SendMessageService.class, SEND_MESSAGE_SERVICE_JOB_ID, work);
     }
 

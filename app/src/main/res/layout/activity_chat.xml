@@ -28,7 +28,8 @@
                 android:dividerHeight="5.0sp"
                 android:stackFromBottom="true"
                 android:transcriptMode="normal"
-                />
+                android:background="@drawable/chat_background"
+                android:paddingBottom="3dp"/>
 
             <RelativeLayout
                 android:id="@id/relativeLayout"

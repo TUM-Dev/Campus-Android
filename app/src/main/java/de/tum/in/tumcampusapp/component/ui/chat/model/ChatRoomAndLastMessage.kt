@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.chat.model
 
+import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Embedded
 
 
@@ -9,4 +10,7 @@ class ChatRoomAndLastMessage {
 
     var text: String? = null
     var timestamp: String? = null
+
+    @ColumnInfo(name = "nr_unread")
+    var nrUnread: Int = 0
 }
