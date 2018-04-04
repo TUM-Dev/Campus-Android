@@ -75,9 +75,8 @@ public final class Helper {
 
     private static Interceptor getDeviceInterceptor(final Context c) {
         //Clearly identify all requests from this app
-        final StringBuilder userAgent = new StringBuilder("TCA Client");
-        userAgent.append(' ')
-                 .append(Utils.getAppVersion(c));
+        final StringBuilder userAgent = new StringBuilder("TCA Client ");
+        userAgent.append(Utils.getAppVersion(c));
 
         return chain -> {
             Utils.log("Fetching: " + chain.request()
