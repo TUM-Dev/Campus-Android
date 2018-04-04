@@ -671,7 +671,7 @@
             android:name=".component.tumui.calendar.CalendarController$QueryLocationsService"
             android:exported="false"/>
         <service
-            android:name=".service.GcmReceiverService"
+            android:name=".service.FcmReceiverService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

@@ -56,6 +56,7 @@ import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
 import de.tum.in.tumcampusapp.database.migrations.Migration4to5;
+import de.tum.in.tumcampusapp.database.migrations.Migration6to7;
 import de.tum.in.tumcampusapp.database.migrations.Migration5to6;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
@@ -66,7 +67,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 6, entities = {
+@Database(version = 7, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -98,7 +99,8 @@ public abstract class TcaDb extends RoomDatabase {
             new Migration2to3(),
             new Migration3to4(),
             new Migration4to5(),
-            new Migration5to6()
+            new Migration5to6(),
+            new Migration6to7()
     };
 
     private static TcaDb instance;

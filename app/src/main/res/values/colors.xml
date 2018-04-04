@@ -18,6 +18,10 @@
     <color name="tum_A400">#2A7FC8</color>
     <color name="tum_A700">#004C8E</color>
 
+    <!-- official TUM accent colors (style guide) -->
+    <color name="tum_orange">#E37222</color>
+    <color name="tum_green">#A2AD00</color>
+
     <color name="text_light_blue">@color/tum_400</color>
     <color name="text_light_gray">#C0C0C0</color>
     <color name="text_dark_gray">#a5a5a5</color>
@@ -34,8 +38,8 @@
     <color name="borderless_button_normal">@color/tum_300</color>
     <color name="borderless_button_pressed">@color/tum_400</color>
 
-    <color name="chat_border">#E0E0E0</color>
-    <color name="chat_outgoing">#D1EAFF</color>
+    <color name="chat_incoming">#FFFFFF</color>
+    <color name="chat_outgoing">#c5e775</color>
 
     <color name="launcher_background">#0064BB</color>
 

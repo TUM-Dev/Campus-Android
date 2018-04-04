@@ -521,6 +521,9 @@ Signature: %5$s</string>
     <string name="filter_lecture_SELECTED_LECTURES">Selected Lectures</string>
     <string name="show_answer">Show Answer</string>
 
+    <string name="card_message_title" translatable="false">%s (%d)</string>
+    <string name="card_message_line" translatable="false"><b>%s</b>: %s</string>
+
     <!-- Create personal Appointment (Calendar) -->
     <string name="comment">Comment</string>
     <string name="from">from</string>
@@ -543,4 +546,5 @@ Signature: %5$s</string>
 
     <string name="token_limit_reached">Token limit was reached (max 10). You have delete a Token in TUMonline before you can continue.</string>
     <string name="back">Back</string>
+
 </resources>

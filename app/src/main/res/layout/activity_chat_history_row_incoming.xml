@@ -17,7 +17,7 @@
         android:id="@+id/tvUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#0099cc"
+        android:textColor="@color/tum_300"
         android:textSize="12sp"
         android:textStyle="bold"/>
 

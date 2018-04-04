@@ -41,7 +41,6 @@
                 android:paddingEnd="8dp"
                 android:paddingRight="0dp"
                 android:textSize="12sp"
-                android:textColor="@color/text_light_gray"
                 android:includeFontPadding="false"
                 tools:ignore="RtlSymmetry"/>
 
@@ -59,8 +58,8 @@
                 android:layout_margin="0dp"
                 android:padding="0dp"
                 app:srcCompat="@drawable/ic_check"
-                android:tint="@color/text_light_gray"
-                android:textColor="@color/text_light_gray"
+                android:tint="@color/color_primary"
+                android:textColor="@color/color_primary"
                 android:layout_weight="1"
                 android:visibility="gone"/>
         </LinearLayout>

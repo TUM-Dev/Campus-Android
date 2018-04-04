@@ -127,9 +127,10 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
                 Calendar endCal = Calendar.getInstance();
                 endCal.setTime(DateUtils.getDateTime(schedule.getEnd()));
 
-                IntegratedCalendarEvent calendarEvent = new IntegratedCalendarEvent(schedule.getEvent_id(),
-                                                                                    schedule.getTitle(), startCal, endCal, "",
-                                                                                    IntegratedCalendarEvent.getDisplayColorFromColor(0xff28921f));
+                IntegratedCalendarEvent calendarEvent =
+                        new IntegratedCalendarEvent(schedule.getEvent_id(), schedule.getTitle(), startCal, endCal, "",
+                                                    IntegratedCalendarEvent.getDisplayColorFromColor(
+                                                            getContext().getResources().getColor(R.color.event_lecture)));
 
                 events.add(calendarEvent);
             }
