@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -40,7 +39,7 @@ import java.util.regex.Pattern;
 import de.tum.in.tumcampusapp.BuildConfig;
 
 /**
- * Class for common helper functions used by a lot of classes
+ * Class for common helper functions used by a lot of classes.
  */
 public final class Utils {
     private static final String LOGGING_REGEX = "[a-zA-Z0-9.]+\\.";
@@ -506,9 +505,8 @@ public final class Utils {
      */
     public static int getAppVersion(Context context) {
         try {
-            PackageInfo packageInfo = context.getPackageManager()
-                                             .getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionCode;
+            return context.getPackageManager()
+                          .getPackageInfo(context.getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             // should never happen
         }
@@ -598,7 +596,7 @@ public final class Utils {
     }
 
     /**
-     * Creates a bitmap for a vector image (.xml) to be able to use it for notifications
+     * Creates a bitmap for a vector image (.xml) to be able to use it for notifications.
      *
      * @param c   the current context
      * @param res the resource id of the drawable we want

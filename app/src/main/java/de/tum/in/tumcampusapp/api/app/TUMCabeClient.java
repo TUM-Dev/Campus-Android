@@ -50,6 +50,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 
+/**
+ * Proxy class for Retrofit client to our API hosted @app.tum.de
+ */
 public final class TUMCabeClient {
 
     private static final String API_HOSTNAME = Const.API_HOSTNAME;
