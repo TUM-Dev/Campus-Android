@@ -71,7 +71,7 @@ android {
 
 def androidSupportVersion = '27.1.0'
 def retrofitVersion = '2.3.0'
-def firebaseVersion = '12.0.0'
+def firebaseVersion = '12.0.1'
 def roomVersion = '1.0.0'
 
 configurations.all {
