@@ -34,6 +34,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,6 +49,43 @@ public final class Utils {
 
     private Utils() {
         // Utils is a utility class
+    }
+
+    public static void migrateSharedPreferences(Context context) {
+        SharedPreferences prefsLegacy = context.getSharedPreferences("internal_prefs", Context.MODE_PRIVATE);
+        Map<String, ?> entries = prefsLegacy.getAll();
+
+        if (entries.isEmpty()) {
+            return;
+        }
+
+        SharedPreferences.Editor prefsEditor = PreferenceManager.getDefaultSharedPreferences(context)
+                                                                .edit();
+
+        for (Map.Entry<String, ?> entry : entries.entrySet()) {
+            Object object = entry.getValue();
+            if (object instanceof Boolean) {
+                prefsEditor.putBoolean(entry.getKey(), (Boolean) object);
+            }
+            if (object instanceof String) {
+                prefsEditor.putString(entry.getKey(), (String) object);
+            }
+            if (object instanceof Integer) {
+                prefsEditor.putInt(entry.getKey(), (Integer) object);
+            }
+            if (object instanceof Float) {
+                prefsEditor.putFloat(entry.getKey(), (Float) object);
+            }
+            if (object instanceof Long) {
+                prefsEditor.putLong(entry.getKey(), (Long) object);
+            }
+        }
+        prefsEditor.apply();
+
+        //Delete any old settings
+        prefsLegacy.edit()
+                   .clear()
+                   .apply();
     }
 
     /**
@@ -96,7 +134,7 @@ public final class Utils {
      * @param c          Context
      * @param key        setting name
      * @param defaultVal default value
-     * @return setting value, "" if undefined
+     * @return setting value, defaultVal if undefined
      */
     public static String getSetting(Context c, String key, String defaultVal) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
@@ -104,7 +142,70 @@ public final class Utils {
     }
 
     /**
-     * Get a value from the default shared preferences
+     * Get a value from the default shared preferences.
+     *
+     * @param c          Context
+     * @param key        setting name
+     * @param defaultVal default value
+     * @return setting value, defaultVal if undefined
+     */
+    public static Long getSettingLong(Context c, String key, Long defaultVal) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        try {
+            return sp.getLong(key, defaultVal);
+        } catch (ClassCastException ignore) {
+            try {
+                return Long.valueOf(sp.getString(key, null));
+            } catch (NumberFormatException ignore2) {
+                return defaultVal;
+            }
+        }
+    }
+
+    /**
+     * Get a value from the default shared preferences.
+     *
+     * @param c          Context
+     * @param key        setting name
+     * @param defaultVal default value
+     * @return setting value, defaultVal if undefined
+     */
+    public static Float getSettingFloat(Context c, String key, Float defaultVal) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        try {
+            return sp.getFloat(key, defaultVal);
+        } catch (ClassCastException ignore) {
+            try {
+                return Float.valueOf(sp.getString(key, null));
+            } catch (NumberFormatException ignore2) {
+                return defaultVal;
+            }
+        }
+    }
+
+    /**
+     * Get a value from the default shared preferences.
+     *
+     * @param c          Context
+     * @param key        setting name
+     * @param defaultVal default value
+     * @return setting value, defaultVal if undefined
+     */
+    public static Integer getSettingInt(Context c, String key, Integer defaultVal) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        try {
+            return sp.getInt(key, defaultVal);
+        } catch (ClassCastException ignore) {
+            try {
+                return Integer.valueOf(sp.getString(key, null));
+            } catch (NumberFormatException ignore2) {
+                return defaultVal;
+            }
+        }
+    }
+
+    /**
+     * Get a value from the default shared preferences.
      *
      * @param c         Context
      * @param key       setting name
@@ -121,7 +222,7 @@ public final class Utils {
     }
 
     /**
-     * Return the boolean value of a setting
+     * Return the boolean value of a setting.
      *
      * @param c          Context
      * @param name       setting name
@@ -129,8 +230,8 @@ public final class Utils {
      * @return true if setting was checked, else value
      */
     public static boolean getSettingBool(Context c, String name, boolean defaultVal) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-        return sp.getBoolean(name, defaultVal);
+        return PreferenceManager.getDefaultSharedPreferences(c)
+                                .getBoolean(name, defaultVal);
     }
 
     /**
@@ -363,146 +464,6 @@ public final class Utils {
     }
 
     /**
-     * Sets an internal preference's boolean value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Value
-     */
-    public static void setInternalSetting(Context context, String key, boolean value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit()
-             .putBoolean(key, value)
-             .apply();
-    }
-
-    /**
-     * Sets an internal preference's integer value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Value
-     */
-    public static void setInternalSetting(Context context, String key, int value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit()
-             .putInt(key, value)
-             .apply();
-    }
-
-    /**
-     * Sets an internal preference's long value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Value
-     */
-    public static void setInternalSetting(Context context, String key, long value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit()
-             .putLong(key, value)
-             .apply();
-    }
-
-    /**
-     * Sets an internal preference's string value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Value
-     */
-    public static void setInternalSetting(Context context, String key, String value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit()
-             .putString(key, value)
-             .apply();
-    }
-
-    /**
-     * Sets an internal preference's string value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Value
-     */
-    public static void setInternalSetting(Context context, String key, float value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        prefs.edit()
-             .putFloat(key, value)
-             .apply();
-    }
-
-    /**
-     * Gets an internal preference's boolean value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Default value
-     * @return The value of the setting or the default value,
-     * if no setting with the specified key exists
-     */
-    public static boolean getInternalSettingBool(Context context, String key, boolean value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        return prefs.getBoolean(key, value);
-    }
-
-    /**
-     * Gets an internal preference's integer value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Default value
-     * @return The value of the setting or the default value,
-     * if no setting with the specified key exists
-     */
-    public static int getInternalSettingInt(Context context, String key, int value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        return prefs.getInt(key, value);
-    }
-
-    /**
-     * Gets an internal preference's long value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Default value
-     * @return The value of the setting or the default value,
-     * if no setting with the specified key exists
-     */
-    public static long getInternalSettingLong(Context context, String key, long value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        return prefs.getLong(key, value);
-    }
-
-    /**
-     * Gets an internal preference's string value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Default value
-     * @return The value of the setting or the default value,
-     * if no setting with the specified key exists
-     */
-    public static String getInternalSettingString(Context context, String key, String value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        return prefs.getString(key, value);
-    }
-
-    /**
-     * Gets an internal preference's float value
-     *
-     * @param context Context
-     * @param key     Key
-     * @param value   Default value
-     * @return The value of the setting or the default value,
-     * if no setting with the specified key exists
-     */
-    public static float getInternalSettingFloat(Context context, String key, float value) {
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
-        return prefs.getFloat(key, value);
-    }
-
-    /**
      * @return Application's version code from the {@code PackageManager}.
      */
     public static int getAppVersion(Context context) {
@@ -572,25 +533,26 @@ public final class Utils {
         return ((float) level / (float) scale) * 100.0f;
     }
 
-    public static String extractRoomNumberFromLocation(String location){
+    public static String extractRoomNumberFromLocation(String location) {
         Pattern pattern = Pattern.compile("\\((.*?)\\)");
         Matcher matcher = pattern.matcher(location);
         if (matcher.find()) {
             return matcher.group(1);
-        }
-        else {
+        } else {
             return location;
         }
     }
 
     /**
-     * Creates a bitmap for a vector image (.xml) to be able to use it for notifications
+     * Creates a bitmap for a vector image (.xml) to be able to use it for notifications.
+     *
      * @param c
      * @param res
      * @return
      */
-    public static Bitmap getLargeIcon(Context c, int res){
-        Drawable icon = c.getResources().getDrawable(R.drawable.ic_cutlery);
+    public static Bitmap getLargeIcon(Context c, int res) {
+        Drawable icon = c.getResources()
+                         .getDrawable(R.drawable.ic_cutlery);
         Bitmap bitmap = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());

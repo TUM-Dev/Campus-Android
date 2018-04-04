@@ -84,10 +84,11 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         this.addDebugRow(debugInfos, "LRZ ID", sp.getString(Const.LRZ_ID, ""))
         this.addDebugRow(debugInfos, "TUM Access token", sp.getString(Const.ACCESS_TOKEN, ""))
         this.addDebugRow(debugInfos, "Bugreports", sp.getBoolean(Const.BUG_REPORTS, false).toString() + " ")
-        this.addDebugRow(debugInfos, "REG ID", Utils.getInternalSettingString(this, Const.GCM_REG_ID, ""))
-        this.addDebugRow(debugInfos, "REG Transmission", DateUtils.getRelativeDateTimeString(this, Utils.getInternalSettingLong(this, Const.GCM_REG_ID_LAST_TRANSMISSION, 0),
-                DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0)
-                .toString())
+
+        this.addDebugRow(debugInfos, "REG ID", Utils.getSetting(this, Const.GCM_REG_ID, ""))
+        this.addDebugRow(debugInfos, "REG Transmission", DateUtils.getRelativeDateTimeString(this,
+                Utils.getSettingLong(this, Const.GCM_REG_ID_LAST_TRANSMISSION, 0),
+                DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0).toString())
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
             this.addDebugRow(debugInfos, "VersionCode", packageInfo.versionCode.toString())

@@ -38,8 +38,8 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
     public String register() throws IOException {
         FirebaseInstanceId iid = FirebaseInstanceId.getInstance();
         String token = iid.getToken();
-        Utils.setInternalSetting(mContext, Const.GCM_INSTANCE_ID, iid.getId());
-        Utils.setInternalSetting(mContext, Const.GCM_TOKEN_ID, token);
+        Utils.setSetting(mContext, Const.GCM_INSTANCE_ID, iid.getId());
+        Utils.setSetting(mContext, Const.GCM_TOKEN_ID, token);
 
         return token;
     }
@@ -48,11 +48,11 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         String refreshedToken = FirebaseInstanceId.getInstance()
                                                   .getToken();
-        Utils.setInternalSetting(this, Const.GCM_TOKEN_ID, refreshedToken);
+        Utils.setSetting(this, Const.GCM_TOKEN_ID, refreshedToken);
     }
 
     public String getCurrentToken() {
-        return Utils.getInternalSettingString(this.mContext, Const.GCM_TOKEN_ID, "");
+        return Utils.getSetting(this.mContext, Const.GCM_TOKEN_ID, "");
     }
 
     public void checkSetup() {
@@ -62,8 +62,9 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
         if (token.isEmpty()) {
             this.registerInBackground();
         } else {
-            // If the regId is not empty, we still need to check whether it was successfully sent to the TCA server, because this can fail due to user not confirming their private key
-            if (!Utils.getInternalSettingBool(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false)) {
+            // If the regId is not empty, we still need to check whether it was successfully sent to the
+            // TCA server, because this can fail due to user not confirming their private key
+            if (!Utils.getSettingBool(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false)) {
                 this.sendTokenToBackend(token);
             }
 
@@ -81,14 +82,14 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
     private void registerInBackground() {
         try {
             //Register a new id
-            String token = GcmIdentificationService.this.register();
+            String token = this.register();
 
             //Reset the lock in case we are updating and maybe failed
-            Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
-            Utils.setInternalSetting(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, new Date().getTime());
+            Utils.setSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
+            Utils.setSetting(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, new Date().getTime());
 
             // Let the server know of our new registration id
-            GcmIdentificationService.this.sendTokenToBackend(token);
+            this.sendTokenToBackend(token);
 
             Utils.log("GCM registration successful");
         } catch (IOException ex) {
@@ -128,7 +129,7 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
 
                             // Store in shared preferences the information that the GCM registration id
                             // was sent to the TCA server successfully
-                            Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, true);
+                            Utils.setSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, true);
                         } else {
                             Utils.logv("Uploading GCM registration failed...");
                         }
@@ -137,7 +138,7 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
                     @Override
                     public void onFailure(@NonNull Call<TUMCabeStatus> call, @NonNull Throwable t) {
                         Utils.log(t, "Failure uploading GCM registration id");
-                        Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
+                        Utils.setSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
                     }
                 });
     }
@@ -149,7 +150,7 @@ public class GcmIdentificationService extends FirebaseInstanceIdService {
      */
     private void checkRegisterIdUpdate(String regId) {
         //Regularly (once a day) update the server with the reg id
-        long lastTransmission = Utils.getInternalSettingLong(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, 0);
+        long lastTransmission = Utils.getSettingLong(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, 0L);
         Date now = new Date();
         if (now.getTime() - 24 * 3600000 > lastTransmission) {
             this.sendTokenToBackend(regId);

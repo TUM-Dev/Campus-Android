@@ -71,7 +71,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         // Test if user has eduroam configured already
         boolean eduroamConfiguredAlready = EduroamController.getEduroamConfig(context) != null || NetUtils.isConnected(context);
 
-        boolean wifiScansEnabled = Utils.getInternalSettingBool(context, Const.WIFI_SCANS_ALLOWED, false);
+        boolean wifiScansEnabled = Utils.getSettingBool(context, Const.WIFI_SCANS_ALLOWED, false);
         boolean nextScanScheduled = false;
 
         WifiScanHandler wifiScanHandler = WifiScanHandler.getInstance(context);
@@ -99,7 +99,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             //scheduled. This setting can be used as additional way to limit battery consumption and leaves
             //the user more freedom in deciding, when to scan.
             float currentBattery = Utils.getBatteryLevel(context);
-            float minimumBattery = Utils.getInternalSettingFloat(context, Const.WIFI_SCAN_MINIMUM_BATTERY_LEVEL, 50.0f);
+            float minimumBattery = Utils.getSettingFloat(context, Const.WIFI_SCAN_MINIMUM_BATTERY_LEVEL, 50.0f);
             if (currentBattery > minimumBattery) {
                 wifiScanHandler.startRepetition();
                 Utils.log("WifiScanHandler rescheduled");
@@ -109,8 +109,8 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         }
 
         //???
-        if (!Utils.getInternalSettingBool(context, SHOULD_SHOW, true)) {
-            Utils.setInternalSetting(context, SHOULD_SHOW, true);
+        if (!Utils.getSettingBool(context, SHOULD_SHOW, true)) {
+            Utils.setSetting(context, SHOULD_SHOW, true);
         }
     }
 
@@ -142,7 +142,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
      */
     static void showNotification(Context context) {
         // If previous notification is still visible
-        if (!Utils.getInternalSettingBool(context, SHOULD_SHOW, true)) {
+        if (!Utils.getSettingBool(context, SHOULD_SHOW, true)) {
             return;
         }
 
@@ -171,7 +171,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         // Build GCMNotification with GCMNotification Manager
         notificationmanager.notify(123, builder.build());
 
-        Utils.setInternalSetting(context, SHOULD_SHOW, false);
+        Utils.setSetting(context, SHOULD_SHOW, false);
 
     }
 

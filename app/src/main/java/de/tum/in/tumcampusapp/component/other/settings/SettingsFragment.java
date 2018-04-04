@@ -248,14 +248,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         TcaDb.resetDb(mContext);
 
         // delete local calendar
-        Utils.setInternalSetting(mContext, Const.SYNC_CALENDAR, false);
+        Utils.setSetting(mContext, Const.SYNC_CALENDAR, false);
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             CalendarController.deleteLocalCalendar(mContext);
         }
 
         Utils.showToast(mContext, R.string.success_clear_cache);
-        Utils.setInternalSetting(mContext, Const.EVERYTHING_SETUP, false);
+        Utils.setSetting(mContext, Const.EVERYTHING_SETUP, false);
 
         mContext.finish();
         startActivity(new Intent(mContext, StartupActivity.class));

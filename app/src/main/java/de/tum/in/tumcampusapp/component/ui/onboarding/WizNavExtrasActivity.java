@@ -146,7 +146,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             new ChatRoomController(this).replaceIntoRooms(rooms);
 
             //Store that this key was activated
-            Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
+            Utils.setSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
 
             return member;
         } catch (IOException | NoPrivateKey e) {

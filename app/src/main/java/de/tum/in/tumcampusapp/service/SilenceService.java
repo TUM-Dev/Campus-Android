@@ -100,17 +100,20 @@ public class SilenceService extends JobIntentService {
         List<CalendarItem> currentLectures = calendarController.getCurrentFromDb();
         Utils.log("Current lectures: " + currentLectures.size());
 
-        if (currentLectures.size() == 0 || isDoNotDisturbMode()) {
-            if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
+        if (currentLectures.isEmpty() || isDoNotDisturbMode()) {
+            if (Utils.getSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
                 // default: old state
                 Utils.log("set ringer mode to old state");
                 am.setRingerMode(Integer.parseInt(
                         Utils.getSetting(this, Const.SILENCE_OLD_STATE,
                                          Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
-                Utils.setInternalSetting(this, Const.SILENCE_ON, false);
+                Utils.setSetting(this, Const.SILENCE_ON, false);
 
                 List<CalendarItem> nextCalendarItems = calendarController.getNextCalendarItems();
-                if (nextCalendarItems.size() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+
+                //Check if we have a "next" item in the database and
+                // update the refresh interval until then. Otherwise use default interval.
+                if (!nextCalendarItems.isEmpty()) {
                     // refresh when next event has started
                     waitDuration = getWaitDuration(nextCalendarItems.get(0)
                                                                     .getDtstart());
@@ -118,12 +121,12 @@ public class SilenceService extends JobIntentService {
             }
         } else {
             // remember old state if just activated ; in doubt dont change
-            if (!Utils.getInternalSettingBool(this, Const.SILENCE_ON, true)) {
+            if (!Utils.getSettingBool(this, Const.SILENCE_ON, true)) {
                 Utils.setSetting(this, Const.SILENCE_OLD_STATE, am.getRingerMode());
             }
 
             // if current lecture(s) found, silence the mobile
-            Utils.setInternalSetting(this, Const.SILENCE_ON, true);
+            Utils.setSetting(this, Const.SILENCE_ON, true);
 
             // Set into silent mode
             String mode = Utils.getSetting(this, "silent_mode_set_to", "0");

@@ -54,7 +54,8 @@ public class StartSyncReceiver extends BroadcastReceiver {
 
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
         SilenceService.enqueueWork(context, new Intent());
-        if (!"android.net.wifi.WIFI_STATE_CHANGED".equals(intent.getAction()) && Utils.getInternalSettingBool(context, Const.WIFI_SCANS_ALLOWED, false)) {
+        if (!"android.net.wifi.WIFI_STATE_CHANGED".equals(intent.getAction())
+            && Utils.getSettingBool(context, Const.WIFI_SCANS_ALLOWED, false)) {
             SendWifiMeasurementService.enqueueWork(context, new Intent());
         }
     }

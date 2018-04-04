@@ -52,7 +52,6 @@ object Const {
     const val GCM_INSTANCE_ID = "gcm_instance_id"
     const val GCM_TOKEN_ID = "gcm_token_id"
     const val APP_LAUNCHES = "app_launches"
-    const val INTERNAL_PREFS = "internal_prefs"
     const val SYNC_CALENDAR = "sync_calendar"
     const val PREFERENCE_SCREEN = "preference_screen"
     const val P_TOKEN = "pToken"
