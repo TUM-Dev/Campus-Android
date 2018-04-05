@@ -90,9 +90,8 @@ public final class TUMCabeClient {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
-        Gson gson = new GsonBuilder().
-                registerTypeAdapter(Date.class,new DateSerializer())
-                .create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer())
+                                     .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
         builder.client(Helper.getOkClient(c));
         service = builder.build()
@@ -132,12 +131,16 @@ public final class TUMCabeClient {
     }
 
     public List<StudyCard> getStudyCards() throws IOException {
-        return service.getStudyCards().execute().body();
+        return service.getStudyCards()
+                      .execute()
+                      .body();
     }
 
     public StudyCard addStudyCard(StudyCard card, ChatVerification verification) throws IOException {
         verification.setData(card);
-        return service.addStudyCard(verification).execute().body();
+        return service.addStudyCard(verification)
+                      .execute()
+                      .body();
     }
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
@@ -305,20 +308,24 @@ public final class TUMCabeClient {
     }
 
     public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
-        service.sendFeedback(feedback).enqueue(cb);
-        for(int i = 0; i < imagePaths.length; i++){
+        service.sendFeedback(feedback)
+               .enqueue(cb);
+
+        for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
-            service.sendFeedbackImage(body, i+1, feedback.getId()).enqueue(cb);
+
+            service.sendFeedbackImage(body, i + 1, feedback.getId())
+                   .enqueue(cb);
         }
     }
+
     public Observable<List<Cafeteria>> getCafeterias() {
         return service.getCafeterias();
     }
 
-
-    public Observable<List<Kino>> getKinos(String lastId){
+    public Observable<List<Kino>> getKinos(String lastId) {
         return service.getKinos(lastId);
     }
 }
