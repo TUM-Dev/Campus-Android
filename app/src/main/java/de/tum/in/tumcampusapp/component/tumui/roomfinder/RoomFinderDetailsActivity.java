@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
@@ -214,17 +215,18 @@ public class RoomFinderDetailsActivity
         TUMCabeClient.getInstance(this)
                      .fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
                          @Override
-                         public void onResponse(Call<List<RoomFinderMap>> call, Response<List<RoomFinderMap>> response) {
-                             try {
-                                 onMapListLoadFinished(Optional.of(response.body()));
-                             } catch (NullPointerException e) {
-                                 Utils.log(e);
+                         public void onResponse(@NonNull Call<List<RoomFinderMap>> call, @NonNull Response<List<RoomFinderMap>> response) {
+                             List<RoomFinderMap> data = response.body();
+                             if (!response.isSuccessful() || data == null) {
                                  onMapListLoadFailed();
+                                 return;
                              }
+
+                             onMapListLoadFinished(Optional.of(data));
                          }
 
                          @Override
-                         public void onFailure(Call<List<RoomFinderMap>> call, Throwable throwable) {
+                         public void onFailure(@NonNull Call<List<RoomFinderMap>> call, @NonNull Throwable throwable) {
                              onMapListLoadFailed();
                          }
                      });
@@ -257,18 +259,18 @@ public class RoomFinderDetailsActivity
         TUMCabeClient.getInstance(this)
                      .fetchCoordinates(room.getArch_id(), new Callback<RoomFinderCoordinate>() {
                          @Override
-                         public void onResponse(Call<RoomFinderCoordinate> call, Response<RoomFinderCoordinate> response) {
-                             try {
-                                 Optional<Geo> result = LocationManager.convertRoomFinderCoordinateToGeo(response.body());
-                                 onGeoLoadFinished(result);
-                             } catch (NullPointerException e) {
-                                 Utils.log(e);
+                         public void onResponse(@NonNull Call<RoomFinderCoordinate> call, @NonNull Response<RoomFinderCoordinate> response) {
+                             RoomFinderCoordinate data = response.body();
+                             if (!response.isSuccessful() || data == null) {
                                  onLoadGeoFailed();
+                                 return;
                              }
+
+                             onGeoLoadFinished(LocationManager.convertRoomFinderCoordinateToGeo(data));
                          }
 
                          @Override
-                         public void onFailure(Call<RoomFinderCoordinate> call, Throwable throwable) {
+                         public void onFailure(@NonNull Call<RoomFinderCoordinate> call, @NonNull Throwable throwable) {
                              onLoadGeoFailed();
                          }
                      });

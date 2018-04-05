@@ -354,7 +354,7 @@ public class FeedbackActivity extends BaseActivity {
         showProgressBarDialog();
         TUMCabeClient client = TUMCabeClient.getInstance(this);
 
-        client.sendFeedback(getFeedback(), picPaths.toArray(new String[0]), new Callback<Success>() {
+        client.sendFeedback(getFeedback(), picPaths.toArray(new String[picPaths.size()]), new Callback<Success>() {
             @Override
             public void onResponse(Call<Success> call, Response<Success> response) {
                 Success success = response.body();
