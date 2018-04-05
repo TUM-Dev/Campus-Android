@@ -59,6 +59,12 @@
                         android:inputType="text"
                         android:padding="@dimen/padding_default"/>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_default"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/tumonline_advantages"/>
                 </LinearLayout>
             </ScrollView>
 
@@ -71,37 +77,14 @@
             android:layout_above="@+id/buttonBar"
             android:background="?android:attr/listDivider"/>
 
-        <LinearLayout
-            android:id="@id/buttonBar"
-            style="@style/ButtonBar"
+        <Button
+            android:layout_alignParentBottom="true"
+            android:id="@+id/buttonBar"
+            style="@style/ButtonBarButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
-
-            <Button
-                style="@style/ButtonBarButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="onClickSkip"
-                android:text="@string/button_skip"/>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="?android:attr/listDivider"/>
-
-            <Button
-                style="@style/ButtonBarButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="onClickNext"
-                android:text="@string/button_next"/>
-        </LinearLayout>
-
+            android:background="?attr/selectableItemBackground"
+            android:onClick="onClickNext"
+            android:text="@string/button_next"/>
     </RelativeLayout>
 </LinearLayout>
