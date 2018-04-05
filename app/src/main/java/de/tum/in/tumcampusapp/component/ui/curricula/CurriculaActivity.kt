@@ -26,7 +26,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView
 class CurriculaActivity : ActivityForLoadingInBackground<Void, List<Curriculum>>(R.layout.activity_curricula), OnItemClickListener {
 
     private val options = HashMap<String, String>()
-    private var curriculumList: ArrayList<Curriculum> = ArrayList()
+    private var curriculumList = ArrayList<Curriculum>()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
