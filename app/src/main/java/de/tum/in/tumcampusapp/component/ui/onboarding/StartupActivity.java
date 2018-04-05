@@ -34,7 +34,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
-import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.DownloadService;
@@ -87,37 +86,6 @@ public class StartupActivity extends AppCompatActivity {
         //Upload stats
         ImplicitCounter.count(this);
         ImplicitCounter.submitCounter(this);
-
-        // For compatibility reasons: big update happened with version 35
-        int prevVersion = Utils.getSettingInt(this, Const.APP_VERSION, 35);
-
-        // get current app version
-        int currentVersion = Utils.getAppVersion(this);
-        boolean newVersion = prevVersion < currentVersion;
-        if (newVersion) {
-            this.setupNewVersion();
-            Utils.setSetting(this, Const.APP_VERSION, currentVersion);
-        }
-
-        // Also First run wizard for setup of id and token
-        // Check the flag if user wants the wizard to open at startup
-        boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
-        String lrzId = Utils.getSetting(this, Const.LRZ_ID, ""); // If new version and LRZ ID is empty, start the full wizard
-
-        if (!hideWizardOnStartup || (newVersion && lrzId.isEmpty())) {
-            startActivity(new Intent(this, WizNavStartActivity.class));
-            finish();
-            return;
-        } else if (newVersion) {
-            Utils.setSetting(this, Const.BACKGROUND_MODE, true);
-            Utils.setSetting(this, CardManager.SHOW_SUPPORT, true);
-
-            Intent intent = new Intent(this, WizNavExtrasActivity.class);
-            intent.putExtra(Const.TOKEN_IS_SETUP, true);
-            startActivity(intent);
-            finish();
-            return;
-        }
 
         // On first setup show remark that loading could last longer than normally
         boolean isSetup = Utils.getSettingBool(this, Const.EVERYTHING_SETUP, false);

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -25,16 +24,13 @@ import com.google.common.base.Optional;
 
 import java.util.List;
 
-import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
-import de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackActivity;
 import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
-import de.tum.in.tumcampusapp.component.ui.onboarding.WizNavStartActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;
@@ -47,7 +43,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                                                                SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     public static final String FRAGMENT_TAG = "my_preference_fragment";
-    private static final String BUTTON_WIZARD = "button_wizard";
     private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
     private static final String SETUP_EDUROAM = "card_eduroam_setup";
     private FragmentActivity mContext;
@@ -68,7 +63,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         if (rootKey == null) {
             // Click listener for preference list entries. Used to simulate a button
             // (since it is not possible to add a button to the preferences screen)
-            findPreference(BUTTON_WIZARD).setOnPreferenceClickListener(this);
             findPreference(BUTTON_CLEAR_CACHE).setOnPreferenceClickListener(this);
 
             // Set summary for these preferences
@@ -220,10 +214,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         switch (key) {
             case SETUP_EDUROAM:
                 startActivity(new Intent(getContext(), SetupEduroamActivity.class));
-                break;
-            case BUTTON_WIZARD:
-                mContext.finish();
-                startActivity(new Intent(mContext, WizNavStartActivity.class));
                 break;
             case BUTTON_CLEAR_CACHE:
                 // This button invokes the clear cache method
