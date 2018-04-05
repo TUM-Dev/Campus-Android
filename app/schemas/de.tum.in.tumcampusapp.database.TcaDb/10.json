@@ -1059,7 +1059,7 @@
             "notNull": true
           },
           {
-            "fieldPath": "id",
+            "fieldPath": "lvId",
             "columnName": "_id",
             "affinity": "INTEGER",
             "notNull": true

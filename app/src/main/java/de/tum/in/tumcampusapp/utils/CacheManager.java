@@ -261,11 +261,9 @@ public class CacheManager {
         }
         List<LecturesSearchRow> lectures = lecturesList.get()
                                                        .getLehrveranstaltungen();
-        if (lectures == null) {
-            return;
-        }
+
         ChatRoomController manager = new ChatRoomController(mContext);
-        manager.replaceInto(lectures);
+        manager.createLectureRooms(lectures);
     }
 
     public static synchronized void clearCache(Context context) {
