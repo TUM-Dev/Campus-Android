@@ -351,38 +351,33 @@ public class FeedbackActivity extends BaseActivity {
             return;
         }
 
-        try {
-            showProgressBarDialog();
-            TUMCabeClient client = TUMCabeClient.getInstance(this);
+        showProgressBarDialog();
+        TUMCabeClient client = TUMCabeClient.getInstance(this);
 
-            client.sendFeedback(getFeedback(), picPaths.toArray(new String[0]), new Callback<Success>() {
-                @Override
-                public void onResponse(Call<Success> call, Response<Success> response) {
-                    Success success = response.body();
-                    if (success != null && success.wasSuccessfullySent()) {
-                        sentCount++;
-                        Utils.log(success.getSuccess());
-                        if (sentCount == picPaths.size() + 1) {
-                            progress.cancel();
-                            finish();
-                            Toast.makeText(feedbackView.getContext(), R.string.feedback_send_success, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        Utils.log("sent " + sentCount + " of " + (picPaths.size() + 1) + " message parts");
-                    } else {
-                        showErrorDialog();
+        client.sendFeedback(getFeedback(), picPaths.toArray(new String[0]), new Callback<Success>() {
+            @Override
+            public void onResponse(Call<Success> call, Response<Success> response) {
+                Success success = response.body();
+                if (success != null && success.wasSuccessfullySent()) {
+                    sentCount++;
+                    Utils.log(success.getSuccess());
+                    if (sentCount == picPaths.size() + 1) {
+                        progress.cancel();
+                        finish();
+                        Toast.makeText(feedbackView.getContext(), R.string.feedback_send_success, Toast.LENGTH_SHORT)
+                             .show();
                     }
-                }
-
-                @Override
-                public void onFailure(Call<Success> call, Throwable t) {
+                    Utils.log("sent " + sentCount + " of " + (picPaths.size() + 1) + " message parts");
+                } else {
                     showErrorDialog();
                 }
-            });
-        } catch (IOException e) {
-            showErrorDialog();
-            e.printStackTrace();
-        }
+            }
+
+            @Override
+            public void onFailure(Call<Success> call, Throwable t) {
+                showErrorDialog();
+            }
+        });
     }
 
     private void showProgressBarDialog() {

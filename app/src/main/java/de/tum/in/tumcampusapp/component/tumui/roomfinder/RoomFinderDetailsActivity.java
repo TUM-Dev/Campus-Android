@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import com.google.common.base.Optional;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -212,28 +211,23 @@ public class RoomFinderDetailsActivity
 
     private void loadMapList() {
         showLoadingStart();
-        try {
-            TUMCabeClient.getInstance(this)
-                         .fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
-                             @Override
-                             public void onResponse(Call<List<RoomFinderMap>> call, Response<List<RoomFinderMap>> response) {
-                                 try {
-                                     onMapListLoadFinished(Optional.of(response.body()));
-                                 } catch (NullPointerException e) {
-                                     Utils.log(e);
-                                     onMapListLoadFailed();
-                                 }
-                             }
-
-                             @Override
-                             public void onFailure(Call<List<RoomFinderMap>> call, Throwable throwable) {
+        TUMCabeClient.getInstance(this)
+                     .fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
+                         @Override
+                         public void onResponse(Call<List<RoomFinderMap>> call, Response<List<RoomFinderMap>> response) {
+                             try {
+                                 onMapListLoadFinished(Optional.of(response.body()));
+                             } catch (NullPointerException e) {
+                                 Utils.log(e);
                                  onMapListLoadFailed();
                              }
-                         });
-        } catch (IOException e) {
-            Utils.log(e);
-            onMapListLoadFailed();
-        }
+                         }
+
+                         @Override
+                         public void onFailure(Call<List<RoomFinderMap>> call, Throwable throwable) {
+                             onMapListLoadFailed();
+                         }
+                     });
     }
 
     private void onMapListLoadFailed() {
@@ -260,29 +254,24 @@ public class RoomFinderDetailsActivity
 
     private void loadGeo() {
         showLoadingStart();
-        try {
-            TUMCabeClient.getInstance(this)
-                         .fetchCoordinates(room.getArch_id(), new Callback<RoomFinderCoordinate>() {
-                             @Override
-                             public void onResponse(Call<RoomFinderCoordinate> call, Response<RoomFinderCoordinate> response) {
-                                 try {
-                                     Optional<Geo> result = LocationManager.convertRoomFinderCoordinateToGeo(response.body());
-                                     onGeoLoadFinished(result);
-                                 } catch (NullPointerException e) {
-                                     Utils.log(e);
-                                     onLoadGeoFailed();
-                                 }
-                             }
-
-                             @Override
-                             public void onFailure(Call<RoomFinderCoordinate> call, Throwable throwable) {
+        TUMCabeClient.getInstance(this)
+                     .fetchCoordinates(room.getArch_id(), new Callback<RoomFinderCoordinate>() {
+                         @Override
+                         public void onResponse(Call<RoomFinderCoordinate> call, Response<RoomFinderCoordinate> response) {
+                             try {
+                                 Optional<Geo> result = LocationManager.convertRoomFinderCoordinateToGeo(response.body());
+                                 onGeoLoadFinished(result);
+                             } catch (NullPointerException e) {
+                                 Utils.log(e);
                                  onLoadGeoFailed();
                              }
-                         });
-        } catch (IOException e) {
-            Utils.log(e);
-            onLoadGeoFailed();
-        }
+                         }
+
+                         @Override
+                         public void onFailure(Call<RoomFinderCoordinate> call, Throwable throwable) {
+                             onLoadGeoFailed();
+                         }
+                     });
     }
 
     private void onLoadGeoFailed() {
