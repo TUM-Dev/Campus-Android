@@ -192,8 +192,7 @@ public final class TUMCabeClient {
 
     public void confirm(int notification) throws IOException {
         service.confirm(notification)
-               .execute()
-               .body();
+               .execute();
     }
 
     public List<GCMNotificationLocation> getAllLocations() throws IOException {
@@ -234,7 +233,7 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
+    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) {
         service.createMeasurements(wifiMeasurementList)
                .enqueue(cb);
     }
@@ -275,7 +274,7 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException {
+    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) {
         service.fetchAvailableMaps(Helper.encodeUrl(archId))
                .enqueue(cb);
     }
@@ -293,7 +292,7 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) throws IOException {
+    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) {
         service.fetchCoordinates(Helper.encodeUrl(archId))
                .enqueue(cb);
     }
@@ -305,7 +304,7 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) throws IOException {
+    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
         service.sendFeedback(feedback).enqueue(cb);
         for(int i = 0; i < imagePaths.length; i++){
             File file = new File(imagePaths[i]);
