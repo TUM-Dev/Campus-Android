@@ -549,7 +549,7 @@ Signature: %5$s</string>
                                         &#8226; See details about your lectures\n
                                         &#8226; Get an overview over your grades\n
                                         &#8226; Check if you have outstanding tuition fees\n
-                                        &#8226; Chat with other students in your lectures</string>
+                                        &#8226; Chat with other students from your lectures</string>
     <string name="tumonline_login">Connect to TUMonline</string>
     <string name="card_login_title">Welcome to the TUM Campus App!</string>
     <string name="card_login_body">Connect the app to TUMonline now to get access to all the features! This includes among other things your calendar, lectures and grades!</string>

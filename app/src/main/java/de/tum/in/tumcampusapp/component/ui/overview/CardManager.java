@@ -18,6 +18,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamFixCard;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
+import de.tum.in.tumcampusapp.component.ui.onboarding.LoginPromtCard;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
@@ -29,6 +30,7 @@ import static de.tum.in.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
  */
 public final class CardManager {
     public static final String SHOW_SUPPORT = "show_support";
+    public static final String SHOW_LOGIN = "show_login";
 
     /**
      * Card typ constants
@@ -44,6 +46,7 @@ public final class CardManager {
     public static final int CARD_EDUROAM = 11;
     public static final int CARD_CHAT = 12;
     public static final int CARD_SUPPORT = 13;
+    public static final int CARD_LOGIN = 14;
     public static final int CARD_EDUROAM_FIX = 15;
     private static boolean shouldRefresh;
     private static List<Card> cards;
@@ -118,6 +121,7 @@ public final class CardManager {
         // Use temporary array to avoid that the main thread is trying to access an empty array
         newCards.clear();
         new NoInternetCard(context).apply();
+        new LoginPromtCard(context).apply();
         new SupportCard(context).apply();
 
         new EduroamCard(context).apply();
