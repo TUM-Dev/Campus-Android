@@ -259,7 +259,8 @@ public class RoomFinderDetailsActivity
         TUMCabeClient.getInstance(this)
                      .fetchCoordinates(room.getArch_id(), new Callback<RoomFinderCoordinate>() {
                          @Override
-                         public void onResponse(@NonNull Call<RoomFinderCoordinate> call, @NonNull Response<RoomFinderCoordinate> response) {
+                         public void onResponse(@NonNull Call<RoomFinderCoordinate> call,
+                                                @NonNull Response<RoomFinderCoordinate> response) {
                              RoomFinderCoordinate data = response.body();
                              if (!response.isSuccessful() || data == null) {
                                  onLoadGeoFailed();
