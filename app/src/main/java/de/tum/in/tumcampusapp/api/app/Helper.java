@@ -12,7 +12,6 @@ import com.google.common.net.UrlEscapers;
 
 import java.util.concurrent.TimeUnit;
 
-import de.tum.in.tumcampusapp.component.other.reporting.bugreport.G;
 import de.tum.in.tumcampusapp.utils.Utils;
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
@@ -76,15 +75,8 @@ public final class Helper {
 
     private static Interceptor getDeviceInterceptor(final Context c) {
         //Clearly identify all requests from this app
-        final StringBuilder userAgent = new StringBuilder("TCA Client");
-        if (G.appVersion != null && !G.appVersion.equals(G.UNKNOWN)) {
-            userAgent.append(' ')
-                     .append(G.appVersion);
-            if (G.appVersionCode != -1) {
-                userAgent.append('/')
-                         .append(G.appVersionCode);
-            }
-        }
+        final StringBuilder userAgent = new StringBuilder("TCA Client ");
+        userAgent.append(Utils.getAppVersion(c));
 
         return chain -> {
             Utils.log("Fetching: " + chain.request()

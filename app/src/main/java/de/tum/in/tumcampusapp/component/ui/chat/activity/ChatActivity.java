@@ -68,7 +68,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Shows an ongoing chat conversation
+ * Shows an ongoing chat conversation.
  * <p/>
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
@@ -77,17 +77,15 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
 
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
-    private static final int MAX_EDIT_TIMESPAN = 120000;
+    //private static final int MAX_EDIT_TIMESPAN = 120000;
 
-    public static ChatRoom mCurrentOpenChatRoom;
+    public static ChatRoom mCurrentOpenChatRoom; // determines whether there will be a notification or not
     private final Handler mUpdateHandler = new Handler();
     private ChatMessageViewModel chatMessageViewModel;
-    private ChatMessageRemoteRepository remoteRepository;
-    private ChatMessageLocalRepository localRepository;
     private final CompositeDisposable mDisposable = new CompositeDisposable();
 
     /**
-     * UI elements
+     * UI elements.
      */
     private ListView lvMessageHistory;
     private ChatHistoryAdapter chatHistoryAdapter;
@@ -120,11 +118,10 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             ChatMessage msg = chatHistoryAdapter.mCheckedItem;
             int i = item.getItemId();
-            if (i == R.id.action_edit) {// If item is not sent at the moment, stop sending
+            if (i == R.id.action_edit) {
+                // If item is not sent at the moment, stop sending
                 if (msg.getSendingStatus() == ChatMessage.STATUS_SENDING) {
-                    //TODO
-                    //chatMessageViewModel.removeUnsentMessage(msg.getInternalID());
-                    //chatHistoryAdapter.removeUnsent(msg);
+                    chatMessageViewModel.removeUnsent(msg);
                 } else { // set editing item
                     chatHistoryAdapter.mEditedItem = msg;
                 }
@@ -134,8 +131,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 imm.showSoftInput(etMessage, 0);
 
                 etMessage.setText(msg.getText());
-                int position = msg.getText()
-                                  .length();
+                int position = msg.getText().length();
                 etMessage.setSelection(position);
                 mode.finish();
                 return true;
@@ -177,7 +173,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
      * Gets the text from speech input and returns null if no input was provided
      */
     private static CharSequence getMessageText(Intent intent) {
-        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+        Bundle remoteInput;
+        remoteInput = RemoteInput.getResultsFromIntent(intent);
         if (remoteInput != null) {
             return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
         }
@@ -190,16 +187,14 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
      * @param extras model that contains infos about the message we should get
      */
     private void handleRoomBroadcast(GCMChat extras) {
-        //If same room just refresh
-        if (!(extras.getRoom() == currentChatRoom.getId() && chatHistoryAdapter != null)) {
+
+        if (extras.getRoom() != currentChatRoom.getId() || chatHistoryAdapter == null) {
             return;
         }
 
-        if (extras.getMember() == currentChatMember.getId()) {
-            //TODO
-            // Remove this message from the adapter
-            //chatHistoryAdapter.setUnsentMessages(chatMessageViewModel.getAllUnsentFromCurrentRoomList());
-        } else if (extras.getMessage() == -1) {
+        if (extras.getMember() != currentChatMember.getId()
+                   && extras.getMessage() == -1) { // this is a new message from a different user
+
             //Check first, if sounds are enabled
             AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
@@ -214,8 +209,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         }
 
         //Update the history
-        chatMessageViewModel.markAsRead(currentChatRoom.getId());
-        chatHistoryAdapter.updateHistory(chatMessageViewModel.getAll(currentChatRoom.getId()));
+        getNextHistoryFromServer(true);
     }
 
     @SuppressWarnings("deprecation")
@@ -238,9 +232,9 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
 
         this.getIntentData();
         TcaDb tcaDb = TcaDb.getInstance(this);
-        remoteRepository = ChatMessageRemoteRepository.INSTANCE;
+        ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
         remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
-        localRepository = ChatMessageLocalRepository.INSTANCE;
+        ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
         localRepository.setDb(tcaDb);
         chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, mDisposable);
         this.bindUIElements();
@@ -254,12 +248,13 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel((currentChatRoom.getId() << 4) + CardManager.CARD_CHAT);
         LocalBroadcastManager.getInstance(this)
-                             .registerReceiver(receiver, new IntentFilter("chat-message-received"));
+                             .registerReceiver(receiver, new IntentFilter(Const.CHAT_BROADCAST_NAME));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        chatMessageViewModel.markAsRead(currentChatRoom.getId());
         mCurrentOpenChatRoom = null;
         LocalBroadcastManager.getInstance(this)
                              .unregisterReceiver(receiver);
@@ -288,7 +283,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             }
             chatHistoryAdapter = null;
             getNextHistoryFromServer(true);
-
         }
     }
 
@@ -359,40 +353,36 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     }
 
     private void sendMessage(String text) {
+
         if (chatHistoryAdapter.mEditedItem == null) {
             final ChatMessage message = new ChatMessage(text, currentChatMember);
             message.setRoom(currentChatRoom.getId());
             chatHistoryAdapter.add(message);
             chatMessageViewModel.addToUnsent(message);
         } else {
-            chatHistoryAdapter.mEditedItem.setText(etMessage.getText()
-                                                            .toString());
+            chatHistoryAdapter.mEditedItem.setText(etMessage.getText().toString());
             chatHistoryAdapter.mEditedItem.setRoom(currentChatRoom.getId());
             chatHistoryAdapter.mEditedItem.setSendingStatus(ChatMessage.STATUS_SENDING);
-            chatHistoryAdapter.mEditedItem.setRead(true);
+            chatHistoryAdapter.mEditedItem.setMember(currentChatMember);
             chatMessageViewModel.addToUnsent(chatHistoryAdapter.mEditedItem);
-            //TODO
-            //chatMessageViewModel.replaceMessage(chatHistoryAdapter.mEditedItem);
             chatHistoryAdapter.mEditedItem = null;
-            //TODO
-            //chatMessageViewModel.markAsRead(currentChatRoom.getId());
-            //chatHistoryAdapter.updateHistory(chatMessageViewModel.getAll(currentChatRoom.getId()));
+            chatMessageViewModel.markAsRead(currentChatRoom.getId());
+            chatHistoryAdapter.updateHistory(chatMessageViewModel.getAll(currentChatRoom.getId()));
         }
 
-        // start service to send the message
-        startService(new Intent(this, SendMessageService.class));
+        // let the service handle the actual sending of the message
+        SendMessageService.enqueueWork(this, new Intent());
     }
 
     /**
-     * Sets the actionbar title to the current chat room
+     * Sets the actionbar title to the current chat room.
      */
     private void getIntentData() {
         Bundle extras = getIntent().getExtras();
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
         currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(currentChatRoom.getName()
-                                                          .substring(4));
+            getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
         }
 
         CharSequence message = getMessageText(getIntent());
@@ -448,36 +438,37 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 return; //In this case we simply cannot do anything
             }
             if (chatHistoryAdapter == null || chatHistoryAdapter.getCount() == 0 || newMsg) {
-                chatMessageViewModel.getNewMessages(currentChatRoom.getId(), verification);
+                chatMessageViewModel.getNewMessages(currentChatRoom.getId(), verification, this::onMessagesLoaded);
             } else {
                 long id = chatHistoryAdapter.getItemId(0);
-                chatMessageViewModel.getMessages(currentChatRoom.getId(), id, verification);
+                chatMessageViewModel.getOlderMessages(currentChatRoom.getId(), id, verification, this::onMessagesLoaded);
             }
-
-            final List<ChatMessage> msgs = chatMessageViewModel.getAll(currentChatRoom.getId());
-            // Update results in UI
-            runOnUiThread(() -> {
-                if (chatHistoryAdapter == null) {
-                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, msgs, currentChatMember);
-                    lvMessageHistory.setAdapter(chatHistoryAdapter);
-                    chatHistoryAdapter.notifyDataSetChanged();
-                } else {
-                    chatHistoryAdapter.updateHistory(chatMessageViewModel.getAll(currentChatRoom.getId()));
-                }
-
-                // If all messages are loaded hide header view
-                if ((!msgs.isEmpty() && msgs.get(0)
-                                            .getPrevious() == 0) || chatHistoryAdapter.getCount() == 0) {
-                    lvMessageHistory.removeHeaderView(bar);
-                } else {
-                    loadingMore = false;
-                }
-            });
         }).start();
     }
 
+    private void onMessagesLoaded(){
+        final List<ChatMessage> msgs = chatMessageViewModel.getAll(currentChatRoom.getId());
+        // Update results in UI
+        runOnUiThread(() -> {
+            if (chatHistoryAdapter == null) {
+                chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, msgs, currentChatMember);
+                lvMessageHistory.setAdapter(chatHistoryAdapter);
+            } else {
+                chatHistoryAdapter.updateHistory(chatMessageViewModel.getAll(currentChatRoom.getId()));
+            }
+
+            // If all messages are loaded hide header view
+            if ((!msgs.isEmpty() && msgs.get(0)
+                                        .getPrevious() == 0) || chatHistoryAdapter.getCount() == 0) {
+                lvMessageHistory.removeHeaderView(bar);
+            } else {
+                loadingMore = false;
+            }
+        });
+    }
+
     /**
-     * When user confirms the leave dialog send the request to the server
+     * When user confirms the leave dialog send the request to the server.
      *
      * @param dialog Dialog handle
      * @param which  The users choice (ignored because this is only called when the user confirms)
@@ -531,12 +522,12 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         int positionActual = position - lvMessageHistory.getHeaderViewsCount();
 
         //Get the correct message
-        ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(positionActual);
+        ChatMessage message = chatHistoryAdapter.getItem(positionActual);
 
-        // If we are in a certain timespan and its the users own message allow editing
-        if ((System.currentTimeMillis() - message.getTimestampDate()
-                                                 .getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember()
-                                                                                                        .getId() == currentChatMember.getId()) {
+        // TODO(jacqueline8711): If we are in a certain timespan and its the users own message allow editing
+        /*if ((System.currentTimeMillis() - message.getTimestampDate()
+                           .getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember()
+                           .getId() == currentChatMember.getId()) {
 
             // Hide keyboard if opened
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -548,7 +539,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             chatHistoryAdapter.notifyDataSetChanged();
         } else {
             this.showInfo(message);
-        }
+        }*/
+        this.showInfo(message);
         return true;
     }
 

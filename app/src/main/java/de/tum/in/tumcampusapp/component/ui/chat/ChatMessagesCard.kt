@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RemoteViews
+import com.google.common.collect.Lists
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatActivity
@@ -20,13 +21,15 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.NotificationAwareCard
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
 import java.util.*
 
 /**
  * Card that shows the cafeteria menu
  */
 class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwareCard(CARD_CHAT, context, "card_chat") {
-    private val mUnread = ArrayList<ChatMessage>()
+    private var mUnread: List<ChatMessage> = ArrayList<ChatMessage>()
+    private var nrUnread = 0;
     private val chatMessageDao: ChatMessageDao
     private var mRoomName = ""
     private var mRoomId = 0
@@ -40,14 +43,19 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
     override fun getTitle() = mRoomName
 
-    override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
+    override fun  updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         mCard = viewHolder.itemView
         val cardsViewHolder = viewHolder as Card.CardViewHolder
         val addedViews = cardsViewHolder.addedViews
 
         mLinearLayout = mCard.findViewById(R.id.card_view)
         mTitleView = mCard.findViewById(R.id.card_title)
-        mTitleView.text = mRoomName
+
+        if(nrUnread > 5){
+            mTitleView.text = mContext.getString(R.string.card_message_title, mRoomName, nrUnread);
+        } else {
+            mTitleView.text = mRoomName
+        }
 
         //Remove additional views
         for (view in addedViews) {
@@ -56,7 +64,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
         // Show cafeteria menu
         mUnread.mapTo(addedViews) {
-            addTextView("${it.member.displayName}: ${it.text}")
+            addTextView(mContext.getString(R.string.card_message_line, it.member.displayName, it.text))
         }
     }
 
@@ -74,7 +82,8 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
                 })
                 .trim()
         chatMessageDao.deleteOldEntries()
-        //mUnread = chatMessageDao.getLastUnread(roomId); TODO
+        nrUnread = chatMessageDao.getNumberUnread(roomId)
+        mUnread = Lists.reverse(chatMessageDao.getLastUnread(roomId))
         mRoomIdString = roomIdString
         mRoomId = roomId
     }
@@ -91,7 +100,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
     override fun discard(editor: Editor) = chatMessageDao.markAsRead(id)
 
-    override fun shouldShowNotification(prefs: SharedPreferences) = false
+    override fun shouldShowNotification(prefs: SharedPreferences) = true
 
     override fun getRemoteViews(context: Context) = RemoteViews(context.packageName, R.layout.cards_widget_card).apply {
         setTextViewText(R.id.widgetCardTextView, title)

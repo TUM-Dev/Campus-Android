@@ -14,7 +14,6 @@ import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.other.reporting.bugreport.model.BugReport;
 import de.tum.in.tumcampusapp.component.other.reporting.stats.model.Statistics;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
@@ -51,15 +50,17 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 
-public class TUMCabeClient {
+/**
+ * Proxy class for Retrofit client to our API hosted @app.tum.de
+ */
+public final class TUMCabeClient {
 
-    static final String API_HOSTNAME = Const.API_HOSTNAME;
-    static final String API_BASEURL = "/Api/";
-    static final String API_CHAT = "chat/";
+    private static final String API_HOSTNAME = Const.API_HOSTNAME;
+    private static final String API_BASEURL = "/Api/";
+    private static final String API_CHAT = "chat/";
     static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
     static final String API_CURRICULA = "curricula/";
-    static final String API_REPORT = "report/";
     static final String API_STATISTICS = "statistics/";
     static final String API_NOTIFICATIONS = "notifications/";
     static final String API_LOCATIONS = "locations/";
@@ -205,12 +206,6 @@ public class TUMCabeClient {
         return service.getLocation(locationId)
                       .execute()
                       .body();
-    }
-
-    public void putBugReport(BugReport r) throws IOException {
-        service.putBugReport(r)
-               .execute()
-               .body();
     }
 
     public void putStatistics(Statistics s) {

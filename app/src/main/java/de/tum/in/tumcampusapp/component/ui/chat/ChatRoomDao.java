@@ -10,17 +10,24 @@ import java.util.List;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 
+/**
+ * Queries needed for the ChatRoomActivity/Controller.
+ */
 @Dao
 public interface ChatRoomDao {
 
-    @Query("SELECT r.*, m.timestamp, m.text " +
+    @Query("SELECT r.*, m.timestamp, m.text, unread.count as nr_unread " +
            "FROM chat_room r " +
+           "LEFT JOIN (SELECT count(*) as count, c.room "
+                    + "FROM chat_message c, chat_room cr "
+                    + "WHERE c.room = cr.room AND c._id > cr.last_read "
+                    + "GROUP BY c.room) unread on (unread.room=r.room) " +
            "LEFT JOIN (SELECT MAX(timestamp) timestamp, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
            "WHERE joined=1 " +
            "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.timestamp) DESC, r.name")
     List<ChatRoomAndLastMessage> getAllRoomsJoinedList();
 
-    @Query("SELECT r.*, m.timestamp, m.text " +
+    @Query("SELECT r.*, m.timestamp, m.text, 0 as nr_unread " +
            "FROM chat_room r " +
            "LEFT JOIN (SELECT MAX(timestamp) timestamp, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
            "WHERE joined=0 OR joined=-1 " +
@@ -62,10 +69,8 @@ public interface ChatRoomDao {
     List<ChatRoomDbRow> getNewUnjoined();
 
     @Query("SELECT r.* " +
-           "FROM chat_room r, (SELECT room FROM chat_message " +
-           "WHERE read=0 GROUP BY room) AS c " +
-           "WHERE r.room=c.room " +
-           "ORDER BY r.semester_id DESC, r.name")
+           "FROM chat_room r " +
+           "WHERE r.last_read < (SELECT MAX(_id) FROM chat_message m WHERE m.room = r.room)")
     List<ChatRoomDbRow> getUnreadRooms();
 
     @Query("DELETE FROM chat_room")

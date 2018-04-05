@@ -14,4 +14,6 @@ data class ChatRoomDbRow(var room: Int = 0,
                          @ColumnInfo(name = "_id")
                          var id: Int = 0,
                          var contributor: String = "",
-                         var members: Int = -1)
+                         var members: Int = -1,
+                         @ColumnInfo(name = "last_read")
+                         var lastRead: Int = -1)

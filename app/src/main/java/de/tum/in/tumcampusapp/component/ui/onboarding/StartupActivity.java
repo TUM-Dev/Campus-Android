@@ -33,7 +33,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
-import de.tum.in.tumcampusapp.component.other.reporting.bugreport.ExceptionHandler;
 import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
@@ -77,9 +76,6 @@ public class StartupActivity extends AppCompatActivity {
     };
 
     private void init() {
-        //Our own Custom exception handler
-        ExceptionHandler.setup(getApplicationContext());
-
         //Check that we have a private key setup in order to authenticate this device
         AuthenticationManager am = new AuthenticationManager(this);
         am.generatePrivateKey(null);

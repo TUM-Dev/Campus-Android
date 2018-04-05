@@ -5,6 +5,7 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'io.fabric'
 apply from: '../findbugs.gradle'
 apply from: '../pmd.gradle'
 apply from: '../jacoco.gradle'
@@ -71,7 +72,7 @@ android {
 
 def androidSupportVersion = '27.1.0'
 def retrofitVersion = '2.3.0'
-def firebaseVersion = '12.0.0'
+def firebaseVersion = '12.0.1'
 def roomVersion = '1.0.0'
 
 configurations.all {
@@ -120,6 +121,7 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
 
     //DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
