@@ -64,7 +64,7 @@ public class SilenceService extends JobIntentService {
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
-        //Abort, if the settings changed
+        //Abort, if the settingsPrefix changed
         if (!Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
             // Don't schedule a new run, since the service is disabled
             return;

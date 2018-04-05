@@ -19,7 +19,6 @@ import android.widget.RemoteViews;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
@@ -54,26 +53,26 @@ public class MVVCard extends NotificationAwareCard {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        mCard = viewHolder.itemView;
-        mLinearLayout = mCard.findViewById(R.id.card_view);
-        mTitleView = mCard.findViewById(R.id.card_title);
-        mTitleView.setText(mStationNameIDPair.first);
-        mCard.findViewById(R.id.place_holder)
-             .setVisibility(View.VISIBLE);
+        setMCard(viewHolder.itemView);
+        setMLinearLayout(getMCard().findViewById(R.id.card_view));
+        setMTitleView(getMCard().findViewById(R.id.card_title));
+        getMTitleView().setText(mStationNameIDPair.first);
+        getMCard().findViewById(R.id.place_holder)
+                  .setVisibility(View.VISIBLE);
 
         //Remove old DepartureViews
-        for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
-            if (mLinearLayout.getChildAt(i) instanceof DepartureView) {
-                mLinearLayout.removeViewAt(i);
+        for (int i = 0; i < getMLinearLayout().getChildCount(); i++) {
+            if (getMLinearLayout().getChildAt(i) instanceof DepartureView) {
+                getMLinearLayout().removeViewAt(i);
                 i--; // Check the same location again, since the childCount changed
             }
         }
 
         // Fetch transport favorites, can only be updated in the detailed view
-        TransportController transportManager = new TransportController(mContext);
+        TransportController transportManager = new TransportController(getContext());
         for (int i = 0; i < mDepartures.size() && i < 5; i++) {
             Departure curr = mDepartures.get(i);
-            DepartureView view = new DepartureView(mContext);
+            DepartureView view = new DepartureView(getContext());
             if (transportManager.isFavorite(curr.getSymbol())) {
                 view.setSymbol(curr.getSymbol(), true);
             } else {
@@ -81,21 +80,16 @@ public class MVVCard extends NotificationAwareCard {
             }
             view.setLine(curr.getDirection());
             view.setTime(curr.getDepartureTime());
-            mLinearLayout.addView(view);
+            getMLinearLayout().addView(view);
         }
     }
 
     @Override
     public Intent getIntent() {
-        Intent i = new Intent(mContext, TransportationDetailsActivity.class);
+        Intent i = new Intent(getContext(), TransportationDetailsActivity.class);
         i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationNameIDPair.first);
         i.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, mStationNameIDPair.second);
         return i;
-    }
-
-    @Override
-    public int getId() {
-        return 0;
     }
 
     @Override
@@ -122,17 +116,17 @@ public class MVVCard extends NotificationAwareCard {
             }
 
             NotificationCompat.Builder pageNotification =
-                    new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_MVV)
+                    new NotificationCompat.Builder(getContext(), Const.NOTIFICATION_CHANNEL_MVV)
                             .setContentTitle(d.getCountDown() + "min")
                             .setSmallIcon(R.drawable.ic_notification)
-                            .setLargeIcon(Utils.getLargeIcon(mContext, R.drawable.ic_mvv))
+                            .setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_mvv))
                             .setContentText(d.getServingLine() + " " + d.getDirection());
             morePageNotification.addPage(pageNotification.build());
         }
 
         notificationBuilder.setContentTitle(firstTime);
         notificationBuilder.setContentText(firstContent);
-        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_mvv);
+        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_mvv);
         morePageNotification.setBackground(bm);
         return morePageNotification.extend(notificationBuilder)
                                    .build();

@@ -77,7 +77,7 @@ public class StartupActivity extends AppCompatActivity {
 
     private void init() {
 
-        //Migrate all settings - we somehow ended up having two different shared prefs: join them back together
+        //Migrate all settingsPrefix - we somehow ended up having two different shared prefs: join them back together
         Utils.migrateSharedPreferences(this.getApplicationContext());
 
         //Check that we have a private key setup in order to authenticate this device

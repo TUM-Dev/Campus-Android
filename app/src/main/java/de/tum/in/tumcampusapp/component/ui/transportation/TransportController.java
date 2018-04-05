@@ -171,7 +171,7 @@ public class TransportController implements ProvidesCard {
     }
 
     /**
-     * Adds the settings of a widget to the widget list, replaces the existing settings if there are some
+     * Adds the settingsPrefix of a widget to the widget list, replaces the existing settingsPrefix if there are some
      */
     public void addWidget(int appWidgetId, WidgetDepartures widgetDepartures) {
         ContentValues values = new ContentValues();
@@ -186,7 +186,7 @@ public class TransportController implements ProvidesCard {
     }
 
     /**
-     * Deletes the settings of a widget to the widget list
+     * Deletes the settingsPrefix of a widget to the widget list
      *
      * @param widgetId The id of the widget
      */
@@ -196,9 +196,9 @@ public class TransportController implements ProvidesCard {
     }
 
     /**
-     * A WidgetDepartures Object containing the settings of this widget.
+     * A WidgetDepartures Object containing the settingsPrefix of this widget.
      * This object can provide the departures needed by this widget as well.
-     * The settings are cached, only the first time its loded from the database.
+     * The settingsPrefix are cached, only the first time its loded from the database.
      * If there is no widget with this id saved (in cache and the database) a new WidgetDepartures Object is generated
      * containing a NULL for the station and an empty string for the station id. This is not cached or saved to the database.
      *

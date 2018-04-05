@@ -59,7 +59,7 @@ public class CafeteriaNotificationSettingsActivity extends BaseActivity {
     }
 
     /**
-     * Reloads the settings into the dailySchedule list.
+     * Reloads the settingsPrefix into the dailySchedule list.
      */
     public void setupList() {
         Calendar it = Calendar.getInstance();

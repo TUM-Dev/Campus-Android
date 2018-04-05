@@ -17,12 +17,10 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoomDbRow
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager.CARD_CHAT
-import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.NotificationAwareCard
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Utils
 import java.util.*
 
 /**
@@ -31,10 +29,11 @@ import java.util.*
 class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwareCard(CARD_CHAT, context, "card_chat") {
     private var mUnread: List<ChatMessage> = ArrayList<ChatMessage>()
     private var nrUnread = 0;
-    private val chatMessageDao: ChatMessageDao
     private var mRoomName = ""
     private var mRoomId = 0
     private var mRoomIdString = ""
+
+    private val chatMessageDao: ChatMessageDao
 
     init {
         val tcaDb = TcaDb.getInstance(context)
@@ -42,30 +41,35 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
         setChatRoom(room.name, room.room, "${room.semesterId}:${room.name}")
     }
 
-    override fun getTitle() = mRoomName
+    override val title = mRoomName
 
     override fun  updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         mCard = viewHolder.itemView
+        val card = viewHolder.itemView
         val cardsViewHolder = viewHolder as CardViewHolder
         val addedViews = cardsViewHolder.addedViews
 
-        mLinearLayout = mCard.findViewById(R.id.card_view)
-        mTitleView = mCard.findViewById(R.id.card_title)
+        //Set title
+        mTitleView = card.findViewById(R.id.card_title)
+        val titleView = mTitleView
 
         if(nrUnread > 5){
-            mTitleView.text = mContext.getString(R.string.card_message_title, mRoomName, nrUnread);
+            titleView!!.text = context.getString(R.string.card_message_title, mRoomName, nrUnread);
         } else {
-            mTitleView.text = mRoomName
+            titleView!!.text = mRoomName
         }
 
         //Remove additional views
+        mLinearLayout = card.findViewById(R.id.card_view)
+        val linearLayout = mLinearLayout
+
         for (view in addedViews) {
-            mLinearLayout.removeView(view)
+            linearLayout!!.removeView(view)
         }
 
         // Show cafeteria menu
         mUnread.mapTo(addedViews) {
-            addTextView(mContext.getString(R.string.card_message_line, it.member.displayName, it.text))
+            addTextView(context.getString(R.string.card_message_line, it.member.displayName, it.text))
         }
     }
 
@@ -89,7 +93,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
         mRoomId = roomId
     }
 
-    override fun getIntent() = Intent(mContext, ChatActivity::class.java).apply {
+    override fun getIntent() = Intent(context, ChatActivity::class.java).apply {
         putExtra(Const.CURRENT_CHAT_ROOM, Gson().toJson(ChatRoom(mRoomIdString).apply {
             id = mRoomId
         }))
@@ -99,7 +103,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
     override fun getId() = mRoomId
 
-    override fun discard(editor: Editor) = chatMessageDao.markAsRead(id)
+    override fun discard(editor: Editor) = chatMessageDao.markAsRead(mRoomId)
 
     override fun shouldShowNotification(prefs: SharedPreferences) = true
 

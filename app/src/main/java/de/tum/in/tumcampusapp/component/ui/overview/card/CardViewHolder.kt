@@ -7,15 +7,12 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-
-import java.util.ArrayList
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
 import de.tum.`in`.tumcampusapp.utils.Const
+import java.util.*
 
 open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
     var currentCard: Card? = null
@@ -29,7 +26,7 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), V
     }
 
     override fun onClick(v: View) {
-        val i = currentCard!!.intent
+        val i = currentCard!!.getIntent()
         val transitionName = mActivity.getString(R.string.transition_card)
         if (i != null) {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -40,7 +37,6 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), V
     }
 
     override fun onLongClick(v: View): Boolean {
-        val key = currentCard!!.settings ?: return false
         val menu = PopupMenu(v.context, v, Gravity.CENTER_HORIZONTAL)
         val inf = menu.menuInflater
         inf.inflate(R.menu.card_popup_menu, menu.menu)
@@ -53,7 +49,7 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), V
     override fun onMenuItemClick(item: MenuItem): Boolean {
         val i = item.itemId
         if (i == R.id.open_card_setting) {// Open card's preference screen
-            val key = currentCard!!.settings ?: return true
+            val key = (currentCard ?: return true).settingsPrefix
 
             val intent = Intent(itemView.context, UserPreferencesActivity::class.java)
             intent.putExtra(Const.PREFERENCE_SCREEN, key)

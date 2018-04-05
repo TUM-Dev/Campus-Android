@@ -16,7 +16,6 @@ import android.widget.RemoteViews;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -44,11 +43,11 @@ public class EduroamCard extends NotificationAwareCard {
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         //Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        WifiManager wifi = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (!wifi.isWifiEnabled()) {
             return false;
         }
-        return EduroamController.getEduroamConfig(mContext) == null && eduroamAvailable(wifi);
+        return EduroamController.getEduroamConfig(getContext()) == null && eduroamAvailable(wifi);
     }
 
     private boolean eduroamAvailable(WifiManager wifi){
@@ -62,7 +61,7 @@ public class EduroamCard extends NotificationAwareCard {
 
     @Override
     protected void discard(SharedPreferences.Editor editor) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit()
              .putBoolean("card_eduroam_start", false)
              .apply();
@@ -75,12 +74,12 @@ public class EduroamCard extends NotificationAwareCard {
 
     @Override
     public String getTitle() {
-        return mContext.getString(R.string.setup_eduroam);
+        return getContext().getString(R.string.setup_eduroam);
     }
 
     @Override
     public Intent getIntent() {
-        return new Intent(mContext, SetupEduroamActivity.class);
+        return new Intent(getContext(), SetupEduroamActivity.class);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class CardsWidgetConfigureActivity extends Activity {
         public void onClick(View v) {
             final Context context = CardsWidgetConfigureActivity.this;
 
-            // When the button is clicked, store the settings locally
+            // When the button is clicked, store the settingsPrefix locally
             saveTitlePref(context, mAppWidgetId, mCafeteriaCheck.isChecked(), mChatCheck.isChecked(),
                           mEduroamCheck.isChecked(), mMVVCheck.isChecked(), mNewsCheck.isChecked(),
                           mLectureCheck.isChecked(), mTutionFeesCheck.isChecked());

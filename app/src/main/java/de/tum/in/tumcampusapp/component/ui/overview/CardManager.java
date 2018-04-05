@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
 import static de.tum.in.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX;
+import static de.tum.in.tumcampusapp.utils.Const.DISCARD_SETTINGS_START;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -191,10 +192,10 @@ public final class CardManager {
     }
 
     /**
-     * Resets dismiss settings for all cards
+     * Resets dismiss settingsPrefix for all cards
      */
     public static void restoreCards(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
+        SharedPreferences prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0);
         prefs.edit()
              .clear()
              .apply();

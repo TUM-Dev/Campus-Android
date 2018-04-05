@@ -64,13 +64,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> implements
     @Override
     public int getItemViewType(int position) {
         return CardManager.getCard(position)
-                          .getType();
+                          .getCardType();
     }
 
     @Override
     public long getItemId(int i) {
         Card card = CardManager.getCard(i);
-        return card.getType() + (card.getId() << 4);
+        return card.getCardType() + (card.getId() << 4);
     }
 
     @Override

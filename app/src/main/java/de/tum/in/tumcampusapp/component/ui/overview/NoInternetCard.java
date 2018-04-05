@@ -13,7 +13,6 @@ import android.widget.TextView;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.StickyCard;
 import de.tum.in.tumcampusapp.service.DownloadService;
@@ -40,16 +39,16 @@ public class NoInternetCard extends StickyCard {
 
         View v = viewHolder.itemView;
         TextView lastUpdate = v.findViewById(R.id.card_last_update);
-        Date lastUpdated = new Date(DownloadService.lastUpdate(mContext));
+        Date lastUpdated = new Date(DownloadService.lastUpdate(getContext()));
         final String time = DateUtils.getRelativeTimeSpanString(lastUpdated.getTime(),
                                                                 System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
                                      .toString();
-        lastUpdate.setText(String.format(mContext.getString(R.string.last_updated), time));
+        lastUpdate.setText(String.format(getContext().getString(R.string.last_updated), time));
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
-        return !NetUtils.isConnected(mContext);
+        return !NetUtils.isConnected(getContext());
     }
 
     @Override

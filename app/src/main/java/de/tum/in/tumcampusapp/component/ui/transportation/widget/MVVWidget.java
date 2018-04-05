@@ -133,7 +133,7 @@ public class MVVWidget extends AppWidgetProvider {
      */
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, boolean forceLoadData) {
-        // Get the settings for this widget from the database
+        // Get the settingsPrefix for this widget from the database
         WidgetDepartures widgetDepartures = transportManager.getWidget(appWidgetId);
 
         // Instantiate the RemoteViews object for the app widget layout.

@@ -170,7 +170,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     /**
-     * If drawer is expanded hide settings icon
+     * If drawer is expanded hide settingsPrefix icon
      *
      * @param menu Menu instance
      * @return True if handled
@@ -207,7 +207,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     /**
-     * Handle expansion of navigation drawer and settings menu item click
+     * Handle expansion of navigation drawer and settingsPrefix menu item click
      *
      * @param item Clicked menu item
      * @return True if handled

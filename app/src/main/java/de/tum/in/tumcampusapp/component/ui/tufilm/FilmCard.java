@@ -13,6 +13,6 @@ public class FilmCard extends NewsCard {
 
     @Override
     public Intent getIntent() {
-        return new Intent(mContext, KinoActivity.class);
+        return new Intent(getContext(), KinoActivity.class);
     }
 }

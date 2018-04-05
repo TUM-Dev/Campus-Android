@@ -50,24 +50,24 @@ public class EduroamFixCard extends NotificationAwareCard {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        mCard = viewHolder.itemView;
-        mLinearLayout = mCard.findViewById(R.id.card_view);
-        TextView errorsTv = mCard.findViewById(R.id.eduroam_errors);
+        setMCard(viewHolder.itemView);
+        setMLinearLayout(getMCard().findViewById(R.id.card_view));
+        TextView errorsTv = getMCard().findViewById(R.id.eduroam_errors);
         errorsTv.setText(Joiner.on("\n").join(errors));
 
         // only error is missing realm which is not insecure per se but also not right
         if (errors.size() == 1 && errors.get(0)
-                                        .equals(mContext.getString(R.string.wifi_identity_zone))) {
-            mCard.findViewById(R.id.eduroam_insecure_message)
-                 .setVisibility(View.GONE);
+                                        .equals(getContext().getString(R.string.wifi_identity_zone))) {
+            getMCard().findViewById(R.id.eduroam_insecure_message)
+                      .setVisibility(View.GONE);
         }
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         //Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        WifiManager wifi = (WifiManager) mContext.getApplicationContext()
-                                                 .getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getContext().getApplicationContext()
+                                                     .getSystemService(Context.WIFI_SERVICE);
         if (!wifi.isWifiEnabled()) {
             return false;
         }
@@ -77,7 +77,7 @@ public class EduroamFixCard extends NotificationAwareCard {
 
     @Override
     protected void discard(SharedPreferences.Editor editor) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit()
              .putBoolean("card_eduroam_fix_start", false)
              .apply();
@@ -90,17 +90,17 @@ public class EduroamFixCard extends NotificationAwareCard {
 
     @Override
     public String getTitle() {
-        return mContext.getString(R.string.fix_eduroam);
+        return getContext().getString(R.string.fix_eduroam);
     }
 
     @Override
     public Intent getIntent() {
         if (eduroam != null) {
-            WifiManager wifi = (WifiManager) mContext.getApplicationContext()
-                                                     .getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifi = (WifiManager) getContext().getApplicationContext()
+                                                         .getSystemService(Context.WIFI_SERVICE);
             wifi.removeNetwork(eduroam.networkId);
         }
-        Intent intent = new Intent(mContext, SetupEduroamActivity.class);
+        Intent intent = new Intent(getContext(), SetupEduroamActivity.class);
         // TCA should only produce correct profiles, so incorrect ones were configured somewhere else
         intent.putExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, true);
         return intent;
@@ -113,7 +113,7 @@ public class EduroamFixCard extends NotificationAwareCard {
 
     private boolean isConfigValid() {
         errors.clear();
-        eduroam = EduroamController.getEduroamConfig(mContext);
+        eduroam = EduroamController.getEduroamConfig(getContext());
 
         //If it is not configured then the config valid
         if (eduroam == null) {
@@ -130,7 +130,7 @@ public class EduroamFixCard extends NotificationAwareCard {
         // for all configurations
         // Check that the full quantifier is used (we already know it's a tum config)
         if (!eduroam.enterpriseConfig.getIdentity().contains(AT_SIGN)) {
-            errors.add(mContext.getString(R.string.wifi_identity_zone));
+            errors.add(getContext().getString(R.string.wifi_identity_zone));
         }
 
         int eapMethod = eduroam.enterpriseConfig.getEapMethod();
@@ -155,18 +155,18 @@ public class EduroamFixCard extends NotificationAwareCard {
             && !anonymousIdentity.equals("anonymous@mwn.de")
                 && !anonymousIdentity.equals("anonymous@eduroam.mwn.de")
                 && !anonymousIdentity.equals("anonymous@mytum.de")) {
-            errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set));
+            errors.add(getContext().getString(R.string.wifi_anonymous_identity_not_set));
         }
     }
 
     private void checkDNSName() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !isValidSubjectMatchAPI18(eduroam)) {
-            errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
+            errors.add(getContext().getString(R.string.wifi_dns_name_not_set));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                    && (!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS)
                        || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))
                    && !isValidSubjectMatchAPI18(eduroam)) {
-            errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
+            errors.add(getContext().getString(R.string.wifi_dns_name_not_set));
         }
     }
 

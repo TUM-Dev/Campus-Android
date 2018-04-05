@@ -24,7 +24,6 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.DateUtils;
@@ -51,7 +50,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     @Override
     public String getTitle() {
-        return mContext.getString(R.string.tuition_fees);
+        return getContext().getString(R.string.tuition_fees);
     }
 
     @Override
@@ -60,23 +59,23 @@ public class TuitionFeesCard extends NotificationAwareCard {
         CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
         List<View> addedViews = cardsViewHolder.getAddedViews();
 
-        mCard = viewHolder.itemView;
-        mLinearLayout = mCard.findViewById(R.id.card_view);
-        mTitleView = mCard.findViewById(R.id.card_title);
-        mTitleView.setText(getTitle());
+        setMCard(viewHolder.itemView);
+        setMLinearLayout(getMCard().findViewById(R.id.card_view));
+        setMTitleView(getMCard().findViewById(R.id.card_title));
+        getMTitleView().setText(getTitle());
 
         //Remove additional views
         for (View view : addedViews) {
-            mLinearLayout.removeView(view);
+            getMLinearLayout().removeView(view);
         }
 
         if ("0".equals(mTuition.getSoll())) {
-            addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez())));
+            addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez())));
         } else {
             Date d = DateUtils.getDate(mTuition.getFrist());
             String date = DateFormat.getDateInstance()
                                     .format(d);
-            addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_todo), date)));
+            addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_todo), date)));
 
             String balanceStr = mTuition.getSoll();
             try {
@@ -112,20 +111,20 @@ public class TuitionFeesCard extends NotificationAwareCard {
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         if ("0".equals(mTuition.getSoll())) {
-            notificationBuilder.setContentText(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez()));
+            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez()));
         } else {
-            notificationBuilder.setContentText(mTuition.getSoll() + "€\n" + String.format(mContext.getString(R.string.reregister_todo), mTuition.getFrist()));
+            notificationBuilder.setContentText(mTuition.getSoll() + "€\n" + String.format(getContext().getString(R.string.reregister_todo), mTuition.getFrist()));
         }
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        notificationBuilder.setLargeIcon(Utils.getLargeIcon(mContext, R.drawable.ic_money));
-        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_tuition_fee);
+        notificationBuilder.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_money));
+        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_tuition_fee);
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();
     }
 
     @Override
     public Intent getIntent() {
-        return new Intent(mContext, TuitionFeesActivity.class);
+        return new Intent(getContext(), TuitionFeesActivity.class);
     }
 
     @Override
