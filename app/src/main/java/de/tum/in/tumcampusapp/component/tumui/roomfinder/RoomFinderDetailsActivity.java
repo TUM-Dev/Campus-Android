@@ -266,7 +266,7 @@ public class RoomFinderDetailsActivity
                              @Override
                              public void onResponse(Call<RoomFinderCoordinate> call, Response<RoomFinderCoordinate> response) {
                                  try {
-                                     Optional<Geo> result = LocationManager.convertRoomFinderCoordinateToGeo(response.body());
+                                     Optional<Geo> result = LocationManager.Companion.convertRoomFinderCoordinateToGeo(response.body());
                                      onGeoLoadFinished(result);
                                  } catch (NullPointerException e) {
                                      Utils.log(e);

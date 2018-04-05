@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.component.ui.transportation;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Pair;
 import android.util.SparseArray;
 
 import com.google.common.base.Optional;
