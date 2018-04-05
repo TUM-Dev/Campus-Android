@@ -353,14 +353,14 @@ public class TransportController implements Card.ProvidesCard {
 
         // Get station for current campus
         LocationManager locMan = new LocationManager(context);
-        String station = locMan.getStation();
+        StationResult station = locMan.getStation();
         if (station == null) {
             return;
         }
 
-        List<Departure> cur = getDeparturesFromExternal(context, station);
+        List<Departure> cur = getDeparturesFromExternal(context, station.getId());
         MVVCard card = new MVVCard(context);
-        card.setStation(new Pair<>(station, station));
+        card.setStation(station);
         card.setDepartures(cur);
         card.apply();
 

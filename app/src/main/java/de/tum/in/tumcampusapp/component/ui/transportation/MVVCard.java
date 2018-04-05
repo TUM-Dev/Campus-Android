@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
+import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.StationResult;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -35,7 +36,7 @@ public class MVVCard extends NotificationAwareCard {
     private Pair<String, String> mStationNameIDPair;
     private List<Departure> mDepartures;
 
-    public MVVCard(Context context) {
+    MVVCard(Context context) {
         super(CARD_MVV, context, "card_mvv");
     }
 
@@ -139,6 +140,10 @@ public class MVVCard extends NotificationAwareCard {
 
     public void setStation(Pair<String, String> stationNameIDPair) {
         this.mStationNameIDPair = stationNameIDPair;
+    }
+
+    public void setStation(StationResult station) {
+        this.mStationNameIDPair = new Pair<>(station.getStation(), station.getId());
     }
 
     public void setDepartures(List<Departure> departures) {

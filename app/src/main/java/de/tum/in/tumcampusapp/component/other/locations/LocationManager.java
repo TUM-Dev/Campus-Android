@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -59,13 +60,18 @@ public class LocationManager {
     };
     private static final StationResult[] DEFAULT_CAMPUS_STATION = {
             new StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE),
+            new StationResult("Garching-Technische Universität", "1002070", Integer.MAX_VALUE),
             new StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE),
             new StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE),
             new StationResult("Theresienstraße", "1000120", Integer.MAX_VALUE),
             new StationResult("Klinikum Großhadern", "1001540", Integer.MAX_VALUE),
             new StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE),
             new StationResult("Giselastraße", "1000080", Integer.MAX_VALUE),
-            new StationResult("Universität", "1000070", Integer.MAX_VALUE)
+            new StationResult("Universität", "1000070", Integer.MAX_VALUE),
+            new StationResult("Pinakotheken", "1000051", Integer.MAX_VALUE),
+            new StationResult("Technische Universität", "1000095", Integer.MAX_VALUE),
+            new StationResult("Waldhüterstraße", "1001574", Integer.MAX_VALUE),
+            new StationResult("LMU Martinsried", "1002557", Integer.MAX_VALUE)
     };
 
     private static final String[] DEFAULT_CAMPUS_CAFETERIA = {"422", null, "423", "421", "414", null, "411", null};
@@ -259,15 +265,25 @@ public class LocationManager {
      *
      * @return Name of the station or null if the user is not near any campus
      */
-    public String getStation() { // TODO: return a StationResult, so we can query the MVV for IDs instead of station names
+    @Nullable
+    public StationResult getStation() {
         int campus = getCurrentCampus();
         if (campus == -1) {
             return null;
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final String defaultVal = DEFAULT_CAMPUS_STATION[campus].getStation();
-        return prefs.getString("card_stations_default_" + CAMPUS_SHORT[campus], defaultVal);
+        final StationResult defaultVal = DEFAULT_CAMPUS_STATION[campus];
+        final String campusSetting = "card_stations_default_" + CAMPUS_SHORT[campus];
+        String station = Utils.getSetting(mContext, campusSetting, "");
+        if (!"".equals(station)) {
+            for (StationResult s : DEFAULT_CAMPUS_STATION) {
+                if (s.getStation()
+                     .equals(station)) {
+                    return s;
+                }
+            }
+        }
+        return defaultVal;
     }
 
     /**
