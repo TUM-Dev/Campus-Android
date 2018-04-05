@@ -40,7 +40,8 @@ import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements
-                                                               SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
+                                                               SharedPreferences.OnSharedPreferenceChangeListener,
+                                                               Preference.OnPreferenceClickListener {
 
     public static final String FRAGMENT_TAG = "my_preference_fragment";
     private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";

@@ -43,10 +43,8 @@ public class LoginPromtCard extends Card {
     @Override
     protected boolean shouldShow(SharedPreferences p) {
         // show on top as long as user hasn't swiped it away and isn't connected to TUMonline
-        if(Utils.getSettingBool(mContext, CardManager.SHOW_LOGIN, true)){
-            return Utils.getSetting(mContext, Const.LRZ_ID, "").isEmpty();
-        }
-        return false;
+        return Utils.getSettingBool(mContext, CardManager.SHOW_LOGIN, true)
+               && Utils.getSetting(mContext, Const.LRZ_ID, "").isEmpty();
     }
 
     @Override
