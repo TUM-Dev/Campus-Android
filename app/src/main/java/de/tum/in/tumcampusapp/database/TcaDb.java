@@ -110,6 +110,7 @@ public abstract class TcaDb extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
                            .addMigrations(migrations)
+                           .fallbackToDestructiveMigration()
                            .build();
         }
         return instance;
