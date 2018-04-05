@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.transportation;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.Pair;
 import android.util.SparseArray;
@@ -24,7 +23,6 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
@@ -174,7 +172,6 @@ public class TransportController implements ProvidesCard {
      * Adds the settingsPrefix of a widget to the widget list, replaces the existing settingsPrefix if there are some
      */
     public void addWidget(int appWidgetId, WidgetDepartures widgetDepartures) {
-        ContentValues values = new ContentValues();
         WidgetsTransport widgetsTransport = new WidgetsTransport();
         widgetsTransport.setId(appWidgetId);
         widgetsTransport.setStation(widgetDepartures.getStation());

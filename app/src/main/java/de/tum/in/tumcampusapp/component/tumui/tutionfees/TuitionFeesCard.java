@@ -113,7 +113,8 @@ public class TuitionFeesCard extends NotificationAwareCard {
         if ("0".equals(mTuition.getSoll())) {
             notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez()));
         } else {
-            notificationBuilder.setContentText(mTuition.getSoll() + "€\n" + String.format(getContext().getString(R.string.reregister_todo), mTuition.getFrist()));
+            notificationBuilder.setContentText(mTuition.getSoll() + "€\n" +
+                                               String.format(getContext().getString(R.string.reregister_todo), mTuition.getFrist()));
         }
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
         notificationBuilder.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_money));
