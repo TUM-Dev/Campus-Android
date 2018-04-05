@@ -116,10 +116,6 @@ public class CacheManager {
     public void fillCache() {
 
         NetUtils net = new NetUtils(mContext);
-        // Cache curricula urls
-        if (shouldRefresh(CurriculaActivity.CURRICULA_URL)) {
-            net.downloadJsonArray(CurriculaActivity.CURRICULA_URL, CacheManager.VALIDITY_ONE_MONTH, true);
-        }
 
         // Cache news source images
         NewsController newsController = new NewsController(mContext);

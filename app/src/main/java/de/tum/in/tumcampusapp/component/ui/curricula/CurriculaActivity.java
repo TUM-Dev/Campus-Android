@@ -28,8 +28,6 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void, List
     public static final String NAME = "name";
     public static final String URL = "url";
 
-    public static final String CURRICULA_URL = "https://tumcabe.in.tum.de/Api/curricula";
-
     private final Map<String, String> options = new HashMap<>();
     private ArrayList<Curriculum> curriculumList;
     private StickyListHeadersListView list;
