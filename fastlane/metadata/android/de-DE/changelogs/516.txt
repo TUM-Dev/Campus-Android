@@ -1,0 +1,4 @@
+Viele Fehler behoben
+Informationen Barrierefreiheit hinzugefügt
+Besserer Standard Campus basierend auf der Fakultät
+Verbesserte MVV Ergebnisse
