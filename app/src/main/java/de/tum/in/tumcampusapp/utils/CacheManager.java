@@ -124,7 +124,7 @@ public class CacheManager {
         // Cache news source images
         NewsController newsController = new NewsController(mContext);
         List<NewsSources> newsSources = newsController.getNewsSources();
-        for (NewsSources newsSource: newsSources) {
+        for (NewsSources newsSource : newsSources) {
             String imgUrl = newsSource.getIcon();
             if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
                 net.downloadImage(imgUrl);
@@ -133,7 +133,7 @@ public class CacheManager {
 
         // Cache news images
         List<News> news = newsController.getAllFromDb(mContext);
-        for (News n: news) {
+        for (News n : news) {
             String imgUrl = n.getImage();
             if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
                 net.downloadImage(imgUrl);
@@ -141,13 +141,15 @@ public class CacheManager {
         }
 
         // Cache kino covers
-        kinoDao.getAll().subscribe(it -> {
-        for (Kino kino : it) {
-            String imgUrl = kino.getCover();
-            if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
-                net.downloadImage(imgUrl);
-            }}
-        });
+        kinoDao.getAll()
+               .subscribe(it -> {
+                   for (Kino kino : it) {
+                       String imgUrl = kino.getCover();
+                       if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
+                           net.downloadImage(imgUrl);
+                       }
+                   }
+               });
 
         // acquire access token
         if (!new AccessTokenManager(mContext).hasValidAccessToken()) {
