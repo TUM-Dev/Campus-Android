@@ -59,8 +59,8 @@ public class LocationManager {
             "S" // Geschwister Schollplatz/Adalbertstraße
     };
     private static final StationResult[] DEFAULT_CAMPUS_STATION = {
+            //Default stations for each campus
             new StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE),
-            new StationResult("Garching-Technische Universität", "1002070", Integer.MAX_VALUE),
             new StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE),
             new StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE),
             new StationResult("Theresienstraße", "1000120", Integer.MAX_VALUE),
@@ -68,10 +68,13 @@ public class LocationManager {
             new StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE),
             new StationResult("Giselastraße", "1000080", Integer.MAX_VALUE),
             new StationResult("Universität", "1000070", Integer.MAX_VALUE),
+
+            //Other Stations, that may be selected as default for a campus
             new StationResult("Pinakotheken", "1000051", Integer.MAX_VALUE),
             new StationResult("Technische Universität", "1000095", Integer.MAX_VALUE),
             new StationResult("Waldhüterstraße", "1001574", Integer.MAX_VALUE),
-            new StationResult("LMU Martinsried", "1002557", Integer.MAX_VALUE)
+            new StationResult("LMU Martinsried", "1002557", Integer.MAX_VALUE),
+            new StationResult("Garching-Technische Universität", "1002070", Integer.MAX_VALUE)
     };
 
     private static final String[] DEFAULT_CAMPUS_CAFETERIA = {"422", null, "423", "421", "414", null, "411", null};
@@ -272,7 +275,6 @@ public class LocationManager {
             return null;
         }
 
-        final StationResult defaultVal = DEFAULT_CAMPUS_STATION[campus];
         final String campusSetting = "card_stations_default_" + CAMPUS_SHORT[campus];
         String station = Utils.getSetting(mContext, campusSetting, "");
         if (!"".equals(station)) {
@@ -283,7 +285,7 @@ public class LocationManager {
                 }
             }
         }
-        return defaultVal;
+        return DEFAULT_CAMPUS_STATION[campus];
     }
 
     /**

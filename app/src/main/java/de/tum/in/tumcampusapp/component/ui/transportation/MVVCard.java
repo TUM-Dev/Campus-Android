@@ -143,7 +143,7 @@ public class MVVCard extends NotificationAwareCard {
     }
 
     public void setStation(StationResult station) {
-        this.mStationNameIDPair = new Pair<>(station.getStation(), station.getId());
+        setStation(new Pair<>(station.getStation(), station.getId()));
     }
 
     public void setDepartures(List<Departure> departures) {
