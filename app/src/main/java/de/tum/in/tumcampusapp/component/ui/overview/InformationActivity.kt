@@ -17,7 +17,6 @@ import android.widget.TextView
 import de.psdev.licensesdialog.LicensesDialog
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
-import de.tum.`in`.tumcampusapp.component.other.reporting.stats.ImplicitCounter
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_information.*
@@ -31,8 +30,6 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        ImplicitCounter.count(this)
         this.displayDebugInfo()
 
         button_facebook.setOnClickListener {
