@@ -14,6 +14,7 @@ import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.StickyCard;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -27,10 +28,10 @@ public class NoInternetCard extends StickyCard {
         super(CardManager.CARD_NO_INTERNET, context);
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_no_internet, parent, false);
-        return new Card.CardViewHolder(view);
+        return new CardViewHolder(view);
     }
 
     @Override

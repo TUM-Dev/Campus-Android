@@ -11,19 +11,20 @@ import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamFixCard;
 import de.tum.in.tumcampusapp.component.ui.news.NewsCard;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.transportation.MVVCard;
 
 /**
  * Adapter for the cards start page used in {@link MainActivity}
  */
-public class CardAdapter extends RecyclerView.Adapter<Card.CardViewHolder> implements MainActivity.ItemTouchHelperAdapter{
+public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> implements MainActivity.ItemTouchHelperAdapter{
 
     public static Card getItem(int i) {
         return CardManager.getCard(i);
     }
 
     @Override
-    public Card.CardViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public CardViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case CardManager.CARD_CAFETERIA:
                 return CafeteriaMenuCard.inflateViewHolder(viewGroup);
@@ -54,7 +55,7 @@ public class CardAdapter extends RecyclerView.Adapter<Card.CardViewHolder> imple
     }
 
     @Override
-    public void onBindViewHolder(Card.CardViewHolder viewHolder, int position) {
+    public void onBindViewHolder(CardViewHolder viewHolder, int position) {
         Card card = CardManager.getCard(position);
         viewHolder.setCurrentCard(card);
         card.updateViewHolder(viewHolder);

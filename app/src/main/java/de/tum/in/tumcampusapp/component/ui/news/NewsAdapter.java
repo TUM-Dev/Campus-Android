@@ -17,11 +17,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 
-public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
     private final NetUtils net;
     private final List<News> news;
@@ -87,12 +88,12 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     }
 
     @Override
-    public Card.CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return NewsCard.inflateViewHolder(parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(Card.CardViewHolder holder, int position) {
+    public void onBindViewHolder(CardViewHolder holder, int position) {
         NewsViewHolder nHolder = (NewsViewHolder) holder;
         NewsCard card;
         if (news.get(position).isFilm()) {
@@ -116,7 +117,7 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
         return news.size();
     }
 
-    private static class NewsViewHolder extends Card.CardViewHolder {
+    private static class NewsViewHolder extends CardViewHolder {
         ImageView img;
         TextView title;
         TextView srcDate;

@@ -28,6 +28,7 @@ import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
 import de.tum.in.tumcampusapp.component.other.settings.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX;
 
@@ -36,20 +37,21 @@ import static de.tum.in.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
  */
 public abstract class Card implements Comparable<Card> {
     public static final String DISCARD_SETTINGS_START = "discard_settings_start";
-    public static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
+    static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
 
     // Context related stuff
     protected Context mContext;
+
     // UI Elements
     protected View mCard;
     protected LinearLayout mLinearLayout;
     protected TextView mTitleView;
     private final String mSettings;
+
     // Settings for showing this card on start page or as notification
     // Default values set for restore card, no internet card, etc.
     private boolean mShowStart = true;
-    protected boolean mShowWear;
-    protected boolean mShowPhone;
+    boolean mShowPhone;
 
     private final int cardType;
 
@@ -79,15 +81,13 @@ public abstract class Card implements Comparable<Card> {
      *
      * @param context      Context
      * @param settings     Preference key prefix used for all preferences belonging to that card
-     * @param wearDefault  True if notifications should by default be displayed on android wear
      * @param phoneDefault True if notifications should by default be displayed on the phone
      */
-    public Card(int cardType, Context context, String settings, boolean wearDefault, boolean phoneDefault) {
+    public Card(int cardType, Context context, String settings, boolean phoneDefault) {
         this(cardType, context, settings);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        mShowStart = prefs.getBoolean(settings + "_start", true);
-        mShowWear = prefs.getBoolean(settings + "_wear", wearDefault);
-        mShowPhone = prefs.getBoolean(settings + "_phone", phoneDefault);
+
+        mShowStart = Utils.getSettingBool(mContext, settings + "_start", true);
+        mShowPhone = Utils.getSettingBool(mContext, settings + "_phone", phoneDefault);
     }
 
     /**
@@ -140,13 +140,6 @@ public abstract class Card implements Comparable<Card> {
     }
 
     /**
-     * Save information about the dismissed card/notification to decide later if the card should be shown again
-     *
-     * @param editor Editor to be used for saving values
-     */
-    protected abstract void discard(Editor editor);
-
-    /**
      * Must be called after information has been set
      * Adds the card to CardManager if not dismissed before and notifies the user
      */
@@ -170,11 +163,7 @@ public abstract class Card implements Comparable<Card> {
         return true;
     }
 
-    /**
-     * @return Should return the intent that should be launched if the card
-     * or the notification gets clicked, null if nothing should happen
-     */
-    public abstract Intent getIntent();
+
 
     /**
      * Tells the list adapter and indirectly the
@@ -202,15 +191,9 @@ public abstract class Card implements Comparable<Card> {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         Editor e = prefs.edit();
         e.putBoolean(mSettings + "_start", false);
-        e.putBoolean(mSettings + "_wear", false);
         e.putBoolean(mSettings + "_phone", false);
         e.apply();
     }
-
-    /**
-     * @return a unique identifier among the type of the card
-     */
-    public abstract int getId();
 
     public int getPosition() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -237,95 +220,20 @@ public abstract class Card implements Comparable<Card> {
     }
 
     /**
-     * Interface which has to be implemented by a manager class to add cards to the stream
+     * @return Should return the intent that should be launched if the card
+     * or the notification gets clicked, null if nothing should happen
      */
-    public interface ProvidesCard {
-        /**
-         * Gets called whenever cards need to be shown or refreshed.
-         * This method should decide whether a card can be displayed and if so
-         * call {@link Card#apply()} to tell the card manager.
-         *
-         * @param context Context
-         */
-        void onRequestCard(Context context);
-    }
+    public abstract Intent getIntent();
 
-    public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
-        private Card current;
-        private List<View> addedViews = new ArrayList<>();
-        private final Activity mActivity;
+    /**
+     * @return a unique identifier among the type of the card
+     */
+    public abstract int getId();
 
-        public CardViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-            mActivity = (Activity) itemView.getContext();
-        }
-
-        public Card getCurrentCard() {
-            return current;
-        }
-
-        public void setCurrentCard(Card current) {
-            this.current = current;
-        }
-
-        public List<View> getAddedViews() {
-            return addedViews;
-        }
-
-        public void setAddedViews(List<View> addedViews) {
-            this.addedViews = addedViews;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Intent i = current.getIntent();
-            String transitionName = mActivity.getString(R.string.transition_card);
-            if (i != null) {
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        mActivity, v, transitionName
-                );
-                ContextCompat.startActivity(mActivity, i, options.toBundle());
-            }
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            String key = current.getSettings();
-            if (key == null) {
-                return false;
-            }
-            PopupMenu menu = new PopupMenu(v.getContext(), v, Gravity.CENTER_HORIZONTAL);
-            MenuInflater inf = menu.getMenuInflater();
-            inf.inflate(R.menu.card_popup_menu, menu.getMenu());
-            menu.setOnMenuItemClickListener(this);
-
-            menu.show();
-            return true;
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            int i = item.getItemId();
-            if (i == R.id.open_card_setting) {// Open card's preference screen
-                String key = current.getSettings();
-                if (key == null) {
-                    return true;
-                }
-
-                Intent intent = new Intent(itemView.getContext(), UserPreferencesActivity.class);
-                intent.putExtra(Const.PREFERENCE_SCREEN, key);
-                itemView.getContext()
-                        .startActivity(intent);
-                return true;
-            } else if (i == R.id.always_hide_card) {
-                current.hideAlways();
-                current.discardCard();
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
+    /**
+     * Save information about the dismissed card/notification to decide later if the card should be shown again
+     *
+     * @param editor Editor to be used for saving values
+     */
+    protected abstract void discard(Editor editor);
 }

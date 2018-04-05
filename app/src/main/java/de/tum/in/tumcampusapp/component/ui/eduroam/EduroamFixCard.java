@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -36,7 +37,7 @@ public class EduroamFixCard extends NotificationAwareCard {
     private static final String AT_SIGN = "@";
 
     public EduroamFixCard(Context context) {
-        super(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start", false, true);
+        super(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start", true);
         errors = new ArrayList<>();
     }
 

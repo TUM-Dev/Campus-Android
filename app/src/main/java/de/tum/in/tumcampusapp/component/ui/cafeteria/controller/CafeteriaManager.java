@@ -18,6 +18,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
@@ -26,9 +27,8 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * Cafeteria Manager, handles database stuff, external imports
  */
-public class CafeteriaManager implements Card.ProvidesCard {
+public class CafeteriaManager implements ProvidesCard {
 
-    private final Context mContext;
     private final CafeteriaViewModel cafeteriaViewModel;
     private final CompositeDisposable compositeDisposable;
 
@@ -38,7 +38,6 @@ public class CafeteriaManager implements Card.ProvidesCard {
      * @param context Context
      */
     public CafeteriaManager(Context context) {
-        mContext = context;
         TcaDb db = TcaDb.getInstance(context);
         compositeDisposable = new CompositeDisposable();
         CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;

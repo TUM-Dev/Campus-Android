@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -22,7 +23,7 @@ public class SupportCard extends Card {
         super(CardManager.CARD_SUPPORT, context);
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         final View view = LayoutInflater.from(parent.getContext())
                                         .inflate(R.layout.card_support, parent, false);
         //Add links to imageviews
@@ -42,7 +43,7 @@ public class SupportCard extends Card {
                 view.getContext()
                     .startActivity(browserIntent);
             });
-        return new Card.CardViewHolder(view);
+        return new CardViewHolder(view);
     }
 
     @Override

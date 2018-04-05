@@ -25,6 +25,7 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
@@ -39,7 +40,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Transport Manager, handles querying data from mvv and card creation
  */
 @SuppressWarnings("StringConcatenationMissingWhitespace")
-public class TransportController implements Card.ProvidesCard {
+public class TransportController implements ProvidesCard {
 
     /*  Documentation for using efa.mvv-muenchen.de
      *

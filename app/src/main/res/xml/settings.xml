@@ -17,13 +17,7 @@
                     android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_cafeteria_wear"
-                    android:title="@string/wear"/>
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:dependency="card_cafeteria_wear"
                     android:key="card_cafeteria_phone"
-                    android:summary="@string/phone_summary"
                     android:title="@string/notification"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/default_cafeteria">
@@ -96,13 +90,7 @@
                     android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_mvv_wear"
-                    android:title="@string/wear"/>
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:dependency="card_mvv_wear"
                     android:key="card_mvv_phone"
-                    android:summary="@string/phone_summary"
                     android:title="@string/notification"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/default_station">
@@ -140,13 +128,7 @@
                     android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_next_lecture_wear"
-                    android:title="@string/wear"/>
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:dependency="card_next_lecture_wear"
                     android:key="card_next_lecture_phone"
-                    android:summary="@string/phone_summary"
                     android:title="@string/notification"/>
             </PreferenceCategory>
         </PreferenceScreen>
@@ -163,13 +145,7 @@
                     android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_tuition_fee_wear"
-                    android:title="@string/wear"/>
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:dependency="card_tuition_fee_wear"
                     android:key="card_tuition_fee_phone"
-                    android:summary="@string/phone_summary"
                     android:title="@string/notification"/>
             </PreferenceCategory>
         </PreferenceScreen>
@@ -186,13 +162,7 @@
                     android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
-                    android:key="card_news_wear"
-                    android:title="@string/wear"/>
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:dependency="card_news_wear"
                     android:key="card_news_phone"
-                    android:summary="@string/phone_summary"
                     android:title="@string/notification"/>
             </PreferenceCategory>
             <PreferenceCategory
@@ -228,13 +198,7 @@
                     android:title="@string/startpage"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_chat_wear"
-                    android:title="@string/wear"/>
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:dependency="card_chat_wear"
                     android:key="card_chat_phone"
-                    android:summary="@string/phone_summary"
                     android:title="@string/notification"/>
             </PreferenceCategory>
         </PreferenceScreen>

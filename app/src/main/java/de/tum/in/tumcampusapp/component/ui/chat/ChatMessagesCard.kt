@@ -18,6 +18,7 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoomDbRow
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager.CARD_CHAT
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
+import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.NotificationAwareCard
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -45,7 +46,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
     override fun  updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         mCard = viewHolder.itemView
-        val cardsViewHolder = viewHolder as Card.CardViewHolder
+        val cardsViewHolder = viewHolder as CardViewHolder
         val addedViews = cardsViewHolder.addedViews
 
         mLinearLayout = mCard.findViewById(R.id.card_view)
@@ -109,7 +110,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
     companion object {
         fun inflateViewHolder(parent: ViewGroup) =
-                Card.CardViewHolder(LayoutInflater.from(parent.context)
+                CardViewHolder(LayoutInflater.from(parent.context)
                         .inflate(R.layout.card_item, parent, false))
     }
 }

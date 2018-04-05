@@ -28,7 +28,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRow;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
@@ -38,7 +38,7 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 /**
  * Calendar Manager, handles database stuff, external imports.
  */
-public class CalendarController implements Card.ProvidesCard {
+public class CalendarController implements ProvidesCard {
     private static final String[] PROJECTION = {"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week

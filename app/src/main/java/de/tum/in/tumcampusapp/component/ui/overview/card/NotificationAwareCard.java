@@ -16,8 +16,8 @@ public abstract class NotificationAwareCard extends Card {
         super(cardType, context, settings);
     }
 
-    public NotificationAwareCard(int cardType, Context context, String settings, boolean wearDefault, boolean phoneDefault) {
-        super(cardType, context, settings, wearDefault, phoneDefault);
+    public NotificationAwareCard(int cardType, Context context, String settings, boolean phoneDefault) {
+        super(cardType, context, settings, phoneDefault);
     }
 
     /**
@@ -38,22 +38,14 @@ public abstract class NotificationAwareCard extends Card {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_DEFAULT)
                         .setAutoCancel(true)
-                        .setContentTitle(getTitle());
+                        .setContentTitle(getTitle())
+                        .setSmallIcon(R.drawable.ic_notification);
 
         // If intent is specified add the content intent to the notification
         final Intent intent = getIntent();
         if (intent != null) {
             PendingIntent viewPendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
             notificationBuilder.setContentIntent(viewPendingIntent);
-        }
-
-        // Apply trick to hide card on phone if it the notification
-        // should only be present on the watch
-        if (mShowWear && !mShowPhone) {
-            notificationBuilder.setGroup("GROUP_" + getType());
-            notificationBuilder.setGroupSummary(false);
-        } else {
-            notificationBuilder.setSmallIcon(R.drawable.ic_notification);
         }
 
         // Let the card set detailed information
@@ -86,8 +78,8 @@ public abstract class NotificationAwareCard extends Card {
     @Override
     public void apply() {
         super.apply();
-        // Should be shown on phone or watch?
-        if (mShowWear || mShowPhone) {
+        // Should be shown as notification
+        if (mShowPhone) {
             SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
             if (shouldShowNotification(prefs)) {
                 notifyUser();

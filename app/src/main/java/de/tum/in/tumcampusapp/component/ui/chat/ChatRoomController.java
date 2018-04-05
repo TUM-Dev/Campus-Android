@@ -22,7 +22,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -30,7 +30,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
-public class ChatRoomController implements Card.ProvidesCard {
+public class ChatRoomController implements ProvidesCard {
 
     private final ChatRoomDao chatRoomDao;
 
