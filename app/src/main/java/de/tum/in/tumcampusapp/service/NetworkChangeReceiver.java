@@ -13,14 +13,19 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = conManager.getActiveNetworkInfo();
-        if (info == null) {
+        if (conManager == null) {
             return;
         }
-        if (info.isConnected()) {
+
+        NetworkInfo info = conManager.getActiveNetworkInfo();
+        if (info == null || !info.isConnected()) {
+            return;
+        }
+
+        WifiManager wm = (WifiManager) context.getApplicationContext()
+                                              .getSystemService(Context.WIFI_SERVICE);
+        if (wm != null) {
             Utils.log("WifiStateChange");
-            WifiManager wm = (WifiManager) context.getApplicationContext()
-                                                  .getSystemService(Context.WIFI_SERVICE);
             wm.startScan();
         }
     }

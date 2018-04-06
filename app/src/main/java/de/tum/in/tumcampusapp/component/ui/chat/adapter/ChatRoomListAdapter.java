@@ -150,7 +150,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         if (rooms != null) {
             return rooms.get(position)
                         .getChatRoomDbRow()
-                        .getId();
+                        .getLvId();
         } else {
             return -1;
         }

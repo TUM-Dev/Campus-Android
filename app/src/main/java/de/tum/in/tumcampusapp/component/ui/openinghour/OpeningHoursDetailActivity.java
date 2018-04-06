@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
 
 /**
  * An activity representing a single Item detail screen. This activity is only
@@ -26,7 +25,6 @@ public class OpeningHoursDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.count(this);
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
