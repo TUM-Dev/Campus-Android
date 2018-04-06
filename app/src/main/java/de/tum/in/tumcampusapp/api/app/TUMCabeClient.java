@@ -14,7 +14,6 @@ import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.other.reporting.stats.model.Statistics;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
@@ -42,9 +41,7 @@ import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -208,22 +205,6 @@ public final class TUMCabeClient {
         return service.getLocation(locationId)
                       .execute()
                       .body();
-    }
-
-    public void putStatistics(Statistics s) {
-        service.putStatistics(s)
-               .enqueue(new Callback<List<String>>() {
-                   @Override
-                   public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                       //We don't care about any responses
-                   }
-
-                   @Override
-                   public void onFailure(Call<List<String>> call, Throwable t) {
-                       //Or if this fails
-                   }
-               });
-
     }
 
     public void deviceRegister(DeviceRegister verification, Callback<TUMCabeStatus> cb) {

@@ -5,7 +5,6 @@ import android.widget.ImageView;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
 
 /**
  * Activity to show plan details.
@@ -22,7 +21,6 @@ public class PlansDetailsActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.count(this);
 
         int title = getIntent().getExtras()
                                .getInt(PLAN_TITLE_ID);
