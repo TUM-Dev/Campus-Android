@@ -32,38 +32,44 @@ class LocationManager(c: Context) {
     private val buildingToGpsDao: BuildingToGpsDao
     private var manager: android.location.LocationManager? = null
 
+    init {
+        val db = TcaDb.getInstance(c)
+        buildingToGpsDao = db.buildingToGpsDao()
+    }
+
     /**
      * Tests if Google Play services is available and then gets last known position
-     *
+     * If location services are not available use default location if set
      * @return Returns the more or less current position or null on failure
      */
-    private// If location services are not available use default location if set
-    val currentLocation: Location?
-        get() {
-            if (servicesConnected()) {
-                val loc = lastLocation
-                if (loc != null) {
-                    return loc
-                }
-            }
-            val selectedCampus = Utils.getSetting(mContext, Const.DEFAULT_CAMPUS, "G")
-            if ("X" != selectedCampus) {
-                val campus = CAMPUS_SHORT[selectedCampus]
-                return CAMPUS_LOCATIONS[campus]
-            }
+    private fun getCurrentLocation(): Location? {
+        if (!servicesConnected()) {
             return null
         }
+
+        val loc = getLastLocation()
+        if (loc != null) {
+            return loc
+        }
+
+        val selectedCampus = Utils.getSetting(mContext, Const.DEFAULT_CAMPUS, "G")
+        val allCampi = Campus.values().associateBy(Campus::short);
+
+        if ("X" != selectedCampus && allCampi.containsKey(selectedCampus)) {
+            return allCampi[selectedCampus]!!.getLocation()
+        }
+        return null
+    }
 
     /**
      * Returns the "id" of the current campus
      *
      * @return Campus id
      */
-    private val currentCampus: Campus?
-        get() {
-            val loc = currentLocation ?: return null
-            return getCampusFromLocation(loc)
-        }
+    private fun getCurrentCampus(): Campus? {
+        val loc = getCurrentLocation() ?: return null
+        return getCampusFromLocation(loc)
+    }
 
     /**
      * Returns the cafeteria's identifier which is near the given location
@@ -71,21 +77,20 @@ class LocationManager(c: Context) {
      *
      * @return Campus id
      */
-    private val cafeterias: List<Cafeteria>
-        get() {
-            val location = currentOrNextLocation
+    private fun getCafeterias(): List<Cafeteria> {
+        val location = getCurrentOrNextLocation()
 
-            val lat = location.latitude
-            val lng = location.longitude
-            val results = FloatArray(1)
-            val list = LinkedList<Cafeteria>()
-            for (cafeteria in list) {
-                Location.distanceBetween(cafeteria.latitude, cafeteria.longitude, lat, lng, results)
-                cafeteria.distance = results[0]
-            }
-            list.sort()
-            return list
+        val lat = location.latitude
+        val lng = location.longitude
+        val results = FloatArray(1)
+        val list = LinkedList<Cafeteria>()
+        for (cafeteria in list) {
+            Location.distanceBetween(cafeteria.latitude, cafeteria.longitude, lat, lng, results)
+            cafeteria.distance = results[0]
         }
+        list.sort()
+        return list
+    }
 
     /**
      * Gets the current location and if it is not available guess
@@ -93,107 +98,95 @@ class LocationManager(c: Context) {
      *
      * @return Any of the above described locations.
      */
-    val currentOrNextLocation: Location
-        get() {
-            return currentLocation ?: nextLocation
-        }
+    fun getCurrentOrNextLocation(): Location {
+        return getCurrentLocation() ?: getNextLocation()
+    }
 
     /**
      * Returns the last known location of the device
      *
      * @return The last location
      */
+    fun getLastLocation(): Location? {
+        //Check Location permission for Android 6.0
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return null
+        }
 
-    val lastLocation: Location?
-        get() {
-            //Check Location permission for Android 6.0
-            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return null
-            }
+        var bestResult: Location? = null
+        var bestAccuracy = java.lang.Float.MAX_VALUE
+        var bestTime = java.lang.Long.MIN_VALUE
+        val minTime: Long = 0
 
-            var bestResult: Location? = null
-            var bestAccuracy = java.lang.Float.MAX_VALUE
-            var bestTime = java.lang.Long.MIN_VALUE
-            val minTime: Long = 0
+        val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
+        val matchingProviders = locationManager.allProviders
+        for (provider in matchingProviders) {
 
-            val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
-            val matchingProviders = locationManager.allProviders
-            for (provider in matchingProviders) {
+            val location = locationManager.getLastKnownLocation(provider)
+            if (location != null) {
+                val accuracy = location.accuracy
+                val time = location.time
 
-                val location = locationManager.getLastKnownLocation(provider)
-                if (location != null) {
-                    val accuracy = location.accuracy
-                    val time = location.time
-
-                    if (time > minTime && accuracy < bestAccuracy) {
-                        bestResult = location
-                        bestAccuracy = accuracy
-                        bestTime = time
-                    } else if (time < minTime &&
-                            bestAccuracy == java.lang.Float.MAX_VALUE && time > bestTime) {
-                        bestResult = location
-                        bestTime = time
-                    }
+                if (time > minTime && accuracy < bestAccuracy) {
+                    bestResult = location
+                    bestAccuracy = accuracy
+                    bestTime = time
+                } else if (time < minTime && bestAccuracy == java.lang.Float.MAX_VALUE && time > bestTime) {
+                    bestResult = location
+                    bestTime = time
                 }
             }
-            return bestResult
         }
+        return bestResult
+    }
 
     /**
      * Returns the name of the station that is nearby and/or set by the user
      *
      * @return Name of the station or null if the user is not near any campus
      */
-    val station: StationResult?
-        get() {
-            val campus = currentCampus ?: return null
+    fun getStation(): StationResult? {
+        val campus = getCurrentCampus() ?: return null
 
-            val campusSetting = "card_stations_default_" + campus.short
-            val station = Utils.getSetting(mContext, campusSetting, "")
-            if ("" != station) {
-                ALL_POSSIBLE_DEFAULT_STATIONS.find {
-                    it.station == station
-                }?.let { return it }
-            }
-            return DEFAULT_CAMPUS_STATION[campus]
+        val campusSetting = "card_stations_default_" + campus.short
+        val station = Utils.getSetting(mContext, campusSetting, "")
+        if ("".equals(station)) {
+            ALL_POSSIBLE_DEFAULT_STATIONS.values.find {
+                it.station == station
+            }?.let { return it }
         }
+        return ALL_POSSIBLE_DEFAULT_STATIONS[campus]
+    }
 
     /**
      * Gets the campus you are currently on or if you are at home or wherever
      * query for your next lecture and find out at which campus it takes place
      */
-    private val currentOrNextCampus: Campus?
-        get() {
-            return currentCampus ?: nextCampus
-        }
+    private fun getCurrentOrNextCampus(): Campus? {
+        return getCurrentCampus() ?: getNextCampus()
+    }
 
     /**
-     * Provides some intelligence to pick one cafeteria to show
+     * If the user is in university or a lecture has been recognized => Get nearest cafeteria
      */
-    // If the user is in university or a lecture has been recognized
-    // Get nearest cafeteria
-    val cafeteria: Int
-        get() {
-            val campus = currentOrNextCampus
-            if (campus != null) {
-                val prefs = PreferenceManager.getDefaultSharedPreferences(mContext)
-                val defaultVal = DEFAULT_CAMPUS_CAFETERIA[campus]
-                val cafeteria = prefs.getString("card_cafeteria_default_" + campus.short, defaultVal)
-                if (cafeteria != null) {
-                    return Integer.parseInt(cafeteria)
-                }
+    fun getCafeteria(): Int {
+        val campus = getCurrentOrNextCampus()
+        if (campus != null) {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(mContext)
+            val cafeteria = prefs.getString("card_cafeteria_default_" + campus.short, campus.defaultMensa)
+            if (cafeteria != null) {
+                return Integer.parseInt(cafeteria)
             }
-            val list = cafeterias
-            return if (list.isEmpty()) {
-                -1
-            } else list[0].id
         }
+
+        val allCafeterias = getCafeterias();
+        return if (allCafeterias.isEmpty()) -1 else allCafeterias[0].id
+    }
 
     /**
      * Queries your calender and gets the campus at which your next lecture takes place
      */
-    private val nextCampus: Campus?
-        get() = getCampusFromLocation(nextLocation)
+    private fun getNextCampus(): Campus? = getCampusFromLocation(getNextLocation())
 
     /**
      * Gets the location of the next room where the user has a lecture.
@@ -201,29 +194,26 @@ class LocationManager(c: Context) {
      *
      * @return Location of the next lecture room
      */
-    private val nextLocation: Location
-        get() {
-            val manager = CalendarController(mContext)
-            val geo = manager.nextCalendarItemGeo
-            val location: Location
-            if (geo == null) {
-                location = CAMPUS_LOCATIONS[Campus.GarchingForschungszentrum]!!
-            } else {
-                location = Location("roomfinder")
-                location.latitude = java.lang.Double.parseDouble(geo.latitude)
-                location.longitude = java.lang.Double.parseDouble(geo.longitude)
-            }
-            return location
+    private fun getNextLocation(): Location {
+        val manager = CalendarController(mContext)
+        val geo = manager.nextCalendarItemGeo
+        if (geo == null) {
+            return Campus.GarchingForschungszentrum.getLocation()
         }
+
+        val location = Location("roomfinder")
+        location.latitude = java.lang.Double.parseDouble(geo.latitude)
+        location.longitude = java.lang.Double.parseDouble(geo.longitude)
+        return location
+    }
 
     /**
      * This method tries to get the list of BuildingToGps by querying database or requesting the server.
      * If both two ways fail, it returns Optional.absent().
-     *
+     * we have to fetch buildings to gps mapping first.
      * @return The list of BuildingToGps
      */
-    private// we have to fetch buildings to gps mapping first.
-    val orFetchBuildingsToGps: List<BuildingToGps>
+    private val orFetchBuildingsToGps: List<BuildingToGps>
         get() {
             var result: List<BuildingToGps>? = buildingToGpsDao.all
             if (result!!.isEmpty()) {
@@ -249,13 +239,9 @@ class LocationManager(c: Context) {
      *
      * @return the id of current building
      */
-    val buildingIDFromCurrentLocation: Optional<String>
-        get() = getBuildingIDFromLocation(currentLocation!!)
+    fun getBuildingIDFromCurrentLocation(): Optional<String> = getBuildingIDFromLocation(getCurrentLocation()!!)
 
-    init {
-        val db = TcaDb.getInstance(c)
-        buildingToGpsDao = db.buildingToGpsDao()
-    }
+
 
     /**
      * This might be battery draining
@@ -289,13 +275,10 @@ class LocationManager(c: Context) {
      */
     private fun servicesConnected(): Boolean {
         val resultCode = GoogleApiAvailability.getInstance()
-                .isGooglePlayServicesAvailable(mContext)
-        return if (ConnectionResult.SUCCESS == resultCode) {
-            true
-        } else {
-            Utils.log("Google Play services is NOT available.")
-            false
-        }
+                .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS
+
+        Utils.log("Google Play services is $resultCode")
+        return resultCode
     }
 
     /**
@@ -390,39 +373,22 @@ class LocationManager(c: Context) {
     }
 
     companion object {
-        private enum class Campus(val short: String) {
-            GarchingForschungszentrum("G"),
-            GarchingHochbrueck("H"),
-            Weihenstephan("W"),
-            Stammgelaende("C"),
-            KlinikumGrosshadern("K"),
-            KlinikumRechtsDerIsar("I"),
-            Leopoldstrasse("L"),
-            GeschwisterSchollplatzAdalbertstrasse("S")
+        private enum class Campus(val short: String, val lat: Double, val lon: Double, val defaultMensa: String?) {
+            GarchingForschungszentrum("G", 48.2648424, 11.6709511, "422"),
+            GarchingHochbrueck("H", 48.249432, 11.633905, null),
+            Weihenstephan("W", 48.397990, 11.722727, "423"),
+            Stammgelaende("C", 48.149436, 11.567635, "421"),
+            KlinikumGrosshadern("K", 48.110847, 11.4703001, "414"),
+            KlinikumRechtsDerIsar("I", 48.137, 11.601119, null),
+            Leopoldstrasse("L", 48.155916, 11.583095, "411"),
+            GeschwisterSchollplatzAdalbertstrasse("S", 48.150244, 11.580665, null);
+
+            fun getLocation(): Location {
+                return Location("defaultLocation").apply { latitude = lat; longitude = lon }
+            }
         }
 
-        private val CAMPUS_LOCATIONS = mapOf(
-                Campus.GarchingForschungszentrum to Location("defaultLocation").apply { latitude = 48.2648424; longitude = 11.6709511 },
-                Campus.GarchingHochbrueck to Location("defaultLocation").apply { latitude = 48.249432; longitude = 11.633905 },
-                Campus.Weihenstephan to Location("defaultLocation").apply { latitude = 48.397990; longitude = 11.722727 },
-                Campus.Stammgelaende to Location("defaultLocation").apply { latitude = 48.149436; longitude = 11.567635 },
-                Campus.KlinikumGrosshadern to Location("defaultLocation").apply { latitude = 48.110847; longitude = 11.4703001 },
-                Campus.KlinikumRechtsDerIsar to Location("defaultLocation").apply { latitude = 48.137539; longitude = 11.601119 },
-                Campus.Leopoldstrasse to Location("defaultLocation").apply { latitude = 48.155916; longitude = 11.583095 },
-                Campus.GeschwisterSchollplatzAdalbertstrasse to Location("defaultLocation").apply { latitude = 48.150244; longitude = 11.580665 }
-        )
-
-        private val CAMPUS_SHORT = mapOf(
-                "G" to Campus.GarchingForschungszentrum,
-                "H" to Campus.GarchingHochbrueck,
-                "W" to Campus.Weihenstephan,
-                "C" to Campus.Stammgelaende,
-                "K" to Campus.KlinikumGrosshadern,
-                "I" to Campus.KlinikumRechtsDerIsar,
-                "L" to Campus.Leopoldstrasse,
-                "S" to Campus.GeschwisterSchollplatzAdalbertstrasse
-        )
-        private val DEFAULT_CAMPUS_STATION = mapOf(
+        private val ALL_POSSIBLE_DEFAULT_STATIONS = mapOf(
                 Campus.GarchingForschungszentrum to StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE),
                 Campus.GarchingHochbrueck to StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE),
                 Campus.Weihenstephan to StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE),
@@ -430,34 +396,14 @@ class LocationManager(c: Context) {
                 Campus.KlinikumGrosshadern to StationResult("Klinikum Großhadern", "1001540", Integer.MAX_VALUE),
                 Campus.KlinikumRechtsDerIsar to StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE),
                 Campus.Leopoldstrasse to StationResult("Giselastraße", "1000080", Integer.MAX_VALUE),
-                Campus.GeschwisterSchollplatzAdalbertstrasse to StationResult("Universität", "1000070", Integer.MAX_VALUE)
+                Campus.GeschwisterSchollplatzAdalbertstrasse to StationResult("Universität", "1000070", Integer.MAX_VALUE),
+                null to StationResult("Pinakotheken", "1000051", Integer.MAX_VALUE),
+                null to StationResult("Technische Universität", "1000095", Integer.MAX_VALUE),
+                null to StationResult("Waldhüterstraße", "1001574", Integer.MAX_VALUE),
+                null to StationResult("LMU Martinsried", "1002557", Integer.MAX_VALUE),
+                null to StationResult("Garching-Technische Universität", "1002070", Integer.MAX_VALUE)
         )
 
-        private val ALL_POSSIBLE_DEFAULT_STATIONS = arrayOf(
-                StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE),
-                StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE),
-                StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE),
-                StationResult("Theresienstraße", "1000120", Integer.MAX_VALUE),
-                StationResult("Klinikum Großhadern", "1001540", Integer.MAX_VALUE),
-                StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE),
-                StationResult("Giselastraße", "1000080", Integer.MAX_VALUE),
-                StationResult("Universität", "1000070", Integer.MAX_VALUE),
-                StationResult("Pinakotheken", "1000051", Integer.MAX_VALUE),
-                StationResult("Technische Universität", "1000095", Integer.MAX_VALUE),
-                StationResult("Waldhüterstraße", "1001574", Integer.MAX_VALUE),
-                StationResult("LMU Martinsried", "1002557", Integer.MAX_VALUE),
-                StationResult("Garching-Technische Universität", "1002070", Integer.MAX_VALUE)
-        )
-
-        private val DEFAULT_CAMPUS_CAFETERIA = mapOf(
-                Campus.GarchingForschungszentrum to "422",
-                Campus.GarchingHochbrueck to null,
-                Campus.Weihenstephan to "423",
-                Campus.Stammgelaende to "421",
-                Campus.KlinikumGrosshadern to "414",
-                Campus.KlinikumRechtsDerIsar to null,
-                Campus.Leopoldstrasse to "411",
-                Campus.GeschwisterSchollplatzAdalbertstrasse to null)
 
         /**
          * Returns the "id" of the campus near the given location
@@ -472,14 +418,15 @@ class LocationManager(c: Context) {
             val results = FloatArray(1)
             var bestDistance = java.lang.Float.MAX_VALUE
             var bestCampus: Campus? = null
-            for (l in CAMPUS_LOCATIONS) {
-                Location.distanceBetween(l.value.latitude, l.value.longitude, lat, lng, results)
+            for (l in Campus.values()) {
+                Location.distanceBetween(l.lat, l.lon, lat, lng, results)
                 val distance = results[0]
                 if (distance < bestDistance) {
                     bestDistance = distance
-                    bestCampus = l.key
+                    bestCampus = l
                 }
             }
+
             return if (bestDistance < 1000) {
                 bestCampus
             } else {
@@ -514,14 +461,12 @@ class LocationManager(c: Context) {
         }
 
         fun convertRoomFinderCoordinateToGeo(roomFinderCoordinate: RoomFinderCoordinate): Optional<Geo> {
-            val result: Geo
             try {
                 val zone = java.lang.Double.parseDouble(roomFinderCoordinate.utm_zone)
                 val easting = java.lang.Double.parseDouble(roomFinderCoordinate.utm_easting)
                 val northing = java.lang.Double.parseDouble(roomFinderCoordinate.utm_northing)
-                result = convertUTMtoLL(northing, easting, zone)
 
-                return Optional.of(result)
+                return Optional.of(convertUTMtoLL(northing, easting, zone))
             } catch (e: NullPointerException) {
                 Utils.log(e)
             } catch (e: NumberFormatException) {
