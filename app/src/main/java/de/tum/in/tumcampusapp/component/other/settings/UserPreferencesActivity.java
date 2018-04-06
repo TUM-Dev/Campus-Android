@@ -9,7 +9,6 @@ import android.support.v7.preference.PreferenceScreen;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
 import de.tum.in.tumcampusapp.utils.Const;
 
 /**
@@ -25,7 +24,6 @@ public class UserPreferencesActivity extends BaseActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.count(this);
 
         //Enable the direct access of a specific sub section, e.g.: cards
         Intent intent = getIntent();

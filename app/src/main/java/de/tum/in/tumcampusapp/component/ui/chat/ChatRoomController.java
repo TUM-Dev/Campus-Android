@@ -59,39 +59,20 @@ public class ChatRoomController implements Card.ProvidesCard {
     }
 
     /**
-     * Saves the given lecture into database
-     */
-    public void replaceInto(LecturesSearchRow lecture) {
-        List<Integer> givenLecture = chatRoomDao.getGivenLecture(lecture.getTitel(), lecture.getSemester_id());
-        if (givenLecture.size() >= 1) {
-            chatRoomDao.updateRoom(lecture.getSemester_name(), Integer.valueOf(lecture.getStp_lv_nr()),
-                                   lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id());
-        } else {
-            ChatRoomDbRow room = new ChatRoomDbRow(-1, lecture.getTitel(), lecture.getSemester_name(),
-                                                   lecture.getSemester_id(), -1,
-                                                   Integer.parseInt(lecture.getStp_lv_nr()),
-                                                   lecture.getVortragende_mitwirkende(), 0, -1);
-            chatRoomDao.replaceRoom(room);
-        }
-    }
-
-    /**
      * Saves the given lectures into database
      */
-    public void replaceInto(List<LecturesSearchRow> lectures) {
-        Collection<String> set;
-        List<Integer> roomIds = chatRoomDao.getIds();
-
-        set = new HashSet<>();
-        if (roomIds.size() >= 1) {
-            for (Integer id : roomIds) {
-                set.add(String.valueOf(id));
-            }
+    public void createLectureRooms(Iterable<LecturesSearchRow> lectures) {
+        // Create a Set of all existing lectures
+        List<Integer> roomLvIds = chatRoomDao.getLvIds();
+        Collection<String> set = new HashSet<>();
+        for (Integer id : roomLvIds) {
+            set.add(String.valueOf(id));
         }
 
+        // Add lectures that are not yet in DB
         for (LecturesSearchRow lecture : lectures) {
             if (!set.contains(lecture.getStp_lv_nr())) {
-                replaceInto(lecture);
+                chatRoomDao.replaceRoom(ChatRoomDbRow.Companion.fromLecture(lecture));
             }
         }
     }
@@ -147,15 +128,11 @@ public class ChatRoomController implements Card.ProvidesCard {
     }
 
     public void join(ChatRoom currentChatRoom) {
-        chatRoomDao.updateJoinedRooms(currentChatRoom.getId(), currentChatRoom.getName()
-                                                                              .substring(4), currentChatRoom.getName()
-                                                                                                            .substring(0, 3));
+        chatRoomDao.updateJoinedRooms(currentChatRoom.getId(), currentChatRoom.getActualName(), currentChatRoom.getSemester());
     }
 
     public void leave(ChatRoom currentChatRoom) {
-        chatRoomDao.updateLeftRooms(currentChatRoom.getId(), currentChatRoom.getName()
-                                                                            .substring(4), currentChatRoom.getName()
-                                                                                                          .substring(0, 3));
+        chatRoomDao.updateLeftRooms(currentChatRoom.getId(), currentChatRoom.getActualName(), currentChatRoom.getSemester());
     }
 
     @Override
@@ -165,8 +142,9 @@ public class ChatRoomController implements Card.ProvidesCard {
                 new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), context, true);
         Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
         if (lecturesList.isPresent()) {
-            List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
-            this.replaceInto(lectures);
+            List<LecturesSearchRow> lectures = lecturesList.get()
+                                                           .getLehrveranstaltungen();
+            this.createLectureRooms(lectures);
         }
 
         // Join all new chat rooms
