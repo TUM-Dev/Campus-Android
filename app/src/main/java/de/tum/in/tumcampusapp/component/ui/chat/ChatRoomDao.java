@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -40,11 +41,14 @@ public interface ChatRoomDao {
     @Query("UPDATE chat_room SET semester=:semester, _id=:id, contributor=:contributor WHERE name=:name AND semester_id=:semesterId")
     void updateRoom(String semester, int id, String contributor, String name, String semesterId);
 
+    @Update
+    void updateRoom(ChatRoomDbRow room);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void replaceRoom(ChatRoomDbRow room);
 
     @Query("SELECT _id FROM chat_room")
-    List<Integer> getIds();
+    List<Integer> getLvIds();
 
     @Query("SELECT * FROM chat_room")
     List<ChatRoomDbRow> getAll();

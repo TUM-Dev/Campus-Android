@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
 import de.tum.in.tumcampusapp.component.other.settings.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -107,7 +106,6 @@ public abstract class Card implements Comparable<Card> {
      */
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         mContext = viewHolder.itemView.getContext();
-        ImplicitCounter.countCard(mContext, this);
     }
 
     /**

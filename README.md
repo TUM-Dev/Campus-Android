@@ -1,4 +1,4 @@
-# TumCampusApp [![Build Status](https://server4.wdkk.de/buildStatus/icon?job=TCA-Android)](https://server4.wdkk.de/job/TCA-Android/) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/01c41ee04d684a11947bfd5216de0b1c)](https://www.codacy.com/app/TCA-Bot/TumCampusApp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TCA-Team/TumCampusApp&amp;utm_campaign=Badge_Grade)
+# TumCampusApp [![Build Status](https://server4.wdkk.de/buildStatus/icon?job=TCA-Android)](https://server4.wdkk.de/job/TCA-Android/)
 ### An excellent app for students by students
 The TUM Campus App (TCA) is a open source project, mainly developed by volunteers with significant contributions by the Android Practical course. The TCA mostly targets phones, but can also be used on tablets or any other device that runs Android.
 
