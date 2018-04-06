@@ -148,14 +148,16 @@ class LocationManager(c: Context) {
     fun getStation(): StationResult? {
         val campus = getCurrentCampus() ?: return null
 
-        val campusSetting = "card_stations_default_" + campus.short
-        val station = Utils.getSetting(mContext, campusSetting, "")
+        //Try to find favorite station for current campus
+        val station = Utils.getSetting(mContext, "card_stations_default_" + campus.short, "")
         if ("".equals(station)) {
-            ALL_POSSIBLE_DEFAULT_STATIONS.values.find {
-                it.station == station
-            }?.let { return it }
+            Stations.values().associateBy(Stations::station).values.find {
+                it.station.station == station
+            }?.let { return it.station }
         }
-        return ALL_POSSIBLE_DEFAULT_STATIONS[campus]
+
+        //Otherwise fallback to the default
+        return campus.defaultStation.station;
     }
 
     /**
@@ -373,36 +375,36 @@ class LocationManager(c: Context) {
     }
 
     companion object {
-        private enum class Campus(val short: String, val lat: Double, val lon: Double, val defaultMensa: String?) {
-            GarchingForschungszentrum("G", 48.2648424, 11.6709511, "422"),
-            GarchingHochbrueck("H", 48.249432, 11.633905, null),
-            Weihenstephan("W", 48.397990, 11.722727, "423"),
-            Stammgelaende("C", 48.149436, 11.567635, "421"),
-            KlinikumGrosshadern("K", 48.110847, 11.4703001, "414"),
-            KlinikumRechtsDerIsar("I", 48.137, 11.601119, null),
-            Leopoldstrasse("L", 48.155916, 11.583095, "411"),
-            GeschwisterSchollplatzAdalbertstrasse("S", 48.150244, 11.580665, null);
+        private enum class Campus(val short: String, val lat: Double, val lon: Double, val defaultMensa: String?, val defaultStation: Stations) {
+            GarchingForschungszentrum("G", 48.2648424, 11.6709511, "422", Stations.GarchingForschungszentrum),
+            GarchingHochbrueck("H", 48.249432, 11.633905, null, Stations.GarchingHochbrueck),
+            Weihenstephan("W", 48.397990, 11.722727, "423", Stations.Weihenstephan),
+            Stammgelaende("C", 48.149436, 11.567635, "421", Stations.Stammgelaende),
+            KlinikumGrosshadern("K", 48.110847, 11.4703001, "414", Stations.KlinikumGrosshadern),
+            KlinikumRechtsDerIsar("I", 48.137, 11.601119, null, Stations.KlinikumRechtsDerIsar),
+            Leopoldstrasse("L", 48.155916, 11.583095, "411", Stations.Leopoldstrasse),
+            GeschwisterSchollplatzAdalbertstrasse("S", 48.150244, 11.580665, null, Stations.GeschwisterSchollplatzAdalbertstrasse);
 
             fun getLocation(): Location {
                 return Location("defaultLocation").apply { latitude = lat; longitude = lon }
             }
         }
 
-        private val ALL_POSSIBLE_DEFAULT_STATIONS = mapOf(
-                Campus.GarchingForschungszentrum to StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE),
-                Campus.GarchingHochbrueck to StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE),
-                Campus.Weihenstephan to StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE),
-                Campus.Stammgelaende to StationResult("Theresienstraße", "1000120", Integer.MAX_VALUE),
-                Campus.KlinikumGrosshadern to StationResult("Klinikum Großhadern", "1001540", Integer.MAX_VALUE),
-                Campus.KlinikumRechtsDerIsar to StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE),
-                Campus.Leopoldstrasse to StationResult("Giselastraße", "1000080", Integer.MAX_VALUE),
-                Campus.GeschwisterSchollplatzAdalbertstrasse to StationResult("Universität", "1000070", Integer.MAX_VALUE),
-                null to StationResult("Pinakotheken", "1000051", Integer.MAX_VALUE),
-                null to StationResult("Technische Universität", "1000095", Integer.MAX_VALUE),
-                null to StationResult("Waldhüterstraße", "1001574", Integer.MAX_VALUE),
-                null to StationResult("LMU Martinsried", "1002557", Integer.MAX_VALUE),
-                null to StationResult("Garching-Technische Universität", "1002070", Integer.MAX_VALUE)
-        )
+        private enum class Stations(val station : StationResult) {
+            GarchingForschungszentrum(StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE)),
+            GarchingHochbrueck(StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE)),
+            Weihenstephan(StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE)),
+            Stammgelaende(StationResult("Theresienstraße", "1000120", Integer.MAX_VALUE)),
+            KlinikumGrosshadern(StationResult("Klinikum Großhadern", "1001540", Integer.MAX_VALUE)),
+            KlinikumRechtsDerIsar(StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE)),
+            Leopoldstrasse(StationResult("Giselastraße", "1000080", Integer.MAX_VALUE)),
+            GeschwisterSchollplatzAdalbertstrasse(StationResult("Universität", "1000070", Integer.MAX_VALUE)),
+            Pinakotheken(StationResult("Pinakotheken", "1000051", Integer.MAX_VALUE)),
+            TUM(StationResult("Technische Universität", "1000095", Integer.MAX_VALUE)),
+            Waldhueterstrasse(StationResult("Waldhüterstraße", "1001574", Integer.MAX_VALUE)),
+            Martinsried(StationResult("LMU Martinsried", "1002557", Integer.MAX_VALUE)),
+            GarchingTUM(StationResult("Garching-Technische Universität", "1002070", Integer.MAX_VALUE))
+        }
 
 
         /**
