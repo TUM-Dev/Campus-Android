@@ -35,16 +35,16 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         button_facebook.setOnClickListener {
             openFacebook();
         }
-        button_github.setOnClickListener{
+        button_github.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))))
         }
-        button_privacy.setOnClickListener{
+        button_privacy.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy))))
         }
-        button_chat_terms.setOnClickListener{
+        button_chat_terms.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_chat_terms))))
         }
-        button_licenses.setOnClickListener{
+        button_licenses.setOnClickListener {
             LicensesDialog.Builder(this)
                     .setNotices(R.raw.notices)
                     .setShowFullLicenseText(false)
@@ -78,8 +78,8 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
             this.addDebugRow(debugInfos, "App Version", packageInfo.versionName)
         } catch (ignore: NameNotFoundException) {
         }
-        this.addDebugRow(debugInfos, "LRZ ID", sp.getString(Const.LRZ_ID, ""))
-        this.addDebugRow(debugInfos, "TUM Access token", sp.getString(Const.ACCESS_TOKEN, ""))
+        this.addDebugRow(debugInfos, "TUM ID", sp.getString(Const.LRZ_ID, ""))
+        this.addDebugRow(debugInfos, "TUM Access token", sp.getString(Const.ACCESS_TOKEN, "").substring(0, 5) + "...")
         this.addDebugRow(debugInfos, "Bugreports", sp.getBoolean(Const.BUG_REPORTS, false).toString() + " ")
 
         this.addDebugRow(debugInfos, "REG ID", Utils.getSetting(this, Const.GCM_REG_ID, ""))
@@ -104,6 +104,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         val l = TextView(this)
         l.text = label
         l.layoutParams = rowParams
+        l.setPadding(0,0,25,0)
         tableRow.addView(l)
 
         val v = TextView(this)
