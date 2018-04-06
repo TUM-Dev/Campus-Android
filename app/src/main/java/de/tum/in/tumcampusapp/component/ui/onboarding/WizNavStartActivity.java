@@ -41,26 +41,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         editTxtLrzId.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
     }
 
-    /**
-     * Handle click on skip button
-     *
-     * @param skip Skip button handle
-     */
-    @SuppressWarnings("UnusedParameters")
-    public void onClickSkip(View skip) {
-        // Upon clicking on the skip button and there is no internet connection -> toast to the user
-        if (!NetUtils.isConnected(getApplicationContext())) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
-                 .show();
-            return;
-        }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // make sure to delete to delete information that might lead the app to believe the user enabled TUMonline
         Utils.setSetting(this, Const.LRZ_ID, null);
         Utils.setSetting(this, Const.ACCESS_TOKEN, null);
-
-        finish();
-        startActivity(new Intent(this, WizNavExtrasActivity.class));
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     /**
@@ -138,7 +124,6 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     @Override
     protected void onLoadFinished(Boolean result) {
         if (result) {
-            finish();
             startActivity(new Intent(this, WizNavCheckTokenActivity.class));
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {

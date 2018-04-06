@@ -55,7 +55,6 @@ object Const {
     const val SYNC_CALENDAR = "sync_calendar"
     const val PREFERENCE_SCREEN = "preference_screen"
     const val P_TOKEN = "pToken"
-    const val APP_VERSION = "app_version"
     const val JSON_NEWS = "news"
     const val JSON_DATE = "date"
     const val JSON_TITLE = "title"
