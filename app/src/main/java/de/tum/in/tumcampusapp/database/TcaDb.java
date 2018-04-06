@@ -67,7 +67,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 7, entities = {
+@Database(version = 10, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -110,6 +110,7 @@ public abstract class TcaDb extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
                            .addMigrations(migrations)
+                           .fallbackToDestructiveMigration()
                            .build();
         }
         return instance;

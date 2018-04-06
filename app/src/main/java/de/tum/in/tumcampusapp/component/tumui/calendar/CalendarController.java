@@ -260,7 +260,7 @@ public class CalendarController implements ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
         List<CalendarItem> nextCalendarItems = getNextCalendarItems();
-        if (nextCalendarItems.size() != 0) {
+        if (!nextCalendarItems.isEmpty()) {
             NextLectureCard card = new NextLectureCard(context);
             card.setLectures(nextCalendarItems);
             card.apply();

@@ -378,8 +378,8 @@ Signature: %5$s</string>
     <string name="status_sent">Sent</string>
     <string name="status_sending">Sending</string>
     <string name="status_sending_failed">Sending failed</string>
-    <string name="joined">My</string>
-    <string name="not_joined">Other</string>
+    <string name="joined">Joined</string>
+    <string name="not_joined">All</string>
     <string name="default_campus">Default campus</string>
     <string name="campus_garching_hochbrueck" translatable="false">Campus Garching Hochbrück</string>
     <string name="campus_leopoldstrasse" translatable="false">Campus Leopoldstraße</string>

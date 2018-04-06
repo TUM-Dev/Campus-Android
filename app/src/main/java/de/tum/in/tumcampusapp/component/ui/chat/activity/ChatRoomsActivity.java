@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -165,9 +166,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CAMERA_REQUEST_CODE
-            && grantResults != null && grantResults.length >= 1
+            && grantResults.length >= 1
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startJoinRoom();
         }
@@ -207,44 +208,50 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         Utils.logv("create or join chat room " + name);
         currentChatRoom = new ChatRoom(name);
 
+        ChatVerification verification;
         try {
-            TUMCabeClient.getInstance(this)
-                         .createRoom(currentChatRoom, ChatVerification.Companion.getChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
-                             @Override
-                             public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
-                                 if (!response.isSuccessful()) {
-                                     Utils.logv("Error creating&joining chat room: " + response.message());
-                                     return;
-                                 }
-
-                                 // The POST request is successful: go to room. API should have auto joined it
-                                 Utils.logv("Success creating&joining chat room: " + response.body());
-                                 currentChatRoom = response.body();
-
-                                 manager.join(currentChatRoom);
-
-                                 // When we show joined chat rooms open chat room directly
-                                 if (mCurrentMode == 1) {
-                                     moveToChatActivity();
-                                 } else { //Otherwise show a nice information, that we added the room
-                                     final List<ChatRoomAndLastMessage> rooms = manager.getAllByStatus(mCurrentMode);
-
-                                     runOnUiThread(() -> {
-                                         chatRoomAdapter.updateRooms(rooms);
-                                         Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
-                                     });
-                                 }
-                             }
-
-                             @Override
-                             public void onFailure(Call<ChatRoom> call, Throwable t) {
-                                 Utils.log(t, "Failure creating/joining chat room - trying to GET it from the server");
-                                 Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
-                             }
-                         });
+            verification = ChatVerification.Companion.getChatVerification(this, this.currentChatMember);
         } catch (NoPrivateKey noPrivateKey) {
             this.finish();
+            return;
         }
+
+        Callback callback = new Callback<ChatRoom>() {
+            @Override
+            public void onResponse(@NonNull Call<ChatRoom> call, @NonNull Response<ChatRoom> response) {
+                if (!response.isSuccessful()) {
+                    Utils.logv("Error creating&joining chat room: " + response.message());
+                    return;
+                }
+
+                // The POST request is successful: go to room. API should have auto joined it
+                Utils.logv("Success creating&joining chat room: " + response.body());
+                currentChatRoom = response.body();
+
+                manager.join(currentChatRoom);
+
+                // When we show joined chat rooms open chat room directly
+                if (mCurrentMode == 1) {
+                    moveToChatActivity();
+                } else { //Otherwise show a nice information, that we added the room
+                    final List<ChatRoomAndLastMessage> rooms = manager.getAllByStatus(mCurrentMode);
+
+                    runOnUiThread(() -> {
+                        chatRoomAdapter.updateRooms(rooms);
+                        Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ChatRoom> call, @NonNull Throwable t) {
+                Utils.log(t, "Failure creating/joining chat room - trying to GET it from the server");
+                Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
+            }
+        };
+
+        TUMCabeClient.getInstance(this)
+                     .createRoom(currentChatRoom, verification, callback);
     }
 
     @Override
@@ -253,7 +260,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         if (lecturesList.isPresent()) {
             List<LecturesSearchRow> lectures = lecturesList.get()
                                                            .getLehrveranstaltungen();
-            manager.replaceInto(lectures);
+            manager.createLectureRooms(lectures);
         }
 
         this.populateCurrentChatMember();
@@ -307,8 +314,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
      * Opens {@link ChatActivity}
      */
     private void moveToChatActivity() {
-        // We need to move to the next activity now and provide the necessary data for it
-        // We are sure that both currentChatRoom and currentChatMember exist
+        // We are sure that both currentChatRoom and currentChatMember exist at this point
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
         startActivity(intent);

@@ -97,30 +97,32 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> implements
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-        toPosition = validatePosition(fromPosition,toPosition);
+        toPosition = validatePosition(fromPosition, toPosition);
         Card card = CardManager.remove(fromPosition);
-        CardManager.insert(toPosition,card);
+        CardManager.insert(toPosition, card);
+
         //Update card positions so they stay the same even when the app is closed
-        for(int index = 0; index < CardManager.getCardCount();index++){
-            CardManager.getCard(index).setPosition(index);
+        for (int index = 0; index < CardManager.getCardCount(); index++) {
+            CardManager.getCard(index)
+                       .setPosition(index);
         }
         notifyItemMoved(fromPosition, toPosition);
     }
 
-    private int validatePosition(int fromPosition, int toPosition){
+    private int validatePosition(int fromPosition, int toPosition) {
         Card selectedCard = CardManager.getCard(fromPosition);
         Card cardAtPosition = CardManager.getCard(toPosition);
         // If there is a support card, it should always be the first one
         // except when it's been dismissed.
         // Restore card should stay at the bottom
-        if(selectedCard instanceof RestoreCard) {
+        if (selectedCard instanceof RestoreCard) {
             return fromPosition;
         } else if (selectedCard instanceof SupportCard) {
             return fromPosition;
         }
         if (cardAtPosition instanceof SupportCard) {
             return toPosition + 1;
-        } else if(cardAtPosition instanceof RestoreCard) {
+        } else if (cardAtPosition instanceof RestoreCard) {
             return toPosition - 1;
         } else {
             return toPosition;
