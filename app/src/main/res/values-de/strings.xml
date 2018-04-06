@@ -91,16 +91,14 @@
 
     <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMonline-Access-Token ist nicht aktiviert</string>
-    <string name="startup_wizard_uppercase">STARTUP-WIZARD</string>
-    <string name="welcome_msg"><b>Willkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
+    <string name="startup_wizard_uppercase">TUMonline-Wizard</string>
+    <string name="welcome_msg">Um den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
     <string name="button_skip">Überspringen</string>
     <string name="button_next">Weiter</string>
     <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nBitte aktiviere jetzt das Token in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
     <string name="step_1">Schritt 1</string>
     <string name="step_2">Schritt 2</string>
     <string name="step_3">Schritt 3</string>
-    <string name="step_4">Schritt 4</string>
-    <string name="step_5">Schritt 5</string>
     <string name="set_silent_mode">Aktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
     <string name="set_background_mode">Aktiviere oder deaktiviere den <i>Hintergrundmodus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
     <string name="goto_tumcampus">Starte TUM Campus App</string>
@@ -508,4 +506,14 @@ Signatur: %5$s</string>
   
     <string name="token_limit_reached">Token-Limit erreicht (10 Stück). Du musst ein Token in TUMonline löschen um fortzufahren.</string>
     <string name="back">Zurück</string>
+
+    <string name="tumonline_advantages">Nach dem Einrichten von TUMonline kannst du:\n\n
+                                        &#8226; auf deinen Kalender zugreifen\n
+                                        &#8226; Details zu deinen Vorlesungen erfahren\n
+                                        &#8226; deine Noten ansehen\n
+                                        &#8226; deinen Studienbeitragsstatus prüfen\n
+                                        &#8226; mit Komilitonen aus deinen Vorlesungen chatten</string>
+    <string name="tumonline_login">Mit TUMonline verbinden</string>
+    <string name="card_login_title">Willkommen zur TUM Campus App!</string>
+    <string name="card_login_body">Verbinde jetzt die App mit TUMonline um alle Features nutzen zu können! Dazu gehören unter anderem dein Kalendar, deine Vorlesungen und deine Noten!</string>
 </resources>

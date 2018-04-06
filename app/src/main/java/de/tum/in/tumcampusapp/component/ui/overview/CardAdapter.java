@@ -10,6 +10,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.ChatMessagesCard;
 import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamFixCard;
 import de.tum.in.tumcampusapp.component.ui.news.NewsCard;
+import de.tum.in.tumcampusapp.component.ui.onboarding.LoginPromtCard;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.transportation.MVVCard;
@@ -49,6 +50,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> implements
                 return ChatMessagesCard.Companion.inflateViewHolder(viewGroup);
             case CardManager.CARD_SUPPORT:
                 return SupportCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_LOGIN:
+                return LoginPromtCard.inflateViewHolder(viewGroup);
             default:
                 throw new UnsupportedOperationException();
         }

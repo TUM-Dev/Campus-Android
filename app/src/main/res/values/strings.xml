@@ -102,16 +102,14 @@
 
     <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMonline-Access-Token is not enabled</string>
-    <string name="startup_wizard_uppercase">STARTUP-WIZARD</string>
-    <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
+    <string name="startup_wizard_uppercase">TUMonline wizard</string>
+    <string name="welcome_msg">In order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
     <string name="need_to_enable"><b>The TUMonline-Access-Token was successfully generated</b>\n\nPlease enable the Token in TUMonline now via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>
     <string name="step_1">Step 1</string>
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
-    <string name="step_4">Step 4</string>
-    <string name="step_5">Step 5</string>
     <string name="set_silent_mode">Activate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
     <string name="set_background_mode">Activate or deactivate <i>Background Mode</i>. If activated, content will be fetched once per day to keep your TUM Campus App up to date.</string>
     <string name="goto_tumcampus">Go to TUM Campus App</string>
@@ -545,5 +543,13 @@ Signature: %5$s</string>
 
     <string name="token_limit_reached">Token limit was reached (max 10). You have delete a Token in TUMonline before you can continue.</string>
     <string name="back">Back</string>
-
+    <string name="tumonline_advantages">After the setup you can:\n\n
+                                        &#8226; View your TUMonline calendar\n
+                                        &#8226; See details about your lectures\n
+                                        &#8226; Get an overview over your grades\n
+                                        &#8226; Check if you have outstanding tuition fees\n
+                                        &#8226; Chat with other students from your lectures</string>
+    <string name="tumonline_login">Connect to TUMonline</string>
+    <string name="card_login_title">Welcome to the TUM Campus App!</string>
+    <string name="card_login_body">Connect the app to TUMonline now to get access to all the features! This includes among other things your calendar, lectures and grades!</string>
 </resources>

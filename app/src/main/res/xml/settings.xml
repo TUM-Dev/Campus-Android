@@ -264,10 +264,6 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/extras">
         <Preference
-            android:key="button_wizard"
-            android:summary="@string/open_wizard_detail"
-            android:title="@string/open_wizard"/>
-        <Preference
             android:key="button_clear_cache"
             android:summary="@string/clear_cache_detail"
             android:title="@string/clear_cache"/>

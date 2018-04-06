@@ -34,24 +34,6 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     }
 
     /**
-     * Just like pressing the system back button.
-     * @param view
-     */
-    public void onBackButtonPressed(View view){
-        onBackPressed();
-    }
-
-    /**
-     * If back key is pressed start previous activity.
-     */
-    @Override
-    public void onBackPressed() {
-        finish();
-        startActivity(new Intent(this, WizNavStartActivity.class));
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-    }
-
-    /**
      * If next is pressed, check if token has been activated.
      *
      * @param next Next button handle
