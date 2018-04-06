@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
-import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -46,8 +45,5 @@ public class BackgroundService extends JobIntentService {
         service.putExtra(Const.APP_LAUNCHES, intent.getBooleanExtra(Const.APP_LAUNCHES, false));
 
         DownloadService.enqueueWork(getBaseContext(), service);
-
-        //Upload Usage statistics
-        ImplicitCounter.submitCounter(this);
     }
 }

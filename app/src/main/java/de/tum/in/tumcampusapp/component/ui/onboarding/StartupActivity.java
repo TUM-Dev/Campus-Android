@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
-import de.tum.in.tumcampusapp.component.other.reporting.stats.ImplicitCounter;
+import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.DownloadService;
@@ -82,10 +82,6 @@ public class StartupActivity extends AppCompatActivity {
         //Check that we have a private key setup in order to authenticate this device
         AuthenticationManager am = new AuthenticationManager(this);
         am.generatePrivateKey(null);
-
-        //Upload stats
-        ImplicitCounter.count(this);
-        ImplicitCounter.submitCounter(this);
 
         // On first setup show remark that loading could last longer than normally
         boolean isSetup = Utils.getSettingBool(this, Const.EVERYTHING_SETUP, false);

@@ -348,7 +348,7 @@ Signatur: %5$s</string>
     <string name="status_sending">Wird gesendet</string>
     <string name="status_sending_failed">Senden fehlgeschlagen</string>
     <string name="joined">Meine</string>
-    <string name="not_joined">Weitere</string>
+    <string name="not_joined">Alle</string>
     <string name="default_campus">Standardcampus</string>
     <string name="no_default_campus">Kein Standardcampus</string>
     <string name="public_key_mail">Public Key Aktivierungs-E-Mail wurde an %s@mytum.de gesendet!\n\n<b>Bitte aktiviere ihn jetzt!</b></string>
