@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.transportation;
 
 import android.content.Context;
-import android.util.Pair;
 import android.util.SparseArray;
 
 import com.google.common.base.Optional;
@@ -351,14 +350,14 @@ public class TransportController implements ProvidesCard {
 
         // Get station for current campus
         LocationManager locMan = new LocationManager(context);
-        String station = locMan.getStation();
+        StationResult station = locMan.getStation();
         if (station == null) {
             return;
         }
 
-        List<Departure> cur = getDeparturesFromExternal(context, station);
+        List<Departure> cur = getDeparturesFromExternal(context, station.getId());
         MVVCard card = new MVVCard(context);
-        card.setStation(new Pair<>(station, station));
+        card.setStation(station);
         card.setDepartures(cur);
         card.apply();
 

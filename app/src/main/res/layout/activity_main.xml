@@ -24,7 +24,7 @@
                 android:id="@+id/cards_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#EEEEEE"
+                android:background="@drawable/chat_background"
                 android:scrollbars="none"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>

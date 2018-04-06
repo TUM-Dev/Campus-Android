@@ -60,7 +60,7 @@ public class NewsController implements ProvidesCard {
      * Download news from external interface (JSON)
      *
      * @param force True to force download over normal sync period, else false
-     * @throws JSONException
+     * @throws JSONException parsing could fail
      */
     public void downloadFromExternal(boolean force) throws JSONException {
         SyncManager sync = new SyncManager(mContext);
