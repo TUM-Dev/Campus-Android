@@ -33,11 +33,6 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
         disableRefresh();
     }
 
-    public void onBackPressed(){
-        super.onBackPressed();
-        Utils.log("OnBackPressed Step 2");
-    }
-
     /**
      * If next is pressed, check if token has been activated.
      *

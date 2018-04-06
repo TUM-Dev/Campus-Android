@@ -14,7 +14,8 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
- * Card that describes how to dismiss a card
+ * Card that prompts the user to login to TUMonline since we don't show the wizard after the first launch anymore.
+ * It will be shown until it is swiped away for the first time.
  */
 public class LoginPromtCard extends Card {
 

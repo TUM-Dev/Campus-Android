@@ -263,31 +263,6 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     /**
-     * Delete stuff from old version
-     */
-    private void setupNewVersion() {
-        // drop database
-        TcaDb.resetDb(this);
-
-        // delete tumcampus directory
-        File f = new File(Environment.getExternalStorageDirectory()
-                                     .getPath() + "/tumcampus");
-        FileUtils.deleteRecursive(f);
-
-        // Load all on start
-        Utils.setSetting(this, Const.EVERYTHING_SETUP, false);
-
-        // rename hide_wizzard_on_startup
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!sp.contains(Const.HIDE_WIZARD_ON_STARTUP)) {
-            SharedPreferences.Editor e = sp.edit();
-            e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
-            e.remove("hide_wizzard_on_startup");
-            e.apply();
-        }
-    }
-
-    /**
      * implement proper NotificationChannels? This just creates a default one, so Notifications get shown at all on Android O
      */
     @TargetApi(Build.VERSION_CODES.O)

@@ -44,7 +44,6 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Utils.log("OnBackPressed Step 1");
         // make sure to delete to delete information that might lead the app to believe the user enabled TUMonline
         Utils.setSetting(this, Const.LRZ_ID, null);
         Utils.setSetting(this, Const.ACCESS_TOKEN, null);
