@@ -11,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.RemoteViews
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.reporting.stats.ImplicitCounter
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
@@ -71,7 +70,6 @@ abstract class Card(
      */
     open fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         context = viewHolder.itemView.context
-        ImplicitCounter.countCard(context, this)
     }
 
     /**
