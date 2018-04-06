@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v4.content.ContextCompat;
 
@@ -261,7 +260,7 @@ public class CalendarController implements Card.ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
         List<CalendarItem> nextCalendarItems = getNextCalendarItems();
-        if (!nextCalendarItems.isEmpty() && Build.VERSION.SDK_INT >= 21) {
+        if (!nextCalendarItems.isEmpty()) {
             NextLectureCard card = new NextLectureCard(context);
             card.setLectures(nextCalendarItems);
             card.apply();
