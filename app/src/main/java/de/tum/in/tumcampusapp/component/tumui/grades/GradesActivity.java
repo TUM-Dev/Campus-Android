@@ -241,7 +241,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         lvGrades.setAdapter(new ExamListAdapter(
                 GradesActivity.this, exams));
         if (chartVisible) {
-            if (barMenuItem.isVisible()) {
+            if (barMenuItem == null || barMenuItem.isVisible()) {
                 showPieChart(exams);
             } else {
                 showBarChart(exams);
