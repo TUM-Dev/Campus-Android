@@ -23,6 +23,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.MVVStationSuggestionPr
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.StationResult;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures;
+import de.tum.in.tumcampusapp.database.TcaDb;
 
 public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<List<StationResult>> implements AdapterView.OnItemClickListener {
 
@@ -35,6 +36,8 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
 
     public MVVWidgetConfigureActivity() {
         super(R.layout.activity_mvv_widget_configure, MVVStationSuggestionProvider.AUTHORITY, 3);
+        recentsDao = TcaDb.getInstance(this)
+                          .recentsDao();
     }
 
     @Override
