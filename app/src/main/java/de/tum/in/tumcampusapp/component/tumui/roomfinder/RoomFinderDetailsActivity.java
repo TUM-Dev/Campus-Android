@@ -267,7 +267,7 @@ public class RoomFinderDetailsActivity
                                  return;
                              }
 
-                             onGeoLoadFinished(LocationManager.convertRoomFinderCoordinateToGeo(data));
+                             onGeoLoadFinished(LocationManager.Companion.convertRoomFinderCoordinateToGeo(data));
                          }
 
                          @Override

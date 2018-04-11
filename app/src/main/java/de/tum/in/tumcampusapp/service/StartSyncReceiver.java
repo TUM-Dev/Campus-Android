@@ -13,7 +13,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Receives on boot completed broadcast, sets alarm for next sync-try
- * and start BackgroundService if enabled in settings
+ * and start BackgroundService if enabled in settingsPrefix
  */
 public class StartSyncReceiver extends BroadcastReceiver {
     private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR * 3;
@@ -35,7 +35,7 @@ public class StartSyncReceiver extends BroadcastReceiver {
         // check intent if called from StartupActivity
         final boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
-        // Look up background service settings
+        // Look up background service settingsPrefix
         final boolean backgroundServicePermitted = Utils.isBackgroundServicePermitted(context);
 
         // Set AlarmNotification for next update, if background service is enabled

@@ -163,7 +163,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
      * Saves the selection to the database, triggers a widget update and closes this activity
      */
     private void saveAndReturn() {
-        // save the settings
+        // save the settingsPrefix
         TransportController transportManager = new TransportController(this);
         transportManager.addWidget(appWidgetId, this.widgetDepartures);
 

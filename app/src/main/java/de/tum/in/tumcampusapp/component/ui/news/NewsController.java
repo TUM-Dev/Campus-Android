@@ -14,7 +14,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.CacheManager;
@@ -27,7 +27,7 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 /**
  * News Manager, handles database stuff, external imports
  */
-public class NewsController implements Card.ProvidesCard {
+public class NewsController implements ProvidesCard {
 
     private static final int TIME_TO_SYNC = 1800; // 1/2 hour
     private static final String NEWS_URL = "https://tumcabe.in.tum.de/Api/news/";

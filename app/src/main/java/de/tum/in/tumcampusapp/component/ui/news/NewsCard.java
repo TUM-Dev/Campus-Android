@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -36,11 +36,11 @@ public class NewsCard extends NotificationAwareCard {
     }
 
     public NewsCard(int type, Context context) {
-        super(type, context, "card_news", false, false);
+        super(type, context, "card_news", false);
         net = new NetUtils(context);
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent, int type) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent, int type) {
         return NewsAdapter.newNewsView(parent, type == CardManager.CARD_NEWS_FILM);
     }
 
@@ -61,7 +61,7 @@ public class NewsCard extends NotificationAwareCard {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        NewsAdapter.bindNewsView(net, viewHolder, mNews, mContext);
+        NewsAdapter.bindNewsView(net, viewHolder, mNews, getContext());
     }
 
     /**
@@ -75,13 +75,13 @@ public class NewsCard extends NotificationAwareCard {
 
     @Override
     protected void discard(SharedPreferences.Editor editor) {
-        NewsController newsController = new NewsController(mContext);
+        NewsController newsController = new NewsController(getContext());
         newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
     }
 
     @Override
     protected void discardNotification(SharedPreferences.Editor editor) {
-        NewsController newsController = new NewsController(mContext);
+        NewsController newsController = new NewsController(getContext());
         newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 2);
     }
 
@@ -97,9 +97,9 @@ public class NewsCard extends NotificationAwareCard {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        NewsSourcesDao newsSourcesDao = TcaDb.getInstance(mContext).newsSourcesDao();
+        NewsSourcesDao newsSourcesDao = TcaDb.getInstance(getContext()).newsSourcesDao();
         NewsSources newsSource = newsSourcesDao.getNewsSource(Integer.parseInt(mNews.getSrc()));
-        notificationBuilder.setContentTitle(mContext.getString(R.string.news));
+        notificationBuilder.setContentTitle(getContext().getString(R.string.news));
         notificationBuilder.setContentText(mNews.getTitle());
         notificationBuilder.setContentInfo(newsSource.getTitle());
         notificationBuilder.setTicker(mNews.getTitle());
@@ -116,7 +116,7 @@ public class NewsCard extends NotificationAwareCard {
         // Show regular news in browser
         String url = mNews.getLink();
         if (url.isEmpty()) {
-            Utils.showToast(mContext, R.string.no_link_existing);
+            Utils.showToast(getContext(), R.string.no_link_existing);
             return null;
         }
 

@@ -20,10 +20,12 @@ import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamFixCard;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.onboarding.LoginPromtCard;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
 import static de.tum.in.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX;
+import static de.tum.in.tumcampusapp.utils.Const.DISCARD_SETTINGS_START;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -93,12 +95,14 @@ public final class CardManager {
         return cards.get(pos);
     }
 
-    public static void restorePositions(Context context){
+    public static void restorePositions(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Editor editor = preferences.edit();
-        for(String s : preferences.getAll().keySet()){
-            if(s.endsWith(CARD_POSITION_PREFERENCE_SUFFIX))
+        for (String s : preferences.getAll()
+                                   .keySet()) {
+            if (s.endsWith(CARD_POSITION_PREFERENCE_SUFFIX)) {
                 editor.remove(s);
+            }
         }
         editor.apply();
     }
@@ -108,13 +112,13 @@ public final class CardManager {
      * WARNING: Must not be called from UI thread.
      * <p/>
      * HOW TO ADD A NEW CARD:
-     * 1. Let the manager class implement {@link Card.ProvidesCard}
+     * 1. Let the manager class implement {@link ProvidesCard}
      * 2. Create a new class extending {@link Card}
      * 3. Implement the getCardView method in this class
      * 4. Create a new instance of this card in the
-     * {@link Card.ProvidesCard#onRequestCard(Context)} method of the manager
+     * {@link ProvidesCard#onRequestCard(Context)} method of the manager
      * 5. Add this card to the CardManager by calling {@link Card#apply()} from
-     * {@link Card.ProvidesCard#onRequestCard(Context)}
+     * {@link ProvidesCard#onRequestCard(Context)}
      * 6. Add an instance of the manager class to the managers list below
      */
     public static synchronized void update(Context context) {
@@ -127,7 +131,7 @@ public final class CardManager {
         new EduroamCard(context).apply();
         new EduroamFixCard(context).apply();
 
-        Collection<Card.ProvidesCard> managers = new ArrayList<>();
+        Collection<ProvidesCard> managers = new ArrayList<>();
 
         // Add those managers only if valid access token is available
         if (new AccessTokenManager(context).hasValidAccessToken()) {
@@ -141,7 +145,7 @@ public final class CardManager {
         managers.add(new TransportController(context));
         managers.add(new NewsController(context));
 
-        for (Card.ProvidesCard manager : managers) {
+        for (ProvidesCard manager : managers) {
             manager.onRequestCard(context);
         }
 
@@ -187,19 +191,21 @@ public final class CardManager {
         return index;
     }
 
-    public static void registerUpdateListener(OnCardAddedListener listener){
+    public static void registerUpdateListener(OnCardAddedListener listener) {
         listeners.add(listener);
     }
 
     /**
-     * Resets dismiss settings for all cards
+     * Resets dismiss settingsPrefix for all cards
      */
     public static void restoreCards(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
+        SharedPreferences prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0);
         prefs.edit()
              .clear()
              .apply();
-        TcaDb.getInstance(context).newsDao().restoreAllNews();
+        TcaDb.getInstance(context)
+             .newsDao()
+             .restoreAllNews();
         restorePositions(context);
     }
 

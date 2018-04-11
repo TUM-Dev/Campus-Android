@@ -46,7 +46,7 @@ public class AuthenticationManager {
 
     /**
      * Gets an unique id that identifies this device.
-     * Should only reset after a reinstall or wiping of the settings.
+     * Should only reset after a reinstall or wiping of the settingsPrefix.
      *
      * @return Unique device id
      */

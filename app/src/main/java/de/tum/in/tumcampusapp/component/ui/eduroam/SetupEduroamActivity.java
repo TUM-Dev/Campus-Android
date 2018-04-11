@@ -115,7 +115,7 @@ public class SetupEduroamActivity extends BaseActivity {
     }
 
     /**
-     * Open android settings
+     * Open android settingsPrefix
      *
      * @param v Button handle
      */

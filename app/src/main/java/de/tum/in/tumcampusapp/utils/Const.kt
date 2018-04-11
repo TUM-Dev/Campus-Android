@@ -120,6 +120,8 @@ object Const {
     const val DATE_ONLY = "yyyy-MM-dd"
 
     const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
+    const val DISCARD_SETTINGS_START = "discard_settings_start"
+    const val DISCARD_SETTINGS_PHONE = "discard_settings_phone"
     const val CALENDAR_ID_PARAM = "calendar_id"
 
     const val RAINBOW_MODE = "rainbow_enabled"

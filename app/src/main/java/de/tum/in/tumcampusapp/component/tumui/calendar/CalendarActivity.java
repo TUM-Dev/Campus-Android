@@ -200,7 +200,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     }
 
     /**
-     * Load up the week view with correct settings
+     * Load up the week view with correct settingsPrefix
      */
     private void refreshWeekView() {
         setupDateTimeInterpreter(mWeekMode);

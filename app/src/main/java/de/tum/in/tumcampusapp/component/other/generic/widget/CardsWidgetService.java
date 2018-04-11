@@ -87,7 +87,7 @@ public class CardsWidgetService extends RemoteViewsService {
             CardManager.update(mContext);
             List<Card> cards = CardManager.getCards();
             for (Card card : cards) {
-                final boolean getsShown = prefs.getBoolean(prefix + card.getType(), false);
+                final boolean getsShown = prefs.getBoolean(prefix + card.getCardType(), false);
                 if (!getsShown) {
                     continue;
                 }

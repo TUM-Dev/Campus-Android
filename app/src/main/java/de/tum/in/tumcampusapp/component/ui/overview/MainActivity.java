@@ -27,6 +27,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.settings.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -175,7 +176,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     /**
-     * If drawer is expanded hide settings icon
+     * If drawer is expanded hide settingsPrefix icon
      *
      * @param menu Menu instance
      * @return True if handled
@@ -212,7 +213,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     /**
-     * Handle expansion of navigation drawer and settings menu item click
+     * Handle expansion of navigation drawer and settingsPrefix menu item click
      *
      * @param item Clicked menu item
      * @return True if handled
@@ -300,7 +301,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         @Override
         public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
+            CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
             if (!cardViewHolder.getCurrentCard()
                                .isDismissible()) {
                 return 0;
@@ -321,7 +322,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
+            CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
             final Card card = cardViewHolder.getCurrentCard();
             final int lastPos = mAdapter.remove(card);
             final View coordinatorLayoutView = findViewById(R.id.coordinator);
