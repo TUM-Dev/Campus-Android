@@ -278,7 +278,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.permission_calendar_explanation))
                         .setPositiveButton(R.string.ok, (dialog, id1) -> ActivityCompat
-                                .requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id1))
+                                .requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id))
                         .show();
             } else {
                 ActivityCompat.requestPermissions(this, PERMISSIONS_CALENDAR, id);
