@@ -70,7 +70,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:drawableLeft="@drawable/ic_location"
+                    android:drawableLeft="@drawable/ic_location_wrapper"
                     android:drawablePadding="10dp"/>
 
             <TextView
@@ -82,8 +82,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:textAppearance="@android:style/TextAppearance.Medium"
-                android:drawableLeft="@drawable/ic_time"
-                android:drawableStart="@drawable/ic_time"
+                android:drawableLeft="@drawable/ic_time_wrapper"
+                android:drawableStart="@drawable/ic_time_wrapper"
                 android:drawablePadding="10dp"/>
 
             <TextView
@@ -95,8 +95,8 @@
                     android:layout_marginStart="10dp"
                     android:paddingTop="22dp"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:drawableLeft="@drawable/ic_action_info_black"
-                    android:drawableStart="@drawable/ic_action_info_black"
+                    android:drawableLeft="@drawable/ic_info_wrapper"
+                    android:drawableStart="@drawable/ic_info_wrapper"
                     android:drawablePadding="10dp"/>
         </LinearLayout>
 
@@ -113,14 +113,14 @@
                 android:id="@+id/bottomSheetDeleteEvent"
                 style="@style/FlatButton"
                 android:text="@string/delete_event_button"
-                android:drawableLeft="@drawable/ic_delete"
-                android:drawableStart="@drawable/ic_delete"/>
+                android:drawableLeft="@drawable/ic_delete_wrapper"
+                android:drawableStart="@drawable/ic_delete_wrapper"/>
             <Button
                 android:id="@+id/bottomSheetEditEvent"
                 style="@style/FlatButton"
                 android:text="@string/edit_event_button"
-                android:drawableLeft="@drawable/ic_action_edit"
-                android:drawableStart="@drawable/ic_action_edit"/>
+                android:drawableLeft="@drawable/ic_edit_wrapper"
+                android:drawableStart="@drawable/ic_edit_wrapper"/>
         </LinearLayout>
 
 
