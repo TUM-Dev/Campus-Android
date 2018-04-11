@@ -27,9 +27,9 @@
             android:layout_height="25dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_marginBottom="5dp"
-            android:drawableLeft="@drawable/ic_action_network_wifi"
+            android:drawableLeft="@drawable/ic_action_network_wifi_wrapper"
             android:drawablePadding="7dp"
-            android:drawableStart="@drawable/ic_action_network_wifi"
+            android:drawableStart="@drawable/ic_action_network_wifi_wrapper"
             android:text="@string/setup_eduroam"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
