@@ -23,13 +23,13 @@ public interface KinoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Kino kino);
 
-    @Query("SELECT * FROM kino")
+    @Query("SELECT * FROM kino ORDER BY date")
     Flowable<List<Kino>> getAll();
 
     @Query("SELECT id FROM kino ORDER BY id DESC LIMIT 1")
     Maybe<String> getLastId();
 
-    @Query("SELECT * FROM kino ORDER BY id LIMIT 1 OFFSET :position")
+    @Query("SELECT * FROM kino ORDER BY date LIMIT 1 OFFSET :position")
     Flowable<Kino> getByPosition(int position);
 
     @Query("DELETE FROM kino")
