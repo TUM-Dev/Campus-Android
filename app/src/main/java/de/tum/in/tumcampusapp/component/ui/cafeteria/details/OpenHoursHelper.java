@@ -36,6 +36,9 @@ public class OpenHoursHelper {
      */
     public String getHoursByIdAsString(Context context, int id, Date date) {
         String result = dao.getHoursById(id);
+        if (result == null){
+            return "";
+        }
 
         //Check which week day we have
         Calendar cal = new GregorianCalendar();
