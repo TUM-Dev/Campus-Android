@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +24,16 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.component.ui.plan.PlanListAdapter.PlanListEntry;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+/**
+ * Fragment that shows a list of available plans.
+ */
 public class PlansViewFragment extends Fragment {
 
     /**
@@ -137,10 +140,10 @@ public class PlansViewFragment extends Fragment {
                 String currentLocalName = PlanFile.values()[pos].getLocalName();
                 File pdfFile = new File(fileDirectory, currentLocalName);
                 if (pdfFile.exists()) {
-                    if (!openPdfViewer(pdfFile)) {
-                        Toast.makeText(getContext(), "Invalid file format, please let us know of this bug - plans have probably been updated.", Toast.LENGTH_LONG)
-                             .show();
-                    }
+                    Intent intent = new Intent(getContext(), PDFViewActivity.class);
+                    intent.putExtra(Const.PDF_TITLE, getString(entry.titleId));
+                    intent.putExtra(Const.PDF_PATH, pdfFile.getAbsolutePath());
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getContext(), "File doesn't exist yet...did you download it?", Toast.LENGTH_LONG)
                          .show();
@@ -181,29 +184,5 @@ public class PlansViewFragment extends Fragment {
                 .show();
     }
 
-    /**
-     * Either creates a new one or uses a existing PdfViewFragment. Then the method tries to open
-     * a given file in the acquired pdf fragment. If that's successful, the current fragment gets
-     * added to the backstack and is being replaced by the pdf fragment.
-     *
-     * @param pdf The file to be opened
-     * @return True, if opening the Pdf was successful, False otherwise. (e.g. file was not pdf but 404 html instead)
-     */
-    public boolean openPdfViewer(File pdf) {
-        PdfViewFragment pdfFragment = (PdfViewFragment) getActivity().getSupportFragmentManager()
-                                                                     .findFragmentByTag("PDF_FRAGMENT");
-        if (pdfFragment == null) {
-            pdfFragment = new PdfViewFragment();
-        }
-        if (!pdfFragment.setPdf(pdf)) {
-            return false;
-        }
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-                                                       .beginTransaction();
-        transaction.replace(R.id.activity_plans_fragment_frame, pdfFragment, "PDF_FRAGMENT");
-        transaction.addToBackStack(null);
-        transaction.commit();
-        return true;
-    }
 }
 

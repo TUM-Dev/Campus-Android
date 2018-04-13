@@ -15,7 +15,7 @@ public class PlansDetailsActivity extends BaseActivity {
     public static final String PLAN_IMG_ID = "plan_img_id";
 
     public PlansDetailsActivity() {
-        super(R.layout.activity_plans_details);
+        super(R.layout.activity_zoomable_image);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class PlansDetailsActivity extends BaseActivity {
         int img = getIntent().getExtras()
                              .getInt(PLAN_IMG_ID);
 
-        ImageView imageViewTouch = findViewById(R.id.activity_plans_plan);
+        ImageView imageViewTouch = findViewById(R.id.zoomable_image);
         imageViewTouch.setImageResource(img);
 
         setTitle(getString(title));

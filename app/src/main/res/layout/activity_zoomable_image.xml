@@ -2,7 +2,7 @@
                                         android:id="@+id/drawer_layout"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent">
-<!-- The main content view -->
+    <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,9 +13,13 @@
         <include layout="@layout/toolbar"/>
 
         <com.github.chrisbanes.photoview.PhotoView
-            android:id="@+id/activity_plans_plan"
+            android:id="@+id/zoomable_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+        <include
+            layout="@layout/layout_error"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
     </LinearLayout>
     <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer"/>
