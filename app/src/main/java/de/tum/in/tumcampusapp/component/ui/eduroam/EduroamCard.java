@@ -1,13 +1,16 @@
 package de.tum.in.tumcampusapp.component.ui.eduroam;
 
+import android.Manifest;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,9 +54,12 @@ public class EduroamCard extends NotificationAwareCard {
     }
 
     private boolean eduroamAvailable(WifiManager wifi){
-        for(ScanResult scan: wifi.getScanResults()){
-            if(scan.SSID.equals(Const.EDUROAM_SSID)){
-                return true;
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            for(ScanResult scan: wifi.getScanResults()){
+                if(scan.SSID.equals(Const.EDUROAM_SSID)){
+                    return true;
+                }
             }
         }
         return false;
