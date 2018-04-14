@@ -6,7 +6,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidget
 import java.util.*
 
 /**
- * Create new WidgetDepartures. It contains the widget settings and can load the according departure list
+ * Create new WidgetDepartures. It contains the widget settingsPrefix and can load the according departure list
  *
  * @param station     The station name
  * @param stationId   The station name

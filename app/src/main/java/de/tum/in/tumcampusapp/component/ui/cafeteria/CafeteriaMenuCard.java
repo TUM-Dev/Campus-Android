@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -60,24 +61,24 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         super.updateViewHolder(viewHolder);
         CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
         List<View> addedViews = cardsViewHolder.getAddedViews();
-        mCard = viewHolder.itemView;
-        mLinearLayout = mCard.findViewById(R.id.card_view);
-        mTitleView = mCard.findViewById(R.id.card_title);
-        mTitleView.setText(getTitle());
+        setMCard(viewHolder.itemView);
+        setMLinearLayout(getMCard().findViewById(R.id.card_view));
+        setMTitleView(getMCard().findViewById(R.id.card_title));
+        getMTitleView().setText(getTitle());
 
         // Show date
-        TextView mDateView = mCard.findViewById(R.id.card_date);
+        TextView mDateView = getMCard().findViewById(R.id.card_date);
         mDateView.setVisibility(View.VISIBLE);
         mDateView.setText(DateFormat.getDateInstance()
                                     .format(mDate));
 
         //Remove additional views
         for (View view : addedViews) {
-            mLinearLayout.removeView(view);
+            getMLinearLayout().removeView(view);
         }
 
         // Show cafeteria menu
-        cardsViewHolder.setAddedViews(showMenu(mLinearLayout, mCafeteriaId, mDateStr, false,mMenus));
+        cardsViewHolder.setAddedViews(showMenu(getMLinearLayout(), mCafeteriaId, mDateStr, false, mMenus));
     }
 
     /**
@@ -104,14 +105,9 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
     @Override
     public Intent getIntent() {
-        Intent i = new Intent(mContext, CafeteriaActivity.class);
+        Intent i = new Intent(getContext(), CafeteriaActivity.class);
         i.putExtra(Const.CAFETERIA_ID, mCafeteriaId);
         return i;
-    }
-
-    @Override
-    public int getId() {
-        return 0;
     }
 
     @Override
@@ -127,7 +123,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(mContext);
+        Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(getContext());
 
         NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
 
@@ -138,12 +134,12 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                 continue;
             }
 
-            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(mContext, Const.NOTIFICATION_CHANNEL_CAFETERIA)
+            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(getContext(), Const.NOTIFICATION_CHANNEL_CAFETERIA)
                     .setContentTitle(PATTERN.matcher(menu.getTypeLong())
                     .replaceAll("")
                     .trim());
             pageNotification.setSmallIcon(R.drawable.ic_notification);
-            pageNotification.setLargeIcon(Utils.getLargeIcon(mContext, R.drawable.ic_cutlery));
+            pageNotification.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_cutlery));
 
             StringBuilder content = new StringBuilder(menu.getName());
             if (rolePrices.containsKey(menu.getTypeLong())) {
@@ -177,7 +173,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         notificationBuilder.setWhen(mDate.getTime());
         notificationBuilder.setContentText(firstContent);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(allContent));
-        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_cafeteria);
+        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_cafeteria);
         morePageNotification.setBackground(bm);
         return morePageNotification.extend(notificationBuilder)
                                    .build();

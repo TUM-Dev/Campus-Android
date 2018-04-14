@@ -27,7 +27,7 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 
@@ -50,10 +50,10 @@ public class NextLectureCard extends NotificationAwareCard {
         super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture");
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_next_lecture_item, parent, false);
-        return new Card.CardViewHolder(view);
+        return new CardViewHolder(view);
     }
 
     @Override
@@ -64,12 +64,12 @@ public class NextLectureCard extends NotificationAwareCard {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        mCard = viewHolder.itemView;
-        mLinearLayout = mCard.findViewById(R.id.card_view);
-        mTitleView = mCard.findViewById(R.id.card_title);
-        mTimeView = mCard.findViewById(R.id.card_time);
-        mLocation = mCard.findViewById(R.id.card_location_action);
-        mEvent = mCard.findViewById(R.id.card_event_action);
+        setMCard(viewHolder.itemView);
+        setMLinearLayout(getMCard().findViewById(R.id.card_view));
+        setMTitleView(getMCard().findViewById(R.id.card_title));
+        mTimeView = getMCard().findViewById(R.id.card_time);
+        mLocation = getMCard().findViewById(R.id.card_location_action);
+        mEvent = getMCard().findViewById(R.id.card_event_action);
 
         showItem(0);
 
@@ -77,12 +77,12 @@ public class NextLectureCard extends NotificationAwareCard {
         if (lectures.size() > 1) {
             for (; i < lectures.size(); i++) {
                 final int j = i;
-                Button text = mCard.findViewById(IDS[i]);
+                Button text = getMCard().findViewById(IDS[i]);
                 text.setOnClickListener(view -> showItem(j));
             }
         }
         for (; i < 4; i++) {
-            View text = mCard.findViewById(IDS[i]);
+            View text = getMCard().findViewById(IDS[i]);
             text.setVisibility(View.GONE);
         }
     }
@@ -91,17 +91,17 @@ public class NextLectureCard extends NotificationAwareCard {
         // Set selection on the buttons
         mSelected = sel;
         for (int i = 0; i < 4; i++) {
-            mCard.findViewById(IDS[i])
-                 .setSelected(i == sel);
+            getMCard().findViewById(IDS[i])
+                      .setSelected(i == sel);
         }
 
         final CalendarItem item = lectures.get(sel);
 
         // Set current title
-        mTitleView.setText(getTitle());
+        getMTitleView().setText(getTitle());
 
         //Add content
-        mTimeView.setText(DateUtils.getFutureTime(item.start, mContext));
+        mTimeView.setText(DateUtils.getFutureTime(item.start, getContext()));
 
         //Add location with link to room finder
         if (item.location == null || item.location.isEmpty()) {
@@ -109,9 +109,9 @@ public class NextLectureCard extends NotificationAwareCard {
         } else {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(v -> {
-                Intent i = new Intent(mContext, RoomFinderActivity.class);
+                Intent i = new Intent(getContext(), RoomFinderActivity.class);
                 i.putExtra(SearchManager.QUERY, item.location);
-                mContext.startActivity(i);
+                getContext().startActivity(i);
             });
         }
 
@@ -119,10 +119,10 @@ public class NextLectureCard extends NotificationAwareCard {
         DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
         mEvent.setText(String.format("%s%s - %s", week.format(item.start), df.format(item.start), df.format(item.end)));
         mEvent.setOnClickListener(view -> {
-            Intent i = new Intent(mContext, CalendarActivity.class);
+            Intent i = new Intent(getContext(), CalendarActivity.class);
             CalendarItem item1 = lectures.get(mSelected);
             i.putExtra(CalendarActivity.EVENT_TIME, item1.start.getTime());
-            mContext.startActivity(i);
+            getContext().startActivity(i);
         });
     }
 
@@ -152,10 +152,10 @@ public class NextLectureCard extends NotificationAwareCard {
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         CalendarItem item = lectures.get(0);
-        final String time = DateUtils.getFutureTime(item.start, mContext);
+        final String time = DateUtils.getFutureTime(item.start, getContext());
         notificationBuilder.setContentText(item.title + '\n' + time);
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_next_lecture);
+        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_next_lecture);
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();
     }

@@ -21,7 +21,7 @@ data class Exam(@field:Element(name = "lv_titel")
                 var date: Date = Date(),
                 @field:Element(name = "pruefer_nachname", required = false)
                 var examiner: String = "",
-                @field:Element(name = "uninotenamekurz")
+                @field:Element(name = "uninotenamekurz", required = false)
                 var grade: String = "",
                 @field:Element(name = "modus", required = false)
                 var modus: String = "",

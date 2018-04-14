@@ -14,7 +14,6 @@ import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.other.reporting.stats.model.Statistics;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
@@ -42,9 +41,7 @@ import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -90,9 +87,8 @@ public final class TUMCabeClient {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
-        Gson gson = new GsonBuilder().
-                registerTypeAdapter(Date.class,new DateSerializer())
-                .create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer())
+                                     .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
         builder.client(Helper.getOkClient(c));
         service = builder.build()
@@ -132,12 +128,16 @@ public final class TUMCabeClient {
     }
 
     public List<StudyCard> getStudyCards() throws IOException {
-        return service.getStudyCards().execute().body();
+        return service.getStudyCards()
+                      .execute()
+                      .body();
     }
 
     public StudyCard addStudyCard(StudyCard card, ChatVerification verification) throws IOException {
         verification.setData(card);
-        return service.addStudyCard(verification).execute().body();
+        return service.addStudyCard(verification)
+                      .execute()
+                      .body();
     }
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
@@ -192,8 +192,7 @@ public final class TUMCabeClient {
 
     public void confirm(int notification) throws IOException {
         service.confirm(notification)
-               .execute()
-               .body();
+               .execute();
     }
 
     public List<GCMNotificationLocation> getAllLocations() throws IOException {
@@ -208,22 +207,6 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void putStatistics(Statistics s) {
-        service.putStatistics(s)
-               .enqueue(new Callback<List<String>>() {
-                   @Override
-                   public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                       //We don't care about any responses
-                   }
-
-                   @Override
-                   public void onFailure(Call<List<String>> call, Throwable t) {
-                       //Or if this fails
-                   }
-               });
-
-    }
-
     public void deviceRegister(DeviceRegister verification, Callback<TUMCabeStatus> cb) {
         service.deviceRegister(verification)
                .enqueue(cb);
@@ -234,7 +217,7 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
+    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) {
         service.createMeasurements(wifiMeasurementList)
                .enqueue(cb);
     }
@@ -275,7 +258,7 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException {
+    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) {
         service.fetchAvailableMaps(Helper.encodeUrl(archId))
                .enqueue(cb);
     }
@@ -293,7 +276,7 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) throws IOException {
+    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) {
         service.fetchCoordinates(Helper.encodeUrl(archId))
                .enqueue(cb);
     }
@@ -305,21 +288,25 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) throws IOException {
-        service.sendFeedback(feedback).enqueue(cb);
-        for(int i = 0; i < imagePaths.length; i++){
+    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
+        service.sendFeedback(feedback)
+               .enqueue(cb);
+
+        for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
-            service.sendFeedbackImage(body, i+1, feedback.getId()).enqueue(cb);
+
+            service.sendFeedbackImage(body, i + 1, feedback.getId())
+                   .enqueue(cb);
         }
     }
+
     public Observable<List<Cafeteria>> getCafeterias() {
         return service.getCafeterias();
     }
 
-
-    public Observable<List<Kino>> getKinos(String lastId){
+    public Observable<List<Kino>> getKinos(String lastId) {
         return service.getKinos(lastId);
     }
 }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -19,10 +20,10 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class SupportCard extends Card {
 
     public SupportCard(Context context) {
-        super(CardManager.CARD_SUPPORT, context);
+        super(CardManager.CARD_SUPPORT, context, "", true);
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         final View view = LayoutInflater.from(parent.getContext())
                                         .inflate(R.layout.card_support, parent, false);
         //Add links to imageviews
@@ -42,17 +43,17 @@ public class SupportCard extends Card {
                 view.getContext()
                     .startActivity(browserIntent);
             });
-        return new Card.CardViewHolder(view);
+        return new CardViewHolder(view);
     }
 
     @Override
     public void discard(Editor editor) {
-        Utils.setSetting(mContext, CardManager.SHOW_SUPPORT, false);
+        Utils.setSetting(getContext(), CardManager.SHOW_SUPPORT, false);
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences p) {
-        return Utils.getSettingBool(mContext, CardManager.SHOW_SUPPORT, true);
+        return Utils.getSettingBool(getContext(), CardManager.SHOW_SUPPORT, true);
     }
 
     @Override

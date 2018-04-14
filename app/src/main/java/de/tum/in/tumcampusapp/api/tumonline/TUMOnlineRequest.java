@@ -135,8 +135,7 @@ public final class TUMOnlineRequest<T> {
         if (!TUMOnlineConst.Companion.getREQUEST_TOKEN().equals(method)){
             //If there were some requests that failed and we verified that the token is not active anymore, block all requests directly
             if (!method.equals(TUMOnlineConst.Companion.getTOKEN_CONFIRMED())
-                && Utils.getSettingBool(mContext, Const.TUMO_DISABLED, false)
-                /*&& !Utils.getSettingBool(mContext, Const.IN_WIZARD, false)*/) {
+                && Utils.getSettingBool(mContext, Const.TUMO_DISABLED, false)) {
                 Utils.log("aborting fetch URL, as the token is not active any longer " + url);
                 return Optional.absent();
             }

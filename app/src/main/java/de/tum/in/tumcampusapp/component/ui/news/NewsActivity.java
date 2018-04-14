@@ -94,7 +94,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements Dial
             Collection<CharSequence> itemsList = new ArrayList<>();
             Collection<Boolean> checkedList = new ArrayList<>();
             List<NewsSources> newsSources = nm.getNewsSources();
-            // Populate the settings dialog from the NewsController sources
+            // Populate the settingsPrefix dialog from the NewsController sources
             for (NewsSources newsSource : newsSources) {
                 itemsList.add(newsSource.getTitle());
                 checkedList.add(Utils.getSettingBool(this, "news_source_" + newsSource.getId(), true));

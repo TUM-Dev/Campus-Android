@@ -106,7 +106,7 @@ public class CafeteriaNotificationSettings {
     }
 
     /**
-     * Checks if there's already a time preference for a weekday or not. The settings
+     * Checks if there's already a time preference for a weekday or not. The settingsPrefix
      * only differ by DAY_OF_WEEK.
      *
      * @param weekday A day ranging from MONDAY to FRIDAY

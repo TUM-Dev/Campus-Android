@@ -1,8 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.transportation;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.util.Pair;
 import android.util.SparseArray;
 
 import com.google.common.base.Optional;
@@ -24,7 +22,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
@@ -39,7 +37,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Transport Manager, handles querying data from mvv and card creation
  */
 @SuppressWarnings("StringConcatenationMissingWhitespace")
-public class TransportController implements Card.ProvidesCard {
+public class TransportController implements ProvidesCard {
 
     /*  Documentation for using efa.mvv-muenchen.de
      *
@@ -170,10 +168,9 @@ public class TransportController implements Card.ProvidesCard {
     }
 
     /**
-     * Adds the settings of a widget to the widget list, replaces the existing settings if there are some
+     * Adds the settingsPrefix of a widget to the widget list, replaces the existing settingsPrefix if there are some
      */
     public void addWidget(int appWidgetId, WidgetDepartures widgetDepartures) {
-        ContentValues values = new ContentValues();
         WidgetsTransport widgetsTransport = new WidgetsTransport();
         widgetsTransport.setId(appWidgetId);
         widgetsTransport.setStation(widgetDepartures.getStation());
@@ -185,7 +182,7 @@ public class TransportController implements Card.ProvidesCard {
     }
 
     /**
-     * Deletes the settings of a widget to the widget list
+     * Deletes the settingsPrefix of a widget to the widget list
      *
      * @param widgetId The id of the widget
      */
@@ -195,9 +192,9 @@ public class TransportController implements Card.ProvidesCard {
     }
 
     /**
-     * A WidgetDepartures Object containing the settings of this widget.
+     * A WidgetDepartures Object containing the settingsPrefix of this widget.
      * This object can provide the departures needed by this widget as well.
-     * The settings are cached, only the first time its loded from the database.
+     * The settingsPrefix are cached, only the first time its loded from the database.
      * If there is no widget with this id saved (in cache and the database) a new WidgetDepartures Object is generated
      * containing a NULL for the station and an empty string for the station id. This is not cached or saved to the database.
      *
@@ -353,14 +350,14 @@ public class TransportController implements Card.ProvidesCard {
 
         // Get station for current campus
         LocationManager locMan = new LocationManager(context);
-        String station = locMan.getStation();
+        StationResult station = locMan.getStation();
         if (station == null) {
             return;
         }
 
-        List<Departure> cur = getDeparturesFromExternal(context, station);
+        List<Departure> cur = getDeparturesFromExternal(context, station.getId());
         MVVCard card = new MVVCard(context);
-        card.setStation(new Pair<>(station, station));
+        card.setStation(station);
         card.setDepartures(cur);
         card.apply();
 

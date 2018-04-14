@@ -80,7 +80,7 @@ public final class Utils {
         }
         prefsEditor.apply();
 
-        //Delete any old settings
+        //Delete any old settingsPrefix
         prefsLegacy.edit()
                    .clear()
                    .apply();

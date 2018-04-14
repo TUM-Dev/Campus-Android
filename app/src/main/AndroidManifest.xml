@@ -388,16 +388,31 @@
         <activity
             android:name=".component.ui.onboarding.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name"
+            android:parentActivityName=".component.ui.overview.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity"/>
+        </activity>
         <activity
             android:name=".component.ui.onboarding.WizNavCheckTokenActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name"
+            android:parentActivityName=".component.ui.onboarding.WizNavStartActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.onboarding.WizNavStartActivity"/>
+        </activity>
         <activity
             android:name=".component.ui.onboarding.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".component.ui.onboarding.WizNavCheckTokenActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.onboarding.WizNavCheckTokenActivity"/>
+        </activity>
         <activity
             android:name=".component.tumui.calendar.CalendarActivity"
             android:configChanges="orientation|screenSize"

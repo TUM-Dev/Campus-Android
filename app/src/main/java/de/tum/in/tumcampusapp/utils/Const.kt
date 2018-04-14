@@ -55,7 +55,6 @@ object Const {
     const val SYNC_CALENDAR = "sync_calendar"
     const val PREFERENCE_SCREEN = "preference_screen"
     const val P_TOKEN = "pToken"
-    const val APP_VERSION = "app_version"
     const val JSON_NEWS = "news"
     const val JSON_DATE = "date"
     const val JSON_TITLE = "title"
@@ -121,6 +120,8 @@ object Const {
     const val DATE_ONLY = "yyyy-MM-dd"
 
     const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
+    const val DISCARD_SETTINGS_START = "discard_settings_start"
+    const val DISCARD_SETTINGS_PHONE = "discard_settings_phone"
     const val CALENDAR_ID_PARAM = "calendar_id"
 
     const val RAINBOW_MODE = "rainbow_enabled"

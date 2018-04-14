@@ -116,15 +116,11 @@ public class CacheManager {
     public void fillCache() {
 
         NetUtils net = new NetUtils(mContext);
-        // Cache curricula urls
-        if (shouldRefresh(CurriculaActivity.CURRICULA_URL)) {
-            net.downloadJsonArray(CurriculaActivity.CURRICULA_URL, CacheManager.VALIDITY_ONE_MONTH, true);
-        }
 
         // Cache news source images
         NewsController newsController = new NewsController(mContext);
         List<NewsSources> newsSources = newsController.getNewsSources();
-        for (NewsSources newsSource: newsSources) {
+        for (NewsSources newsSource : newsSources) {
             String imgUrl = newsSource.getIcon();
             if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
                 net.downloadImage(imgUrl);
@@ -133,7 +129,7 @@ public class CacheManager {
 
         // Cache news images
         List<News> news = newsController.getAllFromDb(mContext);
-        for (News n: news) {
+        for (News n : news) {
             String imgUrl = n.getImage();
             if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
                 net.downloadImage(imgUrl);
@@ -141,13 +137,15 @@ public class CacheManager {
         }
 
         // Cache kino covers
-        kinoDao.getAll().subscribe(it -> {
-        for (Kino kino : it) {
-            String imgUrl = kino.getCover();
-            if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
-                net.downloadImage(imgUrl);
-            }}
-        });
+        kinoDao.getAll()
+               .subscribe(it -> {
+                   for (Kino kino : it) {
+                       String imgUrl = kino.getCover();
+                       if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
+                           net.downloadImage(imgUrl);
+                       }
+                   }
+               });
 
         // acquire access token
         if (!new AccessTokenManager(mContext).hasValidAccessToken()) {
@@ -261,11 +259,9 @@ public class CacheManager {
         }
         List<LecturesSearchRow> lectures = lecturesList.get()
                                                        .getLehrveranstaltungen();
-        if (lectures == null) {
-            return;
-        }
+
         ChatRoomController manager = new ChatRoomController(mContext);
-        manager.replaceInto(lectures);
+        manager.createLectureRooms(lectures);
     }
 
     public static synchronized void clearCache(Context context) {

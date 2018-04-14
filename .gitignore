@@ -11,3 +11,4 @@
 !/.idea/vcs.xml
 *.apk
 gradlew
+/app/release/

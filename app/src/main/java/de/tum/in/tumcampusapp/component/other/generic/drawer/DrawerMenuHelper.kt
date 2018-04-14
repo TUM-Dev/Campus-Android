@@ -22,6 +22,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivit
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity
 import de.tum.`in`.tumcampusapp.component.ui.curricula.CurriculaActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.plan.PlansActivity
@@ -44,14 +45,17 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
         val hasTUMOAccess = AccessTokenManager(mContext).hasValidAccessToken()
         val chatEnabled = Utils.getSettingBool(mContext, Const.GROUP_CHAT_ENABLED, false)
 
+        val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
         if (hasTUMOAccess) {
-            val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
             for (item in MY_TUM) {
                 if (!(item.needsChatAccess && !chatEnabled)) {
                     myTumMenu.add(item.titleRes)
                             .setIcon(item.iconRes).intent = Intent(mContext, item.activity)
                 }
             }
+        } else {
+            myTumMenu.add(R.string.tumonline_login)
+                    .setIcon(R.drawable.ic_link).intent = Intent(mContext, WizNavStartActivity::class.java)
         }
 
         // General information which mostly can be used without a TUMonline token

@@ -89,39 +89,18 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_above="@+id/buttonBar"
+            android:layout_above="@+id/next_button"
             android:background="?android:attr/listDivider"/>
 
-        <LinearLayout
-            android:id="@+id/buttonBar"
-            style="@style/ButtonBar"
+        <Button
+            android:id="@+id/next_button"
+            style="@style/ButtonBarButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            android:background="?attr/selectableItemBackground"
+            android:onClick="onClickNext"
+            android:text="@string/button_next"
+            android:layout_alignParentBottom="true"/>
 
-            <Button
-                style="@style/ButtonBarButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="onBackButtonPressed"
-                android:text="@string/back"/>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="?android:attr/listDivider"/>
-
-            <Button
-                style="@style/ButtonBarButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="onClickNext"
-                android:text="@string/button_next"/>
-        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

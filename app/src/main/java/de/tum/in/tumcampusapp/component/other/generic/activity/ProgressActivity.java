@@ -251,7 +251,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     }
 
     /**
-     * Show wifi settings
+     * Show wifi settingsPrefix
      */
     public void onEnableWifi(View view) {
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
