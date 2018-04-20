@@ -141,7 +141,7 @@ abstract class Card(
         return Integer.compare(position, other.position)
     }
 
-    open fun getRemoteViews(context: Context): RemoteViews? {
+    open fun getRemoteViews(context: Context, appWidgetId: Int): RemoteViews? {
         return null
     }
 

@@ -16,7 +16,6 @@ import android.view.MenuItem;
 
 import com.google.common.base.Optional;
 
-import java.io.File;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -40,8 +39,8 @@ import retrofit2.Response;
  * Displays the map regarding the searched room.
  */
 public class RoomFinderDetailsActivity
-        extends ActivityForLoadingInBackground<Void, Optional<File>>
-        implements DialogInterface.OnClickListener {
+        extends ActivityForLoadingInBackground<Void, String>
+        implements DialogInterface.OnClickListener, com.squareup.picasso.Callback {
 
     public static final String EXTRA_ROOM_INFO = "roomInfo";
     public static final String EXTRA_LOCATION = "location";
@@ -162,40 +161,25 @@ public class RoomFinderDetailsActivity
         dialog.dismiss();
         int selectedPosition = ((AlertDialog) dialog).getListView()
                                                      .getCheckedItemPosition();
-        mapId = mapsList.get(selectedPosition)
-                        .getMap_id();
+        mapId = mapsList.get(selectedPosition).getMap_id();
         startLoading();
     }
 
     @Override
-    protected Optional<File> onLoadInBackground(Void... arg) {
+    protected String onLoadInBackground(Void... arg) {
         String archId = room.getArch_id();
         String url;
-
         if (mapId == null || mapId.isEmpty()) {
             url = Const.URL_DEFAULT_MAP_IMAGE + Helper.encodeUrl(archId);
         } else {
             url = Const.URL_MAP_IMAGE + Helper.encodeUrl(archId) + '/' + Helper.encodeUrl(mapId);
         }
-
-        return net.downloadImage(url);
+        return url;
     }
 
     @Override
-    protected void onLoadFinished(Optional<File> result) {
-        if (!result.isPresent()) {
-            if (NetUtils.isConnected(this)) {
-                showErrorLayout();
-            } else {
-                showNoInternetLayout();
-            }
-            return;
-        }
-        infoLoaded = true;
-        supportInvalidateOptionsMenu();
-
-        //Update the fragment
-        mImage = ImageViewTouchFragment.newInstance(result.get());
+    protected void onLoadFinished(String url) {
+        mImage = ImageViewTouchFragment.newInstance(url, this);
         getSupportFragmentManager().beginTransaction()
                                    .replace(R.id.fragment_container, mImage)
                                    .commit();
@@ -204,9 +188,7 @@ public class RoomFinderDetailsActivity
             getSupportActionBar().setTitle(room.getInfo());
             getSupportActionBar().setSubtitle(room.getAddress());
         }
-
         showLoadingEnded();
-
         loadMapList();
     }
 
@@ -307,6 +289,21 @@ public class RoomFinderDetailsActivity
         } catch (ActivityNotFoundException e) {
             Utils.log(e);
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
+        }
+    }
+
+    @Override
+    public void onSuccess() {
+        // map was successfully loaded, do nothing
+    }
+
+    @Override
+    public void onError(Exception e) {
+        // map could not be shown
+        if (NetUtils.isConnected(this)) {
+            showErrorLayout();
+        } else {
+            showNoInternetLayout();
         }
     }
 }

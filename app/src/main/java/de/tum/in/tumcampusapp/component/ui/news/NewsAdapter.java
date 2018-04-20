@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -19,17 +21,14 @@ import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 
 public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
-    private final NetUtils net;
     private final List<News> news;
     private final Context mContext;
 
-    public NewsAdapter(Context context, List<News> news) {
+    NewsAdapter(Context context, List<News> news) {
         this.mContext = context;
-        net = new NetUtils(context);
         this.news = news;
     }
 
@@ -52,17 +51,19 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         return holder;
     }
 
-    public static void bindNewsView(NetUtils net, RecyclerView.ViewHolder newsViewHolder, News news, Context context) {
+    public static void bindNewsView(RecyclerView.ViewHolder newsViewHolder, News news, Context context) {
         NewsViewHolder holder = (NewsViewHolder) newsViewHolder;
         NewsSourcesDao newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();
         NewsSources newsSource = newsSourcesDao.getNewsSource(Integer.parseInt(news.getSrc()));
         // Set image
         String imgUrl = news.getImage();
-        if (imgUrl == null || imgUrl.isEmpty() || imgUrl.equals("null")) {
+        if (imgUrl.isEmpty() || imgUrl.equals("null")) {
             holder.img.setVisibility(View.GONE);
         } else {
             holder.img.setVisibility(View.VISIBLE);
-            net.loadAndSetImage(imgUrl, holder.img);
+            Picasso p = Picasso.get();
+            p.setIndicatorsEnabled(true);
+            p.load(imgUrl).into(holder.img);
         }
 
         String title = news.getTitle();
@@ -82,7 +83,7 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         if (icon.isEmpty() || "null".equals(icon)) {
             holder.srcIcon.setImageResource(R.drawable.ic_comment);
         } else {
-            net.loadAndSetImage(icon, holder.srcIcon);
+            Picasso.get().load(icon).into(holder.srcIcon);
         }
     }
 
@@ -103,7 +104,7 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         card.setNews(news.get(position));
         nHolder.setCurrentCard(card);
 
-        bindNewsView(net, holder, news.get(position), mContext);
+        bindNewsView(holder, news.get(position), mContext);
     }
 
     @Override

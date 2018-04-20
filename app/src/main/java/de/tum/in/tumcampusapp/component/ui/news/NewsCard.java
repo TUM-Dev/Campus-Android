@@ -11,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
-import com.google.common.base.Optional;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
@@ -20,7 +22,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -29,7 +30,6 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class NewsCard extends NotificationAwareCard {
 
     private News mNews;
-    private final NetUtils net;
 
     public NewsCard(Context context) {
         this(CardManager.CARD_NEWS, context);
@@ -37,7 +37,6 @@ public class NewsCard extends NotificationAwareCard {
 
     public NewsCard(int type, Context context) {
         super(type, context, "card_news", false);
-        net = new NetUtils(context);
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent, int type) {
@@ -61,7 +60,7 @@ public class NewsCard extends NotificationAwareCard {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        NewsAdapter.bindNewsView(net, viewHolder, mNews, getContext());
+        NewsAdapter.bindNewsView(viewHolder, mNews, getContext());
     }
 
     /**
@@ -104,9 +103,11 @@ public class NewsCard extends NotificationAwareCard {
         notificationBuilder.setContentInfo(newsSource.getTitle());
         notificationBuilder.setTicker(mNews.getTitle());
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        Optional<Bitmap> img = net.downloadImageToBitmap(mNews.getImage());
-        if (img.isPresent()) {
-            notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img.get()));
+        try {
+            Bitmap bgImg = Picasso.get().load(mNews.getImage()).get();
+            notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bgImg));
+        } catch (IOException e) {
+            // ignore it if download fails
         }
         return notificationBuilder.build();
     }
@@ -125,16 +126,15 @@ public class NewsCard extends NotificationAwareCard {
     }
 
     @Override
-    public RemoteViews getRemoteViews(Context context) {
+    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         final String imgURL = mNews.getImage();
-        if (imgURL != null && !imgURL.trim()
-                                     .isEmpty() && !"null".equals(imgURL)) {
-            Optional<Bitmap> img = net.downloadImageToBitmap(imgURL);
-            if (img.isPresent()) {
-                remoteViews.setImageViewBitmap(R.id.widgetCardImageView, img.get());
-            }
+        if (!imgURL.trim().isEmpty() && !"null".equals(imgURL)) {
+            Utils.log(imgURL);
+            Picasso p = Picasso.get();
+            p.setIndicatorsEnabled(true);
+            p.load(imgURL).into(remoteViews, R.id.widgetCardImageView, new int[]{appWidgetId});
         }
         return remoteViews;
     }

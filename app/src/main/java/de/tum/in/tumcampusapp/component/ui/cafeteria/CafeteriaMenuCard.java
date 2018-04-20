@@ -180,7 +180,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
     }
 
     @Override
-    public RemoteViews getRemoteViews(Context context) {
+    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_cutlery);

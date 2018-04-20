@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
@@ -144,7 +146,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         runtime.setOnClickListener(this);
 
         // cover
-        net.loadAndSetImage(kino.getCover(), cover);
+        Picasso.get().load(kino.getCover()).into(cover);
 
         rootView.addView(headerView);
     }
@@ -153,19 +155,15 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.button_date) {
-            Toast.makeText(context, R.string.date, Toast.LENGTH_SHORT)
-                 .show();
+            Toast.makeText(context, R.string.date, Toast.LENGTH_SHORT).show();
         } else if (i == R.id.button_link) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         } else if (i == R.id.button_imdb) {
-            Toast.makeText(context, R.string.imdb_rating, Toast.LENGTH_SHORT)
-                 .show();
+            Toast.makeText(context, R.string.imdb_rating, Toast.LENGTH_SHORT).show();
         } else if (i == R.id.button_year) {
-            Toast.makeText(context, R.string.year, Toast.LENGTH_SHORT)
-                 .show();
+            Toast.makeText(context, R.string.year, Toast.LENGTH_SHORT).show();
         } else if (i == R.id.button_runtime) {
-            Toast.makeText(context, R.string.runtime, Toast.LENGTH_SHORT)
-                 .show();
+            Toast.makeText(context, R.string.runtime, Toast.LENGTH_SHORT).show();
         }
     }
 
