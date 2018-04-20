@@ -5,7 +5,8 @@ import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.view.View;
-import android.widget.ImageView;
+
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  *  It shows the Title (Const.PDF_TITLE) in the ActionBar if a title is given.
  */
 public class PDFViewActivity extends BaseActivity {
-    private static final int MAX_RENDER_SIZE = 2500;
+    private static final int MAX_RENDER_SIZE = 4000;
 
     public PDFViewActivity() {
         super(R.layout.activity_zoomable_image);
@@ -30,21 +31,22 @@ public class PDFViewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        if(extras != null){
-            String title = extras.getString(Const.PDF_TITLE);
-            if(title != null && !title.isEmpty()){
-                getSupportActionBar().setTitle(title);
-            }
-
-            String path = extras.getString(Const.PDF_PATH);
-            if (path != null) {
-                showPDF(new File(path));
-            } else {
-                showError();
-            }
-        } else {
+        if (extras == null) {
             showError();
+            return;
         }
+
+        String title = extras.getString(Const.PDF_TITLE);
+        if(title != null && !title.isEmpty() && getSupportActionBar() != null){
+            getSupportActionBar().setTitle(title);
+        }
+
+        String path = extras.getString(Const.PDF_PATH);
+        if (path == null) {
+            showError();
+            return;
+        }
+        showPDF(new File(path));
     }
 
     /**
@@ -63,7 +65,9 @@ public class PDFViewActivity extends BaseActivity {
                 PdfRenderer.Page page = renderer.openPage(i);
                 Bitmap bitmap = createBitmap(page);
                 page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-                ((ImageView) findViewById(R.id.zoomable_image)).setImageBitmap(bitmap);
+                PhotoView image = findViewById(R.id.zoomable_image);
+                image.setImageBitmap(bitmap);
+                image.setMaximumScale(10);
                 // close the page
                 page.close();
             }
@@ -84,17 +88,11 @@ public class PDFViewActivity extends BaseActivity {
         int width, height;
         if(page.getHeight() > page.getWidth()){
             // portrait image
-            height = page.getHeight() * 4;
-            if(height > MAX_RENDER_SIZE){
-                height = MAX_RENDER_SIZE;
-            }
+            height = Math.min(page.getHeight()*4, MAX_RENDER_SIZE);
             width = height * page.getWidth() / page.getHeight();
         } else {
-            // lanscape image
-            width = page.getWidth() * 4;
-            if(width > MAX_RENDER_SIZE){
-                width = MAX_RENDER_SIZE;
-            }
+            // landscape image
+            width = Math.min(page.getWidth()*4, MAX_RENDER_SIZE);
             height = width * page.getHeight() / page.getWidth();
         }
         Utils.log(page.getWidth() + " x " + page.getHeight() + " -> " + width + " x " + height);
