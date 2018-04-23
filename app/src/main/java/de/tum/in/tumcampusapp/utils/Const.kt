@@ -135,4 +135,7 @@ object Const {
     const val EVENT_START = "pVon"
     const val EVENT_END = "pBis"
     const val EVENT_NR = "pTerminNr"
+
+    const val PDF_TITLE = "pdfTitle"
+    const val PDF_PATH = "pdfPath"
 }

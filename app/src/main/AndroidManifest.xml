@@ -407,8 +407,8 @@
             android:name=".component.ui.onboarding.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".component.ui.onboarding.WizNavCheckTokenActivity">
+            android:parentActivityName=".component.ui.onboarding.WizNavCheckTokenActivity"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.onboarding.WizNavCheckTokenActivity"/>
@@ -715,9 +715,14 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".component.tumui.calendar.CreateEventActivity"
-            android:parentActivityName=".component.tumui.calendar.CalendarActivity"
-            android:label="@string/activity_create_event_title"/>
+        <activity
+            android:name=".component.tumui.calendar.CreateEventActivity"
+            android:label="@string/activity_create_event_title"
+            android:parentActivityName=".component.tumui.calendar.CalendarActivity"/>
+        <activity android:name=".component.ui.plan.PDFViewActivity"
+                  android:label="@string/pdf_viewer_title"
+            android:parentActivityName=".component.ui.plan.PlansActivity"/>
+
     </application>
 
 </manifest>
