@@ -111,7 +111,7 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return NewsCard.inflateViewHolder(parent, viewType);
+        return newNewsView(parent, viewType == 0);
     }
 
     @Override
