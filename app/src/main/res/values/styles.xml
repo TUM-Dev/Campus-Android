@@ -99,6 +99,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:backgroundTint">@color/tum_100</item>
         <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:drawablePadding">2dp</item>
     </style>
 
     <style name="FlatButton" parent="@android:style/TextAppearance.Medium">
