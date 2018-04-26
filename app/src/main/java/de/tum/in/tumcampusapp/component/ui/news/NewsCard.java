@@ -132,9 +132,9 @@ public class NewsCard extends NotificationAwareCard {
         final String imgURL = mNews.getImage();
         if (!imgURL.trim().isEmpty() && !"null".equals(imgURL)) {
             Utils.log(imgURL);
-            Picasso p = Picasso.get();
-            p.setIndicatorsEnabled(true);
-            p.load(imgURL).into(remoteViews, R.id.widgetCardImageView, new int[]{appWidgetId});
+            Picasso.get()
+                    .load(imgURL)
+                    .into(remoteViews, R.id.widgetCardImageView, new int[]{appWidgetId});
         }
         return remoteViews;
     }

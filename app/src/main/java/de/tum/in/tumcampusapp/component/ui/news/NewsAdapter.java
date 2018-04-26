@@ -66,9 +66,10 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
             if(news.getLink().endsWith(".png") || news.getLink().endsWith(".jpeg")){
                 Utils.log("try link as image");
                 // the link points to an image (newspread)
-                Picasso p = Picasso.get();
-                p.setIndicatorsEnabled(true);
-                p.load(news.getLink()).placeholder(R.drawable.chat_background).into(holder.img, new Callback() {
+                Picasso.get()
+                        .load(news.getLink())
+                        .placeholder(R.drawable.chat_background)
+                        .into(holder.img, new Callback() {
                     @Override
                     public void onSuccess() {
                         holder.title.setVisibility(View.GONE); // title is included in newspread slide
@@ -83,9 +84,10 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
                 holder.img.setVisibility(View.GONE);
             }
         } else {
-            Picasso p = Picasso.get();
-            p.setIndicatorsEnabled(true);
-            p.load(imgUrl).placeholder(R.drawable.chat_background).into(holder.img);
+            Picasso.get()
+                    .load(imgUrl)
+                    .placeholder(R.drawable.chat_background)
+                    .into(holder.img);
         }
 
         String title = news.getTitle();
