@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -19,17 +22,15 @@ import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
-    private final NetUtils net;
     private final List<News> news;
     private final Context mContext;
 
-    public NewsAdapter(Context context, List<News> news) {
+    NewsAdapter(Context context, List<News> news) {
         this.mContext = context;
-        net = new NetUtils(context);
         this.news = news;
     }
 
@@ -52,17 +53,41 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         return holder;
     }
 
-    public static void bindNewsView(NetUtils net, RecyclerView.ViewHolder newsViewHolder, News news, Context context) {
+    public static void bindNewsView(RecyclerView.ViewHolder newsViewHolder, News news, Context context) {
         NewsViewHolder holder = (NewsViewHolder) newsViewHolder;
         NewsSourcesDao newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();
         NewsSources newsSource = newsSourcesDao.getNewsSource(Integer.parseInt(news.getSrc()));
+        holder.img.setVisibility(View.VISIBLE);
+        holder.title.setVisibility(View.VISIBLE);
+
         // Set image
         String imgUrl = news.getImage();
-        if (imgUrl == null || imgUrl.isEmpty() || imgUrl.equals("null")) {
-            holder.img.setVisibility(View.GONE);
+        if (imgUrl.isEmpty() || imgUrl.equals("null")) {
+            if(news.getLink().endsWith(".png") || news.getLink().endsWith(".jpeg")){
+                Utils.log("try link as image");
+                // the link points to an image (newspread)
+                Picasso.get()
+                        .load(news.getLink())
+                        .placeholder(R.drawable.chat_background)
+                        .into(holder.img, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.title.setVisibility(View.GONE); // title is included in newspread slide
+                        holder.img.setOnClickListener(null); // link doesn't lead to more infos
+                    }
+                    @Override
+                    public void onError(Exception e) {
+                        holder.img.setVisibility(View.GONE); // we can't display the image after all
+                    }
+                });
+            } else {
+                holder.img.setVisibility(View.GONE);
+            }
         } else {
-            holder.img.setVisibility(View.VISIBLE);
-            net.loadAndSetImage(imgUrl, holder.img);
+            Picasso.get()
+                    .load(imgUrl)
+                    .placeholder(R.drawable.chat_background)
+                    .into(holder.img);
         }
 
         String title = news.getTitle();
@@ -82,13 +107,13 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         if (icon.isEmpty() || "null".equals(icon)) {
             holder.srcIcon.setImageResource(R.drawable.ic_comment);
         } else {
-            net.loadAndSetImage(icon, holder.srcIcon);
+            Picasso.get().load(icon).into(holder.srcIcon);
         }
     }
 
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return NewsCard.inflateViewHolder(parent, viewType);
+        return newNewsView(parent, viewType == 0);
     }
 
     @Override
@@ -103,7 +128,7 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         card.setNews(news.get(position));
         nHolder.setCurrentCard(card);
 
-        bindNewsView(net, holder, news.get(position), mContext);
+        bindNewsView(holder, news.get(position), mContext);
     }
 
     @Override

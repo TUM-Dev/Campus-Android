@@ -91,7 +91,7 @@ public class CardsWidgetService extends RemoteViewsService {
                 if (!getsShown) {
                     continue;
                 }
-                final RemoteViews remote = card.getRemoteViews(mContext);
+                final RemoteViews remote = card.getRemoteViews(mContext, appWidgetId);
 
                 //So, here is what we do now:
                 //Since it is not guaranteed, that anything is running when the user clicks on

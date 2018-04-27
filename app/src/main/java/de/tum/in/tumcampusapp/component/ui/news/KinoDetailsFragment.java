@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,8 +13,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
@@ -22,21 +27,17 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Fragment for KinoDetails. Manages content that gets shown on the pagerView
  */
-public class KinoDetailsFragment extends Fragment implements View.OnClickListener {
+public class KinoDetailsFragment extends Fragment {
 
     private Context context;
     private Kino kino;
-    private NetUtils net;
     private String url; // link to homepage
     private LayoutInflater inflater;
-
-    private KinoViewModel kinoViewModel;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -50,9 +51,8 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         int position = getArguments().getInt(Const.POSITION);
 
         KinoLocalRepository.db = TcaDb.getInstance(context);
-        kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposable);
+        KinoViewModel kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposable);
         context = root.getContext();
-        net = new NetUtils(context);
 
         kinoViewModel.getKinoByPosition(position)
                      .subscribe(kino1 -> {
@@ -115,58 +115,67 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
     private void createKinoHeader(LinearLayout rootView) {
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.kino_header, rootView, false);
 
-        Button date;
-        Button link;
-        Button imdb;
-        Button year;
-        Button runtime;
-        ImageView cover = headerView.findViewById(R.id.kino_cover);
-
         // initialize all buttons
-        date = headerView.findViewById(R.id.button_date);
-        link = headerView.findViewById(R.id.button_link);
-        imdb = headerView.findViewById(R.id.button_imdb);
-        year = headerView.findViewById(R.id.button_year);
-        runtime = headerView.findViewById(R.id.button_runtime);
+        Button date = headerView.findViewById(R.id.button_date);
+        Button link = headerView.findViewById(R.id.button_link);
+        Button imdb = headerView.findViewById(R.id.button_imdb);
+        Button year = headerView.findViewById(R.id.button_year);
+        Button runtime = headerView.findViewById(R.id.button_runtime);
+        Button trailer = headerView.findViewById(R.id.button_trailer);
+        ImageView cover = headerView.findViewById(R.id.kino_cover);
+        ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
+        View error = headerView.findViewById(R.id.kino_cover_error);
 
-        // set text for all buttons
+        // set text for buttons
         date.setText(KinoDetailsFragment.formDateString(DateUtils.getDateString(kino.getDate())));
-        link.setText(R.string.www);
-        imdb.setText(kino.getRating());
+        imdb.setText(kino.getRating() + " / 10");
         year.setText(kino.getYear());
         runtime.setText(kino.getRuntime());
 
-        // set onClickListener
-        date.setOnClickListener(this);
-        link.setOnClickListener(this);
-        imdb.setOnClickListener(this);
-        year.setOnClickListener(this);
-        runtime.setOnClickListener(this);
+        // onClickListeners
+        link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
+        year.setOnClickListener(view -> Toast.makeText(context, R.string.year, Toast.LENGTH_SHORT).show());
+        trailer.setOnClickListener(view -> showTrailer());
 
         // cover
-        net.loadAndSetImage(kino.getCover(), cover);
+        Picasso.get()
+                .load(kino.getCover())
+                .into(cover, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progress.setVisibility(View.GONE);
+                        error.setVisibility(View.GONE);
+                    }
+                    @Override
+                    public void onError(Exception e) {
+                        progress.setVisibility(View.GONE);
+                        error.setVisibility(View.VISIBLE);
+                    }
+                });
 
         rootView.addView(headerView);
     }
 
-    @Override
-    public void onClick(View view) {
-        int i = view.getId();
-        if (i == R.id.button_date) {
-            Toast.makeText(context, R.string.date, Toast.LENGTH_SHORT)
-                 .show();
-        } else if (i == R.id.button_link) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-        } else if (i == R.id.button_imdb) {
-            Toast.makeText(context, R.string.imdb_rating, Toast.LENGTH_SHORT)
-                 .show();
-        } else if (i == R.id.button_year) {
-            Toast.makeText(context, R.string.year, Toast.LENGTH_SHORT)
-                 .show();
-        } else if (i == R.id.button_runtime) {
-            Toast.makeText(context, R.string.runtime, Toast.LENGTH_SHORT)
-                 .show();
+    public void showTrailer() {
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://www.youtube.com/results?search_query=" + getTrailerSearchString()));
+        try {
+            context.startActivity(webIntent);
+        } catch (ActivityNotFoundException ex) {
+            Toast.makeText(context, getString(R.string.show_trailer_error), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private String getTrailerSearchString(){
+        String search = kino.getTitle();
+        search = search.split(": ")[1];
+        search = "trailer " + search;
+        if(!search.contains("OV")){
+            search += " german deutsch";
+        }
+        search = search.replace(' ', '+');
+
+        return search;
     }
 
     /**

@@ -28,4 +28,6 @@ object KinoLocalRepository {
 
     fun clear() = db.kinoDao().cleanUp()
 
+    fun getPosition(date: String) = db.kinoDao().getPosition(date)
+
 }

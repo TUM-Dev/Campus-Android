@@ -1,61 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/AppTheme.GreyBackground"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="horizontal">
+    style="@style/AppTheme.GreyBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0.30"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:gravity="center">
 
-        <Button
-            android:id="@+id/button_date"
+        <RelativeLayout
+            android:layout_width="160dp"
+            android:layout_height="240dp">
+            <ImageView
+                android:id="@+id/kino_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/kino_cover_description"/>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:id="@+id/kino_cover_progress"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                android:src="@drawable/error"
+                android:id="@+id/kino_cover_error"/>
+        </RelativeLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button_date"
+                style="@style/KinoHeaderButton"
+                android:drawableStart="@drawable/ic_calendar" />
+
+            <Button
+                android:id="@+id/button_runtime"
+                style="@style/KinoHeaderButton"/>
+
+
+
+            <Button
+                android:id="@+id/button_imdb"
+                style="@style/KinoHeaderButton"/>
+
+            <Button
+                android:id="@+id/button_year"
+                style="@style/KinoHeaderButton"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <Button
+            android:id="@+id/button_trailer"
+            style="@style/KinoHeaderButton"
+            android:drawableEnd="@drawable/ic_play_outline"
+            android:text="@string/trailer"/>
 
         <Button
             android:id="@+id/button_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+            style="@style/KinoHeaderButton"
+            android:drawableStart="@drawable/ic_link"
+            android:text="@string/www"/>
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/kino_cover"
-        android:layout_width="160dp"
-        android:layout_height="240dp"
-        android:scaleType="centerCrop"/>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0.25"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/button_imdb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
-
-        <Button
-            android:id="@+id/button_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
-
-        <Button
-            android:id="@+id/button_runtime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
-    </LinearLayout>
-
 
 </LinearLayout>

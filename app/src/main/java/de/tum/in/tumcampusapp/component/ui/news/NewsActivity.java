@@ -40,6 +40,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements Dial
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestDownload(false);
+        showLoadingEnded();
     }
 
     @Override

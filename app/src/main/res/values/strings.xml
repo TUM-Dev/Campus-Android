@@ -417,7 +417,7 @@ Signature: %5$s</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
-    <string name="www" translatable="false">www</string>
+    <string name="www" translatable="false">TU Film</string>
     <string name="mvv_download">Please press OK to download MVV-Plans otherwise you can\'t use this feature</string>
     <string name="more_info">More Information</string>
     <string name="event_plan">Event plan</string>
@@ -552,5 +552,10 @@ Signature: %5$s</string>
     <string name="tumonline_login">Connect to TUMonline</string>
     <string name="card_login_title">Welcome to the TUM Campus App!</string>
     <string name="card_login_body">Connect the app to TUMonline now to get access to all the features! This includes among other things your calendar, lectures and grades!</string>
+    
+    <string name="kino_cover_description">movie poster</string>
+    <string name="show_trailer_error">Trailer can\'t be shown</string>
+    <string name="trailer">Trailer</string>
+    
     <string name="pdf_viewer_title">PDF Viewer</string>
 </resources>
