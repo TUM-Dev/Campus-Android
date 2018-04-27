@@ -136,6 +136,8 @@ object Const {
     const val EVENT_END = "pBis"
     const val EVENT_NR = "pTerminNr"
 
+    const val KINO_DATE = "kinoDate"
+  
     const val PDF_TITLE = "pdfTitle"
     const val PDF_PATH = "pdfPath"
 }

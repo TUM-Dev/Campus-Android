@@ -62,41 +62,34 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     private static void addContact(Collection<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
         if (contact != null) {
             // Add work telefon number
-            if (contact.getTelefon() != null) {
-                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                                                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                                                .withValue(Phone.NUMBER, contact.getTelefon())
-                                                .withValue(Phone.TYPE, work ? Phone.TYPE_WORK : Phone.TYPE_HOME)
-                                                .build());
-            }
+            ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                                            .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                            .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                                            .withValue(Phone.NUMBER, contact.getTelefon())
+                                            .withValue(Phone.TYPE, work ? Phone.TYPE_WORK : Phone.TYPE_HOME)
+                                            .build());
+
             // Add work mobile number
-            if (contact.getMobilephone() != null) {
-                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                                                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                                                .withValue(Phone.NUMBER, contact.getMobilephone())
-                                                .withValue(Phone.TYPE, work ? Phone.TYPE_WORK_MOBILE : Phone.TYPE_MOBILE)
-                                                .build());
-            }
+            ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                                            .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                            .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                                            .withValue(Phone.NUMBER, contact.getMobilephone())
+                                            .withValue(Phone.TYPE, work ? Phone.TYPE_WORK_MOBILE : Phone.TYPE_MOBILE)
+                                            .build());
             // Add work fax number
-            if (contact.getFax() != null) {
-                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                                                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                                                .withValue(Phone.NUMBER, contact.getFax())
-                                                .withValue(Phone.TYPE, work ? Phone.TYPE_FAX_WORK : Phone.TYPE_FAX_HOME)
-                                                .build());
-            }
+            ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                                            .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                            .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                                            .withValue(Phone.NUMBER, contact.getFax())
+                                            .withValue(Phone.TYPE, work ? Phone.TYPE_FAX_WORK : Phone.TYPE_FAX_HOME)
+                                            .build());
             // Add website
-            if (contact.getHomepage() != null) {
-                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                                                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                                                .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
-                                                .withValue(Website.URL, contact.getHomepage())
-                                                .withValue(Website.TYPE, work ? Website.TYPE_WORK : Website.TYPE_HOME)
-                                                .build());
-            }
+            ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                                            .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                            .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
+                                            .withValue(Website.URL, contact.getHomepage())
+                                            .withValue(Website.TYPE, work ? Website.TYPE_WORK : Website.TYPE_HOME)
+                                            .build());
         }
     }
 
@@ -180,20 +173,14 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         TextView tvDetails1 = findViewById(R.id.tvDetails1);
 
         // get the right gender
-        if (employee.getGender() != null
-            && employee.getGender()
-                       .equals(Person.Companion.getMALE())) {
+        if (employee.getGender().equals(Person.Companion.getMALE())) {
             contentText.append(getString(R.string.mr) + ' ');
-        } else if (employee.getGender() != null
-                   && employee.getGender()
-                              .equals(Person.Companion.getFEMALE())) {
+        } else if (employee.getGender().equals(Person.Companion.getFEMALE())) {
             contentText.append(getString(R.string.mrs) + ' ');
         }
 
         // add title if available
-        if (employee.getTitle() != null) {
-            contentText.append(employee.getTitle() + ' ');
-        }
+        contentText.append(employee.getTitle() + ' ');
 
         // add name
         contentText.append(employee.getName() + ' ' + employee.getSurname());
@@ -306,14 +293,12 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                                         .build());
 
         // Add e-mail address
-        if (employee.getEmail() != null) {
-            ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                                            .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                                            .withValue(Data.MIMETYPE, CommonDataKinds.Email.CONTENT_ITEM_TYPE)
-                                            .withValue(CommonDataKinds.Email.DATA, employee.getEmail())
-                                            .withValue(CommonDataKinds.Email.TYPE, Email.TYPE_WORK)
-                                            .build());
-        }
+        ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                                        .withValue(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE)
+                                        .withValue(Email.DATA, employee.getEmail())
+                                        .withValue(Email.TYPE, Email.TYPE_WORK)
+                                        .build());
 
         List<TelSubstation> substations = employee.getTelSubstations();
         if (substations != null) {
@@ -350,11 +335,9 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
         // Add office hours
         StringBuilder notes = new StringBuilder();
-        if (employee.getConsultationHours() != null) {
-            notes.append(getString(R.string.office_hours))
-                 .append(": ")
-                 .append(employee.getConsultationHours());
-        }
+        notes.append(getString(R.string.office_hours))
+             .append(": ")
+             .append(employee.getConsultationHours());
 
         // add all rooms
         List<Room> rooms = employee.getRooms();

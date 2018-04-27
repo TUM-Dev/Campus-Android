@@ -69,6 +69,7 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
 
     private fun isMovieInFuture(kino: Kino): Boolean = Date().before(kino.date)
 
+    fun getPosition(date: String) = localRepository.getPosition(date)
 
     /**
      * Sets fields that might be null to prevent excpetions when inserting a kino object into the database

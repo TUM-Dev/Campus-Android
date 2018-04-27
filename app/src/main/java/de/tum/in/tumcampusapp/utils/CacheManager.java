@@ -4,18 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Bitmap;
-import android.support.v4.util.LruCache;
-import android.widget.ImageView;
 
 import com.google.common.base.Optional;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
@@ -27,13 +21,6 @@ import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRow;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
-import de.tum.in.tumcampusapp.component.ui.curricula.CurriculaActivity;
-import de.tum.in.tumcampusapp.component.ui.news.NewsController;
-import de.tum.in.tumcampusapp.component.ui.news.model.News;
-import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
-import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
-import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.database.TcaDb;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -52,30 +39,14 @@ public class CacheManager {
     public static final int VALIDITY_TEN_DAYS = 10 * 86400;
     public static final int VALIDITY_ONE_MONTH = 30 * 86400;
 
-    public static final Map<ImageView, String> IMAGE_VIEWS = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
-    public static final LruCache<String, Bitmap> BITMAP_CACHE;
-
     private static SQLiteDatabase cacheDb;
     private final Context mContext;
-    private final KinoDao kinoDao;
-
-    static {
-        int cacheSize = 4 * 1024 * 1024; // 4MiB
-        BITMAP_CACHE = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                return bitmap.getRowBytes() * bitmap.getHeight();
-
-            }
-        };
-    }
 
     private static synchronized void initCacheDb(Context c) {
         if (cacheDb == null) {
             File dbFile = new File(c.getCacheDir()
                                     .getAbsolutePath() + "/cache.db");
-            dbFile.getParentFile()
-                  .mkdirs();
+            dbFile.getParentFile().mkdirs();
             cacheDb = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
         }
     }
@@ -88,8 +59,6 @@ public class CacheManager {
     public CacheManager(Context context) {
         initCacheDb(context);
         mContext = context;
-        kinoDao = TcaDb.getInstance(context)
-                       .kinoDao();
 
         // create table if needed
         cacheDb.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, " +
@@ -114,38 +83,6 @@ public class CacheManager {
      * Download usual tumOnline requests
      */
     public void fillCache() {
-
-        NetUtils net = new NetUtils(mContext);
-
-        // Cache news source images
-        NewsController newsController = new NewsController(mContext);
-        List<NewsSources> newsSources = newsController.getNewsSources();
-        for (NewsSources newsSource : newsSources) {
-            String imgUrl = newsSource.getIcon();
-            if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
-                net.downloadImage(imgUrl);
-            }
-        }
-
-        // Cache news images
-        List<News> news = newsController.getAllFromDb(mContext);
-        for (News n : news) {
-            String imgUrl = n.getImage();
-            if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
-                net.downloadImage(imgUrl);
-            }
-        }
-
-        // Cache kino covers
-        kinoDao.getAll()
-               .subscribe(it -> {
-                   for (Kino kino : it) {
-                       String imgUrl = kino.getCover();
-                       if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
-                           net.downloadImage(imgUrl);
-                       }
-                   }
-               });
 
         // acquire access token
         if (!new AccessTokenManager(mContext).hasValidAccessToken()) {

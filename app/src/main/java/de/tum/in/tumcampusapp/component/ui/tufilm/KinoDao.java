@@ -29,6 +29,9 @@ public interface KinoDao {
     @Query("SELECT id FROM kino ORDER BY id DESC LIMIT 1")
     Maybe<String> getLastId();
 
+    @Query("SELECT count(*) FROM kino WHERE date < :date")
+    int getPosition(String date);
+
     @Query("SELECT * FROM kino ORDER BY date LIMIT 1 OFFSET :position")
     Flowable<Kino> getByPosition(int position);
 

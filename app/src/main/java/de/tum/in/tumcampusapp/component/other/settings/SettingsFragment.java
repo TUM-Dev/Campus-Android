@@ -20,8 +20,9 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 
-import com.google.common.base.Optional;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -108,17 +109,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             final CheckBoxPreference pref = new CheckBoxPreference(mContext);
             pref.setKey("card_news_source_" + newsSource.getId());
             pref.setDefaultValue(true);
+
             // Load news source icon in background and set it
             final String url = newsSource.getIcon();
-
-            if (url != null) { // Skip News that do not have a image
+            if (!url.trim().isEmpty()) { // Skip News that do not have a image
                 new Thread(() -> {
-                    final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                    mContext.runOnUiThread(() -> {
-                        if (bmp.isPresent()) {
-                            pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
-                        }
-                    });
+                    try {
+                        Bitmap bmp = Picasso.get().load(url).get();
+                        mContext.runOnUiThread(() -> {
+                            pref.setIcon(new BitmapDrawable(getResources(), bmp));
+                        });
+                    } catch (IOException e) {
+                        // ignore
+                    }
                 }).start();
             }
 

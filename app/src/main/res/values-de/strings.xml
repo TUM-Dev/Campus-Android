@@ -516,5 +516,10 @@ Signatur: %5$s</string>
     <string name="tumonline_login">Mit TUMonline verbinden</string>
     <string name="card_login_title">Willkommen zur TUM Campus App!</string>
     <string name="card_login_body">Verbinde jetzt die App mit TUMonline um alle Features nutzen zu können! Dazu gehören unter anderem dein Kalendar, deine Vorlesungen und deine Noten!</string>
+    
+    <string name="trailer">Trailer</string>
+    <string name="show_trailer_error">Trailer kann nicht gezeigt werden</string>
+    <string name="kino_cover_description">Cover</string>
+
     <string name="pdf_viewer_title">PDF Viewer</string>
 </resources>

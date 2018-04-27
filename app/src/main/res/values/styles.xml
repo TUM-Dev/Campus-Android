@@ -93,6 +93,15 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
+    <style name="KinoHeaderButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:backgroundTint">@color/tum_100</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:drawablePadding">2dp</item>
+    </style>
+
     <style name="FlatButton" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">30dp</item>

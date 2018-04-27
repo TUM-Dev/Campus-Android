@@ -107,7 +107,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
     override fun shouldShowNotification(prefs: SharedPreferences) = true
 
-    override fun getRemoteViews(context: Context) = RemoteViews(context.packageName, R.layout.cards_widget_card).apply {
+    override fun getRemoteViews(context: Context, appWidgetId: Int) = RemoteViews(context.packageName, R.layout.cards_widget_card).apply {
         setTextViewText(R.id.widgetCardTextView, title)
         setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_comment)
     }

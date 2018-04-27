@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.tufilm;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -47,11 +46,6 @@ public class KinoAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return count;
-    }
-
-    @Override
-    public int getItemPosition(@NonNull Object object) {
-        return POSITION_NONE;
     }
 
     @Override

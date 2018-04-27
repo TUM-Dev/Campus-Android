@@ -35,6 +35,7 @@ import android.widget.ProgressBar;
 
 import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.List;
@@ -59,7 +60,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
@@ -316,7 +316,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                                 .escape(currentChatRoom.getName());
 
         final ImageView qrCode = new ImageView(this);
-        new NetUtils(this).loadAndSetImage(url, qrCode);
+        Picasso.get().load(url).into(qrCode);
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.add_chat_member)
