@@ -54,6 +54,7 @@ public final class TUMCabeClient {
 
     private static final String API_HOSTNAME = Const.API_HOSTNAME;
     private static final String API_BASEURL = "/Api/";
+
     private static final String API_CHAT = "chat/";
     static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
@@ -79,6 +80,7 @@ public final class TUMCabeClient {
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
     static final String API_CARD = "cards/";
+    static final String API_NEWS = "news/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
