@@ -155,14 +155,20 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+        Utils.log("onActivity is this ");
+        if (resultCode == RESULT_OK && data != null) {   //removed requestCode; but maybe inspite of requestCode = 1, we need something else.
             String name = data.getStringExtra("name");
+            Utils.log("name is this " +name);
             if (name.charAt(3) == ':') {
+                Utils.log("about to call createorjoinchat room");
                 createOrJoinChatRoom(name);
             } else {
                 Utils.showToast(this, R.string.invalid_chat_room);
             }
         }
+        //String name = data.getStringExtra("name");
+        //Utils.log("name is this " +name);
+        //createOrJoinChatRoom(name);
     }
 
     @Override
@@ -200,6 +206,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
      * Works asynchronously.
      */
     private void createOrJoinChatRoom(String name) {
+        Utils.logv("create or join chat room rish ");
         if (this.currentChatMember == null) {
             Utils.showToast(this, getString(R.string.chat_not_setup));
             return;
