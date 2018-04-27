@@ -553,7 +553,6 @@ Signature: %5$s</string>
     <string name="card_login_title">Welcome to the TUM Campus App!</string>
     <string name="card_login_body">Connect the app to TUMonline now to get access to all the features! This includes among other things your calendar, lectures and grades!</string>
     <string name="kino_cover_description">movie poster</string>
-    <string name="rating" translatable="false">%s / 10</string>
     <string name="show_trailer_error">Trailer can\'t be shown</string>
     <string name="trailer">Trailer</string>
 </resources>

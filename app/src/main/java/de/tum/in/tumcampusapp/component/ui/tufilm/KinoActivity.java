@@ -10,12 +10,16 @@ import de.tum.in.tumcampusapp.component.ui.news.KinoViewModel;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Activity to show TU Kino details (e.g. imdb rating)
  */
 public class KinoActivity extends BaseActivity {
+    private int startPosition;
+    private ViewPager mPager;
 
     public KinoActivity() {
         super(R.layout.activity_kino);
@@ -30,26 +34,31 @@ public class KinoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         KinoLocalRepository.db = TcaDb.getInstance(this);
         kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposable);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+        String date = getIntent().getStringExtra(Const.KINO_DATE);
+        if(date != null){
+            startPosition = kinoViewModel.getPosition(date);
+        } else {
+            startPosition = 0;
+        }
+
+        Utils.log("startPos " + startPosition);
+
         View noMovies = findViewById(R.id.no_movies_layout);
         // set up ViewPager and adapter
-        ViewPager mpager = findViewById(R.id.pager);
+        mPager = findViewById(R.id.pager);
         kinoViewModel.getAllKinos()
-                     .doOnError(throwable -> setContentView(R.layout.layout_error))
-                     .subscribe(kinos -> {
-                         if (kinos.isEmpty()) {
-                             noMovies.setVisibility(View.VISIBLE);
-                         } else {
-                             noMovies.setVisibility(View.GONE);
-                             KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
-                             mpager.setAdapter(kinoAdapter);
-                         }
-                     });
-
+                .doOnError(throwable -> setContentView(R.layout.layout_error))
+                .subscribe(kinos -> {
+                    if (kinos.isEmpty()) {
+                        noMovies.setVisibility(View.VISIBLE);
+                    } else {
+                        noMovies.setVisibility(View.GONE);
+                        KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
+                        mPager.setAdapter(kinoAdapter);
+                        mPager.setCurrentItem(startPosition);
+                    }
+                });
     }
 
     @Override
@@ -57,5 +66,6 @@ public class KinoActivity extends BaseActivity {
         super.onDestroy();
         disposable.clear();
     }
+
 }
 

@@ -14,6 +14,7 @@ import android.widget.RemoteViews;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
@@ -55,6 +56,10 @@ public class NewsCard extends NotificationAwareCard {
 
     public String getSource() {
         return mNews.getSrc();
+    }
+
+    public Date getDate() {
+        return mNews.getDate();
     }
 
     @Override

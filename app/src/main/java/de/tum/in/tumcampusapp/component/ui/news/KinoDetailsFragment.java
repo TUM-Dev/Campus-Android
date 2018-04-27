@@ -128,7 +128,7 @@ public class KinoDetailsFragment extends Fragment {
 
         // set text for buttons
         date.setText(KinoDetailsFragment.formDateString(DateUtils.getDateString(kino.getDate())));
-        imdb.setText(getString(R.string.rating, kino.getRating()));
+        imdb.setText(kino.getRating() + " / 10");
         year.setText(kino.getYear());
         runtime.setText(kino.getRuntime());
 
@@ -169,6 +169,7 @@ public class KinoDetailsFragment extends Fragment {
     private String getTrailerSearchString(){
         String search = kino.getTitle();
         search = search.split(": ")[1];
+        search = "trailer " + search;
         if(!search.contains("OV")){
             search += " german deutsch";
         }
