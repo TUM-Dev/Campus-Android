@@ -61,7 +61,6 @@ abstract class Card(
         return null
     }
 
-
     /**
      * Updates the Cards content.
      * Override this method, if the card contains any dynamic content, that is not already in its XML
