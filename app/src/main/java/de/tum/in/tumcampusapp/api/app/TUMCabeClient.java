@@ -12,6 +12,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -310,5 +311,9 @@ public final class TUMCabeClient {
 
     public Observable<List<Kino>> getKinos(String lastId) {
         return service.getKinos(lastId);
+    }
+
+    public Observable<NewsAlert> getNewsAlert(){
+        return service.getNewsAlert();
     }
 }

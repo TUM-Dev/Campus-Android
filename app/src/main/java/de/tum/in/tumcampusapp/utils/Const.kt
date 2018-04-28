@@ -140,4 +140,9 @@ object Const {
   
     const val PDF_TITLE = "pdfTitle"
     const val PDF_PATH = "pdfPath"
+
+    const val TOP_NEWS = "topNewsDownload"
+    const val NEWS_ALERT_IMAGE = "newsAlertImageURL"
+    const val NEWS_ALERT_LINK = "newsAlertLink"
+    const val NEWS_ALERT_SHOW_UNTIL = "newsAlertShowUntil"
 }

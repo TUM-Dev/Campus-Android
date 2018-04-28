@@ -28,6 +28,7 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.settings.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
+import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -104,6 +105,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         Intent service = new Intent(this, SilenceService.class);
         this.startService(service);
 
+        downloadNewsAlert();
+
         // Set the list's click listener
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
@@ -146,6 +149,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         this.getMenuInflater()
             .inflate(R.menu.menu_settings, menu);
         return true;
+    }
+
+    public void downloadNewsAlert(){
+        Intent downloadService = new Intent();
+        downloadService.putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL);
+        DownloadService.enqueueWork(getBaseContext(), downloadService);
     }
 
     /**
@@ -237,6 +246,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     public void refreshCards() {
         mSwipeRefreshLayout.setRefreshing(true);
         onRefresh();
+        downloadNewsAlert();
     }
 
     /**

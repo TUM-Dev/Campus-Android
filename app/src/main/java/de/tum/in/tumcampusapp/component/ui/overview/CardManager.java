@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX;
 import static de.tum.in.tumcampusapp.utils.Const.DISCARD_SETTINGS_START;
@@ -209,6 +210,7 @@ public final class CardManager {
         TcaDb.getInstance(context)
              .newsDao()
              .restoreAllNews();
+        Utils.setSetting(context, SHOW_TOP_NEWS, true);
         restorePositions(context);
     }
 
