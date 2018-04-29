@@ -465,7 +465,7 @@ Signature: %5$s</string>
 
     <!-- Feedback Activity -->
     <string name="feedback">Feedback</string>
-    <string name="general">General (IT-Support)</string>
+    <string name="general">TUM in General</string>
     <string name="tca">TUM Campus App</string>
     <string name="feedback_hint">What would you like us to know?</string>
     <string name="add_picture_button">&#160;&#160;Add picture</string>

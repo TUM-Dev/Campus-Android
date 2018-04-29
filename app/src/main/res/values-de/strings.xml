@@ -431,7 +431,7 @@ Signatur: %5$s</string>
 
     <!-- Feedback Activity -->
     <string name="feedback">Feedback</string>
-    <string name="general">Allgemein (IT-Support)</string>
+    <string name="general">TUM Allgemein</string>
     <string name="tca">TUM Campus App</string>
     <string-array name="feedback_options">
         <item>@string/general</item>
