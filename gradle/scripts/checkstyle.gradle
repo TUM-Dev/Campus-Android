@@ -2,7 +2,7 @@ apply plugin: 'checkstyle'
 
 task checkstyle(type: Checkstyle) {
     showViolations = true
-    configFile file("../config/checkstyle/checkstyle.xml")
+    configFile file("$rootDir/gradle/config/checkstyle.xml")
     source 'src/main/java'
     include '**/*.java'
     exclude '**/gen/**'
