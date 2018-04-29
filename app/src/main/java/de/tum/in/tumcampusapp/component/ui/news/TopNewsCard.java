@@ -76,7 +76,7 @@ public class TopNewsCard extends Card {
     protected boolean shouldShow(SharedPreferences p) {
         // don't show if the showUntil date does not exist or is in the past
         String untilDateString = Utils.getSetting(context, Const.NEWS_ALERT_SHOW_UNTIL, "");
-        Date until = DateUtils.parseIsoDate(untilDateString);
+        Date until = DateUtils.parseIsoDateWithMillis(untilDateString);
 
         if(until == null){
             return false;
