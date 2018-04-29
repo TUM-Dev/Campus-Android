@@ -117,7 +117,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                     try {
                         Bitmap bmp = Picasso.get().load(url).get();
                         mContext.runOnUiThread(() -> {
-                            pref.setIcon(new BitmapDrawable(getResources(), bmp));
+                            if(isAdded()){
+                                pref.setIcon(new BitmapDrawable(getResources(), bmp));
+                            }
                         });
                     } catch (IOException e) {
                         // ignore
