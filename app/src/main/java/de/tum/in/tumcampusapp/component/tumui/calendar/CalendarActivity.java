@@ -398,10 +398,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             }
 
             @Override
-            public String interpretTime(int hour) {
+            public String interpretTime(int hour, int minutes) {
                 Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.HOUR_OF_DAY, hour);
-                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.MINUTE, minutes);
                 DateFormat hourFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 return hourFormat.format(cal.getTime());
             }
