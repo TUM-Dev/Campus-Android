@@ -529,4 +529,6 @@ Signatur: %5$s</string>
         Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird vom TCA-Team für Android und iOS bereitgestellt.\n\n
         Für besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
     </string>
+    <string name="dialog_add_to_contacts">Zu Kontakten hinzufügen?</string>
+
 </resources>
