@@ -17,7 +17,8 @@ public final class DateUtils {
     private static final long DAY_MILLIS = android.text.format.DateUtils.DAY_IN_MILLIS;
 
     private static final String FORMAT_SQL = "yyyy-MM-dd HH:mm:ss"; // 2014-06-30 16:31:57
-    private static final String FORMAT_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57.878Z
+    private static final String FORMAT_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57Z
+    private static final String FORMAT_ISO_WITH_MILLIS = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"; // 2014-06-30T16:31:57.878Z
 
     /*
      * Format an upcoming string nicely by being more precise as time comes closer
@@ -128,7 +129,20 @@ public final class DateUtils {
             SimpleDateFormat formatter = new SimpleDateFormat(FORMAT_ISO, Locale.ENGLISH);
             return formatter.parse(datetime);
         } catch (ParseException e) {
-            Utils.log("Parsing SQL date failed");
+            Utils.log(e,"Parsing ISO date failed");
+        }
+        return null;
+    }
+
+    public static Date parseIsoDateWithMillis(String datetime) {
+        if (datetime == null) {
+            return null;
+        }
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat(FORMAT_ISO_WITH_MILLIS, Locale.ENGLISH);
+            return formatter.parse(datetime);
+        } catch (ParseException e) {
+            Utils.log(e,"Parsing ISO date with milliseconds failed");
         }
         return null;
     }

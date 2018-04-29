@@ -18,11 +18,13 @@ import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamFixCard;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
+import de.tum.in.tumcampusapp.component.ui.news.TopNewsCard;
 import de.tum.in.tumcampusapp.component.ui.onboarding.LoginPromtCard;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX;
 import static de.tum.in.tumcampusapp.utils.Const.DISCARD_SETTINGS_START;
@@ -33,6 +35,7 @@ import static de.tum.in.tumcampusapp.utils.Const.DISCARD_SETTINGS_START;
 public final class CardManager {
     public static final String SHOW_SUPPORT = "show_support";
     public static final String SHOW_LOGIN = "show_login";
+    public static final String SHOW_TOP_NEWS = "show_top_news";
 
     /**
      * Card typ constants
@@ -50,6 +53,7 @@ public final class CardManager {
     public static final int CARD_SUPPORT = 13;
     public static final int CARD_LOGIN = 14;
     public static final int CARD_EDUROAM_FIX = 15;
+    public static final int CARD_TOP_NEWS = 16;
     private static boolean shouldRefresh;
     private static List<Card> cards;
     private static Collection<Card> newCards = new ConcurrentSkipListSet<>();
@@ -125,6 +129,7 @@ public final class CardManager {
         // Use temporary array to avoid that the main thread is trying to access an empty array
         newCards.clear();
         new NoInternetCard(context).apply();
+        new TopNewsCard(context).apply();
         new LoginPromtCard(context).apply();
         new SupportCard(context).apply();
 
@@ -153,7 +158,6 @@ public final class CardManager {
         new RestoreCard(context).apply();
 
         shouldRefresh = false;
-
     }
 
     /**
@@ -206,6 +210,7 @@ public final class CardManager {
         TcaDb.getInstance(context)
              .newsDao()
              .restoreAllNews();
+        Utils.setSetting(context, SHOW_TOP_NEWS, true);
         restorePositions(context);
     }
 

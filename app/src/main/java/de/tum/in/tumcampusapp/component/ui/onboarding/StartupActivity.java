@@ -10,13 +10,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,18 +25,14 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
-import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.FileUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;

@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.service;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
@@ -24,8 +22,10 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRe
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.news.KinoViewModel;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
+import de.tum.in.tumcampusapp.component.ui.news.TopNewsViewModel;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
+import de.tum.in.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.CacheManager;
@@ -53,6 +53,7 @@ public class DownloadService extends JobIntentService {
 
     private CompositeDisposable mDisposable = new CompositeDisposable();
     private KinoViewModel kinoViewModel;
+    private TopNewsViewModel topNewsViewModel;
 
     /**
      * Gets the time when BackgroundService was called last time
@@ -95,6 +96,9 @@ public class DownloadService extends JobIntentService {
                     break;
                 case Const.KINO:
                     successful = service.downLoadKino(force);
+                    break;
+                case Const.TOP_NEWS:
+                    successful = service.dowloadTopNews();
                     break;
                 case Const.DOWNLOAD_ALL_FROM_EXTERNAL:
                 default:
@@ -162,6 +166,8 @@ public class DownloadService extends JobIntentService {
         KinoRemoteRepository.INSTANCE.setTumCabeClient(TUMCabeClient.getInstance(this));
         kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, mDisposable);
 
+        TopNewsRemoteRepository.INSTANCE.setTumCabeClient(TUMCabeClient.getInstance(this));
+        topNewsViewModel = new TopNewsViewModel(TopNewsRemoteRepository.INSTANCE, mDisposable);
     }
 
     @Override
@@ -171,7 +177,8 @@ public class DownloadService extends JobIntentService {
         Utils.log("DownloadService service has stopped");
     }
 
-    static void enqueueWork(Context context, Intent work) {
+    public static void enqueueWork(Context context, Intent work) {
+        Utils.log("Download work enqueued");
         enqueueWork(context, DownloadService.class, DOWNLOAD_SERVICE_JOB_ID, work);
     }
 
@@ -210,7 +217,8 @@ public class DownloadService extends JobIntentService {
         final boolean cafe = downloadCafeterias(force);
         final boolean kino = downLoadKino(force);
         final boolean news = downloadNews(force);
-        return cafe && kino && news;
+        final boolean topNews = dowloadTopNews();
+        return cafe && kino && news && topNews;
     }
 
     private boolean downloadCafeterias(boolean force) {
@@ -234,6 +242,10 @@ public class DownloadService extends JobIntentService {
             Utils.log(e);
             return false;
         }
+    }
+
+    private boolean dowloadTopNews(){
+        return topNewsViewModel.getNewsAlertFromService(getApplicationContext());
     }
 
     /**

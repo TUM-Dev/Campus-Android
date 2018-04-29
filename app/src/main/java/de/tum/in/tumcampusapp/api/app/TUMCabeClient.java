@@ -12,6 +12,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -54,6 +55,7 @@ public final class TUMCabeClient {
 
     private static final String API_HOSTNAME = Const.API_HOSTNAME;
     private static final String API_BASEURL = "/Api/";
+
     private static final String API_CHAT = "chat/";
     static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
@@ -79,6 +81,7 @@ public final class TUMCabeClient {
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
     static final String API_CARD = "cards/";
+    static final String API_NEWS = "news/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -308,5 +311,9 @@ public final class TUMCabeClient {
 
     public Observable<List<Kino>> getKinos(String lastId) {
         return service.getKinos(lastId);
+    }
+
+    public Observable<NewsAlert> getNewsAlert(){
+        return service.getNewsAlert();
     }
 }

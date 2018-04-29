@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -54,6 +55,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
@@ -182,7 +184,7 @@ public interface TUMCabeAPIService {
     @GET(API_CAFETERIAS)
     Observable<List<Cafeteria>> getCafeterias();
 
-    @GET(API_KINOS+"{lastId}")
+    @GET(API_KINOS + "{lastId}")
     Observable<List<Kino>> getKinos(@Path("lastId") String lastId);
 
     @GET(API_CARD)
@@ -190,4 +192,7 @@ public interface TUMCabeAPIService {
 
     @PUT(API_CARD)
     Call<StudyCard> addStudyCard(@Body ChatVerification verification);
+
+    @GET(API_NEWS + "alert")
+    Observable<NewsAlert> getNewsAlert();
 }
