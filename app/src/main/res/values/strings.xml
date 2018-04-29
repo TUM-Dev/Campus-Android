@@ -90,7 +90,7 @@
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
 
-    <string name="about_tca">About the TCA</string>
+    <string name="about_tca">About the App</string>
     <string name="information">Information</string>
     <string name="facebook" translatable="false">Facebook</string>
     <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
@@ -271,11 +271,10 @@
     <string name="send_email">Send e-mail feedback</string>
     <string name="show_feedback">Send feedback</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
-    <string name="app_info_text" translatable="false">
-        Die TUM Campus App wird von Freiwilligen Helfern, Studierenden des Android Praktikums und Lehrstuhlmitarbeitern des Informatik Fachgebiet 13 unter
-        Professor Dr. Baumgarten entwickelt.
-        Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird vom TCA-Team für Android und iOS bereitgestellt.\n\n
-        Für besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
+    <string name="app_info_text">
+        Die TUM Campus App is being developed by volunteers, students of the Android practical course and employees of the Chair of Operating Systems led by Professor Dr. Baumgarten.
+        The app can be used on smartphones and tablets and is available for both iOS and Android.\n\n
+        You can reach via the feedback form in the app or via email (app@tum.de) if you have special concerns or request.
     </string>
 
     <!-- END Translated, please do not change identifiers -->
@@ -466,7 +465,7 @@ Signature: %5$s</string>
 
     <!-- Feedback Activity -->
     <string name="feedback">Feedback</string>
-    <string name="general">General (IT-Support)</string>
+    <string name="general">TUM in General</string>
     <string name="tca">TUM Campus App</string>
     <string name="feedback_hint">What would you like us to know?</string>
     <string name="add_picture_button">&#160;&#160;Add picture</string>
@@ -558,4 +557,5 @@ Signature: %5$s</string>
     <string name="trailer">Trailer</string>
     
     <string name="pdf_viewer_title">PDF Viewer</string>
+    <string name="dialog_add_to_contacts">Add to Contacts?</string>
 </resources>

@@ -83,7 +83,7 @@
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
 
-    <string name="about_tca">Über die TCA</string>
+    <string name="about_tca">Über die App</string>
     <string name="information">Informationen</string>
     <string name="github">Mitmachen auf Github</string>
     <string name="licences">Open Source-Lizenzen</string>
@@ -431,7 +431,7 @@ Signatur: %5$s</string>
 
     <!-- Feedback Activity -->
     <string name="feedback">Feedback</string>
-    <string name="general">Allgemein (IT-Support)</string>
+    <string name="general">TUM Allgemein</string>
     <string name="tca">TUM Campus App</string>
     <string-array name="feedback_options">
         <item>@string/general</item>
@@ -522,4 +522,13 @@ Signatur: %5$s</string>
     <string name="kino_cover_description">Cover</string>
 
     <string name="pdf_viewer_title">PDF Viewer</string>
+
+    <string name="app_info_text">
+        Die TUM Campus App wird von Freiwilligen Helfern, Studierenden des Android Praktikums und Lehrstuhlmitarbeitern des Informatik Fachgebiet 13 unter
+        Professor Dr. Baumgarten entwickelt.
+        Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird vom TCA-Team für Android und iOS bereitgestellt.\n\n
+        Für besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
+    </string>
+    <string name="dialog_add_to_contacts">Zu Kontakten hinzufügen?</string>
+
 </resources>

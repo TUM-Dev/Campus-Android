@@ -131,7 +131,12 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         int i = item.getItemId();
         if (i == R.id.action_add_contact) {
             if (mEmployee != null) {
-                addContact(mEmployee);
+                AlertDialog.Builder dialog= new AlertDialog.Builder(this);
+                dialog.setTitle(R.string.dialog_add_to_contacts);
+                dialog.setPositiveButton(R.string.yes, (dialog1, which) -> addContact(mEmployee));
+                dialog.setNegativeButton(R.string.no, null);
+                dialog.setIcon(R.drawable.ic_action_add_person_blue);
+                dialog.show();
             }
             return true;
         } else {
@@ -398,7 +403,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     }
 
     /**
-     * Check Calendar permission for Android 6.0
+     * Check Contacts permission for Android 6.0
      *
      * @param id the request id
      * @return If the contacts permission was granted
