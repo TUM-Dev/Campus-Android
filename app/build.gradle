@@ -30,8 +30,8 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 523
-        versionName "1.6.0-dev"
+        versionCode 530
+        versionName "1.6.1-dev"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions.annotationProcessorOptions.arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
     }
