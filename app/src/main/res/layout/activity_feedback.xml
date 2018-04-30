@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:scrollbars="vertical"
+    android:background="@drawable/chat_background"
     tools:context=".component.tumui.feedback.FeedbackActivity">
 
     <!-- The toolbar aka SupportActionBar -->
@@ -20,11 +21,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/feedback_topic_spinner"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"/>
+                android:gravity="center"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/topic"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="@dimen/large_text_size"/>
+                <Spinner
+                    android:id="@+id/feedback_topic_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/feedback_message"
@@ -58,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:drawableLeft="@drawable/ic_add_photo"
+                    android:drawableStart="@drawable/ic_add_photo"
                     android:onClick="addPicture"
                     android:text="@string/add_picture_button"/>
             </LinearLayout>
@@ -75,8 +88,8 @@
                 android:hint="@string/feedback_email_hint"
                 android:id="@+id/feedback_custom_email"
                 android:inputType="textEmailAddress"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="10dp"
                 android:padding="5dp"
                 android:visibility="gone"/>
 
