@@ -5,7 +5,9 @@ import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -32,7 +34,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         super.onCreate(savedInstanceState);
 
         amountTextView = findViewById(R.id.soll);
-        deadlineTextView = findViewById(R.id.frist);
+        deadlineTextView = findViewById(R.id.deadline);
         semesterTextView = findViewById(R.id.semester);
         ((TextView) findViewById(R.id.fees_aid)).setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -46,9 +48,9 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
      */
     @Override
     public void onFetch(TuitionList tuitionList) {
-        amountTextView.setText(String.format("%s€", tuitionList.getTuitions()
-                                                               .get(0)
-                                                               .getSoll()));
+        String amount = tuitionList.getTuitions().get(0).getSoll();
+        amountTextView.setText(String.format("%s€", amount));
+
         Date date = DateUtils.getDate(tuitionList.getTuitions()
                                                  .get(0)
                                                  .getFrist());
@@ -58,6 +60,20 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
                                             .get(0)
                                             .getSemesterBez()
                                             .toUpperCase(Locale.getDefault()));
+
+        if(amount.trim().equals("0")){
+            amountTextView.setTextColor(getResources().getColor(R.color.sections_green));
+        } else {
+            // check if the deadline is less than a week from now
+            GregorianCalendar cal = new GregorianCalendar();
+            cal.setTime(date);
+            cal.add(Calendar.WEEK_OF_YEAR, 1);
+            if(cal.getTime().after(new Date())){
+                amountTextView.setTextColor(getResources().getColor(R.color.error));
+            } else {
+                amountTextView.setTextColor(getResources().getColor(R.color.black));
+            }
+        }
 
         showLoadingEnded();
     }
