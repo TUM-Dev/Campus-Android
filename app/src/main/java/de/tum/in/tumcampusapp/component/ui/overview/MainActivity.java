@@ -26,7 +26,6 @@ import com.trello.rxlifecycle2.LifecycleProvider;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
-import de.tum.in.tumcampusapp.component.other.settings.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.service.DownloadService;
@@ -54,6 +53,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     private RecyclerView mCardsView;
     private CardAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
     final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -141,6 +141,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 runOnUiThread(() -> mAdapter.notifyDataSetChanged());
             }
         });
+
         if (CardManager.getShouldRefresh() || CardManager.getCards() == null) {
             refreshCards();
         } else {
@@ -152,7 +153,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         this.getMenuInflater()
-            .inflate(R.menu.menu_settings, menu);
+            .inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -190,21 +191,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     /**
-     * If drawer is expanded hide settingsPrefix icon
-     *
-     * @param menu Menu instance
-     * @return True if handled
-     */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_settings)
-            .setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    /**
      * Sync the toggle state after onRestoreInstanceState has occurred.
      *
      * @param savedInstanceState Saved instance state bundle
@@ -227,22 +213,14 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     /**
-     * Handle expansion of navigation drawer and settingsPrefix menu item click
+     * Handle expansion of navigation drawer
      *
      * @param item Clicked menu item
      * @return True if handled
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        // Opens the preferences screen
-        if (item.getItemId() == R.id.action_settings) {
-            startActivity(new Intent(this, UserPreferencesActivity.class));
-        }
-        return super.onOptionsItemSelected(item);
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     /**
