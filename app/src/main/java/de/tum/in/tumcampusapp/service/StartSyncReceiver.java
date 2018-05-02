@@ -56,7 +56,7 @@ public class StartSyncReceiver extends BroadcastReceiver {
         SilenceService.enqueueWork(context, new Intent());
         if (!"android.net.wifi.WIFI_STATE_CHANGED".equals(intent.getAction())
             && Utils.getSettingBool(context, Const.WIFI_SCANS_ALLOWED, false)) {
-            SendWifiMeasurementService.enqueueWork(context, new Intent());
+            SendWifiMeasurementService.Companion.enqueueWork(context, new Intent());
         }
     }
 }
