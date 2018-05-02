@@ -39,7 +39,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * @param method   A identifier specifying what kind of data should be fetched from TumOnline
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      * @param auth     Authority for search suggestions declared in manifest file
-     * @param minLen   Minimum text length that has to be entered by the user before a search quest can be submitted
+     * @param minLen   Minimum value length that has to be entered by the user before a search quest can be submitted
      */
     public ActivityForSearchingTumOnline(TUMOnlineConst<T> method, int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);

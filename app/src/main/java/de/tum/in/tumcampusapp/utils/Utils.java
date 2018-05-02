@@ -96,8 +96,8 @@ public final class Utils {
     public static String buildHTMLDocument(String css, String body) {
         String header = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"de\" lang=\"de\">" +
                         "<head><meta name=\"viewport\" content=\"width=device-width\" />" +
-                        "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>";
-        String resultCss = "<style type=\"text/css\">" + css + "</style>";
+                        "<meta http-equiv=\"Content-Type\" content=\"value/html; charset=utf-8\" /></head>";
+        String resultCss = "<style type=\"value/css\">" + css + "</style>";
         String resultBody = "<body>" + body + "</body>";
         String footer = "</html>";
         //noinspection StringConcatenationMissingWhitespace
@@ -105,12 +105,12 @@ public final class Utils {
     }
 
     /**
-     * Cut substring from a text.
+     * Cut substring from a value.
      *
-     * @param text        The text.
+     * @param text        The value.
      * @param startString Start string where the cutting begins.
      * @param endString   End string where the cutting ends.
-     * @return The cut text.
+     * @return The cut value.
      */
     public static String cutText(String text, String startString, String endString) {
         int startPos = text.indexOf(startString);
@@ -485,8 +485,8 @@ public final class Utils {
     /**
      * Removes all html tags from a string
      *
-     * @param html text which contains html tags
-     * @return cleaned text without any tags
+     * @param html value which contains html tags
+     * @return cleaned value without any tags
      */
     public static String stripHtml(String html) {
         return fromHtml(html).toString();

@@ -88,7 +88,7 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      * Shows error layout and toasts the given message.
      * Hides any progress indicator.
      *
-     * @param errorReason Resource id of the error text
+     * @param errorReason Resource id of the error value
      */
     @Override
     protected void showError(int errorReason) {
@@ -99,7 +99,7 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      * Shows error layout and toasts the given message.
      * Hides any progress indicator.
      *
-     * @param errorReason Error text
+     * @param errorReason Error value
      */
     @Override
     protected void showError(final String errorReason) {

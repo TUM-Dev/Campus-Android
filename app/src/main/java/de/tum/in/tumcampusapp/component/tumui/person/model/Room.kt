@@ -14,9 +14,12 @@ import java.io.Serializable
 data class Room(@field:Element(name = "ortsbeschreibung")
                 var location: String = "",
                 @field:Element(name = "kurz")
-                var number: String = "") :
-        Serializable {
+                var number: String = "") : Serializable {
+
+    fun getFullLocation() = "$location ($number)"
+
     companion object {
         private const val serialVersionUID = -5328581629897735774L
     }
+
 }

@@ -169,7 +169,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     }
 
     /**
-     * Gets the text from speech input and returns null if no input was provided
+     * Gets the value from speech input and returns null if no input was provided
      */
     private static CharSequence getMessageText(Intent intent) {
         Bundle remoteInput;

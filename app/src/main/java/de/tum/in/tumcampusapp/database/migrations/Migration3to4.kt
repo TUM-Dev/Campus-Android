@@ -15,7 +15,7 @@ class Migration3to4 : Migration(3, 4) {
                 "_id INTEGER NOT NULL PRIMARY KEY," +
                 "previous INTEGER NOT NULL, " +
                 "room INTEGER NOT NULL, " +
-                "text TEXT NULL, " +
+                "value TEXT NULL, " +
                 "timestamp TEXT NULL, " +
                 "signature TEXT NULL," +
                 "member TEXT NULL, " +

@@ -180,7 +180,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
     }
 
     /**
-     * Returns true if the body in question probably contains human readable text. Uses a small sample
+     * Returns true if the body in question probably contains human readable value. Uses a small sample
      * of code points to detect unicode control characters commonly used in binary file signatures.
      */
     private static boolean isPlaintext(Buffer buffer) throws EOFException {

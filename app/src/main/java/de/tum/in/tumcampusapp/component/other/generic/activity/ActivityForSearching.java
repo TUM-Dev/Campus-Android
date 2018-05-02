@@ -47,7 +47,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
      *
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      * @param auth     Authority for search suggestions declared in manifest file
-     * @param minLen   Minimum text length that has to be entered by the user before a search quest can be submitted
+     * @param minLen   Minimum value length that has to be entered by the user before a search quest can be submitted
      */
     public ActivityForSearching(int layoutId, String auth, int minLen) {
         super(layoutId);

@@ -558,4 +558,6 @@ Signature: %5$s</string>
     
     <string name="pdf_viewer_title">PDF Viewer</string>
     <string name="dialog_add_to_contacts">Add to Contacts?</string>
+    <string name="add">Add</string>
+    <string name="recents">Recents</string>
 </resources>

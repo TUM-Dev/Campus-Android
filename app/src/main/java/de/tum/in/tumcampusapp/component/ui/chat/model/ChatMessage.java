@@ -49,7 +49,7 @@ public class ChatMessage {
     /**
      * Called when creating a new chat message
      *
-     * @param text   ChatNotification message text
+     * @param text   ChatNotification message value
      * @param member Member who sent the message
      */
     public ChatMessage(String text, ChatMember member) {

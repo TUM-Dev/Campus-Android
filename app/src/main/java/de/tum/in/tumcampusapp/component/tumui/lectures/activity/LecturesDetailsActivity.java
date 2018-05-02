@@ -98,7 +98,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     /**
      * process the given TUMOnline Data and display the details
      *
-     * @param xmllv Raw text response
+     * @param xmllv Raw value response
      */
     @Override
     public void onFetch(LectureDetailsRowSet xmllv) {

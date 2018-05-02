@@ -114,7 +114,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         } else {
             holder = (HeaderViewHolder) convertview.getTag();
         }
-        //set header text as first char in name
+        //set header value as first char in name
         ChatRoomAndLastMessage item = getItem(pos);
         String semester = item.getChatRoomDbRow()
                               .getSemester();

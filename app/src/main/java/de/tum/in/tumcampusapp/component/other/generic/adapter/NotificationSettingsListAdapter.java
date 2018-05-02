@@ -62,7 +62,7 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
 
     /**
      * Takes care of generating the notification settingsPrefix list.
-     * For each day (Monday-Friday) add a list-item and display
+     * For each day (Monday-Friday) saveToContacts a list-item and display
      * in a checkbox whether the alarm is disabled for that day (hour == -1)
      * or enabled (hour != 1)
      *

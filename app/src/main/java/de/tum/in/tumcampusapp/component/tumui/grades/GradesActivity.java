@@ -334,7 +334,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     /**
      * Handle the response by de-serializing it into model entities.
      *
-     * @param rawResponse Raw text response
+     * @param rawResponse Raw value response
      */
     @Override
     public void onFetch(ExamList rawResponse) {

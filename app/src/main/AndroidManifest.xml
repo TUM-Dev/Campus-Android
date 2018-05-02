@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
-    <!-- To add searched person to contact list -->
+    <!--saveToContacts add searched person to contact list -->
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 
     <!-- For location services -->

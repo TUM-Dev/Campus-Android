@@ -1,10 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 
 import com.google.common.base.Charsets
+import de.tum.`in`.tumcampusapp.R
 
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
@@ -58,6 +60,14 @@ data class Employee(@field:Element(name = "geschlecht", required = false)
 
     val telSubstations: List<TelSubstation>?
         get() = telSubstationList?.substations
+
+    fun getFullName() = "$name $surname"
+
+    fun getNameWithTitle(context: Context): String {
+        val resourceId = if (gender == Person.FEMALE) R.string.mrs else R.string.mr
+        val salutation = context.getString(resourceId)
+        return "$salutation $name $surname, $title"
+    }
 
     override fun toString(): String {
         var infoText = title

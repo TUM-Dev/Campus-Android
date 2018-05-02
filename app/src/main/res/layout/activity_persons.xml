@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        android:id="@+id/drawer_layout"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent">
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,14 +24,26 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"/>
 
-            <ListView
-                android:id="@+id/lstPersons"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"/>
+            <TextView
+                android:id="@+id/recentsHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/recents"
+                android:textAllCaps="true"
+                android:textColor="@color/text_dark_gray"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/personsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
     </LinearLayout>
+
     <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer"/>
 

@@ -92,7 +92,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Lis
     /**
      * Searches the Webservice for stations
      *
-     * @param query the text entered by the user
+     * @param query the value entered by the user
      * @return List of StationResult
      */
     @Override

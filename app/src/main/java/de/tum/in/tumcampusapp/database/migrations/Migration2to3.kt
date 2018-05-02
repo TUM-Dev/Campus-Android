@@ -35,7 +35,7 @@ class Migration2to3 : Migration(2,3) {
                 "_id INTEGER NOT NULL PRIMARY KEY," +
                 "previous INTEGER NOT NULL, " +
                 "room INTEGER NOT NULL, " +
-                "text TEXT NULL, " +
+                "value TEXT NULL, " +
                 "timestamp TEXT NULL, "+
                 "signature TEXT NULL," +
                 "member TEXT NULL, " +
@@ -172,12 +172,12 @@ class Migration2to3 : Migration(2,3) {
         database.execSQL("DROP TABLE IF EXISTS  openQuestions_new")
         database.execSQL("CREATE TABLE openQuestions_new (" +
                 "question INTEGER NOT NULL PRIMARY KEY, answerid INTEGER NOT NULL, synced INTEGER NOT NULL, " +
-                "answered INTEGER NOT NULL, created TEXT NOT NULL, end TEXT NOT NULL, text TEXT NOT NULL" +
+                "answered INTEGER NOT NULL, created TEXT NOT NULL, end TEXT NOT NULL, value TEXT NOT NULL" +
                 ")")
         // Copy the data
         try {
             database.execSQL(
-                    "INSERT INTO openQuestions_new (question, answerid, synced, answered, created, end, text) SELECT question, answerid, synced, answered, created, end, text FROM openQuestions")
+                    "INSERT INTO openQuestions_new (question, answerid, synced, answered, created, end, value) SELECT question, answerid, synced, answered, created, end, value FROM openQuestions")
         } catch (ignore: SQLException) {
         }
         // Remove the old table
@@ -190,12 +190,12 @@ class Migration2to3 : Migration(2,3) {
         database.execSQL("DROP TABLE IF EXISTS  ownQuestions_new")
         database.execSQL("CREATE TABLE ownQuestions_new (" +
                 "question INTEGER NOT NULL PRIMARY KEY,no INTEGER NOT NULL, deleted INTEGER NOT NULL, synced INTEGER NOT NULL, " +
-                "targetFac TEXT NOT NULL, created TEXT NOT NULL, yes INTEGER NOT NULL, end TEXT NOT NULL, text TEXT NOT NULL" +
+                "targetFac TEXT NOT NULL, created TEXT NOT NULL, yes INTEGER NOT NULL, end TEXT NOT NULL, value TEXT NOT NULL" +
                 ")")
         // Copy the data
         try {
             database.execSQL(
-                    "INSERT INTO ownQuestions_new (question, no, deleted, synced, targetFac, created, yes, end, text) SELECT question, no, deleted, synced, targetFac, created, yes, end, text FROM ownQuestions")
+                    "INSERT INTO ownQuestions_new (question, no, deleted, synced, targetFac, created, yes, end, value) SELECT question, no, deleted, synced, targetFac, created, yes, end, value FROM ownQuestions")
         } catch (ignore: SQLException) {
         }
         // Remove the old table

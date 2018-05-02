@@ -105,7 +105,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         val tableRow = TableRow(this)
         tableRow.layoutParams = rowParams
 
-        //Add our text fields
+        //Add our value fields
         val l = TextView(this)
         l.text = label
         l.layoutParams = rowParams

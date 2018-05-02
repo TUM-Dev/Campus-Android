@@ -174,12 +174,12 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     }
 
     /**
-     * Converts menu text to {@link SpannableString}.
+     * Converts menu value to {@link SpannableString}.
      * Replaces all (v), ... annotations with images
      *
      * @param context Context
      * @param menu    Text with annotations
-     * @return Spannable text with images
+     * @return Spannable value with images
      */
     public static SpannableString menuToSpan(Context context, String menu) {
         final String processedMenu = splitAnnotations(menu);

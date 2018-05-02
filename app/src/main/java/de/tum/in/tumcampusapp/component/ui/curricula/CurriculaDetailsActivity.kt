@@ -49,7 +49,7 @@ class CurriculaDetailsActivity : ActivityForLoadingInBackground<String, Optional
      */
     private fun fetchCurriculum(url: String): Optional<String> {
         val results = extractResultsFromURL(url)
-        val css = net.downloadStringAndCache("http://www.in.tum.de/fileadmin/_src/add.css", CacheManager.VALIDITY_ONE_MONTH, false)
+        val css = net.downloadStringAndCache("http://www.in.tum.de/fileadmin/_src/saveToContacts.css", CacheManager.VALIDITY_ONE_MONTH, false)
         if (!results.isPresent || !css.isPresent) {
             return Optional.absent()
         }
@@ -84,7 +84,7 @@ class CurriculaDetailsActivity : ActivityForLoadingInBackground<String, Optional
      */
     override fun onLoadFinished(result: Optional<String>) {
         if (result.isPresent) {
-            activity_curricula_web_view.loadData(result.get(), "text/html; charset=UTF-8", null)
+            activity_curricula_web_view.loadData(result.get(), "value/html; charset=UTF-8", null)
             showLoadingEnded()
         }
     }
