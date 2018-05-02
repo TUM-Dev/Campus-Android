@@ -73,8 +73,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, false));
             checkSilentMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (checkSilentMode.isChecked() &&
-                    !SilenceService.hasPermissions(WizNavExtrasActivity.this)) {
-                    SilenceService.requestPermissions(WizNavExtrasActivity.this);
+                    !SilenceService.Companion.hasPermissions(WizNavExtrasActivity.this)) {
+                    SilenceService.Companion.requestPermissions(WizNavExtrasActivity.this);
                     checkSilentMode.setChecked(false);
                 }
             });
