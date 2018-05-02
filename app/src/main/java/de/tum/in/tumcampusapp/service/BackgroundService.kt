@@ -23,13 +23,13 @@ class BackgroundService : JobIntentService() {
      */
     override fun onHandleWork(intent: Intent) {
         // Download all from external
+        val appLaunches = intent.getBooleanExtra(Const.APP_LAUNCHES, false)
         val service = Intent().apply {
             putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL)
             putExtra(Const.FORCE_DOWNLOAD, false)
-            putExtra(Const.APP_LAUNCHES, intent.getBooleanExtra(Const.APP_LAUNCHES, false))
+            putExtra(Const.APP_LAUNCHES, appLaunches)
         }
-        service.putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL)
-        service.putExtra(Const.FORCE_DOWNLOAD, false)
+        DownloadService.enqueueWork(baseContext, service)
     }
 
     override fun onDestroy() {
@@ -40,7 +40,7 @@ class BackgroundService : JobIntentService() {
     companion object {
 
         @JvmStatic fun enqueueWork(context: Context, work: Intent) {
-            JobIntentService.enqueueWork(context, BackgroundService::class.java, Const.BACKGROUND_SERVICE_JOB_ID, work)
+            enqueueWork(context, BackgroundService::class.java, Const.BACKGROUND_SERVICE_JOB_ID, work)
         }
 
     }
