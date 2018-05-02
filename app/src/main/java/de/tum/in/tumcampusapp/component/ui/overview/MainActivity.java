@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     public void downloadNewsAlert(){
         Intent downloadService = new Intent();
         downloadService.putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL);
-        DownloadService.enqueueWork(getBaseContext(), downloadService);
+        DownloadService.Companion.enqueueWork(getBaseContext(), downloadService);
     }
 
     /**

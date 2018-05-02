@@ -39,7 +39,7 @@ public class NoInternetCard extends StickyCard {
 
         View v = viewHolder.itemView;
         TextView lastUpdate = v.findViewById(R.id.card_last_update);
-        Date lastUpdated = new Date(DownloadService.lastUpdate(getContext()));
+        Date lastUpdated = new Date(DownloadService.Companion.lastUpdate(getContext()));
         final String time = DateUtils.getRelativeTimeSpanString(lastUpdated.getTime(),
                                                                 System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
                                      .toString();
