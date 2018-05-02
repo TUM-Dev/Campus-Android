@@ -51,7 +51,7 @@ class PersonContactItemsAdapter(
             labelTextView.text = item.label
             valueTextView.text = item.getFormattedValue()
             setOnClickListener {
-                context.startActivity(item.getIntent())
+                context.startActivity(item.getIntent(context))
             }
         }
 

@@ -136,7 +136,7 @@ class PersonsDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnline
 
         employee.rooms?.let { rooms ->
             rooms.forEach { room ->
-                contactItems.add(RoomContactItem(room.getFullLocation()))
+                contactItems.add(RoomContactItem(room.getFullLocation(), room.number))
             }
         }
 

@@ -123,6 +123,7 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.android.support:customtabs:23.3.0'
 
     //DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'

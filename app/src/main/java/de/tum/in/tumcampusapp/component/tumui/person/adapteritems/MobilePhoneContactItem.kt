@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.telephony.PhoneNumberUtils
@@ -10,7 +11,7 @@ class MobilePhoneContactItem(text: String) : AbstractContactItem("Mobile Phone",
 
     override fun getFormattedValue() = PhoneNumberUtils.formatNumber(value, Locale.getDefault().isO3Country) ?: value
 
-    override fun getIntent(): Intent {
+    override fun getIntent(context: Context): Intent {
         val uri = Uri.parse("tel:$value")
         return Intent(Intent.ACTION_DIAL, uri)
     }

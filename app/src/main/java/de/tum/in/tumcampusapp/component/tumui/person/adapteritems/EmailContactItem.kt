@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems
 
+import android.content.Context
 import android.content.Intent
 import de.tum.`in`.tumcampusapp.R
 
@@ -7,7 +8,7 @@ class EmailContactItem(emailAddress: String) : AbstractContactItem("E-mail", ema
 
     override fun getFormattedValue() = value
 
-    override fun getIntent() = Intent(Intent.ACTION_SEND).apply {
+    override fun getIntent(context: Context) = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(Intent.EXTRA_EMAIL, value)
     }
