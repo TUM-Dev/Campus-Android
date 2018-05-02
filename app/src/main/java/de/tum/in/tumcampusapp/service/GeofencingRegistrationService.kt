@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.service
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.Service
@@ -22,10 +23,9 @@ import de.tum.`in`.tumcampusapp.utils.Utils
  */
 class GeofencingRegistrationService : JobIntentService() {
 
-    private lateinit var geofencePendingIntent: PendingIntent
-    private lateinit var locationClient: GeofencingClient
+    private var geofencePendingIntent: PendingIntent? = null
+    private var locationClient: GeofencingClient? = null
 
-    @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         return Service.START_STICKY
@@ -34,6 +34,7 @@ class GeofencingRegistrationService : JobIntentService() {
     override fun onCreate() {
         super.onCreate()
         locationClient = LocationServices.getGeofencingClient(baseContext)
+
         val intent = Intent(this, GeofencingUpdateReceiver::class.java)
         geofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         Utils.log("Service started")
@@ -44,23 +45,20 @@ class GeofencingRegistrationService : JobIntentService() {
         if (!isLocationPermissionGranted()) {
             return
         }
-        val mRequest = intent.getParcelableExtra<GeofencingRequest>(ADD_GEOFENCE_EXTRA)
-        if (mRequest != null) {
-            locationClient.addGeofences(mRequest, geofencePendingIntent)
-            Utils.log("Registered new Geofence")
-        }
+        val request = intent.getParcelableExtra<GeofencingRequest>(ADD_GEOFENCE_EXTRA) ?: return
+        locationClient?.addGeofences(request, geofencePendingIntent)
+        Utils.log("Registered new Geofence")
 
     }
 
     private fun isLocationPermissionGranted(): Boolean {
-        return ContextCompat.checkSelfPermission(applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
     companion object {
 
-
-        @JvmStatic
-        fun startGeofencing(context: Context, work: Intent) {
+        @JvmStatic fun startGeofencing(context: Context, work: Intent) {
             enqueueWork(context, GeofencingRegistrationService::class.java, GEOFENCING_SERVICE_JOB_ID, work)
         }
 
@@ -75,10 +73,13 @@ class GeofencingRegistrationService : JobIntentService() {
                     .setCircularRegion(latitude, longitude, range)
                     .setExpirationDuration(Geofence.NEVER_EXPIRE)
                     .build()
-            val builder = GeofencingRequest.Builder()
-            builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER or GeofencingRequest.INITIAL_TRIGGER_EXIT)
-            builder.addGeofences(arrayListOf(geofence))
-            return intent.putExtra(ADD_GEOFENCE_EXTRA, builder.build())
+            val geofencingRequest = GeofencingRequest.Builder()
+                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER or GeofencingRequest.INITIAL_TRIGGER_EXIT)
+                    .addGeofences(arrayListOf(geofence))
+                    .build()
+            return intent.putExtra(ADD_GEOFENCE_EXTRA, geofencingRequest)
         }
+
     }
+
 }

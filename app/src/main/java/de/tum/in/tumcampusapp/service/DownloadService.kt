@@ -153,7 +153,7 @@ class DownloadService : JobIntentService() {
         /**
          * Download broadcast identifier
          */
-        @JvmStatic val BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD"
+        @JvmField val BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD"
         private const val LAST_UPDATE = "last_update"
         private const val CSV_LOCATIONS = "locations.csv"
 

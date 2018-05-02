@@ -16,7 +16,7 @@ import java.io.IOException
 import java.util.*
 
 class GcmIdentificationService(val context: Context? = null) : FirebaseInstanceIdService() {
-    
+
     private val currentToken: String
         get() = Utils.getSetting(this.context, Const.GCM_TOKEN_ID, "")
 
