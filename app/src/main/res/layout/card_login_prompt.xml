@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginEnd="@dimen/material_default_padding"
-    android:layout_marginStart="@dimen/material_default_padding"
     android:elevation="@dimen/card_view_elevation"
     android:padding="@dimen/material_default_padding"
     card_view:cardBackgroundColor="@android:color/white"

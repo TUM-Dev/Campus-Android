@@ -558,4 +558,7 @@ Signature: %5$s</string>
     
     <string name="pdf_viewer_title">PDF Viewer</string>
     <string name="dialog_add_to_contacts">Add to Contacts?</string>
+    <string name="like_us_on_facebook">Like us on Facebook</string>
+    <string name="check_us_out_on_github">Check us out on GitHub</string>
+    <string name="e_mail_us">E-mail us</string>
 </resources>

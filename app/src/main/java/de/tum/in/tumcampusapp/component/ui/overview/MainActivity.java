@@ -25,6 +25,7 @@ import com.trello.rxlifecycle2.LifecycleProvider;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.other.settings.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -98,7 +99,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mCardsView.setLayoutManager(layoutManager);
         mCardsView.setHasFixedSize(true);
 
-        //Swipe gestures
+        // Add equal spacing between CardViews in the RecyclerView
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
+        mCardsView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
+
+        // Swipe gestures
         new ItemTouchHelper(new MainActivityTouchHelperCallback()).attachToRecyclerView(mCardsView);
 
         // Start silence Service (if already started it will just invoke a check)

@@ -1,33 +1,28 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginBottom="@dimen/card_padding_vertical"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_marginRight="8dp"
-                                    android:layout_marginTop="@dimen/card_padding_vertical"
-                                    android:elevation="@dimen/card_view_elevation"
-                                    android:transitionName="@string/transition_card"
-                                    card_view:cardBackgroundColor="#fff"
-                                    card_view:cardCornerRadius="3dp"
-                                    tools:ignore="UnusedAttribute">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:elevation="@dimen/card_view_elevation"
+    card_view:contentPadding="@dimen/material_default_padding"
+    android:transitionName="@string/transition_card"
+    card_view:cardBackgroundColor="#fff"
+    card_view:cardCornerRadius="@dimen/material_corner_radius">
 
     <LinearLayout
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_marginBottom="5dp"
-            android:drawableLeft="@drawable/ic_action_network_wifi"
             android:drawablePadding="7dp"
             android:drawableStart="@drawable/ic_action_network_wifi"
             android:text="@string/setup_eduroam"
@@ -46,5 +41,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/eduroam_setup_question_desc"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
+
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

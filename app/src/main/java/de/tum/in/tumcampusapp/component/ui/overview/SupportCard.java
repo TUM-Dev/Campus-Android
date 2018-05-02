@@ -26,23 +26,33 @@ public class SupportCard extends Card {
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         final View view = LayoutInflater.from(parent.getContext())
                                         .inflate(R.layout.card_support, parent, false);
-        //Add links to imageviews
-        view.findViewById(R.id.facebook)
+
+        view.findViewById(R.id.facebook_button)
             .setOnClickListener(v -> {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW);
                 browserIntent.setData(Uri.parse(view.getContext()
                                                     .getString(R.string.facebook_link)));
-                view.getContext()
-                    .startActivity(browserIntent);
+                v.getContext()
+                 .startActivity(browserIntent);
             });
-        view.findViewById(R.id.github)
+
+        view.findViewById(R.id.github_button)
             .setOnClickListener(v -> {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW);
                 browserIntent.setData(Uri.parse(view.getContext()
                                                     .getString(R.string.github_link)));
-                view.getContext()
-                    .startActivity(browserIntent);
+                v.getContext()
+                 .startActivity(browserIntent);
             });
+
+        view.findViewById(R.id.email_button)
+            .setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                v.getContext()
+                 .startActivity(Intent.createChooser(intent, "Send Email"));
+            });
+
         return new CardViewHolder(view);
     }
 

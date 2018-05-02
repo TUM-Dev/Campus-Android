@@ -2,6 +2,7 @@
     <dimen name="material_default_padding">16dp</dimen>
     <dimen name="material_small_padding">8dp</dimen>
 
+    <dimen name="material_card_view_padding">8dp</dimen>
     <dimen name="material_corner_radius">2dp</dimen>
 
     <dimen name="padding_chat">2dp</dimen>

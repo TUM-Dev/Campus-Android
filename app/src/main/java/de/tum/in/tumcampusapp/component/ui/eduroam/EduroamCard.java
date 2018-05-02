@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -39,18 +40,19 @@ public class EduroamCard extends NotificationAwareCard {
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         // NOOP
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         //Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (!wifi.isWifiEnabled()) {
+        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager != null && !wifiManager.isWifiEnabled()) {
             return false;
         }
-        return EduroamController.getEduroamConfig(getContext()) == null && eduroamAvailable(wifi);
+
+        return EduroamController.getEduroamConfig(getContext()) == null && eduroamAvailable(wifiManager);
     }
 
     private boolean eduroamAvailable(WifiManager wifi){
@@ -66,7 +68,7 @@ public class EduroamCard extends NotificationAwareCard {
     }
 
     @Override
-    protected void discard(SharedPreferences.Editor editor) {
+    protected void discard(@NonNull SharedPreferences.Editor editor) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit()
              .putBoolean("card_eduroam_start", false)
@@ -74,10 +76,11 @@ public class EduroamCard extends NotificationAwareCard {
     }
 
     @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
+    protected Notification fillNotification(@NonNull NotificationCompat.Builder notificationBuilder) {
         return null;
     }
 
+    @NonNull
     @Override
     public String getTitle() {
         return getContext().getString(R.string.setup_eduroam);
@@ -94,10 +97,11 @@ public class EduroamCard extends NotificationAwareCard {
     }
 
     @Override
-    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
+    public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_action_network_wifi);
         return remoteViews;
     }
+
 }

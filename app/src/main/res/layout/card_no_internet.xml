@@ -1,17 +1,13 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginBottom="@dimen/card_padding_vertical"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_marginRight="8dp"
-                                    android:layout_marginTop="@dimen/card_padding_vertical"
-                                    android:elevation="@dimen/card_view_elevation"
-                                    card_view:cardBackgroundColor="#fff"
-                                    card_view:cardCornerRadius="3dp"
-                                    tools:ignore="UnusedAttribute">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:elevation="@dimen/card_view_elevation"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardCornerRadius="@dimen/material_corner_radius">
 
     <LinearLayout
         android:id="@+id/card_view"
@@ -19,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/material_default_padding">
 
         <TextView
             android:id="@+id/textView"
@@ -28,14 +24,17 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/no_internet_connection"
             android:textSize="16sp"
-            android:textStyle="bold|italic"/>
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/card_last_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/material_small_padding"
             android:textColor="@android:color/secondary_text_light"
-            android:textStyle="italic"/>
+            tools:text="Last update"/>
+
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

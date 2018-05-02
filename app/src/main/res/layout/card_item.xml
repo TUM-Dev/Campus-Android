@@ -1,18 +1,15 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginBottom="@dimen/card_padding_vertical"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_marginRight="8dp"
-                                    android:layout_marginTop="@dimen/card_padding_vertical"
-                                    android:elevation="@dimen/card_view_elevation"
-                                    android:transitionName="@string/transition_card"
-                                    card_view:cardBackgroundColor="#fff"
-                                    card_view:cardCornerRadius="3dp"
-                                    tools:ignore="UnusedAttribute">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:elevation="@dimen/card_view_elevation"
+    card_view:contentPadding="@dimen/material_default_padding"
+    android:transitionName="@string/transition_card"
+    card_view:cardBackgroundColor="#fff"
+    card_view:cardCornerRadius="@dimen/material_corner_radius">
 
     <LinearLayout
         android:id="@+id/card_view"
@@ -38,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:visibility="gone"/>
+
         </LinearLayout>
 
         <View
@@ -47,4 +45,5 @@
             android:visibility="gone"/>
 
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

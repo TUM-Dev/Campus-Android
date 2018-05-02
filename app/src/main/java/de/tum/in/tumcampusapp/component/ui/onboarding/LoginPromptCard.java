@@ -27,7 +27,7 @@ public class LoginPromptCard extends Card {
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         final View view = LayoutInflater.from(parent.getContext())
-                                        .inflate(R.layout.card_login_promt, parent, false);
+                                        .inflate(R.layout.card_login_prompt, parent, false);
 
         view.findViewById(R.id.login_button)
             .setOnClickListener(v -> {
