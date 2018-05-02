@@ -719,8 +719,9 @@
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
             android:parentActivityName=".component.tumui.calendar.CalendarActivity"/>
-        <activity android:name=".component.ui.plan.PDFViewActivity"
-                  android:label="@string/pdf_viewer_title"
+        <activity
+            android:name=".component.ui.plan.PDFViewActivity"
+            android:label="@string/pdf_viewer_title"
             android:parentActivityName=".component.ui.plan.PlansActivity"/>
 
     </application>
