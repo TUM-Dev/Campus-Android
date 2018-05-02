@@ -103,7 +103,7 @@
     <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMonline-Access-Token is not enabled</string>
     <string name="startup_wizard_uppercase">TUMonline wizard</string>
-    <string name="welcome_msg">In order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
+    <string name="welcome_msg">In order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis ID has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
     <string name="need_to_enable"><b>The TUMonline-Access-Token was successfully generated</b>\n\nPlease enable the Token in TUMonline now via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>

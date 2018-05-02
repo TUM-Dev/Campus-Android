@@ -51,14 +51,6 @@
                         android:padding="2dp"
                         android:text="@string/need_to_enable"/>
 
-                    <TextView
-                        android:id="@+id/tvBrowse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="2dp"
-                        android:text="@string/tumonline_link"/>
-
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
