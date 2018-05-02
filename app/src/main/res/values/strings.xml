@@ -561,4 +561,7 @@ Signature: %5$s</string>
     <string name="like_us_on_facebook">Like us on Facebook</string>
     <string name="check_us_out_on_github">Check us out on GitHub</string>
     <string name="e_mail_us">E-mail us</string>
+    <string name="enter_your_tum_id">Enter your TUM ID …</string>
+    <string name="generate_new_token">Generate new token</string>
+    <string name="open_tum_online">Open TUM Online</string>
 </resources>

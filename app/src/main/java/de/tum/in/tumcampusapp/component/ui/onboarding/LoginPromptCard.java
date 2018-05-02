@@ -52,7 +52,9 @@ public class LoginPromptCard extends Card {
 
     @Override
     public Intent getIntent() {
-        return new Intent(this.getContext(), WizNavStartActivity.class);
+        // Returns null, because tapping the card (instead of the button) will transition to the setup wizard with a fade animation.
+        // We want the slide-up animation of Android activities.
+        return null;
     }
 
     @Override

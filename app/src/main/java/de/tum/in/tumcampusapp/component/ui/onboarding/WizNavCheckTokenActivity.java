@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -45,6 +46,12 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             return;
         }
         startLoading();
+    }
+
+    public void onClickTUMOnline(View next) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("http://campus.tum.de"));
+        startActivity(intent);
     }
 
     /**
@@ -114,4 +121,5 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
         TextView textView = findViewById(R.id.tvBrowse);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
+
 }
