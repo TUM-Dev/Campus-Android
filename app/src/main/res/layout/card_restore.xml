@@ -9,7 +9,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginTop="@dimen/card_padding_vertical"
-    android:elevation="@dimen/cardview_elevation"
+    android:elevation="@dimen/card_view_elevation"
     card_view:cardBackgroundColor="#fff"
     card_view:cardCornerRadius="3dp"
     tools:ignore="UnusedAttribute">

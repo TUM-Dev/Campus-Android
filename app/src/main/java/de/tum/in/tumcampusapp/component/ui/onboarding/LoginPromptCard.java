@@ -19,9 +19,9 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Card that prompts the user to login to TUMonline since we don't show the wizard after the first launch anymore.
  * It will be shown until it is swiped away for the first time.
  */
-public class LoginPromtCard extends Card {
+public class LoginPromptCard extends Card {
 
-    public LoginPromtCard(Context context) {
+    public LoginPromptCard(Context context) {
         super(CardManager.CARD_LOGIN, context, "card_login", false);
     }
 
@@ -44,7 +44,7 @@ public class LoginPromtCard extends Card {
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences p) {
+    protected boolean shouldShow(@NonNull SharedPreferences sharedPrefs) {
         // show on top as long as user hasn't swiped it away and isn't connected to TUMonline
         return Utils.getSettingBool(this.getContext(), CardManager.SHOW_LOGIN, true)
                && Utils.getSetting(this.getContext(), Const.LRZ_ID, "").isEmpty();

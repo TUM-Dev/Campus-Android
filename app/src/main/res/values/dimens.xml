@@ -1,4 +1,9 @@
 <resources>
+    <dimen name="material_default_padding">16dp</dimen>
+    <dimen name="material_small_padding">8dp</dimen>
+
+    <dimen name="material_corner_radius">2dp</dimen>
+
     <dimen name="padding_chat">2dp</dimen>
     <dimen name="padding_default">8dp</dimen>
     <dimen name="mid_text_size">14sp</dimen>
@@ -10,7 +15,8 @@
     <dimen name="card_text_padding">10dp</dimen>
     <dimen name="next_lecture_select_width">30dp</dimen>
     <dimen name="card_padding_vertical">0dp</dimen>
-    <dimen name="cardview_elevation">6dp</dimen>
+    <dimen name="card_padding_horizontal">16dp</dimen>
+    <dimen name="card_view_elevation">2dp</dimen>
 
     <dimen name="widget_margin">0dp</dimen>
 

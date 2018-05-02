@@ -1,48 +1,51 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginBottom="@dimen/card_padding_vertical"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_marginRight="8dp"
-                                    android:layout_marginTop="@dimen/card_padding_vertical"
-                                    android:elevation="@dimen/cardview_elevation"
-                                    card_view:cardBackgroundColor="#fff"
-                                    card_view:cardCornerRadius="3dp"
-                                    tools:ignore="UnusedAttribute">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginEnd="@dimen/material_default_padding"
+    android:layout_marginStart="@dimen/material_default_padding"
+    android:elevation="@dimen/card_view_elevation"
+    android:padding="@dimen/material_default_padding"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardCornerRadius="@dimen/material_corner_radius">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/card_selector"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="10dp"
-        android:gravity="center_horizontal">
+        android:padding="@dimen/material_default_padding">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_horizontal"
             android:text="@string/card_login_title"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="20sp"
-            android:typeface="sans"
-            android:gravity="center_horizontal"/>
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
             android:text="@string/card_login_body"/>
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/FlatButton"
-            android:text="@string/tumonline_login"
+            android:drawablePadding="@dimen/material_small_padding"
             android:drawableStart="@drawable/ic_link_white"
-            android:drawablePadding="5dp"
-            android:id="@+id/login_button"/>
+            android:text="@string/tumonline_login"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/color_primary"/>
+
     </LinearLayout>
+
 </android.support.v7.widget.CardView>
