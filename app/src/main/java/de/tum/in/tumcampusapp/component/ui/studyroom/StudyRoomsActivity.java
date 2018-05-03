@@ -152,9 +152,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         //
     }
 
-    public void goToRoomFinder(View view) {
-        String link = ((TextView) view).getText()
-                                       .toString();
+    public void openLink(View view) {
+        String link = (String) view.getTag();
         String roomCode = link.substring(link.indexOf(' ') + 1, link.length());
 
         Intent findStudyRoomIntent = new Intent();

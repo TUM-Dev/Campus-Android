@@ -1,53 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools"
-                                    android:id="@+id/card_view"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="@dimen/card_padding_vertical"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_marginRight="8dp"
-                                    android:layout_marginTop="@dimen/card_padding_vertical"
-                                    android:elevation="@dimen/card_view_elevation"
-                                    card_view:cardBackgroundColor="#fff"
-                                    card_view:cardCornerRadius="3dp"
-                                    tools:ignore="UnusedAttribute">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="@dimen/card_view_elevation"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardCornerRadius="@dimen/material_corner_radius"
+    card_view:contentPadding="@dimen/material_small_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/listPreferredItemHeight"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/text1"
-            android:layout_width="fill_parent"
+            android:id="@+id/headerTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/material_small_padding"
+            android:layout_marginStart="@dimen/material_small_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
             android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            tools:text="Text1"/>
 
         <TextView
-            android:id="@+id/text2"
-            android:layout_width="fill_parent"
+            android:id="@+id/detailsTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/material_small_padding"
+            android:layout_marginStart="@dimen/material_small_padding"
             android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-        <TextView
-            android:id="@+id/text3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_place_transparent"
-            android:drawablePadding="5dp"
-            android:drawableStart="@drawable/ic_place_transparent"
-            android:gravity="center_vertical"
-            android:linksClickable="true"
-            android:onClick="goToRoomFinder"
-            android:text="@string/roomfinder"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#006c90"/>
+            tools:text="Text1"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/openLinkButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_small_padding"
+            android:onClick="openLink"
+            android:textColor="#006c90"
+            tools:text="@string/roomfinder"/>
 
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

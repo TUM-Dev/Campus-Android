@@ -564,4 +564,5 @@ Signature: %5$s</string>
     <string name="enter_your_tum_id">Enter your TUM ID …</string>
     <string name="generate_new_token">Generate new token</string>
     <string name="open_tum_online">Open TUM Online</string>
+    <string name="go_to_room">Go to room</string>
 </resources>
