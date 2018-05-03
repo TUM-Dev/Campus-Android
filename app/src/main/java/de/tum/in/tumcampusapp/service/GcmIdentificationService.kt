@@ -78,7 +78,6 @@ class GcmIdentificationService(val context: Context? = null) : FirebaseInstanceI
         } catch (e: IOException) {
             Utils.log(e)
         }
-
     }
 
     /**

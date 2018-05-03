@@ -61,5 +61,7 @@ class StartSyncReceiver : BroadcastReceiver() {
             alarm.cancel(pendingIntent)
             alarm.setExact(AlarmManager.RTC, System.currentTimeMillis() + StartSyncReceiver.START_INTERVAL, pendingIntent)
         }
+
     }
+
 }

@@ -72,14 +72,15 @@ class FavoriteDishAlarmScheduler : BroadcastReceiver() {
     override fun onReceive(context: Context, extra: Intent) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         cancelFoodNotifications(notificationManager)
+
         if (extra.getBooleanExtra("cancelNotifications", false)) {
             return
         }
 
         val triggeredAt = extra.getStringExtra("triggeredAt")
-
         val scheduledNow = CafeteriaMenuManager(context)
                 .getServedFavoritesAtDate(triggeredAt)
+
         if (scheduledNow == null) {
             Utils.log("FavoriteDishAlarmScheduler: Scheduled now is null, onReceived aborted")
             return
@@ -92,9 +93,7 @@ class FavoriteDishAlarmScheduler : BroadcastReceiver() {
         scheduledNow.keys.forEach { mensaId ->
             val menuCount = scheduledNow[mensaId]?.size ?: 0
             val scheduledForMensaID = scheduledNow[mensaId] ?: emptySet<CafeteriaMenu>()
-            val message = scheduledForMensaID
-                    .map { menu -> menu.name }
-                    .joinToString("\n")
+            val message = scheduledForMensaID.joinToString("\n") { menu -> menu.name }
 
             ACTIVE_NOTIFICATIONS.add(mensaId)
             val mensaName = dao.getMensaNameFromId(mensaId)

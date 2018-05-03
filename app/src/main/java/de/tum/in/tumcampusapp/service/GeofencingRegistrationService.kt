@@ -13,6 +13,7 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
+import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.ADD_GEOFENCE_EXTRA
 import de.tum.`in`.tumcampusapp.utils.Const.GEOFENCING_SERVICE_JOB_ID
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -23,7 +24,6 @@ import de.tum.`in`.tumcampusapp.utils.Utils
  */
 class GeofencingRegistrationService : JobIntentService() {
 
-    private var geofencePendingIntent: PendingIntent? = null
     private var locationClient: GeofencingClient? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -34,9 +34,6 @@ class GeofencingRegistrationService : JobIntentService() {
     override fun onCreate() {
         super.onCreate()
         locationClient = LocationServices.getGeofencingClient(baseContext)
-
-        val intent = Intent(this, GeofencingUpdateReceiver::class.java)
-        geofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         Utils.log("Service started")
     }
 
@@ -45,10 +42,14 @@ class GeofencingRegistrationService : JobIntentService() {
         if (!isLocationPermissionGranted()) {
             return
         }
-        val request = intent.getParcelableExtra<GeofencingRequest>(ADD_GEOFENCE_EXTRA) ?: return
+
+        val request = intent.getParcelableExtra<GeofencingRequest>(Const.ADD_GEOFENCE_EXTRA) ?: return
+        val geofenceIntent = Intent(this, GeofencingUpdateReceiver::class.java)
+        val geofencePendingIntent = PendingIntent.getBroadcast(
+                this, 0, geofenceIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         locationClient?.addGeofences(request, geofencePendingIntent)
         Utils.log("Registered new Geofence")
-
     }
 
     private fun isLocationPermissionGranted(): Boolean {

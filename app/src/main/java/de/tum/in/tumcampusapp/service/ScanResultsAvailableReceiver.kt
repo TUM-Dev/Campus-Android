@@ -29,6 +29,8 @@ import de.tum.`in`.tumcampusapp.utils.Utils
  */
 class ScanResultsAvailableReceiver : BroadcastReceiver() {
 
+    private var locationManager: LocationManager? = null
+
     /**
      * This method either gets called by broadcast directly or gets repeatedly triggered by the
      * WifiScanHandler, which starts scans at time periods, as long as an eduroam or lrz network is
@@ -48,10 +50,8 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
             return
         }
 
-        if (locationManager == null) {
-            locationManager = context.applicationContext
-                    .getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        }
+        locationManager = context.applicationContext
+                .getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         //Check if locations are enabled
         val locationsEnabled = ContextCompat.checkSelfPermission(
@@ -146,8 +146,6 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
         private const val SHOULD_SHOW = "wifi_setup_notification_dismissed"
         private const val NOTIFICATION_ID = 123
 
-        private var locationManager: LocationManager? = null
-
         /**
          * Shows notification if it is not already visible
          *
@@ -183,7 +181,8 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
             notificationManager.notify(NOTIFICATION_ID, notification)
 
             Utils.setSetting(context, SHOULD_SHOW, false)
-
         }
+
     }
+
 }

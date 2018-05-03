@@ -45,10 +45,11 @@ class DownloadService : JobIntentService() {
         Utils.log("DownloadService service has started")
         broadcastManager = LocalBroadcastManager.getInstance(this)
 
-        SyncManager(this)
+        SyncManager(this) // Starts a new sync in constructor; should be moved to explicit method call
 
         val remoteRepository = CafeteriaRemoteRepository
         remoteRepository.tumCabeClient = TUMCabeClient.getInstance(this)
+
         val localRepository = CafeteriaLocalRepository
         localRepository.db = TcaDb.getInstance(this)
         cafeteriaViewModel = CafeteriaViewModel(localRepository, remoteRepository, disposable)
@@ -60,12 +61,6 @@ class DownloadService : JobIntentService() {
 
         TopNewsRemoteRepository.tumCabeClient = TUMCabeClient.getInstance(this)
         topNewsViewModel = TopNewsViewModel(TopNewsRemoteRepository, disposable)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.clear()
-        Utils.log("DownloadService service has stopped")
     }
 
     override fun onHandleWork(intent: Intent) {
@@ -91,17 +86,17 @@ class DownloadService : JobIntentService() {
     }
 
     /**
-     * Download all external data and check, if the download was successful
+     * Download all external data and returns whether the download was successful
      *
      * @param force True to force download over normal sync period
      * @return if all downloads were successful
      */
     private fun downloadAll(force: Boolean): Boolean {
-        val cafe = downloadCafeterias(force)
-        val kino = downloadKino(force)
-        val news = downloadNews(force)
-        val topNews = downloadTopNews()
-        return cafe && kino && news && topNews
+        val cafeSuccess = downloadCafeterias(force)
+        val kinoSuccess = downloadKino(force)
+        val newsSuccess = downloadNews(force)
+        val topNewsSuccess = downloadTopNews()
+        return cafeSuccess && kinoSuccess && newsSuccess && topNewsSuccess
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
@@ -128,9 +123,7 @@ class DownloadService : JobIntentService() {
 
     }
 
-    private fun downloadTopNews(): Boolean {
-        return topNewsViewModel?.getNewsAlertFromService(this) == true
-    }
+    private fun downloadTopNews() = topNewsViewModel?.getNewsAlertFromService(this) == true
 
     /**
      * Import default location and opening hours from assets
@@ -148,6 +141,12 @@ class DownloadService : JobIntentService() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
+        Utils.log("DownloadService service has stopped")
+    }
+
     companion object {
 
         /**
@@ -163,9 +162,7 @@ class DownloadService : JobIntentService() {
          * @param context Context
          * @return time when BackgroundService was executed last time
          */
-        fun lastUpdate(context: Context): Long {
-            return Utils.getSettingLong(context, LAST_UPDATE, 0L) ?: 0
-        }
+        fun lastUpdate(context: Context): Long = Utils.getSettingLong(context, LAST_UPDATE, 0L)
 
         /**
          * Download the data for a specific intent
@@ -215,6 +212,7 @@ class DownloadService : JobIntentService() {
                 if (success) {
                     Utils.setSetting(service, LAST_UPDATE, System.currentTimeMillis())
                 }
+
                 CardManager.update(service)
                 success = true
             }

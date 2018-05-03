@@ -31,11 +31,11 @@ class SilenceService : JobIntentService() {
     // See: https://stackoverflow.com/questions/31387137/android-detect-do-not-disturb-status
     // Settings.System.getInt(getContentResolver(), Settings.System.DO_NOT_DISTURB, 1);
 
-    private val isDoNotDisturbMode: Boolean
+    private val isDoNotDisturbActive: Boolean
         get() {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val nm = getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
-                nm.currentInterruptionFilter != android.app.NotificationManager.INTERRUPTION_FILTER_ALL
+                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+                notificationManager.currentInterruptionFilter != android.app.NotificationManager.INTERRUPTION_FILTER_ALL
             } else {
                 try {
                     val mode = Settings.Global.getInt(contentResolver, "zen_mode")
@@ -68,7 +68,7 @@ class SilenceService : JobIntentService() {
             return
         }
 
-        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager ?: return
+        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val newIntent = Intent(this, SilenceService::class.java)
         val pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
@@ -83,12 +83,12 @@ class SilenceService : JobIntentService() {
             return
         }
 
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager ?: return
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val currentLectures = calendarController.currentFromDb
         Utils.log("Current lectures: " + currentLectures.size)
 
-        if (currentLectures.isEmpty() || isDoNotDisturbMode) {
-            if (Utils.getSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode) {
+        if (currentLectures.isEmpty() || isDoNotDisturbActive) {
+            if (Utils.getSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbActive) {
                 // default: old state
                 Utils.log("set ringer mode to old state")
                 val ringerMode = Utils.getSetting(this, Const.SILENCE_OLD_STATE, AudioManager.RINGER_MODE_NORMAL.toString())
@@ -113,7 +113,7 @@ class SilenceService : JobIntentService() {
             // if current lecture(s) found, silence the mobile
             Utils.setSetting(this, Const.SILENCE_ON, true)
 
-            // Set into silent mode
+            // Set into silent or vibrate mode based on current setting
             val mode = Utils.getSetting(this, "silent_mode_set_to", "0")
             audioManager.ringerMode = when (mode) {
                 RINGER_MODE_SILENT -> AudioManager.RINGER_MODE_VIBRATE

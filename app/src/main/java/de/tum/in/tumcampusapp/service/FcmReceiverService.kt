@@ -75,10 +75,10 @@ class FcmReceiverService : FirebaseMessagingService() {
                 }
             }
 
-            genericNotification?.let { genNotification ->
-                postNotification(genNotification)
+            genericNotification?.let {
+                postNotification(it)
                 try {
-                    genNotification.sendConfirmation()
+                    it.sendConfirmation()
                 } catch (e: IOException) {
                     Utils.log(e)
                 }
@@ -96,7 +96,6 @@ class FcmReceiverService : FirebaseMessagingService() {
                 }
                 postNotification(ChatNotification(bundle, this, -1))
             } catch (e: Exception) {
-                // TODO: Do something
                 Utils.log(e)
             }
 
@@ -107,10 +106,10 @@ class FcmReceiverService : FirebaseMessagingService() {
      * @param genericNotification the Notification to post
      */
     private fun postNotification(genericNotification: GenericNotification?) {
-        if (genericNotification != null) {
+        genericNotification?.let {
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val note = genericNotification.notification
-            notificationManager.notify(genericNotification.notificationIdentification, note)
+            val note = it.notification
+            notificationManager.notify(it.notificationIdentification, note)
         }
     }
 
