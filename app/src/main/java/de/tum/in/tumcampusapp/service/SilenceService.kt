@@ -156,7 +156,7 @@ class SilenceService : JobIntentService() {
         /**
          * Check if the app has the permissions to enable "Do Not Disturb".
          */
-        fun hasPermissions(context: Context): Boolean {
+        @JvmStatic fun hasPermissions(context: Context): Boolean {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             return !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !notificationManager.isNotificationPolicyAccessGranted)
         }
@@ -164,7 +164,7 @@ class SilenceService : JobIntentService() {
         /**
          * Request the "Do Not Disturb" permissions for android version >= N.
          */
-        fun requestPermissions(context: Context) {
+        @JvmStatic fun requestPermissions(context: Context) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 return
             }

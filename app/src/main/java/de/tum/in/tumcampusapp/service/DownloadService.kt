@@ -162,7 +162,7 @@ class DownloadService : JobIntentService() {
          * @param context Context
          * @return time when BackgroundService was executed last time
          */
-        fun lastUpdate(context: Context): Long = Utils.getSettingLong(context, LAST_UPDATE, 0L)
+        @JvmStatic fun lastUpdate(context: Context): Long = Utils.getSettingLong(context, LAST_UPDATE, 0L)
 
         /**
          * Download the data for a specific intent
@@ -231,7 +231,7 @@ class DownloadService : JobIntentService() {
             }
         }
 
-        fun enqueueWork(context: Context, work: Intent) {
+        @JvmStatic fun enqueueWork(context: Context, work: Intent) {
             Utils.log("Download work enqueued")
             JobIntentService.enqueueWork(context, DownloadService::class.java, Const.DOWNLOAD_SERVICE_JOB_ID, work)
         }
