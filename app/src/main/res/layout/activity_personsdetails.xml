@@ -57,6 +57,7 @@
 
                     <View
                         android:layout_width="match_parent"
+                        android:id="@+id/dividerNameGroups"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
                         android:layout_height="1dp"
@@ -70,6 +71,7 @@
                         android:overScrollMode="never"/>
 
                     <View
+                        android:id="@+id/dividerGroupsContactItems"
                         android:layout_width="match_parent"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"

@@ -101,6 +101,7 @@ class PersonsDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnline
             groupsRecyclerView.layoutManager = LinearLayoutManager(this)
             groupsRecyclerView.adapter = PersonGroupsAdapter(groups)
         } else {
+            dividerNameGroups.visibility = View.GONE
             groupsRecyclerView.visibility = View.GONE
         }
 
@@ -140,9 +141,14 @@ class PersonsDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnline
             }
         }
 
-        contactItemsRecyclerView.setHasFixedSize(true)
-        contactItemsRecyclerView.layoutManager = LinearLayoutManager(this)
-        contactItemsRecyclerView.adapter = PersonContactItemsAdapter(contactItems)
+        if (contactItems.isNotEmpty()) {
+            contactItemsRecyclerView.setHasFixedSize(true)
+            contactItemsRecyclerView.layoutManager = LinearLayoutManager(this)
+            contactItemsRecyclerView.adapter = PersonContactItemsAdapter(contactItems)
+        } else {
+            dividerGroupsContactItems.visibility = View.GONE
+            contactItemsRecyclerView.visibility = View.GONE
+        }
     }
 
     /**

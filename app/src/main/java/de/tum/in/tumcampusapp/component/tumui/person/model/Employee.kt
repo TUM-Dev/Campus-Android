@@ -61,12 +61,16 @@ data class Employee(@field:Element(name = "geschlecht", required = false)
     val telSubstations: List<TelSubstation>?
         get() = telSubstationList?.substations
 
-    fun getFullName() = "$name $surname"
-
     fun getNameWithTitle(context: Context): String {
         val resourceId = if (gender == Person.FEMALE) R.string.mrs else R.string.mr
         val salutation = context.getString(resourceId)
-        return "$salutation $name $surname, $title"
+        val salutationWithName = "$salutation $name $surname"
+
+        if (title.isEmpty()) {
+            return salutationWithName
+        } else {
+            return "$salutationWithName, $title"
+        }
     }
 
     override fun toString(): String {
