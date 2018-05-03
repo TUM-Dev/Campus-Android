@@ -77,7 +77,7 @@
             android:maxHeight="150dp"
             android:layout_marginTop="10dp"
             android:padding="5dp"
-            android:background="@drawable/feedback_rounded_background"
+            android:background="@drawable/rounded_corners_background"
             android:hint="@string/comment"
             android:gravity="top"
             android:textSize="16sp"

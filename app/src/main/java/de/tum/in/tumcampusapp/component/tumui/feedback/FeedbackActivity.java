@@ -21,12 +21,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
@@ -56,6 +54,9 @@ import retrofit2.Response;
 
 public class FeedbackActivity extends BaseActivity {
 
+    private static final int GENERAL_FEEDBACK = 0;
+    private static final int TCA_FEEDBACK = 0;
+
     private static final int REQUEST_TAKE_PHOTO = 11;
     private static final int REQUEST_GALLERY = 12;
     private static final int PERMISSION_LOCATION = 13;
@@ -69,13 +70,14 @@ public class FeedbackActivity extends BaseActivity {
     private int feedbackTopic;
     private String email;
     private String lrzId;
+
     private Location location;
     private LocationListener locationListener;
     private LocationManager locationManager;
 
-    private ArrayList<String> picPaths;
+    private ArrayList<String> picturePaths;
 
-    private RecyclerView.Adapter thumbAdapter;
+    private RecyclerView.Adapter thumbnailsAdapter;
 
     private int sentCount;
     private Dialog progress;
@@ -89,7 +91,7 @@ public class FeedbackActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        feedbackTopic = 0; // General feedback by default
+        feedbackTopic = GENERAL_FEEDBACK; // General feedback by default
 
         feedbackView = findViewById(R.id.feedback_message);
         customEmailView = findViewById(R.id.feedback_custom_email);
@@ -98,21 +100,22 @@ public class FeedbackActivity extends BaseActivity {
 
         lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
 
-        initTopicSpinner(savedInstanceState);
+        initRadioGroup(savedInstanceState);
         initIncludeLocation(savedInstanceState);
         initIncludeEmail(savedInstanceState);
 
         if (savedInstanceState == null) {
-            picPaths = new ArrayList<>();
+            picturePaths = new ArrayList<>();
         } else {
-            picPaths = savedInstanceState.getStringArrayList(Const.FEEDBACK_PIC_PATHS);
+            picturePaths = savedInstanceState.getStringArrayList(Const.FEEDBACK_PIC_PATHS);
             feedbackView.setText(savedInstanceState.getString(Const.FEEDBACK_MESSAGE));
         }
 
         RecyclerView pictureList = findViewById(R.id.feedback_image_list);
-        pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        thumbAdapter = new FeedbackThumbAdapter(picPaths);
-        pictureList.setAdapter(thumbAdapter);
+        pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        thumbnailsAdapter = new FeedbackThumbnailsAdapter(picturePaths);
+        pictureList.setAdapter(thumbnailsAdapter);
     }
 
     @SuppressLint("NewApi")
@@ -128,7 +131,7 @@ public class FeedbackActivity extends BaseActivity {
         if (savedInstanceState != null) {
             includeLocation.setChecked(savedInstanceState.getBoolean(Const.FEEDBACK_INCL_LOCATION));
         } else {
-            includeLocation.setChecked(true);
+            includeLocation.setChecked(false);
         }
 
         if (includeLocation.isChecked()
@@ -245,35 +248,24 @@ public class FeedbackActivity extends BaseActivity {
         }
     }
 
-    private void initTopicSpinner(Bundle savedInstanceState) {
-        Spinner spinner = findViewById(R.id.feedback_topic_spinner);
-        spinner.requestFocus();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.feedback_options, R.layout.spinner_item_bold);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                feedbackTopic = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                feedbackTopic = 0;
-            }
+    private void initRadioGroup(Bundle savedInstanceState) {
+        RadioGroup radioGroup = findViewById(R.id.radioButtonsGroup);
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            feedbackTopic = (checkedId == R.id.tumInGeneralRadioButton) ? GENERAL_FEEDBACK : TCA_FEEDBACK;
         });
 
         if (savedInstanceState != null) {
-            spinner.getOnItemSelectedListener()
-                   .onItemSelected(null, null, savedInstanceState.getInt(Const.FEEDBACK_TOPIC), 0);
+            int feedbackTopic = savedInstanceState.getInt(Const.FEEDBACK_TOPIC);
+            int radioButtonId = (feedbackTopic == GENERAL_FEEDBACK) ? R.id.tumInGeneralRadioButton : R.id.tumCampusAppRadioButton;
+            radioGroup.check(-1); // Clear the selection
+            radioGroup.check(radioButtonId);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (String path : picPaths) {
+        for (String path : picturePaths) {
             new File(path).delete();
         }
     }
@@ -338,7 +330,7 @@ public class FeedbackActivity extends BaseActivity {
                             (includeEmail.isChecked() ? email : ""),
                             (includeLocation.isChecked() ? location.getLatitude() : 0),
                             (includeLocation.isChecked() ? location.getLongitude() : 0),
-                            picPaths == null ? 0 : picPaths.size(),
+                            picturePaths == null ? 0 : picturePaths.size(),
                             Build.VERSION.RELEASE,
                             BuildConfig.VERSION_NAME);
     }
@@ -354,20 +346,20 @@ public class FeedbackActivity extends BaseActivity {
         showProgressBarDialog();
         TUMCabeClient client = TUMCabeClient.getInstance(this);
 
-        client.sendFeedback(getFeedback(), picPaths.toArray(new String[picPaths.size()]), new Callback<Success>() {
+        client.sendFeedback(getFeedback(), picturePaths.toArray(new String[picturePaths.size()]), new Callback<Success>() {
             @Override
             public void onResponse(Call<Success> call, Response<Success> response) {
                 Success success = response.body();
                 if (success != null && success.wasSuccessfullySent()) {
                     sentCount++;
                     Utils.log(success.getSuccess());
-                    if (sentCount == picPaths.size() + 1) {
+                    if (sentCount == picturePaths.size() + 1) {
                         progress.cancel();
                         finish();
                         Toast.makeText(feedbackView.getContext(), R.string.feedback_send_success, Toast.LENGTH_SHORT)
                              .show();
                     }
-                    Utils.log("sent " + sentCount + " of " + (picPaths.size() + 1) + " message parts");
+                    Utils.log("sent " + sentCount + " of " + (picturePaths.size() + 1) + " message parts");
                 } else {
                     showErrorDialog();
                 }
@@ -410,7 +402,7 @@ public class FeedbackActivity extends BaseActivity {
         outState.putInt(Const.FEEDBACK_TOPIC, feedbackTopic);
         outState.putString(Const.FEEDBACK_MESSAGE, feedbackView.getText()
                                                                .toString());
-        outState.putStringArrayList(Const.FEEDBACK_PIC_PATHS, picPaths);
+        outState.putStringArrayList(Const.FEEDBACK_PIC_PATHS, picturePaths);
         outState.putBoolean(Const.FEEDBACK_INCL_EMAIL, includeEmail.isChecked());
         outState.putBoolean(Const.FEEDBACK_INCL_LOCATION, includeLocation.isChecked());
         outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText()
@@ -445,8 +437,8 @@ public class FeedbackActivity extends BaseActivity {
                 // get picture, resize it and write back the image
                 rescaleBitmap(Uri.fromFile(new File(mCurrentPhotoPath)), new File(mCurrentPhotoPath));
 
-                picPaths.add(mCurrentPhotoPath);
-                thumbAdapter.notifyDataSetChanged();
+                picturePaths.add(mCurrentPhotoPath);
+                thumbnailsAdapter.notifyDataSetChanged();
             } else if (requestCode == REQUEST_GALLERY) {
 
                 File destination = null;
@@ -458,8 +450,8 @@ public class FeedbackActivity extends BaseActivity {
                 rescaleBitmap(data.getData(), destination);
 
                 if (destination != null) {
-                    picPaths.add(destination.getAbsolutePath());
-                    thumbAdapter.notifyDataSetChanged();
+                    picturePaths.add(destination.getAbsolutePath());
+                    thumbnailsAdapter.notifyDataSetChanged();
                 }
             }
         }
