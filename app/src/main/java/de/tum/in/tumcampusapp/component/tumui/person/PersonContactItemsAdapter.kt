@@ -39,19 +39,18 @@ class PersonContactItemsAdapter(
 
     override fun getItemCount() = items.size
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: AbstractContactItem, showIcon: Boolean = true) = with(itemView) {
-            if (showIcon) {
-                iconImageView.setImageResource(item.iconResourceId)
-            } else {
-                iconImageView.setImageResource(android.R.color.transparent)
-            }
+            val resourceId = if (showIcon) item.iconResourceId else android.R.color.transparent
+            iconImageView.setImageResource(resourceId)
 
             labelTextView.text = item.label
-            valueTextView.text = item.getFormattedValue()
+            valueTextView.text = item.value
+
             setOnClickListener {
-                context.startActivity(item.getIntent(context))
+                val intent = item.getIntent(context) ?: return@setOnClickListener
+                context.startActivity(intent)
             }
         }
 
