@@ -13,7 +13,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
  * @param appVersion helpful info if bugs are submitted
  */
 data class Feedback(
-        var id: String = "", // to be able to match the pictures to the value message
+        var id: String = "", // to be able to match the pictures to the text message
         var topic: String = Const.FEEDBACK_TOPIC_GENERAL,
         var message: String = "",
         var email: String = "",

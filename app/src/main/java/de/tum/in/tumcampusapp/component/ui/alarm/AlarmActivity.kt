@@ -38,7 +38,7 @@ class AlarmActivity : BaseActivity(R.layout.activity_alarmdetails) {
         Utils.log(notification.toString())
 
         this.mTitle.text = notification.title
-        this.mDescription.loadDataWithBaseURL(null, notification.description, "value/html", "utf-8", null)
+        this.mDescription.loadDataWithBaseURL(null, notification.description, "text/html", "utf-8", null)
         this.mDescription.setBackgroundColor(Color.TRANSPARENT)
         this.mDate.text = notification.created
     }

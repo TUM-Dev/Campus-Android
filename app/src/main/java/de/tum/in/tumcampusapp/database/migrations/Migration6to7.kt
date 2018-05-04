@@ -17,7 +17,7 @@ class Migration6to7 : Migration(6, 7) {
                 "_id INTEGER NOT NULL PRIMARY KEY," +
                 "previous INTEGER NOT NULL, " +
                 "room INTEGER NOT NULL, " +
-                "value TEXT NULL, " +
+                "text TEXT NULL, " +
                 "timestamp TEXT NULL, " +
                 "signature TEXT NULL," +
                 "member TEXT NULL, " +

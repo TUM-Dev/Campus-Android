@@ -27,7 +27,7 @@ public class OpeningHoursDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            // Create the detail fragment and saveToContacts it to the activity
+            // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
             arguments.putInt(OpeningHoursDetailFragment.ARG_ITEM_ID,

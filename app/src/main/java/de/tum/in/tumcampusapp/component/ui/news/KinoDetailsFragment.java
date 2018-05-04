@@ -126,7 +126,7 @@ public class KinoDetailsFragment extends Fragment {
         ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
         View error = headerView.findViewById(R.id.kino_cover_error);
 
-        // set value for buttons
+        // set text for buttons
         date.setText(KinoDetailsFragment.formDateString(DateUtils.getDateString(kino.getDate())));
         imdb.setText(kino.getRating() + " / 10");
         year.setText(kino.getYear());

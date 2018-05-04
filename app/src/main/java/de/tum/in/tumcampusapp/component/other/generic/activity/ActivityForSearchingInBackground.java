@@ -29,7 +29,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      *
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      * @param auth     Authority for search suggestions declared in manifest file
-     * @param minLen   Minimum value length that has to be entered by the user before a search quest can be submitted
+     * @param minLen   Minimum text length that has to be entered by the user before a search quest can be submitted
      */
     public ActivityForSearchingInBackground(int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);
@@ -96,7 +96,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      * Shows error layout and toasts the given message.
      * Hides any progress indicator.
      *
-     * @param errorReason Resource id of the error value
+     * @param errorReason Resource id of the error text
      */
     @Override
     protected void showError(int errorReason) {
@@ -107,7 +107,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      * Shows error layout and toasts the given message.
      * Hides any progress indicator.
      *
-     * @param errorReason Error value
+     * @param errorReason Error text
      */
     @Override
     protected void showError(final String errorReason) {

@@ -53,9 +53,9 @@ public class ChatMessageValidator {
 
     /**
      * Private helper method which performs the actual validation of a signature
-     * attached to a particular value, given a {@link PublicKey}
+     * attached to a particular text, given a {@link PublicKey}
      *
-     * @param text      The value the signature has signed
+     * @param text      The text the signature has signed
      * @param signature The signature encoded as a base64 string
      * @param key       a {@link PublicKey} instance to use to verify the signature
      * @return Returns true if signature is valid
@@ -114,11 +114,11 @@ public class ChatMessageValidator {
     }
 
     /**
-     * Private helper method decoding the given key value from its Base64 encoded
+     * Private helper method decoding the given key text from its Base64 encoded
      * representation into an array of bytes.
      *
-     * @param text The value to be decoded as a String
-     * @return An array of bytes representing the given value
+     * @param text The text to be decoded as a String
+     * @return An array of bytes representing the given text
      */
     private static byte[] decodeByteRepresentation(String text) {
         if (text == null) {

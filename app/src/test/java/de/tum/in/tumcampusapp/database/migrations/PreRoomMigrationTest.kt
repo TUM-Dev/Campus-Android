@@ -22,13 +22,13 @@ import java.io.File
 class PreRoomMigrationTest {
     private val preRoomSchema =
             """CREATE TABLE faculties (faculty INTEGER, name VARCHAR);
-               CREATE TABLE openQuestions (question INTEGER PRIMARY KEY, value VARCHAR, created VARCHAR, end VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN);
-               CREATE TABLE ownQuestions (question INTEGER PRIMARY KEY, value VARCHAR, targetFac VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN);
+               CREATE TABLE openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN);
+               CREATE TABLE ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN);
                CREATE TABLE tumLocks (url VARCHAR UNIQUE, error VARCHAR, timestamp VARCHAR, lockedFor INT, active INT);
                CREATE TABLE chat_room (room INTEGER, name VARCHAR, semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id));
-               CREATE TABLE chat_message (_id INTEGER PRIMARY KEY, previous INTEGER, room INTEGER, value TEXT, timestamp VARCHAR, signature TEXT, member BLOB, read INTEGER, sending INTEGER);
+               CREATE TABLE chat_message (_id INTEGER PRIMARY KEY, previous INTEGER, room INTEGER, text TEXT, timestamp VARCHAR, signature TEXT, member BLOB, read INTEGER, sending INTEGER);
                CREATE TABLE syncs (id VARCHAR PRIMARY KEY, lastSync VARCHAR);
-               CREATE TABLE unsent_chat_message (_id INTEGER PRIMARY KEY AUTOINCREMENT, room INTEGER, value TEXT, member BLOB, msg_id INTEGER);
+               CREATE TABLE unsent_chat_message (_id INTEGER PRIMARY KEY AUTOINCREMENT, room INTEGER, text TEXT, member BLOB, msg_id INTEGER);
                CREATE TABLE cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR, latitude REAL, longitude REAL);
                CREATE TABLE cafeterias_menus (id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, typeLong VARCHAR, typeNr INTEGER, name VARCHAR);
                CREATE TABLE favorite_dishes (id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER, dishName VARCHAR,date VARCHAR, tag VARCHAR);

@@ -68,7 +68,7 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
     }
 
     private fun showPersonDetails(person: Person) {
-        // Store selected person ID in bundle to get in in StaffDetails
+        // Store selected person ID in bundle to get in in StaffDetailst
         val bundle = Bundle().apply {
             putSerializable("personObject", person)
         }

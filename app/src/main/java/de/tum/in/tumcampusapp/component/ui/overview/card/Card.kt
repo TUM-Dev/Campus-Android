@@ -72,7 +72,7 @@ abstract class Card(
     }
 
     /**
-     * Adds a new value view to the main card layout
+     * Adds a new text view to the main card layout
      *
      * @param text Text that should be shown
      * @return Handle to the [TextView]

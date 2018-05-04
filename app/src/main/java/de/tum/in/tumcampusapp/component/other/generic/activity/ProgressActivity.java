@@ -82,7 +82,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * Shows error layout and toasts the given message.
      * Hides any progress indicator.
      *
-     * @param errorReason Resource id of the error value
+     * @param errorReason Resource id of the error text
      */
     protected void showError(int errorReason) {
         showError(getString(errorReason));
@@ -92,7 +92,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * Shows error layout and toasts the given message.
      * Hides any progress indicator.
      *
-     * @param errorReason Error value
+     * @param errorReason Error text
      */
     protected void showError(String errorReason) {
         TextView error = errorLayout.findViewById(R.id.error_text);

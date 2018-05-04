@@ -103,7 +103,7 @@ public class MVVSymbolView extends Drawable {
     }
 
     /**
-     * Gets the value color that should be used to draw value on top of this drawable
+     * Gets the text color that should be used to draw text on top of this drawable
      *
      * @return Text color
      */
