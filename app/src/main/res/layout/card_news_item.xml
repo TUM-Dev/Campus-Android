@@ -36,46 +36,25 @@
                 android:id="@+id/news_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_default_padding"
                 android:text="@string/info_title"
                 android:textSize="20sp"
                 tools:text="News title"/>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/news_src_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:textSize="16sp"
+                tools:text="News source date"/>
 
-                <ImageView
-                    android:id="@+id/news_src_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/material_default_padding"
-                    tools:src="@drawable/ic_facebook"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/news_src_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        tools:text="News source title"/>
-
-                    <TextView
-                        android:id="@+id/news_src_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        tools:text="News source date"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/news_src_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/material_default_padding"
+                android:drawableStart="@drawable/ic_facebook"
+                tools:text="News source title"/>
 
         </LinearLayout>
 

@@ -37,46 +37,27 @@
                 android:textSize="20sp"
                 tools:text="Title"/>
 
+            <TextView
+                android:id="@+id/news_src_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                tools:text="Source Date"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <LinearLayout
-                android:id="@id/linearLayout"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/news_src_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/news_src_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginEnd="@dimen/material_default_padding"
-                    tools:src="@drawable/ic_comment"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/news_src_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        tools:text="Source Title"/>
-
-                    <TextView
-                        android:id="@+id/news_src_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        tools:text="Source Date"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
+                android:layout_gravity="center_vertical"
+                android:drawablePadding="@dimen/material_default_padding"
+                android:drawableStart="@drawable/ic_comment"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:text="Source Title"/>
 
         </LinearLayout>
 

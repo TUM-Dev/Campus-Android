@@ -1,6 +1,10 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -44,11 +49,10 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
                                  .inflate(R.layout.card_news_item, parent, false);
         }
         NewsViewHolder holder = new NewsViewHolder(card);
-        holder.title = card.findViewById(R.id.news_title);
-        holder.img = card.findViewById(R.id.news_img);
-        holder.srcDate = card.findViewById(R.id.news_src_date);
-        holder.srcIcon = card.findViewById(R.id.news_src_icon);
-        holder.srcTitle = card.findViewById(R.id.news_src_title);
+        holder.imageView = card.findViewById(R.id.news_img);
+        holder.titleTextView = card.findViewById(R.id.news_title);
+        holder.dateTextView = card.findViewById(R.id.news_src_date);
+        holder.sourceTextView = card.findViewById(R.id.news_src_title);
         card.setTag(holder);
         return holder;
     }
@@ -57,8 +61,8 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         NewsViewHolder holder = (NewsViewHolder) newsViewHolder;
         NewsSourcesDao newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();
         NewsSources newsSource = newsSourcesDao.getNewsSource(Integer.parseInt(news.getSrc()));
-        holder.img.setVisibility(View.VISIBLE);
-        holder.title.setVisibility(View.VISIBLE);
+        holder.imageView.setVisibility(View.VISIBLE);
+        holder.titleTextView.setVisibility(View.VISIBLE);
 
         // Set image
         String imgUrl = news.getImage();
@@ -69,25 +73,25 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
                 Picasso.get()
                         .load(news.getLink())
                         .placeholder(R.drawable.chat_background)
-                        .into(holder.img, new Callback() {
+                        .into(holder.imageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        holder.title.setVisibility(View.GONE); // title is included in newspread slide
-                        holder.img.setOnClickListener(null); // link doesn't lead to more infos
+                        holder.titleTextView.setVisibility(View.GONE); // title is included in newspread slide
+                        holder.imageView.setOnClickListener(null); // link doesn't lead to more infos
                     }
                     @Override
                     public void onError(Exception e) {
-                        holder.img.setVisibility(View.GONE); // we can't display the image after all
+                        holder.imageView.setVisibility(View.GONE); // we can't display the image after all
                     }
                 });
             } else {
-                holder.img.setVisibility(View.GONE);
+                holder.imageView.setVisibility(View.GONE);
             }
         } else {
             Picasso.get()
                     .load(imgUrl)
                     .placeholder(R.drawable.chat_background)
-                    .into(holder.img);
+                    .into(holder.imageView);
         }
 
         String title = news.getTitle();
@@ -95,19 +99,35 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
             title = COMPILE.matcher(title)
                            .replaceAll("");
         }
-        holder.title.setText(title);
+        holder.titleTextView.setText(title);
 
         // Adds date
         Date date = news.getDate();
         DateFormat sdf = DateFormat.getDateInstance();
-        holder.srcDate.setText(sdf.format(date));
+        holder.dateTextView.setText(sdf.format(date));
 
-        holder.srcTitle.setText(newsSource.getTitle());
+        holder.sourceTextView.setText(newsSource.getTitle());
         String icon = newsSource.getIcon();
         if (icon.isEmpty() || "null".equals(icon)) {
-            holder.srcIcon.setImageResource(R.drawable.ic_comment);
+            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_comment);
+            holder.sourceTextView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            //holder.srcIcon.setImageResource(R.drawable.ic_comment);
         } else {
-            Picasso.get().load(icon).into(holder.srcIcon);
+            Picasso.get()
+                   .load(icon)
+                   .into(new Target() {
+                       @Override
+                       public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                           Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
+                           holder.sourceTextView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                       }
+
+                       @Override
+                       public void onBitmapFailed(Exception e, Drawable errorDrawable) { }
+
+                       @Override
+                       public void onPrepareLoad(Drawable placeHolderDrawable) { }
+                   });
         }
     }
 
@@ -142,11 +162,10 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     }
 
     private static class NewsViewHolder extends CardViewHolder {
-        ImageView img;
-        TextView title;
-        TextView srcDate;
-        TextView srcTitle;
-        ImageView srcIcon;
+        ImageView imageView;
+        TextView titleTextView;
+        TextView dateTextView;
+        TextView sourceTextView;
 
         NewsViewHolder(View itemView) {
             super(itemView);
