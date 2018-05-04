@@ -110,7 +110,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
             add(EmailContactItem(employee.email))
             employee.businessContact?.let { contact ->
                 if (contact.homepage.isNotBlank()) {
-                    add(WebsiteContactItem(contact.homepage))
+                    add(HomepageContactItem(contact.homepage))
                 }
             }
         }
@@ -132,7 +132,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
         }
 
         if (employee.consultationHours.isNotBlank()) {
-            contactItems.add(ConsultationHoursContactItem(employee.consultationHours))
+            contactItems.add(OfficeHoursContactItem(employee.consultationHours))
         }
 
         employee.rooms?.let { rooms ->

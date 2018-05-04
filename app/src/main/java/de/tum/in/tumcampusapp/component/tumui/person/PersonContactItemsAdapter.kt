@@ -21,20 +21,20 @@ class PersonContactItemsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
+        val contactItem = items[position]
 
         // Figure out if this is the first item of its kind
         // If so, display the icon; otherwise, don't
-        val clazzItems = items.filter { clazzItem ->
-            if (item::class.java == MobilePhoneContactItem::class.java) {
+        val classItems = items.filter { item ->
+            if (contactItem::class.java == MobilePhoneContactItem::class.java) {
                 // If it's a mobile phone number, we consider it part of the PhoneContactItem items
-                clazzItem::class.java == item::class.java || clazzItem::class.java == PhoneContactItem::class.java
+                item::class.java == contactItem::class.java || item::class.java == PhoneContactItem::class.java
             } else {
-                clazzItem::class.java == item::class.java
+                item::class.java == contactItem::class.java
             }
         }
-        val isFirstOfItsKind = clazzItems.first() == item
-        holder.bind(item, isFirstOfItsKind)
+        val isFirstOfItsKind = classItems.first() == contactItem
+        holder.bind(contactItem, isFirstOfItsKind)
     }
 
     override fun getItemCount() = items.size
@@ -45,7 +45,7 @@ class PersonContactItemsAdapter(
             val resourceId = if (showIcon) item.iconResourceId else android.R.color.transparent
             iconImageView.setImageResource(resourceId)
 
-            labelTextView.text = item.label
+            labelTextView.text = context.getString(item.labelResourceId)
             valueTextView.text = item.value
 
             setOnClickListener {
