@@ -18,12 +18,12 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.utils.ContactsManager
-import kotlinx.android.synthetic.main.activity_personsdetails.*
+import kotlinx.android.synthetic.main.activity_person_details.*
 
 /**
  * Activity to show information about an person at TUM.
  */
-class PersonsDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_personsdetails) {
+class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_person_details) {
 
     private var employee: Employee? = null
 
@@ -89,7 +89,7 @@ class PersonsDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnline
      */
     private fun displayResult(employee: Employee) {
         val image = employee.image ?: BitmapFactory.decodeResource(
-                resources, R.drawable.photo_not_available_rectangular)  // TODO: Get new icon
+                resources, R.drawable.photo_not_available)
 
         pictureImageView.setImageBitmap(image)
         nameTextView.text = employee.getNameWithTitle(this)
@@ -184,7 +184,7 @@ class PersonsDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnline
                 AlertDialog.Builder(this)
                         .setMessage(R.string.permission_contacts_explanation)
                         .setPositiveButton(R.string.grant_permission) { _, _ ->
-                            ActivityCompat.requestPermissions(this@PersonsDetailsActivity, PERMISSIONS_CONTACTS, id)
+                            ActivityCompat.requestPermissions(this@PersonDetailsActivity, PERMISSIONS_CONTACTS, id)
                         }
                         .setNegativeButton(R.string.cancel, null)
                         .show()

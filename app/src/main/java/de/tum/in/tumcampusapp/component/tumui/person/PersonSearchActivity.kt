@@ -13,14 +13,14 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSear
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import kotlinx.android.synthetic.main.activity_persons.*
+import kotlinx.android.synthetic.main.activity_person_search.*
 
 /**
  * Activity to search for employees.
  */
-class PersonsSearchActivity : ActivityForSearchingTumOnline<PersonList>(
+class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
         TUMOnlineConst.PERSON_SEARCH,
-        R.layout.activity_persons,
+        R.layout.activity_person_search,
         PersonSearchSuggestionProvider.AUTHORITY, 3
 ), PersonSearchResultsItemListener {
 
@@ -79,7 +79,7 @@ class PersonsSearchActivity : ActivityForSearchingTumOnline<PersonList>(
         }
 
         // Show detailed information in new activity
-        val intent = Intent(this, PersonsDetailsActivity::class.java).apply {
+        val intent = Intent(this, PersonDetailsActivity::class.java).apply {
             putExtras(bundle)
         }
         startActivity(intent)
