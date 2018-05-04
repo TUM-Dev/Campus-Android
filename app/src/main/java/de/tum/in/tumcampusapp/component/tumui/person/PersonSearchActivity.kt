@@ -67,11 +67,6 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
         requestFetch()
     }
 
-    private fun proceedToPersonDetails(person: Person) {
-        personsRecyclerView.adapter = null
-        showPersonDetails(person)
-    }
-
     private fun showPersonDetails(person: Person) {
         // Store selected person ID in bundle to get in in StaffDetails
         val bundle = Bundle().apply {
@@ -95,7 +90,7 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
         recentsHeader.visibility = View.GONE
 
         if (response.persons.size == 1) {
-            proceedToPersonDetails(response.persons[0])
+            showPersonDetails(response.persons.first())
         } else {
             val adapter = personsRecyclerView.adapter as? PersonSearchResultsAdapter
             adapter?.update(response.persons)
