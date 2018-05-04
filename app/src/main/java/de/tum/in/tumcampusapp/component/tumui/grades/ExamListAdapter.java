@@ -71,10 +71,10 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
         if (view == null) {
             view = mInflater.inflate(R.layout.activity_grades_listview, parent, false);
             holder = new ViewHolder();
-            holder.tvName = view.findViewById(R.id.name);
-            holder.tvGrade = view.findViewById(R.id.grade);
-            holder.tvDetails1 = view.findViewById(R.id.tv1);
-            holder.tvDetails2 = view.findViewById(R.id.tv2);
+            holder.tvName = view.findViewById(R.id.courseNameTextView);
+            holder.tvGrade = view.findViewById(R.id.gradeTextView);
+            holder.tvDetails1 = view.findViewById(R.id.examDateTextView);
+            holder.tvDetails2 = view.findViewById(R.id.examinerTextView);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();

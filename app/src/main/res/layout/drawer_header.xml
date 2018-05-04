@@ -20,7 +20,7 @@
         tools:ignore="UnusedAttribute"/>
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/courseNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_image"
@@ -32,7 +32,7 @@
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/name"
+        android:layout_below="@id/courseNameTextView"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"

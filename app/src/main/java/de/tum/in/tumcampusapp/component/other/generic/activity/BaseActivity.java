@@ -70,7 +70,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mDrawerList != null && mDrawerLayout != null) {
             // Set personalization in the navdrawer
             headerView = mDrawerList.inflateHeaderView(R.layout.drawer_header);
-            TextView nameText = headerView.findViewById(R.id.name);
+            TextView nameText = headerView.findViewById(R.id.courseNameTextView);
             TextView emailText = headerView.findViewById(R.id.email);
             nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
                                               getString(R.string.token_not_enabled)));
