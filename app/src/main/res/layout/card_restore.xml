@@ -15,7 +15,6 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_horizontal"
-        android:onClick="restoreCards"
         android:padding="@dimen/material_default_padding">
 
         <TextView

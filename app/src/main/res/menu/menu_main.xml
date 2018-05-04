@@ -2,12 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
-    <!--
     <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_action_settings"
-        android:title="@string/settings"
-        tumcampus:showAsAction="always"/>
-    -->
+        android:id="@+id/action_restore_cards"
+        android:title="@string/restore_all_cards"
+        tumcampus:showAsAction="never"/>
 
 </menu>
