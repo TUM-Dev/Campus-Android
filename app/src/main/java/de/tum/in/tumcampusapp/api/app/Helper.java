@@ -24,7 +24,7 @@ import static de.tum.in.tumcampusapp.utils.Const.API_HOSTNAME_NEW;
 
 public final class Helper {
     private static final String TAG = "TUM_API_CALL";
-    private static final int HTTP_TIMEOUT = 25000;
+    private static final int HTTP_TIMEOUT = 25000; //increased time; added 0 ; of no use can revert back to normal;reverted
     private static OkHttpClient client;
 
     public static OkHttpClient getOkClient(Context c) {

@@ -49,6 +49,8 @@ public class JoinRoomScanActivity extends Activity implements ZXingScannerView.R
                            .toString()); // Prints the scan format (qrcode, pdf417 etc.)
         Intent data = new Intent();
         data.putExtra("name", rawResult.getText());
+        Utils.log("data is here ");
+        Utils.log(data.toString());
         setResult(RESULT_OK, data);
         finish();
     }
