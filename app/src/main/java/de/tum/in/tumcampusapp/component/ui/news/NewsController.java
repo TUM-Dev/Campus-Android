@@ -3,8 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.news;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,9 +46,8 @@ public class NewsController implements ProvidesCard {
      * Download news from external interface (JSON)
      *
      * @param force True to force download over normal sync period, else false
-     * @throws JSONException parsing could fail
      */
-    public void downloadFromExternal(boolean force) throws JSONException {
+    public void downloadFromExternal(boolean force) {
         SyncManager sync = new SyncManager(context);
         if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
             return;

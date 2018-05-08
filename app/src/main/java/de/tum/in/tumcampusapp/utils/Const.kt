@@ -19,7 +19,6 @@ object Const {
     const val MESSAGE = "message"
     const val FORCE_DOWNLOAD = "force_download"
     const val HIDE_WIZARD_ON_STARTUP = "hide_wizard_on_startup"
-    const val JSON_LINK = "link"
     const val LRZ_ID = "lrz_id"
     const val NEWS = "news"
     const val KINO = "kino"
