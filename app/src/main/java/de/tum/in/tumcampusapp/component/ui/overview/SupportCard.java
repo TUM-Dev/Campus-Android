@@ -43,6 +43,14 @@ public class SupportCard extends Card {
                 view.getContext()
                     .startActivity(browserIntent);
             });
+        view.findViewById(R.id.email)
+            .setOnClickListener(v -> {
+                Intent mailIntent = new Intent(Intent.ACTION_SENDTO);
+                mailIntent.setData(Uri.parse(view.getContext().getString(R.string.support_email_link)));
+                mailIntent.putExtra(Intent.EXTRA_SUBJECT, view.getContext().getString(R.string.feedback));
+                view.getContext()
+                    .startActivity(mailIntent);
+            });
         return new CardViewHolder(view);
     }
 

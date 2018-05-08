@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_github_white"
                     android:drawableStart="@drawable/ic_github_white"
-                    android:text="@string/github"/>
+                    android:text="@string/github_contribute"/>
 
                 <Button
                     android:id="@+id/button_privacy"
