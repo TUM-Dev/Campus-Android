@@ -138,7 +138,7 @@
         <item name="android:transitionName">@string/transition_card</item>
 
         <item name="cardBackgroundColor">#FFFFFF</item>
-        <item name="cardCornerRadius">3dp</item>
+        <item name="cardCornerRadius">@dimen/cardview_corner_radius</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
