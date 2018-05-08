@@ -19,7 +19,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,7 +45,7 @@
                 android:id="@+id/feedback_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/feedback_rounded_background"
                 android:gravity="top"
                 android:hint="@string/feedback_hint"
@@ -56,7 +58,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/feedback_image_list"
@@ -64,12 +67,13 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:scrollbars="horizontal"/>
+                    android:scrollbars="horizontal" />
 
                 <Button
                     style="@style/FlatButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
                     android:layout_gravity="end"
                     android:drawableStart="@drawable/ic_add_photo"
                     android:onClick="addPicture"
