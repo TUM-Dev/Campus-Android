@@ -77,16 +77,10 @@
             </LinearLayout>
 
             <TextView
+                style="@style/InfoBox"
                 android:id="@+id/fees_aid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:layout_marginTop="25dp"
-                android:text="@string/tuition_fee_more"
-                android:textSize="16sp"
-                android:drawableStart="@drawable/ic_action_info_blue"
-                android:drawablePadding="10dp"
-                android:background="@drawable/feedback_rounded_background" />
+                android:text="@string/tuition_fee_more" />
         </LinearLayout>
     </LinearLayout>
     <!-- The navigation drawer -->
