@@ -6,11 +6,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
-apply from: '../findbugs.gradle'
-apply from: '../pmd.gradle'
-apply from: '../jacoco.gradle'
-apply from: '../checkstyle.gradle'
-apply from: '../detekt.gradle'
+apply from: '../gradle/scripts/findbugs.gradle'
+apply from: '../gradle/scripts/pmd.gradle'
+apply from: '../gradle/scripts/jacoco.gradle'
+apply from: '../gradle/scripts/checkstyle.gradle'
+apply from: '../gradle/scripts/detekt.gradle'
+apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
     compileSdkVersion 27
@@ -32,7 +33,6 @@ android {
         targetSdkVersion 27
         versionCode 530
         versionName "1.6.1-dev"
-        vectorDrawables.useSupportLibrary = true
         javaCompileOptions.annotationProcessorOptions.arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
     }
     lintOptions {
@@ -70,58 +70,68 @@ android {
     }
 }
 
-def androidSupportVersion = '27.1.0'
+def androidSupportVersion = '27.1.1'
 def retrofitVersion = '2.3.0'
-def firebaseVersion = '12.0.1'
+def firebaseVersion = '15.0.0'
 def roomVersion = '1.0.0'
 
 configurations.all {
     resolutionStrategy {
-        force "com.android.support:design:$androidSupportVersion"
+        force "com.android.support:exifinterface:$androidSupportVersion"
         force 'com.google.code.findbugs:jsr305:3.0.1'
     }
 }
 
 dependencies {
+    // Support Libraries
     implementation "com.android.support:cardview-v7:$androidSupportVersion"
     implementation "com.android.support:design:$androidSupportVersion"
     implementation "com.android.support:preference-v7:$androidSupportVersion"
-    implementation "com.google.android.gms:play-services-base:$firebaseVersion"
-    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.google.guava:guava:23.2-android'
-    implementation 'se.emilsjolander:stickylistheaders:2.7.0'
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
-    implementation 'com.github.chrisbanes:PhotoView:2.1.3'
-    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
-    implementation('org.simpleframework:simple-xml:2.7.1') {
-        exclude group: 'stax', module: 'stax-api'
-        exclude group: 'xpp3', module: 'xpp3'
-    }
-    implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
-    implementation 'com.github.alamkanak:android-week-view:1.2.6'
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    implementation 'net.danlew:android.joda:2.9.9.2'
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
-    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.1'
+    //Android arch components
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "android.arch.lifecycle:runtime:1.1.1"
     implementation "android.arch.lifecycle:extensions:1.1.1"
     annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+
+    //Firebase / Play services
+    implementation "com.google.android.gms:play-services-base:$firebaseVersion"
+    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.2'
+
+    //Helpers
+    implementation 'net.danlew:android.joda:2.9.9.2'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation('org.simpleframework:simple-xml:2.7.1') {
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'xpp3', module: 'xpp3'
+    }
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.1'
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
+
+    //Transport
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //UI
+    implementation 'se.emilsjolander:stickylistheaders:2.7.0'
+    implementation 'com.github.chrisbanes:PhotoView:2.1.3'
+    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+    implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
+    implementation 'com.github.quivr:android-week-view:2.3.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     //DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
@@ -136,43 +146,3 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-
-//Fancy printing for test cases
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
-tasks.withType(Test) {
-    testLogging {
-        // set options for log level LIFECYCLE
-        events TestLogEvent.FAILED,
-                TestLogEvent.PASSED,
-                TestLogEvent.SKIPPED,
-                TestLogEvent.STANDARD_OUT
-        exceptionFormat TestExceptionFormat.FULL
-        showExceptions true
-        showCauses true
-        showStackTraces true
-
-        // set options for log level DEBUG and INFO
-        debug {
-            events TestLogEvent.STARTED,
-                    TestLogEvent.FAILED,
-                    TestLogEvent.PASSED,
-                    TestLogEvent.SKIPPED,
-                    TestLogEvent.STANDARD_ERROR,
-                    TestLogEvent.STANDARD_OUT
-            exceptionFormat TestExceptionFormat.FULL
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
-
-        afterSuite { desc, result ->
-            if (!desc.parent) { // will match the outermost suite
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-            }
-        }
-    }
-}

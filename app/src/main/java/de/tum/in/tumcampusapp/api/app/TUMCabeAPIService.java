@@ -4,7 +4,6 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
-import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -26,6 +25,9 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
+import de.tum.in.tumcampusapp.component.ui.news.model.News;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Observable;
@@ -192,6 +194,12 @@ public interface TUMCabeAPIService {
 
     @PUT(API_CARD)
     Call<StudyCard> addStudyCard(@Body ChatVerification verification);
+
+    @GET(API_NEWS + "{lastNewsId}")
+    Call<List<News>> getNews(@Path("lastNewsId") String lastNewsId);
+
+    @GET(API_NEWS + "sources")
+    Call<List<NewsSources>> getNewsSources();
 
     @GET(API_NEWS + "alert")
     Observable<NewsAlert> getNewsAlert();
