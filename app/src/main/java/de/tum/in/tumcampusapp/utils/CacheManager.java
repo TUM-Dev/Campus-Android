@@ -35,7 +35,7 @@ public class CacheManager {
     public static final int VALIDITY_DO_NOT_CACHE = 0;
     public static final int VALIDITY_ONE_DAY = 86400;
     public static final int VALIDITY_TWO_DAYS = 2 * 86400;
-    public static final int VALIDITY_FIFE_DAYS = 5 * 86400;
+    public static final int VALIDITY_FIVE_DAYS = 5 * 86400;
     public static final int VALIDITY_TEN_DAYS = 10 * 86400;
     public static final int VALIDITY_ONE_MONTH = 30 * 86400;
 

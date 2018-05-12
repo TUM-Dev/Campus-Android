@@ -3,7 +3,7 @@ detekt {
 
     profile('main') {
         input = "$projectDir/src/main/java"
-        config = "$rootDir/detekt-config.yml"
+        config = "$rootDir/gradle/config/detekt-config.yml"
         filters = '.*test.*,.*/resources/.*,.*/tmp/.*'
         output = "$projectDir/build/reports/detekt"
     }

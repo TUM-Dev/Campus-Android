@@ -9,7 +9,7 @@ import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
 /**
- * Sync Manager, tracks last successful syncs
+ * Sync Manager, tracks last successful syncs and prevents api fetch spams
  */
 public class SyncManager {
 
