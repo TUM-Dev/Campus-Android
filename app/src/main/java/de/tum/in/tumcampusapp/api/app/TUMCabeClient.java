@@ -12,7 +12,6 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
-import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -34,6 +33,9 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
+import de.tum.in.tumcampusapp.component.ui.news.model.News;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -313,6 +315,12 @@ public final class TUMCabeClient {
         return service.getKinos(lastId);
     }
 
+    public List<News> getNews(String lastNewsId) throws IOException {
+        return service.getNews(lastNewsId).execute().body();
+    }
+    public List<NewsSources> getNewsSources() throws IOException {
+        return service.getNewsSources().execute().body();
+    }
     public Observable<NewsAlert> getNewsAlert(){
         return service.getNewsAlert();
     }

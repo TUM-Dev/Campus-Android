@@ -109,8 +109,10 @@ public class NewsCard extends NotificationAwareCard {
         notificationBuilder.setTicker(mNews.getTitle());
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
         try {
-            Bitmap bgImg = Picasso.get().load(mNews.getImage()).get();
-            notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bgImg));
+            if(!mNews.getImage().isEmpty()){
+                Bitmap bgImg = Picasso.get().load(mNews.getImage()).get();
+                notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bgImg));
+            }
         } catch (IOException e) {
             // ignore it if download fails
         }
