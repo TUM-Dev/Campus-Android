@@ -17,7 +17,8 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAcce
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
-import de.tum.`in`.tumcampusapp.utils.ContactsManager
+import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ContactsHelper
 import kotlinx.android.synthetic.main.activity_person_details.*
 
 /**
@@ -157,12 +158,12 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
      * @param employee Object to insert into contacts
      */
     private fun addContact(employee: Employee?) {
-        if (!isPermissionGranted(0)) {
+        if (!isPermissionGranted(Const.CONTACTS_PERMISSION_REQUEST_CODE)) {
             return
         }
 
         if (employee != null) {
-            ContactsManager.saveToContacts(this, employee)
+            ContactsHelper.saveToContacts(this, employee)
         }
     }
 
@@ -175,22 +176,22 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
     private fun isPermissionGranted(id: Int): Boolean {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             return true
+        }
+
+        // Provide an additional rationale to the user if the permission was not granted
+        // and the user would benefit from additional context for the use of the permission.
+        // For example, if the request has been denied previously.
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CONTACTS)) {
+            // Display an AlertDialog with an explanation and a button to trigger the request.
+            AlertDialog.Builder(this)
+                    .setMessage(R.string.permission_contacts_explanation)
+                    .setPositiveButton(R.string.grant_permission) { _, _ ->
+                        ActivityCompat.requestPermissions(this@PersonDetailsActivity, PERMISSIONS_CONTACTS, id)
+                    }
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
         } else {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CONTACTS)) {
-                // Display an AlertDialog with an explanation and a button to trigger the request.
-                AlertDialog.Builder(this)
-                        .setMessage(R.string.permission_contacts_explanation)
-                        .setPositiveButton(R.string.grant_permission) { _, _ ->
-                            ActivityCompat.requestPermissions(this@PersonDetailsActivity, PERMISSIONS_CONTACTS, id)
-                        }
-                        .setNegativeButton(R.string.cancel, null)
-                        .show()
-            } else {
-                ActivityCompat.requestPermissions(this, PERMISSIONS_CONTACTS, id)
-            }
+            ActivityCompat.requestPermissions(this, PERMISSIONS_CONTACTS, id)
         }
 
         return false

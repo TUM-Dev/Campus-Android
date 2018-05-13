@@ -13,6 +13,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSear
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.utils.Const
 import kotlinx.android.synthetic.main.activity_person_search.*
 
 /**
@@ -63,7 +64,7 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
     }
 
     public override fun onStartSearch(query: String) {
-        requestHandler.setParameter(P_SUCHE, query)
+        requestHandler.setParameter(Const.PERSON_SEARCH_TUM_REQUEST_KEY, query)
         requestFetch()
     }
 
@@ -95,10 +96,6 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
             val adapter = personsRecyclerView.adapter as? PersonSearchResultsAdapter
             adapter?.update(response.persons)
         }
-    }
-
-    companion object {
-        private const val P_SUCHE = "pSuche"
     }
 
 }
