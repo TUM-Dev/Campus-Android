@@ -24,7 +24,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
  */
 class GeofencingRegistrationService : JobIntentService() {
 
-    private var locationClient: GeofencingClient? = null
+    private lateinit var locationClient: GeofencingClient
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
@@ -48,7 +48,7 @@ class GeofencingRegistrationService : JobIntentService() {
         val geofencePendingIntent = PendingIntent.getBroadcast(
                 this, 0, geofenceIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        locationClient?.addGeofences(request, geofencePendingIntent)
+        locationClient.addGeofences(request, geofencePendingIntent)
         Utils.log("Registered new Geofence")
     }
 

@@ -9,6 +9,7 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location.Companion.fromCSVRow
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel
@@ -25,7 +26,6 @@ import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import io.reactivex.disposables.CompositeDisposable
-import org.json.JSONException
 import java.io.IOException
 
 /**
@@ -33,11 +33,12 @@ import java.io.IOException
  */
 class DownloadService : JobIntentService() {
 
-    private var broadcastManager: LocalBroadcastManager? = null
-    private var cafeteriaViewModel: CafeteriaViewModel? = null
+    private lateinit var broadcastManager: LocalBroadcastManager
+    private lateinit var cafeteriaViewModel: CafeteriaViewModel
 
-    private var kinoViewModel: KinoViewModel? = null
-    private var topNewsViewModel: TopNewsViewModel? = null
+    private lateinit var kinoViewModel: KinoViewModel
+    private lateinit var topNewsViewModel: TopNewsViewModel
+
     private val disposable = CompositeDisposable()
 
     override fun onCreate() {
@@ -82,7 +83,7 @@ class DownloadService : JobIntentService() {
             putExtra(Const.ACTION_EXTRA, action)
             putExtra(Const.MESSAGE, message)
         }
-        broadcastManager?.sendBroadcast(intent)
+        broadcastManager.sendBroadcast(intent)
     }
 
     /**
@@ -102,28 +103,21 @@ class DownloadService : JobIntentService() {
     private fun downloadCafeterias(force: Boolean): Boolean {
         CafeteriaMenuManager(this)
                 .downloadFromExternal(this, force)
-        cafeteriaViewModel?.getCafeteriasFromService(force)
+        cafeteriaViewModel.getCafeteriasFromService(force)
         return true
     }
 
     private fun downloadKino(force: Boolean): Boolean {
-        kinoViewModel?.getKinosFromService(force)
+        kinoViewModel.getKinosFromService(force)
         return true
     }
 
     private fun downloadNews(force: Boolean): Boolean {
-        try {
-            NewsController(this)
-                    .downloadFromExternal(force)
-            return true
-        } catch (e: JSONException) {
-            Utils.log(e)
-            return false
-        }
-
+        NewsController(this).downloadFromExternal(force)
+        return true
     }
 
-    private fun downloadTopNews() = topNewsViewModel?.getNewsAlertFromService(this) == true
+    private fun downloadTopNews() = topNewsViewModel.getNewsAlertFromService(this)
 
     /**
      * Import default location and opening hours from assets
@@ -136,8 +130,8 @@ class DownloadService : JobIntentService() {
 
         if (dao.isEmpty) {
             Utils.readCsv(assets.open(CSV_LOCATIONS))
-                    .map { row -> Location.fromCSVRow(row) }
-                    .forEach { location -> dao.replaceInto(location) }
+                    .map(Location.Companion::fromCSVRow)
+                    .forEach(dao::replaceInto)
         }
     }
 

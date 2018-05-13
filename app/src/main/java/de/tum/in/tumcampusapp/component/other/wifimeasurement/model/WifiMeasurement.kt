@@ -23,7 +23,8 @@ data class WifiMeasurement(@PrimaryKey
         }
 
         fun fromScanResult(scanResult: ScanResult): WifiMeasurement {
-            return WifiMeasurement("", scanResult.SSID, scanResult.BSSID, scanResult.level, -1f, -1.0, -1.0)
+            return WifiMeasurement(ssid = scanResult.SSID, bssid = scanResult.BSSID, dBm = scanResult.level,
+                    accuracyInMeters = -1f, latitude = -1.0, longitude = -1.0)
         }
 
     }

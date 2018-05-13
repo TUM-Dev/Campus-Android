@@ -32,7 +32,7 @@ import java.util.*
 class FavoriteDishAlarmScheduler : BroadcastReceiver() {
 
     fun setFoodAlarm(context: Context, dateString: String) {
-        val scheduledAt = loadTriggerHourAndMinute(context, dateString) ?: return
+        val scheduledAt = loadTriggerHourAndMinute(context, dateString)
         val today = Calendar.getInstance()
         if (today.after(scheduledAt)) {
             return
@@ -131,7 +131,7 @@ class FavoriteDishAlarmScheduler : BroadcastReceiver() {
     /**
      * Checks if the user set or disabled (hour = -1) an hour for a potential schedule.
      */
-    private fun loadTriggerHourAndMinute(context: Context, dateString: String): Calendar? {
+    private fun loadTriggerHourAndMinute(context: Context, dateString: String): Calendar {
         val scheduledAt = Calendar.getInstance().apply {
             time = DateUtils.getDate(dateString)
         }
