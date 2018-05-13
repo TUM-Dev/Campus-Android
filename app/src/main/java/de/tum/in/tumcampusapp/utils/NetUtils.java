@@ -7,7 +7,6 @@ import android.net.NetworkInfo;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -169,26 +168,6 @@ public class NetUtils {
             Utils.log(e);
         }
         return Optional.absent();
-    }
-
-    /**
-     * Download a JSON stream from a URL or load it from cache
-     *
-     * @param url   Valid URL
-     * @param force Load data anyway and fill cache, even if valid cached version exists
-     * @return JSONObject
-     */
-    public Optional<JSONArray> downloadJsonArray(String url, int validity, boolean force) {
-        Optional<String> download = downloadStringAndCache(url, validity, force);
-        JSONArray result = null;
-        if (download.isPresent()) {
-            try {
-                result = new JSONArray(download.get());
-            } catch (JSONException e) {
-                Utils.log(e);
-            }
-        }
-        return Optional.fromNullable(result);
     }
 
     /**

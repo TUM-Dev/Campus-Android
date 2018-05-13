@@ -20,6 +20,9 @@ public interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(News news);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(List<News> news);
+
     @Query("SELECT * FROM news " +
            "WHERE src IN (:ids) " +
            "AND (src < 7 OR src > 13 OR src=:selectedNewspread) " +
