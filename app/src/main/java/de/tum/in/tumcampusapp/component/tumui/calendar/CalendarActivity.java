@@ -52,6 +52,7 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_FIVE_DAYS;
 import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
 
 /**
@@ -69,7 +70,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private static final int REQUEST_DELETE = 1;
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
                                                           Manifest.permission.WRITE_CALENDAR};
-    private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
+    private static final int TIME_TO_SYNC_CALENDAR = VALIDITY_FIVE_DAYS;
     private CalendarController calendarController;
     private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
 
@@ -398,10 +399,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             }
 
             @Override
-            public String interpretTime(int hour) {
+            public String interpretTime(int hour, int minutes) {
                 Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.HOUR_OF_DAY, hour);
-                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.MINUTE, minutes);
                 DateFormat hourFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 return hourFormat.format(cal.getTime());
             }

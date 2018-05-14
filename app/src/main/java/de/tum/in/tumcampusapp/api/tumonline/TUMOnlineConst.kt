@@ -27,17 +27,17 @@ class TUMOnlineConst<T> private constructor(private val webservice: String, val 
     }
 
     companion object {
-        val CALENDER = TUMOnlineConst("kalender", CacheManager.VALIDITY_FIFE_DAYS, CalendarRowSet::class.java)
+        val CALENDER = TUMOnlineConst("kalender", CacheManager.VALIDITY_FIVE_DAYS, CalendarRowSet::class.java)
         val CREATE_EVENT = TUMOnlineConst("terminCreate", CacheManager.VALIDITY_DO_NOT_CACHE, CreateEvent::class.java)
         val DELETE_EVENT = TUMOnlineConst("terminDelete", CacheManager.VALIDITY_DO_NOT_CACHE, DeleteEvent::class.java)
         val TUITION_FEE_STATUS = TUMOnlineConst("studienbeitragsstatus", CacheManager.VALIDITY_TWO_DAYS, TuitionList::class.java)
-        val LECTURES_PERSONAL = TUMOnlineConst("veranstaltungenEigene", CacheManager.VALIDITY_FIFE_DAYS, LecturesSearchRowSet::class.java)
+        val LECTURES_PERSONAL = TUMOnlineConst("veranstaltungenEigene", CacheManager.VALIDITY_FIVE_DAYS, LecturesSearchRowSet::class.java)
         val LECTURES_DETAILS = TUMOnlineConst("veranstaltungenDetails", CacheManager.VALIDITY_TEN_DAYS, LectureDetailsRowSet::class.java)
         val LECTURES_APPOINTMENTS = TUMOnlineConst("veranstaltungenTermine", CacheManager.VALIDITY_TEN_DAYS, LectureAppointmentsRowSet::class.java)
         val LECTURES_SEARCH = TUMOnlineConst("veranstaltungenSuche", CacheManager.VALIDITY_DO_NOT_CACHE, LecturesSearchRowSet::class.java)
         val ORG_TREE = TUMOnlineConst("orgBaum", CacheManager.VALIDITY_ONE_MONTH, OrgItemList::class.java)
         val ORG_DETAILS = TUMOnlineConst("orgDetails", CacheManager.VALIDITY_ONE_MONTH, OrgDetailItemList::class.java)
-        val PERSON_DETAILS = TUMOnlineConst("personenDetails", CacheManager.VALIDITY_FIFE_DAYS, Employee::class.java)
+        val PERSON_DETAILS = TUMOnlineConst("personenDetails", CacheManager.VALIDITY_FIVE_DAYS, Employee::class.java)
         val PERSON_SEARCH = TUMOnlineConst("personenSuche", CacheManager.VALIDITY_DO_NOT_CACHE, PersonList::class.java)
         val EXAMS = TUMOnlineConst("noten", CacheManager.VALIDITY_TEN_DAYS, ExamList::class.java)
         val TOKEN_CONFIRMED = TUMOnlineConst("isTokenConfirmed", CacheManager.VALIDITY_DO_NOT_CACHE, TokenConfirmation::class.java)

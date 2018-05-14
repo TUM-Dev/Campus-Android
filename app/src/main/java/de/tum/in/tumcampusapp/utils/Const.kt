@@ -19,7 +19,6 @@ object Const {
     const val MESSAGE = "message"
     const val FORCE_DOWNLOAD = "force_download"
     const val HIDE_WIZARD_ON_STARTUP = "hide_wizard_on_startup"
-    const val JSON_LINK = "link"
     const val LRZ_ID = "lrz_id"
     const val NEWS = "news"
     const val KINO = "kino"
@@ -55,14 +54,6 @@ object Const {
     const val SYNC_CALENDAR = "sync_calendar"
     const val PREFERENCE_SCREEN = "preference_screen"
     const val P_TOKEN = "pToken"
-    const val JSON_NEWS = "news"
-    const val JSON_DATE = "date"
-    const val JSON_TITLE = "title"
-    const val JSON_IMAGE = "image"
-    const val JSON_CREATED = "created"
-    const val JSON_SRC = "src"
-    const val JSON_ICON = "icon"
-    const val JSON_SOURCE = "source"
 
     const val EVERYTHING_SETUP = "everything_setup"
     const val SYNC_CALENDAR_IMPORT = "calendar_import"
@@ -145,4 +136,7 @@ object Const {
     const val NEWS_ALERT_IMAGE = "newsAlertImageURL"
     const val NEWS_ALERT_LINK = "newsAlertLink"
     const val NEWS_ALERT_SHOW_UNTIL = "newsAlertShowUntil"
+
+    const val CONTACTS_PERMISSION_REQUEST_CODE = 0
+    const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
 }

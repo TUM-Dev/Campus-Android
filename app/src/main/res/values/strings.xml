@@ -95,7 +95,8 @@
     <string name="facebook" translatable="false">Facebook</string>
     <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
     <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
-    <string name="github">Contribute on Github</string>
+    <string name="github" translatable="false">GitHub</string>
+    <string name="github_contribute">Contribute on Github</string>
     <string name="github_link" translatable="false">https://github.com/TCA-Team/TumCampusApp</string>
     <string name="licences">Open Source-Licences</string>
     <string name="licences_summary">Legal notes to licences</string>
@@ -406,7 +407,7 @@ Signature: %5$s</string>
 
     <string name="update_notification_description">A new version of the Tum Campus App has been released on %s. Tap to download now.</string>
     <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
-    <string name="support_email" translatable="false">app@tum.de</string>
+    <string name="support_email_link" translatable="false">mailto:app@tum.de</string>
     <string name="support_us_title">Support us!</string>
     <string name="permission_calendar_explanation">This App needs permission to access your calendar to be able to sync it with your TUM calendar.</string>
     <string name="permission_location_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
@@ -558,4 +559,8 @@ Signature: %5$s</string>
     
     <string name="pdf_viewer_title">PDF Viewer</string>
     <string name="dialog_add_to_contacts">Add to Contacts?</string>
+    <string name="add">Add</string>
+    <string name="recents">Recents</string>
+    <string name="e_mail">E-mail</string>
+    <string name="additional_info">Additional Info</string>
 </resources>

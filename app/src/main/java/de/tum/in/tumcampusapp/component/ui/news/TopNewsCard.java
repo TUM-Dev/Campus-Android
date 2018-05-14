@@ -53,6 +53,9 @@ public class TopNewsCard extends Card {
 
     private void updateImageView(){
         String imageURL = Utils.getSetting(context, Const.NEWS_ALERT_IMAGE, "");
+        if (imageURL.isEmpty() || imageView == null) {
+            return;
+        }
         Picasso.get().load(imageURL).into(imageView, new Callback() {
             @Override
             public void onSuccess() {
