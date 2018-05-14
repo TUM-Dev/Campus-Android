@@ -75,6 +75,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
 
     /**
+     * Variables for filtering calendar events
+     */
+    private boolean showCanceledEvents = true;
+
+    /**
      * Used as a flag, if there are results fetched from internet
      */
     private boolean isFetched;
@@ -176,27 +181,58 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
-        if (i == R.id.action_switch_view_mode) {
-            mWeekMode = !mWeekMode;
-            Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
-            this.refreshWeekView();
-            return true;
-        } else if (i == R.id.action_export_calendar) {
-            exportCalendarToGoogle();
+        switch(i) {
+            case R.id.action_switch_view_mode:
+                mWeekMode = !mWeekMode;
+                Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
+                this.refreshWeekView();
+                return true;
+            case R.id.action_export_calendar:
+                exportCalendarToGoogle();
 
-            // Enable automatic calendar synchronisation
-            Utils.setSetting(this, Const.SYNC_CALENDAR, true);
-            supportInvalidateOptionsMenu();
-            return true;
-        } else if (i == R.id.action_delete_calendar) {
-            deleteCalendarFromGoogle();
-            return true;
-        } else if (i == R.id.action_create_event) {
-            startActivity(new Intent(this, CreateEventActivity.class));
-            return true;
-        } else {
-            isFetched = false;
-            return super.onOptionsItemSelected(item);
+                // Enable automatic calendar synchronisation
+                Utils.setSetting(this, Const.SYNC_CALENDAR, true);
+                supportInvalidateOptionsMenu();
+                return true;
+            case R.id.action_delete_calendar:
+                deleteCalendarFromGoogle();
+                return true;
+            case R.id.action_create_event:
+                startActivity(new Intent(this, CreateEventActivity.class));
+                return true;
+            case R.id.action_calendar_filter_weekends:
+                item.setChecked(!item.isChecked());
+
+                if (item.isChecked()) {
+                    mWeekView.setNumberOfVisibleDays(5);
+                } else {
+                    mWeekView.setNumberOfVisibleDays(7);
+                }
+                return true;
+            case R.id.action_calendar_filter_canceled:
+                item.setChecked(!item.isChecked());
+                showCanceledEvents = item.isChecked();
+                onResume();
+                return true;
+            case R.id.action_calendar_filter_8_to_8:
+                item.setChecked(!item.isChecked());
+                return true;
+            case R.id.action_calendar_filter_fit_screen:
+                item.setChecked(!item.isChecked());
+                int hourHeight = 0;
+                if (item.isChecked()) {
+                    hourHeight = (mWeekView.getMeasuredHeight()
+                                 - mWeekView.getTextSize()
+                                 - (2*mWeekView.getHeaderRowPadding()))
+                                 / 24;
+                } else {
+                    hourHeight = 105;
+                }
+                mWeekView.setHourHeight(hourHeight);
+                return true;
+            default:
+                isFetched = false;
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -367,6 +403,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
             List<CalendarItem> calendarItems = calendarController.getFromDbForDate(new Date(calendar.getTimeInMillis()));
             for (CalendarItem calendarItem : calendarItems) {
+                if (!showCanceledEvents && calendarItem.getStatus().equals("CANCEL")) continue;
                 events.add(new IntegratedCalendarEvent(calendarItem, this));
             }
         }
@@ -482,5 +519,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     protected void onResume(){
         super.onResume();
         refreshWeekView();
+    }
+
+    protected void initFilterCheckboxes() {
+
     }
 }
