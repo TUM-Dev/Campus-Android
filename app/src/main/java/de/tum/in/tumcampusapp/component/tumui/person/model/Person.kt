@@ -20,22 +20,25 @@ data class Person(@field:Element(name = "geschlecht", required = false)
                   @field:Element(name = "vorname")
                   var name: String = "",
                   @field:Element(name = "familienname")
-                  var surname: String = "") :
-        Serializable {
+                  var surname: String = "") : Serializable {
 
-    override fun toString() = "$name $surname"
+    fun getFullName() = "$name $surname"
 
     companion object {
-        val FEMALE = "W"
-        val MALE = "M"
+
         private const val serialVersionUID = -5210814076506102292L
 
-        fun fromRecent(r: Recent): Person {
+        const val FEMALE = "W"
+        const val MALE = "M"
+
+        @JvmStatic fun fromRecent(r: Recent): Person {
             val split = r.name.split("\\$".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             val p = Person()
             p.id = split[0]
             p.name = split[1]
             return p
         }
+
     }
+
 }

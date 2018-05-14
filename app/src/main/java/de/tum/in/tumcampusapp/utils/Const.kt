@@ -137,4 +137,7 @@ object Const {
     const val NEWS_ALERT_IMAGE = "newsAlertImageURL"
     const val NEWS_ALERT_LINK = "newsAlertLink"
     const val NEWS_ALERT_SHOW_UNTIL = "newsAlertShowUntil"
+
+    const val CONTACTS_PERMISSION_REQUEST_CODE = 0
+    const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
 }

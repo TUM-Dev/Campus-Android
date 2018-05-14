@@ -12,7 +12,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter;
-import de.tum.in.tumcampusapp.component.tumui.person.PersonsDetailsActivity;
+import de.tum.in.tumcampusapp.component.tumui.person.PersonDetailsActivity;
 import de.tum.in.tumcampusapp.component.tumui.person.model.Person;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -91,7 +91,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("personObject", person);
 
-                    Intent intent = new Intent(context, PersonsDetailsActivity.class);
+                    Intent intent = new Intent(context, PersonDetailsActivity.class);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 });
