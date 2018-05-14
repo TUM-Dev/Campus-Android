@@ -30,11 +30,6 @@
         tumcampus:showAsAction="ifRoom">
         <menu>
             <group android:checkableBehavior="all" >
-                <item android:id="@+id/action_calendar_filter_weekends"
-                      android:title="@string/calendar_filter_weekends"
-                      android:orderInCategory="100"
-                      tumcampus:showAsAction="never" />
-
                 <item android:id="@+id/action_calendar_filter_canceled"
                       android:title="@string/calendar_filter_canceled"
                       android:orderInCategory="100"

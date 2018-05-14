@@ -85,8 +85,15 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private boolean isFetched;
     private boolean mWeekMode;
     private Calendar mShowDate;
-    private MenuItem menuItemSwitchView;
     private WeekView mWeekView;
+    private MenuItem menuItemSwitchView;
+    private MenuItem menuItemFilterCanceled;
+    private MenuItem menuItemFilter8to8;
+    private MenuItem menuItemFilterFitScreen;
+    /**
+     * Default hour height, to return to default after fitScreen filter was applied
+     */
+    private int defaultHourHeight;
 
     private CalendarDetailsFragment detailsFragment;
 
@@ -133,6 +140,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         } else {
             isFetched = true;
         }
+
+        // Set default hour height of weekView
+        defaultHourHeight = mWeekView.getHourHeight();
     }
 
     @Override
@@ -156,9 +166,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
         menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode);
-
+        menuItemFilter8to8 = menu.findItem(R.id.action_calendar_filter_8_to_8);
+        menuItemFilterCanceled = menu.findItem(R.id.action_calendar_filter_canceled);
+        menuItemFilterFitScreen = menu.findItem(R.id.action_calendar_filter_fit_screen);
         //Refresh the icon according to us having day or weekview
         this.refreshWeekView();
+
+        // Initiate checkboxes for filter in top menu
+        initFilterCheckboxes();
 
         return true;
     }
@@ -200,35 +215,20 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             case R.id.action_create_event:
                 startActivity(new Intent(this, CreateEventActivity.class));
                 return true;
-            case R.id.action_calendar_filter_weekends:
-                item.setChecked(!item.isChecked());
-
-                if (item.isChecked()) {
-                    mWeekView.setNumberOfVisibleDays(5);
-                } else {
-                    mWeekView.setNumberOfVisibleDays(7);
-                }
-                return true;
             case R.id.action_calendar_filter_canceled:
                 item.setChecked(!item.isChecked());
-                showCanceledEvents = item.isChecked();
-                onResume();
+                applyFilterCanceled(item.isChecked());
+                Utils.setSetting(this, Const.CALENDAR_FILTER_CANCELED, item.isChecked());
                 return true;
             case R.id.action_calendar_filter_8_to_8:
                 item.setChecked(!item.isChecked());
+                applyFilter8to8(item.isChecked());
+                Utils.setSetting(this, Const.CALENDAR_FILTER_8_to_8, item.isChecked());
                 return true;
             case R.id.action_calendar_filter_fit_screen:
                 item.setChecked(!item.isChecked());
-                int hourHeight = 0;
-                if (item.isChecked()) {
-                    hourHeight = (mWeekView.getMeasuredHeight()
-                                 - mWeekView.getTextSize()
-                                 - (2*mWeekView.getHeaderRowPadding()))
-                                 / 24;
-                } else {
-                    hourHeight = 105;
-                }
-                mWeekView.setHourHeight(hourHeight);
+                applyFilterFitScreen(item.isChecked());
+                Utils.setSetting(this, Const.CALENDAR_FILTER_FIT_SCREEN, item.isChecked());
                 return true;
             default:
                 isFetched = false;
@@ -522,6 +522,38 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     }
 
     protected void initFilterCheckboxes() {
+        boolean settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_FIT_SCREEN, false);
+        menuItemFilterFitScreen.setChecked(settings);
+        applyFilterFitScreen(settings);
 
+        settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
+        menuItemFilterCanceled.setChecked(settings);
+        applyFilterCanceled(settings);
+
+        settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_8_to_8, false);
+        menuItemFilter8to8.setChecked(settings);
+        applyFilter8to8(settings);
+    }
+
+    protected void applyFilterCanceled(boolean val) {
+        showCanceledEvents = val;
+        onResume();
+    }
+
+    protected void applyFilter8to8(boolean val) {
+        return;
+    }
+
+    protected void applyFilterFitScreen(boolean val) {
+        int hourHeight = 0;
+        if (val) {
+            hourHeight = (mWeekView.getMeasuredHeight()
+                          - mWeekView.getTextSize()
+                          - (2*mWeekView.getHeaderRowPadding()))
+                         / 24;
+        } else {
+            hourHeight = defaultHourHeight;
+        }
+        mWeekView.setHourHeight(hourHeight);
     }
 }

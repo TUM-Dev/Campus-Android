@@ -27,7 +27,6 @@
     <string name="semester_summer">Summer term</string>
     <string name="semester_winter">Winter term</string>
     <string name="calendar_filter_title">Change Filters</string>
-    <string name="calendar_filter_weekends">Show Weekends</string>
     <string name="calendar_filter_canceled">Show Canceled Events</string>
     <string name="calendar_filter_8_to_8">Only show 8am to 8pm</string>
     <string name="calendar_filter_fit_screen">Fit Screen</string>
