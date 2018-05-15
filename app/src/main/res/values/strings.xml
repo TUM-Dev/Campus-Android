@@ -563,4 +563,5 @@ Signature: %5$s</string>
     <string name="recents">Recents</string>
     <string name="e_mail">E-mail</string>
     <string name="additional_info">Additional Info</string>
+    <string name="Refresh">Refresh</string>
 </resources>

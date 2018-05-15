@@ -66,7 +66,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
      *
      * @param force Force reload of content
      */
-    void requestFetch(boolean force) {
+    protected void requestFetch(boolean force) {
         String accessToken = PreferenceManager.getDefaultSharedPreferences(this)
                                               .getString(Const.ACCESS_TOKEN, null);
         if (accessToken == null) {
