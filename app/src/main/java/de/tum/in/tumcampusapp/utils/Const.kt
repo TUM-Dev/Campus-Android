@@ -141,6 +141,5 @@ object Const {
     const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
 
     const val CALENDAR_FILTER_CANCELED = "calendar_filter_canceled"
-    const val CALENDAR_FILTER_8_to_8 = "calendar_filter_8_to_8"
     const val CALENDAR_FILTER_FIT_SCREEN = "calendar_filter_fit_screen"
 }

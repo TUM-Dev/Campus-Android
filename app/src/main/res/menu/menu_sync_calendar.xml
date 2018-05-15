@@ -32,18 +32,11 @@
             <group android:checkableBehavior="all" >
                 <item android:id="@+id/action_calendar_filter_canceled"
                       android:title="@string/calendar_filter_canceled"
-                      android:orderInCategory="100"
-                      tumcampus:showAsAction="never" />
-
-                <item android:id="@+id/action_calendar_filter_8_to_8"
-                      android:title="@string/calendar_filter_8_to_8"
-                      android:orderInCategory="100"
-                      tumcampus:showAsAction="never" />
+                      tumcampus:showAsAction="ifRoom" />
 
                 <item android:id="@+id/action_calendar_filter_fit_screen"
                       android:title="@string/calendar_filter_fit_screen"
-                      android:orderInCategory="100"
-                      tumcampus:showAsAction="never" />
+                      tumcampus:showAsAction="ifRoom" />
             </group>
         </menu>
     </item>

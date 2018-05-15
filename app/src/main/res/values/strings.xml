@@ -28,7 +28,6 @@
     <string name="semester_winter">Winter term</string>
     <string name="calendar_filter_title">Change Filters</string>
     <string name="calendar_filter_canceled">Show Canceled Events</string>
-    <string name="calendar_filter_8_to_8">Only show 8am to 8pm</string>
     <string name="calendar_filter_fit_screen">Fit Screen</string>
 
     <!-- Roomfinder -->
@@ -269,7 +268,7 @@
     <string name="cafeteria_notification_settings">Cafeteria Notification Settings</string>
 
     <!-- Cafeteria Notification Settings -->
-    <string name="invalid_notification_time">Invalid time. Please pick a time ranging from:</string>
+    <string name="invalid_notification_time">Invalid time. Please pick a ctime ranging from:</string>
 
     <!-- Information -->
     <string name="version">Version: %1$s</string>

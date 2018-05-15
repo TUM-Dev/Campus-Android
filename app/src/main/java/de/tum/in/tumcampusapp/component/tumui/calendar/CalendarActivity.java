@@ -75,11 +75,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
 
     /**
-     * Variables for filtering calendar events
-     */
-    private boolean showCanceledEvents = true;
-
-    /**
      * Used as a flag, if there are results fetched from internet
      */
     private boolean isFetched;
@@ -88,7 +83,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private WeekView mWeekView;
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;
-    private MenuItem menuItemFilter8to8;
     private MenuItem menuItemFilterFitScreen;
     /**
      * Default hour height, to return to default after fitScreen filter was applied
@@ -166,7 +160,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
         menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode);
-        menuItemFilter8to8 = menu.findItem(R.id.action_calendar_filter_8_to_8);
         menuItemFilterCanceled = menu.findItem(R.id.action_calendar_filter_canceled);
         menuItemFilterFitScreen = menu.findItem(R.id.action_calendar_filter_fit_screen);
         //Refresh the icon according to us having day or weekview
@@ -218,17 +211,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             case R.id.action_calendar_filter_canceled:
                 item.setChecked(!item.isChecked());
                 applyFilterCanceled(item.isChecked());
-                Utils.setSetting(this, Const.CALENDAR_FILTER_CANCELED, item.isChecked());
-                return true;
-            case R.id.action_calendar_filter_8_to_8:
-                item.setChecked(!item.isChecked());
-                applyFilter8to8(item.isChecked());
-                Utils.setSetting(this, Const.CALENDAR_FILTER_8_to_8, item.isChecked());
                 return true;
             case R.id.action_calendar_filter_fit_screen:
                 item.setChecked(!item.isChecked());
                 applyFilterFitScreen(item.isChecked());
-                Utils.setSetting(this, Const.CALENDAR_FILTER_FIT_SCREEN, item.isChecked());
                 return true;
             default:
                 isFetched = false;
@@ -403,8 +389,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
             List<CalendarItem> calendarItems = calendarController.getFromDbForDate(new Date(calendar.getTimeInMillis()));
             for (CalendarItem calendarItem : calendarItems) {
-                if (!showCanceledEvents && calendarItem.getStatus().equals("CANCEL")) continue;
-                events.add(new IntegratedCalendarEvent(calendarItem, this));
+                if (Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true) || !calendarItem.getStatus().equals("CANCEL")) {
+                    events.add(new IntegratedCalendarEvent(calendarItem, this));
+                }
             }
         }
 
@@ -529,30 +516,23 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
         menuItemFilterCanceled.setChecked(settings);
         applyFilterCanceled(settings);
-
-        settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_8_to_8, false);
-        menuItemFilter8to8.setChecked(settings);
-        applyFilter8to8(settings);
     }
 
     protected void applyFilterCanceled(boolean val) {
-        showCanceledEvents = val;
+        Utils.setSetting(this, Const.CALENDAR_FILTER_CANCELED, val);
         onResume();
     }
 
-    protected void applyFilter8to8(boolean val) {
-        return;
-    }
-
     protected void applyFilterFitScreen(boolean val) {
-        int hourHeight = 0;
+        Utils.setSetting(this, Const.CALENDAR_FILTER_FIT_SCREEN, val);
+        int hourHeight = defaultHourHeight;
         if (val) {
-            hourHeight = (mWeekView.getMeasuredHeight()
-                          - mWeekView.getTextSize()
-                          - (2*mWeekView.getHeaderRowPadding()))
-                         / 24;
-        } else {
-            hourHeight = defaultHourHeight;
+            // get the height of the weekView and subtract the height of its header
+            // to get height of actual calendar section, then devide by 24 to get height of a single hour
+            hourHeight = (mWeekView.getHeight()                     // height of weekView
+                          - mWeekView.getTextSize()                 // height of text in header of weekView
+                          - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and 2x below text in header
+                         / 24;                                      // amount of hours
         }
         mWeekView.setHourHeight(hourHeight);
     }
