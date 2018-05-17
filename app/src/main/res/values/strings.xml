@@ -32,7 +32,7 @@
     <string name="search_rooms">Search rooms</string>
 
     <!-- Auxiliary -->
-    <string name="empty_string" translatable="false"/>
+    <string name="empty_string" translatable="false" />
     <string name="error_fetching_tumonline">Error accessing TUMonline.\nPlease make sure your TUMonline-Access-Token has
 		been\nactivated and the corresponding rights are set.\n\n<b>Click here to retry.</b></string>
     <string name="error_no_token_setup">No TUMonline-Access-Token was set.\nPlease set your TUMonline-Access-Token in the\n <i>Settings</i> screen to access TUMonline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
@@ -391,7 +391,7 @@ Signature: %5$s</string>
     <string name="edit">Edit</string>
     <string name="auto_join_chat">Join new lecture rooms</string>
     <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture’s chat room.</string>
-    <string name="add_chat_member">Add person to chat room</string>
+    <string name="add_chat_member">Add user to chat room</string>
     <string name="add_chat_room">New chat room</string>
     <string name="join_chat_room">Join chat room</string>
     <string name="invalid_chat_room">Invalid chat room</string>
@@ -552,11 +552,12 @@ Signature: %5$s</string>
     <string name="tumonline_login">Connect to TUMonline</string>
     <string name="card_login_title">Welcome to the TUM Campus App!</string>
     <string name="card_login_body">Connect the app to TUMonline now to get access to all the features! This includes among other things your calendar, lectures and grades!</string>
-    
+
     <string name="kino_cover_description">movie poster</string>
     <string name="show_trailer_error">Trailer can\'t be shown</string>
     <string name="trailer">Trailer</string>
-    
+
     <string name="pdf_viewer_title">PDF Viewer</string>
     <string name="dialog_add_to_contacts">Add to Contacts?</string>
+    <string name="user_search_hint">Search Name or TUM-ID</string>
 </resources>

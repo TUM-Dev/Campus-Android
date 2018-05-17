@@ -115,11 +115,9 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
      */
     @Override
     public void onLoadFinished(PersonList response) {
-        if (response.getPersons() == null || response.getPersons()
-                                                     .isEmpty()) {
+        if (response.getPersons().isEmpty()) {
             lvPersons.setAdapter(new NoResultsAdapter(this));
-        } else if (response.getPersons()
-                           .size() == 1) {
+        } else if (response.getPersons().size() == 1) {
             proceedToPersonDetails(response);
         } else {
             ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, response.getPersons());

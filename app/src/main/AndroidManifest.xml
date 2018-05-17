@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="de.tum.in.tumcampusapp"
-          android:installLocation="auto"
-          tools:ignore="UnusedAttribute">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="de.tum.in.tumcampusapp"
+    android:installLocation="auto"
+    tools:ignore="UnusedAttribute">
 
     <!-- Standard access rights -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- For google calendar synchronisation -->
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
-    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <!-- To add searched person to contact list -->
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <!-- For location services -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- For automatically setting up eduroam -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <!-- GCM requires a Google account. -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <!-- Allow vibration for chat messages -->
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- As AndroidLint suggests: We do not necessarily need camera access -->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.location.network"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.location.gps"
-        android:required="false"/>
+        android:required="false" />
 
     <!-- For QR code scanner -->
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- To start the Silence and Background service on Boot -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- To potentially change the Do Not Disturb mode -->
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
         android:allowBackup="true"
@@ -66,32 +66,32 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
 
-        <uses-library android:name="android.test.runner"/>
+        <uses-library android:name="android.test.runner" />
 
         <receiver android:name=".service.ScanResultsAvailableReceiver">
             <intent-filter>
-                <action android:name="android.net.wifi.SCAN_RESULTS"/>
+                <action android:name="android.net.wifi.SCAN_RESULTS" />
             </intent-filter>
         </receiver>
 
         <provider
             android:name=".component.tumui.roomfinder.RoomFinderSuggestionProvider"
             android:authorities="de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderSuggestionProvider"
-            android:exported="false"/>
+            android:exported="false" />
         <provider
             android:name=".component.tumui.person.PersonSearchSuggestionProvider"
             android:authorities="de.tum.in.tumcampusapp.component.tumui.person.PersonSearchSuggestionProvider"
-            android:exported="false"/>
+            android:exported="false" />
         <provider
             android:name=".component.ui.transportation.MVVStationSuggestionProvider"
             android:authorities="de.tum.in.tumcampusapp.component.ui.transportation.MVVStationSuggestionProvider"
-            android:exported="false"/>
+            android:exported="false" />
         <provider
             android:name=".component.tumui.lectures.LectureSearchSuggestionProvider"
             android:authorities="de.tum.in.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider"
-            android:exported="false"/>
+            android:exported="false" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="de.tum.in.tumcampusapp.fileprovider"
@@ -99,7 +99,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fileprovider"/>
+                android:resource="@xml/fileprovider" />
         </provider>
 
         <activity
@@ -108,20 +108,20 @@
             android:label="@string/app_name"
             android:theme="@style/AppThemeStartup">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts"/>
+                android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".component.ui.overview.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".component.ui.news.NewsActivity"
             android:configChanges="orientation|screenSize"
@@ -130,7 +130,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.plan.PlansActivity"
@@ -140,7 +140,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.plan.PlansDetailsActivity"
@@ -149,7 +149,7 @@
             android:parentActivityName=".component.ui.plan.PlansActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.plan.PlansActivity"/>
+                android:value=".component.ui.plan.PlansActivity" />
         </activity>
         <activity
             android:name=".component.tumui.grades.GradesActivity"
@@ -158,7 +158,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.other.settings.UserPreferencesActivity"
@@ -167,7 +167,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.curricula.CurriculaActivity"
@@ -177,7 +177,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.curricula.CurriculaDetailsActivity"
@@ -186,7 +186,7 @@
             android:parentActivityName=".component.ui.curricula.CurriculaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.curricula.CurriculaActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.ui.curricula.CurriculaActivity" />
         </activity>
         <activity
             android:name=".component.ui.openinghour.OpeningHoursDetailActivity"
@@ -195,7 +195,7 @@
             android:parentActivityName=".component.ui.openinghour.OpeningHoursListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.openinghour.OpeningHoursListActivity"/>
+                android:value=".component.ui.openinghour.OpeningHoursListActivity" />
         </activity>
         <activity
             android:name=".component.ui.openinghour.OpeningHoursListActivity"
@@ -205,7 +205,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.transportation.TransportationActivity"
@@ -214,15 +214,15 @@
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.overview.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_mvv"/>
+                android:resource="@xml/searchable_mvv" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.transportation.TransportationDetailsActivity"
@@ -231,12 +231,12 @@
             android:parentActivityName=".component.ui.transportation.TransportationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.transportation.TransportationActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.ui.transportation.TransportationActivity" />
         </activity>
         <activity
             android:name=".component.tumui.lectures.activity.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures_appointments"/>
+            android:label="@string/lectures_appointments" />
         <activity
             android:name=".component.tumui.lectures.activity.LecturesDetailsActivity"
             android:configChanges="orientation|screenSize"
@@ -244,7 +244,7 @@
             android:parentActivityName=".component.tumui.lectures.activity.LecturesPersonalActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity" />
         </activity>
         <activity
             android:name=".component.tumui.lectures.activity.LecturesPersonalActivity"
@@ -253,15 +253,15 @@
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.overview.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_lectures"/>
+                android:resource="@xml/searchable_lectures" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.cafeteria.activity.CafeteriaActivity"
@@ -271,7 +271,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.cafeteria.activity.CafeteriaNotificationSettingsActivity"
@@ -281,7 +281,7 @@
             android:parentActivityName=".component.ui.cafeteria.activity.CafeteriaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity" />
         </activity>
         <activity
             android:name=".component.ui.tufilm.KinoActivity"
@@ -291,7 +291,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.tumui.person.PersonsSearchActivity"
@@ -300,15 +300,15 @@
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.overview.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_persons"/>
+                android:resource="@xml/searchable_persons" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.tumui.person.PersonsDetailsActivity"
@@ -317,7 +317,7 @@
             android:parentActivityName=".component.tumui.person.PersonsSearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.person.PersonsSearchActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.tumui.person.PersonsSearchActivity" />
         </activity>
         <activity
             android:name=".component.tumui.roomfinder.RoomFinderActivity"
@@ -327,15 +327,15 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
 
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_rooms"/>
+                android:resource="@xml/searchable_rooms" />
         </activity>
         <activity
             android:name=".component.tumui.roomfinder.RoomFinderDetailsActivity"
@@ -344,7 +344,7 @@
             android:parentActivityName=".component.tumui.roomfinder.RoomFinderActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity" />
         </activity>
         <activity
             android:name=".component.ui.studyroom.StudyRoomsActivity"
@@ -353,7 +353,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.tumui.tutionfees.TuitionFeesActivity"
@@ -363,7 +363,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.overview.InformationActivity"
@@ -373,7 +373,7 @@
             android:parentActivityName=".component.other.settings.UserPreferencesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.other.settings.UserPreferencesActivity"/>
+                android:value=".component.other.settings.UserPreferencesActivity" />
         </activity>
         <activity
             android:name=".component.ui.eduroam.SetupEduroamActivity"
@@ -383,7 +383,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.onboarding.WizNavStartActivity"
@@ -392,7 +392,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.onboarding.WizNavCheckTokenActivity"
@@ -401,7 +401,7 @@
             android:parentActivityName=".component.ui.onboarding.WizNavStartActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.onboarding.WizNavStartActivity"/>
+                android:value=".component.ui.onboarding.WizNavStartActivity" />
         </activity>
         <activity
             android:name=".component.ui.onboarding.WizNavExtrasActivity"
@@ -411,7 +411,7 @@
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.onboarding.WizNavCheckTokenActivity"/>
+                android:value=".component.ui.onboarding.WizNavCheckTokenActivity" />
         </activity>
         <activity
             android:name=".component.tumui.calendar.CalendarActivity"
@@ -421,7 +421,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.chat.activity.ChatRoomsActivity"
@@ -431,7 +431,7 @@
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.chat.activity.ChatActivity"
@@ -441,7 +441,7 @@
             android:parentActivityName=".component.ui.chat.activity.ChatRoomsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity" />
         </activity>
         <activity
             android:name=".component.ui.chat.activity.JoinRoomScanActivity"
@@ -452,7 +452,7 @@
             android:theme="@style/AppThemeFullscreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity" />
         </activity>
         <activity
             android:name=".component.ui.alarm.AlarmActivity"
@@ -463,43 +463,38 @@
             android:theme="@style/AppThemeFullscreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeInfoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/barrier_free"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-        </activity>
+            android:parentActivityName=".component.ui.overview.MainActivity" />
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeContactActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/contact_person"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity">
-        </activity>
+            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeFacilitiesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/facilities"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity">
-        </activity>
+            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeMoreInfoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/more_info"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity">
-        </activity>
+            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
             android:name=".component.tumui.feedback.FeedbackActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/feedback"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.tumui.feedback.FeedbackActivity">
-        </activity>
+            android:parentActivityName=".component.tumui.feedback.FeedbackActivity" />
         <activity
             android:name=".component.ui.studycard.CardsActivity"
             android:label="@string/title_activity_cards"
@@ -507,7 +502,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity"/>
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
             android:name=".component.ui.studycard.CardsDetailActivity"
@@ -516,7 +511,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.studycard.CardsActivity"/>
+                android:value=".component.ui.studycard.CardsActivity" />
         </activity>
         <activity
             android:name=".component.ui.studycard.CardsQuizActivity"
@@ -525,25 +520,42 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.studycard.CardsActivity"/>
+                android:value=".component.ui.studycard.CardsActivity" />
         </activity>
+        <activity
+            android:name=".component.tumui.calendar.CreateEventActivity"
+            android:label="@string/activity_create_event_title"
+            android:parentActivityName=".component.tumui.calendar.CalendarActivity" />
+        <activity
+            android:name=".component.ui.plan.PDFViewActivity"
+            android:label="@string/pdf_viewer_title"
+            android:parentActivityName=".component.ui.plan.PlansActivity" />
+        <activity
+            android:name=".component.ui.chat.AddChatMemberActivity"
+            android:label="Add Participant"
+            android:parentActivityName=".component.ui.chat.activity.ChatActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.chat.activity.ChatActivity" />
+        </activity>
+
 
         <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".component.ui.cafeteria.widget.MensaWidget"
             android:label="@string/mensa_widget">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/mensa_widget_info"/>
+                android:resource="@xml/mensa_widget_info" />
         </receiver>
 
         <service
             android:name=".service.MensaWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <!-- receiver for the MVVWidget -->
 
@@ -551,18 +563,18 @@
             android:name=".component.ui.transportation.widget.MVVWidget"
             android:label="@string/mvv_widget">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-                <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/mvv_widget_info"/>
+                android:resource="@xml/mvv_widget_info" />
         </receiver>
 
         <service
             android:name=".component.ui.transportation.widget.MVVWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name=".component.ui.transportation.widget.MVVWidgetConfigureActivity"
@@ -572,15 +584,15 @@
             android:launchMode="singleTop"
             android:taskAffinity="">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_mvv"/>
+                android:resource="@xml/searchable_mvv" />
 
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
@@ -588,21 +600,21 @@
 
         <receiver android:name=".component.other.generic.widget.CardsWidget">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/cards_widget_info"/>
+                android:resource="@xml/cards_widget_info" />
         </receiver>
 
         <service
             android:name=".component.other.generic.widget.CardsWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity android:name=".component.other.generic.widget.CardsWidgetConfigureActivity">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
@@ -612,17 +624,17 @@
             android:name=".component.tumui.calendar.widget.TimetableWidget"
             android:label="@string/timetable_widget">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/timetable_widget_info"/>
+                android:resource="@xml/timetable_widget_info" />
         </receiver>
 
         <service
             android:name=".component.tumui.calendar.widget.TimetableWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name=".component.tumui.calendar.widget.TimetableWidgetConfigureActivity"
@@ -632,65 +644,65 @@
             android:launchMode="singleTop"
             android:taskAffinity="">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <!-- Used to reAlarmNotificationlarm when device has been restarted -->
         <receiver android:name=".service.StartSyncReceiver">
             <intent-filter>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
 
         <!-- Used for generating the wifi-heatmap data -->
         <receiver android:name=".service.NetworkChangeReceiver">
             <intent-filter>
-                <action android:name="android.net.wifi.STATE_CHANGE"/>
+                <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
 
         <!-- Used to set Notification for favoriteDish -->
-        <receiver android:name=".service.FavoriteDishAlarmScheduler"/>
+        <receiver android:name=".service.FavoriteDishAlarmScheduler" />
 
         <service
             android:name=".service.DownloadService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.SilenceService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.SendMessageService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.SendWifiMeasurementService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.BackgroundService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.FillCacheService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.ScanResultsAvailableReceiver$NeverShowAgain"
-            android:exported="false"/>
+            android:exported="false" />
         <service
             android:name=".component.tumui.calendar.CalendarController$QueryLocationsService"
-            android:exported="false"/>
+            android:exported="false" />
         <service
             android:name=".service.FcmReceiverService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
@@ -698,30 +710,22 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".service.GeofencingRegistrationService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name=".service.GeofencingUpdateReceiver"/>
+        <receiver android:name=".service.GeofencingUpdateReceiver" />
         <receiver android:name=".service.GeofencingStartupReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.location.MODE_CHANGED"/>
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-                <action android:name="android.location.PROVIDERS_CHANGED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.location.MODE_CHANGED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".component.tumui.calendar.CreateEventActivity"
-            android:label="@string/activity_create_event_title"
-            android:parentActivityName=".component.tumui.calendar.CalendarActivity"/>
-        <activity android:name=".component.ui.plan.PDFViewActivity"
-                  android:label="@string/pdf_viewer_title"
-            android:parentActivityName=".component.ui.plan.PlansActivity"/>
 
     </application>
 
