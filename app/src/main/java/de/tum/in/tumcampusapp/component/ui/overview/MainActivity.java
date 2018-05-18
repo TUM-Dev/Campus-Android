@@ -224,11 +224,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             return true;
         }
 
-        if (item.getItemId() == R.id.action_restore_cards) {
-            restoreCards();
-            return true;
-        }
-
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
@@ -270,7 +265,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     /**
      * Executed when the RestoreCard is pressed
      */
-    public void restoreCards() {
+    public void restoreCards(View view) {
         CardManager.restoreCards(this);
         refreshCards();
     }

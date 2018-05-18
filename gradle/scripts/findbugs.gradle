@@ -20,7 +20,7 @@ afterEvaluate {
             source = variantCompile.source
             classpath = variantCompile.classpath.plus(project.files(android.bootClasspath))
             dependsOn(variantCompile)
-            excludeFilter = new File("../excludeBugsFilter.xml")
+            excludeFilter = new File("$rootDir/gradle/config/excludeBugsFilter.xml")
         }
         tasks.getByName('check').dependsOn(task)
     }

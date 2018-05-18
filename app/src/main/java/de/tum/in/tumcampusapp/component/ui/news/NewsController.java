@@ -1,38 +1,31 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
-import com.google.common.base.Optional;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.CacheManager;
-import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
+
+import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_ONE_DAY;
 
 /**
  * News Manager, handles database stuff, external imports
  */
 public class NewsController implements ProvidesCard {
 
-    private static final int TIME_TO_SYNC = 1800; // 1/2 hour
-    private static final String NEWS_URL = "https://tumcabe.in.tum.de/Api/news/";
-    private static final String NEWS_SOURCES_URL = NEWS_URL + "sources";
-    private final Context mContext;
+    private static final int TIME_TO_SYNC = VALIDITY_ONE_DAY;
+    private final Context context;
     private final NewsDao newsDao;
     private final NewsSourcesDao newsSourcesDao;
 
@@ -42,7 +35,7 @@ public class NewsController implements ProvidesCard {
      * @param context Context
      */
     public NewsController(Context context) {
-        mContext = context;
+        this.context = context;
         newsDao = TcaDb.getInstance(context)
                        .newsDao();
         newsSourcesDao = TcaDb.getInstance(context)
@@ -50,61 +43,41 @@ public class NewsController implements ProvidesCard {
     }
 
     /**
-     * Removes all old items (older than 3 months)
-     */
-    private void cleanupDb() {
-        newsDao.cleanUp();
-    }
-
-    /**
      * Download news from external interface (JSON)
      *
      * @param force True to force download over normal sync period, else false
-     * @throws JSONException parsing could fail
      */
-    public void downloadFromExternal(boolean force) throws JSONException {
-        SyncManager sync = new SyncManager(mContext);
+    public void downloadFromExternal(boolean force) {
+        SyncManager sync = new SyncManager(context);
         if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
             return;
         }
 
-        NetUtils net = new NetUtils(mContext);
-        // Load all news sources
-        Optional<JSONArray> jsonArray = net.downloadJsonArray(NEWS_SOURCES_URL, CacheManager.VALIDITY_ONE_MONTH, force);
-
-        if (jsonArray.isPresent()) {
-            JSONArray arr = jsonArray.get();
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject obj = arr.getJSONObject(i);
-                newsSourcesDao.insert(new NewsSources(obj.getInt(Const.JSON_SOURCE),
-                                                      obj.getString(Const.JSON_TITLE),
-                                                      obj.has(Const.JSON_ICON) ? obj.getString(Const.JSON_ICON) : ""));
-            }
-        }
-
-        // Load all news since the last sync
-        jsonArray = net.downloadJsonArray(NEWS_URL + getLastId(), CacheManager.VALIDITY_ONE_DAY, force);
-
         // Delete all too old items
-        cleanupDb();
+        newsDao.cleanUp();
 
-        if (!jsonArray.isPresent()) {
+        TUMCabeClient api = TUMCabeClient.getInstance(context);
+
+        // Load all news sources
+        try {
+            List sources = api.getNewsSources();
+            newsSourcesDao.insert(sources);
+        } catch (IOException e) {
+            Utils.log(e);
             return;
         }
 
-        JSONArray arr = jsonArray.get();
-        for (int i = 0; i < arr.length(); i++) {
-            JSONObject obj = arr.getJSONObject(i);
-            newsDao.insert(new News(obj.getString(Const.JSON_NEWS),
-                                    obj.getString(Const.JSON_TITLE),
-                                    obj.getString(Const.JSON_LINK),
-                                    obj.getString(Const.JSON_SRC),
-                                    obj.getString(Const.JSON_IMAGE),
-                                    DateUtils.getDateTime(obj.getString(Const.JSON_DATE)),
-                                    DateUtils.getDateTime(obj.getString(Const.JSON_CREATED)),
-                                    0));
+
+        // Load all news since the last sync
+        try {
+            List news = api.getNews(getLastId());
+            newsDao.insert(news);
+        } catch (IOException e) {
+            Utils.log(e);
+            return;
         }
 
+        //Finish sync
         sync.replaceIntoDb(this);
     }
 
@@ -114,7 +87,7 @@ public class NewsController implements ProvidesCard {
      * @return List of News
      */
     public List<News> getAllFromDb(Context context) {
-        int selectedNewspread = Integer.parseInt(Utils.getSetting(mContext, "news_newspread", "7"));
+        int selectedNewspread = Integer.parseInt(Utils.getSetting(this.context, "news_newspread", "7"));
         List<NewsSources> newsSources = getNewsSources();
         Collection<Integer> newsSourceIds = new ArrayList<>();
         for (NewsSources newsSource : newsSources) {
@@ -133,9 +106,9 @@ public class NewsController implements ProvidesCard {
      * @return index of the newest item that is older than 'now' - 1
      */
     public int getTodayIndex() {
-        int selectedNewspread = Integer.parseInt(Utils.getSetting(mContext, "news_newspread", "7"));
+        int selectedNewspread = Integer.parseInt(Utils.getSetting(context, "news_newspread", "7"));
         List<News> news = newsDao.getNewer(selectedNewspread);
-        return news.size() == 0 ? 0 : news.size() - 1;
+        return news.isEmpty() ? 0 : news.size() - 1;
     }
 
     private String getLastId() {
@@ -144,7 +117,7 @@ public class NewsController implements ProvidesCard {
     }
 
     public List<NewsSources> getNewsSources() {
-        String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
+        String selectedNewspread = Utils.getSetting(context, "news_newspread", "7");
         return newsSourcesDao.getNewsSources(selectedNewspread);
     }
 
@@ -176,7 +149,7 @@ public class NewsController implements ProvidesCard {
      * @param context Context
      */
     @Override
-    public void onRequestCard(Context context) {
+    public void onRequestCard(@NonNull Context context) {
         Collection<Integer> sources = getActiveSources(context);
 
         List<News> news;

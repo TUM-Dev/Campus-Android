@@ -3,7 +3,7 @@ apply plugin: 'pmd'
 task pmd(type: Pmd) {
     description 'Run PMD'
 
-    ruleSetFiles = files("../pmd-ruleset.xml")
+    ruleSetFiles = files("$rootDir/gradle/config/pmd-ruleset.xml")
     ruleSets = []
 
     source 'src'
@@ -24,7 +24,7 @@ afterEvaluate {
 
     variants.each { variant ->
         def task = tasks.create("pmd${variant.name.capitalize()}", Pmd) {
-            ruleSetFiles = files("../pmd-ruleset.xml")
+            ruleSetFiles = files("$rootDir/gradle/config/pmd-ruleset.xml")
             ruleSets = []
 
             source 'src'

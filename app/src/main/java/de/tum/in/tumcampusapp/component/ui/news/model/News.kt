@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.news.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 import java.util.*
 
 /**
@@ -16,6 +17,7 @@ import java.util.*
  */
 @Entity
 data class News(@PrimaryKey
+                @SerializedName("news")
                 var id: String = "",
                 var title: String = "",
                 var link: String = "",

@@ -49,6 +49,7 @@ public class SupportCard extends Card {
             .setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, view.getContext().getString(R.string.feedback));
                 v.getContext()
                  .startActivity(Intent.createChooser(intent, "Send Email"));
             });

@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -234,17 +232,12 @@ public class DownloadService extends JobIntentService {
     }
 
     private boolean downloadNews(boolean force) {
-        try {
-            NewsController nm = new NewsController(this);
-            nm.downloadFromExternal(force);
-            return true;
-        } catch (JSONException e) {
-            Utils.log(e);
-            return false;
-        }
+        NewsController nm = new NewsController(this);
+        nm.downloadFromExternal(force);
+        return true;
     }
 
-    private boolean dowloadTopNews(){
+    private boolean dowloadTopNews() {
         return topNewsViewModel.getNewsAlertFromService(getApplicationContext());
     }
 

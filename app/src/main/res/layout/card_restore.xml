@@ -1,13 +1,7 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:elevation="@dimen/card_view_elevation"
-    card_view:cardBackgroundColor="@android:color/white"
-    card_view:cardCornerRadius="@dimen/material_corner_radius">
+    style="@style/StandardCard">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -15,7 +9,12 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_horizontal"
-        android:padding="@dimen/material_default_padding">
+        android:onClick="restoreCards"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/material_small_padding"
+        android:paddingEnd="@dimen/material_default_padding"
+        android:paddingStart="@dimen/material_default_padding"
+        android:paddingTop="@dimen/material_small_padding">
 
         <TextView
             android:id="@+id/textView"
