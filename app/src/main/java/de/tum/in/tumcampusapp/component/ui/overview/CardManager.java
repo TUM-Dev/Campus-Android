@@ -154,6 +154,9 @@ public final class CardManager {
             manager.onRequestCard(context);
         }
 
+        // Always append the restore card at the end of our list
+        new RestoreCard(context).apply();
+
         shouldRefresh = false;
     }
 

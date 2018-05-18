@@ -571,4 +571,6 @@ Signature: %5$s</string>
     <string name="e_mail">E-mail</string>
     <string name="additional_info">Additional Info</string>
     <string name="Refresh">Refresh</string>
+    <string name="create">Create</string>
+    <string name="enter_name_placeholder">Enter name …</string>
 </resources>

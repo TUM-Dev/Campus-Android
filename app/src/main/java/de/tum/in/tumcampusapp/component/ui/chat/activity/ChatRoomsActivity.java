@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -179,15 +180,16 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
      */
     private void newChatRoom() {
         // Set an EditText view to get user input
-        final EditText input = new EditText(this);
+        final View view = LayoutInflater.from(this)
+                .inflate(R.layout.dialog_input, null);
+        final EditText input = view.findViewById(R.id.inputEditText);
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.new_chat_room)
                 .setMessage(R.string.new_chat_room_desc)
-                .setView(input)
-                .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
-                    String value = input.getText()
-                                        .toString();
+                .setView(view)
+                .setPositiveButton(R.string.create, (dialog, whichButton) -> {
+                    String value = input.getText().toString();
                     String randId = Integer.toHexString((int) (Math.random() * 4096));
                     createOrJoinChatRoom(randId + ':' + value);
                 })

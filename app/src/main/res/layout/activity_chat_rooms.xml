@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        android:id="@+id/drawer_layout"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent">
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,9 +12,10 @@
         android:orientation="vertical">
 
         <!-- The toolbar aka SupportActionBar -->
-        <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="wrap_content">
+        <android.support.design.widget.AppBarLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/main_toolbar"
@@ -26,9 +29,12 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/color_primary"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
-        </android.support.design.widget.AppBarLayout>
+                android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                app:tabIndicatorColor="@android:color/white"
+                app:tabIndicatorHeight="2dp"
+                app:tabMode="fixed"/>
 
+        </android.support.design.widget.AppBarLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -49,8 +55,9 @@
                     android:id="@+id/lvMyChatRoomList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="vertical"
-                    android:importantForAutofill="noExcludeDescendants"/>
+                    android:importantForAutofill="noExcludeDescendants"
+                    android:scrollbars="vertical"/>
+
                 <!-- TODO remove importantForAutofill (workaround) once library is fixed -->
 
             </android.support.v4.widget.SwipeRefreshLayout>
@@ -58,6 +65,8 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer"/>
+
 </android.support.v4.widget.DrawerLayout>

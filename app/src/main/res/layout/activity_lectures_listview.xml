@@ -2,23 +2,22 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
+    android:minHeight="?android:listPreferredItemHeight"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/material_small_padding"
-    android:paddingEnd="@dimen/material_default_padding"
-    android:paddingStart="@dimen/material_default_padding"
-    android:paddingTop="@dimen/material_small_padding">
+    android:padding="@dimen/material_default_padding">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight=".80"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvLectureName"
+            android:id="@+id/lectureNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -28,9 +27,10 @@
             tools:text="Lecture"/>
 
         <TextView
-            android:id="@+id/tvTypeSWSSemester"
+            android:id="@+id/typeTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             tools:text="Type"/>
 
         <LinearLayout
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/nrUnreadMessages"
+                android:id="@+id/unreadMessagesTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -54,27 +54,27 @@
                 tools:text="Unread messages"/>
 
             <TextView
-                android:id="@+id/tvDozent"
+                android:id="@+id/professorTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
                 tools:text="Professor"/>
+
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/llAdditionalInfo"
+        android:id="@+id/additionalInfoLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight=".20"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvLastmsg"
+            android:id="@+id/lastMessageTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -84,7 +84,7 @@
             tools:text="…"/>
 
         <TextView
-            android:id="@+id/tvMembers"
+            android:id="@+id/membersTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
