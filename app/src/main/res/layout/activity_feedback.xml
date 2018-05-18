@@ -55,31 +55,14 @@
                 android:padding="@dimen/padding_default"
                 android:scrollbars="vertical"/>
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/feedback_image_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/padding_default">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/feedback_image_list"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_default"
-                    android:scrollbars="horizontal" />
-
-                <Button
-                    style="@style/FlatButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:layout_gravity="end"
-                    android:drawableStart="@drawable/ic_add_photo"
-                    android:onClick="addPicture"
-                    android:drawablePadding="@dimen/padding_default"
-                    android:text="@string/add_picture_button"/>
-            </LinearLayout>
+                android:padding="@dimen/padding_default"
+                android:scrollbars="horizontal"
+                android:layout_marginTop="@dimen/padding_default"
+                android:layout_gravity="center_horizontal"/>
 
             <CheckBox
                 android:id="@+id/feedback_include_email"
@@ -103,13 +86,27 @@
                 android:checked="false"
                 android:text="@string/feedback_include_location"/>
 
-            <Button
-                style="@style/FlatButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:onClick="sendFeedback"
-                android:text="@string/feedback_send_button"/>
+                android:layout_marginTop="@dimen/padding_default"
+                android:gravity="end">
+
+                <Button
+                    style="@style/FlatButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_add_photo"
+                    android:onClick="addPicture"
+                    android:text="@string/add_picture_button"/>
+
+                <Button
+                    style="@style/FlatButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="sendFeedback"
+                    android:text="@string/feedback_send_button"/>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
