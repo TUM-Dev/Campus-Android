@@ -29,13 +29,10 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.List;
@@ -301,7 +298,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         if (i == R.id.action_add_chat_member) {
             Intent intent = new Intent(this, AddChatMemberActivity.class);
             intent.putExtra(Const.CURRENT_CHAT_ROOM, currentChatRoom.getId());
-            intent.putExtra(Const.CHAT_ROOM_DISPLAY_NAME, currentChatRoom.getActualName());
+            intent.putExtra(Const.CHAT_ROOM_NAME, currentChatRoom.getName());
             startActivity(intent);
             return true;
         } else if (i == R.id.action_leave_chat_room) {
@@ -315,21 +312,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         } else {
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void showQRCode() {
-        String url = "http://chart.apis.google.com/chart?cht=qr&chs=500x500&chld=M&choe=UTF-8&chl=" +
-                     UrlEscapers.urlPathSegmentEscaper()
-                                .escape(currentChatRoom.getName());
-
-        final ImageView qrCode = new ImageView(this);
-        Picasso.get().load(url).into(qrCode);
-
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.add_chat_member)
-                .setView(qrCode)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
     }
 
     /**

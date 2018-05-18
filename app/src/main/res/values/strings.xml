@@ -571,4 +571,6 @@ Signature: %5$s</string>
     <string name="recents">Recents</string>
     <string name="e_mail">E-mail</string>
     <string name="additional_info">Additional Info</string>
+    <string name="or">or</string>
+    <string name="join_chat_via_qr_code">let others join via QR-code</string>
 </resources>

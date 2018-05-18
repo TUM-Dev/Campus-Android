@@ -1,17 +1,22 @@
 package de.tum.in.tumcampusapp.component.ui.chat;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.Helper;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
@@ -31,15 +36,14 @@ import retrofit2.Response;
 public class AddChatMemberActivity extends BaseActivity {
     private static final int THRESHOLD = 3; // min number of characters before getting suggestions
     private static final int DELAY = 1000; // millis after user stopped typing before getting suggestions
-    private String chatRoomName;
-    private int roomId;
+    private ChatRoom room;
     private TUMCabeClient tumCabeClient;
     private Pattern tumIdPattern;
     private AutoCompleteTextView searchView;
 
     // for delayed suggestions
     private Handler delayHandler;
-    private Runnable suggestionRunnable = () -> getSuggestions();
+    private Runnable suggestionRunnable = this::getSuggestions;
 
 
     private List<ChatMember> suggestions;
@@ -55,9 +59,10 @@ public class AddChatMemberActivity extends BaseActivity {
         delayHandler = new Handler();
         tumIdPattern = Pattern.compile(Const.TUM_ID_PATTERN);
 
-        chatRoomName = getIntent().getStringExtra(Const.CHAT_ROOM_DISPLAY_NAME);
-        roomId = getIntent().getIntExtra(Const.CURRENT_CHAT_ROOM, -1);
-        Utils.log("ChatRoom: " + chatRoomName + " (roomId: " + roomId + ")");
+        room = new ChatRoom();
+        room.setName(getIntent().getStringExtra(Const.CHAT_ROOM_NAME));
+        room.setId(getIntent().getIntExtra(Const.CURRENT_CHAT_ROOM, -1));
+        Utils.log("ChatRoom: " + room.getActualName() + " (roomId: " + room.getId() + ")");
 
         tumCabeClient = TUMCabeClient.getInstance(this);
 
@@ -68,6 +73,20 @@ public class AddChatMemberActivity extends BaseActivity {
         searchView.setOnItemClickListener((adapterView, view, pos, l) -> {
             ChatMember member = (ChatMember) adapterView.getItemAtPosition(pos);
             showConfirmDialog(member);
+        });
+
+        searchView.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                Utils.log("Search");
+                delayHandler.removeCallbacks(suggestionRunnable);
+                getSuggestions();
+
+                //searchView.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchView.getWindowToken(),0);
+                return true;
+            }
+            return false;
         });
 
         searchView.addTextChangedListener(new TextWatcher() {
@@ -131,6 +150,8 @@ public class AddChatMemberActivity extends BaseActivity {
             }
         });
 
+        ImageView qrCode = findViewById(R.id.join_chat_qr_code);
+        qrCode.setImageBitmap(Helper.createQRCode(room.getName()));
     }
 
     private void getSuggestions(){
@@ -158,7 +179,7 @@ public class AddChatMemberActivity extends BaseActivity {
     private void showConfirmDialog(ChatMember member){
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setIcon(R.drawable.ic_action_add_person_blue);
-        dialog.setMessage(getString(R.string.add_user_to_chat_message, member.getDisplayName(), chatRoomName));
+        dialog.setMessage(getString(R.string.add_user_to_chat_message, member.getDisplayName(), room.getActualName()));
         dialog.setPositiveButton(R.string.yes, (dialogInterface, i) -> {
             joinRoom(member);
             reset();
@@ -186,9 +207,6 @@ public class AddChatMemberActivity extends BaseActivity {
             return;
         }
 
-        ChatRoom room = new ChatRoom();
-        room.setId(roomId);
-        room.setName(chatRoomName);
         TUMCabeClient.getInstance(this).addUserToChat(room, member, verification, new Callback<ChatRoom>() {
             @Override
             public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {

@@ -33,6 +33,7 @@ object Const {
     const val API_HOSTNAME_NEW = "app.tum.de"
     const val CURRENT_CHAT_ROOM = "current_chat_room"
     const val CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name"
+    const val CHAT_ROOM_NAME = "chat_room_name"
 
     const val PRIVATE_KEY_ACTIVE = "chat_member_private_key_active"
     const val PRIVATE_KEY = "chat_member_private_key"

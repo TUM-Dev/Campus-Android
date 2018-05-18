@@ -542,4 +542,7 @@ Signatur: %5$s</string>
     <string name="add_user_to_chat_message"><b>%s</b> zum Chatroom <b>%s</b> hinzufügen?</string>
     <string name="chat_member_added">User wurde hinzugefügt</string>
 
+    <string name="or">oder</string>
+    <string name="join_chat_via_qr_code">via QR-code beitreten</string>
+
 </resources>

@@ -155,7 +155,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == JOIN_ROOM_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             String name = data.getStringExtra("name");
             if (name.charAt(3) == ':') {
                 createOrJoinChatRoom(name);

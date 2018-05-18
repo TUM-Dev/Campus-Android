@@ -14,9 +14,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin">
+        android:layout_margin="@dimen/activity_horizontal_margin">
 
         <AutoCompleteTextView
             android:id="@+id/chat_user_search"
@@ -26,7 +24,27 @@
             android:drawableEnd="@drawable/ic_action_search_black"
             android:drawablePadding="2dp"
             android:lines="1"
-            android:inputType="textAutoComplete"/>
+            android:inputType="textAutoComplete"
+            android:imeOptions="actionSearch"/>
     </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/or"
+        android:layout_margin="@dimen/padding_default"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/join_chat_via_qr_code"/>
+
+    <ImageView
+        android:id="@+id/join_chat_qr_code"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:scaleType="fitCenter"
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
 
 </LinearLayout>
