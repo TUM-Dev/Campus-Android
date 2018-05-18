@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.ui.chat;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.AutoCompleteTextView;
@@ -28,12 +29,18 @@ import retrofit2.Response;
  * Allows user to search for other users which he or she can then add to the ChatRoom
  */
 public class AddChatMemberActivity extends BaseActivity {
-    private static final int THRESHOLD = 3; // min number of characters before we getting suggestions
+    private static final int THRESHOLD = 3; // min number of characters before getting suggestions
+    private static final int DELAY = 1000; // millis after user stopped typing before getting suggestions
     private String chatRoomName;
     private int roomId;
     private TUMCabeClient tumCabeClient;
     private Pattern tumIdPattern;
     private AutoCompleteTextView searchView;
+
+    // for delayed suggestions
+    private Handler delayHandler;
+    private Runnable suggestionRunnable = () -> getSuggestions();
+
 
     private List<ChatMember> suggestions;
 
@@ -45,6 +52,7 @@ public class AddChatMemberActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         suggestions = new ArrayList<>();
+        delayHandler = new Handler();
         tumIdPattern = Pattern.compile(Const.TUM_ID_PATTERN);
 
         chatRoomName = getIntent().getStringExtra(Const.CHAT_ROOM_DISPLAY_NAME);
@@ -70,7 +78,7 @@ public class AddChatMemberActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                Utils.log(charSequence.toString());
+                delayHandler.removeCallbacks(suggestionRunnable);
 
                 if(charSequence.length() < THRESHOLD){
                     return;
@@ -114,20 +122,7 @@ public class AddChatMemberActivity extends BaseActivity {
                     return;
                 }
 
-                // Get suggestions from backend
-                tumCabeClient.searchChatMember(charSequence.toString(), new Callback<List<ChatMember>>() {
-                    @Override
-                    public void onResponse(Call<List<ChatMember>> call, Response<List<ChatMember>> response) {
-                        searchView.setError(null);
-                        suggestions = response.body();
-                        ((MemberSuggestionsListAdapter)searchView.getAdapter()).updateSuggestions(suggestions);
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<ChatMember>> call, Throwable t) {
-                        onError();
-                    }
-                });
+                delayHandler.postDelayed(suggestionRunnable, DELAY);
             }
 
             @Override
@@ -136,6 +131,24 @@ public class AddChatMemberActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private void getSuggestions(){
+        String input = searchView.getText().toString();
+        Utils.log("Get suggestions for " + input);
+        tumCabeClient.searchChatMember(input, new Callback<List<ChatMember>>() {
+            @Override
+            public void onResponse(Call<List<ChatMember>> call, Response<List<ChatMember>> response) {
+                searchView.setError(null);
+                suggestions = response.body();
+                ((MemberSuggestionsListAdapter)searchView.getAdapter()).updateSuggestions(suggestions);
+            }
+
+            @Override
+            public void onFailure(Call<List<ChatMember>> call, Throwable t) {
+                onError();
+            }
+        });
     }
 
     private void onError(){
@@ -194,6 +207,5 @@ public class AddChatMemberActivity extends BaseActivity {
             }
         });
     }
-
 
 }
