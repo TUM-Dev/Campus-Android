@@ -142,4 +142,6 @@ object Const {
 
     const val CALENDAR_FILTER_CANCELED = "calendar_filter_canceled"
     const val CALENDAR_FILTER_FIT_SCREEN = "calendar_filter_fit_screen"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MIN = "calendar_filter_hour_limit_min"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MAX = "calendar_filter_hour_limit_max"
 }

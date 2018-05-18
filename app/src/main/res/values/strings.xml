@@ -29,6 +29,10 @@
     <string name="calendar_filter_title">Change Filters</string>
     <string name="calendar_filter_canceled">Show Canceled Events</string>
     <string name="calendar_filter_fit_screen">Fit Screen</string>
+    <string name="calendar_filter_hour_limit">Limit Shown Timespan</string>
+    <string name="calendar_filter_hour_limit_min_title">Lower Limit</string>
+    <string name="calendar_filter_hour_limit_max_title">Upper Limit</string>
+    <string name="calendar_filter_hour_limit_error_message">Lower bound must be below upper bound!</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>

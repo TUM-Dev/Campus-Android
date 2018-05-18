@@ -58,7 +58,7 @@ import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener {
+public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener, LimitPickerDialogListener {
 
     /**
      * The space between the first and the last date
@@ -215,6 +215,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             case R.id.action_calendar_filter_fit_screen:
                 item.setChecked(!item.isChecked());
                 applyFilterFitScreen(item.isChecked());
+                return true;
+            case R.id.action_calendar_filter_hour_limit:
+                showHourLimitFilterDialog();
                 return true;
             default:
                 isFetched = false;
@@ -516,6 +519,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
         menuItemFilterCanceled.setChecked(settings);
         applyFilterCanceled(settings);
+
+        int savedMin = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, "0"));
+        int savedMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, "24"));
+        applyFilterLimitHours(savedMin, savedMax);
     }
 
     protected void applyFilterCanceled(boolean val) {
@@ -526,14 +533,43 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     protected void applyFilterFitScreen(boolean val) {
         Utils.setSetting(this, Const.CALENDAR_FILTER_FIT_SCREEN, val);
         int hourHeight = defaultHourHeight;
+        int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, "0"));
+        int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, "24"));
         if (val) {
-            // get the height of the weekView and subtract the height of its header
-            // to get height of actual calendar section, then devide by 24 to get height of a single hour
-            hourHeight = (mWeekView.getHeight()                     // height of weekView
-                          - mWeekView.getTextSize()                 // height of text in header of weekView
-                          - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and 2x below text in header
-                         / 24;                                      // amount of hours
+            hourHeight = calcHourHeightToFit(minHour, maxHour);
         }
         mWeekView.setHourHeight(hourHeight);
     }
+
+    protected int calcHourHeightToFit(int min, int max) {
+        // get the height of the weekView and subtract the height of its header
+        // to get height of actual calendar section, then devide by 24 to get height of a single hour
+        return (mWeekView.getHeight()                     // height of weekView
+                - mWeekView.getTextSize()                 // height of text in header of weekView
+                - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and 2x below text in header
+                / (max - min);                            // amount of hours
+    }
+
+    protected void applyFilterLimitHours(int min, int max) {
+        Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Integer.toString(min));
+        Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Integer.toString(max));
+
+        mWeekView.setMinTime(min);
+        mWeekView.setMaxTime(max);
+        if(Utils.getSettingBool(this, Const.CALENDAR_FILTER_FIT_SCREEN, false)) {
+            mWeekView.setHourHeight(calcHourHeightToFit(min, max));
+        }
+    }
+
+    protected void showHourLimitFilterDialog() {
+        LimitPickerDialog dialog = new LimitPickerDialog(this);
+        dialog.addListener(this);
+        dialog.show();
+    }
+
+    @Override
+    public void onSelected(int min, int max) {
+        applyFilterLimitHours(min, max);
+    }
 }
+
