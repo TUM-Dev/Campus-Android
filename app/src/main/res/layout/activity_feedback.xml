@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:scrollbars="vertical"
+    android:background="@drawable/chat_background"
     tools:context=".component.tumui.feedback.FeedbackActivity">
 
     <!-- The toolbar aka SupportActionBar -->
@@ -18,50 +19,50 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin">
 
-            <Spinner
-                android:id="@+id/feedback_topic_spinner"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"/>
+                android:gravity="center"
+                android:layout_marginTop="@dimen/padding_default">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/topic"
+                    android:layout_marginEnd="@dimen/padding_default"
+                    android:textSize="@dimen/large_text_size"/>
+                <Spinner
+                    android:id="@+id/feedback_topic_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/feedback_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginTop="@dimen/padding_default"
                 android:background="@drawable/feedback_rounded_background"
                 android:gravity="top"
                 android:hint="@string/feedback_hint"
                 android:inputType="textMultiLine"
                 android:maxHeight="300dp"
                 android:minHeight="200dp"
-                android:padding="5dp"
+                android:padding="@dimen/padding_default"
                 android:scrollbars="vertical"/>
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/feedback_image_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/feedback_image_list"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:scrollbars="horizontal"/>
-
-                <Button
-                    style="@style/FlatButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:drawableLeft="@drawable/ic_add_photo"
-                    android:onClick="addPicture"
-                    android:text="@string/add_picture_button"/>
-            </LinearLayout>
+                android:padding="@dimen/padding_default"
+                android:scrollbars="horizontal"
+                android:layout_marginTop="@dimen/padding_default"
+                android:layout_gravity="center_horizontal"/>
 
             <CheckBox
                 android:id="@+id/feedback_include_email"
@@ -75,9 +76,7 @@
                 android:hint="@string/feedback_email_hint"
                 android:id="@+id/feedback_custom_email"
                 android:inputType="textEmailAddress"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="10dp"
-                android:padding="5dp"
+                android:layout_marginStart="32dp"
                 android:visibility="gone"/>
 
             <CheckBox
@@ -87,13 +86,27 @@
                 android:checked="false"
                 android:text="@string/feedback_include_location"/>
 
-            <Button
-                style="@style/FlatButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:onClick="sendFeedback"
-                android:text="@string/feedback_send_button"/>
+                android:layout_marginTop="@dimen/padding_default"
+                android:gravity="end">
+
+                <Button
+                    style="@style/FlatButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_add_photo"
+                    android:onClick="addPicture"
+                    android:text="@string/add_picture_button"/>
+
+                <Button
+                    style="@style/FlatButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="sendFeedback"
+                    android:text="@string/feedback_send_button"/>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

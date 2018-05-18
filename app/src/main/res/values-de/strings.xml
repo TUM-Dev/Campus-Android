@@ -168,7 +168,7 @@
 
     <!-- Tuition fees -->
     <string name="amount_dots">Offener Betrag</string>
-    <string name="deadline_dots">Deadline</string>
+    <string name="deadline_dots">Deadline:</string>
 
     <!-- Persons -->
     <string name="no_search_result">Keine Suchergebnisse</string>
@@ -324,6 +324,7 @@
     <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
     <string name="joined_chat_room">Du bist dem Chatroom beigetreten!</string>
     <string name="view_mode">Ansicht wechseln</string>
+    <string name="Refresh">Aktualisieren</string>
     <string name="bug_reports">Anonyme Fehlerberichte</string>
     <string name="set_bug_reports">Unterstütze das TCA Team indem du anonyme Fehlerberichte zu unseren Server schicken lässt. Diese beinhalten: Stacktrace, Logdatei, Android Version, App Version und Bildschirm Auflösung</string>
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
@@ -438,7 +439,7 @@ Signatur: %5$s</string>
         <item>@string/tca</item>
     </string-array>
     <string name="feedback_hint">Hier ist Platz für dein Feedback…</string>
-    <string name="add_picture_button">&#160;&#160;Bild hinzufügen</string>
+    <string name="add_picture_button">Bild hinzufügen</string>
     <string name="feedback_include_email">Email mitversenden um eine Antwort zu erhalten</string>
     <string name="feedback_include_email_tum_id">Email mitversenden um eine Antwort zu erhalten (%s)</string>
     <string name="feedback_email_hint">E-Mail-Adresse</string>
@@ -535,4 +536,5 @@ Signatur: %5$s</string>
     <string name="e_mail">E-Mail</string>
     <string name="additional_info">Zusaätzliche Infos</string>
 
+    <string name="topic">Über</string>
 </resources>
