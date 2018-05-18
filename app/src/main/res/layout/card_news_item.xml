@@ -33,14 +33,6 @@
                 android:textSize="20sp"
                 tools:text="News title"/>
 
-            <ImageView
-                android:id="@+id/news_src_icon"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_facebook"/>
-
             <TextView
                 android:id="@+id/news_src_date"
                 android:layout_width="match_parent"

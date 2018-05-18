@@ -13,7 +13,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.StickyCard;
 /**
  * Card that allows the user to reset the dismiss state of all cards
  */
-@Deprecated()
 public class RestoreCard extends StickyCard {
 
     public RestoreCard(Context context) {

@@ -67,8 +67,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                                      .inflate(R.layout.two_line_list_item,
-                                               parent, false);
+                                      .inflate(R.layout.two_line_list_item, parent, false);
             return new RecyclerView.ViewHolder(view) {
             };
         }
@@ -117,5 +116,6 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
         public int getItemCount() {
             return studyRooms.size();
         }
+
     }
 }
