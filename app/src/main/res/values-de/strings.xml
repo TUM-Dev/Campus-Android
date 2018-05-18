@@ -531,4 +531,11 @@ Signatur: %5$s</string>
     </string>
     <string name="dialog_add_to_contacts">Zu Kontakten hinzufügen?</string>
 
+    <!-- Add user to chat via search -->
+    <string name="user_search_hint">Suche Name oder TUM Kennung</string>
+    <string name="error_invalid_tum_id_format">Inkorrekte TUM Kennung</string>
+    <string name="error_user_not_found">Kein Nutzer gefunden</string>
+    <string name="add_user_to_chat_message"><b>%s</b> zum Chatroom <b>%s</b> hinzufügen?</string>
+    <string name="chat_member_added">User wurde hinzugefügt</string>
+
 </resources>

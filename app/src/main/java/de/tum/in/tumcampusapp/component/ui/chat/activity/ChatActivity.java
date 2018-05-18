@@ -299,7 +299,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_add_chat_member) {
-            //showQRCode();
             Intent intent = new Intent(this, AddChatMemberActivity.class);
             intent.putExtra(Const.CURRENT_CHAT_ROOM, currentChatRoom.getId());
             intent.putExtra(Const.CHAT_ROOM_DISPLAY_NAME, currentChatRoom.getActualName());

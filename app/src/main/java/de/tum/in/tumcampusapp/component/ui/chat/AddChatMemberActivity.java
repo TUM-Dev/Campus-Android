@@ -78,7 +78,7 @@ public class AddChatMemberActivity extends BaseActivity {
 
                 // backend call, add to adapter
                 if(tumIdPattern.matcher(charSequence).matches()){
-                    Utils.log("Query matches TUM-ID");
+                    // query matches TUM-ID
                     tumCabeClient.getChatMemberByLrzId(charSequence.toString(), new Callback<ChatMember>() {
                         @Override
                         public void onResponse(Call<ChatMember> call, Response<ChatMember> response) {
@@ -104,12 +104,17 @@ public class AddChatMemberActivity extends BaseActivity {
                     }
                 }
                 if(containsDigit){
-                    Utils.log("Non-finished TUM-ID");
                     // don't try to get new suggestions (we don't autocomplete TUM-IDs)
+                    if(charSequence.length() > 7){
+                        searchView.setError(getString(R.string.error_invalid_tum_id_format));
+                    } else {
+                        // unfinished TUM-ID
+                        searchView.setError(null);
+                    }
                     return;
                 }
 
-                Utils.log("Get suggestions from backend");
+                // Get suggestions from backend
                 tumCabeClient.searchChatMember(charSequence.toString(), new Callback<List<ChatMember>>() {
                     @Override
                     public void onResponse(Call<List<ChatMember>> call, Response<List<ChatMember>> response) {
@@ -134,12 +139,13 @@ public class AddChatMemberActivity extends BaseActivity {
     }
 
     private void onError(){
-        searchView.setError("No user found");
+        searchView.setError(getString(R.string.error_user_not_found));
     }
 
     private void showConfirmDialog(ChatMember member){
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setMessage("Add " + member.getDisplayName() + " to chat room " + chatRoomName + "?");
+        dialog.setIcon(R.drawable.ic_action_add_person_blue);
+        dialog.setMessage(getString(R.string.add_user_to_chat_message, member.getDisplayName(), chatRoomName));
         dialog.setPositiveButton(R.string.yes, (dialogInterface, i) -> {
             joinRoom(member);
             reset();
@@ -163,7 +169,7 @@ public class AddChatMemberActivity extends BaseActivity {
             ChatMember currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
             verification = ChatVerification.Companion.getChatVerification(this, currentChatMember);
         } catch (NoPrivateKey noPrivateKey) {
-            Utils.showToast(getBaseContext(), "An Error occurred");
+            Utils.showToast(getBaseContext(), R.string.error);
             return;
         }
 
@@ -176,15 +182,15 @@ public class AddChatMemberActivity extends BaseActivity {
                 ChatRoom room = response.body();
                 if(room != null){
                     TcaDb.getInstance(getBaseContext()).chatRoomDao().updateMemberCount(room.getMembers(), room.getId(), room.getName());
-                    Utils.showToast(getBaseContext(), "User added");
+                    Utils.showToast(getBaseContext(), R.string.chat_member_added);
                 } else {
-                    Utils.showToast(getBaseContext(), "An Error occurred");
+                    Utils.showToast(getBaseContext(), R.string.error);
                 }
             }
 
             @Override
             public void onFailure(Call<ChatRoom> call, Throwable t) {
-                Utils.showToast(getBaseContext(), "An Error occurred");
+                Utils.showToast(getBaseContext(), R.string.error);
             }
         });
     }

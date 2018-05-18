@@ -273,9 +273,9 @@
     <string name="show_feedback">Send feedback</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="app_info_text">
-        Die TUM Campus App is being developed by volunteers, students of the Android practical course and employees of the Chair of Operating Systems led by Professor Dr. Baumgarten.
+        The TUM Campus App is being developed by volunteers, students of the Android practical course and employees of the Chair of Operating Systems led by Professor Dr. Baumgarten.
         The app can be used on smartphones and tablets and is available for both iOS and Android.\n\n
-        You can reach via the feedback form in the app or via email (app@tum.de) if you have special concerns or request.
+        You can reach us via the feedback form in the app or via email (app@tum.de) if you have any special concerns or requests.
     </string>
 
     <!-- END Translated, please do not change identifiers -->
@@ -559,5 +559,11 @@ Signature: %5$s</string>
 
     <string name="pdf_viewer_title">PDF Viewer</string>
     <string name="dialog_add_to_contacts">Add to Contacts?</string>
-    <string name="user_search_hint">Search Name or TUM-ID</string>
+
+    <!-- Add user to chat via search -->
+    <string name="user_search_hint">Search Name or TUM Identification</string>
+    <string name="error_invalid_tum_id_format">Invalid TUM-ID format</string>
+    <string name="error_user_not_found">No user found</string>
+    <string name="add_user_to_chat_message">Add <b>%s</b> to chat room <b>%s</b>?</string>
+    <string name="chat_member_added">User was added</string>
 </resources>
