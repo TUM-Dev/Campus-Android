@@ -110,7 +110,7 @@ public class FeedbackActivity extends BaseActivity {
         }
 
         RecyclerView pictureList = findViewById(R.id.feedback_image_list);
-        pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         thumbAdapter = new FeedbackThumbAdapter(picPaths);
         pictureList.setAdapter(thumbAdapter);
     }
