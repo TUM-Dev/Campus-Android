@@ -14,11 +14,12 @@ class GeofencingStartupReceiver : BroadcastReceiver() {
         if (!isValidIntent(intent)) {
             return
         }
+
         Utils.log("Restarting geofencing due to " + intent?.action)
-        if (context != null) {
-            val geofencingIntent = GeofencingRegistrationService.buildGeofence(context, MUNICH_GEOFENCE,
+        context?.let {
+            val geofencingIntent = GeofencingRegistrationService.buildGeofence(it, MUNICH_GEOFENCE,
                     48.137430, 11.575490, DISTANCE_IN_METER)
-            GeofencingRegistrationService.startGeofencing(context, geofencingIntent)
+            GeofencingRegistrationService.startGeofencing(it, geofencingIntent)
         }
     }
 
@@ -28,4 +29,5 @@ class GeofencingStartupReceiver : BroadcastReceiver() {
                 intent.action == "android.intent.action.QUICKBOOT_POWERON" ||
                 intent.action == "android.location.PROVIDERS_CHANGED")
     }
+
 }

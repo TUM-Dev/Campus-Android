@@ -294,7 +294,7 @@
                 android:value=".component.ui.overview.MainActivity"/>
         </activity>
         <activity
-            android:name=".component.tumui.person.PersonsSearchActivity"
+            android:name=".component.tumui.person.PersonSearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/person_search"
             android:launchMode="singleTop"
@@ -311,13 +311,13 @@
                 android:value=".component.ui.overview.MainActivity"/>
         </activity>
         <activity
-            android:name=".component.tumui.person.PersonsDetailsActivity"
+            android:name=".component.tumui.person.PersonDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/person_information"
-            android:parentActivityName=".component.tumui.person.PersonsSearchActivity">
+            android:parentActivityName=".component.tumui.person.PersonSearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.person.PersonsSearchActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.tumui.person.PersonSearchActivity"/>
         </activity>
         <activity
             android:name=".component.tumui.roomfinder.RoomFinderActivity"
@@ -680,7 +680,7 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
-            android:name=".service.ScanResultsAvailableReceiver$NeverShowAgain"
+            android:name=".service.ScanResultsAvailableReceiver$NeverShowAgainService"
             android:exported="false"/>
         <service
             android:name=".component.tumui.calendar.CalendarController$QueryLocationsService"
@@ -719,8 +719,9 @@
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
             android:parentActivityName=".component.tumui.calendar.CalendarActivity"/>
-        <activity android:name=".component.ui.plan.PDFViewActivity"
-                  android:label="@string/pdf_viewer_title"
+        <activity
+            android:name=".component.ui.plan.PDFViewActivity"
+            android:label="@string/pdf_viewer_title"
             android:parentActivityName=".component.ui.plan.PlansActivity"/>
 
     </application>

@@ -116,6 +116,16 @@
         <item name="android:layout_margin">5dp</item>
     </style>
 
+    <style name="InfoBox">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:drawableStart">@drawable/ic_action_info_blue</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:background">@drawable/rounded_corners_background</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
     <style name="StandardCard" parent="CardView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
