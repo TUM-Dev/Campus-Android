@@ -14,7 +14,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesActivity
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity
-import de.tum.`in`.tumcampusapp.component.tumui.person.PersonsSearchActivity
+import de.tum.`in`.tumcampusapp.component.tumui.person.PersonSearchActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeInfoActivity
@@ -90,7 +90,7 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
                 SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, RoomFinderActivity::class.java, false, false),
                 SideNavigationItem(R.string.plans, R.drawable.ic_plans, PlansActivity::class.java, false, false),
                 SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity::class.java, false, false),
-                SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity::class.java, true, false),
+                SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonSearchActivity::class.java, true, false),
                 SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity::class.java, false, false),
                 SideNavigationItem(R.string.barrier_free, R.drawable.ic_accessible, BarrierFreeInfoActivity::class.java, false, false),
                 SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity::class.java, false, false),

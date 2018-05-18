@@ -566,4 +566,9 @@ Signature: %5$s</string>
     <string name="error_user_not_found">No user found</string>
     <string name="add_user_to_chat_message">Add <b>%s</b> to chat room <b>%s</b>?</string>
     <string name="chat_member_added">User was added</string>
+
+    <string name="add">Add</string>
+    <string name="recents">Recents</string>
+    <string name="e_mail">E-mail</string>
+    <string name="additional_info">Additional Info</string>
 </resources>

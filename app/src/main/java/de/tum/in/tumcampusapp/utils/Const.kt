@@ -118,6 +118,7 @@ object Const {
     const val RAINBOW_MODE = "rainbow_enabled"
     const val REFRESH_CARDS = "refresh_cards"
     const val EDUROAM_SSID = "eduroam"
+    const val LRZ = "lrz"
 
     const val CHAT_BROADCAST_NAME = "chat-message-received"
   
@@ -136,4 +137,7 @@ object Const {
     const val NEWS_ALERT_IMAGE = "newsAlertImageURL"
     const val NEWS_ALERT_LINK = "newsAlertLink"
     const val NEWS_ALERT_SHOW_UNTIL = "newsAlertShowUntil"
+
+    const val CONTACTS_PERMISSION_REQUEST_CODE = 0
+    const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
 }
