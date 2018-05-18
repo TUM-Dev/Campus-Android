@@ -520,8 +520,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         menuItemFilterCanceled.setChecked(settings);
         applyFilterCanceled(settings);
 
-        int savedMin = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, "0"));
-        int savedMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, "24"));
+        int savedMin = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
+        int savedMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
         applyFilterLimitHours(savedMin, savedMax);
     }
 
@@ -533,8 +533,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     protected void applyFilterFitScreen(boolean val) {
         Utils.setSetting(this, Const.CALENDAR_FILTER_FIT_SCREEN, val);
         int hourHeight = defaultHourHeight;
-        int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, "0"));
-        int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, "24"));
+        int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
+        int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
         if (val) {
             hourHeight = calcHourHeightToFit(minHour, maxHour);
         }

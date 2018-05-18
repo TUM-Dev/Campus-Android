@@ -120,7 +120,7 @@ object Const {
     const val EDUROAM_SSID = "eduroam"
 
     const val CHAT_BROADCAST_NAME = "chat-message-received"
-  
+
     const val EVENT_TITLE = "pTitel"
     const val EVENT_COMMENT = "pAnmerkung"
     const val EVENT_START = "pVon"
@@ -128,7 +128,7 @@ object Const {
     const val EVENT_NR = "pTerminNr"
 
     const val KINO_DATE = "kinoDate"
-  
+
     const val PDF_TITLE = "pdfTitle"
     const val PDF_PATH = "pdfPath"
 
@@ -144,4 +144,6 @@ object Const {
     const val CALENDAR_FILTER_FIT_SCREEN = "calendar_filter_fit_screen"
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN = "calendar_filter_hour_limit_min"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX = "calendar_filter_hour_limit_max"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
 }
