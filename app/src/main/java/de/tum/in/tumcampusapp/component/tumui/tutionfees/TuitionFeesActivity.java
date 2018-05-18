@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
+
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -38,6 +40,8 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         semesterTextView = findViewById(R.id.semester);
         ((TextView) findViewById(R.id.fees_aid)).setMovementMethod(LinkMovementMethod.getInstance());
 
+        JodaTimeAndroid.init(this);
+
         requestFetch();
     }
 
@@ -51,11 +55,11 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         String amount = tuitionList.getTuitions().get(0).getSoll();
         amountTextView.setText(String.format("%s€", amount));
 
-        Date date = DateUtils.getDate(tuitionList.getTuitions()
+        Date deadline = DateUtils.getDate(tuitionList.getTuitions()
                                                  .get(0)
                                                  .getFrist());
         deadlineTextView.setText(DateFormat.getDateInstance()
-                                           .format(date));
+                                           .format(deadline));
         semesterTextView.setText(tuitionList.getTuitions()
                                             .get(0)
                                             .getSemesterBez()
@@ -65,10 +69,8 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
             amountTextView.setTextColor(getResources().getColor(R.color.sections_green));
         } else {
             // check if the deadline is less than a week from now
-            GregorianCalendar cal = new GregorianCalendar();
-            cal.setTime(date);
-            cal.add(Calendar.WEEK_OF_YEAR, 1);
-            if(cal.getTime().after(new Date())){
+            DateTime nextWeek = new DateTime().plusWeeks(1);
+            if(nextWeek.isAfter(deadline.getTime())){
                 amountTextView.setTextColor(getResources().getColor(R.color.error));
             } else {
                 amountTextView.setTextColor(getResources().getColor(R.color.black));
