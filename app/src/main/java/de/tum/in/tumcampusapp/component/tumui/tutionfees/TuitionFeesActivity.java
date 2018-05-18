@@ -53,7 +53,15 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
     @Override
     public void onFetch(TuitionList tuitionList) {
         String amount = tuitionList.getTuitions().get(0).getSoll();
-        amountTextView.setText(String.format("%s€", amount));
+        if (amount.contains(",")) {
+            // Make sure that the format is correct (e.g. 10,4 -> 10,40)
+            String[] parts = amount.split(",");
+            String decimals = parts[1];
+            if (decimals.length() == 1) {
+                amount += "0";
+            }
+        }
+        amountTextView.setText(String.format("%s €", amount));
 
         Date deadline = DateUtils.getDate(tuitionList.getTuitions()
                                                  .get(0)

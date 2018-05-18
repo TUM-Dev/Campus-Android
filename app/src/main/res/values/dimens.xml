@@ -1,4 +1,5 @@
 <resources>
+    <dimen name="material_large_padding">24dp</dimen>
     <dimen name="material_default_padding">16dp</dimen>
     <dimen name="material_small_padding">8dp</dimen>
     <dimen name="material_tiny_padding">4dp</dimen>
