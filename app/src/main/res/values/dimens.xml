@@ -12,6 +12,7 @@
     <dimen name="next_lecture_select_width">30dp</dimen>
     <dimen name="card_padding_vertical">0dp</dimen>
     <dimen name="cardview_elevation">6dp</dimen>
+    <dimen name="cardview_corner_radius">3dp</dimen>
 
     <dimen name="widget_margin">0dp</dimen>
 
