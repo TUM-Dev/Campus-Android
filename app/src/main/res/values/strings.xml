@@ -469,7 +469,7 @@ Signature: %5$s</string>
     <string name="general">TUM in General</string>
     <string name="tca">TUM Campus App</string>
     <string name="feedback_hint">What would you like us to know?</string>
-    <string name="add_picture_button">&#160;&#160;Add picture</string>
+    <string name="add_picture_button">Add picture</string>
     <string name="feedback_include_email">Include my email to get a reply</string>
     <string name="feedback_include_email_tum_id">Include my email to get a reply (%s)</string>
     <string name="feedback_email_hint">Your email</string>

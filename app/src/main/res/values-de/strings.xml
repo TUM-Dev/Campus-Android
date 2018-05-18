@@ -438,7 +438,7 @@ Signatur: %5$s</string>
         <item>@string/tca</item>
     </string-array>
     <string name="feedback_hint">Hier ist Platz für dein Feedback…</string>
-    <string name="add_picture_button">&#160;&#160;Bild hinzufügen</string>
+    <string name="add_picture_button">Bild hinzufügen</string>
     <string name="feedback_include_email">Email mitversenden um eine Antwort zu erhalten</string>
     <string name="feedback_include_email_tum_id">Email mitversenden um eine Antwort zu erhalten (%s)</string>
     <string name="feedback_email_hint">E-Mail-Adresse</string>
