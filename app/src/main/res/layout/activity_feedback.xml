@@ -57,7 +57,8 @@
                 android:inputType="textMultiLine"
                 android:maxHeight="300dp"
                 android:minHeight="200dp"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical"
+                android:textCursorDrawable="@drawable/cursor_text_field_colorful"/>
 
             <View
                 android:layout_width="match_parent"
@@ -110,10 +111,10 @@
                 android:id="@+id/feedback_custom_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
                 android:layout_marginTop="@dimen/material_small_padding"
                 android:hint="@string/feedback_email_hint"
                 android:inputType="textEmailAddress"
-                android:layout_marginStart="28dp"
                 android:visibility="gone"
                 tools:visibility="visible"/>
 
