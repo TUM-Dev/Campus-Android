@@ -17,7 +17,7 @@
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_primary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="colorControlActivated">@color/tum_100</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_text_field</item>
     </style>
 
     <style name="AppTheme.WhiteBackground" parent="AppTheme">
