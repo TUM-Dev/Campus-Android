@@ -21,9 +21,11 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.component.ui.tufilm.show_ticket;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
@@ -39,7 +41,7 @@ public class KinoDetailsFragment extends Fragment {
     private String url; // link to homepage
     private LayoutInflater inflater;
 
-    private boolean isBooked = false;
+    private boolean isBooked = true;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -169,9 +171,14 @@ public class KinoDetailsFragment extends Fragment {
 
         rootView.addView(headerView);
     }
-
+    //open show_ticket activity, and transfer current movie data to it.
+    //The String data is just a example, it should be get from correspongding movie which now show on the screen.
+    //time and place of movie  is fixed. Only the movie title and date should be transfered to show_ticket activity
     private void showTicket(){
-        // TODO: go to QR code activity (to be implemented)
+        String data = "KingsMan 08.05 " + "\n"+ "Filmbegin: 20:00 o'clock "+"\n"+ " 1. Stock, Hörsaal 1200 (Carl-von-Linde-Hörsaal) Arcisstraße 21";
+        Intent intent = new Intent(getActivity().getApplicationContext(), show_ticket.class);
+        intent.putExtra("movie_data", data);
+        startActivity(intent);
     }
 
     private void buyTicket(){
