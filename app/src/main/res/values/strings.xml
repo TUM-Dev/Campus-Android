@@ -567,4 +567,5 @@ Signature: %5$s</string>
     <string name="Refresh">Refresh</string>
     <string name="moviesdetail_dots">Movie detail</string>
     <string name="ticketnumber_dots">ticket number</string>
+    <string name="your_ticket">Your Ticket</string>
 </resources>
