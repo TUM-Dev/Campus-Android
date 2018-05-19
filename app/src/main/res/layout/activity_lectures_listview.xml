@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
-    android:minHeight="?android:listPreferredItemHeight"
+    android:minHeight="?android:listPreferredItemHeightSmall"
     android:orientation="horizontal"
     android:padding="@dimen/material_default_padding">
 
