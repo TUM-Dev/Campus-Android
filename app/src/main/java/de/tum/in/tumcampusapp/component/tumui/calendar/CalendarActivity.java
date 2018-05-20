@@ -64,7 +64,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      * The space between the first and the last date
      */
     public static final int MONTH_AFTER = 3;
-    public static final int MONTH_BEFORE = 0;
+    public static final int MONTH_BEFORE = 2;
     public static final String EVENT_TIME = "event_time";
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
@@ -218,6 +218,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 return true;
             case R.id.action_calendar_filter_hour_limit:
                 showHourLimitFilterDialog();
+                return true;
+            case R.id.action_update_calendar:
+                requestFetch(true);
+                refreshWeekView();
                 return true;
             default:
                 isFetched = false;

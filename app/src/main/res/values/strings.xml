@@ -180,7 +180,7 @@
 
     <!-- Tuition fees -->
     <string name="amount_dots">Outstanding balance</string>
-    <string name="deadline_dots">Deadline</string>
+    <string name="deadline_dots">Deadline:</string>
 
     <!-- Persons -->
     <string name="no_search_result">No search result</string>
@@ -362,7 +362,7 @@
     <string name="room_timetable">Room timetable</string>
     <string name="newspread" translatable="false" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
-    <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a></string>
+    <string name="tuition_fee_more">For information on contributions and exemptions, loans, training assistance and scholarships visit <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a></string>
     <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMonline token!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
@@ -476,7 +476,7 @@ Signature: %5$s</string>
     <string name="general">TUM in General</string>
     <string name="tca">TUM Campus App</string>
     <string name="feedback_hint">What would you like us to know?</string>
-    <string name="add_picture_button">&#160;&#160;Add picture</string>
+    <string name="add_picture_button">Add picture</string>
     <string name="feedback_include_email">Include my email to get a reply</string>
     <string name="feedback_include_email_tum_id">Include my email to get a reply (%s)</string>
     <string name="feedback_email_hint">Your email</string>
@@ -566,8 +566,10 @@ Signature: %5$s</string>
     
     <string name="pdf_viewer_title">PDF Viewer</string>
     <string name="dialog_add_to_contacts">Add to Contacts?</string>
+    <string name="topic">Topic:</string>
     <string name="add">Add</string>
     <string name="recents">Recents</string>
     <string name="e_mail">E-mail</string>
     <string name="additional_info">Additional Info</string>
+    <string name="Refresh">Refresh</string>
 </resources>

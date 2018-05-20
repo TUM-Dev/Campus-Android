@@ -56,7 +56,8 @@ public class StartupActivity extends AppCompatActivity {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (DownloadService.BROADCAST_NAME.equals(intent.getAction())) {
+            if (DownloadService.BROADCAST_NAME
+                                         .equals(intent.getAction())) {
 
                 //Only proceed to start the App, if initialization is finished
                 if (initializationFinished.compareAndSet(false, true)) {

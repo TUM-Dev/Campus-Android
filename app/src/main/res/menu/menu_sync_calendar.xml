@@ -13,6 +13,11 @@
         android:title="@string/view_mode"
         tumcampus:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/action_update_calendar"
+        android:icon="@drawable/ic_refresh_white"
+        android:title="@string/Refresh"
+        tumcampus:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_export_calendar"
         android:icon="@drawable/ic_sync_cloud"
         android:title="@string/export_to_google"
