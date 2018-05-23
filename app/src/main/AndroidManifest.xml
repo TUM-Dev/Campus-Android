@@ -719,7 +719,7 @@
             android:label="@string/pdf_viewer_title"
             android:parentActivityName=".component.ui.plan.PlansActivity" />
         <activity
-            android:name=".component.ui.tufilm.show_ticket"
+            android:name=".component.ui.ticket.ShowTicketActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/your_ticket"
             android:launchMode="singleTop"

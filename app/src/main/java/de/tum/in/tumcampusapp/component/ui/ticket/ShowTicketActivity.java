@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.tufilm;
+package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,13 +18,13 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.utils.Const;
 
-public class show_ticket extends BaseActivity {
+public class ShowTicketActivity extends BaseActivity {
 
     private TextView moviedetailTextView;
     private TextView ticketsnumberTextView;
     private ImageView ticketqrcode;
 
-    public show_ticket() {
+    public ShowTicketActivity() {
         super(R.layout.activity_show_ticket);
     }
     @Override
@@ -33,13 +33,22 @@ public class show_ticket extends BaseActivity {
         moviedetailTextView = (TextView)findViewById(R.id.moviedetail);
         ticketsnumberTextView = (TextView)findViewById(R.id.ticketnumber);
         ticketqrcode = (ImageView) findViewById(R.id.ticket_qrcode);
-        //get data from last activity
+        //Get data from KinoDetailsFragment
         Intent intent = getIntent();
         String data = getIntent().getStringExtra("movie_data");
         moviedetailTextView.setText(data);
-        ticketsnumberTextView.setText("87237489273984");//data from backend
 
-        String text="KingsMan 08.05 Kailiang Dong "; // Whatever you need to encode in the QR code
+        //TODO:It is data from backend. Wait for setting up of backend
+        ticketsnumberTextView.setText("87237489273984");
+
+        // TODO:it is Whatever you need to encode in the QR code.Wait for setting up of backend
+        String text="KingsMan 08.05 Kailiang Dong ";
+
+        //create the qrcode using library  zxing
+        createQRCode(text);
+
+    }
+    private void createQRCode(String text) {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
             BitMatrix bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.QR_CODE,200,200);
@@ -49,7 +58,6 @@ public class show_ticket extends BaseActivity {
         } catch (WriterException e) {
             e.printStackTrace();
         }
-
     }
 }
 

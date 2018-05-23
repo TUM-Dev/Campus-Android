@@ -478,6 +478,8 @@ Signatur: %5$s</string>
     <string name="card_back_text">Hinterseite</string>
     <string name="title_activity_cards_detail">Karte hinzufügen</string>
     <string name="card_question">Frage</string>
+    <string name="moviesdetail_dots">Filmdetail</string>
+    <string name="ticketnumber_dots">Ticketnummer</string>
     <string name="card_answer">Antwort</string>
     <string name="filter_lecture_ALL_LECTURES">Alle Vorlesungen</string>
     <string name="filter_lecture_OWN_LECTURES">Eigene Vorlesungen</string>
