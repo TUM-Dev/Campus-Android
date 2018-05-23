@@ -536,21 +536,25 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     protected void applyFilterFitScreen(boolean val) {
         Utils.setSetting(this, Const.CALENDAR_FILTER_FIT_SCREEN, val);
-        int hourHeight = defaultHourHeight;
+        int hourHeight = defaultHourHeight, minHourHeight = 0, maxHourHeight = 250;// default values from WeekView.java
         int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
         int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
         if (val) {
             hourHeight = calcHourHeightToFit(minHour, maxHour);
+            minHourHeight = hourHeight;
+            maxHourHeight = hourHeight;
         }
         mWeekView.setHourHeight(hourHeight);
+        mWeekView.setMaxHourHeight(maxHourHeight);
+        mWeekView.setMinHourHeight(minHourHeight);
     }
 
     protected int calcHourHeightToFit(int min, int max) {
         // get the height of the weekView and subtract the height of its header
         // to get height of actual calendar section, then devide by 24 to get height of a single hour
-        return (mWeekView.getHeight()                     // height of weekView
+        return (mWeekView.getMeasuredHeight()                     // height of weekView
                 - mWeekView.getTextSize()                 // height of text in header of weekView
-                - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and 2x below text in header
+                - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and below text in header
                 / (max - min);                            // amount of hours
     }
 
@@ -563,6 +567,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         if(Utils.getSettingBool(this, Const.CALENDAR_FILTER_FIT_SCREEN, false)) {
             mWeekView.setHourHeight(calcHourHeightToFit(min, max));
         }
+        applyFilterFitScreen(Utils.getSettingBool(this, Const.CALENDAR_FILTER_FIT_SCREEN, false));
     }
 
     protected void showHourLimitFilterDialog() {
