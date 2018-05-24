@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.tumui.grades;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -70,12 +72,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     // everything for the charts
     private MenuItem barMenuItem;
     private MenuItem pieMenuItem;
+    private boolean showBarChartAfterRotate;
 
-    private boolean chartVisible;
     private View chartView; // holds both the pieChart and the barChart
     private PieChart pieChart;
     private BarChart barChart;
-    private boolean showBarChartAfterRotate;
     private int mMediumAnimationDuration;
 
     // average grade bar at the bottom
@@ -86,18 +87,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         super(TUMOnlineConst.Companion.getEXAMS(), R.layout.activity_grades);
     }
 
-    private void showPieChart(List<Exam> exams) {
-
-        // only animate if we are in the opposite state
-        if(barChart.getVisibility() == View.VISIBLE && pieChart.getVisibility() == View.GONE){
-            crossfade(barChart, pieChart);
-        }
-
-        Map<String, Integer> gradeCount = calculateGradeDistribution(exams);
-
+    private void initPieChart(Map<String, Integer> gradeDistribution) {
         List<PieEntry> entries = new ArrayList<>();
         for (String GRADE : GRADES) {
-            entries.add(new PieEntry(gradeCount.get(GRADE), GRADE));
+            entries.add(new PieEntry(gradeDistribution.get(GRADE), GRADE));
         }
 
         PieDataSet set = new PieDataSet(entries, getString(R.string.grades_without_weight));
@@ -112,18 +105,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         pieChart.invalidate();
     }
 
-    private void showBarChart(List<Exam> exams) {
-
-        // only animate if we are in the opposite state
-        if(pieChart.getVisibility() == View.VISIBLE && barChart.getVisibility() == View.GONE){
-            crossfade(pieChart, barChart);
-        }
-
-        Map<String, Integer> gradeCount = calculateGradeDistribution(exams);
-
+    private void initBarChart(Map<String, Integer> gradeDistribution) {
         List<BarEntry> entries = new ArrayList<>();
         for (int i = 0; i < GRADES.length; i++) {
-            entries.add(new BarEntry(i, gradeCount.get(GRADES[i])));
+            entries.add(new BarEntry(i, gradeDistribution.get(GRADES[i])));
         }
 
         BarDataSet set = new BarDataSet(entries, getString(R.string.grades_without_weight));
@@ -147,7 +132,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * @param filteredExamList List of exams
      * @return Average grade
      */
-    Double calculateAverageGrade(List<Exam> filteredExamList) {
+    Double calculateAverageGrade(Iterable<Exam> filteredExamList) {
         double gradeSum = 0.0;
         int grades = 0;
 
@@ -174,7 +159,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * @return HashMap with grade to grade count mapping
      */
     Map<String, Integer> calculateGradeDistribution(
-            List<Exam> filteredExamList) {
+            Iterable<Exam> filteredExamList) {
         Map<String, Integer> gradeDistribution = new HashMap<>(128);
 
         for (String GRADE : GRADES) {
@@ -215,7 +200,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         }
 
         // init the spinner
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item_actionbar, filters);
+        SpinnerAdapter spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item_actionbar, filters);
         spFilter.setAdapter(spinnerArrayAdapter);
         spFilter.setSelection(spinnerPosition);
         spFilter.setVisibility(View.VISIBLE);
@@ -243,10 +228,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                     }
                     examsToShow = filteredExamList;
                 }
-                if (showBarChartAfterRotate) {
-                    barMenuItem.setVisible(false);
-                    pieMenuItem.setVisible(true);
-                }
                 showExams(examsToShow);
             }
 
@@ -256,19 +237,24 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         });
     }
 
+    /**
+     * updates/inits all components to show the given exams
+     * @param exams
+     */
+    @SuppressLint("DefaultLocale")
     private void showExams(List<Exam> exams) {
         lvGrades.setAdapter(new ExamListAdapter(
                 GradesActivity.this, exams));
-        if (chartVisible) {
-            if (barMenuItem == null || barMenuItem.isVisible()) {
-                showPieChart(exams);
-            } else {
-                showBarChart(exams);
-            }
-        }
-        double averageGrade = Math.round(calculateAverageGrade(exams) * 100.0) / 100.0;
-        tvAverageGrade.setText(String.format("%s: %s",
-                                             getResources().getString(R.string.average_grade), averageGrade));
+
+        // update charts
+        Map<String, Integer> gradeDistribution = calculateGradeDistribution(exams);
+        initPieChart(gradeDistribution);
+        initBarChart(gradeDistribution);
+
+        Utils.log("avg grade: " + calculateAverageGrade(exams));
+        tvAverageGrade.setText(String.format("%s: %f",
+                                             getResources().getString(R.string.average_grade),
+                                             calculateAverageGrade(exams)));
     }
 
     @Override
@@ -281,8 +267,15 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         barChart = findViewById(R.id.bar_chart);
         pieChart = findViewById(R.id.pie_chart);
         chartView = findViewById(R.id.charts);
-        chartVisible = true;
-        showBarChartAfterRotate = savedInstanceState != null && !savedInstanceState.getBoolean(SHOW_PIE_CHART, true);
+
+        showBarChartAfterRotate = savedInstanceState != null
+                                          && !savedInstanceState.getBoolean(SHOW_PIE_CHART, true);
+        if (showBarChartAfterRotate) {
+            barMenuItem.setVisible(false);
+            pieMenuItem.setVisible(true);
+            barChart.setVisibility(View.GONE);
+            pieChart.setVisibility(View.VISIBLE);
+        }
 
         lvGrades = findViewById(R.id.lstGrades);
         spFilter = findViewById(R.id.spFilter);
@@ -292,6 +285,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.color_primary, R.color.tum_A100, R.color.tum_A200);
 
+        isFetched = false;
         requestFetch();
     }
 
@@ -302,23 +296,30 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         instanceState.putInt(SPINNER_POSITION, spinnerPosition);
     }
 
-    private void showChart(boolean show, boolean landscape) {
-        if (show) {
-            if (pieMenuItem.isVisible()) {
-                barChart.setVisibility(View.VISIBLE);
-            } else {
-                pieChart.setVisibility(View.VISIBLE);
-            }
-            if (landscape) {
-                swipeRefreshLayout.setVisibility(View.GONE);
-            }
-        } else {
-            pieChart.setVisibility(View.GONE);
-            barChart.setVisibility(View.GONE);
-            swipeRefreshLayout.setVisibility(View.VISIBLE);
+    /**
+     * animated due to android:animateLayoutChanges="true" in xml file
+     */
+    private void toggleChartVisibility() {
+       if(chartView.getVisibility() == View.GONE){
+           // make charts visible
+           chartView.setVisibility(View.VISIBLE);
+       } else {
+           chartView.setVisibility(View.GONE);
+       }
 
+        // TODO animate the arrow using an animatedVectorDrawable
+        View toggle = findViewById(R.id.chartVisibilityToggle);
+        toggle.setRotation(toggle.getRotation() + 180);
+    }
+
+    private void toggleChartVisibilityLand(){
+        if(chartView.getVisibility() == View.GONE) {
+            // make charts visible
+            crossfade(swipeRefreshLayout, chartView);
+        } else {
+            // hide charts / show list
+            crossfade(chartView, swipeRefreshLayout);
         }
-        chartVisible = show;
     }
 
     // for landscape
@@ -326,20 +327,19 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         swipeRefreshLayout.setVisibility(View.GONE);
         view.setVisibility(View.GONE);
         findViewById(R.id.button_show_list).setVisibility(View.VISIBLE);
-        showChart(true, true);
+        toggleChartVisibilityLand();
     }
 
     public void showList(View view) {
         swipeRefreshLayout.setVisibility(View.VISIBLE);
         findViewById(R.id.button_show_chart).setVisibility(View.VISIBLE);
         view.setVisibility(View.GONE);
-        showChart(false, true);
+        toggleChartVisibilityLand();
     }
 
     // for portrait
     public void hideChartToggle(View view) {
-        showChart(!chartVisible, false);
-        view.setRotation(view.getRotation() + 180);
+        toggleChartVisibility();
     }
 
     @Override
@@ -371,11 +371,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         // initialize the program choice spinner
         initSpinner();
 
-        // Displays results in view
-        lvGrades.setAdapter(new ExamListAdapter(this, examList));
-
         // enabling the Menu options after first fetch
         isFetched = true;
+        if(barMenuItem != null && pieMenuItem != null){
+            barMenuItem.setEnabled(true);
+            pieMenuItem.setEnabled(true);
+        }
+
         showExams(examList);
 
         // update the action bar to display the enabled menu options
@@ -400,15 +402,23 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         if (i == R.id.bar_chart_menu) {
             barMenuItem.setVisible(false);
             pieMenuItem.setVisible(true);
-            if (chartVisible) {
-                showBarChart(examList);
+            if (chartView.getVisibility() == View.VISIBLE) {
+                crossfade(pieChart, barChart);
+            } else {
+                // switch layouts even though they are not visible
+                // --> when they are visible again the right chart will be displayed
+                pieChart.setVisibility(View.GONE);
+                barChart.setVisibility(View.VISIBLE);
             }
             return true;
         } else if (i == R.id.pie_chart_menu) {
             barMenuItem.setVisible(true);
             pieMenuItem.setVisible(false);
-            if (chartVisible) {
-                showPieChart(examList);
+            if (chartView.getVisibility() == View.VISIBLE) {
+                crossfade(barChart, pieChart);
+            } else {
+                pieChart.setVisibility(View.VISIBLE);
+                barChart.setVisibility(View.GONE);
             }
             return true;
         } else {
@@ -417,7 +427,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     }
 
     /**
-     * for switching out the different charts in a nice way
+     * switching out two layouts by fading one in and the other one out (at the same time)
      * @param fadeout
      * @param fadein
      */
@@ -456,6 +466,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         barMenuItem.setEnabled(isFetched);
         pieMenuItem = menu.findItem(R.id.pie_chart_menu);
         pieMenuItem.setEnabled(isFetched);
+
+        if(showBarChartAfterRotate){
+            barMenuItem.setVisible(true);
+            pieMenuItem.setVisible(false);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }

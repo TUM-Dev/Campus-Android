@@ -35,37 +35,41 @@
                 android:layout_height="fill_parent"/>
 
             <FrameLayout
-                android:id="@+id/charts"
                 android:layout_width="match_parent"
                 android:layout_height="0px"
-                android:layout_weight="1"
-                android:layout_margin="@dimen/padding_default">
+                android:layout_weight="1">
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pie_chart"
+                <FrameLayout
+                    android:id="@+id/charts"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible"/>
+                    android:layout_margin="@dimen/padding_default">
 
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/bar_chart"
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pie_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"/>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/bar_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipeRefreshLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"/>
+                    android:visibility="gone">
+                    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+                        android:id="@+id/lstGrades"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="vertical"/>
+                </android.support.v4.widget.SwipeRefreshLayout>
             </FrameLayout>
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefreshLayout"
-                android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_weight="1"
-                android:visibility="gone">
-                <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-                    android:id="@+id/lstGrades"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="vertical"/>
-            </android.support.v4.widget.SwipeRefreshLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,6 +111,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/chartVisibilityToggle"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="@color/tum_300"
