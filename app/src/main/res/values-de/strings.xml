@@ -23,7 +23,6 @@
     <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalender</string>
     <string name="calendar_filter_title">Filter ändern</string>
     <string name="calendar_filter_canceled">Abgesagte Veranstaltungen zeigen</string>
-    <string name="calendar_filter_fit_screen">Gesamte Zeitspanne anzeigen</string>
     <string name="calendar_filter_hour_limit">Angezeigte Zeitspanne anpassen</string>
     <string name="calendar_filter_hour_limit_min_title">Von Uhrzeit</string>
     <string name="calendar_filter_hour_limit_max_title">Bis Uhrzeit</string>

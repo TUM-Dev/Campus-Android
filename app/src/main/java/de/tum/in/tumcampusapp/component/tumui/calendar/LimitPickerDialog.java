@@ -25,7 +25,7 @@ class LimitPickerDialog extends Dialog {
     private NumberPicker numberPickerMin;
     private NumberPicker numberPickerMax;
     protected Context context;
-    private List<LimitPickerDialogListener> listeners = new ArrayList<LimitPickerDialogListener>();
+    private List<LimitPickerDialogListener> listeners = new ArrayList<>();
 
     LimitPickerDialog(Context context) {
         super(context);

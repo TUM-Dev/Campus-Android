@@ -38,10 +38,6 @@
                 <item android:id="@+id/action_calendar_filter_canceled"
                       android:title="@string/calendar_filter_canceled"
                       tumcampus:showAsAction="ifRoom" />
-
-                <item android:id="@+id/action_calendar_filter_fit_screen"
-                      android:title="@string/calendar_filter_fit_screen"
-                      tumcampus:showAsAction="ifRoom" />
             </group>
 
             <item android:id="@+id/action_calendar_filter_hour_limit"

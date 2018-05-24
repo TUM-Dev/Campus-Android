@@ -28,7 +28,6 @@
     <string name="semester_winter">Winter term</string>
     <string name="calendar_filter_title">Change Filters</string>
     <string name="calendar_filter_canceled">Show Canceled Events</string>
-    <string name="calendar_filter_fit_screen">Fit Screen</string>
     <string name="calendar_filter_hour_limit">Limit Shown Timespan</string>
     <string name="calendar_filter_hour_limit_min_title">From Hour</string>
     <string name="calendar_filter_hour_limit_max_title">To Hour</string>

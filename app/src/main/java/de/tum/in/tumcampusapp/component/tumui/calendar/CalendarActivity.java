@@ -83,7 +83,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private WeekView mWeekView;
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;
-    private MenuItem menuItemFilterFitScreen;
+
     /**
      * Default hour height, to return to default after fitScreen filter was applied
      */
@@ -161,7 +161,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
         menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode);
         menuItemFilterCanceled = menu.findItem(R.id.action_calendar_filter_canceled);
-        menuItemFilterFitScreen = menu.findItem(R.id.action_calendar_filter_fit_screen);
         //Refresh the icon according to us having day or weekview
         this.refreshWeekView();
 
@@ -211,10 +210,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             case R.id.action_calendar_filter_canceled:
                 item.setChecked(!item.isChecked());
                 applyFilterCanceled(item.isChecked());
-                return true;
-            case R.id.action_calendar_filter_fit_screen:
-                item.setChecked(!item.isChecked());
-                applyFilterFitScreen(item.isChecked());
                 return true;
             case R.id.action_calendar_filter_hour_limit:
                 showHourLimitFilterDialog();
@@ -516,11 +511,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     }
 
     protected void initFilterCheckboxes() {
-        boolean settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_FIT_SCREEN, false);
-        menuItemFilterFitScreen.setChecked(settings);
-        applyFilterFitScreen(settings);
-
-        settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
+        boolean settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
         menuItemFilterCanceled.setChecked(settings);
         applyFilterCanceled(settings);
 
@@ -534,40 +525,20 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         onResume();
     }
 
-    protected void applyFilterFitScreen(boolean val) {
-        Utils.setSetting(this, Const.CALENDAR_FILTER_FIT_SCREEN, val);
-        int hourHeight = defaultHourHeight, minHourHeight = 0, maxHourHeight = 250;// default values from WeekView.java
-        int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
-        int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
-        if (val) {
-            hourHeight = calcHourHeightToFit(minHour, maxHour);
-            minHourHeight = hourHeight;
-            maxHourHeight = hourHeight;
-        }
-        mWeekView.setHourHeight(hourHeight);
-        mWeekView.setMaxHourHeight(maxHourHeight);
-        mWeekView.setMinHourHeight(minHourHeight);
-    }
-
-    protected int calcHourHeightToFit(int min, int max) {
-        // get the height of the weekView and subtract the height of its header
-        // to get height of actual calendar section, then devide by 24 to get height of a single hour
-        return (mWeekView.getMeasuredHeight()                     // height of weekView
-                - mWeekView.getTextSize()                 // height of text in header of weekView
-                - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and below text in header
-                / (max - min);                            // amount of hours
-    }
-
     protected void applyFilterLimitHours(int min, int max) {
+        // Get old max value to check, if new min will be bigger, in which case the order of setting the new values must be reversed
+        int oldMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, "0"));
+
         Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Integer.toString(min));
         Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Integer.toString(max));
 
-        mWeekView.setMinTime(min);
-        mWeekView.setMaxTime(max);
-        if(Utils.getSettingBool(this, Const.CALENDAR_FILTER_FIT_SCREEN, false)) {
-            mWeekView.setHourHeight(calcHourHeightToFit(min, max));
+        if(min > oldMax) {
+            mWeekView.setMaxTime(max);
+            mWeekView.setMinTime(min);
+        } else {
+            mWeekView.setMinTime(min);
+            mWeekView.setMaxTime(max);
         }
-        applyFilterFitScreen(Utils.getSettingBool(this, Const.CALENDAR_FILTER_FIT_SCREEN, false));
     }
 
     protected void showHourLimitFilterDialog() {
