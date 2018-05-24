@@ -104,7 +104,7 @@
                     style="@style/FlatButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="sendFeedback"
+                    android:onClick="onSendClicked"
                     android:text="@string/feedback_send_button"/>
             </LinearLayout>
 
