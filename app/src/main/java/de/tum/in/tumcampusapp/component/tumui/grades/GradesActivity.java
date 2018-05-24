@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.component.tumui.grades;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
@@ -20,6 +22,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -69,14 +73,18 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
     private boolean isFetched;
     private boolean showBarChartAfterRotate;
+    private int mShortAnimationDuration;
 
     public GradesActivity() {
         super(TUMOnlineConst.Companion.getEXAMS(), R.layout.activity_grades);
     }
 
     private void showPieChart(List<Exam> exams) {
-        barChart.setVisibility(View.GONE);
-        pieChart.setVisibility(View.VISIBLE);
+
+        // only animate if we are in the opposite state
+        if(barChart.getVisibility() == View.VISIBLE && pieChart.getVisibility() == View.GONE){
+            crossfade(barChart, pieChart);
+        }
 
         Map<String, Integer> gradeCount = calculateGradeDistribution(exams);
 
@@ -98,8 +106,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     }
 
     private void showBarChart(List<Exam> exams) {
-        pieChart.setVisibility(View.GONE);
-        barChart.setVisibility(View.VISIBLE);
+
+        // only animate if we are in the opposite state
+        if(pieChart.getVisibility() == View.VISIBLE && barChart.getVisibility() == View.GONE){
+            crossfade(pieChart, barChart);
+        }
 
         Map<String, Integer> gradeCount = calculateGradeDistribution(exams);
 
@@ -256,6 +267,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mShortAnimationDuration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
+
         barChart = findViewById(R.id.bar_chart);
         pieChart = findViewById(R.id.pie_chart);
         lvGrades = findViewById(R.id.lstGrades);
@@ -389,6 +402,39 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * for switching out the different charts in a nice way
+     * @param fadeout
+     * @param fadein
+     */
+    public void crossfade(@NotNull View fadeout,@NotNull View fadein){
+        // Set the content view to 0% opacity but visible, so that it is visible
+        // (but fully transparent) during the animation.
+        fadein.setAlpha(0f);
+        fadein.setVisibility(View.VISIBLE);
+
+        // Animate the content view to 100% opacity, and clear any animation
+        // listener set on the view.
+        fadein.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        // Animate the loading view to 0% opacity. After the animation ends,
+        // set its visibility to GONE as an optimization step (it won't
+        // participate in layout passes, etc.)
+        fadeout.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        fadeout.setVisibility(View.GONE);
+                    }
+                });
+
     }
 
     @Override
