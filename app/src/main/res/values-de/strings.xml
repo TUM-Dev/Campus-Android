@@ -537,4 +537,13 @@ Signatur: %5$s</string>
     <string name="additional_info">Zusaätzliche Infos</string>
 
     <string name="topic">Über</string>
+    <string name="generate_new_token">Neuen Token generieren</string>
+    <string name="open_tum_online">TUM Online öffnen</string>
+    <string name="create">Erstellen</string>
+    <string name="enter_name_placeholder">Name eingeben …</string>
+    <string name="go_to_room">Raum anzeigen</string>
+    <string name="enter_your_tum_id">TUM-ID eingeben …</string>
+    <string name="e_mail_us">Schreib uns eine E-Mail</string>
+    <string name="like_us_on_facebook">Like uns auf Facebook</string>
+    <string name="check_us_out_on_github">Besuche uns auf GitHub</string>
 </resources>

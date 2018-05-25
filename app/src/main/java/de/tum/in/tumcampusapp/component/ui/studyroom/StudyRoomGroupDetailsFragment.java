@@ -80,7 +80,6 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
             TextView headerTextView = holder.itemView.findViewById(R.id.headerTextView);
             TextView detailsTextView = holder.itemView.findViewById(R.id.detailsTextView);
 
-            //TextView locationTextView = holder.itemView.findViewById(R.id.text3);
             AppCompatButton openLinkButton = holder.itemView.findViewById(R.id.openLinkButton);
             openLinkButton.setText(R.string.go_to_room);
             openLinkButton.setTag(room.getCode());

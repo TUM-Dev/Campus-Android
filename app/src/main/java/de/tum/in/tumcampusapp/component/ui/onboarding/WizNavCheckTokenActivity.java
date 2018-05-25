@@ -48,7 +48,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
 
     public void onClickTUMOnline(View next) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("http://campus.tum.de"));
+        intent.setData(Uri.parse(Const.TUM_CAMPUS_URL));
         startActivity(intent);
     }
 

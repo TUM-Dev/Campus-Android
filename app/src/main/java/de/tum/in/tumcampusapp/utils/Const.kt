@@ -140,4 +140,6 @@ object Const {
 
     const val CONTACTS_PERMISSION_REQUEST_CODE = 0
     const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
+
+    const val TUM_CAMPUS_URL = "http://campus.tum.de"
 }

@@ -53,15 +53,15 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
     @Override
     public void onFetch(TuitionList tuitionList) {
         String amount = tuitionList.getTuitions().get(0).getSoll();
-        if (amount.contains(",")) {
-            // Make sure that the format is correct (e.g. 10,4 -> 10,40)
-            String[] parts = amount.split(",");
-            String decimals = parts[1];
-            if (decimals.length() == 1) {
-                amount += "0";
-            }
-        }
-        amountTextView.setText(String.format("%s €", amount));
+        float floatAmount = 0f;
+
+        try {
+            String dotSeparatedAmount = amount.replace(",", ".");
+            floatAmount = Float.parseFloat(dotSeparatedAmount);
+        } catch (NumberFormatException ignored) {}
+
+        String amountText = String.format(Locale.getDefault(), "%.2f", floatAmount);
+        amountTextView.setText(String.format("%s €", amountText));
 
         Date deadline = DateUtils.getDate(tuitionList.getTuitions()
                                                  .get(0)
@@ -73,7 +73,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
                                             .getSemesterBez()
                                             .toUpperCase(Locale.getDefault()));
 
-        if(amount.trim().equals("0")){
+        if (floatAmount == 0) {
             amountTextView.setTextColor(getResources().getColor(R.color.sections_green));
         } else {
             // check if the deadline is less than a week from now

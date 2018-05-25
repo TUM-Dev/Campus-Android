@@ -111,7 +111,6 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         if (icon.isEmpty() || "null".equals(icon)) {
             Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_comment);
             holder.sourceTextView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-            //holder.srcIcon.setImageResource(R.drawable.ic_comment);
         } else {
             Picasso.get()
                    .load(icon)
