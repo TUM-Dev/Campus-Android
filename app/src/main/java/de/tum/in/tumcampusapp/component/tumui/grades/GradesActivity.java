@@ -2,7 +2,7 @@ package de.tum.in.tumcampusapp.component.tumui.grades;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.SuppressLint;
+import android.graphics.drawable.Animatable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
@@ -138,7 +140,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
         for (Exam item : filteredExamList) {
             try {
-                double grade = NumberFormat.getInstance()
+                double grade = NumberFormat.getInstance(Locale.GERMAN)
                                            .parse(item.getGrade())
                                            .doubleValue();
                 if (grade <= 4.0) {
@@ -241,7 +243,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * updates/inits all components to show the given exams
      * @param exams
      */
-    @SuppressLint("DefaultLocale")
     private void showExams(List<Exam> exams) {
         lvGrades.setAdapter(new ExamListAdapter(
                 GradesActivity.this, exams));
@@ -252,7 +253,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         initBarChart(gradeDistribution);
 
         Utils.log("avg grade: " + calculateAverageGrade(exams));
-        tvAverageGrade.setText(String.format("%s: %f",
+        tvAverageGrade.setText(String.format(getResources().getConfiguration().locale, "%s: %.2f",
                                              getResources().getString(R.string.average_grade),
                                              calculateAverageGrade(exams)));
     }
@@ -300,16 +301,22 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * animated due to android:animateLayoutChanges="true" in xml file
      */
     private void toggleChartVisibility() {
-       if(chartView.getVisibility() == View.GONE){
-           // make charts visible
-           chartView.setVisibility(View.VISIBLE);
-       } else {
-           chartView.setVisibility(View.GONE);
-       }
 
-        // TODO animate the arrow using an animatedVectorDrawable
-        View toggle = findViewById(R.id.chartVisibilityToggle);
-        toggle.setRotation(toggle.getRotation() + 180);
+        int arrow;
+        if(chartView.getVisibility() == View.GONE){
+            // make charts visible
+            chartView.setVisibility(View.VISIBLE);
+            arrow = R.drawable.ic_arrow_anim_up;
+        } else {
+            // hide charts
+            chartView.setVisibility(View.GONE);
+            arrow = R.drawable.ic_arrow_anim_down;
+        }
+
+        // animate arrow
+        ImageView toggle = findViewById(R.id.chartVisibilityToggle);
+        toggle.setImageResource(arrow);
+        ((Animatable) toggle.getDrawable()).start();
     }
 
     private void toggleChartVisibilityLand(){
