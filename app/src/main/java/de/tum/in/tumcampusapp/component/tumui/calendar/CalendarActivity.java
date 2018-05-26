@@ -84,11 +84,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;
 
-    /**
-     * Default hour height, to return to default after fitScreen filter was applied
-     */
-    private int defaultHourHeight;
-
     private CalendarDetailsFragment detailsFragment;
 
     public CalendarActivity() {
@@ -134,9 +129,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         } else {
             isFetched = true;
         }
-
-        // Set default hour height of weekView
-        defaultHourHeight = mWeekView.getHourHeight();
     }
 
     @Override
@@ -525,6 +517,22 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         onResume();
     }
 
+    protected void hourheightFitScreen() {
+        int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
+        int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
+        int hourHeight = calcHourHeightToFit(minHour, maxHour);
+        mWeekView.setHourHeight(hourHeight);
+    }
+
+    protected int calcHourHeightToFit(int min, int max) {
+        // get the height of the weekView and subtract the height of its header
+        // to get height of actual calendar section, then devide by 24 to get height of a single hour
+        return (mWeekView.getMeasuredHeight()                     // height of weekView
+                - mWeekView.getTextSize()                 // height of text in header of weekView
+                - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and below text in header
+               / (max - min);                            // amount of hours
+    }
+
     protected void applyFilterLimitHours(int min, int max) {
         // Get old max value to check, if new min will be bigger, in which case the order of setting the new values must be reversed
         int oldMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, "0"));
@@ -539,6 +547,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             mWeekView.setMinTime(min);
             mWeekView.setMaxTime(max);
         }
+        hourheightFitScreen();
     }
 
     protected void showHourLimitFilterDialog() {
