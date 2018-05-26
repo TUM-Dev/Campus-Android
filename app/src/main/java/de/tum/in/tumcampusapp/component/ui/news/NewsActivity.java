@@ -42,6 +42,15 @@ public class NewsActivity extends ActivityForDownloadingExternal implements Dial
         super.onCreate(savedInstanceState);
         requestDownload(false);
         showLoadingEnded();
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        recyclerView = findViewById(R.id.activity_news_list_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
+        recyclerView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
     }
 
     @Override
@@ -54,13 +63,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements Dial
 
         if (!news.isEmpty()) {
             NewsAdapter adapter = new NewsAdapter(this, news);
-
-            recyclerView = findViewById(R.id.activity_news_list_view);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adapter);
-
-            int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
-            recyclerView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
 
             /* Restore previous state (including selected item index and scroll position) */
             if (state == -1) {

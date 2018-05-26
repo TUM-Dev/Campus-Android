@@ -5,9 +5,9 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar"/>
@@ -23,48 +23,55 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/event_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/event_title"
-                android:id="@+id/event_title"
-                android:textSize="24sp"
+                android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:layout_margin="10dp"/>
+                android:hint="@string/event_title"
+                android:textCursorDrawable="@drawable/cursor_text_field_colorful"
+                android:textSize="24sp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_margin="10dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/from"/>
+
                 <TextView
-                    style="@style/CalendarElement"
-                    android:id="@+id/event_start_date"/>
+                    android:id="@+id/event_start_date"
+                    style="@style/CalendarElement"/>
+
                 <TextView
-                    style="@style/CalendarElement"
-                    android:id="@+id/event_start_time"/>
+                    android:id="@+id/event_start_time"
+                    style="@style/CalendarElement"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_margin="10dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/to"/>
+
                 <TextView
-                    style="@style/CalendarElement"
-                    android:id="@+id/event_end_date"/>
+                    android:id="@+id/event_end_date"
+                    style="@style/CalendarElement"/>
+
                 <TextView
-                    style="@style/CalendarElement"
-                    android:id="@+id/event_end_time"/>
+                    android:id="@+id/event_end_time"
+                    style="@style/CalendarElement"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -72,25 +79,26 @@
             android:id="@+id/event_description"
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_weight="1"
-            android:minHeight="75dp"
-            android:maxHeight="150dp"
+            android:layout_margin="10dp"
             android:layout_marginTop="10dp"
-            android:padding="5dp"
+            android:layout_weight="1"
             android:background="@drawable/rounded_corners_background"
-            android:hint="@string/comment"
             android:gravity="top"
-            android:textSize="16sp"
-            android:layout_margin="10dp"/>
+            android:hint="@string/comment"
+            android:maxHeight="150dp"
+            android:minHeight="75dp"
+            android:padding="5dp"
+            android:textCursorDrawable="@drawable/cursor_text_field_colorful"
+            android:textSize="16sp"/>
 
         <Button
+            android:id="@+id/create_event_button"
             style="@style/FlatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/create_event_button"
             android:layout_gravity="right"
-            android:text="@string/save"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:text="@string/save"/>
     </LinearLayout>
 
     <!-- The navigation drawer -->

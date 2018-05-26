@@ -98,6 +98,8 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         }
 
         if (showDateAndNumber) {
+            holder.additionalInfoLayout.setVisibility(View.VISIBLE);
+
             String membersText = Integer.toString(chatRoom.getMembers());
             if (!membersText.isEmpty()) {
                 holder.membersTextView.setVisibility(View.VISIBLE);

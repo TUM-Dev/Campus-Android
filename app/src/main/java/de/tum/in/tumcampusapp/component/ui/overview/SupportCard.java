@@ -47,8 +47,9 @@ public class SupportCard extends Card {
 
         view.findViewById(R.id.email_button)
             .setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_SEND);
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.setType("text/plain");
+                intent.setData(Uri.parse(view.getContext().getString(R.string.support_email_link)));
                 intent.putExtra(Intent.EXTRA_SUBJECT, view.getContext().getString(R.string.feedback));
                 v.getContext()
                  .startActivity(Intent.createChooser(intent, "Send Email"));
