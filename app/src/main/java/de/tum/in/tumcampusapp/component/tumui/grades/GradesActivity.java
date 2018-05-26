@@ -272,10 +272,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         showBarChartAfterRotate = savedInstanceState != null
                                           && !savedInstanceState.getBoolean(SHOW_PIE_CHART, true);
         if (showBarChartAfterRotate) {
-            barMenuItem.setVisible(false);
-            pieMenuItem.setVisible(true);
-            barChart.setVisibility(View.GONE);
-            pieChart.setVisibility(View.VISIBLE);
+            if(barMenuItem != null){
+                barMenuItem.setVisible(false);
+                pieMenuItem.setVisible(true);
+            }
+            barChart.setVisibility(View.VISIBLE);
+            pieChart.setVisibility(View.GONE);
         }
 
         lvGrades = findViewById(R.id.lstGrades);
@@ -475,8 +477,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         pieMenuItem.setEnabled(isFetched);
 
         if(showBarChartAfterRotate){
-            barMenuItem.setVisible(true);
-            pieMenuItem.setVisible(false);
+            barMenuItem.setVisible(false);
+            pieMenuItem.setVisible(true);
         }
 
         return super.onPrepareOptionsMenu(menu);
