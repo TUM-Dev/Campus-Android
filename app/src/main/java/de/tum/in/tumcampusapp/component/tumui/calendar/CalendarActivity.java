@@ -517,7 +517,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         onResume();
     }
 
-    protected void hourheightFitScreen() {
+    protected void hourHeightFitScreen() {
         int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
         int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
         int hourHeight = calcHourHeightToFit(minHour, maxHour);
@@ -526,11 +526,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     protected int calcHourHeightToFit(int min, int max) {
         // get the height of the weekView and subtract the height of its header
-        // to get height of actual calendar section, then devide by 24 to get height of a single hour
-        return (mWeekView.getMeasuredHeight()                     // height of weekView
+        // to get height of actual calendar section, then divide by 24 to get height of a single hour
+        return (mWeekView.getMeasuredHeight()             // height of weekView
                 - mWeekView.getTextSize()                 // height of text in header of weekView
                 - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and below text in header
-               / (max - min);                            // amount of hours
+               / (max - min);                             // amount of hours
     }
 
     protected void applyFilterLimitHours(int min, int max) {
@@ -547,7 +547,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             mWeekView.setMinTime(min);
             mWeekView.setMaxTime(max);
         }
-        hourheightFitScreen();
+        hourHeightFitScreen();
     }
 
     protected void showHourLimitFilterDialog() {
