@@ -532,7 +532,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Integer.toString(min));
         Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Integer.toString(max));
 
-        if(min > oldMax) {
+        if(min >= oldMax) {
             mWeekView.setMaxTime(max);
             mWeekView.setMinTime(min);
         } else {
