@@ -138,6 +138,7 @@
     <string name="opening_hours">Opening Hours</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
+    <string name="events">Events</string>
     <string name="barrier_free">Barrier-free Information</string>
 
     <!-- Activity titles -->
@@ -565,7 +566,11 @@ Signature: %5$s</string>
     <string name="e_mail">E-mail</string>
     <string name="additional_info">Additional Info</string>
     <string name="Refresh">Refresh</string>
-    <string name="moviesdetail_dots">Movie detail</string>
-    <string name="ticketnumber_dots">ticket number</string>
+    <!-- QR Code Ticket Activity -->
+    <string name="moviesdetail_dots">Movie Details</string>
+    <string name="ticketnumber_dots">Ticket Number</string>
     <string name="your_ticket">Your Ticket</string>
+    <!-- Event Activity -->
+    <string name="show_booked_events">Show booked events</string>
+    <string name="events_overview">Events Overview</string>
 </resources>
