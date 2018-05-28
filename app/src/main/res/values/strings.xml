@@ -26,6 +26,12 @@
     <string name="calendar_not_existing_toast">No local calendar existing</string>
     <string name="semester_summer">Summer term</string>
     <string name="semester_winter">Winter term</string>
+    <string name="calendar_filter_title">Change Filters</string>
+    <string name="calendar_filter_canceled">Show Canceled Events</string>
+    <string name="calendar_filter_hour_limit">Limit Shown Timespan</string>
+    <string name="calendar_filter_hour_limit_min_title">From Hour</string>
+    <string name="calendar_filter_hour_limit_max_title">To Hour</string>
+    <string name="calendar_filter_hour_limit_error_message">Minimum hour must be below maximum hour!</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>
