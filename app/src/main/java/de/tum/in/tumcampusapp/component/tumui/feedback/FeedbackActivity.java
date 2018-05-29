@@ -343,7 +343,24 @@ public class FeedbackActivity extends BaseActivity {
                             BuildConfig.VERSION_NAME);
     }
 
-    public void sendFeedback(View view) {
+    public void onSendClicked(View view){
+        if(feedbackView.getText().toString().trim().isEmpty()){
+            if(picPaths.isEmpty()){
+                feedbackView.setError(getString(R.string.feedback_empty));
+            } else {
+                feedbackView.setError(getString(R.string.feedback_img_without_text));
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.send_feedback_question);
+        builder.setIcon(R.drawable.ic_feedback);
+        builder.setPositiveButton(R.string.send, (dialogInterface, i) -> sendFeedback());
+        builder.setNegativeButton(R.string.no, null);
+        builder.show();
+    }
+
+    public void sendFeedback() {
         sentCount = 0;
         stopListeningForLocation();
 
@@ -397,7 +414,7 @@ public class FeedbackActivity extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.feedback_sending_error);
         builder.setIcon(R.drawable.ic_error_outline);
-        builder.setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback(null));
+        builder.setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback());
 
         // Or save message to send later -> db table needed? / sharedPreferences
         builder.setNegativeButton(R.string.ok, null);
