@@ -131,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/material_default_padding"
-                android:onClick="sendFeedback"
+                android:onClick="onSendClicked"
                 android:text="@string/feedback_send_button"
                 android:textColor="@android:color/white"
                 app:backgroundTint="@color/color_primary"/>
