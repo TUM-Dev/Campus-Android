@@ -31,7 +31,7 @@ public class ShowTicketActivity extends BaseActivity {
         movieDetailsTextView = (TextView) findViewById(R.id.moviedetail);
         ticketNumberTextView = (TextView) findViewById(R.id.ticketnumber);
         ticketQrCode = (ImageView) findViewById(R.id.ticket_qrcode);
-        //Get data from KinoDetailsFragment
+        //Get data from EventsDetailsFragment
         Intent intent = getIntent();
         String data = intent.getStringExtra("movie_data");
         movieDetailsTextView.setText(data);

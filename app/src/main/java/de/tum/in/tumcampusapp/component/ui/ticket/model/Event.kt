@@ -8,31 +8,21 @@ import java.util.*
 /**
  * Events
  *
- * @param id      News Facebook-ID
- * @param title   Title
- * @param link    Url, e.g. http://www.in.tum.de
+ * @param id      Event-ID
  * @param image   Image url e.g. http://www.tu-film.de/img/film/poster/Fack%20ju%20Ghte.jpg
+ * @param title   Title
+ * @param description Description
+ * @param locality Locality
  * @param date    Date
- * @param created Creation date
+ * @param link    Url, e.g. http://www.in.tum.de
  */
 @Entity
-data class News(@PrimaryKey
-                @SerializedName("news")
-                var id: String = "",
-                var title: String = "",
-                var link: String = "",
-                var src: String = "",
+data class Event(@PrimaryKey
+                @SerializedName("event")
+                var id: Int = 0,
                 var image: String = "",
+                var title: String = "",
+                var description: String = "",
+                var locality: String = "",
                 var date: Date = Date(),
-                var created: Date = Date(),
-                var dismissed: Int = 0) {
-    /**
-     * Identifies News as a film.
-     *
-     * @return true if News is a film; else false
-     */
-    fun isFilm(): Boolean {
-        return src == "2"
-    }
-
-}
+                var link:  String = "")
