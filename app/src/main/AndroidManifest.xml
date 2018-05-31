@@ -470,31 +470,31 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/barrier_free"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity"></activity>
+            android:parentActivityName=".component.ui.overview.MainActivity" />
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeContactActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/contact_person"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity"></activity>
+            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeFacilitiesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/facilities"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity"></activity>
+            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeMoreInfoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/more_info"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity"></activity>
+            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
             android:name=".component.tumui.feedback.FeedbackActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/feedback"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.tumui.feedback.FeedbackActivity"></activity>
+            android:parentActivityName=".component.tumui.feedback.FeedbackActivity" />
         <activity
             android:name=".component.ui.studycard.CardsActivity"
             android:label="@string/title_activity_cards"
@@ -719,14 +719,24 @@
             android:label="@string/pdf_viewer_title"
             android:parentActivityName=".component.ui.plan.PlansActivity" />
         <activity
-            android:name=".component.ui.tufilm.show_ticket"
+            android:name=".component.ui.ticket.ShowTicketActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/your_ticket"
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".component.ui.overview.MainActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.EventsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/events_overview"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.overview.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
         </activity>
     </application>
 

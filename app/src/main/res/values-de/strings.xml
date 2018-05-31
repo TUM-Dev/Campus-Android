@@ -134,7 +134,7 @@
     <string name="opening_hours">Öffnungszeiten</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
-
+    <string name="events">Ereignisse</string>
     <!-- Activity titles -->
     <string name="lectures_information">Vorlesungsinformationen</string>
     <string name="lectures_appointments">Vorlesungstermine</string>
@@ -485,6 +485,11 @@ Signatur: %5$s</string>
     <string name="show_answer">Antwort anzeigen</string>
     <string name="title_activity_cards_quiz">Lernkarten</string>
 
+    <!-- QR Code Ticket Activity -->
+    <string name="moviesdetail_dots">Filmdetails</string>
+    <string name="ticketnumber_dots">Ticketnummer</string>
+    <string name="your_ticket">Dein Ticket</string>
+
     <!-- Create personal Appointment (Calendar) -->
     <string name="create_event">Termin erstellen</string>
     <string name="comment">Anmerkung</string>
@@ -537,4 +542,7 @@ Signatur: %5$s</string>
     <string name="additional_info">Zusaätzliche Infos</string>
 
     <string name="topic">Über</string>
+    <!-- Events Activity -->
+    <string name="show_booked_events">Gebuchte Veranstaltungen anzeigen</string>
+    <string name="events_overview">Veranstaltungenubersicht</string>
 </resources>
