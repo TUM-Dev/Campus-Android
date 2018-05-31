@@ -35,6 +35,7 @@ public class ShowTicketActivity extends BaseActivity {
         Intent intent = getIntent();
         String data = intent.getStringExtra("movie_data");
         movieDetailsTextView.setText(data);
+        //get objectclass
 
         //TODO:It is data from backend. Wait for setting up of backend
         ticketNumberTextView.setText("87237489273984");

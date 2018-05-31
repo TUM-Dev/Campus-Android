@@ -21,7 +21,7 @@ import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeInfoActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity
 import de.tum.`in`.tumcampusapp.component.ui.curricula.CurriculaActivity
-import de.tum.`in`.tumcampusapp.component.ui.events.EventsActivity
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListActivity

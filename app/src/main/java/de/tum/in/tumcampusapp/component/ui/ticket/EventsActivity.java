@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.events;
+package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;

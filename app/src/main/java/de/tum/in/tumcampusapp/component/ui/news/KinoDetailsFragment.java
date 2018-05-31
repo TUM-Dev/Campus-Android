@@ -175,6 +175,7 @@ public class KinoDetailsFragment extends Fragment {
     //open ShowTicketActivity activity, and transfer current movie data to it.
     //TODO: The String data is just a example, it should be get from correspongding movie which now show on the screen.
     //Time and place of movie  is fixed. Only the movie title and date should be transfered to ShowTicketActivity activity
+    //somethings in event class,object
     private void showTicket() {
         String data = "KingsMan 08.05 " + "\n" + "Filmbegin: 20:00 o'clock " + "\n" + " 1. Stock, Hörsaal 1200 (Carl-von-Linde-Hörsaal) Arcisstraße 21";
         Intent intent = new Intent(getActivity().getApplicationContext(), ShowTicketActivity.class);

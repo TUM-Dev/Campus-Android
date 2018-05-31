@@ -729,7 +729,7 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-            android:name=".component.ui.events.EventsActivity"
+            android:name=".component.ui.ticket.EventsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/events_overview"
             android:launchMode="singleTop"
