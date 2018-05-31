@@ -50,10 +50,11 @@ public class TicketScanActivity extends Activity implements ZXingScannerView.Res
                 .toString()); // Prints the scan format (qrcode, pdf417 etc.)
         Intent data = new Intent();
         data.putExtra("name", rawResult.getText());
-        // TODO
-        // 1. Send the String to the Server and ask the server to return the Name associated with it
-        // 2. Display the Name that the server sent in the app, so that user can compare it to the personal ID of person
-        // 3. If correct, user can press "Ok", if not, user can abort and scan again
+
+        // TODO: Send the String to the Server and ask the server to return the Name associated with it
+        // Until then, we will display a dummy string
+
+        // 3. If correct, user can press "Confirm", if not, user can "Abort" and scan again
         setResult(RESULT_OK, data);
         finish();
     }
