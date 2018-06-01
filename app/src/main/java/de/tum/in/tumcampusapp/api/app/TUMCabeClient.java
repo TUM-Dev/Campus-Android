@@ -37,6 +37,8 @@ import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -84,6 +86,8 @@ public final class TUMCabeClient {
     static final String API_KINOS = "kino/";
     static final String API_CARD = "cards/";
     static final String API_NEWS = "news/";
+    static final String API_EVENTS = "event/";
+    static final String API_TICKET = "ticket/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -318,10 +322,20 @@ public final class TUMCabeClient {
     public List<News> getNews(String lastNewsId) throws IOException {
         return service.getNews(lastNewsId).execute().body();
     }
+
     public List<NewsSources> getNewsSources() throws IOException {
         return service.getNewsSources().execute().body();
     }
+
     public Observable<NewsAlert> getNewsAlert(){
         return service.getNewsAlert();
+    }
+
+    public List<Event> getEvents() throws IOException {
+        return service.getEvents().execute().body();
+    }
+
+    public List<Ticket> getTickets() throws IOException {
+        return service.getTickets().execute().body();
     }
 }
