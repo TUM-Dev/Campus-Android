@@ -21,6 +21,7 @@ object Const {
     const val HIDE_WIZARD_ON_STARTUP = "hide_wizard_on_startup"
     const val LRZ_ID = "lrz_id"
     const val NEWS = "news"
+    const val EVENTS = "events"
     const val KINO = "kino"
     const val STUDY_ROOM_GROUP_ID = "study_room_group_id"
     const val ROLE = "card_role"
