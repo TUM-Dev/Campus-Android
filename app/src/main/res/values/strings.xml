@@ -568,4 +568,7 @@ Signature: %5$s</string>
     <string name="moviesdetail_dots">Movie detail</string>
     <string name="ticketnumber_dots">ticket number</string>
     <string name="your_ticket">Your Ticket</string>
+    <string name="events">Events</string>
+    <string name="location">Location</string>
+    <string name="link" translatable="false">Link</string>
 </resources>

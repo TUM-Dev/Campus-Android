@@ -728,6 +728,7 @@
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".component.ui.overview.MainActivity"/>
         </activity>
+        <activity android:name=".component.ui.ticket.EventActivity" />
     </application>
 
 </manifest>

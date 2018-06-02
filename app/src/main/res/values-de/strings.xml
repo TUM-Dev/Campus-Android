@@ -537,4 +537,5 @@ Signatur: %5$s</string>
     <string name="additional_info">Zusaätzliche Infos</string>
 
     <string name="topic">Über</string>
+    <string name="location">Ort</string>
 </resources>
