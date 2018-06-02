@@ -26,6 +26,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
+ * TODO: combine this with KinoDetailsFragment
  */
 public class EventDetailsFragment extends Fragment {
 

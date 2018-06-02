@@ -7,9 +7,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class EventActivity extends BaseActivity{
+/**
+ * TODO: combine this with KinoActivity
+ */
+public class EventDetailsActivity extends BaseActivity{
 
-    public EventActivity() {
+    public EventDetailsActivity() {
         super(R.layout.activity_kino);
     }
 
