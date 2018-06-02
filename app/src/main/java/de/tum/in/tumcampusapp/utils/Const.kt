@@ -141,6 +141,8 @@ object Const {
     const val CONTACTS_PERMISSION_REQUEST_CODE = 0
     const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
 
+    const val TUM_CAMPUS_URL = "http://campus.tum.de"
+
     const val CALENDAR_FILTER_CANCELED = "calendar_filter_canceled"
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN = "calendar_filter_hour_limit_min"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX = "calendar_filter_hour_limit_max"

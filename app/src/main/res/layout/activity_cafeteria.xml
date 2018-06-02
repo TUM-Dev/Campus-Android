@@ -19,15 +19,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/color_primary"
-                android:elevation="12dp"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                android:elevation="@dimen/material_default_elevation"
+                android:theme="@style/TumToolbar"
                 tools:ignore="UnusedAttribute">
 
                 <Spinner
                     android:id="@+id/spinnerToolbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
             </android.support.v7.widget.Toolbar>
+
         </android.support.design.widget.AppBarLayout>
 
         <LinearLayout

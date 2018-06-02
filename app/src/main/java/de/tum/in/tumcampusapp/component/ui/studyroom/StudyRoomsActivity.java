@@ -30,8 +30,8 @@ import de.tum.in.tumcampusapp.utils.Utils;
 /**
  * Shows information about reservable study rooms.
  */
-public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Void> implements AdapterView
-                                                                                                      .OnItemSelectedListener {
+public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Void>
+        implements AdapterView.OnItemSelectedListener {
 
     private List<StudyRoomGroup> mStudyRoomGroupList;
     private int mSelectedStudyRoomGroupId = -1;
@@ -78,13 +78,11 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         SpinnerAdapter adapterCafeterias =
                 new ArrayAdapter<StudyRoomGroup>(this, R.layout.simple_spinner_item_actionbar,
                                                  android.R.id.text1, mStudyRoomGroupList) {
-                    final LayoutInflater inflater = (LayoutInflater) getContext()
-                            .getSystemService(LAYOUT_INFLATER_SERVICE);
-
                     @Override
                     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                        View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar,
-                                                  parent, false);
+                        View v = LayoutInflater.from(parent.getContext())
+                                               .inflate(R.layout.simple_spinner_dropdown_item_actionbar,
+                                                        parent, false);
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
                         TextView name = v.findViewById(android.R.id.text1); // Set name
@@ -136,15 +134,15 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         }
     }
 
-    private void changeViewPagerAdapter(int mSelectedStudyRoomGroupId) {
+    private void changeViewPagerAdapter(int selectedRoomGroupId) {
         mViewPager.setAdapter(null); //unset the adapter for updating
-        mSectionsPagerAdapter.setStudyRoomGroupId(this, mSelectedStudyRoomGroupId);
+        mSectionsPagerAdapter.setStudyRoomGroupId(this, selectedRoomGroupId);
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }
 
-    private void setupViewPagerAdapter(int mSelectedStudyRoomGroupId) {
+    private void setupViewPagerAdapter(int selectedRoomGroupId) {
         mSectionsPagerAdapter = new StudyRoomsPagerAdapter(getSupportFragmentManager());
-        changeViewPagerAdapter(mSelectedStudyRoomGroupId);
+        changeViewPagerAdapter(selectedRoomGroupId);
     }
 
     @Override
@@ -152,9 +150,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         //
     }
 
-    public void goToRoomFinder(View view) {
-        String link = ((TextView) view).getText()
-                                       .toString();
+    public void openLink(View view) {
+        String link = (String) view.getTag();
         String roomCode = link.substring(link.indexOf(' ') + 1, link.length());
 
         Intent findStudyRoomIntent = new Intent();
