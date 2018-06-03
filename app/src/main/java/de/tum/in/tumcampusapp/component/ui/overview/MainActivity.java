@@ -135,7 +135,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mViewModel = ViewModelProviders
                 .of(this)
                 .get(MainActivityViewModel.class);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         mViewModel.getCards().observe(this, cards -> {
             if (cards != null) {
                 onNewCardsAvailable(cards);

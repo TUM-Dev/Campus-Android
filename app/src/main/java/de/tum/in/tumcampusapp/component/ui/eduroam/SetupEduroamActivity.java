@@ -106,9 +106,6 @@ public class SetupEduroamActivity extends BaseActivity {
             Utils.showToast(this, R.string.eduroam_success);
             Utils.setSetting(this, Const.REFRESH_CARDS, true);
             finish();
-
-            // TODO
-            //CardManager.setShouldRefresh();
         } else {
             findViewById(R.id.eduroam_config_error).setVisibility(View.VISIBLE);
         }

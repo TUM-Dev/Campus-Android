@@ -141,12 +141,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             listPreference.setSummary(listPreference.getEntry());
         }
 
-        //Refresh the cards after a change has been made to them
-        if (key.startsWith("card_")) {
-            // TODO
-            //CardManager.setShouldRefresh();
-        }
-
         // When newspread selection changes
         // deselect all newspread sources and select only the
         // selected source if one of all was selected before
@@ -162,9 +156,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             String newSource = sharedPreferences.getString(key, "7");
             e.putBoolean("card_news_source_" + newSource, value);
             e.apply();
-            
-            // TODO
-            //CardManager.setShouldRefresh();
         }
 
         // If the silent mode was activated, start the service. This will invoke
