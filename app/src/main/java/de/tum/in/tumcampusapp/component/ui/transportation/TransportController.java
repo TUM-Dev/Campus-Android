@@ -8,6 +8,7 @@ import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +23,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
@@ -105,6 +107,7 @@ public class TransportController implements ProvidesCard {
     private static SparseArray<WidgetDepartures> widgetDeparturesList;
     private static final Gson gson = new Gson();
 
+    private Context mContext;
     private final TransportDao transportDao;
 
     static {
@@ -128,6 +131,7 @@ public class TransportController implements ProvidesCard {
     }
 
     public TransportController(Context context) {
+        mContext = context;
         TcaDb tcaDb = TcaDb.getInstance(context);
         transportDao = tcaDb.transportDao();
 
@@ -360,7 +364,30 @@ public class TransportController implements ProvidesCard {
         card.setStation(station);
         card.setDepartures(cur);
         card.apply();
+    }
 
+    @NotNull
+    @Override
+    public List<Card> getCards() {
+        List<Card> results = new ArrayList<>();
+        if (!NetUtils.isConnected(mContext)) {
+            return results;
+        }
+
+        // Get station for current campus
+        LocationManager locMan = new LocationManager(mContext);
+        StationResult station = locMan.getStation();
+        if (station == null) {
+            return results;
+        }
+
+        List<Departure> departures = getDeparturesFromExternal(mContext, station.getId());
+        MVVCard card = new MVVCard(mContext);
+        card.setStation(station);
+        card.setDepartures(departures);
+        results.add(card.getIfShowOnStart());
+
+        return results;
     }
 
     public static List<StationResult> getRecentStations(List<Recent> recents) {

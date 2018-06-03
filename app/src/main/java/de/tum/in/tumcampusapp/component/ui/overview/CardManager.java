@@ -141,7 +141,7 @@ public final class CardManager {
         // Add those managers only if valid access token is available
         if (new AccessTokenManager(context).hasValidAccessToken()) {
             managers.add(new CalendarController(context));
-            managers.add(new TuitionFeeManager());
+            managers.add(new TuitionFeeManager(context));
             managers.add(new ChatRoomController(context));
         }
 

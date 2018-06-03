@@ -3,6 +3,9 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 import android.content.Context;
 import android.text.format.DateUtils;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -17,6 +20,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -67,7 +71,13 @@ public class CafeteriaManager implements ProvidesCard {
                                             card.setCardMenus(cafeteria.id, cafeteria.name, cafeteria.dateStr, de.tum.in.tumcampusapp.utils.DateUtils.getDate(cafeteria.dateStr), cafeteria.menus);
                                             card.apply();
                                         }, throwable -> Utils.log(throwable.getMessage())));
+    }
 
+    @NotNull
+    @Override
+    public List<Card> getCards() {
+        // TODO Add synchronous query for cafeterias
+        return new ArrayList<>();
     }
 
     /**
