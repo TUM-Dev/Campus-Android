@@ -22,19 +22,33 @@ class CardsRepository(private val context: Context) {
 
     private var cards = MutableLiveData<List<Card>>()
 
+    /**
+     * Starts refresh of [Card]s and returns the corresponding [LiveData]
+     * through which the result can be received.
+     *
+     * @return The [LiveData] of [Card]s
+     */
     fun getCards(): LiveData<List<Card>> {
         refreshCards()
         return cards
     }
 
+    /**
+     * Refreshes the [LiveData] of [Card]s and updates its value.
+     */
     fun refreshCards() {
         doAsync {
-            val results = fetchCards()
+            val results = getCardsNow()
             cards.postValue(results)
         }
     }
 
-    private fun fetchCards(): List<Card> {
+    /**
+     * Returns the list of [Card]s synchronously.
+     *
+     * @return The list of [Card]s
+     */
+    fun getCardsNow(): List<Card> {
         val results = ArrayList<Card?>().apply {
             add(NoInternetCard(context).getIfShowOnStart())
             add(TopNewsCard(context).getIfShowOnStart())

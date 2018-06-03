@@ -18,7 +18,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -207,7 +206,9 @@ class DownloadService : JobIntentService() {
                     Utils.setSetting(service, LAST_UPDATE, System.currentTimeMillis())
                 }
 
-                CardManager.update(service)
+                // TODO: Can we omit this call or should we use persistence to store its results?
+                // CardManager.update(service)
+
                 success = true
             }
 

@@ -141,20 +141,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 onNewCardsAvailable(cards);
             }
         });
-
-        /*
-        CardManager.registerUpdateListener(() -> {
-            if (mAdapter != null) {
-                runOnUiThread(() -> mAdapter.notifyDataSetChanged());
-            }
-        });
-
-        if (CardManager.getShouldRefresh() || CardManager.getCards() == null) {
-            refreshCards();
-        } else {
-            initAdapter();
-        }
-        */
     }
 
     private void onNewCardsAvailable(List<Card> cards) {
@@ -338,5 +324,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                     })
                     .show();
         }
+
     }
+
 }

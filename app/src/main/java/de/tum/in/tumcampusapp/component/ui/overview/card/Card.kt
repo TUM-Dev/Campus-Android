@@ -95,20 +95,6 @@ abstract class Card(
     }
 
     /**
-     * Must be called after information has been set
-     * Adds the card to CardManager if not dismissed before and notifies the user
-     */
-    open fun apply() {
-        // Should be shown on start page?
-        if (mShowStart) {
-            val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
-            if (shouldShow(prefs)) {
-                CardManager.addCard(this)
-            }
-        }
-    }
-
-    /**
      * Returns the Card if it should be displayed in the overview screen or null otherwise.
      *
      * @return The Card to be displayed or null
