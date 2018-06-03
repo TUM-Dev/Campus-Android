@@ -18,6 +18,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
@@ -40,9 +41,8 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements
-                                                               SharedPreferences.OnSharedPreferenceChangeListener,
-                                                               Preference.OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragmentCompat
+        implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     public static final String FRAGMENT_TAG = "my_preference_fragment";
     private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
@@ -56,9 +56,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         mContext = getActivity();
 
         // Disables silence service if the app is used without TUMOnline access
-        CheckBoxPreference silent = (CheckBoxPreference) findPreference("silent_mode");
-        if (silent != null && !new AccessTokenManager(mContext).hasValidAccessToken()) {
-            silent.setEnabled(false);
+        SwitchPreferenceCompat silentSwitch =
+                (SwitchPreferenceCompat) findPreference(Const.SILENCE_SERVICE);
+        if (silentSwitch != null && !new AccessTokenManager(mContext).hasValidAccessToken()) {
+            silentSwitch.setEnabled(false);
         }
 
         //Only do these things if we are in the root of the preferences
@@ -100,7 +101,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     }
 
     private void populateNewsSources() {
-        PreferenceCategory newsSourcesPreference = (PreferenceCategory) findPreference("card_news_sources");
+        PreferenceCategory newsSourcesPreference =
+                (PreferenceCategory) findPreference("card_news_sources");
 
         NewsController newsController = new NewsController(mContext);
         List<NewsSources> newsSources = newsController.getNewsSources();
@@ -172,9 +174,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             if (sharedPreferences.getBoolean(key, false)) {
                 if (!SilenceService.hasPermissions(mContext)) {
                     // disable until silence service permission is resolved
-                    CheckBoxPreference silenceCheckbox = (CheckBoxPreference) findPreference(Const.SILENCE_SERVICE);
-                    if (silenceCheckbox != null) {
-                        silenceCheckbox.setChecked(false);
+                    SwitchPreferenceCompat silenceSwitch =
+                            (SwitchPreferenceCompat) findPreference(Const.SILENCE_SERVICE);
+                    if (silenceSwitch != null) {
+                        silenceSwitch.setChecked(false);
                     }
                     Utils.setSetting(mContext, Const.SILENCE_SERVICE, false);
 
@@ -228,7 +231,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                         .setPositiveButton(R.string.yes, (dialogInterface, i) -> clearCache())
                         .setNegativeButton(R.string.no, null)
                         .show();
-
                 break;
             default:
                 return false;
