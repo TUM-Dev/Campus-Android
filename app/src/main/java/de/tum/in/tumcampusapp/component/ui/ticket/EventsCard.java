@@ -1,29 +1,22 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.news.model.News;
-import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -80,45 +73,24 @@ public class EventsCard extends NotificationAwareCard {
 
     @Override
     protected void discard(SharedPreferences.Editor editor) {
-        EventsController eventsController = new EventsController(getContext());
-        eventsController.setDismissed(mEvents.getId(), mEvents.getDismissed() | 1);
+
     }
 
     @Override
     protected void discardNotification(SharedPreferences.Editor editor) {
-        EventsController eventsController = new EventsController(getContext());
-        eventsController.setDismissed(mEvents.getId(), mEvents.getDismissed() | 2);
+
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
-        return (mEvents.getDismissed() & 1) == 0;
+        return 1==0;
     }
 
     @Override
     protected boolean shouldShowNotification(SharedPreferences prefs) {
-        return (mEvents.getDismissed() & 2) == 0;
+        return 1==0;
     }
 
-    @Override
-/*    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        NewsSourcesDao newsSourcesDao = TcaDb.getInstance(getContext()).newsSourcesDao();
-        NewsSources newsSource = newsSourcesDao.getNewsSource(Integer.parseInt(mNews.getSrc()));
-        notificationBuilder.setContentTitle(getContext().getString(R.string.news));
-        notificationBuilder.setContentText(mNews.getTitle());
-        notificationBuilder.setContentInfo(newsSource.getTitle());
-        notificationBuilder.setTicker(mNews.getTitle());
-        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        try {
-            if(!mNews.getImage().isEmpty()){
-                Bitmap bgImg = Picasso.get().load(mNews.getImage()).get();
-                notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bgImg));
-            }
-        } catch (IOException e) {
-            // ignore it if download fails
-        }
-        return notificationBuilder.build();
-    }*///NewsDao 是query，mockup的话还需不需要
 
     @Override
     public Intent getIntent() {

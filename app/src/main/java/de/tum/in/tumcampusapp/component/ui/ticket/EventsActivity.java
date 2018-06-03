@@ -21,7 +21,6 @@ public class EventsActivity extends ActivityForDownloadingExternal  {
     private RecyclerView lv;
     private int state = -1;
     private EventsController nm;
-
     public EventsActivity() {
         super(Const.EVENTS,R.layout.activity_events);
     }
@@ -35,29 +34,14 @@ public class EventsActivity extends ActivityForDownloadingExternal  {
     protected void onStart() {
         super.onStart();
 
-        // Gets all news from database
-        nm = new EventsController(this);
-        List<Event> events = new ArrayList<>();
-        events.add(new Event("title"));
+        // Gets all news from mockup
+        List<Event> events = EventsController.getEvents();
 
         if (events.size() > 0) {
-            EventsAdapters adapter = new EventsAdapters(this, events);
-
+            EventsAdapter adapter = new EventsAdapter(this, events);
             lv = findViewById(R.id.activity_events_list_view);
             lv.setLayoutManager(new LinearLayoutManager(this));
             lv.setAdapter(adapter);
-
-            /* Restore previous state (including selected item index and scroll position) */
-            if (state == -1) {
-                lv.scrollToPosition(nm.getTodayIndex());
-            } else {
-                lv.scrollToPosition(state);
-            }
-
-        } else if (NetUtils.isConnected(this)) {
-            showErrorLayout();
-        } else {
-            showNoInternetLayout();
         }
     }
     /**
