@@ -14,18 +14,22 @@ data class CafeteriaWithMenus(val id: Int) {
     val nextMenuDate: String
         get() {
             val now = Calendar.getInstance();
-            var nextDate = menuDates
-                    .getOrElse(0) { DateUtils.getDateTimeString(Date()) }
-            val nextDateDate = DateUtils.getDate(nextDate)
+            var nextDateString = menuDates
+                    .getOrElse(0) {
+                        DateUtils.getDateTimeString(Date())
+                    }
+            val nextDate = DateUtils.getDate(nextDateString)
 
-            // TODO: Improve this mess and comment
-
-            if (AndroidDateUtils.isToday(nextDateDate.time)
-                    && now.get(Calendar.HOUR_OF_DAY) >= 15 && menuDates.size > 1) {
-                nextDate = menuDates[1]
+            if (nextDate.isToday() && now.hour >= 15 && menuDates.size > 1) {
+                nextDateString = menuDates[1]
             }
 
-            return nextDate
+            return nextDateString
         }
 
 }
+
+fun Date.isToday() = AndroidDateUtils.isToday(this.time)
+
+val Calendar.hour: Int
+    get() = this.get(Calendar.HOUR_OF_DAY)
