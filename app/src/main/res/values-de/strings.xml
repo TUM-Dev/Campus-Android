@@ -75,7 +75,7 @@
     <string name="open_wizard">Öffne Startup-Wizard</string>
     <string name="open_wizard_detail">Der Startup-Wizard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMonline Dienste einzurichten und das Farbschema der App festzulegen.</string>
     <string name="clear_cache">Lösche Daten</string>
-    <string name="clear_cache_detail">Löscht alle durch die TUM Campus App heruntergeladenen, auf der SD-Karte gespeicherten Daten.</string>
+    <string name="clear_cache_detail">Löscht alle Daten der TUM Campus App von deinem Gerät.</string>
     <string name="delete_cache_sure">Alle Daten wirklich löschen?</string>
     <string name="success_clear_cache">Daten erfolgreich gelöscht</string>
 
@@ -83,7 +83,7 @@
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
     <string name="background_mode">Hintergrundmodus (empfohlen)</string>
-    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist. Wird automatisch abgeschalten, wenn du dich mehr als 50km außerhalb von München befindest.</string>
+    <string name="background_info">Aktualisiert die Inhalte der App automatisch einmal täglich, wenn du dich im Großraum München aufhältst.</string>
     <string name="mode_background_mode">Aktivierung des Hintergrundmodus</string>
     <string name="always">Immer</string>
     <string name="wifi_only">Nur bei WLAN-Verbindung</string>

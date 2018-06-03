@@ -81,7 +81,7 @@
     <string name="open_wizard">Open Startup-Wizard</string>
     <string name="open_wizard_detail">The Startup-Wizard helps you in order to set the basic preferences for accessing TUMonline services and the layout of this App.</string>
     <string name="clear_cache">Clear Cache</string>
-    <string name="clear_cache_detail">Deletes all data which was downloaded by the TUM Campus App and stored on the SD-Card</string>
+    <string name="clear_cache_detail">Deletes all data which was downloaded by the TUM Campus App and stored on your device.</string>
     <string name="delete_cache_sure">Are you sure you want to delete all data?</string>
     <string name="success_clear_cache">Successfully cleared cache</string>
 
@@ -89,7 +89,7 @@
     <string name="silence_phone">Silent Service</string>
     <string name="silence_phone_info">The device will be automatically put into silent mode during a lecture.</string>
     <string name="background_mode">Background Mode (Recommended)</string>
-    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don’t open the app. If you’re more than 50km outside of munich it’ll automatically turned off/on</string>
+    <string name="background_info">Content will automatically be updated once per day if you’re in the Munich area.</string>
     <string name="mode_background_mode">Background Mode activation</string>
     <string name="always">Always</string>
     <string name="wifi_only">WiFi only</string>
@@ -395,8 +395,8 @@ Signature: %5$s</string>
     <string name="key_not_activated">You have not activated your key!</string>
     <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMonline token!</string>
     <string name="edit">Edit</string>
-    <string name="auto_join_chat">Join new lecture rooms</string>
-    <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture’s chat room.</string>
+    <string name="auto_join_chat">Auto-join new lecture rooms</string>
+    <string name="set_auto_join_chat">If you subscribe to a new lecture, the app will automatically add you to the lecture’s chat room.</string>
     <string name="add_chat_member">Add person to chat room</string>
     <string name="add_chat_room">New chat room</string>
     <string name="join_chat_room">Join chat room</string>

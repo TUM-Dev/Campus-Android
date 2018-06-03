@@ -217,7 +217,7 @@
 
             <android.support.v7.preference.PreferenceCategory android:title="@string/extra">
 
-                <android.support.v7.preference.CheckBoxPreference
+                <android.support.v7.preference.SwitchPreferenceCompat
                     android:defaultValue="true"
                     android:key="card_news_latest_only"
                     android:summary="@string/only_latest_article_summary"

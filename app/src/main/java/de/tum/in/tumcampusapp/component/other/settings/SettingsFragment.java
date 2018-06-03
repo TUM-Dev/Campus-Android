@@ -47,6 +47,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     public static final String FRAGMENT_TAG = "my_preference_fragment";
     private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
     private static final String SETUP_EDUROAM = "card_eduroam_setup";
+
     private FragmentActivity mContext;
 
     @Override
@@ -68,18 +69,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
             // (since it is not possible to add a button to the preferences screen)
             findPreference(BUTTON_CLEAR_CACHE).setOnPreferenceClickListener(this);
 
-            // Set summary for these preferences
+            setSummary("card_default_campus");
+            setSummary("silent_mode_set_to");
+            setSummary("background_mode_set_to");
+        } else if (rootKey.equals("card_cafeteria")) {
             setSummary("card_cafeteria_default_G");
             setSummary("card_cafeteria_default_K");
             setSummary("card_cafeteria_default_W");
             setSummary("card_role");
+        } else if (rootKey.equals("card_mvv")) {
             setSummary("card_stations_default_G");
             setSummary("card_stations_default_C");
             setSummary("card_stations_default_K");
-            setSummary("card_default_campus");
-            setSummary("silent_mode_set_to");
-            setSummary("background_mode_set_to");
-
         } else if (rootKey.equals("card_eduroam")) {
             findPreference(SETUP_EDUROAM).setOnPreferenceClickListener(this);
         }
@@ -141,7 +142,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         Preference pref = findPreference(key);
         if (pref instanceof ListPreference) {
             ListPreference listPreference = (ListPreference) pref;
-            listPreference.setSummary(listPreference.getEntry());
+            String entry = listPreference.getEntry().toString();
+            listPreference.setSummary(entry);
         }
 
         //Refresh the cards after a change has been made to them
@@ -203,10 +205,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void setSummary(CharSequence key) {
-        Preference t = findPreference(key);
-        if (t instanceof ListPreference) {
-            ListPreference pref = (ListPreference) t;
-            pref.setSummary(pref.getEntry());
+        Preference pref = findPreference(key);
+        if (pref instanceof ListPreference) {
+            ListPreference listPref = (ListPreference) pref;
+            String entry = listPref.getEntry().toString();
+            listPref.setSummary(entry);
         }
     }
 
@@ -258,4 +261,5 @@ public class SettingsFragment extends PreferenceFragmentCompat
         mContext.finish();
         startActivity(new Intent(mContext, StartupActivity.class));
     }
+
 }
