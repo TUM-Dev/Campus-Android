@@ -3,6 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="cards_pref_container">
 
+    <android.support.v7.preference.PreferenceCategory android:title="@string/campus">
+
+        <android.support.v7.preference.ListPreference
+            android:defaultValue="G"
+            android:entries="@array/default_campus_entries"
+            android:entryValues="@array/default_campus_values"
+            android:key="card_default_campus"
+            android:title="@string/default_campus"/>
+
+    </android.support.v7.preference.PreferenceCategory>
+
     <android.support.v7.preference.PreferenceCategory android:title="@string/cards_settings">
 
         <!-- Cafeteria card -->
@@ -286,13 +297,6 @@
             </android.support.v7.preference.PreferenceCategory>
 
         </android.support.v7.preference.PreferenceScreen>
-
-        <android.support.v7.preference.ListPreference
-            android:defaultValue="G"
-            android:entries="@array/default_campus_entries"
-            android:entryValues="@array/default_campus_values"
-            android:key="card_default_campus"
-            android:title="@string/default_campus"/>
 
     </android.support.v7.preference.PreferenceCategory>
 

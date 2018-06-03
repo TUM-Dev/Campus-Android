@@ -557,4 +557,5 @@ Signatur: %5$s</string>
     <string name="send_feedback_question">Feedback absenden?</string>
     <string name="feedback_empty">Bitte gib hier dein Feedback ein</string>
     <string name="feedback_img_without_text">Bitte füge eine Beschreibung hinzu</string>
+    <string name="campus">Campus</string>
 </resources>

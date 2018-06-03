@@ -583,4 +583,5 @@ Signature: %5$s</string>
     <string name="send_feedback_question">Send feedback now?</string>
     <string name="feedback_empty">You haven\'t entered any feedback</string>
     <string name="feedback_img_without_text">Please add a description</string>
+    <string name="campus">Campus</string>
 </resources>
