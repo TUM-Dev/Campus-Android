@@ -35,11 +35,11 @@
                     style="@style/SmallListSeparatorTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/moviesdetail_dots"
+                    android:text="@string/eventdetail_dots"
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:id="@+id/moviedetail"
+                    android:id="@+id/eventdetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
@@ -50,16 +50,9 @@
                     style="@style/SmallListSeparatorTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/ticketnumber_dots"
+                    android:text="@string/qrcode_dots"
                     android:textSize="16sp"/>
 
-                <TextView
-                    android:id="@+id/ticketnumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:text=""
-                    android:textSize="@dimen/large_text_size"/>
                 <ImageView
                     android:id="@+id/ticket_qrcode"
                     android:layout_width="match_parent"

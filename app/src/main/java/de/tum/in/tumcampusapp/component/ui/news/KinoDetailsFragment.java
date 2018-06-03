@@ -60,10 +60,10 @@ public class KinoDetailsFragment extends Fragment {
         // TODO: set isBooked if the user has already bought a ticket
 
         kinoViewModel.getKinoByPosition(position)
-                     .subscribe(kino1 -> {
-                         kino = kino1;
-                         showDetails(root);
-                     });
+                .subscribe(kino1 -> {
+                    kino = kino1;
+                    showDetails(root);
+                });
 
         return rootView;
     }
@@ -101,11 +101,11 @@ public class KinoDetailsFragment extends Fragment {
         text.setText(contentString);
         // padding is done programmatically here because we need more padding at the end
         int padding = (int) context.getResources()
-                                   .getDimension(R.dimen.padding_kino);
+                .getDimension(R.dimen.padding_kino);
         int paddingRight = (int) context.getResources()
-                                        .getDimension(R.dimen.padding_kino_right);
+                .getDimension(R.dimen.padding_kino_right);
         int paddingEnd = (int) context.getResources()
-                                      .getDimension(R.dimen.padding_kino_end);
+                .getDimension(R.dimen.padding_kino_end);
         text.setPadding(padding, padding, paddingRight, paddingEnd);
         rootView.addView(view);
     }
@@ -144,10 +144,10 @@ public class KinoDetailsFragment extends Fragment {
         trailer.setOnClickListener(view -> showTrailer());
 
         // Setup "Buy/Show ticket" button according to ticket status for current event
-        if (isBooked){
+        if (isBooked) {
             ticket.setText("Show ticket");
             ticket.setOnClickListener(view -> showTicket());
-        } else{
+        } else {
             ticket.setText("Buy ticket");
             ticket.setOnClickListener(view -> buyTicket());
         }
@@ -161,6 +161,7 @@ public class KinoDetailsFragment extends Fragment {
                         progress.setVisibility(View.GONE);
                         error.setVisibility(View.GONE);
                     }
+
                     @Override
                     public void onError(Exception e) {
                         progress.setVisibility(View.GONE);
@@ -170,17 +171,14 @@ public class KinoDetailsFragment extends Fragment {
 
         rootView.addView(headerView);
     }
-    //open ShowTicketActivity activity, and transfer current movie data to it.
-    //TODO: The String data is just a example, it should be get from correspongding movie which now show on the screen.
-    //Time and place of movie  is fixed. Only the movie title and date should be transfered to ShowTicketActivity activity
-    private void showTicket(){
-        String data = "KingsMan 08.05 " + "\n"+ "Filmbegin: 20:00 o'clock "+"\n"+ " 1. Stock, Hörsaal 1200 (Carl-von-Linde-Hörsaal) Arcisstraße 21";
+
+    //open ShowTicketActivity activity
+    private void showTicket() {
         Intent intent = new Intent(getActivity().getApplicationContext(), ShowTicketActivity.class);
-        intent.putExtra("movie_data", data);
         startActivity(intent);
     }
 
-    private void buyTicket(){
+    private void buyTicket() {
         // TODO: go to payment activity (to be implemented)
     }
 
@@ -194,11 +192,11 @@ public class KinoDetailsFragment extends Fragment {
         }
     }
 
-    private String getTrailerSearchString(){
+    private String getTrailerSearchString() {
         String search = kino.getTitle();
         search = search.split(": ")[1];
         search = "trailer " + search;
-        if(!search.contains("OV")){
+        if (!search.contains("OV")) {
             search += " german deutsch";
         }
         search = search.replace(' ', '+');
