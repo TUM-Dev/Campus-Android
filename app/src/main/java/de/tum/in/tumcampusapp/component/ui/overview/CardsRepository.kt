@@ -20,13 +20,18 @@ import org.jetbrains.anko.doAsync
 
 class CardsRepository(private val context: Context) {
 
+    private var cards = MutableLiveData<List<Card>>()
+
     fun getCards(): LiveData<List<Card>> {
-        val data = MutableLiveData<List<Card>>()
+        refreshCards()
+        return cards
+    }
+
+    fun refreshCards() {
         doAsync {
             val results = fetchCards()
-            data.postValue(results)
+            cards.postValue(results)
         }
-        return data
     }
 
     private fun fetchCards(): List<Card> {

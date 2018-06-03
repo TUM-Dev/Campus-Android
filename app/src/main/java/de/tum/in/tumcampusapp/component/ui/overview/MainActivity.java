@@ -170,9 +170,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     private void onNewCardsAvailable(List<Card> cards) {
-        // TODO: Update adapter
         mSwipeRefreshLayout.setRefreshing(false);
-
+        mAdapter.updateItems(cards);
 
         if (!NetUtils.isConnected(this) && !isConnectivityChangeReceiverRegistered) {
             registerReceiver(connectivityChangeReceiver,
@@ -267,27 +266,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     @Override
     public void onRefresh() {
         mViewModel.refreshCards();
-
-        /*
-        Completable.fromAction(() -> CardManager.update(this))
-                   .compose(provider.bindToLifecycle())
-                   .subscribeOn(Schedulers.io())
-                   .observeOn(AndroidSchedulers.mainThread())
-                   .subscribe(() -> {
-                       if (mAdapter == null) {
-                           initAdapter();
-                       } else {
-                           mAdapter.notifyDataSetChanged();
-                       }
-
-                       mSwipeRefreshLayout.setRefreshing(false);
-                       if (!registered && !NetUtils.isConnected(MainActivity.this)) {
-                           registerReceiver(connectivityChangeReceiver,
-                                            new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-                           registered = true;
-                       }
-                   });
-        */
     }
 
     /**
@@ -348,7 +326,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
             final Card card = cardViewHolder.getCurrentCard();
-            final int lastPos = mAdapter.remove(card);
+            final int lastPos = cardViewHolder.getAdapterPosition();
+            mAdapter.remove(lastPos);
+
             final View coordinatorLayoutView = findViewById(R.id.coordinator);
 
             Snackbar.make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
