@@ -293,9 +293,9 @@
     <string name="card_cafeteria_summary">Displays the cafeteria menu</string>
     <string name="card_mvv_summary">Shows you the departure times of public transport</string>
     <string name="card_next_lecture_summary">Shows information about your next lecture</string>
-    <string name="card_tuition_fee_summary">Reminds you if you have to pay your fees</string>
+    <string name="card_tuition_fee_summary">Reminds you when you have to pay your fees</string>
     <string name="card_news_summary">Advertises selected news</string>
-    <string name="card_chat_summary">Notifies you if new messages are available</string>
+    <string name="card_chat_summary">Notifies you about new messages</string>
     <string name="chat" translatable="false">Chat</string>
     <string name="open_card_settings">Open card settings</string>
     <string name="always_hide_card">Always hide card</string>
@@ -326,7 +326,7 @@
     <string name="not_ask_again">Don’t ask again</string>
     <string name="eduroam_setup_question">Do you want to connect to eduroam now?</string>
     <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
-    <string name="card_eduroam_summary">Allows you to easily set up eduroam wifi connection</string>
+    <string name="card_eduroam_summary">Allows you to easily set up eduroam Wi-Fi connection</string>
     <string name="pin_lock">PIN-Lock</string>
     <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.</string>
     <string name="enable_pin_lock">Enable PIN-Lock</string>
