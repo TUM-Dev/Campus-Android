@@ -38,6 +38,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         EventsViewHolder holder = new EventsViewHolder(card);
         holder.title = card.findViewById(R.id.events_title);
         holder.img = card.findViewById(R.id.events_img);
+        holder.locality = card.findViewById(R.id.events_src_locality);
         holder.srcDate = card.findViewById(R.id.events_src_date);
         card.setTag(holder);
         return holder;
@@ -82,6 +83,9 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
             title = COMPILE.matcher(title)
                     .replaceAll("");
         holder.title.setText(title);
+        //Adds locality
+        String locality = event.getLocality();
+        holder.locality.setText(locality);
 
         // Adds date
         Date date = event.getDate();
@@ -107,10 +111,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         bindEventsView(holder, events.get(position), mContext);
     }
 
-/*    @Override
-    public int getItemViewType(int position) {
-        return news.get(position).isFilm() ? 0 : 1;
-    }*/
+
 
     @Override
     public int getItemCount() {
@@ -120,6 +121,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     private static class EventsViewHolder extends CardViewHolder {
         ImageView img;
         TextView title;
+        TextView locality;
         TextView srcDate;
 
         EventsViewHolder(View itemView) {

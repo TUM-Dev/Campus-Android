@@ -48,9 +48,6 @@ public class EventsCard extends NotificationAwareCard {
         return mEvents.getTitle();
     }
 
-/*    public String getSource() {
-        return mEvents.getSrc();
-    }*/
 
     public Date getDate() {
         return mEvents.getDate();
@@ -65,7 +62,7 @@ public class EventsCard extends NotificationAwareCard {
     /**
      * Sets the information needed to show Events
      *
-     * @param n   Events object
+     * @param n Events object
      */
     public void setEvents(Event n) {
         mEvents = n;
@@ -83,27 +80,14 @@ public class EventsCard extends NotificationAwareCard {
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
-        return 1==0;
+        return false;
     }
 
     @Override
     protected boolean shouldShowNotification(SharedPreferences prefs) {
-        return 1==0;
+        return false;
     }
 
-
-    @Override
-    public Intent getIntent() {
-        // Show regular Events in browser
-        String url = mEvents.getLink();
-        if (url.isEmpty()) {
-            Utils.showToast(getContext(), R.string.no_link_existing);
-            return null;
-        }
-
-        // Opens url in browser
-        return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-    }
 
     @Override
     public RemoteViews getRemoteViews(Context context, int appWidgetId) {
