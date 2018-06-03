@@ -108,6 +108,22 @@ abstract class Card(
     }
 
     /**
+     * Returns the Card if it should be displayed in the overview screen or null otherwise.
+     *
+     * @return The Card to be displayed or null
+     */
+    open fun getIfShowOnStart(): Card? {
+        if (mShowStart) {
+            val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
+            if (shouldShow(prefs)) {
+                return this
+            }
+        }
+
+        return null
+    }
+
+    /**
      * Determines if the card should be shown. Decision is based on the given SharedPreferences.
      * This method should be overridden in most cases.
      *
