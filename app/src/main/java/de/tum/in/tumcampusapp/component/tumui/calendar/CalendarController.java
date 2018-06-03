@@ -255,21 +255,6 @@ public class CalendarController implements ProvidesCard {
         return geo;
     }
 
-    /**
-     * Shows next lecture card if lecture is available
-     *
-     * @param context Context
-     */
-    @Override
-    public void onRequestCard(Context context) {
-        List<CalendarItem> nextCalendarItems = getNextCalendarItems();
-        if (!nextCalendarItems.isEmpty()) {
-            NextLectureCard card = new NextLectureCard(context);
-            card.setLectures(nextCalendarItems);
-            card.apply();
-        }
-    }
-
     @NotNull
     @Override
     public List<Card> getCards() {

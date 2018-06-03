@@ -113,17 +113,6 @@ public final class CardManager {
 
     /**
      * Refreshes or initialises all cards.
-     * WARNING: Must not be called from UI thread.
-     * <p/>
-     * HOW TO ADD A NEW CARD:
-     * 1. Let the manager class implement {@link ProvidesCard}
-     * 2. Create a new class extending {@link Card}
-     * 3. Implement the getCardView method in this class
-     * 4. Create a new instance of this card in the
-     * {@link ProvidesCard#onRequestCard(Context)} method of the manager
-     * 5. Add this card to the CardManager by calling {@link Card#apply()} from
-     * {@link ProvidesCard#onRequestCard(Context)}
-     * 6. Add an instance of the manager class to the managers list below
      */
     public static synchronized void update(Context context) {
         // Use temporary array to avoid that the main thread is trying to access an empty array
@@ -151,7 +140,8 @@ public final class CardManager {
         managers.add(new NewsController(context));
 
         for (ProvidesCard manager : managers) {
-            manager.onRequestCard(context);
+            // TODO
+            //manager.onRequestCard(context);
         }
 
         // Always append the restore card at the end of our list

@@ -140,49 +140,6 @@ public class ChatRoomController implements ProvidesCard {
         chatRoomDao.updateLeftRooms(currentChatRoom.getId(), currentChatRoom.getActualName(), currentChatRoom.getSemester());
     }
 
-    @Override
-    public void onRequestCard(Context context) {
-        // Get all of the users lectures and save them as possible chat rooms
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler =
-                new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, context, true);
-        Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
-        if (lecturesList.isPresent()) {
-            List<LecturesSearchRow> lectures = lecturesList.get()
-                                                           .getLehrveranstaltungen();
-            this.createLectureRooms(lectures);
-        }
-
-        // Join all new chat rooms
-        if (Utils.getSettingBool(context, Const.AUTO_JOIN_NEW_ROOMS, false)) {
-            List<String> newRooms = this.getNewUnjoined();
-            ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
-            for (String roomId : newRooms) {
-                // Join chat room
-                try {
-                    ChatRoom currentChatRoom = new ChatRoom(roomId);
-                    currentChatRoom = TUMCabeClient.getInstance(context)
-                                                   .createRoom(currentChatRoom, ChatVerification.Companion.getChatVerification(context, currentChatMember));
-                    if (currentChatRoom != null) {
-                        this.join(currentChatRoom);
-                    }
-                } catch (IOException e) {
-                    Utils.log(e, " - error occured while creating the room!");
-                } catch (NoPrivateKey noPrivateKey) {
-                    return;
-                }
-            }
-        }
-
-        // Get all rooms that have unread messages
-        List<ChatRoomDbRow> rooms = chatRoomDao.getUnreadRooms();
-        if (!rooms.isEmpty()) {
-            for (ChatRoomDbRow room : rooms) {
-                ChatMessagesCard card = new ChatMessagesCard(context, room);
-                card.apply();
-            }
-        }
-    }
-
     @NotNull
     @Override
     public List<Card> getCards() {

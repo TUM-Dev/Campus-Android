@@ -26,25 +26,6 @@ public class TuitionFeeManager implements ProvidesCard {
         mContext = context;
     }
 
-    /**
-     * Shows tuition card with current fee status
-     *
-     * @param context Context
-     */
-    @Override
-    public void onRequestCard(Context context) {
-        TUMOnlineRequest<TuitionList> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.TUITION_FEE_STATUS, context, true);
-        Optional<TuitionList> tuitionList = requestHandler.fetch();
-        if (!tuitionList.isPresent()) {
-            return;
-        }
-        TuitionFeesCard card = new TuitionFeesCard(context);
-        card.setTuition(tuitionList.get()
-                                   .getTuitions()
-                                   .get(0));
-        card.apply();
-    }
-
     @NotNull
     @Override
     public List<Card> getCards() {
@@ -66,4 +47,5 @@ public class TuitionFeeManager implements ProvidesCard {
         results.add(card.getIfShowOnStart());
         return results;
     }
+
 }

@@ -341,31 +341,6 @@ public class TransportController implements ProvidesCard {
         results.add(new StationResult(name, id, quality));
     }
 
-    /**
-     * Inserts a MVV card for the nearest public transport station
-     *
-     * @param context Context
-     */
-    @Override
-    public void onRequestCard(Context context) {
-        if (!NetUtils.isConnected(context)) {
-            return;
-        }
-
-        // Get station for current campus
-        LocationManager locMan = new LocationManager(context);
-        StationResult station = locMan.getStation();
-        if (station == null) {
-            return;
-        }
-
-        List<Departure> cur = getDeparturesFromExternal(context, station.getId());
-        MVVCard card = new MVVCard(context);
-        card.setStation(station);
-        card.setDepartures(cur);
-        card.apply();
-    }
-
     @NotNull
     @Override
     public List<Card> getCards() {
