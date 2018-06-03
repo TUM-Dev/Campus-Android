@@ -227,9 +227,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
             case BUTTON_CLEAR_CACHE:
                 // This button invokes the clear cache method
                 new AlertDialog.Builder(mContext)
-                        .setMessage(R.string.delete_chache_sure)
-                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> clearCache())
-                        .setNegativeButton(R.string.no, null)
+                        .setMessage(R.string.delete_cache_sure)
+                        .setPositiveButton(R.string.delete, (dialogInterface, i) -> clearCache())
+                        .setNegativeButton(R.string.cancel, null)
                         .show();
                 break;
             default:
