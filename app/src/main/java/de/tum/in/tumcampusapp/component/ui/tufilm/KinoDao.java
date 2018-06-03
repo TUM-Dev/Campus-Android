@@ -26,7 +26,7 @@ public interface KinoDao {
     Flowable<List<Kino>> getAll();
 
     @Query("SELECT id FROM kino ORDER BY id DESC LIMIT 1")
-    String getLastId();
+    String getLatestId();
 
     @Query("SELECT count(*) FROM kino WHERE date < :date")
     int getPosition(String date);

@@ -35,8 +35,6 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
 
-    fun getLastId() = KinoLocalRepository.getLastId()
-
     /**
      * Downloads kinos and stores them in the local repository.
      *
@@ -48,7 +46,11 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
      */
     fun getKinosFromService(force: Boolean): Boolean =
             compositeDisposable.add(
-                    Observable.create<List<Kino>> { remoteRepository.getAllKinos(getLastId()) }
+                    Observable
+                            .create<List<Kino>> {
+                                val latestId = KinoLocalRepository.getLatestId()
+                                remoteRepository.getAllKinos(latestId)
+                            }
                             .filter { localRepository.getLastSync() == null || force }
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
