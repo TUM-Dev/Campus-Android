@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.overview;
 
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -88,10 +89,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>
     }
 
     public void updateItems(List<Card> newCards) {
-        // TODO: DiffUtil
+        DiffUtil.DiffResult diffResult =
+                DiffUtil.calculateDiff(new Card.DiffCallback(mItems, newCards));
+
         mItems.clear();
         mItems.addAll(newCards);
-        notifyDataSetChanged();
+
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public Card remove(int position) {
