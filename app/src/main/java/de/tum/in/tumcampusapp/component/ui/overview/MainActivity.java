@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.overview;
 
 import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,8 @@ import android.view.View;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
+import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
@@ -33,19 +36,18 @@ import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
 public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+
     /**
      * Navigation Drawer
      */
     private ActionBarDrawerToggle mDrawerToggle;
-    private boolean registered;
+
+    private boolean isConnectivityChangeReceiverRegistered = false;
 
     /**
      * Card list
@@ -54,6 +56,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     private CardAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private MainActivityViewModel mViewModel;
+
     final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -61,7 +65,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 refreshCards();
                 runOnUiThread(() -> {
                     unregisterReceiver(connectivityChangeReceiver);
-                    registered = false;
+                    isConnectivityChangeReceiverRegistered = false;
                 });
             }
         }
@@ -98,6 +102,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mCardsView.setLayoutManager(layoutManager);
         mCardsView.setHasFixedSize(true);
+
+        mAdapter = new CardAdapter();
+        mCardsView.setAdapter(mAdapter);
 
         // Add equal spacing between CardViews in the RecyclerView
         int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
@@ -136,6 +143,18 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        mViewModel = ViewModelProviders
+                .of(this)
+                .get(MainActivityViewModel.class);
+
+        mViewModel.getCards().observe(this, cards -> {
+            if (cards != null) {
+                onNewCardsAvailable(cards);
+            }
+        });
+
+        /*
         CardManager.registerUpdateListener(() -> {
             if (mAdapter != null) {
                 runOnUiThread(() -> mAdapter.notifyDataSetChanged());
@@ -146,6 +165,19 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             refreshCards();
         } else {
             initAdapter();
+        }
+        */
+    }
+
+    private void onNewCardsAvailable(List<Card> cards) {
+        // TODO: Update adapter
+        mSwipeRefreshLayout.setRefreshing(false);
+
+
+        if (!NetUtils.isConnected(this) && !isConnectivityChangeReceiverRegistered) {
+            registerReceiver(connectivityChangeReceiver,
+                             new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            isConnectivityChangeReceiverRegistered = true;
         }
     }
 
@@ -163,20 +195,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         DownloadService.enqueueWork(getBaseContext(), downloadService);
     }
 
-    /**
-     * Setup cards adapter
-     */
-    private void initAdapter() {
-        mAdapter = new CardAdapter();
-        mCardsView.setAdapter(mAdapter);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (registered) {
+        if (isConnectivityChangeReceiverRegistered) {
             unregisterReceiver(connectivityChangeReceiver);
-            registered = false;
+            isConnectivityChangeReceiverRegistered = false;
         }
     }
 
@@ -242,6 +266,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      */
     @Override
     public void onRefresh() {
+        mViewModel.refreshCards();
+
+        /*
         Completable.fromAction(() -> CardManager.update(this))
                    .compose(provider.bindToLifecycle())
                    .subscribeOn(Schedulers.io())
@@ -260,6 +287,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                            registered = true;
                        }
                    });
+        */
     }
 
     /**
