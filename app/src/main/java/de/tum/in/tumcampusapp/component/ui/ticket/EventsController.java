@@ -15,9 +15,10 @@ public class EventsController {
     /**
      * Only for testing purposes as server calls are not yet implemented
      * -> TODO: replace with real data
+     *
      * @return
      */
-    public static List<Event> getEvents(){
+    public static List<Event> getEvents() {
         List<Event> events = new ArrayList<>();
         events.add(new Event(0, "http://placehold.it/120x120&text=image1", "Unity",
                 "Keine Ahnung war noch nie dort. Soll ganz cool sein...",

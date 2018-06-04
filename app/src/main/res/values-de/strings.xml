@@ -544,5 +544,5 @@ Signatur: %5$s</string>
     <string name="topic">Über</string>
     <!-- Events Activity -->
     <string name="show_booked_events">Gebuchte Veranstaltungen anzeigen</string>
-    <string name="events_overview">Veranstaltungenubersicht</string>
+    <string name="events_overview">Veranstaltungsübersicht</string>
 </resources>

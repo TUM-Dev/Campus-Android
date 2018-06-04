@@ -33,8 +33,8 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     public static EventsViewHolder newEventView(ViewGroup parent) {
         View card;
-            card = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_events_item, parent, false);
+        card = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.card_events_item, parent, false);
         EventsViewHolder holder = new EventsViewHolder(card);
         holder.title = card.findViewById(R.id.events_title);
         holder.img = card.findViewById(R.id.events_img);
@@ -52,7 +52,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         // Set image
         String imgUrl = event.getImage();
         if (imgUrl.isEmpty() || imgUrl.equals("null")) {
-            if(event.getLink().endsWith(".png") || event.getLink().endsWith(".jpeg")){
+            if (event.getLink().endsWith(".png") || event.getLink().endsWith(".jpeg")) {
                 Utils.log("try link as image");
                 // the link points to an image (eventspread)
                 Picasso.get()
@@ -64,6 +64,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
                                 holder.title.setVisibility(View.GONE); // title is included in eventspread slide
                                 holder.img.setOnClickListener(null); // link doesn't lead to more infos
                             }
+
                             @Override
                             public void onError(Exception e) {
                                 holder.img.setVisibility(View.GONE); // we can't display the image after all
@@ -80,8 +81,8 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         }
 
         String title = event.getTitle();
-            title = COMPILE.matcher(title)
-                    .replaceAll("");
+        title = COMPILE.matcher(title)
+                .replaceAll("");
         holder.title.setText(title);
         //Adds locality
         String locality = event.getLocality();
@@ -103,14 +104,13 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     public void onBindViewHolder(CardViewHolder holder, int position) {
         EventsViewHolder nHolder = (EventsViewHolder) holder;
         EventsCard card;
-            card = new EventsCard(mContext);
+        card = new EventsCard(mContext);
 
         card.setEvents(events.get(position));
         nHolder.setCurrentCard(card);
 
         bindEventsView(holder, events.get(position), mContext);
     }
-
 
 
     @Override

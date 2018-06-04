@@ -6,23 +6,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
-import de.tum.in.tumcampusapp.utils.Utils;
 
-public class EventsActivity extends ActivityForDownloadingExternal  {
+public class EventsActivity extends ActivityForDownloadingExternal {
 
     private RecyclerView lv;
     private int state = -1;
-    private EventsController nm;
+
     public EventsActivity() {
-        super(Const.EVENTS,R.layout.activity_events);
+        super(Const.EVENTS, R.layout.activity_events);
     }
 
     @Override
@@ -44,6 +41,7 @@ public class EventsActivity extends ActivityForDownloadingExternal  {
             lv.setAdapter(adapter);
         }
     }
+
     /**
      * Save ListView state
      */

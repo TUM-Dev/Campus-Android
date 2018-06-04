@@ -1,9 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
@@ -69,14 +67,10 @@ public class EventsCard extends NotificationAwareCard {
     }
 
     @Override
-    protected void discard(SharedPreferences.Editor editor) {
-
-    }
+    protected void discard(SharedPreferences.Editor editor) { }
 
     @Override
-    protected void discardNotification(SharedPreferences.Editor editor) {
-
-    }
+    protected void discardNotification(SharedPreferences.Editor editor) { }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
