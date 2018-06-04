@@ -723,7 +723,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/your_ticket"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.tufilm.KinoActivity">
             <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".component.ui.overview.MainActivity"/>

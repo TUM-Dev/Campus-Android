@@ -486,7 +486,7 @@ Signatur: %5$s</string>
     <string name="title_activity_cards_quiz">Lernkarten</string>
 
     <!-- QR Code Ticket Activity -->
-    <string name="eventdetail_dots">Veranstaltungdetails</string>
+    <string name="eventdetail_dots">Veranstaltungsdetails</string>
     <string name="qrcode_dots">Ticket QRcode</string>
     <string name="your_ticket">Dein Ticket</string>
 
@@ -544,5 +544,5 @@ Signatur: %5$s</string>
     <string name="topic">Über</string>
     <!-- Events Activity -->
     <string name="show_booked_events">Gebuchte Veranstaltungen anzeigen</string>
-    <string name="events_overview">Veranstaltungenubersicht</string>
+    <string name="events_overview">Veranstaltungsübersicht</string>
 </resources>

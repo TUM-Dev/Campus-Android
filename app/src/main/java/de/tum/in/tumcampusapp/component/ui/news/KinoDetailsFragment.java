@@ -174,7 +174,7 @@ public class KinoDetailsFragment extends Fragment {
 
     //open ShowTicketActivity activity
     private void showTicket() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), ShowTicketActivity.class);
+        Intent intent = new Intent(context, ShowTicketActivity.class);
         startActivity(intent);
     }
 
