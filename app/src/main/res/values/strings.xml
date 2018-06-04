@@ -181,6 +181,8 @@
     <string name="amount_dots">Outstanding balance</string>
     <string name="deadline_dots">Deadline:</string>
 
+    <string name="amount_dots_card">Outstanding balance: %s€</string>
+
     <!-- Persons -->
     <string name="no_search_result">No search result</string>
     <string name="no_person_set">No person set!</string>

@@ -83,11 +83,12 @@ public class TuitionFeesCard extends NotificationAwareCard {
                                              .parse(mTuition.getSoll())
                                              .doubleValue();
 
-                balanceStr = String.format(Locale.GERMAN, "Value of a: %.2f", balance);
-            } catch (ParseException ignore) {
-            }
-            addedViews.add(addTextView(viewHolder.itemView.getContext()
-                                                          .getString(R.string.amount_dots) + ' ' + balanceStr + '€'));
+                balanceStr = String.format(Locale.GERMAN, "%.2f", balance);
+            } catch (ParseException ignore) {}
+
+            String textWithPlaceholder = viewHolder.itemView.getContext().getString(R.string.amount_dots_card);
+            String cardText = String.format(Locale.getDefault(), textWithPlaceholder, balanceStr);
+            addedViews.add(addTextView(cardText));
         }
     }
 
