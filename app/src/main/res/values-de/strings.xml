@@ -176,6 +176,7 @@
     <!-- Tuition fees -->
     <string name="amount_dots">Offener Betrag</string>
     <string name="deadline_dots">Deadline:</string>
+    <string name="amount_dots_card">Offener Betrag: %s</string>
 
     <!-- Persons -->
     <string name="no_search_result">Keine Suchergebnisse</string>
