@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
-import java.util.ArrayList;
+
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
@@ -16,15 +15,15 @@ public class TicketsController {
     /**
      * Only for testing purposes as server calls are not yet implemented
      * -> TODO: replace with real data
+     *
      * @return
      */
-    public static List<Ticket> getTickets(){
-        List<Ticket> tickets = new ArrayList<>();
-        tickets.add(new Ticket(new Event(0, "http://placehold.it/120x120&text=image1", "Unity",
+    public static Ticket getTickets() {
+        Ticket ticket = new Ticket(new Event(0, "http://placehold.it/120x120&text=image1", "Unity",
                 "Keine Ahnung war noch nie dort. Soll ganz cool sein...",
                 "Garching, Magistrale",
                 new GregorianCalendar(2018, 8, 8).getTime(),
-                "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"), "7585685764567467657", new TicketType(45, 4.5,"good tickets")));
-        return tickets;
+                "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"), "7585685764567467657", new TicketType(45, 4.5, "good tickets"));
+        return ticket;
     }
 }

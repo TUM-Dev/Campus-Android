@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -12,8 +11,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import java.util.List;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
@@ -22,10 +19,9 @@ public class ShowTicketActivity extends BaseActivity {
 
     private TextView eventDetailsTextView;
     private ImageView ticketQrCode;
-    private final List<Ticket> tickets;
-    public ShowTicketActivity(List<Ticket> tickets) {
+
+    public ShowTicketActivity() {
         super(R.layout.activity_show_ticket);
-        this.tickets = tickets;
     }
 
     @Override
@@ -33,19 +29,15 @@ public class ShowTicketActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         eventDetailsTextView = (TextView) findViewById(R.id.eventdetail);
         ticketQrCode = (ImageView) findViewById(R.id.ticket_qrcode);
+
         //Get data from Api backend, now it is mock up data
-        Intent intent = getIntent();
-        movieDetailsTextView.setText(data);
-        String title = event.getTitle();
-        title = COMPILE.matcher(title)
-                .replaceAll("");
-        holder.title.setText(title);
-        //Adds locality
-        String locality = event.getLocality();
-        holder.locality.setText(locality);
+        Ticket ticket = TicketsController.getTickets();
 
+        //load eventdetail
+        String eventdetail = ticket.getEvent().getTitle() + "\n" + ticket.getEvent().getLocality() + "\n" + ticket.getEvent().getDate();
+        eventDetailsTextView.setText(eventdetail);
 
-        String code = tickets.get();
+        String code = ticket.getCode();
         //create the qrcode using library  zxing
         createQRCode(code);
 

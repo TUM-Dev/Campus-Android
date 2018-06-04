@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <!-- The toolbar aka SupportActionBar -->
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -21,7 +21,7 @@
             <include
                 layout="@layout/layout_all_errors"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"/>
+                android:layout_height="fill_parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/eventdetail_dots"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/eventdetail"
@@ -44,24 +44,24 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:text=""
-                    android:textSize="@dimen/large_text_size"/>
+                    android:textSize="@dimen/large_text_size" />
 
                 <TextView
                     style="@style/SmallListSeparatorTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/qrcode_dots"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/ticket_qrcode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src ="@drawable/qrcodedemo"/>
+                    android:src="@drawable/qrcodedemo" />
 
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer"/>
+    <include layout="@layout/navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>
