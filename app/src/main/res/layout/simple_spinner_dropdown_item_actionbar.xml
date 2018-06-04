@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:background="@android:color/background_light"
-    android:clickable="true"
-    android:focusable="true"
     android:foreground="?android:selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="vertical"
