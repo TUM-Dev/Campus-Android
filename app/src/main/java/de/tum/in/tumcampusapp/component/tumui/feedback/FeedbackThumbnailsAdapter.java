@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-public class FeedbackThumbAdapter extends RecyclerView.Adapter<FeedbackThumbAdapter.ViewHolder> {
+public class FeedbackThumbnailsAdapter extends RecyclerView.Adapter<FeedbackThumbnailsAdapter.ViewHolder> {
     private ArrayList<String> paths;
     private ArrayList<Bitmap> thumbs;
 
@@ -32,7 +32,7 @@ public class FeedbackThumbAdapter extends RecyclerView.Adapter<FeedbackThumbAdap
         }
     }
 
-    public FeedbackThumbAdapter(ArrayList<String> paths) {
+    public FeedbackThumbnailsAdapter(ArrayList<String> paths) {
         this.paths = paths;
         thumbs = new ArrayList<>(paths.size());
     }
@@ -114,7 +114,7 @@ public class FeedbackThumbAdapter extends RecyclerView.Adapter<FeedbackThumbAdap
 
         int targetSize = (int) mImageView.getContext()
                                          .getResources()
-                                         .getDimension(R.dimen.thumb_size);
+                                         .getDimension(R.dimen.thumbnail_size);
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();

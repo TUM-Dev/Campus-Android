@@ -1,5 +1,6 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/StandardCard">
 
     <LinearLayout
@@ -7,7 +8,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/card_selector"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/material_default_padding">
 
         <TextView
             android:layout_width="match_parent"
@@ -21,41 +22,40 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
             android:text="@string/support_us"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/facebook_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/FlatButton"
-                android:text="@string/facebook"
-                android:id="@+id/facebook"
-                android:drawableStart="@drawable/ic_facebook_white_transparent"
-                android:drawablePadding="3dp"
-                android:layout_margin="3dp"/>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/FlatButton"
-                android:text="@string/github"
-                android:id="@+id/github"
-                android:drawableStart="@drawable/ic_github_white"
-                android:drawablePadding="3dp"
-                android:layout_margin="3dp"/>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/FlatButton"
-                android:text="@string/email"
-                android:id="@+id/email"
-                android:drawableStart="@drawable/ic_mail_outline"
-                android:drawablePadding="3dp"
-                android:layout_margin="3dp"/>
-        </LinearLayout>
+            android:drawablePadding="@dimen/material_small_padding"
+            android:drawableStart="@drawable/ic_thumb_up_white_24dp"
+            android:text="@string/like_us_on_facebook"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/facebook"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/github_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/material_small_padding"
+            android:drawableStart="@drawable/ic_code_white_24dp"
+            android:text="@string/check_us_out_on_github"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/github"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/email_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/material_small_padding"
+            android:drawableStart="@drawable/ic_email_white_24dp"
+            android:text="@string/e_mail_us"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/email"/>
+
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

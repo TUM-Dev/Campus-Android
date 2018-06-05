@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamCard;
 import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamFixCard;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.TopNewsCard;
-import de.tum.in.tumcampusapp.component.ui.onboarding.LoginPromtCard;
+import de.tum.in.tumcampusapp.component.ui.onboarding.LoginPromptCard;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
@@ -130,7 +130,7 @@ public final class CardManager {
         newCards.clear();
         new NoInternetCard(context).apply();
         new TopNewsCard(context).apply();
-        new LoginPromtCard(context).apply();
+        new LoginPromptCard(context).apply();
         new SupportCard(context).apply();
 
         new EduroamCard(context).apply();

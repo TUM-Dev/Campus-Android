@@ -4,6 +4,10 @@ import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -32,9 +36,11 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         super.onCreate(savedInstanceState);
 
         amountTextView = findViewById(R.id.soll);
-        deadlineTextView = findViewById(R.id.frist);
+        deadlineTextView = findViewById(R.id.deadline);
         semesterTextView = findViewById(R.id.semester);
         ((TextView) findViewById(R.id.fees_aid)).setMovementMethod(LinkMovementMethod.getInstance());
+
+        JodaTimeAndroid.init(this);
 
         requestFetch();
     }
@@ -46,18 +52,38 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
      */
     @Override
     public void onFetch(TuitionList tuitionList) {
-        amountTextView.setText(String.format("%s€", tuitionList.getTuitions()
-                                                               .get(0)
-                                                               .getSoll()));
-        Date date = DateUtils.getDate(tuitionList.getTuitions()
+        String amount = tuitionList.getTuitions().get(0).getSoll();
+        float floatAmount = 0f;
+
+        try {
+            String dotSeparatedAmount = amount.replace(",", ".");
+            floatAmount = Float.parseFloat(dotSeparatedAmount);
+        } catch (NumberFormatException ignored) {}
+
+        String amountText = String.format(Locale.getDefault(), "%.2f", floatAmount);
+        amountTextView.setText(String.format("%s €", amountText));
+
+        Date deadline = DateUtils.getDate(tuitionList.getTuitions()
                                                  .get(0)
                                                  .getFrist());
         deadlineTextView.setText(DateFormat.getDateInstance()
-                                           .format(date));
+                                           .format(deadline));
         semesterTextView.setText(tuitionList.getTuitions()
                                             .get(0)
                                             .getSemesterBez()
                                             .toUpperCase(Locale.getDefault()));
+
+        if (floatAmount == 0) {
+            amountTextView.setTextColor(getResources().getColor(R.color.sections_green));
+        } else {
+            // check if the deadline is less than a week from now
+            DateTime nextWeek = new DateTime().plusWeeks(1);
+            if(nextWeek.isAfter(deadline.getTime())){
+                amountTextView.setTextColor(getResources().getColor(R.color.error));
+            } else {
+                amountTextView.setTextColor(getResources().getColor(R.color.black));
+            }
+        }
 
         showLoadingEnded();
     }

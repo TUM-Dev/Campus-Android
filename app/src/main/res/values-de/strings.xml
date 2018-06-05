@@ -21,6 +21,13 @@
     <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
     <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
     <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalender</string>
+    <string name="calendar_filter_title">Filter ändern</string>
+    <string name="calendar_filter_canceled">Abgesagte Veranstaltungen zeigen</string>
+    <string name="calendar_filter_hour_limit">Angezeigte Zeitspanne anpassen</string>
+    <string name="calendar_filter_hour_limit_min_title">Von Uhrzeit</string>
+    <string name="calendar_filter_hour_limit_max_title">Bis Uhrzeit</string>
+    <string name="calendar_filter_hour_limit_error_message">Die Anfangsstunde muss vor dem Ende liegen!</string>
+
 
     <!-- Roomfinder -->
     <string name="no_map_available">Keine Karte verfügbar</string>
@@ -168,7 +175,7 @@
 
     <!-- Tuition fees -->
     <string name="amount_dots">Offener Betrag</string>
-    <string name="deadline_dots">Deadline</string>
+    <string name="deadline_dots">Deadline:</string>
 
     <!-- Persons -->
     <string name="no_search_result">Keine Suchergebnisse</string>
@@ -324,6 +331,7 @@
     <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
     <string name="joined_chat_room">Du bist dem Chatroom beigetreten!</string>
     <string name="view_mode">Ansicht wechseln</string>
+    <string name="Refresh">Aktualisieren</string>
     <string name="bug_reports">Anonyme Fehlerberichte</string>
     <string name="set_bug_reports">Unterstütze das TCA Team indem du anonyme Fehlerberichte zu unseren Server schicken lässt. Diese beinhalten: Stacktrace, Logdatei, Android Version, App Version und Bildschirm Auflösung</string>
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
@@ -438,7 +446,7 @@ Signatur: %5$s</string>
         <item>@string/tca</item>
     </string-array>
     <string name="feedback_hint">Hier ist Platz für dein Feedback…</string>
-    <string name="add_picture_button">&#160;&#160;Bild hinzufügen</string>
+    <string name="add_picture_button">Bild hinzufügen</string>
     <string name="feedback_include_email">Email mitversenden um eine Antwort zu erhalten</string>
     <string name="feedback_include_email_tum_id">Email mitversenden um eine Antwort zu erhalten (%s)</string>
     <string name="feedback_email_hint">E-Mail-Adresse</string>
@@ -544,5 +552,20 @@ Signatur: %5$s</string>
 
     <string name="or">oder</string>
     <string name="join_chat_via_qr_code">via QR-code beitreten</string>
+
+    <string name="topic">Über</string>
+    <string name="generate_new_token">Neuen Token generieren</string>
+    <string name="open_tum_online">TUM Online öffnen</string>
+    <string name="create">Erstellen</string>
+    <string name="enter_name_placeholder">Name eingeben …</string>
+    <string name="go_to_room">Raum anzeigen</string>
+    <string name="enter_your_tum_id">TUM-ID eingeben …</string>
+    <string name="e_mail_us">Schreib uns eine E-Mail</string>
+    <string name="like_us_on_facebook">Like uns auf Facebook</string>
+    <string name="check_us_out_on_github">Besuche uns auf GitHub</string>
+
+    <string name="send_feedback_question">Feedback absenden?</string>
+    <string name="feedback_empty">Bitte gib hier dein Feedback ein</string>
+    <string name="feedback_img_without_text">Bitte füge eine Beschreibung hinzu</string>
 
 </resources>

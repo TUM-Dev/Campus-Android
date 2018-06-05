@@ -58,13 +58,13 @@ import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener {
+public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener, LimitPickerDialogListener {
 
     /**
      * The space between the first and the last date
      */
     public static final int MONTH_AFTER = 3;
-    public static final int MONTH_BEFORE = 0;
+    public static final int MONTH_BEFORE = 2;
     public static final String EVENT_TIME = "event_time";
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
@@ -80,8 +80,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private boolean isFetched;
     private boolean mWeekMode;
     private Calendar mShowDate;
-    private MenuItem menuItemSwitchView;
     private WeekView mWeekView;
+    private MenuItem menuItemSwitchView;
+    private MenuItem menuItemFilterCanceled;
 
     private CalendarDetailsFragment detailsFragment;
 
@@ -151,9 +152,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
         menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode);
-
+        menuItemFilterCanceled = menu.findItem(R.id.action_calendar_filter_canceled);
         //Refresh the icon according to us having day or weekview
         this.refreshWeekView();
+
+        // Initiate checkboxes for filter in top menu
+        initFilterCheckboxes();
 
         return true;
     }
@@ -176,27 +180,39 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
-        if (i == R.id.action_switch_view_mode) {
-            mWeekMode = !mWeekMode;
-            Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
-            this.refreshWeekView();
-            return true;
-        } else if (i == R.id.action_export_calendar) {
-            exportCalendarToGoogle();
+        switch(i) {
+            case R.id.action_switch_view_mode:
+                mWeekMode = !mWeekMode;
+                Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
+                this.refreshWeekView();
+                return true;
+            case R.id.action_export_calendar:
+                exportCalendarToGoogle();
 
-            // Enable automatic calendar synchronisation
-            Utils.setSetting(this, Const.SYNC_CALENDAR, true);
-            supportInvalidateOptionsMenu();
-            return true;
-        } else if (i == R.id.action_delete_calendar) {
-            deleteCalendarFromGoogle();
-            return true;
-        } else if (i == R.id.action_create_event) {
-            startActivity(new Intent(this, CreateEventActivity.class));
-            return true;
-        } else {
-            isFetched = false;
-            return super.onOptionsItemSelected(item);
+                // Enable automatic calendar synchronisation
+                Utils.setSetting(this, Const.SYNC_CALENDAR, true);
+                supportInvalidateOptionsMenu();
+                return true;
+            case R.id.action_delete_calendar:
+                deleteCalendarFromGoogle();
+                return true;
+            case R.id.action_create_event:
+                startActivity(new Intent(this, CreateEventActivity.class));
+                return true;
+            case R.id.action_calendar_filter_canceled:
+                item.setChecked(!item.isChecked());
+                applyFilterCanceled(item.isChecked());
+                return true;
+            case R.id.action_calendar_filter_hour_limit:
+                showHourLimitFilterDialog();
+                return true;
+            case R.id.action_update_calendar:
+                requestFetch(true);
+                refreshWeekView();
+                return true;
+            default:
+                isFetched = false;
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -367,7 +383,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
             List<CalendarItem> calendarItems = calendarController.getFromDbForDate(new Date(calendar.getTimeInMillis()));
             for (CalendarItem calendarItem : calendarItems) {
-                events.add(new IntegratedCalendarEvent(calendarItem, this));
+                if (Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true) || !calendarItem.getStatus().equals("CANCEL")) {
+                    events.add(new IntegratedCalendarEvent(calendarItem, this));
+                }
             }
         }
 
@@ -483,4 +501,64 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         super.onResume();
         refreshWeekView();
     }
+
+    protected void initFilterCheckboxes() {
+        boolean settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
+        menuItemFilterCanceled.setChecked(settings);
+        applyFilterCanceled(settings);
+
+        int savedMin = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
+        int savedMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
+        applyFilterLimitHours(savedMin, savedMax);
+    }
+
+    protected void applyFilterCanceled(boolean val) {
+        Utils.setSetting(this, Const.CALENDAR_FILTER_CANCELED, val);
+        onResume();
+    }
+
+    protected void hourHeightFitScreen() {
+        int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
+        int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
+        int hourHeight = calcHourHeightToFit(minHour, maxHour);
+        mWeekView.setHourHeight(hourHeight);
+    }
+
+    protected int calcHourHeightToFit(int min, int max) {
+        // get the height of the weekView and subtract the height of its header
+        // to get height of actual calendar section, then divide by 24 to get height of a single hour
+        return (mWeekView.getMeasuredHeight()             // height of weekView
+                - mWeekView.getTextSize()                 // height of text in header of weekView
+                - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and below text in header
+               / (max - min);                             // amount of hours
+    }
+
+    protected void applyFilterLimitHours(int min, int max) {
+        // Get old max value to check, if new min will be bigger, in which case the order of setting the new values must be reversed
+        int oldMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, "0"));
+
+        Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Integer.toString(min));
+        Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Integer.toString(max));
+
+        if(min >= oldMax) {
+            mWeekView.setMaxTime(max);
+            mWeekView.setMinTime(min);
+        } else {
+            mWeekView.setMinTime(min);
+            mWeekView.setMaxTime(max);
+        }
+        hourHeightFitScreen();
+    }
+
+    protected void showHourLimitFilterDialog() {
+        LimitPickerDialog dialog = new LimitPickerDialog(this);
+        dialog.addListener(this);
+        dialog.show();
+    }
+
+    @Override
+    public void onSelected(int min, int max) {
+        applyFilterLimitHours(min, max);
+    }
 }
+

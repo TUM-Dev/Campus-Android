@@ -1,8 +1,11 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        xmlns:tools="http://schemas.android.com/tools"
-                                        android:id="@+id/drawer_layout"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent">
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,15 +22,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/color_primary"
-                android:elevation="12dp"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark"
-                tools:ignore="UnusedAttribute">
+                android:elevation="@dimen/material_default_elevation"
+                android:theme="@style/TumToolbar"
+                app:popupTheme="@style/TumToolbarPopUp">
 
                 <Spinner
                     android:id="@+id/spinnerToolbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
             </android.support.v7.widget.Toolbar>
+
         </android.support.design.widget.AppBarLayout>
 
         <LinearLayout
@@ -49,8 +54,14 @@
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
+
             </android.support.v4.widget.SwipeRefreshLayout>
+
         </LinearLayout>
-    </LinearLayout><!-- The navigation drawer -->
+
+    </LinearLayout>
+
+    <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer"/>
+
 </android.support.v4.widget.DrawerLayout>

@@ -13,6 +13,11 @@
         android:title="@string/view_mode"
         tumcampus:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/action_update_calendar"
+        android:icon="@drawable/ic_refresh_white"
+        android:title="@string/Refresh"
+        tumcampus:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_export_calendar"
         android:icon="@drawable/ic_sync_cloud"
         android:title="@string/export_to_google"
@@ -22,4 +27,22 @@
         android:icon="@drawable/ic_stop_sync_cloud"
         android:title="@string/delete_from_google"
         tumcampus:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_calendar_change_filters"
+        android:icon="@drawable/ic_filter_list"
+        android:title="@string/calendar_filter_title"
+        tumcampus:showAsAction="ifRoom">
+        <menu>
+            <group android:checkableBehavior="all" >
+                <item android:id="@+id/action_calendar_filter_canceled"
+                      android:title="@string/calendar_filter_canceled"
+                      tumcampus:showAsAction="ifRoom" />
+            </group>
+
+            <item android:id="@+id/action_calendar_filter_hour_limit"
+                  android:title="@string/calendar_filter_hour_limit"
+                  tumcampus:showAsAction="ifRoom" />
+        </menu>
+    </item>
 </menu>

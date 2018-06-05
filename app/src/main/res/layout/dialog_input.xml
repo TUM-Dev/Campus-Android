@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/inputEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/material_large_padding"
+        android:layout_marginStart="@dimen/material_large_padding"
+        android:hint="@string/enter_name_placeholder"
+        android:imeOptions="actionGo"
+        android:inputType="textCapWords|textAutoComplete"
+        android:textCursorDrawable="@drawable/cursor_text_field_colorful"/>
+
+</FrameLayout>
