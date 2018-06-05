@@ -26,6 +26,12 @@
     <string name="calendar_not_existing_toast">No local calendar existing</string>
     <string name="semester_summer">Summer term</string>
     <string name="semester_winter">Winter term</string>
+    <string name="calendar_filter_title">Change Filters</string>
+    <string name="calendar_filter_canceled">Show Canceled Events</string>
+    <string name="calendar_filter_hour_limit">Limit Shown Timespan</string>
+    <string name="calendar_filter_hour_limit_min_title">From Hour</string>
+    <string name="calendar_filter_hour_limit_max_title">To Hour</string>
+    <string name="calendar_filter_hour_limit_error_message">Minimum hour must be below maximum hour!</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>
@@ -104,7 +110,7 @@
     <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMonline-Access-Token is not enabled</string>
     <string name="startup_wizard_uppercase">TUMonline wizard</string>
-    <string name="welcome_msg">In order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
+    <string name="welcome_msg">In order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis ID has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
     <string name="need_to_enable"><b>The TUMonline-Access-Token was successfully generated</b>\n\nPlease enable the Token in TUMonline now via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>
@@ -559,10 +565,22 @@ Signature: %5$s</string>
     
     <string name="pdf_viewer_title">PDF Viewer</string>
     <string name="dialog_add_to_contacts">Add to Contacts?</string>
+    <string name="like_us_on_facebook">Like us on Facebook</string>
+    <string name="check_us_out_on_github">Check us out on GitHub</string>
+    <string name="e_mail_us">E-mail us</string>
+    <string name="enter_your_tum_id">Enter your TUM ID …</string>
+    <string name="generate_new_token">Generate new token</string>
+    <string name="open_tum_online">Open TUM Online</string>
+    <string name="go_to_room">Go to room</string>
     <string name="topic">Topic:</string>
     <string name="add">Add</string>
     <string name="recents">Recents</string>
     <string name="e_mail">E-mail</string>
     <string name="additional_info">Additional Info</string>
     <string name="Refresh">Refresh</string>
+    <string name="create">Create</string>
+    <string name="enter_name_placeholder">Enter name …</string>
+    <string name="send_feedback_question">Send feedback now?</string>
+    <string name="feedback_empty">You haven\'t entered any feedback</string>
+    <string name="feedback_img_without_text">Please add a description</string>
 </resources>

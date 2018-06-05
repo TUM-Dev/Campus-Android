@@ -21,6 +21,13 @@
     <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
     <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
     <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalender</string>
+    <string name="calendar_filter_title">Filter ändern</string>
+    <string name="calendar_filter_canceled">Abgesagte Veranstaltungen zeigen</string>
+    <string name="calendar_filter_hour_limit">Angezeigte Zeitspanne anpassen</string>
+    <string name="calendar_filter_hour_limit_min_title">Von Uhrzeit</string>
+    <string name="calendar_filter_hour_limit_max_title">Bis Uhrzeit</string>
+    <string name="calendar_filter_hour_limit_error_message">Die Anfangsstunde muss vor dem Ende liegen!</string>
+
 
     <!-- Roomfinder -->
     <string name="no_map_available">Keine Karte verfügbar</string>
@@ -537,4 +544,17 @@ Signatur: %5$s</string>
     <string name="additional_info">Zusaätzliche Infos</string>
 
     <string name="topic">Über</string>
+    <string name="generate_new_token">Neuen Token generieren</string>
+    <string name="open_tum_online">TUM Online öffnen</string>
+    <string name="create">Erstellen</string>
+    <string name="enter_name_placeholder">Name eingeben …</string>
+    <string name="go_to_room">Raum anzeigen</string>
+    <string name="enter_your_tum_id">TUM-ID eingeben …</string>
+    <string name="e_mail_us">Schreib uns eine E-Mail</string>
+    <string name="like_us_on_facebook">Like uns auf Facebook</string>
+    <string name="check_us_out_on_github">Besuche uns auf GitHub</string>
+
+    <string name="send_feedback_question">Feedback absenden?</string>
+    <string name="feedback_empty">Bitte gib hier dein Feedback ein</string>
+    <string name="feedback_img_without_text">Bitte füge eine Beschreibung hinzu</string>
 </resources>

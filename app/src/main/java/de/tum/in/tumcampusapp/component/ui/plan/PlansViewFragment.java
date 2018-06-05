@@ -132,7 +132,7 @@ public class PlansViewFragment extends Fragment {
         downloadFiles();
 
         //Add files/links to listview
-        mListAdapter = new PlanListAdapter(getActivity(), listMenuEntrySet);
+        mListAdapter = new PlanListAdapter(listMenuEntrySet);
         list.setAdapter(mListAdapter);
         list.setOnItemClickListener((adapterView, view, pos, id) -> {
             PlanListEntry entry = (PlanListEntry) mListAdapter.getItem(pos);

@@ -34,7 +34,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         if (view == null) {
             // Crate UI element
             view = getInflater().inflate(R.layout.activity_barrier_free_contact_listview, parent, false);
-            holder = new ViewHolder(view, parent);
+            holder = new ViewHolder(view);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -62,12 +62,11 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         TextView email;
         TextView more;
 
-        ViewHolder(View view, ViewGroup parent) {
-
-            name = view.findViewById(R.id.barrierfreeContactListViewName);
-            phone = view.findViewById(R.id.barrierfreeContactListViewPhone);
-            email = view.findViewById(R.id.barrierfreeContactListViewEmail);
-            more = view.findViewById(R.id.barrierfreeContactListViewTumOnlineMore);
+        ViewHolder(View view) {
+            name = view.findViewById(R.id.barrierfreeContactNameTextView);
+            phone = view.findViewById(R.id.barrierfreeContactPhoneTextView);
+            email = view.findViewById(R.id.barrierfreeContactEmailTextView);
+            more = view.findViewById(R.id.barrierfreeContactMoreTextView);
         }
 
         void setContent(final BarrierfreeContact contact) {
@@ -76,8 +75,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
             Linkify.addLinks(phone, Linkify.ALL);
             email.setText(contact.getEmail());
 
-            // Has information in tumonline
-            if (!contact.isHavingTumID()) {
+            if (!contact.getHasTumID()) {
                 more.setVisibility(View.GONE);
             } else {
                 // Jump to PersonDetail Activity
