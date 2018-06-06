@@ -36,7 +36,7 @@ data class Tuition(@field:Element(name = "frist")
         get() {
             return try {
                 val amountText = String.format(Locale.getDefault(), "%.2f", outstandingBalance)
-                return "$amountText€"
+                return "$amountText €"
             } catch (e: ParseException) {
                 soll
             }
