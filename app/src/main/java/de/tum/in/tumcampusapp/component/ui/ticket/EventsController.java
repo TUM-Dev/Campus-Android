@@ -25,7 +25,31 @@ public class EventsController {
                 "Garching, Magistrale",
                 new GregorianCalendar(2018, 8, 8).getTime(),
                 "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
-        events.add(new Event(1, "http://placehold.it/120x120&text=image2", "Unity 2",
+        events.add(new Event(2, "http://placehold.it/120x120&text=image2", "Unity 2",
+                "Das gleiche nochmal",
+                "Garching, Magistrale",
+                new GregorianCalendar(2019, 8, 8).getTime(),
+                "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
+        events.add(new Event(3, "http://placehold.it/120x120&text=image2", "Unity 3",
+                "Das gleiche nochmal",
+                "Garching, Magistrale",
+                new GregorianCalendar(2020, 8, 8).getTime(),
+                "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
+        events.add(new Event(4, "http://placehold.it/120x120&text=image2", "Unity 4",
+                "Das gleiche nochmal",
+                "Garching, Magistrale",
+                new GregorianCalendar(2021, 8, 8).getTime(),
+                "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
+        return events;
+    }
+    public static List<Event> getbookedEvents() {
+        List<Event> events = new ArrayList<>();
+        events.add(new Event(0, "http://placehold.it/120x120&text=image1", "Unity2",
+                "Keine Ahnung war noch nie dort. Soll ganz cool sein...",
+                "Garching, Magistrale",
+                new GregorianCalendar(2018, 8, 8).getTime(),
+                "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
+        events.add(new Event(2, "http://placehold.it/120x120&text=image2", "Unity 3",
                 "Das gleiche nochmal",
                 "Garching, Magistrale",
                 new GregorianCalendar(2019, 8, 8).getTime(),

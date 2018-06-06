@@ -35,7 +35,7 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         List<Event> events = EventsController.getEvents();
 
         if (events.size() > 0) {
-            EventsAdapter adapter = new EventsAdapter(this, events);
+            EventsAdapter adapter = new EventsAdapter(events);
             lv = findViewById(R.id.activity_events_list_view);
             lv.setLayoutManager(new LinearLayoutManager(this));
             lv.setAdapter(adapter);
@@ -59,10 +59,14 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         int i = item.getItemId();
         if (i == R.id.action_booked_events) {
-            //TODO:fliter booked events
+            List<Event> events = EventsController.getbookedEvents();
+            EventsAdapter adapter = new EventsAdapter(events);
+            lv.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
         return true;
     }

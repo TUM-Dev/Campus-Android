@@ -1,6 +1,8 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,35 +19,50 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
+
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
-    private final List<Event> events;
-    private final Context mContext;
+    private final List<Event> meventlist;
+    private Context mContext;
 
-    EventsAdapter(Context context, List<Event> events) {
-        this.mContext = context;
-        this.events = events;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
+        ImageView img;
+        TextView title;
+        TextView locality;
+        TextView srcDate;
+
+        public ViewHolder(View view) {
+            super(view);
+            cardView = (CardView) view;
+            title = (TextView) view.findViewById(R.id.events_title);
+            img = (ImageView) view.findViewById(R.id.events_img);
+            locality = (TextView) view.findViewById(R.id.events_src_locality);
+            srcDate = (TextView) view.findViewById(R.id.events_src_date);
+        }
     }
 
-    public static EventsViewHolder newEventView(ViewGroup parent) {
-        View card;
-        card = LayoutInflater.from(parent.getContext())
+    public EventsAdapter(List<Event> events) {
+        meventlist = events;
+    }
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        if (mContext==null){
+            mContext = parent.getContext();
+        }
+        View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.card_events_item, parent, false);
-        EventsViewHolder holder = new EventsViewHolder(card);
-        holder.title = card.findViewById(R.id.events_title);
-        holder.img = card.findViewById(R.id.events_img);
-        holder.locality = card.findViewById(R.id.events_src_locality);
-        holder.srcDate = card.findViewById(R.id.events_src_date);
-        card.setTag(holder);
-        return holder;
+        return new ViewHolder(view);
     }
 
-    public static void bindEventsView(RecyclerView.ViewHolder eventsViewHolder, Event event, Context context) {
-        EventsViewHolder holder = (EventsViewHolder) eventsViewHolder;
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Event event = meventlist.get(position);
         holder.img.setVisibility(View.VISIBLE);
         holder.title.setVisibility(View.VISIBLE);
 
@@ -92,40 +109,12 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         Date date = event.getDate();
         DateFormat sdf = DateFormat.getDateInstance();
         holder.srcDate.setText(sdf.format(date));
-
     }
-
-    @Override
-    public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return newEventView(parent);
-    }
-
-    @Override
-    public void onBindViewHolder(CardViewHolder holder, int position) {
-        EventsViewHolder nHolder = (EventsViewHolder) holder;
-        EventsCard card;
-        card = new EventsCard(mContext);
-
-        card.setEvents(events.get(position));
-        nHolder.setCurrentCard(card);
-
-        bindEventsView(holder, events.get(position), mContext);
-    }
-
 
     @Override
     public int getItemCount() {
-        return events.size();
+        return meventlist.size();
     }
 
-    private static class EventsViewHolder extends CardViewHolder {
-        ImageView img;
-        TextView title;
-        TextView locality;
-        TextView srcDate;
 
-        EventsViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
 }
