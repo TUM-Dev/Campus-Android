@@ -1,10 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.common.base.Optional;
 
@@ -45,6 +44,12 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             return;
         }
         startLoading();
+    }
+
+    public void onClickTUMOnline(View next) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(Const.TUM_CAMPUS_URL));
+        startActivity(intent);
     }
 
     /**
@@ -105,13 +110,4 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
         }
     }
 
-    /**
-     * Adds clickable link to activity.
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        TextView textView = findViewById(R.id.tvBrowse);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-    }
 }

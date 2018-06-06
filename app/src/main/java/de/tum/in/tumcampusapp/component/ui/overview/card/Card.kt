@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RemoteViews
 import android.widget.TextView
-import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
@@ -80,12 +79,6 @@ abstract class Card(
     protected fun addTextView(text: CharSequence): TextView {
         val textView = TextView(context)
         textView.text = text
-
-        //Give some space to the other stuff on the card
-        val padding = context.resources
-                .getDimension(R.dimen.card_text_padding).toInt()
-        textView.setPadding(padding, 0, padding, 0)
-
         mLinearLayout!!.addView(textView)
         return textView
     }

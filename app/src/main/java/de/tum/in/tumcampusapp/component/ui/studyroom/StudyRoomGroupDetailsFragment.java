@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -42,12 +44,14 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
         StudyRoomGroupManager manager = new StudyRoomGroupManager(getActivity());
+
         RecyclerView recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
-        recyclerView.setAdapter(new StudyRoomAdapter(manager.getAllStudyRoomsForGroup(mStudyRoomGroupId)));
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(new StudyRoomAdapter(manager.getAllStudyRoomsForGroup(mStudyRoomGroupId)));
+
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
+        recyclerView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
 
         return rootView;
     }
@@ -63,28 +67,28 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                                      .inflate(R.layout.two_line_list_item,
-                                               parent, false);
+                                      .inflate(R.layout.two_line_list_item, parent, false);
             return new RecyclerView.ViewHolder(view) {
             };
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             StudyRoom room = studyRooms.get(position);
-
             CardView cardView = holder.itemView.findViewById(R.id.card_view);
-            TextView locationName = holder.itemView.findViewById(R.id.text3);
-            TextView occupationStatus = holder.itemView.findViewById(R.id.text2);
-            TextView roomName = holder.itemView.findViewById(R.id.text1);
-            locationName.setText(room.getCode());
-            roomName.setText(room.getName());
+
+            TextView headerTextView = holder.itemView.findViewById(R.id.headerTextView);
+            TextView detailsTextView = holder.itemView.findViewById(R.id.detailsTextView);
+
+            AppCompatButton openLinkButton = holder.itemView.findViewById(R.id.openLinkButton);
+            openLinkButton.setText(R.string.go_to_room);
+            openLinkButton.setTag(room.getCode());
+
+            headerTextView.setText(room.getName());
 
             StringBuilder stringBuilder = new StringBuilder(room.getLocation()).append("<br>");
 
-            if (room.getOccupiedTill()
-                    .compareTo(new Date()) < 0) {
+            if (room.getOccupiedTill().compareTo(new Date()) < 0) {
                 stringBuilder.append(getString(R.string.free));
             } else {
                 stringBuilder.append(getString(R.string.occupied))
@@ -93,10 +97,10 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
                              .append("</b>");
             }
 
-            occupationStatus.setText(Utils.fromHtml(stringBuilder.toString()));
+            detailsTextView.setText(Utils.fromHtml(stringBuilder.toString()));
 
             int color;
-            if (occupationStatus.getText()
+            if (detailsTextView.getText()
                                 .toString()
                                 .contains(getString(R.string.free))) {
                 color = Color.rgb(200, 230, 201);
@@ -111,5 +115,6 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
         public int getItemCount() {
             return studyRooms.size();
         }
+
     }
 }

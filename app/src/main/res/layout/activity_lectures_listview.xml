@@ -1,91 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:padding="@dimen/padding_default"
-              android:baselineAligned="false">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:minHeight="?android:listPreferredItemHeightSmall"
+    android:orientation="horizontal"
+    android:padding="@dimen/material_default_padding">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight=".80">
+        android:layout_gravity="center_vertical"
+        android:layout_weight=".80"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvLectureName"
-            android:layout_width="fill_parent"
+            android:id="@+id/lectureNameTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:textColor="@color/tum_300"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:ellipsize="end"/>
+            tools:text="Lecture"/>
 
         <TextView
-            android:id="@+id/tvTypeSWSSemester"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:id="@+id/typeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:text="Type"/>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
+                android:id="@+id/unreadMessagesTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/nrUnreadMessages"
-                android:visibility="gone"
+                android:layout_gravity="center"
+                android:layout_margin="3dp"
                 android:background="@drawable/unread_messages_bg"
+                android:gravity="center"
+                android:paddingBottom="2dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:layout_margin="3dp"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                tools:text="Unread messages"/>
+
             <TextView
-                android:id="@+id/tvDozent"
-                android:layout_width="fill_parent"
+                android:id="@+id/professorTextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                tools:text="Professor"/>
+
         </LinearLayout>
 
     </LinearLayout>
 
-
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:layout_weight=".20"
+        android:id="@+id/additionalInfoLayout"
         android:layout_width="0dp"
-        android:id="@+id/llAdditionalInfo"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight=".20"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
-            android:layout_height="wrap_content"
-            android:id="@+id/tvLastmsg"
-            android:gravity="right"
-            android:layout_gravity="right"
-            android:visibility="visible"
+            android:id="@+id/lastMessageTextView"
             android:layout_width="wrap_content"
-            android:maxLines="1"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:visibility="visible"
+            tools:text="…"/>
 
         <TextView
+            android:id="@+id/membersTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvMembers"
-            android:gravity="center"
-            android:textStyle="bold"
+            android:layout_gravity="end"
             android:background="@color/tum_300"
-            android:drawableRight="@drawable/ic_users_white"
+            android:drawableEnd="@drawable/ic_users_white"
             android:drawablePadding="3dp"
-            android:textColor="@android:color/white"
-            android:layout_gravity="right"
-            android:paddingTop="@dimen/padding_chat"
+            android:gravity="center"
             android:paddingBottom="@dimen/padding_chat"
             android:paddingLeft="@dimen/padding_default"
             android:paddingRight="@dimen/padding_default"
-            android:layout_width="wrap_content"/>
+            android:paddingTop="@dimen/padding_chat"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            tools:text="Members"/>
+
     </LinearLayout>
 
 </LinearLayout>
