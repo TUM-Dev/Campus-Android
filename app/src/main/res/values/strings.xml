@@ -38,7 +38,7 @@
     <string name="search_rooms">Search rooms</string>
 
     <!-- Auxiliary -->
-    <string name="empty_string" translatable="false"/>
+    <string name="empty_string" translatable="false" />
     <string name="error_fetching_tumonline">Error accessing TUMonline.\nPlease make sure your TUMonline-Access-Token has
 		been\nactivated and the corresponding rights are set.\n\n<b>Click here to retry.</b></string>
     <string name="error_no_token_setup">No TUMonline-Access-Token was set.\nPlease set your TUMonline-Access-Token in the\n <i>Settings</i> screen to access TUMonline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
@@ -280,9 +280,9 @@
     <string name="show_feedback">Send feedback</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="app_info_text">
-        Die TUM Campus App is being developed by volunteers, students of the Android practical course and employees of the Chair of Operating Systems led by Professor Dr. Baumgarten.
+        The TUM Campus App is being developed by volunteers, students of the Android practical course and employees of the Chair of Operating Systems led by Professor Dr. Baumgarten.
         The app can be used on smartphones and tablets and is available for both iOS and Android.\n\n
-        You can reach via the feedback form in the app or via email (app@tum.de) if you have special concerns or request.
+        You can reach us via the feedback form in the app or via email (app@tum.de) if you have any special concerns or requests.
     </string>
 
     <!-- END Translated, please do not change identifiers -->
@@ -559,13 +559,22 @@ Signature: %5$s</string>
     <string name="tumonline_login">Connect to TUMonline</string>
     <string name="card_login_title">Welcome to the TUM Campus App!</string>
     <string name="card_login_body">Connect the app to TUMonline now to get access to all the features! This includes among other things your calendar, lectures and grades!</string>
-    
+
     <string name="kino_cover_description">movie poster</string>
     <string name="show_trailer_error">Trailer can\'t be shown</string>
     <string name="trailer">Trailer</string>
-    
+
     <string name="pdf_viewer_title">PDF Viewer</string>
     <string name="dialog_add_to_contacts">Add to Contacts?</string>
+
+    <!-- Add user to chat via search -->
+    <string name="user_search_hint">Search Name or TUM Identification</string>
+    <string name="error_invalid_tum_id_format">Invalid TUM-ID format</string>
+    <string name="error_user_not_found">No user found</string>
+    <string name="add_user_to_chat_message">Add <b>%s</b> to chat room <b>%s</b>?</string>
+    <string name="chat_member_added">User was added</string>
+
+
     <string name="like_us_on_facebook">Like us on Facebook</string>
     <string name="check_us_out_on_github">Check us out on GitHub</string>
     <string name="e_mail_us">E-mail us</string>
@@ -574,10 +583,15 @@ Signature: %5$s</string>
     <string name="open_tum_online">Open TUM Online</string>
     <string name="go_to_room">Go to room</string>
     <string name="topic">Topic:</string>
+
     <string name="add">Add</string>
     <string name="recents">Recents</string>
     <string name="e_mail">E-mail</string>
     <string name="additional_info">Additional Info</string>
+
+    <string name="or">or</string>
+    <string name="join_chat_via_qr_code">let others join via QR-code</string>
+
     <string name="Refresh">Refresh</string>
     <string name="create">Create</string>
     <string name="enter_name_placeholder">Enter name …</string>
