@@ -6,12 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.common.collect.ImmutableMap;
-
 import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter;
@@ -22,27 +19,8 @@ import de.tum.in.tumcampusapp.component.tumui.grades.model.Exam;
  */
 public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
     private static final DateFormat DF = DateFormat.getDateInstance(DateFormat.MEDIUM);
-    private static final Map<String, Integer> GRADE_COLOR = ImmutableMap.<String, Integer>builder()
-            .put("1,0", R.color.grade_1_0)
-            .put("1,3", R.color.grade_1_3)
-            .put("1,4", R.color.grade_1_3)
-            .put("1,7", R.color.grade_1_7)
-            .put("2,0", R.color.grade_2_0)
-            .put("2,3", R.color.grade_2_3)
-            .put("2,4", R.color.grade_2_3)
-            .put("2,7", R.color.grade_2_7)
-            .put("3,0", R.color.grade_3_0)
-            .put("3,3", R.color.grade_3_3)
-            .put("3,4", R.color.grade_3_3)
-            .put("3,7", R.color.grade_3_7)
-            .put("4,0", R.color.grade_4_0)
-            .put("4,3", R.color.grade_4_3)
-            .put("4,4", R.color.grade_4_3)
-            .put("4,7", R.color.grade_4_7)
-            .put("5,0", R.color.grade_5_0)
-            .build();
 
-    public ExamListAdapter(Context context, List<Exam> results) {
+    ExamListAdapter(Context context, List<Exam> results) {
         super(context, results);
         Collections.sort(infoList);
     }
@@ -76,7 +54,8 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
             holder.tvGrade = view.findViewById(R.id.gradeTextView);
             holder.tvDetails1 = view.findViewById(R.id.examDateTextView);
             holder.tvDetails2 = view.findViewById(R.id.examinerTextView);
-            holder.gradeBackground = context.getResources().getDrawable(R.drawable.grade_background);
+            holder.gradeBackground = context.getResources()
+                                            .getDrawable(R.drawable.grade_background);
             holder.tvGrade.setBackground(holder.gradeBackground);
             view.setTag(holder);
         } else {
@@ -87,23 +66,14 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
         if (exam != null) {
             holder.tvName.setText(exam.getCourse());
             holder.tvGrade.setText(exam.getGrade());
-            if (GRADE_COLOR.containsKey(exam.getGrade())) {
-                holder.gradeBackground.setTint(
-                        context.getResources().getColor(GRADE_COLOR.get(exam.getGrade())));
-            } else {
-                holder.gradeBackground.setTint(
-                        context.getResources().getColor(R.color.grade_default));
-            }
+            holder.gradeBackground.setTint(exam.getGradeColor(context));
 
-            holder.tvDetails1.setText(
-                    String.format("%s: %s, ",
-                                  context.getString(R.string.date), DF.format(exam.getDate())));
+            holder.tvDetails1.setText(String.format("%s: %s, ", context.getString(R.string.date), DF.format(exam.getDate())));
 
-            holder.tvDetails2
-                    .setText(String.format("%s: %s, " +
-                                           "%s: %s",
-                                           context.getString(R.string.examiner), exam.getExaminer(),
-                                           context.getString(R.string.mode), exam.getModus()));
+            holder.tvDetails2.setText(String.format("%s: %s, " +
+                                                    "%s: %s",
+                                                    context.getString(R.string.examiner), exam.getExaminer(),
+                                                    context.getString(R.string.mode), exam.getModus()));
         }
 
         return view;
