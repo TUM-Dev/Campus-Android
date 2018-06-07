@@ -55,6 +55,7 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:description="@string/app_short_description"
         android:fullBackupContent="true"
@@ -164,7 +165,8 @@
             android:name=".component.other.settings.UserPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:theme="@style/AppTheme.SettingsTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity"/>

@@ -5,7 +5,6 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.DateUtils
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
-import io.reactivex.Maybe
 import java.util.*
 
 object KinoLocalRepository {
@@ -22,7 +21,7 @@ object KinoLocalRepository {
 
     fun getAllKinos(): Flowable<List<Kino>> = db.kinoDao().all
 
-    fun getLastId(): Maybe<String> = db.kinoDao().lastId
+    fun getLatestId() = db.kinoDao().latestId
 
     fun getKinoByPosition(position: Int): Flowable<Kino> = db.kinoDao().getByPosition(position)
 
