@@ -128,7 +128,7 @@ public final class Helper {
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             return barcodeEncoder.createBitmap(bitMatrix);
         } catch (WriterException e) {
-            e.printStackTrace();
+            Utils.log(e);
             return null;
         }
     }
