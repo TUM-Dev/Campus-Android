@@ -145,10 +145,10 @@ public class KinoDetailsFragment extends Fragment {
 
         // Setup "Buy/Show ticket" button according to ticket status for current event
         if (isBooked) {
-            ticket.setText("Show ticket");
+            ticket.setText(this.getString(R.string.show_ticket));
             ticket.setOnClickListener(view -> showTicket());
         } else {
-            ticket.setText("Buy ticket");
+            ticket.setText(this.getString(R.string.buy_ticket));
             ticket.setOnClickListener(view -> buyTicket());
         }
 

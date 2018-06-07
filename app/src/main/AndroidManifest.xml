@@ -720,7 +720,7 @@
             android:parentActivityName=".component.ui.plan.PlansActivity" />
         <activity
             android:name=".component.ui.ticket.ShowTicketActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="keyboardHidden|screenSize"
             android:label="@string/your_ticket"
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.tufilm.KinoActivity">

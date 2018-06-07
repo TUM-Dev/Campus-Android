@@ -489,6 +489,8 @@ Signatur: %5$s</string>
     <string name="eventdetail_dots">Veranstaltungsdetails</string>
     <string name="qrcode_dots">Ticket QRcode</string>
     <string name="your_ticket">Dein Ticket</string>
+    <string name="show_ticket">Ticket Zeigen</string>
+    <string name="buy_ticket">Ticket Kaufen</string>
 
     <!-- Create personal Appointment (Calendar) -->
     <string name="create_event">Termin erstellen</string>
