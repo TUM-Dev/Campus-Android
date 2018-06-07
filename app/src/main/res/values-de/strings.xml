@@ -75,15 +75,15 @@
     <string name="open_wizard">Öffne Startup-Wizard</string>
     <string name="open_wizard_detail">Der Startup-Wizard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMonline Dienste einzurichten und das Farbschema der App festzulegen.</string>
     <string name="clear_cache">Lösche Daten</string>
-    <string name="clear_cache_detail">Löscht alle durch die TUM Campus App heruntergeladenen, auf der SD-Karte gespeicherten Daten.</string>
-    <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
+    <string name="clear_cache_detail">Löscht alle Daten der TUM Campus App von deinem Gerät.</string>
+    <string name="delete_cache_sure">Alle Daten wirklich löschen?</string>
     <string name="success_clear_cache">Daten erfolgreich gelöscht</string>
 
     <string name="services">Dienste</string>
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
     <string name="background_mode">Hintergrundmodus (empfohlen)</string>
-    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist. Wird automatisch abgeschalten, wenn du dich mehr als 50km außerhalb von München befindest.</string>
+    <string name="background_info">Aktualisiert die Inhalte der App automatisch einmal täglich, wenn du dich im Großraum München aufhältst.</string>
     <string name="mode_background_mode">Aktivierung des Hintergrundmodus</string>
     <string name="always">Immer</string>
     <string name="wifi_only">Nur bei WLAN-Verbindung</string>
@@ -279,9 +279,9 @@
     <string name="card_cafeteria_summary">Zeigt den Mensa-Speiseplan an</string>
     <string name="card_mvv_summary">Zeigt die Abfahrtszeiten der öffentlich Verkehrmittel an</string>
     <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
-    <string name="card_tuition_fee_summary">Erinnert dich wenn du die Studiengebühren zahlen musst</string>
+    <string name="card_tuition_fee_summary">Erinnert dich, wenn du die Studiengebühren zahlen musst</string>
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
-    <string name="card_chat_summary">Benachrichtigt dich wenn neue Nachrichten verfügbar sind</string>
+    <string name="card_chat_summary">Benachrichtigt dich über neue Nachrichten</string>
     <string name="open_card_settings">Karte anpassen</string>
     <string name="always_hide_card">Karte immer ausblenden</string>
     <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
@@ -298,8 +298,8 @@
     <string name="password">Passwort</string>
     <string name="not_ask_again">Nicht mehr fragen</string>
     <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
-    <string name="eduroam_setup_question_desc">Hier klicken um eduroam einzurichten</string>
-    <string name="card_eduroam_summary">Hilft dir eduroam einzurichten</string>
+    <string name="eduroam_setup_question_desc">Hier klicken, um eduroam einzurichten</string>
+    <string name="card_eduroam_summary">Hilft dir, eduroam einzurichten</string>
     <string name="pin_lock">PIN-Sperre</string>
     <string name="pin_lock_desc">Für die Einrichtung des WLAN-Zugangs wird eine PIN-Sperre benötigt.
         Falls du noch keine PIN-Sperre verwendet kannst du hier eine einrichten.</string>
@@ -567,5 +567,5 @@ Signatur: %5$s</string>
     <string name="send_feedback_question">Feedback absenden?</string>
     <string name="feedback_empty">Bitte gib hier dein Feedback ein</string>
     <string name="feedback_img_without_text">Bitte füge eine Beschreibung hinzu</string>
-
+    <string name="campus">Campus</string>
 </resources>
