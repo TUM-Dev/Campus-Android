@@ -199,8 +199,6 @@
     <string name="room">Room</string>
     <string name="add_contact">Add to contacts</string>
     <string name="contact_added">Contact is successfully added!</string>
-
-    <!-- Curricula -->
     <string name="something_wrong">An unknown error occurred</string>
 
     <!-- Opening hours -->
