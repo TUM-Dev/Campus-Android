@@ -45,10 +45,9 @@ public class AddChatMemberActivity extends BaseActivity {
     private Handler delayHandler;
     private Runnable suggestionRunnable = this::getSuggestions;
 
-
     private List<ChatMember> suggestions;
 
-    public AddChatMemberActivity(){
+    public AddChatMemberActivity() {
         super(R.layout.activity_add_chat_member);
     }
 
@@ -76,14 +75,13 @@ public class AddChatMemberActivity extends BaseActivity {
         });
 
         searchView.setOnEditorActionListener((textView, actionId, keyEvent) -> {
-            if(actionId == EditorInfo.IME_ACTION_SEARCH){
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 Utils.log("Search");
                 delayHandler.removeCallbacks(suggestionRunnable);
                 getSuggestions();
 
-                //searchView.clearFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchView.getWindowToken(),0);
+                imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                 return true;
             }
             return false;
@@ -99,12 +97,13 @@ public class AddChatMemberActivity extends BaseActivity {
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 delayHandler.removeCallbacks(suggestionRunnable);
 
-                if(charSequence.length() < THRESHOLD){
+                if (charSequence.length() < THRESHOLD) {
                     return;
                 }
 
                 // backend call, add to adapter
-                if(tumIdPattern.matcher(charSequence).matches()){
+                if (tumIdPattern.matcher(charSequence)
+                                .matches()) {
                     // query matches TUM-ID
                     tumCabeClient.getChatMemberByLrzId(charSequence.toString(), new Callback<ChatMember>() {
                         @Override
@@ -112,7 +111,7 @@ public class AddChatMemberActivity extends BaseActivity {
                             searchView.setError(null);
                             suggestions = new ArrayList<>();
                             suggestions.add(response.body());
-                            ((MemberSuggestionsListAdapter)searchView.getAdapter()).updateSuggestions(suggestions);
+                            ((MemberSuggestionsListAdapter) searchView.getAdapter()).updateSuggestions(suggestions);
                         }
 
                         @Override
@@ -124,15 +123,15 @@ public class AddChatMemberActivity extends BaseActivity {
                 }
 
                 boolean containsDigit = false;
-                for(int i = 0; i < charSequence.length(); i++){
-                    if(Character.isDigit(charSequence.charAt(i))){
+                for (int i = 0; i < charSequence.length(); i++) {
+                    if (Character.isDigit(charSequence.charAt(i))) {
                         containsDigit = true;
                         break;
                     }
                 }
-                if(containsDigit){
+                if (containsDigit) {
                     // don't try to get new suggestions (we don't autocomplete TUM-IDs)
-                    if(charSequence.length() > 7){
+                    if (charSequence.length() > 7) {
                         searchView.setError(getString(R.string.error_invalid_tum_id_format));
                     } else {
                         // unfinished TUM-ID
@@ -154,15 +153,16 @@ public class AddChatMemberActivity extends BaseActivity {
         qrCode.setImageBitmap(Helper.createQRCode(room.getName()));
     }
 
-    private void getSuggestions(){
-        String input = searchView.getText().toString();
+    private void getSuggestions() {
+        String input = searchView.getText()
+                                 .toString();
         Utils.log("Get suggestions for " + input);
         tumCabeClient.searchChatMember(input, new Callback<List<ChatMember>>() {
             @Override
             public void onResponse(Call<List<ChatMember>> call, Response<List<ChatMember>> response) {
                 searchView.setError(null);
                 suggestions = response.body();
-                ((MemberSuggestionsListAdapter)searchView.getAdapter()).updateSuggestions(suggestions);
+                ((MemberSuggestionsListAdapter) searchView.getAdapter()).updateSuggestions(suggestions);
             }
 
             @Override
@@ -172,11 +172,11 @@ public class AddChatMemberActivity extends BaseActivity {
         });
     }
 
-    private void onError(){
+    private void onError() {
         searchView.setError(getString(R.string.error_user_not_found));
     }
 
-    private void showConfirmDialog(ChatMember member){
+    private void showConfirmDialog(ChatMember member) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setIcon(R.drawable.ic_action_add_person_blue);
         dialog.setMessage(getString(R.string.add_user_to_chat_message, member.getDisplayName(), room.getActualName()));
@@ -191,13 +191,13 @@ public class AddChatMemberActivity extends BaseActivity {
     /**
      * Clears everything from the last search.
      */
-    private void reset(){
+    private void reset() {
         suggestions = new ArrayList<>();
-        ((MemberSuggestionsListAdapter)searchView.getAdapter()).updateSuggestions(suggestions);
+        ((MemberSuggestionsListAdapter) searchView.getAdapter()).updateSuggestions(suggestions);
         searchView.setText("");
     }
 
-    private void joinRoom(ChatMember member){
+    private void joinRoom(ChatMember member) {
         ChatVerification verification;
         try {
             ChatMember currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
@@ -207,23 +207,26 @@ public class AddChatMemberActivity extends BaseActivity {
             return;
         }
 
-        TUMCabeClient.getInstance(this).addUserToChat(room, member, verification, new Callback<ChatRoom>() {
-            @Override
-            public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
-                ChatRoom room = response.body();
-                if(room != null){
-                    TcaDb.getInstance(getBaseContext()).chatRoomDao().updateMemberCount(room.getMembers(), room.getId(), room.getName());
-                    Utils.showToast(getBaseContext(), R.string.chat_member_added);
-                } else {
-                    Utils.showToast(getBaseContext(), R.string.error);
-                }
-            }
+        TUMCabeClient.getInstance(this)
+                     .addUserToChat(room, member, verification, new Callback<ChatRoom>() {
+                         @Override
+                         public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
+                             ChatRoom room = response.body();
+                             if (room != null) {
+                                 TcaDb.getInstance(getBaseContext())
+                                      .chatRoomDao()
+                                      .updateMemberCount(room.getMembers(), room.getId(), room.getName());
+                                 Utils.showToast(getBaseContext(), R.string.chat_member_added);
+                             } else {
+                                 Utils.showToast(getBaseContext(), R.string.error);
+                             }
+                         }
 
-            @Override
-            public void onFailure(Call<ChatRoom> call, Throwable t) {
-                Utils.showToast(getBaseContext(), R.string.error);
-            }
-        });
+                         @Override
+                         public void onFailure(Call<ChatRoom> call, Throwable t) {
+                             Utils.showToast(getBaseContext(), R.string.error);
+                         }
+                     });
     }
 
 }
