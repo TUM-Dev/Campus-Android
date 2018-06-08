@@ -2,14 +2,21 @@ package de.tum.`in`.tumcampusapp.component.other.notifications
 
 import android.app.PendingIntent
 import android.content.Context
+import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.Tuition
+import de.tum.`in`.tumcampusapp.utils.Const
 import java.util.*
 
-class TuitionFeesNotificationsProvider(context: Context,
-                                       private val tuition: Tuition) : NotificationsProvider(context) {
+class TuitionFeesNotificationsProvider(
+        context: Context, private val tuition: Tuition) : NotificationsProvider(context) {
+
+    override fun getNotificationBuilder(): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+                .setSmallIcon(R.drawable.ic_notification)
+    }
 
     override fun getNotifications(): List<AppNotification> {
         if (tuition.isReregistered) {
@@ -19,7 +26,7 @@ class TuitionFeesNotificationsProvider(context: Context,
         val title = context.getString(R.string.tuition_fees)
         val text = String.format(context.getString(R.string.reregister_todo), tuition.frist)
 
-        notificationBuilder
+        val notificationBuilder = getNotificationBuilder()
                 .setContentTitle(title)
                 .setContentText(text)
 

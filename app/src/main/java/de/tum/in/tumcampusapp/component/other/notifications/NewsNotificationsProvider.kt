@@ -15,6 +15,21 @@ class NewsNotificationsProvider(context: Context,
 
     private val GROUP_KEY_NEWS = "de.tum.in.tumcampus.NEWS"
 
+    override fun getNotificationBuilder(): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setGroupSummary(true)
+                .setGroup(GROUP_KEY_NEWS)
+    }
+
+    private fun getSecondaryNotificationBuilder(): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setGroup(GROUP_KEY_NEWS)
+                .setShowWhen(false)
+    }
+
     override fun getNotifications(): List<AppNotification> {
         val newsSourcesDao = TcaDb
                 .getInstance(context)
@@ -22,18 +37,17 @@ class NewsNotificationsProvider(context: Context,
 
         val notifications = newsItems
                 .map { newsItem ->
+                    val newsSource = newsSourcesDao.getNewsSource(newsItem.src.toInt())
+                    val notificationBuilder = getSecondaryNotificationBuilder()
+                            .setContentTitle(newsSource.title)
+                            .setContentText(newsItem.title)
+                            .setTicker(newsItem.title)
+
                     val intent = newsItem.getIntent(context)
                     if (intent != null) {
                         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
                         notificationBuilder.setContentIntent(pendingIntent)
                     }
-
-                    val newsSource = newsSourcesDao.getNewsSource(newsItem.src.toInt())
-                    notificationBuilder
-                            .setContentTitle(newsSource.title)
-                            .setContentText(newsItem.title)
-                            .setTicker(newsItem.title)
-                            .setGroup(GROUP_KEY_NEWS)
 
                     val notification = notificationBuilder.build()
                     InstantNotification(newsItem.id.toInt() , notification)
@@ -50,13 +64,10 @@ class NewsNotificationsProvider(context: Context,
 
         // TODO Pending intent?
 
-        val summaryNotification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+        val summaryNotification = getNotificationBuilder()
                 .setContentTitle(summaryTitle)
                 .setContentText(summaryText)
-                .setSmallIcon(R.drawable.ic_notification)
                 .setStyle(inboxStyle)
-                .setGroupSummary(true)
-                .setGroup(GROUP_KEY_NEWS)
                 .build()
 
         // This is the summary notification of all news. While individual notifications have their

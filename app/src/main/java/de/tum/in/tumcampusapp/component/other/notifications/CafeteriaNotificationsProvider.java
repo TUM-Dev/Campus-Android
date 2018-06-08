@@ -35,6 +35,15 @@ public class CafeteriaNotificationsProvider extends NotificationsProvider {
 
     @NotNull
     @Override
+    protected NotificationCompat.Builder getNotificationBuilder() {
+        return new NotificationCompat.Builder(getContext(), Const.NOTIFICATION_CHANNEL_CAFETERIA)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setWhen(System.currentTimeMillis());
+    }
+
+    @NotNull
+    @Override
     public List<AppNotification> getNotifications() {
         // TODO: This is the previous implementation, which is way too complicated.
         // Let's refactor this!

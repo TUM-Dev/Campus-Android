@@ -16,6 +16,24 @@ class KtCafeteriaNotificationsProvider(
 
     private val GROUP_KEY_CAFETERIA = "de.tum.in.tumcampus.CAFETERIA"
 
+    override fun getNotificationBuilder(): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setGroup(GROUP_KEY_CAFETERIA)
+                .setGroupSummary(true)
+                .setShowWhen(false)
+                .setWhen(System.currentTimeMillis())
+    }
+
+    private fun getSecondaryNotificationBuilder(): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setGroup(GROUP_KEY_CAFETERIA)
+                .setShowWhen(false)
+    }
+
     override fun getNotifications(): List<AppNotification> {
         val menus = cafeteria.menus.filter { it.typeShort != "bei" }
 
@@ -23,6 +41,8 @@ class KtCafeteriaNotificationsProvider(
                 .map { menu ->
                     val title = menu.notificationTitle
                     val text = menu.getNotificationText(context)
+
+                    val notificationBuilder = getSecondaryNotificationBuilder()
 
                     val intent = cafeteria.getIntent(context)
                     if (intent != null) {
@@ -32,12 +52,8 @@ class KtCafeteriaNotificationsProvider(
                     }
 
                     notificationBuilder
-                            .setChannelId(Const.CAFETERIA_ID)
                             .setContentTitle(title)
                             .setContentText(text)
-                            .setAutoCancel(true)
-                            .setSmallIcon(R.drawable.ic_notification)
-                            .setGroup(GROUP_KEY_CAFETERIA)
                             .build()
                 }
                 .mapIndexed { index, notification ->
@@ -57,14 +73,10 @@ class KtCafeteriaNotificationsProvider(
 
         // TODO: Pending intent?
 
-        val summaryNotification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+        val summaryNotification = getNotificationBuilder()
                 .setContentTitle(title)
                 .setContentText(text)
-                .setSmallIcon(R.drawable.ic_notification)
                 .setStyle(inboxStyle)
-                .setWhen(date.time)
-                .setGroupSummary(true)
-                .setGroup(GROUP_KEY_CAFETERIA)
                 .build()
 
         // This is the summary notification of all news. While individual notifications have their
