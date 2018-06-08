@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.other.notifications.CafeteriaNotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.KtCafeteriaNotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.notifications.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotification;
@@ -86,7 +86,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
             return new ArrayList<>();
         }
 
-        NotificationsProvider provider = new CafeteriaNotificationsProvider(mContext, cafeteria);
+        NotificationsProvider provider = new KtCafeteriaNotificationsProvider(mContext, cafeteria);
         return provider.getNotifications();
     }
 

@@ -36,7 +36,7 @@ class NewsNotificationsProvider(context: Context,
                             .setGroup(GROUP_KEY_NEWS)
 
                     val notification = notificationBuilder.build()
-                    InstantNotification(newsItem.id.toInt() /*AppNotification.NEWS_ID*/, notification)
+                    InstantNotification(newsItem.id.toInt() , notification)
                 }
                 .toCollection(ArrayList())
 
@@ -47,6 +47,8 @@ class NewsNotificationsProvider(context: Context,
         newsItems.forEach { newsItem ->
             inboxStyle.addLine(newsItem.title)
         }
+
+        // TODO Pending intent?
 
         val summaryNotification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setContentTitle(summaryTitle)

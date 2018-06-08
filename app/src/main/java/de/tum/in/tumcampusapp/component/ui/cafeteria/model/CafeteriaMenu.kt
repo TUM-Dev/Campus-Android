@@ -2,7 +2,9 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.content.Context
 import java.util.*
+import java.util.regex.Pattern
 
 /**
  * CafeteriaMenu
@@ -23,4 +25,37 @@ data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
                          var typeShort: String = "",
                          var typeLong: String = "",
                          var typeNr: Int = -1,
-                         var name: String = "")
+                         var name: String = "") {
+
+    val notificationTitle: String
+        get() {
+            return PATTERN
+                    .matcher(typeLong)
+                    .replaceAll("")
+                    .trim()
+        }
+
+    fun getNotificationText(context: Context): String {
+        val priceText = getPriceText(context)
+        val formattedPriceText = COMPILE
+                .matcher(priceText)
+                .replaceAll("")
+                .trim()
+
+        return name + formattedPriceText
+    }
+
+    private fun getPriceText(context: Context): String {
+        val rolePrices = CafeteriaPrices.getRolePrices(context)
+        val price = rolePrices[typeLong]
+        return if (price != null) "\n$price €" else ""
+    }
+
+    companion object {
+
+        val COMPILE = Pattern.compile("\\([^\\)]+\\)")
+        val PATTERN = Pattern.compile("[0-9]")
+
+    }
+
+}
