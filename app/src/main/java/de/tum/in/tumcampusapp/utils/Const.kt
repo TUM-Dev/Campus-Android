@@ -11,6 +11,7 @@ object Const {
     const val CAFETERIA_ID = "cafeteriasId"
     const val CAFETERIAS = "cafeterias"
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
+    const val EVENT_BOOKED_MODE = "event_booked_mode"
     const val COMPLETED = "completed"
     const val DATABASE_NAME = "database.db"
     const val DATE = "date"
