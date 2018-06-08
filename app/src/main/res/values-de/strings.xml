@@ -491,6 +491,8 @@ Signatur: %5$s</string>
     <string name="your_ticket">Dein Ticket</string>
     <string name="show_ticket">Ticket Zeigen</string>
     <string name="buy_ticket">Ticket Kaufen</string>
+    <string name="purchasedetail_dots">Details zu Ihrem Kauf:</string>
+    <string name="continue_to_payment">WEITER ZU ZAHLEN</string>
 
     <!-- Create personal Appointment (Calendar) -->
     <string name="create_event">Termin erstellen</string>

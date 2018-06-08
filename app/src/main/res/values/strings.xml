@@ -572,7 +572,8 @@ Signature: %5$s</string>
     <string name="your_ticket">Your Ticket</string>
     <string name="show_ticket">Show Ticket</string>
     <string name="buy_ticket">Buy Ticket</string>
-
+    <string name="purchasedetail_dots">Details of your purchase:</string>
+    <string name="continue_to_payment">CONTINUE TO PAYMENT</string>
     <!-- Event Activity -->
     <string name="show_booked_events">Show booked events</string>
     <string name="events_overview">Events Overview</string>

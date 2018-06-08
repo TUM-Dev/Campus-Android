@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.BuyTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.component.ui.ticket.ShowTicketActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
@@ -40,7 +41,7 @@ public class KinoDetailsFragment extends Fragment {
     private String url; // link to homepage
     private LayoutInflater inflater;
 
-    private boolean isBooked = true;
+    private boolean isBooked = false;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -179,7 +180,8 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     private void buyTicket() {
-        // TODO: go to payment activity (to be implemented)
+        Intent intent = new Intent(context, BuyTicketActivity.class);
+        startActivity(intent);
     }
 
     public void showTrailer() {
