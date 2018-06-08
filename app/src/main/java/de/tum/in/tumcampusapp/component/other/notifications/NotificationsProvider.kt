@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.other.notifications
 import android.content.Context
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.utils.Const
 
 abstract class NotificationsProvider(protected val context: Context) {

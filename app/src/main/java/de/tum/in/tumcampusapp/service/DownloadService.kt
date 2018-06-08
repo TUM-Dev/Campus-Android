@@ -6,6 +6,14 @@ import android.support.v4.app.JobIntentService
 import android.support.v4.content.LocalBroadcastManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.component.other.notifications.NotificationPresenter
+import de.tum.`in`.tumcampusapp.component.other.notifications.NotificationScheduler
+import de.tum.`in`.tumcampusapp.component.other.notifications.ProvidesNotifications
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
+import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
@@ -18,6 +26,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -192,6 +201,30 @@ class DownloadService : JobIntentService() {
                     }
                 }
             }
+
+            // Get and display notifications
+            val notificationProviders = ArrayList<ProvidesNotifications>().apply {
+                add(CafeteriaManager(service.baseContext))
+                add(CalendarController(service.baseContext))
+                add(NewsController(service.baseContext))
+                add(TransportController(service.baseContext))
+                add(TuitionFeeManager(service.baseContext))
+            }
+
+            val notifications = notificationProviders
+                    .flatMap { provider -> provider.getNotifications() }
+
+            // Show instant notifications now
+            notifications
+                    .filter { it is InstantNotification }
+                    .forEach { NotificationPresenter.show(service.baseContext, it) }
+
+            // Schedule future notifications
+            notifications
+                    .map { it as? FutureNotification }
+                    .filterNotNull()
+                    .forEach { NotificationScheduler.schedule(service.baseContext, it) }
+
 
             // Update the last run time saved in shared prefs
             if (action == Const.DOWNLOAD_ALL_FROM_EXTERNAL) {
