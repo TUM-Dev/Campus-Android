@@ -125,7 +125,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     @Override
     public Intent getIntent() {
-        return new Intent(getContext(), TuitionFeesActivity.class);
+        return mTuition.getIntent(getContext());
     }
 
     @Override

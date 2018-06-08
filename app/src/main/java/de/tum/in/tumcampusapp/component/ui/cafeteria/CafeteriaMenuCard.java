@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
@@ -39,9 +38,14 @@ import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_CAFE
  * Card that shows the cafeteria menu
  */
 public class CafeteriaMenuCard extends NotificationAwareCard {
+
     private static final String CAFETERIA_DATE = "cafeteria_date";
     private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
     private static final Pattern PATTERN = Pattern.compile("[0-9]");
+
+    // TODO: Replace with CafeteriaWithMenus
+    private CafeteriaWithMenus mCafeteria;
+
     private int mCafeteriaId;
     private String mCafeteriaName;
     private Date mDate;
@@ -83,6 +87,10 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         cardsViewHolder.setAddedViews(showMenu(getMLinearLayout(), mCafeteriaId, mDateStr, false, mMenus));
     }
 
+    public void setCafeteria(CafeteriaWithMenus cafeteria) {
+        mCafeteria = cafeteria;
+    }
+
     public void setCardMenus(CafeteriaWithMenus cafeteria) {
         setCardMenus(
                 cafeteria.getId(),
@@ -117,9 +125,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
     @Override
     public Intent getIntent() {
-        Intent i = new Intent(getContext(), CafeteriaActivity.class);
-        i.putExtra(Const.CAFETERIA_ID, mCafeteriaId);
-        return i;
+        return mCafeteria.getIntent(getContext());
     }
 
     @Override

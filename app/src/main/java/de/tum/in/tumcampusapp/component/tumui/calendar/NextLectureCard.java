@@ -175,11 +175,11 @@ public class NextLectureCard extends NotificationAwareCard {
         }
     }
 
-    private static class CalendarItem {
-        String title;
-        Date start;
-        Date end;
-        String location;
+    public static class CalendarItem {
+        public String title;
+        public Date start;
+        public Date end;
+        public String location;
     }
 
     @Override

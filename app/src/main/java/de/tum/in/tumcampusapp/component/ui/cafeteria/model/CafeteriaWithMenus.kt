@@ -1,5 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
+import android.content.Context
+import android.content.Intent
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
+import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateUtils
 import java.util.*
 
@@ -26,6 +30,11 @@ data class CafeteriaWithMenus(val id: Int) {
 
             return nextDateString
         }
+
+    fun getIntent(context: Context): Intent? =
+            Intent(context, CafeteriaActivity::class.java).apply {
+                putExtra(Const.CAFETERIA_ID, id)
+            }
 
 }
 

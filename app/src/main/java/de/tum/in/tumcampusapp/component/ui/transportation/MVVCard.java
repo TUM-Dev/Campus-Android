@@ -87,10 +87,11 @@ public class MVVCard extends NotificationAwareCard {
 
     @Override
     public Intent getIntent() {
-        Intent i = new Intent(getContext(), TransportationDetailsActivity.class);
-        i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationNameIDPair.first);
-        i.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, mStationNameIDPair.second);
-        return i;
+        if (mDepartures.isEmpty()) {
+            return null;
+        } else {
+            return mDepartures.get(0).getIntent(getContext(), mStationNameIDPair);
+        }
     }
 
     @Override

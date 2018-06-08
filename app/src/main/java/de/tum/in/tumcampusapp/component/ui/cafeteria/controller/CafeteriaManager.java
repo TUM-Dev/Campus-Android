@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
@@ -29,6 +30,10 @@ import io.reactivex.disposables.CompositeDisposable;
  * Cafeteria Manager, handles database stuff, external imports
  */
 public class CafeteriaManager implements ProvidesCard {
+
+    public static final String CAFETERIA_DATE = "cafeteria_date";
+    public static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
+    public static final Pattern PATTERN = Pattern.compile("[0-9]");
 
     private Context mContext;
     private final CafeteriaViewModel cafeteriaViewModel;
@@ -63,6 +68,7 @@ public class CafeteriaManager implements ProvidesCard {
 
         CafeteriaMenuCard card = new CafeteriaMenuCard(mContext);
         CafeteriaWithMenus cafeteria = cafeteriaViewModel.getCafeteriaWithMenus(cafeteriaId);
+        card.setCafeteria(cafeteria);
         card.setCardMenus(cafeteria);
 
         results.add(card.getIfShowOnStart());
