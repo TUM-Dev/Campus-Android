@@ -23,9 +23,9 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.other.notifications.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.providers.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
-import de.tum.in.tumcampusapp.component.other.notifications.TransportNotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.providers.TransportNotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotification;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
@@ -372,8 +372,11 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
     @Override
     public List<AppNotification> getNotifications() {
         StationResult station = getClosestStation();
-        List<Departure> departures = getDeparturesFromExternal(mContext, station.getId());
+        if (station == null) {
+            return new ArrayList<>();
+        }
 
+        List<Departure> departures = getDeparturesFromExternal(mContext, station.getId());
         NotificationsProvider provider = new TransportNotificationsProvider(mContext, departures, station);
         return provider.getNotifications();
     }

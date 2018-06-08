@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications
+package de.tum.`in`.tumcampusapp.component.other.notifications.providers
 
 import android.app.PendingIntent
 import android.content.Context
@@ -7,6 +7,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateUtils
 
@@ -35,7 +36,8 @@ class KtCafeteriaNotificationsProvider(
     }
 
     override fun getNotifications(): List<AppNotification> {
-        val menus = cafeteria.menus.filter { it.typeShort != "bei" }
+        val menus = cafeteria.menus.filter { it.menuType != MenuType.SIDE_DISH }
+        val intent = cafeteria.getIntent(context)
 
         val notifications = menus
                 .map { menu ->
@@ -44,17 +46,24 @@ class KtCafeteriaNotificationsProvider(
 
                     val notificationBuilder = getSecondaryNotificationBuilder()
 
-                    val intent = cafeteria.getIntent(context)
                     if (intent != null) {
                         val pendingIntent = PendingIntent
                                 .getActivity(context, 0, intent, 0)
                         notificationBuilder.setContentIntent(pendingIntent)
                     }
 
+                    val inboxStyle = NotificationCompat.InboxStyle()
+                    val expandedLines = menu.getNotificationLines(context)
+                    expandedLines.forEach { line ->
+                        inboxStyle.addLine(line)
+                    }
+
                     notificationBuilder
                             .setContentTitle(title)
                             .setContentText(text)
-                            .build()
+                            .setStyle(inboxStyle)
+
+                    notificationBuilder.build()
                 }
                 .mapIndexed { index, notification ->
                     val menuId = menus[index].id
@@ -71,12 +80,14 @@ class KtCafeteriaNotificationsProvider(
         val date = DateUtils.getDate(cafeteria.nextMenuDate)
         val text = DateUtils.getDateString(date)
 
-        // TODO: Pending intent?
+        val pendingIntent = PendingIntent
+                .getActivity(context, 0, intent, 0)
 
         val summaryNotification = getNotificationBuilder()
                 .setContentTitle(title)
                 .setContentText(text)
                 .setStyle(inboxStyle)
+                .setContentIntent(pendingIntent)
                 .build()
 
         // This is the summary notification of all news. While individual notifications have their

@@ -27,6 +27,20 @@ data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
                          var typeNr: Int = -1,
                          var name: String = "") {
 
+    private val formattedName: String
+        get() = COMPILE.matcher(name).replaceAll("").trim()
+
+    val menuType: MenuType
+        get() {
+            return when (typeShort) {
+                "tg" -> MenuType.DAILY_SPECIAL
+                "ae" -> MenuType.DISCOUNTED_COURSE
+                "akt" -> MenuType.SPECIALS
+                "bio" -> MenuType.BIO
+                else -> MenuType.SIDE_DISH
+            }
+        }
+
     val notificationTitle: String
         get() {
             return PATTERN
@@ -36,25 +50,37 @@ data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
         }
 
     fun getNotificationText(context: Context): String {
-        val priceText = getPriceText(context)
-        val formattedPriceText = COMPILE
-                .matcher(priceText)
-                .replaceAll("")
-                .trim()
-
-        return name + formattedPriceText
+        val lines = getNotificationLines(context)
+        return if (menuType == MenuType.SPECIALS) {
+            lines.joinToString(", ")
+        } else {
+            lines.first()
+        }
     }
 
-    private fun getPriceText(context: Context): String {
+    fun getNotificationLines(context: Context): List<String> {
+        return if (menuType == MenuType.SPECIALS) {
+            // Returns a list of all specials
+            formattedName
+                    .split("\n")
+                    .map { it.trim() }
+        } else {
+            // Returns a list containing the dish name and the price
+            val priceText = getPriceText(context)
+            listOfNotNull(formattedName, priceText)
+        }
+    }
+
+    private fun getPriceText(context: Context): String? {
         val rolePrices = CafeteriaPrices.getRolePrices(context)
         val price = rolePrices[typeLong]
-        return if (price != null) "\n$price €" else ""
+        return if (price != null) "$price €" else null
     }
 
     companion object {
 
-        val COMPILE = Pattern.compile("\\([^\\)]+\\)")
-        val PATTERN = Pattern.compile("[0-9]")
+        private val COMPILE: Pattern = Pattern.compile("\\([^\\)]+\\)")
+        private val PATTERN: Pattern = Pattern.compile("[0-9]")
 
     }
 

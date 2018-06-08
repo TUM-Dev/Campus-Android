@@ -1,11 +1,13 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications
+package de.tum.`in`.tumcampusapp.component.other.notifications.providers
 
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
+import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -63,11 +65,14 @@ class NewsNotificationsProvider(context: Context,
         }
 
         // TODO Pending intent?
+        val intent = Intent(context, NewsActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
         val summaryNotification = getNotificationBuilder()
                 .setContentTitle(summaryTitle)
                 .setContentText(summaryText)
                 .setStyle(inboxStyle)
+                .setContentIntent(pendingIntent)
                 .build()
 
         // This is the summary notification of all news. While individual notifications have their

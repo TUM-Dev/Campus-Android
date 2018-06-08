@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.other.notifications;
+package de.tum.in.tumcampusapp.component.other.notifications.providers;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
+@Deprecated
 public class CafeteriaNotificationsProvider extends NotificationsProvider {
 
     private CafeteriaWithMenus mCafeteria;

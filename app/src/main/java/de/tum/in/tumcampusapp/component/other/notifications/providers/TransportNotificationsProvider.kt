@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications
+package de.tum.`in`.tumcampusapp.component.other.notifications.providers
 
 import android.app.PendingIntent
 import android.content.Context

@@ -9,6 +9,7 @@ object Const {
     const val ACTION_EXTRA = "action"
     const val BACKGROUND_MODE = "background_mode"
     const val CAFETERIA_ID = "cafeteriasId"
+    const val CAFETERIA_DATE = "cafeteriaDate"
     const val CAFETERIAS = "cafeterias"
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
     const val COMPLETED = "completed"
