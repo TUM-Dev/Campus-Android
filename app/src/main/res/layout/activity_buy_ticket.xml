@@ -36,13 +36,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/purchasedetail_dots"
-                    android:textSize="16sp" />
+                    android:textSize="20sp"
+                    android:layout_marginTop="30dp"
+                    />
 
                 <TextView
                     android:id="@+id/ticketdetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_margin="30dp"
                     android:text=""
                     android:textSize="@dimen/large_text_size" />
 
@@ -52,10 +54,11 @@
                     android:layout_height="wrap_content" />
 
                 <Button
-                    android:id="@+id/purchasebutton"
+                    android:id="@+id/paymentbutton"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="40dp"
                     android:text="@string/continue_to_payment" />
 
             </LinearLayout>

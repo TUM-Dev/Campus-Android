@@ -566,7 +566,7 @@ Signature: %5$s</string>
     <string name="e_mail">E-mail</string>
     <string name="additional_info">Additional Info</string>
     <string name="Refresh">Refresh</string>
-    <!-- QR Code Ticket Activity -->
+    <!-- Ticket Activity -->
     <string name="eventdetail_dots">Event Details</string>
     <string name="qrcode_dots">Ticket QRcode</string>
     <string name="your_ticket">Your Ticket</string>
@@ -574,6 +574,7 @@ Signature: %5$s</string>
     <string name="buy_ticket">Buy Ticket</string>
     <string name="purchasedetail_dots">Details of your purchase:</string>
     <string name="continue_to_payment">CONTINUE TO PAYMENT</string>
+    <string name="summary">Summary</string>
     <!-- Event Activity -->
     <string name="show_booked_events">Show booked events</string>
     <string name="events_overview">Events Overview</string>
