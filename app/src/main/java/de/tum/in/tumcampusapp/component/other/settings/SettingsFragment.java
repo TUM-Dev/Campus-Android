@@ -38,7 +38,6 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class SettingsFragment extends PreferenceFragmentCompat
@@ -55,6 +54,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         //Load the correct preference category
         setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
+
+        populateNewsSources();
 
         // Disables silence service if the app is used without TUMOnline access
         SwitchPreferenceCompat silentSwitch =
@@ -96,9 +97,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         // Set the default white background in the view so as to avoid transparency
         view.setBackgroundColor(Color.WHITE);
-
-        // Populate news sources
-        populateNewsSources();
     }
 
     private void populateNewsSources() {
@@ -107,11 +105,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         NewsController newsController = new NewsController(mContext);
         List<NewsSources> newsSources = newsController.getNewsSources();
-        final NetUtils net = new NetUtils(mContext);
         for (NewsSources newsSource : newsSources) {
             final CheckBoxPreference pref = new CheckBoxPreference(mContext);
             pref.setKey("card_news_source_" + newsSource.getId());
             pref.setDefaultValue(true);
+            
+            // reserve space so that when the icon is loaded the text is not moved again
+            pref.setIconSpaceReserved(true);
 
             // Load news source icon in background and set it
             final String url = newsSource.getIcon();
