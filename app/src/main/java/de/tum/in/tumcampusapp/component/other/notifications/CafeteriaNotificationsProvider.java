@@ -4,8 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,10 +41,11 @@ public class CafeteriaNotificationsProvider extends NotificationsProvider {
 
         Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(getContext());
 
-        NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
-
         StringBuilder allContent = new StringBuilder();
         StringBuilder firstContent = new StringBuilder();
+
+        // TODO: Use NotificationCompat.MessagingStyle
+
         for (CafeteriaMenu menu : mCafeteria.getMenus()) {
             if ("bei".equals(menu.getTypeShort())) {
                 continue;
@@ -77,8 +76,7 @@ public class CafeteriaNotificationsProvider extends NotificationsProvider {
 
             pageNotificationBuilder.setContentText(contentString);
             if ("tg".equals(menu.getTypeShort())) {
-                if (!allContent.toString()
-                        .isEmpty()) {
+                if (!allContent.toString().isEmpty()) {
                     allContent.append('\n');
                 }
                 allContent.append(contentString);
@@ -90,29 +88,17 @@ public class CafeteriaNotificationsProvider extends NotificationsProvider {
                                 .replaceAll("")
                                 .trim()
                 ).append('…');
-            } else {
-                morePageNotification.addPage(pageNotificationBuilder.build());
             }
         }
-
-        Bitmap bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_cafeteria);
-        morePageNotification.setBackground(bitmap);
 
         Date date = DateUtils.getDate(mCafeteria.getNextMenuDate());
 
         NotificationCompat.Builder notificationBuilder = getNotificationBuilder();
+
         notificationBuilder
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(allContent))
                 .setContentText(firstContent)
                 .setWhen(date.getTime());
-
-        /*
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(getContext(), Const.NOTIFICATION_CHANNEL_CAFETERIA)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(allContent))
-                        .setContentText(firstContent)
-                        .setWhen(date.getTime());
-        */
 
         Intent intent = mCafeteria.getIntent(getContext());
         if (intent != null) {

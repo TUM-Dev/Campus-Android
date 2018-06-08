@@ -1,8 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.notifications
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
@@ -17,15 +15,10 @@ class CalendarNotificationsProvider(context: Context,
         val firstItemStart = DateUtils.getDateTime(firstItem.dtstart)
         val time = DateUtils.getFutureTime(firstItemStart, context)
 
-        notificationBuilder
+        val notification = notificationBuilder
                 .setContentText("${firstItem.title}\n${time}")
                 .setSmallIcon(R.drawable.ic_notification)
-
-        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.wear_next_lecture)
-        notificationBuilder
-                .extend(NotificationCompat.WearableExtender().setBackground(bitmap))
-
-        val notification = notificationBuilder.build()
+                .build()
 
         return ArrayList<AppNotification>().apply {
             add(InstantNotification(AppNotification.CALENDAR_ID, notification))

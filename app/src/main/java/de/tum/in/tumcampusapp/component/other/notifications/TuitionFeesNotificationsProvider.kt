@@ -6,7 +6,6 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.Tuition
-import de.tum.`in`.tumcampusapp.utils.Utils
 import java.util.*
 
 class TuitionFeesNotificationsProvider(context: Context,
@@ -20,12 +19,13 @@ class TuitionFeesNotificationsProvider(context: Context,
         val title = context.getString(R.string.tuition_fees)
         val text = String.format(context.getString(R.string.reregister_todo), tuition.frist)
 
-        val notification = notificationBuilder
+        notificationBuilder
                 .setContentTitle(title)
                 .setContentText(text)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setLargeIcon(Utils.getLargeIcon(context, R.drawable.ic_money))
-                .build()
+
+        // TODO: If deadline is close, turn it red
+
+        val notification = notificationBuilder.build()
 
         // TODO: Intelligently schedule notifications for 1 month, 2 weeks, 1 week, 3 days
         val futureNotification = InstantNotification(AppNotification.TUITION_FEES_ID, notification)
