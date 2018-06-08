@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      */
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private boolean isConnectivityChangeReceiverRegistered = false;
+    private boolean mIsConnectivityChangeReceiverRegistered;
 
     /**
      * Card list
@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 refreshCards();
                 runOnUiThread(() -> {
                     unregisterReceiver(connectivityChangeReceiver);
-                    isConnectivityChangeReceiverRegistered = false;
+                    mIsConnectivityChangeReceiverRegistered = false;
                 });
             }
         }
@@ -151,10 +151,10 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mSwipeRefreshLayout.setRefreshing(false);
         mAdapter.updateItems(cards);
 
-        if (!NetUtils.isConnected(this) && !isConnectivityChangeReceiverRegistered) {
+        if (!NetUtils.isConnected(this) && !mIsConnectivityChangeReceiverRegistered) {
             registerReceiver(connectivityChangeReceiver,
                              new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-            isConnectivityChangeReceiverRegistered = true;
+            mIsConnectivityChangeReceiverRegistered = true;
         }
     }
 
@@ -175,9 +175,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (isConnectivityChangeReceiverRegistered) {
+        if (mIsConnectivityChangeReceiverRegistered) {
             unregisterReceiver(connectivityChangeReceiver);
-            isConnectivityChangeReceiverRegistered = false;
+            mIsConnectivityChangeReceiverRegistered = false;
         }
     }
 
