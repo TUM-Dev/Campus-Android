@@ -4,7 +4,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.support.v4.app.NotificationCompat
 import com.squareup.picasso.Picasso
-import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import java.io.IOException
@@ -31,7 +32,6 @@ class NewsNotificationsProvider(context: Context,
                     .setContentText(newsItem.title)
                     .setContentInfo(newsSource.title)
                     .setTicker(newsItem.title)
-                    .setSmallIcon(R.drawable.ic_notification)
 
             try {
                 if (newsItem.image.isNotEmpty()) {
@@ -45,7 +45,7 @@ class NewsNotificationsProvider(context: Context,
             } catch (e: IOException) {}
 
             val notification = notificationBuilder.build()
-            InstantNotification(notification)
+            InstantNotification(AppNotification.NEWS_ID, notification)
         }
     }
 

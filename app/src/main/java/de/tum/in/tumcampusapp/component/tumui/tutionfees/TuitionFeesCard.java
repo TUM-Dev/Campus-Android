@@ -1,13 +1,9 @@
 package de.tum.in.tumcampusapp.component.tumui.tutionfees;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +23,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.DateUtils;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Card that shows information about your fees that have to be paid or have been paid
@@ -108,6 +103,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
                (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
     }
 
+    /*
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         if ("0".equals(mTuition.getSoll())) {
@@ -122,6 +118,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();
     }
+    */
 
     @Override
     public Intent getIntent() {

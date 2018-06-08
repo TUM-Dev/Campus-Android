@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.Tuition
 import de.tum.`in`.tumcampusapp.utils.Utils
 import java.util.*
@@ -31,7 +33,7 @@ class TuitionFeesNotificationsProvider(context: Context,
         val notification = notificationBuilder.build()
 
         // TODO: Schedule notifications for 1 month, 2 weeks, 1 week, 3 days
-        val futureNotification = InstantNotification(notification)
+        val futureNotification = InstantNotification(AppNotification.TUITION_FEES_ID, notification)
 
         val intent = tuition.getIntent(context)
         if (intent != null) {

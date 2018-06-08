@@ -12,6 +12,7 @@ abstract class NotificationsProvider(protected val context: Context) {
             NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                     .setAutoCancel(true)
                     .setSmallIcon(R.drawable.ic_notification)
+                    .setWhen(System.currentTimeMillis())
 
     abstract fun getNotifications(): List<AppNotification>
 

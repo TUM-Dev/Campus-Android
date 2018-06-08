@@ -1,16 +1,11 @@
 package de.tum.in.tumcampusapp.component.ui.transportation;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +18,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.StationResult;
-import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_MVV;
 
@@ -33,7 +26,7 @@ import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_MVV;
  */
 public class MVVCard extends NotificationAwareCard {
     private static final String MVV_TIME = "mvv_time";
-    private Pair<String, String> mStationNameIDPair;
+    private StationResult mStation;
     private List<Departure> mDepartures;
 
     MVVCard(Context context) {
@@ -48,7 +41,7 @@ public class MVVCard extends NotificationAwareCard {
 
     @Override
     public String getTitle() {
-        return mStationNameIDPair.first;
+        return mStation.getStation();
     }
 
     @Override
@@ -57,7 +50,7 @@ public class MVVCard extends NotificationAwareCard {
         setMCard(viewHolder.itemView);
         setMLinearLayout(getMCard().findViewById(R.id.card_view));
         setMTitleView(getMCard().findViewById(R.id.card_title));
-        getMTitleView().setText(mStationNameIDPair.first);
+        getMTitleView().setText(mStation.getStation());
         getMCard().findViewById(R.id.place_holder)
                   .setVisibility(View.VISIBLE);
 
@@ -90,7 +83,7 @@ public class MVVCard extends NotificationAwareCard {
         if (mDepartures.isEmpty()) {
             return null;
         } else {
-            return mDepartures.get(0).getIntent(getContext(), mStationNameIDPair);
+            return mDepartures.get(0).getIntent(getContext(), mStation);
         }
     }
 
@@ -105,6 +98,7 @@ public class MVVCard extends NotificationAwareCard {
         return prevDate + DateUtils.HOUR_IN_MILLIS < System.currentTimeMillis();
     }
 
+    /*
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
@@ -133,13 +127,10 @@ public class MVVCard extends NotificationAwareCard {
         return morePageNotification.extend(notificationBuilder)
                                    .build();
     }
-
-    public void setStation(Pair<String, String> stationNameIDPair) {
-        this.mStationNameIDPair = stationNameIDPair;
-    }
+    */
 
     public void setStation(StationResult station) {
-        setStation(new Pair<>(station.getStation(), station.getId()));
+        this.mStation = station;
     }
 
     public void setDepartures(List<Departure> departures) {
@@ -153,4 +144,5 @@ public class MVVCard extends NotificationAwareCard {
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_mvv);
         return remoteViews;
     }
+
 }

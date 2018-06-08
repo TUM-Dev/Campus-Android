@@ -5,14 +5,17 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
+import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 
 class TransportNotificationsProvider(
         context: Context,
         private val departures: List<Departure>,
-        private val stationNameId: Pair<String, String>) : NotificationsProvider(context) {
+        private val station: StationResult) : NotificationsProvider(context) {
 
     override fun getNotifications(): List<AppNotification> {
         val firstDeparture = departures.firstOrNull() ?: return emptyList()
@@ -44,18 +47,18 @@ class TransportNotificationsProvider(
         val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.wear_mvv)
         morePageNotification.background = bitmap
 
-        val intent = firstDeparture.getIntent(context, stationNameId)
+        val intent = firstDeparture.getIntent(context, station)
         if (intent != null) {
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
             notificationBuilder.setContentIntent(pendingIntent)
         }
 
-        val notification = morePageNotification
-                .extend(notificationBuilder)
+        val notification = notificationBuilder
+                .extend(morePageNotification)
                 .build()
 
         return ArrayList<AppNotification>().apply {
-            add(InstantNotification(notification))
+            add(InstantNotification(AppNotification.TRANSPORT_ID, notification))
         }
     }
 

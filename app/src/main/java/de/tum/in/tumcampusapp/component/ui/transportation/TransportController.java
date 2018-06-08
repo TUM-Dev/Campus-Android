@@ -23,8 +23,10 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.other.notifications.AppNotification;
+import de.tum.in.tumcampusapp.component.other.notifications.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
+import de.tum.in.tumcampusapp.component.other.notifications.TransportNotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotification;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
@@ -352,8 +354,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
         }
 
         // Get station for current campus
-        LocationManager locMan = new LocationManager(mContext);
-        StationResult station = locMan.getStation();
+        StationResult station = getClosestStation();
         if (station == null) {
             return results;
         }
@@ -370,10 +371,16 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
     @NotNull
     @Override
     public List<AppNotification> getNotifications() {
-        // TODO: This needs more serious refactoring (mStationNameIdPair in MVVCard)
-        return new ArrayList<>();
-        //NotificationsProvider provider = new TransportNotificationsProvider(mContext, departures, stationNameId);
-        //return provider.getNotifications();
+        StationResult station = getClosestStation();
+        List<Departure> departures = getDeparturesFromExternal(mContext, station.getId());
+
+        NotificationsProvider provider = new TransportNotificationsProvider(mContext, departures, station);
+        return provider.getNotifications();
+    }
+
+    private StationResult getClosestStation() {
+        LocationManager locMan = new LocationManager(mContext);
+        return locMan.getStation();
     }
 
     public static List<StationResult> getRecentStations(List<Recent> recents) {

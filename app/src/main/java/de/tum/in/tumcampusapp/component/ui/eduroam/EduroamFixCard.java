@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.eduroam;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +8,6 @@ import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,11 +79,6 @@ public class EduroamFixCard extends NotificationAwareCard {
         prefs.edit()
              .putBoolean("card_eduroam_fix_start", false)
              .apply();
-    }
-
-    @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        return null;
     }
 
     @Override

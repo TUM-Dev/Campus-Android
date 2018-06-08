@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.component.ui.chat
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
@@ -105,7 +104,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
     override fun discard(editor: Editor) = chatMessageDao.markAsRead(mRoomId)
 
-    override fun shouldShowNotification(prefs: SharedPreferences) = true
+    //override fun shouldShowNotification(prefs: SharedPreferences) = true
 
     override fun getRemoteViews(context: Context, appWidgetId: Int) = RemoteViews(context.packageName, R.layout.cards_widget_card).apply {
         setTextViewText(R.id.widgetCardTextView, title)

@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.utils.DateUtils
 
@@ -26,7 +28,7 @@ class CalendarNotificationsProvider(context: Context,
         val notification = notificationBuilder.build()
 
         return ArrayList<AppNotification>().apply {
-            add(InstantNotification(notification))
+            add(InstantNotification(AppNotification.CALENDAR_ID, notification))
         }
     }
 

@@ -1,28 +1,22 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
-import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -83,22 +77,29 @@ public class NewsCard extends NotificationAwareCard {
         newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
     }
 
+    // TODO
+    /*
     @Override
     protected void discardNotification(SharedPreferences.Editor editor) {
         NewsController newsController = new NewsController(getContext());
         newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 2);
     }
+    */
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         return (mNews.getDismissed() & 1) == 0;
     }
 
+    // TODO
+    /*
     @Override
     protected boolean shouldShowNotification(SharedPreferences prefs) {
         return (mNews.getDismissed() & 2) == 0;
     }
+    */
 
+    /*
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         NewsSourcesDao newsSourcesDao = TcaDb.getInstance(getContext()).newsSourcesDao();
@@ -118,6 +119,7 @@ public class NewsCard extends NotificationAwareCard {
         }
         return notificationBuilder.build();
     }
+    */
 
     @Override
     public Intent getIntent() {

@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotification;
+import de.tum.in.tumcampusapp.component.other.notifications.model.InstantNotification;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
@@ -98,11 +100,19 @@ public class CafeteriaNotificationsProvider extends NotificationsProvider {
 
         Date date = DateUtils.getDate(mCafeteria.getNextMenuDate());
 
+        NotificationCompat.Builder notificationBuilder = getNotificationBuilder();
+        notificationBuilder
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(allContent))
+                .setContentText(firstContent)
+                .setWhen(date.getTime());
+
+        /*
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(getContext(), Const.NOTIFICATION_CHANNEL_CAFETERIA)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(allContent))
                         .setContentText(firstContent)
                         .setWhen(date.getTime());
+        */
 
         Intent intent = mCafeteria.getIntent(getContext());
         if (intent != null) {
@@ -114,7 +124,7 @@ public class CafeteriaNotificationsProvider extends NotificationsProvider {
         Notification notification = notificationBuilder.build();
 
         List<AppNotification> results = new ArrayList<>();
-        results.add(new InstantNotification(notification));
+        results.add(new InstantNotification(AppNotification.CAFETERIA_ID, notification));
         return results;
     }
 

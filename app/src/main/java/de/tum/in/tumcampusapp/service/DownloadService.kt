@@ -204,26 +204,27 @@ class DownloadService : JobIntentService() {
 
             // Get and display notifications
             val notificationProviders = ArrayList<ProvidesNotifications>().apply {
-                add(CafeteriaManager(service.baseContext))
-                add(CalendarController(service.baseContext))
-                add(NewsController(service.baseContext))
-                add(TransportController(service.baseContext))
-                add(TuitionFeeManager(service.baseContext))
+                add(CafeteriaManager(service))
+                add(CalendarController(service))
+                add(NewsController(service))
+                add(TransportController(service))
+                add(TuitionFeeManager(service))
             }
 
-            val notifications = notificationProviders
-                    .flatMap { provider -> provider.getNotifications() }
+            val notifications = notificationProviders.flatMap { it.getNotifications() }
 
             // Show instant notifications now
             notifications
                     .filter { it is InstantNotification }
-                    .forEach { NotificationPresenter.show(service.baseContext, it) }
+                    .forEach {
+                        NotificationPresenter.show(service, it)
+                    }
 
             // Schedule future notifications
             notifications
                     .map { it as? FutureNotification }
                     .filterNotNull()
-                    .forEach { NotificationScheduler.schedule(service.baseContext, it) }
+                    .forEach { NotificationScheduler.schedule(service, it) }
 
 
             // Update the last run time saved in shared prefs

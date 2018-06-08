@@ -1,13 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,18 +14,14 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
-import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment.showMenu;
 import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_CAFETERIA;
@@ -139,6 +131,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         return prevDate < mDate.getTime();
     }
 
+    /*
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(getContext());
@@ -196,6 +189,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         return morePageNotification.extend(notificationBuilder)
                                    .build();
     }
+    */
 
     @Override
     public RemoteViews getRemoteViews(Context context, int appWidgetId) {

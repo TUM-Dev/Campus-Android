@@ -1,15 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview.card
 
-import android.app.Notification
-import android.app.PendingIntent
 import android.content.Context
-import android.content.SharedPreferences
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
-
-import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_PHONE
 
 abstract class NotificationAwareCard : Card {
 
@@ -28,13 +19,17 @@ abstract class NotificationAwareCard : Card {
      *
      * @return returns true if the card should be shown
      */
+    // TODO: Move somewhere else
+    /*
     protected open fun shouldShowNotification(prefs: SharedPreferences): Boolean {
         return shouldShow(prefs)
     }
+    */
 
     /**
      * Shows the card as notification if settingsPrefix allow it
      */
+    /*
     private fun notifyUser() {
         // Start building our notification
         val notificationBuilder = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
@@ -64,41 +59,52 @@ abstract class NotificationAwareCard : Card {
             discardNotification()
         }
     }
+    */
 
     /**
      * Should fill the given notification builder with content
      */
+    /*
     protected open fun fillNotification(notificationBuilder: NotificationCompat.Builder): Notification? {
         return notificationBuilder.build()
     }
+    */
 
+    /*
     override fun getIfShowOnStart(): Card? {
         return super.getIfShowOnStart().also {
             if (mShowPhone) {
                 val prefs = context.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0)
                 if (shouldShowNotification(prefs)) {
-                    notifyUser()
+                    //notifyUser()
                 }
             }
         }
     }
+    */
 
     /**
      * Should be called if the notification has been dismissed
      */
+    // TODO: Consider user settings for scheduling notifications
+    /*
     protected fun discardNotification() {
         val prefs = context.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0)
         val editor = prefs.edit()
         discardNotification(editor)
         editor.apply()
     }
+    */
 
     /**
      * Save information about the dismissed notification to don't shown again the notification
      *
      * @param editor Editor to be used for saving values
      */
+    /*
     protected open fun discardNotification(editor: SharedPreferences.Editor) {
         discard(editor)
     }
+    */
+
 }

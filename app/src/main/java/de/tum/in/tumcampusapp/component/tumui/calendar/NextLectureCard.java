@@ -1,14 +1,10 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
-import android.app.Notification;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -150,6 +146,7 @@ public class NextLectureCard extends NotificationAwareCard {
         return 0;
     }
 
+    /*
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         CardCalendarItem item = lectures.get(0);
@@ -160,6 +157,7 @@ public class NextLectureCard extends NotificationAwareCard {
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();
     }
+    */
 
     public void setLectures(List<CalendarItem> calendarItems) {
         for (CalendarItem calendarItem : calendarItems) {
