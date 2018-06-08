@@ -23,6 +23,8 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.other.notifications.AppNotification;
+import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
@@ -39,7 +41,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Transport Manager, handles querying data from mvv and card creation
  */
 @SuppressWarnings("StringConcatenationMissingWhitespace")
-public class TransportController implements ProvidesCard {
+public class TransportController implements ProvidesCard, ProvidesNotifications {
 
     /*  Documentation for using efa.mvv-muenchen.de
      *
@@ -365,6 +367,15 @@ public class TransportController implements ProvidesCard {
         return results;
     }
 
+    @NotNull
+    @Override
+    public List<AppNotification> getNotifications() {
+        // TODO: This needs more serious refactoring (mStationNameIdPair in MVVCard)
+        return new ArrayList<>();
+        //NotificationsProvider provider = new TransportNotificationsProvider(mContext, departures, stationNameId);
+        //return provider.getNotifications();
+    }
+
     public static List<StationResult> getRecentStations(List<Recent> recents) {
         List<StationResult> stationResults = new ArrayList<>(recents.size());
         for (Recent r : recents) {
@@ -376,4 +387,5 @@ public class TransportController implements ProvidesCard {
         }
         return stationResults;
     }
+
 }

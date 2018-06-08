@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -41,7 +42,7 @@ public class NextLectureCard extends NotificationAwareCard {
             R.id.lecture_4
     };
     private TextView mLocation;
-    private final List<CalendarItem> lectures = new ArrayList<>();
+    private final List<CardCalendarItem> lectures = new ArrayList<>();
     private TextView mTimeView;
     private int mSelected;
     private TextView mEvent;
@@ -95,7 +96,7 @@ public class NextLectureCard extends NotificationAwareCard {
                       .setSelected(i == sel);
         }
 
-        final CalendarItem item = lectures.get(sel);
+        final CardCalendarItem item = lectures.get(sel);
 
         // Set current title
         getMTitleView().setText(getTitle());
@@ -120,7 +121,7 @@ public class NextLectureCard extends NotificationAwareCard {
         mEvent.setText(String.format("%s%s - %s", week.format(item.start), df.format(item.start), df.format(item.end)));
         mEvent.setOnClickListener(view -> {
             Intent i = new Intent(getContext(), CalendarActivity.class);
-            CalendarItem item1 = lectures.get(mSelected);
+            CardCalendarItem item1 = lectures.get(mSelected);
             i.putExtra(CalendarActivity.EVENT_TIME, item1.start.getTime());
             getContext().startActivity(i);
         });
@@ -128,13 +129,13 @@ public class NextLectureCard extends NotificationAwareCard {
 
     @Override
     protected void discard(Editor editor) {
-        CalendarItem item = lectures.get(lectures.size() - 1);
+        CardCalendarItem item = lectures.get(lectures.size() - 1);
         editor.putLong(NEXT_LECTURE_DATE, item.start.getTime());
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
-        CalendarItem item = lectures.get(0);
+        CardCalendarItem item = lectures.get(0);
         long prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0);
         return item.start.getTime() > prevTime;
     }
@@ -151,7 +152,7 @@ public class NextLectureCard extends NotificationAwareCard {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        CalendarItem item = lectures.get(0);
+        CardCalendarItem item = lectures.get(0);
         final String time = DateUtils.getFutureTime(item.start, getContext());
         notificationBuilder.setContentText(item.title + '\n' + time);
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
@@ -160,9 +161,20 @@ public class NextLectureCard extends NotificationAwareCard {
         return notificationBuilder.build();
     }
 
-    public void setLectures(List<de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem> calendarItems) {
-        for (de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem calendarItem : calendarItems) {
-            CalendarItem item = new CalendarItem();
+    public void setLectures(List<CalendarItem> calendarItems) {
+        for (CalendarItem calendarItem : calendarItems) {
+            lectures.add(CardCalendarItem.fromCalendarItem(calendarItem));
+        }
+    }
+
+    public static class CardCalendarItem {
+        public String title;
+        public Date start;
+        public Date end;
+        public String location;
+
+        public static CardCalendarItem fromCalendarItem(CalendarItem calendarItem) {
+            CardCalendarItem item = new CardCalendarItem();
             item.start = DateUtils.getDateTime(calendarItem.getDtstart());
             item.end = DateUtils.getDateTime(calendarItem.getDtend());
 
@@ -171,15 +183,8 @@ public class NextLectureCard extends NotificationAwareCard {
 
             // Handle location
             item.location = calendarItem.getEventLocation();
-            lectures.add(item);
+            return item;
         }
-    }
-
-    public static class CalendarItem {
-        public String title;
-        public Date start;
-        public Date end;
-        public String location;
     }
 
     @Override

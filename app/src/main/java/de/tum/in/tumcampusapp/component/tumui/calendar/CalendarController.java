@@ -25,6 +25,10 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
+import de.tum.in.tumcampusapp.component.other.notifications.AppNotification;
+import de.tum.in.tumcampusapp.component.other.notifications.CalendarNotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRow;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
@@ -41,7 +45,8 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 /**
  * Calendar Manager, handles database stuff, external imports.
  */
-public class CalendarController implements ProvidesCard {
+public class CalendarController implements ProvidesCard, ProvidesNotifications {
+
     private static final String[] PROJECTION = {"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
@@ -268,6 +273,14 @@ public class CalendarController implements ProvidesCard {
         }
 
         return results;
+    }
+
+    @NotNull
+    @Override
+    public List<AppNotification> getNotifications() {
+        List<CalendarItem> nextCalendarItems = getNextCalendarItems();
+        NotificationsProvider provider = new CalendarNotificationsProvider(mContext, nextCalendarItems);
+        return provider.getNotifications();
     }
 
     public static class QueryLocationsService extends IntentService {

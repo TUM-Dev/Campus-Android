@@ -7,9 +7,10 @@ import de.tum.`in`.tumcampusapp.utils.Const
 
 abstract class NotificationsProvider(protected val context: Context) {
 
-    val notificationBuilder = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
-            .setAutoCancel(true)
-            .setSmallIcon(R.drawable.ic_notification)
+    protected val notificationBuilder: NotificationCompat.Builder =
+            NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+                    .setAutoCancel(true)
+                    .setSmallIcon(R.drawable.ic_notification)
 
     abstract fun getNotifications(): List<AppNotification>
 

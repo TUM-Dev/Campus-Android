@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 import android.content.Context;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +14,10 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.other.notifications.AppNotification;
+import de.tum.in.tumcampusapp.component.other.notifications.CafeteriaNotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
@@ -29,7 +34,7 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * Cafeteria Manager, handles database stuff, external imports
  */
-public class CafeteriaManager implements ProvidesCard {
+public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
 
     public static final String CAFETERIA_DATE = "cafeteria_date";
     public static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
@@ -60,19 +65,39 @@ public class CafeteriaManager implements ProvidesCard {
     public List<Card> getCards() {
         List<Card> results = new ArrayList<>();
 
-        // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(mContext).getCafeteria();
-        if (cafeteriaId == -1) {
+        CafeteriaWithMenus cafeteria = getCafeteriaWithMenus();
+        if (cafeteria == null) {
             return results;
         }
 
         CafeteriaMenuCard card = new CafeteriaMenuCard(mContext);
-        CafeteriaWithMenus cafeteria = cafeteriaViewModel.getCafeteriaWithMenus(cafeteriaId);
         card.setCafeteria(cafeteria);
         card.setCardMenus(cafeteria);
 
         results.add(card.getIfShowOnStart());
         return results;
+    }
+
+    @NotNull
+    @Override
+    public List<AppNotification> getNotifications() {
+        CafeteriaWithMenus cafeteria = getCafeteriaWithMenus();
+        if (cafeteria == null) {
+            return new ArrayList<>();
+        }
+
+        NotificationsProvider provider = new CafeteriaNotificationsProvider(mContext, cafeteria);
+        return provider.getNotifications();
+    }
+
+    @Nullable
+    private CafeteriaWithMenus getCafeteriaWithMenus() {
+        // Choose which mensa should be shown
+        int cafeteriaId = new LocationManager(mContext).getCafeteria();
+        if (cafeteriaId == -1) {
+            return null;
+        }
+        return cafeteriaViewModel.getCafeteriaWithMenus(cafeteriaId);
     }
 
     /**

@@ -10,6 +10,10 @@ import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.other.notifications.AppNotification;
+import de.tum.in.tumcampusapp.component.other.notifications.NewsNotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -24,7 +28,7 @@ import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_ONE_DAY;
 /**
  * News Manager, handles database stuff, external imports
  */
-public class NewsController implements ProvidesCard {
+public class NewsController implements ProvidesCard, ProvidesNotifications {
 
     private static final int TIME_TO_SYNC = VALIDITY_ONE_DAY;
     private final Context context;
@@ -149,14 +153,7 @@ public class NewsController implements ProvidesCard {
     @Override
     public List<Card> getCards() {
         List<Card> results = new ArrayList<>();
-        Collection<Integer> sources = getActiveSources(context);
-
-        List<News> news;
-        if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
-            news = newsDao.getBySourcesLatest(sources.toArray(new Integer[sources.size()]));
-        } else {
-            news = newsDao.getBySources(sources.toArray(new Integer[sources.size()]));
-        }
+        List<News> news = getNews();
 
         //Display resulting cards
         for (News n : news) {
@@ -173,4 +170,21 @@ public class NewsController implements ProvidesCard {
 
         return results;
     }
+
+    @NotNull
+    @Override
+    public List<AppNotification> getNotifications() {
+        NotificationsProvider provider = new NewsNotificationsProvider(context, getNews());
+        return provider.getNotifications();
+    }
+
+    private List<News> getNews() {
+        Collection<Integer> sources = getActiveSources(context);
+        if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
+            return newsDao.getBySourcesLatest(sources.toArray(new Integer[sources.size()]));
+        } else {
+            return newsDao.getBySources(sources.toArray(new Integer[sources.size()]));
+        }
+    }
+
 }
