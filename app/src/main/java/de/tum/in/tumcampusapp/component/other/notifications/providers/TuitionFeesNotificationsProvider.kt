@@ -2,10 +2,12 @@ package de.tum.`in`.tumcampusapp.component.other.notifications.providers
 
 import android.app.PendingIntent
 import android.content.Context
+import android.graphics.Color
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.schedulers.TuitionNotificationScheduler
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.Tuition
 import de.tum.`in`.tumcampusapp.utils.Const
 import java.util.*
@@ -16,6 +18,7 @@ class TuitionFeesNotificationsProvider(
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setSmallIcon(R.drawable.ic_notification)
+                .setShowWhen(false)
     }
 
     override fun getNotifications(): List<AppNotification> {
@@ -30,12 +33,19 @@ class TuitionFeesNotificationsProvider(
                 .setContentTitle(title)
                 .setContentText(text)
 
-        // TODO: If deadline is close, turn it red
+        val buffer = TuitionNotificationScheduler.getDaysBuffer(tuition)
+        if (buffer.days <= 4) {
+            // The deadline is less than a week away
+            notificationBuilder.setColorized(true)
+            notificationBuilder.color = Color.RED  // TODO: Test color
+        }
 
         val notification = notificationBuilder.build()
 
-        // TODO: Intelligently schedule notifications for 1 month, 2 weeks, 1 week, 3 days
-        val futureNotification = InstantNotification(AppNotification.TUITION_FEES_ID, notification)
+        // Schedule notification based on the remaining buffer until the deadline
+        val notificationTime = TuitionNotificationScheduler.getNextNotificationTime(tuition)
+        val futureNotification = FutureNotification(
+                AppNotification.TUITION_FEES_ID, notification, notificationTime)
 
         val intent = tuition.getIntent(context)
         if (intent != null) {

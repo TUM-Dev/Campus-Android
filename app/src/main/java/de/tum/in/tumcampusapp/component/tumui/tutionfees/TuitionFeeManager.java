@@ -58,7 +58,7 @@ public class TuitionFeeManager implements ProvidesCard, ProvidesNotifications {
     }
 
     @Nullable
-    private Tuition loadTuition() {
+    public Tuition loadTuition() {
         TUMOnlineRequest<TuitionList> requestHandler =
                 new TUMOnlineRequest<>(TUMOnlineConst.TUITION_FEE_STATUS, mContext, true);
 

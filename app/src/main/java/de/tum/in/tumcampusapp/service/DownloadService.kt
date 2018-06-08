@@ -7,7 +7,7 @@ import android.support.v4.content.LocalBroadcastManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.other.notifications.NotificationPresenter
-import de.tum.`in`.tumcampusapp.component.other.notifications.NotificationScheduler
+import de.tum.`in`.tumcampusapp.component.other.notifications.schedulers.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.other.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
@@ -17,7 +17,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location.Companion.fromCSVRow
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel

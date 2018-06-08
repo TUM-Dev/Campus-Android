@@ -1,10 +1,11 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications
+package de.tum.`in`.tumcampusapp.component.other.notifications.schedulers
 
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.receivers.NotificationReceiver
 
 object NotificationScheduler {
 

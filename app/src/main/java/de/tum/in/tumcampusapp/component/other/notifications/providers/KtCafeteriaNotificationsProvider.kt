@@ -5,7 +5,7 @@ import android.content.Context
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -39,6 +39,10 @@ class KtCafeteriaNotificationsProvider(
         val menus = cafeteria.menus.filter { it.menuType != MenuType.SIDE_DISH }
         val intent = cafeteria.getIntent(context)
 
+        val notificationTime = cafeteria.notificationTime
+
+        // TODO: How to reliably remove old notifications of single dish?
+
         val notifications = menus
                 .map { menu ->
                     val title = menu.notificationTitle
@@ -67,7 +71,7 @@ class KtCafeteriaNotificationsProvider(
                 }
                 .mapIndexed { index, notification ->
                     val menuId = menus[index].id
-                    InstantNotification(menuId, notification)
+                    FutureNotification(menuId, notification, notificationTime)
                 }
                 .toCollection(ArrayList())
 
@@ -93,7 +97,8 @@ class KtCafeteriaNotificationsProvider(
         // This is the summary notification of all news. While individual notifications have their
         // own IDs (newsItem.id), it is important that this summary notification always uses
         // AppNotification.NEWS_ID in order to work reliably.
-        val summaryAppNotification = InstantNotification(AppNotification.CAFETERIA_ID, summaryNotification)
+        val summaryAppNotification = FutureNotification(
+                AppNotification.CAFETERIA_ID, summaryNotification, notificationTime)
         notifications.add(summaryAppNotification)
 
         return notifications
