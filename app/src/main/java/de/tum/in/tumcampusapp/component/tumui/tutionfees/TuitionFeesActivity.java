@@ -15,6 +15,7 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
+import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 
@@ -52,16 +53,10 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
      */
     @Override
     public void onFetch(TuitionList tuitionList) {
-        String amount = tuitionList.getTuitions().get(0).getSoll();
-        float floatAmount = 0f;
+        Tuition tuition = tuitionList.getTuitions().get(0);
 
-        try {
-            String dotSeparatedAmount = amount.replace(",", ".");
-            floatAmount = Float.parseFloat(dotSeparatedAmount);
-        } catch (NumberFormatException ignored) {}
-
-        String amountText = String.format(Locale.getDefault(), "%.2f", floatAmount);
-        amountTextView.setText(String.format("%s €", amountText));
+        String amountText = tuition.getOutstandingBalanceText();
+        amountTextView.setText(amountText);
 
         Date deadline = DateUtils.getDate(tuitionList.getTuitions()
                                                  .get(0)
@@ -73,7 +68,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
                                             .getSemesterBez()
                                             .toUpperCase(Locale.getDefault()));
 
-        if (floatAmount == 0) {
+        if (tuition.getOutstandingBalance() == 0) {
             amountTextView.setTextColor(getResources().getColor(R.color.sections_green));
         } else {
             // check if the deadline is less than a week from now

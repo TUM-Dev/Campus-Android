@@ -9,7 +9,6 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
 
 @Dao
 public interface KinoDao {
@@ -27,7 +26,7 @@ public interface KinoDao {
     Flowable<List<Kino>> getAll();
 
     @Query("SELECT id FROM kino ORDER BY id DESC LIMIT 1")
-    Maybe<String> getLastId();
+    String getLatestId();
 
     @Query("SELECT count(*) FROM kino WHERE date < :date")
     int getPosition(String date);

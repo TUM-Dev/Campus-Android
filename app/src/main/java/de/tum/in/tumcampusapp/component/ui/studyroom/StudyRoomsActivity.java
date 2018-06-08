@@ -78,19 +78,27 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         SpinnerAdapter adapterCafeterias =
                 new ArrayAdapter<StudyRoomGroup>(this, R.layout.simple_spinner_item_actionbar,
                                                  android.R.id.text1, mStudyRoomGroupList) {
+                    final LayoutInflater inflater = LayoutInflater.from(getContext());
+
                     @Override
                     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                        View v = LayoutInflater.from(parent.getContext())
-                                               .inflate(R.layout.simple_spinner_dropdown_item_actionbar,
-                                                        parent, false);
+                        View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar,
+                                                  parent, false);
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
-                        TextView name = v.findViewById(android.R.id.text1); // Set name
-                        TextView details = v.findViewById(android.R.id.text2); // Set detail
+                        TextView nameTextView = v.findViewById(android.R.id.text1);
+                        TextView detailsTextView = v.findViewById(android.R.id.text2);
 
                         if (studyRoomGroup != null) {
-                            name.setText(studyRoomGroup.getName());
-                            details.setText(studyRoomGroup.getDetails());
+                            String name = studyRoomGroup.getName();
+                            String details = studyRoomGroup.getDetails();
+
+                            nameTextView.setText(name);
+                            detailsTextView.setText(details);
+
+                            if (details.isEmpty()) {
+                                detailsTextView.setVisibility(View.GONE);
+                            }
                         }
 
                         return v;

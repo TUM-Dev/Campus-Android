@@ -20,6 +20,10 @@
         <item name="android:textCursorDrawable">@drawable/cursor_text_field</item>
     </style>
 
+    <style name="AppTheme.SettingsTheme" parent="AppTheme">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
+
     <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>

@@ -156,7 +156,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == JOIN_ROOM_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             String name = data.getStringExtra("name");
             if (name.charAt(3) == ':') {
                 createOrJoinChatRoom(name);
@@ -202,12 +202,12 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
      * Works asynchronously.
      */
     private void createOrJoinChatRoom(String name) {
+        Utils.logv("create or join chat room " + name);
         if (this.currentChatMember == null) {
             Utils.showToast(this, getString(R.string.chat_not_setup));
             return;
         }
 
-        Utils.logv("create or join chat room " + name);
         currentChatRoom = new ChatRoom(name);
 
         ChatVerification verification;

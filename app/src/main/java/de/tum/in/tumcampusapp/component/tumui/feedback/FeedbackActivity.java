@@ -462,7 +462,7 @@ public class FeedbackActivity extends BaseActivity {
                 try {
                     destination = createImageFile();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Utils.log(e);
                 }
                 rescaleBitmap(data.getData(), destination);
 
@@ -494,7 +494,7 @@ public class FeedbackActivity extends BaseActivity {
             fileOut.close();
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Utils.log(e);
         }
     }
 
@@ -531,8 +531,8 @@ public class FeedbackActivity extends BaseActivity {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException e) {
+                Utils.log(e);
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {

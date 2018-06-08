@@ -6,12 +6,10 @@ import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepositor
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable
-import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 
 /**
  * ViewModel for kinos.
@@ -37,12 +35,6 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
 
-    fun getLastId(): Maybe<String> =
-            KinoLocalRepository.getLastId()
-                    .defaultIfEmpty("")
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-
     /**
      * Downloads kinos and stores them in the local repository.
      *
@@ -53,31 +45,23 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
      *
      */
     fun getKinosFromService(force: Boolean): Boolean =
-            compositeDisposable.add(Observable.just("")
-                    .filter { localRepository.getLastSync() == null || force }
-                    .subscribeOn(Schedulers.computation())
-                    .doOnNext { localRepository.clear() }
-                    .flatMap { remoteRepository.getAllKinos(getLastId().blockingGet()) }.observeOn(Schedulers.io())
-                    .doAfterNext { localRepository.updateLastSync() }
-                    .doOnError { Utils.log(it) }
-                    .map { transformKino(it) }
-                    .subscribe({ it.forEach {
-                        if(isMovieInFuture(it))
-                            localRepository.addKino(it)
-                    } })
+            compositeDisposable.add(
+                    Observable
+                            .create<List<Kino>> {
+                                val latestId = KinoLocalRepository.getLatestId()
+                                remoteRepository.getAllKinos(latestId)
+                            }
+                            .filter { localRepository.getLastSync() == null || force }
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnNext { localRepository.clear() }
+                            .doAfterNext { localRepository.updateLastSync() }
+                            .doOnError { Utils.log(it) }
+                            .flatMapIterable { it }
+                            .filter { it.isFutureMovie() }
+                            .subscribe { localRepository.addKino(it) }
             )
 
-    private fun isMovieInFuture(kino: Kino): Boolean = Date().before(kino.date)
-
     fun getPosition(date: String) = localRepository.getPosition(date)
-
-    /**
-     * Sets fields that might be null to prevent excpetions when inserting a kino object into the database
-     */
-    private fun transformKino(kinos: List<Kino>): List<Kino> =
-            kinos.map {
-                it.trailer ?: ""
-                it
-            }
 
 }

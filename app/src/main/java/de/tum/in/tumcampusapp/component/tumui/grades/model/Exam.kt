@@ -1,5 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades.model
 
+import android.content.Context
+import android.support.v4.content.ContextCompat
+import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
@@ -41,4 +44,29 @@ data class Exam(@field:Element(name = "lv_titel")
                 headerId.compareTo(other.headerId) * (-1)
             }
 
+    fun getGradeColor(c: Context) = GRADE_COLOR.getOrDefault(grade, R.color.grade_default).let {
+        ContextCompat.getColor(c, it)
+    }
+
+    companion object {
+        private val GRADE_COLOR = mapOf(
+                "1,0" to R.color.grade_1_0,
+                "1,3" to R.color.grade_1_3,
+                "1,4" to R.color.grade_1_3,
+                "1,7" to R.color.grade_1_7,
+                "2,0" to R.color.grade_2_0,
+                "2,3" to R.color.grade_2_3,
+                "2,4" to R.color.grade_2_3,
+                "2,7" to R.color.grade_2_7,
+                "3,0" to R.color.grade_3_0,
+                "3,3" to R.color.grade_3_3,
+                "3,4" to R.color.grade_3_3,
+                "3,7" to R.color.grade_3_7,
+                "4,0" to R.color.grade_4_0,
+                "4,3" to R.color.grade_4_3,
+                "4,4" to R.color.grade_4_3,
+                "4,7" to R.color.grade_4_7,
+                "5,0" to R.color.grade_5_0
+        )
+    }
 }
