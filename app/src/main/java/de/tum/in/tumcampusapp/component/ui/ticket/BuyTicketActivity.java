@@ -22,12 +22,12 @@ public class BuyTicketActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TextView eventView = (TextView) findViewById(R.id.ticket_details_event);
-        TextView locationView = (TextView) findViewById(R.id.ticket_details_location);
-        TextView dateView = (TextView) findViewById(R.id.ticket_details_date);
-        TextView priceView = (TextView) findViewById(R.id.ticket_details_price);
-        TextView ticketTypeView = (TextView) findViewById(R.id.ticket_details_ticket_type);
-        Button paymentButton = (Button) findViewById(R.id.paymentbutton);
+        TextView eventView = findViewById(R.id.ticket_details_event);
+        TextView locationView = findViewById(R.id.ticket_details_location);
+        TextView dateView = findViewById(R.id.ticket_details_date);
+        TextView priceView = findViewById(R.id.ticket_details_price);
+        TextView ticketTypeView = findViewById(R.id.ticket_details_ticket_type);
+        Button paymentButton = findViewById(R.id.paymentbutton);
 
         // TODO: Get data from Api backend, now it is mock up data
         Ticket ticket = TicketsController.getTickets();
