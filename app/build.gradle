@@ -39,7 +39,7 @@ android {
         checkAllWarnings true
         htmlReport false
         abortOnError false
-        lintConfig new File("lint.xml")
+        lintConfig new File("gradle/config/lint.xml")
         disable 'GoogleAppIndexingWarning',
                 'TrulyRandom',
                 'ContentDescription',
