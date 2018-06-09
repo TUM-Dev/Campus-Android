@@ -2,12 +2,14 @@ package de.tum.in.tumcampusapp.component.tumui.grades;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.LayoutTransition;
 import android.graphics.drawable.Animatable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -304,14 +306,22 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      */
     private void toggleChartVisibility() {
 
+        ViewGroup layout = findViewById(R.id.grades_layout);
+        View charts = findViewById(R.id.charts);
+        LayoutTransition transition = new LayoutTransition();
+
         int arrow;
         if(chartView.getVisibility() == View.GONE){
             // make charts visible
             chartView.setVisibility(View.VISIBLE);
+            transition.addChild(layout, charts);
+
             arrow = R.drawable.ic_arrow_anim_up;
         } else {
             // hide charts
             chartView.setVisibility(View.GONE);
+            transition.removeChild(layout, charts);
+
             arrow = R.drawable.ic_arrow_anim_down;
         }
 
