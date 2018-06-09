@@ -33,7 +33,6 @@ import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
-import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.SilenceService;
@@ -146,11 +145,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             listPreference.setSummary(entry);
         }
 
-        //Refresh the cards after a change has been made to them
-        if (key.startsWith("card_")) {
-            CardManager.setShouldRefresh();
-        }
-
         // When newspread selection changes
         // deselect all newspread sources and select only the
         // selected source if one of all was selected before
@@ -166,7 +160,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             String newSource = sharedPreferences.getString(key, "7");
             e.putBoolean("card_news_source_" + newSource, value);
             e.apply();
-            CardManager.setShouldRefresh();
         }
 
         // If the silent mode was activated, start the service. This will invoke

@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.google.common.base.Optional;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +24,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -32,6 +35,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  */
 public class ChatRoomController implements ProvidesCard {
 
+    private Context mContext;
     private final ChatRoomDao chatRoomDao;
 
     /**
@@ -40,6 +44,7 @@ public class ChatRoomController implements ProvidesCard {
      * @param context Context
      */
     public ChatRoomController(Context context) {
+        mContext = context;
         TcaDb db = TcaDb.getInstance(context);
         chatRoomDao = db.chatRoomDao();
     }
@@ -135,35 +140,40 @@ public class ChatRoomController implements ProvidesCard {
         chatRoomDao.updateLeftRooms(currentChatRoom.getId(), currentChatRoom.getActualName(), currentChatRoom.getSemester());
     }
 
+    @NotNull
     @Override
-    public void onRequestCard(Context context) {
+    public List<Card> getCards() {
+        List<Card> results = new ArrayList<>();
+
         // Get all of the users lectures and save them as possible chat rooms
         TUMOnlineRequest<LecturesSearchRowSet> requestHandler =
-                new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), context, true);
+                new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext, true);
         Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
         if (lecturesList.isPresent()) {
-            List<LecturesSearchRow> lectures = lecturesList.get()
-                                                           .getLehrveranstaltungen();
+            List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
             this.createLectureRooms(lectures);
         }
 
         // Join all new chat rooms
-        if (Utils.getSettingBool(context, Const.AUTO_JOIN_NEW_ROOMS, false)) {
+        if (Utils.getSettingBool(mContext, Const.AUTO_JOIN_NEW_ROOMS, false)) {
+            TUMCabeClient client = TUMCabeClient.getInstance(mContext);
             List<String> newRooms = this.getNewUnjoined();
-            ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
+            ChatMember currentChatMember = Utils.getSetting(mContext, Const.CHAT_MEMBER, ChatMember.class);
+
             for (String roomId : newRooms) {
                 // Join chat room
                 try {
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
-                    currentChatRoom = TUMCabeClient.getInstance(context)
-                                                   .createRoom(currentChatRoom, ChatVerification.Companion.getChatVerification(context, currentChatMember));
+                    currentChatRoom = client.createRoom(
+                            currentChatRoom,
+                            ChatVerification.Companion.getChatVerification(mContext, currentChatMember));
                     if (currentChatRoom != null) {
                         this.join(currentChatRoom);
                     }
                 } catch (IOException e) {
                     Utils.log(e, " - error occured while creating the room!");
                 } catch (NoPrivateKey noPrivateKey) {
-                    return;
+                    return results;
                 }
             }
         }
@@ -172,10 +182,12 @@ public class ChatRoomController implements ProvidesCard {
         List<ChatRoomDbRow> rooms = chatRoomDao.getUnreadRooms();
         if (!rooms.isEmpty()) {
             for (ChatRoomDbRow room : rooms) {
-                ChatMessagesCard card = new ChatMessagesCard(context, room);
-                card.apply();
+                ChatMessagesCard card = new ChatMessagesCard(mContext, room);
+                results.add(card.getIfShowOnStart());
             }
         }
+
+        return results;
     }
 
     private List<String> getNewUnjoined() {

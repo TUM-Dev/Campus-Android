@@ -5,24 +5,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.ConcurrentSkipListSet;
-
-import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
-import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
-import de.tum.in.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
-import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
-import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamCard;
-import de.tum.in.tumcampusapp.component.ui.eduroam.EduroamFixCard;
-import de.tum.in.tumcampusapp.component.ui.news.NewsController;
-import de.tum.in.tumcampusapp.component.ui.news.TopNewsCard;
-import de.tum.in.tumcampusapp.component.ui.onboarding.LoginPromptCard;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
-import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
-import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -33,6 +15,7 @@ import static de.tum.in.tumcampusapp.utils.Const.DISCARD_SETTINGS_START;
  * Card manager, manages inserting, dismissing, updating and displaying of cards
  */
 public final class CardManager {
+
     public static final String SHOW_SUPPORT = "show_support";
     public static final String SHOW_LOGIN = "show_login";
     public static final String SHOW_TOP_NEWS = "show_top_news";
@@ -54,52 +37,27 @@ public final class CardManager {
     public static final int CARD_LOGIN = 14;
     public static final int CARD_EDUROAM_FIX = 15;
     public static final int CARD_TOP_NEWS = 16;
-    private static boolean shouldRefresh;
-    private static List<Card> cards;
-    private static Collection<Card> newCards = new ConcurrentSkipListSet<>();
-    private static List<OnCardAddedListener> listeners = new ArrayList<>();
+
+    private CardManager() {}
 
     /**
-     * Adds the specified card to the card manager
-     * Should only be used in {@link Card#apply()}
-     *
-     * @param card Card that should be added
+     * Resets dismiss settingsPrefix for all cards
      */
-    public static void addCard(Card card) {
-        if (card.getPosition() == -1) {
-            card.setPosition(newCards.size());
-        }
-        newCards.add(card);
-        cards = new ArrayList<>(newCards);
-        for (OnCardAddedListener onCardAddedListener : listeners) {
-            onCardAddedListener.onCardAdded();
-        }
+    public static void restoreCards(Context context) {
+        context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
+               .edit()
+               .clear()
+               .apply();
+
+        TcaDb.getInstance(context)
+             .newsDao()
+             .restoreAllNews();
+
+        Utils.setSetting(context, SHOW_TOP_NEWS, true);
+        restoreCardPositions(context);
     }
 
-    /**
-     * Gets the number of cards
-     * HINT: For use in {@link CardAdapter}
-     *
-     * @return Card count
-     */
-    public static int getCardCount() {
-        if (cards == null) {
-            return 0;
-        }
-        return cards.size();
-    }
-
-    /**
-     * Gets the card by index
-     * HINT: For use in {@link CardAdapter}
-     *
-     * @return Card
-     */
-    public static Card getCard(int pos) {
-        return cards.get(pos);
-    }
-
-    public static void restorePositions(Context context) {
+    private static void restoreCardPositions(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Editor editor = preferences.edit();
         for (String s : preferences.getAll()
@@ -111,126 +69,4 @@ public final class CardManager {
         editor.apply();
     }
 
-    /**
-     * Refreshes or initialises all cards.
-     * WARNING: Must not be called from UI thread.
-     * <p/>
-     * HOW TO ADD A NEW CARD:
-     * 1. Let the manager class implement {@link ProvidesCard}
-     * 2. Create a new class extending {@link Card}
-     * 3. Implement the getCardView method in this class
-     * 4. Create a new instance of this card in the
-     * {@link ProvidesCard#onRequestCard(Context)} method of the manager
-     * 5. Add this card to the CardManager by calling {@link Card#apply()} from
-     * {@link ProvidesCard#onRequestCard(Context)}
-     * 6. Add an instance of the manager class to the managers list below
-     */
-    public static synchronized void update(Context context) {
-        // Use temporary array to avoid that the main thread is trying to access an empty array
-        newCards.clear();
-        new NoInternetCard(context).apply();
-        new TopNewsCard(context).apply();
-        new LoginPromptCard(context).apply();
-        new SupportCard(context).apply();
-
-        new EduroamCard(context).apply();
-        new EduroamFixCard(context).apply();
-
-        Collection<ProvidesCard> managers = new ArrayList<>();
-
-        // Add those managers only if valid access token is available
-        if (new AccessTokenManager(context).hasValidAccessToken()) {
-            managers.add(new CalendarController(context));
-            managers.add(new TuitionFeeManager());
-            managers.add(new ChatRoomController(context));
-        }
-
-        // Those don't need TUMOnline access
-        managers.add(new CafeteriaManager(context));
-        managers.add(new TransportController(context));
-        managers.add(new NewsController(context));
-
-        for (ProvidesCard manager : managers) {
-            manager.onRequestCard(context);
-        }
-
-        // Always append the restore card at the end of our list
-        new RestoreCard(context).apply();
-
-        shouldRefresh = false;
-    }
-
-    /**
-     * Inserts a card into the list
-     *
-     * @param position Position where the card should be inserted
-     * @param item     Card to be inserted
-     */
-    public static void insert(int position, Card item) {
-        if (position < 0 || position > cards.size()) {
-            return;
-        }
-        cards.add(position, item);
-    }
-
-    /**
-     * Removes card from the list
-     *
-     * @param position Index of the card to delete
-     * @return The removed card object
-     */
-    public static Card remove(int position) {
-        return cards.remove(position);
-    }
-
-    /**
-     * Removes card from the list
-     *
-     * @param card The card to delete
-     * @return the last index of the card
-     */
-    public static int remove(Card card) {
-        int index = cards.indexOf(card);
-        cards.remove(card);
-        return index;
-    }
-
-    public static void registerUpdateListener(OnCardAddedListener listener) {
-        listeners.add(listener);
-    }
-
-    /**
-     * Resets dismiss settingsPrefix for all cards
-     */
-    public static void restoreCards(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0);
-        prefs.edit()
-             .clear()
-             .apply();
-        TcaDb.getInstance(context)
-             .newsDao()
-             .restoreAllNews();
-        Utils.setSetting(context, SHOW_TOP_NEWS, true);
-        restorePositions(context);
-    }
-
-    public static List<Card> getCards() {
-        return cards;
-    }
-
-    public static void setShouldRefresh() {
-        shouldRefresh = true;
-    }
-
-    public static boolean getShouldRefresh() {
-        return shouldRefresh;
-    }
-
-    private CardManager() {
-        // CardManager is a utility class
-    }
-
-    public interface OnCardAddedListener {
-        void onCardAdded();
-    }
 }
