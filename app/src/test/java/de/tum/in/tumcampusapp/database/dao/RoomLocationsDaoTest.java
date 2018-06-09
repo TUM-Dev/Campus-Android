@@ -22,7 +22,7 @@ import de.tum.in.tumcampusapp.utils.DateUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApp.class)
 public class RoomLocationsDaoTest {
     private RoomLocationsDao dao;
     private CalendarDao calendarDao;

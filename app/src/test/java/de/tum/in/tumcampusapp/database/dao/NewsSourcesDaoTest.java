@@ -16,7 +16,7 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApp.class)
 public class NewsSourcesDaoTest {
     private NewsSourcesDao dao;
 

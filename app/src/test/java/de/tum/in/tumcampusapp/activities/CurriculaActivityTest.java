@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, application = TestApp.class)
 public class CurriculaActivityTest extends BaseActivityTest {
 
     @Override

@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, application = TestApp.class)
 public class RSASignerTestCase {
 
     private RSASigner signer;
