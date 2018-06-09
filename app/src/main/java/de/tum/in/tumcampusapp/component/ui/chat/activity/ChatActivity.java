@@ -29,13 +29,10 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.List;
@@ -44,6 +41,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
+import de.tum.in.tumcampusapp.component.ui.chat.AddChatMemberActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageValidator;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageViewModel;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
@@ -268,8 +266,11 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         super.onNewIntent(intent);
 
         //Try to get the room from the extras
-        final ChatRoom room = new Gson().fromJson(intent.getExtras()
-                                                        .getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
+        ChatRoom room = null;
+        if(intent.getExtras() != null){
+            room = new Gson().fromJson(intent.getExtras()
+                    .getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
+        }
 
         //Check, maybe it wasn't there
         if (room != null && room.getId() != currentChatRoom.getId()) {
@@ -295,7 +296,10 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_add_chat_member) {
-            showQRCode();
+            Intent intent = new Intent(this, AddChatMemberActivity.class);
+            intent.putExtra(Const.CURRENT_CHAT_ROOM, currentChatRoom.getId());
+            intent.putExtra(Const.CHAT_ROOM_NAME, currentChatRoom.getName());
+            startActivity(intent);
             return true;
         } else if (i == R.id.action_leave_chat_room) {
             new AlertDialog.Builder(this).setTitle(R.string.leave_chat_room)
@@ -308,21 +312,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         } else {
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void showQRCode() {
-        String url = "http://chart.apis.google.com/chart?cht=qr&chs=500x500&chld=M&choe=UTF-8&chl=" +
-                     UrlEscapers.urlPathSegmentEscaper()
-                                .escape(currentChatRoom.getName());
-
-        final ImageView qrCode = new ImageView(this);
-        Picasso.get().load(url).into(qrCode);
-
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.add_chat_member)
-                .setView(qrCode)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
     }
 
     /**

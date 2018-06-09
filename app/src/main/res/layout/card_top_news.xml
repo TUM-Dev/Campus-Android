@@ -6,11 +6,12 @@
         android:id="@+id/top_news_img"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
         android:maxHeight="200dp"
         android:minHeight="50dp"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
         android:src="@drawable/mvv_entire_net_icon"/>
+
     <ProgressBar
         android:id="@+id/top_news_progress"
         android:layout_width="wrap_content"

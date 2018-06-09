@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.plan;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +17,16 @@ import de.tum.in.tumcampusapp.R;
  */
 public class PlanListAdapter extends BaseAdapter {
 
-    private final Activity activity;
-
-    private final LayoutInflater inflater;
     private final List<PlanListEntry> planList;
 
-    public static class ViewHolder {
+    public class ViewHolder {
         public TextView detail;
         public ImageView icon;
         public TextView title;
     }
 
-    public PlanListAdapter(Activity activity, List<PlanListEntry> planList) {
-        this.activity = activity;
+    public PlanListAdapter(List<PlanListEntry> planList) {
         this.planList = planList;
-        this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -52,33 +46,34 @@ public class PlanListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View vi = convertView;
-
         ViewHolder holder;
         if (convertView == null) {
-            vi = this.inflater.inflate(R.layout.activity_plans_listview, parent, false);
-
+            convertView = LayoutInflater.from(parent.getContext())
+                                        .inflate(R.layout.activity_plans_listview, parent, false);
             holder = new ViewHolder();
-            holder.icon = vi.findViewById(R.id.list_menu_icon);
-            holder.title = vi.findViewById(R.id.list_menu_title);
-            holder.detail = vi.findViewById(R.id.list_menu_detail);
-            vi.setTag(holder);
+            holder.icon = convertView.findViewById(R.id.list_menu_icon);
+            holder.title = convertView.findViewById(R.id.list_menu_title);
+            holder.detail = convertView.findViewById(R.id.list_menu_detail);
+            convertView.setTag(holder);
         } else {
-            holder = (ViewHolder) vi.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
+
+        Context context = parent.getContext();
 
         PlanListEntry item = planList.get(position);
         holder.icon.setImageResource(item.imageId);
-        holder.title.setText(activity.getResources()
-                                     .getText(item.titleId));
+        holder.title.setText(context.getResources()
+                                    .getText(item.titleId));
         if (item.detailId == R.string.empty_string) {
             holder.detail.setVisibility(View.GONE);
         } else {
             holder.detail.setVisibility(View.VISIBLE);
-            holder.detail.setText(activity.getResources()
-                                          .getText(item.detailId));
+            holder.detail.setText(context.getResources()
+                                         .getText(item.detailId));
         }
-        return vi;
+
+        return convertView;
     }
 
     public static class PlanListEntry {
