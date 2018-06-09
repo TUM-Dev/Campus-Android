@@ -39,5 +39,9 @@ data class Kino(@PrimaryKey
                 var trailer: String? = "",
                 var date: Date = Date(),
                 var created: Date = Date(),
-                var link: String = "")
+                var link: String = "") {
+
+    fun isFutureMovie() = date.after(Date())
+
+}
 

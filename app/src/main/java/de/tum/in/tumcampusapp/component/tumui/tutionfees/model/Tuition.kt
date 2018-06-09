@@ -5,6 +5,9 @@ import android.content.Intent
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesActivity
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
+import java.text.NumberFormat
+import java.text.ParseException
+import java.util.*
 
 /**
  * Class holding tuition information.
@@ -25,5 +28,26 @@ data class Tuition(@field:Element(name = "frist")
         get() = soll == "0"
 
     fun getIntent(context: Context): Intent? = Intent(context, TuitionFeesActivity::class.java)
+
+    val outstandingBalance: Float
+        get() {
+            return try {
+                NumberFormat.getInstance(Locale.GERMAN)
+                        .parse(soll)
+                        .toFloat()
+            } catch (e: ParseException) {
+                0f
+            }
+        }
+
+    val outstandingBalanceText: String
+        get() {
+            return try {
+                val amountText = String.format(Locale.getDefault(), "%.2f", outstandingBalance)
+                return "$amountText €"
+            } catch (e: ParseException) {
+                soll
+            }
+        }
 
 }
