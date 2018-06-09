@@ -2,7 +2,9 @@ package de.tum.`in`.tumcampusapp.component.other.notifications.providers
 
 import android.app.PendingIntent
 import android.content.Context
+import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
@@ -11,11 +13,13 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateUtils
 
-class KtCafeteriaNotificationsProvider(
+class CafeteriaNotificationsProvider(
         context: Context,
         private val cafeteria: CafeteriaWithMenus) : NotificationsProvider(context) {
 
     private val GROUP_KEY_CAFETERIA = "de.tum.in.tumcampus.CAFETERIA"
+
+    private val notificationsStore = CafeteriaNotificationsStore(context)
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
@@ -24,7 +28,6 @@ class KtCafeteriaNotificationsProvider(
                 .setGroup(GROUP_KEY_CAFETERIA)
                 .setGroupSummary(true)
                 .setShowWhen(false)
-                .setWhen(System.currentTimeMillis())
     }
 
     private fun getSecondaryNotificationBuilder(): NotificationCompat.Builder {
@@ -41,7 +44,8 @@ class KtCafeteriaNotificationsProvider(
 
         val notificationTime = cafeteria.notificationTime
 
-        // TODO: How to reliably remove old notifications of single dish?
+        // Cancel any cafeteria notifications that have not been cleared by the user
+        notificationsStore.clearAll()
 
         val notifications = menus
                 .map { menu ->
@@ -101,7 +105,60 @@ class KtCafeteriaNotificationsProvider(
                 AppNotification.CAFETERIA_ID, summaryNotification, notificationTime)
         notifications.add(summaryAppNotification)
 
+        // Store all new notifications so that they can be cleared if the user does not remove them
+        // before the next cafeteria notification.
+        notificationsStore.store(notifications)
+
         return notifications
+    }
+
+    /**
+     * This class handles the persistence of cafeteria notifications. We use this to cancel all old
+     * cafeteria notifications before scheduling new cafeteria notifications.
+     *
+     * @param context The current [Context]
+     */
+    private class CafeteriaNotificationsStore(private val context: Context) {
+
+        private val KEY_NOTIFICATIONS = "cafeteriaNotifications"
+
+        private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+
+        /**
+         * Removes all displayed or scheduled cafeteria notifications.
+         */
+        fun clearAll() {
+            // Cancel each notification individually
+            sharedPrefs
+                    .getStringSet(KEY_NOTIFICATIONS, emptySet())
+                    .map { it.toInt() }
+                    .forEach { id ->
+                        NotificationManagerCompat
+                                .from(context)
+                                .cancel(id)
+                    }
+
+            // Clear the persistent store of notifications
+            sharedPrefs.edit().remove(KEY_NOTIFICATIONS).apply()
+        }
+
+        /**
+         * Stores all cafeteria notifications that will be displayed.
+         *
+         * @param notifications The list of [AppNotification]s that will be displayed
+         */
+        fun store(notifications: List<AppNotification>) {
+            val ids = notifications
+                    .map { it.id }
+                    .map { it.toString() }
+                    .toSet()
+
+            sharedPrefs
+                    .edit()
+                    .putStringSet(KEY_NOTIFICATIONS, ids)
+                    .apply()
+        }
+
     }
 
 }

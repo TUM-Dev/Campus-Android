@@ -74,6 +74,9 @@ object Const {
     const val URL_MAP_IMAGE = "https://$API_HOSTNAME${URL_ROOM_FINDER_API}map/"
     const val ROOM_ID = "room_id"
 
+    const val KEY_NOTIFICATION_ID = "notificationID"
+    const val KEY_NOTIFICATION = "notification"
+
     const val NOTIFICATION_CHANNEL_DEFAULT = "general"
     const val NOTIFICATION_CHANNEL_CHAT = "chat"
     const val NOTIFICATION_CHANNEL_EDUROAM = "eduroam"

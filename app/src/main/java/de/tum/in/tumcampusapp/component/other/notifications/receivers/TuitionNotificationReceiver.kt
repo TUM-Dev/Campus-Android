@@ -10,8 +10,8 @@ import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
 class TuitionNotificationReceiver(private val context: Context) {
 
     fun onReceive(notificationId: Int, notification: Notification) {
-        // Return if the tuition has been paid
-        val tuition = TuitionFeeManager(context).loadTuition() ?: return  // TODO
+        // Abort if the tuition has been paid
+        val tuition = TuitionFeeManager(context).loadTuition() ?: return
         if (tuition.isReregistered) {
             return
         }
@@ -19,7 +19,6 @@ class TuitionNotificationReceiver(private val context: Context) {
         // Schedule the next notification
         val notificationTime = TuitionNotificationScheduler.getNextNotificationTime(tuition)
         val futureNotification = FutureNotification(notificationId, notification, notificationTime)
-
         NotificationScheduler.schedule(context, futureNotification)
     }
 

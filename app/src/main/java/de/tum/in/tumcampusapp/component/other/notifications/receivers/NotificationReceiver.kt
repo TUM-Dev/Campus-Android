@@ -6,19 +6,17 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationManagerCompat
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.schedulers.NotificationScheduler
+import de.tum.`in`.tumcampusapp.utils.Const
 
 class NotificationReceiver : BroadcastReceiver() {
 
-    // TODO: Register in Manifest
-
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (context == null) {
+        if (context == null || intent == null) {
             return
         }
 
-        val notificationId = intent?.getIntExtra(NotificationScheduler.KEY_NOTIFICATION_ID, 0) ?: 0
-        val notification = intent?.getParcelableExtra<Notification>(NotificationScheduler.KEY_NOTIFICATION) ?: return
+        val notificationId = intent.getIntExtra(Const.KEY_NOTIFICATION_ID, 0)
+        val notification = intent.getParcelableExtra<Notification>(Const.KEY_NOTIFICATION) ?: return
 
         // If it's a notification about tuition fees, we hand it over to TuitionNotificationReceiver
         if (notificationId == AppNotification.TUITION_FEES_ID) {

@@ -728,6 +728,7 @@
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".component.other.notifications.receivers.NotificationReceiver" />
 
     </application>
 
