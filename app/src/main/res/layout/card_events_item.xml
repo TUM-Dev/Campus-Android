@@ -1,4 +1,5 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
 
     <LinearLayout
@@ -29,7 +30,17 @@
                 android:layout_alignParentTop="true"
                 android:layout_margin="10dp"
                 android:text="@string/info_title"
-                android:textSize="20sp" />
+                tools:text="Title"
+                android:textSize="30sp" />
+            <TextView
+                android:id="@+id/events_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_alignBottom="@+id/events_title"
+                android:layout_marginStart="10dp"
+                tools:text="Description"
+                android:textSize="18sp"/>
 
             <LinearLayout
                 android:id="@id/linearLayout"
@@ -49,13 +60,15 @@
                         android:id="@+id/events_src_locality"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textSize="15sp"/>
 
                     <TextView
                         android:id="@+id/events_src_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textSize="15sp"/>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

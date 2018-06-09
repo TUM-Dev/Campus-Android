@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -32,18 +30,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
-        ImageView img;
-        TextView title;
-        TextView locality;
-        TextView srcDate;
+        ImageView imgView;
+        TextView titleView;
+        TextView descriptionView;
+        TextView localityView;
+        TextView srcDateView;
 
         public ViewHolder(View view) {
             super(view);
             cardView = (CardView) view;
-            title = (TextView) view.findViewById(R.id.events_title);
-            img = (ImageView) view.findViewById(R.id.events_img);
-            locality = (TextView) view.findViewById(R.id.events_src_locality);
-            srcDate = (TextView) view.findViewById(R.id.events_src_date);
+            titleView =  view.findViewById(R.id.events_title);
+            imgView = view.findViewById(R.id.events_img);
+            descriptionView =view.findViewById(R.id.events_description);
+            localityView = view.findViewById(R.id.events_src_locality);
+            srcDateView = view.findViewById(R.id.events_src_date);
         }
     }
 
@@ -63,8 +63,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Event event = meventlist.get(position);
-        holder.img.setVisibility(View.VISIBLE);
-        holder.title.setVisibility(View.VISIBLE);
+        holder.imgView.setVisibility(View.VISIBLE);
+        holder.titleView.setVisibility(View.VISIBLE);
 
         // Set image
         String imgUrl = event.getImage();
@@ -75,40 +75,49 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 Picasso.get()
                         .load(event.getLink())
                         .placeholder(R.drawable.chat_background)
-                        .into(holder.img, new Callback() {
+                        .into(holder.imgView, new Callback() {
                             @Override
                             public void onSuccess() {
-                                holder.title.setVisibility(View.GONE); // title is included in eventspread slide
-                                holder.img.setOnClickListener(null); // link doesn't lead to more infos
+                                holder.titleView.setVisibility(View.GONE); // titleView is included in eventspread slide
+                                holder.imgView.setOnClickListener(null); // link doesn't lead to more infos
                             }
 
                             @Override
                             public void onError(Exception e) {
-                                holder.img.setVisibility(View.GONE); // we can't display the image after all
+                                holder.imgView.setVisibility(View.GONE); // we can't display the image after all
                             }
                         });
             } else {
-                holder.img.setVisibility(View.GONE);
+                holder.imgView.setVisibility(View.GONE);
             }
         } else {
             Picasso.get()
                     .load(imgUrl)
                     .placeholder(R.drawable.chat_background)
-                    .into(holder.img);
+                    .into(holder.imgView);
         }
 
         String title = event.getTitle();
         title = COMPILE.matcher(title)
                 .replaceAll("");
-        holder.title.setText(title);
-        //Adds locality
+        holder.titleView.setText(title);
+
+        //Adds descriptionView
+        int maxDescriptionLength = 80;
+        String description = event.getDescription();
+        String shortenedDescription = description;
+        if (description.length() > maxDescriptionLength){
+            shortenedDescription = description.substring(0, 80) + "...";
+        }
+        holder.descriptionView.setText(shortenedDescription);
+        //Adds localityView
         String locality = event.getLocality();
-        holder.locality.setText(locality);
+        holder.localityView.setText(locality);
 
         // Adds date
         Date date = event.getDate();
         DateFormat sdf = DateFormat.getDateInstance();
-        holder.srcDate.setText(sdf.format(date));
+        holder.srcDateView.setText(sdf.format(date));
     }
 
     @Override

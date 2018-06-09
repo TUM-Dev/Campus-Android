@@ -21,22 +21,38 @@ public class EventsController {
     public static List<Event> getEvents() {
         List<Event> events = new ArrayList<>();
         events.add(new Event(0, "http://placehold.it/120x120&text=image1", "Unity",
-                "Keine Ahnung war noch nie dort. Soll ganz cool sein...",
+                "Die TUM Campus App wird von Freiwilligen und Studenten entwickelt. " +
+                        "Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und bietet " +
+                        "unter anderem folgende Funktionen:Vorlesungstermine, Neuigkeiten von TUM relevanten " +
+                        "Organisationen, Veranstaltungshinweise, Mensa Speiseplan, MVV Abfahrtszeiten, " +
+                        "Umgebungspläne und viele weitere Funktionen. ",
                 "Garching, Magistrale",
                 new GregorianCalendar(2018, 8, 8).getTime(),
                 "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
         events.add(new Event(2, "http://placehold.it/120x120&text=image2", "Unity 2",
-                "Das gleiche nochmal",
+                "Die TUM Campus App wird von Freiwilligen und Studenten entwickelt. " +
+                        "Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und bietet " +
+                        "unter anderem folgende Funktionen:Vorlesungstermine, Neuigkeiten von TUM relevanten " +
+                        "Organisationen, Veranstaltungshinweise, Mensa Speiseplan, MVV Abfahrtszeiten, " +
+                        "Umgebungspläne und viele weitere Funktionen. ",
                 "Garching, Magistrale",
                 new GregorianCalendar(2019, 8, 8).getTime(),
                 "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
         events.add(new Event(3, "http://placehold.it/120x120&text=image2", "Unity 3",
-                "Das gleiche nochmal",
+                "Die TUM Campus App wird von Freiwilligen und Studenten entwickelt. " +
+                        "Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und bietet " +
+                        "unter anderem folgende Funktionen:Vorlesungstermine, Neuigkeiten von TUM relevanten " +
+                        "Organisationen, Veranstaltungshinweise, Mensa Speiseplan, MVV Abfahrtszeiten, " +
+                        "Umgebungspläne und viele weitere Funktionen. ",
                 "Garching, Magistrale",
                 new GregorianCalendar(2020, 8, 8).getTime(),
                 "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
         events.add(new Event(4, "http://placehold.it/120x120&text=image2", "Unity 4",
-                "Das gleiche nochmal",
+                "Die TUM Campus App wird von Freiwilligen und Studenten entwickelt. " +
+                        "Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und bietet " +
+                        "unter anderem folgende Funktionen:Vorlesungstermine, Neuigkeiten von TUM relevanten " +
+                        "Organisationen, Veranstaltungshinweise, Mensa Speiseplan, MVV Abfahrtszeiten, " +
+                        "Umgebungspläne und viele weitere Funktionen. ",
                 "Garching, Magistrale",
                 new GregorianCalendar(2021, 8, 8).getTime(),
                 "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
@@ -45,12 +61,16 @@ public class EventsController {
     public static List<Event> getbookedEvents() {
         List<Event> events = new ArrayList<>();
         events.add(new Event(0, "http://placehold.it/120x120&text=image1", "Unity2",
-                "Keine Ahnung war noch nie dort. Soll ganz cool sein...",
+                "Die TUM Campus App wird von Freiwilligen und Studenten entwickelt. " +
+                        "Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und bietet " +
+                        "unter anderem folgende Funktionen:Vorlesungstermine, Neuigkeiten von TUM relevanten " +
+                        "Organisationen, Veranstaltungshinweise, Mensa Speiseplan, MVV Abfahrtszeiten, " +
+                        "Umgebungspläne und viele weitere Funktionen. ",
                 "Garching, Magistrale",
                 new GregorianCalendar(2018, 8, 8).getTime(),
                 "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
         events.add(new Event(2, "http://placehold.it/120x120&text=image2", "Unity 3",
-                "Das gleiche nochmal",
+                "Kurze Beschreibung.",
                 "Garching, Magistrale",
                 new GregorianCalendar(2019, 8, 8).getTime(),
                 "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));

@@ -18,8 +18,6 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class EventsActivity extends ActivityForDownloadingExternal {
 
     private RecyclerView lv;
-    private int state = -1;
-    private List<Event> events;
     private boolean mBookedShowMode;
     private MenuItem menuItemSwitchView;
 
@@ -30,34 +28,17 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        lv = findViewById(R.id.activity_events_list_view);
+        lv.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        // Gets all news from mockup
-        events = EventsController.getEvents();
-
-        if (events.size() > 0) {
-            EventsAdapter adapter = new EventsAdapter(events);
-            lv = findViewById(R.id.activity_events_list_view);
-            lv.setLayoutManager(new LinearLayoutManager(this));
-            lv.setAdapter(adapter);
-        }
-
         this.mBookedShowMode = Utils.getSettingBool(this, Const.EVENT_BOOKED_MODE, false);
-
-    }
-
-    /**
-     * Save ListView state
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
-        state = layoutManager.findFirstVisibleItemPosition();
+        refreshEventView();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,17 +58,20 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         }
         return true;
     }
+
     private void refreshEventView() {
         int icon;
+
+        List<Event> events;
         if (mBookedShowMode) {
             icon = R.drawable.ic_action_booked;
-            List<Event> events = EventsController.getEvents();
-            EventsAdapter adapter = new EventsAdapter(events);
-            lv.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+            events = EventsController.getEvents();
         } else {
             icon = R.drawable.ic_all_event;
-            List<Event> events = EventsController.getbookedEvents();
+            events = EventsController.getbookedEvents();
+        }
+
+        if (!events.isEmpty()) {
             EventsAdapter adapter = new EventsAdapter(events);
             lv.setAdapter(adapter);
             adapter.notifyDataSetChanged();
