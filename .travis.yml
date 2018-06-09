@@ -1,7 +1,4 @@
 sudo: false
-branches:
-  only:
-  - master
 language: android
 jdk: oraclejdk8
 before_cache:
