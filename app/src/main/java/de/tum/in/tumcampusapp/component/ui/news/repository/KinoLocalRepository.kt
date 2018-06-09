@@ -21,7 +21,7 @@ object KinoLocalRepository {
 
     fun getAllKinos(): Flowable<List<Kino>> = db.kinoDao().all
 
-    fun getLatestId() = db.kinoDao().latestId
+    fun getLatestId(): String? = db.kinoDao().latestId
 
     fun getKinoByPosition(position: Int): Flowable<Kino> = db.kinoDao().getByPosition(position)
 
