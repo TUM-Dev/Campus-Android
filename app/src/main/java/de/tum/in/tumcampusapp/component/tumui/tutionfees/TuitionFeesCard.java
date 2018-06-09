@@ -68,8 +68,7 @@ public class TuitionFeesCard extends Card {
             addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez())));
         } else {
             Date d = DateUtils.getDate(mTuition.getFrist());
-            String date = DateFormat.getDateInstance()
-                                    .format(d);
+            String date = DateFormat.getDateInstance().format(d);
             addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_todo), date)));
 
             String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
