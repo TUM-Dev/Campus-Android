@@ -20,7 +20,6 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.utils.DateUtils;
 
 import static de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment.showMenu;
 import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_CAFETERIA;
@@ -32,14 +31,14 @@ public class CafeteriaMenuCard extends Card {
 
     private static final String CAFETERIA_DATE = "cafeteria_date";
 
-    // TODO: Replace with CafeteriaWithMenus
     private CafeteriaWithMenus mCafeteria;
 
-    //private int mCafeteriaId;
-    //private String mCafeteriaName;
-    //private Date mDate;
-    //private String mDateStr;
-    //private List<CafeteriaMenu> mMenus;
+    // TODO: Replace completely with CafeteriaWithMenus
+    private int mCafeteriaId;
+    private String mCafeteriaName;
+    private Date mDate;
+    private String mDateStr;
+    private List<CafeteriaMenu> mMenus;
 
     public CafeteriaMenuCard(Context context) {
         super(CARD_CAFETERIA, context, "card_cafeteria");
@@ -81,15 +80,6 @@ public class CafeteriaMenuCard extends Card {
         mCafeteria = cafeteria;
     }
 
-    public void setCardMenus(CafeteriaWithMenus cafeteria) {
-        setCardMenus(
-                cafeteria.getId(),
-                cafeteria.getName(),
-                cafeteria.getNextMenuDate(),
-                DateUtils.getDate(cafeteria.getNextMenuDate()),
-                cafeteria.getMenus()
-        );
-    }
     /**
      * Sets the information needed to build the card
      *

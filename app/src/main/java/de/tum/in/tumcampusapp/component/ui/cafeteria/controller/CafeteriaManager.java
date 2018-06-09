@@ -2,18 +2,10 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 
 import android.content.Context;
 
-<<<<<<< HEAD
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-||||||| merged common ancestors
-import java.util.Calendar;
-=======
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
->>>>>>> 6ce4faa2f74ae18d09d52b71074bd044da0ec9bf
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +14,10 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.CafeteriaNotificationsProvider;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotification;
+import de.tum.in.tumcampusapp.component.other.notifications.providers.CafeteriaNotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.providers.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
