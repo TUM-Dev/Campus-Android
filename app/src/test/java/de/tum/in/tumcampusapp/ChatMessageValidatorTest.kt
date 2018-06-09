@@ -17,7 +17,7 @@ import org.junit.Assert.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class, application = TestApp::class)
-class ChatMessageValidatorTestCase {
+class ChatMessageValidatorTest {
 
     private var validator: ChatMessageValidator? = null
     private var publicKeyFixtures: MutableList<ChatPublicKey>? = null
