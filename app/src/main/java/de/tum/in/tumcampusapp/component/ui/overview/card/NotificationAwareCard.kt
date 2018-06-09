@@ -72,13 +72,13 @@ abstract class NotificationAwareCard : Card {
         return notificationBuilder.build()
     }
 
-    override fun apply() {
-        super.apply()
-        // Should be shown as notification
-        if (mShowPhone) {
-            val prefs = context.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0)
-            if (shouldShowNotification(prefs)) {
-                notifyUser()
+    override fun getIfShowOnStart(): Card? {
+        return super.getIfShowOnStart().also {
+            if (mShowPhone) {
+                val prefs = context.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0)
+                if (shouldShowNotification(prefs)) {
+                    notifyUser()
+                }
             }
         }
     }

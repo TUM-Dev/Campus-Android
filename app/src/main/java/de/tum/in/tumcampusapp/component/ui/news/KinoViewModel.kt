@@ -49,7 +49,11 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
                     Observable
                             .create<List<Kino>> {
                                 val latestId = KinoLocalRepository.getLatestId()
-                                remoteRepository.getAllKinos(latestId)
+                                if(latestId != null){
+                                    remoteRepository.getAllKinos(latestId)
+                                } else {
+                                    remoteRepository.getAllKinos("0")
+                                }
                             }
                             .filter { localRepository.getLastSync() == null || force }
                             .subscribeOn(Schedulers.io())
