@@ -33,12 +33,10 @@ import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
-import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class SettingsFragment extends PreferenceFragmentCompat
@@ -55,6 +53,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         //Load the correct preference category
         setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
+
+        populateNewsSources();
 
         // Disables silence service if the app is used without TUMOnline access
         SwitchPreferenceCompat silentSwitch =
@@ -96,9 +96,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         // Set the default white background in the view so as to avoid transparency
         view.setBackgroundColor(Color.WHITE);
-
-        // Populate news sources
-        populateNewsSources();
     }
 
     private void populateNewsSources() {
@@ -107,11 +104,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         NewsController newsController = new NewsController(mContext);
         List<NewsSources> newsSources = newsController.getNewsSources();
-        final NetUtils net = new NetUtils(mContext);
         for (NewsSources newsSource : newsSources) {
             final CheckBoxPreference pref = new CheckBoxPreference(mContext);
             pref.setKey("card_news_source_" + newsSource.getId());
             pref.setDefaultValue(true);
+            
+            // reserve space so that when the icon is loaded the text is not moved again
+            pref.setIconSpaceReserved(true);
 
             // Load news source icon in background and set it
             final String url = newsSource.getIcon();
@@ -146,11 +145,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             listPreference.setSummary(entry);
         }
 
-        //Refresh the cards after a change has been made to them
-        if (key.startsWith("card_")) {
-            CardManager.setShouldRefresh();
-        }
-
         // When newspread selection changes
         // deselect all newspread sources and select only the
         // selected source if one of all was selected before
@@ -166,7 +160,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             String newSource = sharedPreferences.getString(key, "7");
             e.putBoolean("card_news_source_" + newSource, value);
             e.apply();
-            CardManager.setShouldRefresh();
         }
 
         // If the silent mode was activated, start the service. This will invoke
