@@ -498,6 +498,7 @@ Signatur: %5$s</string>
     <string name="price">Preis</string>
     <string name="location">Ort</string>
 
+
     <!-- Create personal Appointment (Calendar) -->
     <string name="create_event">Termin erstellen</string>
     <string name="comment">Anmerkung</string>

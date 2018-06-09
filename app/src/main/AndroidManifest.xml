@@ -738,6 +738,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
+        <activity
+            android:name=".component.ui.ticket.EventsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/events_overview"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.overview.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
