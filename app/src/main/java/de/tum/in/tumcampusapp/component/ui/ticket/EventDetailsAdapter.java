@@ -15,12 +15,12 @@ import de.tum.in.tumcampusapp.utils.Const;
 /**
  * TODO: combine this with KinoAdapter
  */
-public class EventAdapter extends FragmentStatePagerAdapter {
+public class EventDetailsAdapter extends FragmentStatePagerAdapter {
 
     private final int count; //number of pages
     private final List<String> titles = new ArrayList<>();  // titles shown in the pagerStrip
 
-    public EventAdapter(FragmentManager fm, Collection<Event> events) {
+    public EventDetailsAdapter(FragmentManager fm, Collection<Event> events) {
         super(fm);
         count = events.size();
 

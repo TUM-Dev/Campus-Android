@@ -18,6 +18,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -100,7 +103,8 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void createKinoFooter(LinearLayout root) {
-        addToRoot(root, R.string.date, event.getDate().toString());
+        addToRoot(root, R.string.date, new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
+                format(event.getDate()));
         addToRoot(root, R.string.location, event.getLocality());
         addToRootWithPadding(root, R.string.description, event.getDescription());
     }
@@ -120,10 +124,10 @@ public class EventDetailsFragment extends Fragment {
 
         // Setup "Buy/Show ticket" button according to ticket status for current event
         if (booked){
-            ticket.setText("Show ticket");
+            ticket.setText(this.getString(R.string.show_ticket));
             ticket.setOnClickListener(view -> showTicket());
         } else{
-            ticket.setText("Buy ticket");
+            ticket.setText(this.getString(R.string.buy_ticket));
             ticket.setOnClickListener(view -> buyTicket());
         }
 
@@ -145,28 +149,17 @@ public class EventDetailsFragment extends Fragment {
 
         rootView.addView(headerView);
     }
-    //open show_ticket activity, and transfer current movie data to it.
-    //The String data is just a example, it should be get from correspongding movie which now show on the screen.
-    //time and place of movie  is fixed. Only the movie title and date should be transfered to show_ticket activity
-    private void showTicket(){
-        String data = "KingsMan 08.05 " + "\n"+ "Filmbegin: 20:00 o'clock "+"\n"+ " 1. Stock, Hörsaal 1200 (Carl-von-Linde-Hörsaal) Arcisstraße 21";
-        Intent intent = new Intent(getActivity().getApplicationContext(), ShowTicketActivity.class);
-        intent.putExtra("movie_data", data);
+
+    private void showTicket() {
+        // TODO: pass the event to know which ticket to display
+        Intent intent = new Intent(context, ShowTicketActivity.class);
         startActivity(intent);
     }
 
-    private void buyTicket(){
-        // TODO: go to payment activity (to be implemented)
-    }
-
-    /**
-     * formats the dateString
-     *
-     * @param date Date string stored in database
-     * @return formated dateString
-     */
-    private static CharSequence formDateString(String date) {
-        return date.substring(8, 10) + '.' + date.substring(5, 7) + '.';
+    private void buyTicket() {
+        // TODO: message to server to create ticket
+        Intent intent = new Intent(context, BuyTicketActivity.class);
+        startActivity(intent);
     }
 
     @Override
