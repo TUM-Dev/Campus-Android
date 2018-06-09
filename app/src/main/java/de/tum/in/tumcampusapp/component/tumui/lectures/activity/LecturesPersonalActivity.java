@@ -34,7 +34,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
     private StickyListHeadersListView lvMyLecturesList;
 
     public LecturesPersonalActivity() {
-        super(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
+        super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
     @Override
     protected void onStartSearch() {
         enableRefresh();
-        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), this, true);
+        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
         requestFetch();
     }
 

@@ -98,7 +98,7 @@ public class CacheManager {
         }
 
         // Sync fee status
-        TUMOnlineRequest<TuitionList> requestHandler2 = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTUITION_FEE_STATUS(), mContext);
+        TUMOnlineRequest<TuitionList> requestHandler2 = new TUMOnlineRequest<>(TUMOnlineConst.TUITION_FEE_STATUS, mContext);
         if (shouldRefresh(requestHandler2.getRequestURL())) {
             requestHandler2.fetch();
         }
@@ -185,7 +185,7 @@ public class CacheManager {
      */
     private void importLecturesFromTUMOnline() {
         // get my lectures
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), mContext);
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
         if (!shouldRefresh(requestHandler.getRequestURL())) {
             return;
         }

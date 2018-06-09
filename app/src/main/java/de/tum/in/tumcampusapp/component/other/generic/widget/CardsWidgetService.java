@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
+import de.tum.in.tumcampusapp.component.ui.overview.CardsRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 
 @SuppressLint("Registered")
@@ -29,11 +29,13 @@ public class CardsWidgetService extends RemoteViewsService {
         final private int appWidgetId;
         final private SharedPreferences prefs;
         final private List<RemoteViews> views = new ArrayList<>();
+        final private CardsRepository mCardsRepository;
 
         CardsRemoteViewsFactory(Context context, int appWidgetId) {
             this.mContext = context;
             this.appWidgetId = appWidgetId;
-            prefs = context.getSharedPreferences(CardsWidgetConfigureActivity.PREFS_NAME, 0);
+            this.prefs = context.getSharedPreferences(CardsWidgetConfigureActivity.PREFS_NAME, 0);
+            this.mCardsRepository = new CardsRepository(mContext);
         }
 
         @Override
@@ -84,8 +86,9 @@ public class CardsWidgetService extends RemoteViewsService {
         private void updateContent() {
             final String prefix = CardsWidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId;
             views.clear();
-            CardManager.update(mContext);
-            List<Card> cards = CardManager.getCards();
+
+            List<Card> cards = mCardsRepository.getCardsNow();
+
             for (Card card : cards) {
                 final boolean getsShown = prefs.getBoolean(prefix + card.getCardType(), false);
                 if (!getsShown) {

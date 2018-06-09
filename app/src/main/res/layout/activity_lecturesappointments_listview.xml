@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical"
-              android:padding="@dimen/padding_default">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/material_small_padding"
+    android:paddingEnd="@dimen/material_default_padding"
+    android:paddingStart="@dimen/material_default_padding"
+    android:paddingTop="@dimen/material_small_padding">
 
     <TextView
         android:id="@+id/tvTerminZeit"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:fontFamily="sans-serif-medium"
         android:textColor="@color/text_light_blue"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        tools:text="Header"/>
 
     <TextView
         android:id="@+id/tvTerminOrt"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""/>
+        tools:text="Details"/>
 
     <TextView
         android:id="@+id/tvTerminBetreff"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""/>
+        tools:text="More details"/>
 
 </LinearLayout>
