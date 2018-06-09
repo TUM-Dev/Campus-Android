@@ -17,14 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/material_default_padding"
+        android:layout_marginBottom="@dimen/material_default_padding">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImageView"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginBottom="@dimen/material_small_padding"
-            android:layout_marginStart="@dimen/material_default_padding"
             android:elevation="4dp"
             android:src="@drawable/photo_not_available"/>
 
@@ -32,7 +33,6 @@
             android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             tools:text="Name"/>
 
@@ -40,8 +40,6 @@
             android:id="@+id/emailTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/material_default_padding"
-            android:layout_marginStart="@dimen/material_default_padding"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:text="E-mail"/>
 
