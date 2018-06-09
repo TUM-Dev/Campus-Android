@@ -35,11 +35,11 @@ public class CafeteriaMenuCard extends Card {
     // TODO: Replace with CafeteriaWithMenus
     private CafeteriaWithMenus mCafeteria;
 
-    private int mCafeteriaId;
-    private String mCafeteriaName;
-    private Date mDate;
-    private String mDateStr;
-    private List<CafeteriaMenu> mMenus;
+    //private int mCafeteriaId;
+    //private String mCafeteriaName;
+    //private Date mDate;
+    //private String mDateStr;
+    //private List<CafeteriaMenu> mMenus;
 
     public CafeteriaMenuCard(Context context) {
         super(CARD_CAFETERIA, context, "card_cafeteria");
@@ -76,6 +76,7 @@ public class CafeteriaMenuCard extends Card {
         cardsViewHolder.setAddedViews(showMenu(getMLinearLayout(), mCafeteriaId, mDateStr, false, mMenus));
     }
 
+
     public void setCafeteria(CafeteriaWithMenus cafeteria) {
         mCafeteria = cafeteria;
     }
@@ -89,7 +90,6 @@ public class CafeteriaMenuCard extends Card {
                 cafeteria.getMenus()
         );
     }
-
     /**
      * Sets the information needed to build the card
      *

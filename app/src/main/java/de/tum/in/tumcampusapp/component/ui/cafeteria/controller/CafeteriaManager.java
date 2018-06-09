@@ -2,10 +2,18 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 
 import android.content.Context;
 
+<<<<<<< HEAD
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+||||||| merged common ancestors
+import java.util.Calendar;
+=======
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+>>>>>>> 6ce4faa2f74ae18d09d52b71074bd044da0ec9bf
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +80,6 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
 
         CafeteriaMenuCard card = new CafeteriaMenuCard(mContext);
         card.setCafeteria(cafeteria);
-        card.setCardMenus(cafeteria);
 
         results.add(card.getIfShowOnStart());
         return results;

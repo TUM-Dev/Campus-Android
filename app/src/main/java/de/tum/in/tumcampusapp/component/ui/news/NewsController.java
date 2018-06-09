@@ -153,7 +153,14 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
     @Override
     public List<Card> getCards() {
         List<Card> results = new ArrayList<>();
-        List<News> news = getNews();
+        Collection<Integer> sources = getActiveSources(context);
+
+        List<News> news;
+        if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
+            news = newsDao.getBySourcesLatest(sources.toArray(new Integer[sources.size()]));
+        } else {
+            news = newsDao.getBySources(sources.toArray(new Integer[sources.size()]));
+        }
 
         //Display resulting cards
         for (News n : news) {

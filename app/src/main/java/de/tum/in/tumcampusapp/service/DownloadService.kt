@@ -221,7 +221,7 @@ class DownloadService : JobIntentService() {
                 if (success) {
                     Utils.setSetting(service, LAST_UPDATE, System.currentTimeMillis())
                 }
-
+                
                 success = true
             }
 

@@ -4,12 +4,21 @@ import android.content.Context;
 
 import com.google.common.base.Optional;
 
+<<<<<<< HEAD
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+||||||| merged common ancestors
+=======
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+>>>>>>> 6ce4faa2f74ae18d09d52b71074bd044da0ec9bf
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
