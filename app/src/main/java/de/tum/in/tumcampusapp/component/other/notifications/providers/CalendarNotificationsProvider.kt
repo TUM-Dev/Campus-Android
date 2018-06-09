@@ -4,11 +4,11 @@ import android.content.Context
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
+import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateUtils
-import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.toJoda
 
 class CalendarNotificationsProvider(context: Context,
                                     private val lectures: List<CalendarItem>) : NotificationsProvider(context) {
@@ -26,12 +26,18 @@ class CalendarNotificationsProvider(context: Context,
         val time = DateUtils.getFutureTime(firstItemStart, context)
 
         val notification = getNotificationBuilder()
-                .setContentText("${firstItem.title}\n${time}")
+                .setContentText("${firstItem.title}\n$time")
                 .setSmallIcon(R.drawable.ic_notification)
                 .build()
 
+        // Schedule the notification 15 minutes before the lecture
+        val notificationTime = firstItemStart
+                .toJoda()
+                .minusMinutes(15)
+                .millis
+
         return ArrayList<AppNotification>().apply {
-            add(InstantNotification(AppNotification.CALENDAR_ID, notification))
+            add(FutureNotification(AppNotification.CALENDAR_ID, notification, notificationTime))
         }
     }
 

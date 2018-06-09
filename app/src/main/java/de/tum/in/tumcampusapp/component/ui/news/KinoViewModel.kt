@@ -48,7 +48,7 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
             compositeDisposable.add(
                     Observable
                             .create<List<Kino>> {
-                                val latestId = KinoLocalRepository.getLatestId()
+                                val latestId = KinoLocalRepository.getLatestId() ?: "0"
                                 remoteRepository.getAllKinos(latestId)
                             }
                             .filter { localRepository.getLastSync() == null || force }

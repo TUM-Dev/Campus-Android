@@ -22,7 +22,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class LoginPromptCard extends Card {
 
     public LoginPromptCard(Context context) {
-        super(CardManager.CARD_LOGIN, context, "card_login", false);
+        super(CardManager.CARD_LOGIN, context, "card_login");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {

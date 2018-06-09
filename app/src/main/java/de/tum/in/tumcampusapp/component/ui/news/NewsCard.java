@@ -30,7 +30,7 @@ public class NewsCard extends Card {
     }
 
     public NewsCard(int type, Context context) {
-        super(type, context, "card_news", false);
+        super(type, context, "card_news");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent, int type) {
@@ -41,13 +41,6 @@ public class NewsCard extends Card {
     public int getId() {
         return Integer.parseInt(mNews.getId());
     }
-
-    /*
-    @Override
-    public String getTitle() {
-        return mNews.getTitle();
-    }
-    */
 
     public String getSource() {
         return mNews.getSrc();
@@ -78,71 +71,14 @@ public class NewsCard extends Card {
         newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
     }
 
-    // TODO
-    /*
-    @Override
-    protected void discardNotification(SharedPreferences.Editor editor) {
-        NewsController newsController = new NewsController(getContext());
-        newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 2);
-    }
-    */
-
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         return (mNews.getDismissed() & 1) == 0;
     }
 
-    // TODO
-    /*
-    @Override
-    protected boolean shouldShowNotification(SharedPreferences prefs) {
-        return (mNews.getDismissed() & 2) == 0;
-    }
-    */
-
-    /*
-    @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        NewsSourcesDao newsSourcesDao = TcaDb.getInstance(getContext()).newsSourcesDao();
-        NewsSources newsSource = newsSourcesDao.getNewsSource(Integer.parseInt(mNews.getSrc()));
-        notificationBuilder.setContentTitle(getContext().getString(R.string.news));
-        notificationBuilder.setContentText(mNews.getTitle());
-        notificationBuilder.setContentInfo(newsSource.getTitle());
-        notificationBuilder.setTicker(mNews.getTitle());
-        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        try {
-            if(!mNews.getImage().isEmpty()){
-                Bitmap bgImg = Picasso.get().load(mNews.getImage()).get();
-                notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bgImg));
-            }
-        } catch (IOException e) {
-            // ignore it if download fails
-        }
-        return notificationBuilder.build();
-    }
-    */
-
     @Override
     public Intent getIntent() {
-        /*
-        if (mNews.getLink().isEmpty()) {
-            Utils.showToast(getContext(), R.string.no_link_existing);
-            return null;
-        }
-        */
-
         return mNews.getIntent(getContext());
-        /*
-        // Show regular news in browser
-        String url = mNews.getLink();
-        if (url.isEmpty()) {
-            Utils.showToast(getContext(), R.string.no_link_existing);
-            return null;
-        }
-
-        // Opens url in browser
-        return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        */
     }
 
     @Override

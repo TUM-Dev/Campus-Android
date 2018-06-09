@@ -31,7 +31,7 @@ public class MVVCard extends Card {
     private List<Departure> mDepartures;
 
     MVVCard(Context context) {
-        super(CARD_MVV, context, "card_mvv", true);
+        super(CARD_MVV, context, "card_mvv");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -39,13 +39,6 @@ public class MVVCard extends Card {
                                   .inflate(R.layout.card_item, parent, false);
         return new CardViewHolder(view);
     }
-
-    /*
-    @Override
-    public String getTitle() {
-        return mStation.getStation();
-    }
-    */
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
@@ -100,37 +93,6 @@ public class MVVCard extends Card {
         final long prevDate = prefs.getLong(MVV_TIME, 0);
         return prevDate + DateUtils.HOUR_IN_MILLIS < System.currentTimeMillis();
     }
-
-    /*
-    @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
-
-        String firstContent = "";
-        String firstTime = "";
-        for (Departure d : mDepartures) {
-            if (firstTime.isEmpty()) {
-                firstTime = d.getCountDown() + "min";
-                firstContent = d.getServingLine() + " " + d.getDirection();
-            }
-
-            NotificationCompat.Builder pageNotification =
-                    new NotificationCompat.Builder(getContext(), Const.NOTIFICATION_CHANNEL_MVV)
-                            .setContentTitle(d.getCountDown() + "min")
-                            .setSmallIcon(R.drawable.ic_notification)
-                            .setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_mvv))
-                            .setContentText(d.getServingLine() + " " + d.getDirection());
-            morePageNotification.addPage(pageNotification.build());
-        }
-
-        notificationBuilder.setContentTitle(firstTime);
-        notificationBuilder.setContentText(firstContent);
-        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_mvv);
-        morePageNotification.setBackground(bm);
-        return morePageNotification.extend(notificationBuilder)
-                                   .build();
-    }
-    */
 
     public void setStation(StationResult station) {
         this.mStation = station;

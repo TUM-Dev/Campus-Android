@@ -32,7 +32,7 @@ public class TuitionFeesCard extends Card {
     private Tuition mTuition;
 
     public TuitionFeesCard(Context context) {
-        super(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee", true);
+        super(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -40,13 +40,6 @@ public class TuitionFeesCard extends Card {
                                   .inflate(R.layout.card_item, parent, false);
         return new CardViewHolder(view);
     }
-
-    /*
-    @Override
-    public String getTitle() {
-        return getContext().getString(R.string.tuition_fees);
-    }
-    */
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
@@ -94,23 +87,6 @@ public class TuitionFeesCard extends Card {
         return !(prevFrist.isEmpty() && "0".equals(mTuition.getSoll())) &&
                (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
     }
-
-    /*
-    @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        if ("0".equals(mTuition.getSoll())) {
-            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez()));
-        } else {
-            notificationBuilder.setContentText(mTuition.getSoll() + "€\n" +
-                                               String.format(getContext().getString(R.string.reregister_todo), mTuition.getFrist()));
-        }
-        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        notificationBuilder.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_money));
-        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_tuition_fee);
-        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
-        return notificationBuilder.build();
-    }
-    */
 
     @Override
     public Intent getIntent() {

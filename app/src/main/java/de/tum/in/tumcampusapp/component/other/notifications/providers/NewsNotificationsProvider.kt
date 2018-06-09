@@ -11,7 +11,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Utils
 
 class NewsNotificationsProvider(context: Context,
                                 private val newsItems: List<News>) : NotificationsProvider(context) {

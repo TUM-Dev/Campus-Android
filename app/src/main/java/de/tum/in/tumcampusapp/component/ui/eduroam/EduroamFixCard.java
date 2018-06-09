@@ -35,7 +35,7 @@ public class EduroamFixCard extends Card {
     private static final String AT_SIGN = "@";
 
     public EduroamFixCard(Context context) {
-        super(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start", true);
+        super(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start");
         errors = new ArrayList<>();
     }
 
@@ -80,13 +80,6 @@ public class EduroamFixCard extends Card {
              .putBoolean("card_eduroam_fix_start", false)
              .apply();
     }
-
-    /*
-    @Override
-    public String getTitle() {
-        return getContext().getString(R.string.fix_eduroam);
-    }
-    */
 
     @Override
     public Intent getIntent() {

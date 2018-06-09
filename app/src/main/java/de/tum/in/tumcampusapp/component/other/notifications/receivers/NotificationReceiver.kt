@@ -25,8 +25,6 @@ class NotificationReceiver : BroadcastReceiver() {
             return
         }
 
-        // TODO: WearableExtender
-
         NotificationManagerCompat
                 .from(context)
                 .notify(notificationId, notification)

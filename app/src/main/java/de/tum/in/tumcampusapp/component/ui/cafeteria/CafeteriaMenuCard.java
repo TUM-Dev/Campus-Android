@@ -42,7 +42,7 @@ public class CafeteriaMenuCard extends Card {
     private List<CafeteriaMenu> mMenus;
 
     public CafeteriaMenuCard(Context context) {
-        super(CARD_CAFETERIA, context, "card_cafeteria", true);
+        super(CARD_CAFETERIA, context, "card_cafeteria");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -107,13 +107,6 @@ public class CafeteriaMenuCard extends Card {
         mMenus = menus;
     }
 
-    /*
-    @Override
-    public String getTitle() {
-        return mCafeteriaName;
-    }
-    */
-
     @Override
     public Intent getIntent() {
         return mCafeteria.getIntent(getContext());
@@ -129,66 +122,6 @@ public class CafeteriaMenuCard extends Card {
         final long prevDate = prefs.getLong(CAFETERIA_DATE, 0);
         return prevDate < mDate.getTime();
     }
-
-    /*
-    @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(getContext());
-
-        NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
-
-        StringBuilder allContent = new StringBuilder();
-        StringBuilder firstContent = new StringBuilder();
-        for (CafeteriaMenu menu : mMenus) {
-            if ("bei".equals(menu.getTypeShort())) {
-                continue;
-            }
-
-            NotificationCompat.Builder pageNotification = new NotificationCompat.Builder(getContext(), Const.NOTIFICATION_CHANNEL_CAFETERIA)
-                    .setContentTitle(PATTERN.matcher(menu.getTypeLong())
-                    .replaceAll("")
-                    .trim());
-            pageNotification.setSmallIcon(R.drawable.ic_notification);
-            pageNotification.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_cutlery));
-
-            StringBuilder content = new StringBuilder(menu.getName());
-            if (rolePrices.containsKey(menu.getTypeLong())) {
-                content.append('\n')
-                       .append(rolePrices.get(menu.getTypeLong()))
-                       .append(" €");
-            }
-
-            String contentString = COMPILE.matcher(content.toString())
-                                          .replaceAll("")
-                                          .trim();
-            pageNotification.setContentText(contentString);
-            if ("tg".equals(menu.getTypeShort())) {
-                if (!allContent.toString()
-                               .isEmpty()) {
-                    allContent.append('\n');
-                }
-                allContent.append(contentString);
-            }
-            if (firstContent.toString()
-                            .isEmpty()) {
-                firstContent.append(COMPILE.matcher(menu.getName())
-                                           .replaceAll("")
-                                           .trim())
-                            .append('…');
-            } else {
-                morePageNotification.addPage(pageNotification.build());
-            }
-        }
-
-        notificationBuilder.setWhen(mDate.getTime());
-        notificationBuilder.setContentText(firstContent);
-        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(allContent));
-        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_cafeteria);
-        morePageNotification.setBackground(bm);
-        return morePageNotification.extend(notificationBuilder)
-                                   .build();
-    }
-    */
 
     @Override
     public RemoteViews getRemoteViews(Context context, int appWidgetId) {

@@ -12,7 +12,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateUtils
-import de.tum.`in`.tumcampusapp.utils.Utils
 
 class CafeteriaNotificationsProvider(
         context: Context,
@@ -47,8 +46,6 @@ class CafeteriaNotificationsProvider(
 
         // Cancel any cafeteria notifications that have not been cleared by the user
         notificationsStore.clearAll()
-
-        // TODO: WearableExtender
 
         val notifications = menus
                 .map { menu ->

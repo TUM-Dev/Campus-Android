@@ -13,7 +13,7 @@ interface ProvidesNotifications {
      *
      * @return Whether the user has enabled notifications for this kind
      */
-    abstract fun hasNotificationsEnabled(): Boolean
+    fun hasNotificationsEnabled(): Boolean
 
     /**
      * Returns the list of [AppNotification]s that should be displayed to the user.

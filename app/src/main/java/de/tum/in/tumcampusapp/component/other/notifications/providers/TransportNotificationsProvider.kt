@@ -1,25 +1,17 @@
 package de.tum.`in`.tumcampusapp.component.other.notifications.providers
 
-import android.app.PendingIntent
 import android.content.Context
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Utils
 
 class TransportNotificationsProvider(
         context: Context,
         private val departures: List<Departure>,
         private val station: StationResult) : NotificationsProvider(context) {
-
-    override fun hasNotificationsEnabled(): Boolean {
-        return Utils.getSettingBool(context, "card_mvv_phone", false)
-
-    }
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_MVV)
@@ -27,6 +19,11 @@ class TransportNotificationsProvider(
     }
 
     override fun getNotifications(): List<AppNotification> {
+        return emptyList()
+
+        // TODO: Add intelligent scheduling (last lecture)
+        // Otherwise, this does not provide much value to the user
+        /*
         val firstDeparture = departures.firstOrNull() ?: return emptyList()
 
         val title = context.getString(R.string.mvv)
@@ -42,14 +39,12 @@ class TransportNotificationsProvider(
             notificationBuilder.setContentIntent(pendingIntent)
         }
 
-        // TODO: Add intelligent scheduling (last lecture)
-        // Otherwise, this does not provide much value to the user
-
         val notification = notificationBuilder.build()
 
         return ArrayList<AppNotification>().apply {
             add(InstantNotification(AppNotification.TRANSPORT_ID, notification))
         }
+        */
     }
 
 }

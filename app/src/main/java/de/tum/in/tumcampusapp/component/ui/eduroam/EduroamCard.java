@@ -28,7 +28,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 public class EduroamCard extends Card {
 
     public EduroamCard(Context context) {
-        super(CardManager.CARD_EDUROAM, context, "card_eduroam", true);
+        super(CardManager.CARD_EDUROAM, context, "card_eduroam");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -72,14 +72,6 @@ public class EduroamCard extends Card {
              .putBoolean("card_eduroam_start", false)
              .apply();
     }
-
-    /*
-    @NonNull
-    @Override
-    public String getTitle() {
-        return getContext().getString(R.string.setup_eduroam);
-    }
-    */
 
     @Override
     public Intent getIntent() {

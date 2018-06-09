@@ -44,7 +44,7 @@ public class NextLectureCard extends Card {
     private TextView mEvent;
 
     public NextLectureCard(Context context) {
-        super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture", true);
+        super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -56,13 +56,6 @@ public class NextLectureCard extends Card {
     public CardCalendarItem getSelected() {
         return lectures.get(mSelected);
     }
-
-    /*
-    @Override
-    public String getTitle() {
-        return lectures.get(mSelected).title;
-    }
-    */
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
@@ -151,19 +144,6 @@ public class NextLectureCard extends Card {
     public int getId() {
         return 0;
     }
-
-    /*
-    @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        CardCalendarItem item = lectures.get(0);
-        final String time = DateUtils.getFutureTime(item.start, getContext());
-        notificationBuilder.setContentText(item.title + '\n' + time);
-        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_next_lecture);
-        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
-        return notificationBuilder.build();
-    }
-    */
 
     public void setLectures(List<CalendarItem> calendarItems) {
         for (CalendarItem calendarItem : calendarItems) {
