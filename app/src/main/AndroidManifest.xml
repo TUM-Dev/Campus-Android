@@ -729,6 +729,16 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
+            android:name=".component.ui.ticket.BuyTicketActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/summary"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.tufilm.KinoActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+        </activity>
+        <activity
             android:name=".component.ui.ticket.EventsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/events_overview"

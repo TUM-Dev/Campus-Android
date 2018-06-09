@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.ticket;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -68,7 +67,7 @@ public class EventsActivity extends ActivityForDownloadingExternal {
             events = EventsController.getEvents();
         } else {
             icon = R.drawable.ic_all_event;
-            events = EventsController.getbookedEvents();
+            events = EventsController.getBookedEvents();
         }
 
         if (!events.isEmpty()) {

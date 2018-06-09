@@ -58,7 +58,7 @@ public class EventsController {
                 "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
         return events;
     }
-    public static List<Event> getbookedEvents() {
+    public static List<Event> getBookedEvents() {
         List<Event> events = new ArrayList<>();
         events.add(new Event(0, "http://placehold.it/120x120&text=image1", "Unity2",
                 "Die TUM Campus App wird von Freiwilligen und Studenten entwickelt. " +

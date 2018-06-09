@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
-    private final List<Event> meventlist;
+    private final List<Event> mEventList;
     private Context mContext;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -48,7 +48,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
     public EventsAdapter(List<Event> events) {
-        meventlist = events;
+        mEventList = events;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -62,7 +62,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Event event = meventlist.get(position);
+        Event event = mEventList.get(position);
         holder.imgView.setVisibility(View.VISIBLE);
         holder.titleView.setVisibility(View.VISIBLE);
 
@@ -122,7 +122,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return meventlist.size();
+        return mEventList.size();
     }
 
 
