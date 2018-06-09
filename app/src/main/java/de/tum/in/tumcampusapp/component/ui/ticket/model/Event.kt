@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 /**
- * Events
+ * Event
  *
  * @param id      Event-ID
  * @param image   Image url e.g. http://www.tu-film.de/img/film/poster/Fack%20ju%20Ghte.jpg

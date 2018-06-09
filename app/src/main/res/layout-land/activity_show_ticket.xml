@@ -4,6 +4,11 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
     <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,13 +60,15 @@
 
                 <ImageView
                     android:id="@+id/ticket_qrcode"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="1200px"
+                    android:layout_height="1200px"
+                    android:layout_gravity="center"
                     android:src="@drawable/qrcodedemo" />
 
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    </ScrollView>
     <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>
