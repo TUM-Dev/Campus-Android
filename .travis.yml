@@ -4,10 +4,14 @@ branches:
   - master
 language: android
 jdk: oraclejdk8
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
- directories:
- -$HOME/.gradle/caches/
- -$HOME/.gradle/wrapper/
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
 env:
  global:
  - ANDROID_API=27
@@ -22,6 +26,7 @@ android:
   - extra-google-m2repository
   - android-$ANDROID_API_LEVEL
   - build-tools-$ANDROID_BUILD_TOOLS
+  - addon-google_apis-google-$ANDROID_API_LEVEL
   licenses:
   - ".+"
 before_install:
