@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.news;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
@@ -24,7 +23,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  */
 public class NewsCard extends Card {
 
-    private News mNews;
+    protected News mNews;
 
     public NewsCard(Context context) {
         this(CardManager.CARD_NEWS, context);
@@ -125,6 +124,15 @@ public class NewsCard extends Card {
 
     @Override
     public Intent getIntent() {
+        /*
+        if (mNews.getLink().isEmpty()) {
+            Utils.showToast(getContext(), R.string.no_link_existing);
+            return null;
+        }
+        */
+
+        return mNews.getIntent(getContext());
+        /*
         // Show regular news in browser
         String url = mNews.getLink();
         if (url.isEmpty()) {
@@ -134,6 +142,7 @@ public class NewsCard extends Card {
 
         // Opens url in browser
         return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        */
     }
 
     @Override

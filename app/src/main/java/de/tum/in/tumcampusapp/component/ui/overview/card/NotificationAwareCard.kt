@@ -12,7 +12,7 @@ abstract class NotificationAwareCard : Card {
 
     constructor(cardType: Int, context: Context, settings: String) : super(cardType, context, settings) {}
 
-    constructor(cardType: Int, context: Context, settings: String, phoneDefault: Boolean) : super(cardType, context, settings, phoneDefault) {}
+    constructor(cardType: Int, context: Context, settings: String, phoneDefault: Boolean) : super(cardType, context, settings) {}
 
     /**
      * Determines if the card should show a notification. Decision is based on the given SharedPreferences.

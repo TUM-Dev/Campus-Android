@@ -275,6 +275,11 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return results;
     }
 
+    @Override
+    public boolean hasNotificationsEnabled() {
+        return Utils.getSettingBool(mContext, "card_next_phone", false);
+    }
+
     @NotNull
     @Override
     public List<AppNotification> getNotifications() {

@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RemoteViews
 import android.widget.TextView
-import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -25,8 +24,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 abstract class Card(
         val cardType: Int,
         protected var context: Context,
-        val settingsPrefix: String = "",
-        showNotificationDefault: Boolean = false) : Comparable<Card> {
+        val settingsPrefix: String = "") : Comparable<Card> {
 
     // UI Elements
     protected var mCard: View? = null
@@ -35,7 +33,6 @@ abstract class Card(
 
     // Settings for showing this card on start page or as notification
     protected var mShowStart = Utils.getSettingBool(context, settingsPrefix + "_start", true)
-    protected var mShowPhone = Utils.getSettingBool(context, settingsPrefix + "_phone", showNotificationDefault)
 
     open fun getId(): Int {
         return 0;

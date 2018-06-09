@@ -368,6 +368,11 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
         return results;
     }
 
+    @Override
+    public boolean hasNotificationsEnabled() {
+        return Utils.getSettingBool(mContext, "card_mvv_phone", false);
+    }
+
     @NotNull
     @Override
     public List<AppNotification> getNotifications() {

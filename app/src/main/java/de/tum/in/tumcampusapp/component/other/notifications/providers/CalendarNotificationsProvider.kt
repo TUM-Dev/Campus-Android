@@ -8,6 +8,7 @@ import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotif
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateUtils
+import de.tum.`in`.tumcampusapp.utils.Utils
 
 class CalendarNotificationsProvider(context: Context,
                                     private val lectures: List<CalendarItem>) : NotificationsProvider(context) {

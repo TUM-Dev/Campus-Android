@@ -10,12 +10,15 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 
 object AppNotificationsManager {
 
-    fun getProviders(context: Context) = arrayOf<ProvidesNotifications>(
+    private fun getProviders(context: Context) = arrayOf<ProvidesNotifications>(
             CafeteriaManager(context),
             CalendarController(context),
             NewsController(context),
             TransportController(context),
             TuitionFeeManager(context)
     )
+
+    fun getEnabledProviders(context: Context) =
+            getProviders(context).filter { it.hasNotificationsEnabled() }
 
 }

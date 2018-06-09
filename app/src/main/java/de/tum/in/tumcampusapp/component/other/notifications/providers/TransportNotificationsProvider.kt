@@ -9,11 +9,17 @@ import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotif
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
 
 class TransportNotificationsProvider(
         context: Context,
         private val departures: List<Departure>,
         private val station: StationResult) : NotificationsProvider(context) {
+
+    override fun hasNotificationsEnabled(): Boolean {
+        return Utils.getSettingBool(context, "card_mvv_phone", false)
+
+    }
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_MVV)

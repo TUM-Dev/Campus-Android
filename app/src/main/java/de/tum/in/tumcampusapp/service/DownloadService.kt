@@ -198,7 +198,7 @@ class DownloadService : JobIntentService() {
             }
 
             // Get all providers of notifications
-            val notificationProviders = AppNotificationsManager.getProviders(service)
+            val notificationProviders = AppNotificationsManager.getEnabledProviders(service)
             val notifications = notificationProviders.flatMap { it.getNotifications() }
 
             // Show instant notifications immediately
@@ -221,10 +221,6 @@ class DownloadService : JobIntentService() {
                 if (success) {
                     Utils.setSetting(service, LAST_UPDATE, System.currentTimeMillis())
                 }
-
-                // TODO Till: Philipp and I have decided to omit the update of Cards here.
-                // In the future, we’ll introduce a better way for Manager classes to update
-                // themselves in the background, independent of their corresponding Card.
 
                 success = true
             }

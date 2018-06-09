@@ -17,7 +17,7 @@ object NotificationScheduler {
     fun schedule(context: Context, futureNotification: FutureNotification) {
         val alarmIntent = getAlarmIntent(context, futureNotification)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, futureNotification.time, alarmIntent)
+        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, futureNotification.time, alarmIntent) // TODO: Elapsed time
     }
 
     private fun getAlarmIntent(context: Context, futureNotification: FutureNotification): PendingIntent {

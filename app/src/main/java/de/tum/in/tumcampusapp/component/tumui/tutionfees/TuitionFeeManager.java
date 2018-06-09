@@ -12,14 +12,15 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.TuitionFeesNotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotification;
+import de.tum.in.tumcampusapp.component.other.notifications.providers.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.notifications.providers.TuitionFeesNotificationsProvider;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Tuition manager, handles tuition card
@@ -43,6 +44,11 @@ public class TuitionFeeManager implements ProvidesCard, ProvidesNotifications {
 
         results.add(card.getIfShowOnStart());
         return results;
+    }
+
+    @Override
+    public boolean hasNotificationsEnabled() {
+        return Utils.getSettingBool(mContext, "card_tuition_fee_phone", true);
     }
 
     @NotNull

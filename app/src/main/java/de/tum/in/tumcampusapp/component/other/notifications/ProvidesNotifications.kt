@@ -9,6 +9,13 @@ import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotificat
 interface ProvidesNotifications {
 
     /**
+     * Returns whether the user has enabled notifications for a particular kind of notifications.
+     *
+     * @return Whether the user has enabled notifications for this kind
+     */
+    abstract fun hasNotificationsEnabled(): Boolean
+
+    /**
      * Returns the list of [AppNotification]s that should be displayed to the user.
      *
      * @return The list of [AppNotification]s

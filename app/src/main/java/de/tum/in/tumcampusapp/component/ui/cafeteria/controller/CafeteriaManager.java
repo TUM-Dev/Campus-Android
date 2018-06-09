@@ -78,6 +78,11 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         return results;
     }
 
+    @Override
+    public boolean hasNotificationsEnabled() {
+        return Utils.getSettingBool(mContext, "card_cafeteria_phone", true);
+    }
+
     @NotNull
     @Override
     public List<AppNotification> getNotifications() {

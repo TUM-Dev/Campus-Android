@@ -23,12 +23,12 @@ object TuitionNotificationScheduler {
         )
 
         // The buffer between the current date and the deadline
-        val buffer = getDaysBuffer(deadline)
+        val daysDiff = getDaysDiff(deadline)
 
         // Sort possible notification times descending and remove all bigger than the buffer
         // Then, select the biggest number of days until the deadline
         val daysBeforeDeadline = notificationTimes
-                .filter { time -> time <= buffer }
+                .filter { time -> time <= daysDiff }
                 .sortedDescending()
                 .first()
                 .days
@@ -44,12 +44,6 @@ object TuitionNotificationScheduler {
         return notificationDate.millis
     }
 
-    fun getDaysBuffer(tuition: Tuition): Days {
-        val deadline = DateUtils.getDate(tuition.frist).toJoda()
-        return getDaysBuffer(deadline)
-    }
-
-    private fun getDaysBuffer(deadline: DateTime) = Days.daysBetween(Date().toJoda(), deadline)
-
+    private fun getDaysDiff(deadline: DateTime) = Days.daysBetween(Date().toJoda(), deadline)
 
 }

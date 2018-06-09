@@ -171,6 +171,11 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
         return results;
     }
 
+    @Override
+    public boolean hasNotificationsEnabled() {
+        return Utils.getSettingBool(context, "card_news_phone", false);
+    }
+
     @NotNull
     @Override
     public List<AppNotification> getNotifications() {
