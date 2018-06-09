@@ -20,7 +20,6 @@ import com.squareup.picasso.Picasso;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.component.ui.tufilm.show_ticket;
 import de.tum.in.tumcampusapp.utils.Const;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -151,7 +150,7 @@ public class EventDetailsFragment extends Fragment {
     //time and place of movie  is fixed. Only the movie title and date should be transfered to show_ticket activity
     private void showTicket(){
         String data = "KingsMan 08.05 " + "\n"+ "Filmbegin: 20:00 o'clock "+"\n"+ " 1. Stock, Hörsaal 1200 (Carl-von-Linde-Hörsaal) Arcisstraße 21";
-        Intent intent = new Intent(getActivity().getApplicationContext(), show_ticket.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), ShowTicketActivity.class);
         intent.putExtra("movie_data", data);
         startActivity(intent);
     }

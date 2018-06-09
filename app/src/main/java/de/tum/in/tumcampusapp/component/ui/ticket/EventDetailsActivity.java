@@ -26,7 +26,8 @@ public class EventDetailsActivity extends BaseActivity{
         ViewPager mPager = findViewById(R.id.pager);
 
         // TODO: replace by real data -> for now, using static method with mock data for testing purposes
-        EventAdapter eventAdapter = new EventAdapter(getSupportFragmentManager(), EventsController.getEvents());
+        EventAdapter eventAdapter = new EventAdapter(getSupportFragmentManager(),
+                EventsController.getEvents());
         mPager.setAdapter(eventAdapter);
         mPager.setCurrentItem(0);
     }
