@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginRight="@dimen/padding_default">
+        android:layout_marginEnd="@dimen/padding_default">
 
         <ImageView
             android:layout_width="@dimen/icon_small"

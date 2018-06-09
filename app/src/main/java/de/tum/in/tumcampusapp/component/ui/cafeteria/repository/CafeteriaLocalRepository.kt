@@ -22,7 +22,7 @@ object CafeteriaLocalRepository {
 
     // Menu methods //
 
-    fun getCafeteriaMenu(id: Int, date: String): Flowable<List<CafeteriaMenu>> =
+    fun getCafeteriaMenus(id: Int, date: String): Flowable<List<CafeteriaMenu>> =
             db.cafeteriaMenuDao().getTypeNameFromDbCard(id, date)
 
     fun getAllMenuDates(): Flowable<List<String>> = db.cafeteriaMenuDao().allDates

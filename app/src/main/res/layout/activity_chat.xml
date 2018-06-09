@@ -52,6 +52,7 @@
                     android:hint="@string/send"
                     android:inputType="textCapSentences|textMultiLine"
                     android:maxLines="4"
+                    android:textCursorDrawable="@drawable/cursor_text_field_colorful"
                     android:scrollbars="vertical"/>
 
                 <ImageButton

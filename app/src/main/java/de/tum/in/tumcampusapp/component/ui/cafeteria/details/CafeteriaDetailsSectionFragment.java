@@ -279,7 +279,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         LinearLayout root = rootView.findViewById(R.id.layout);
         int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
         String date = getArguments().getString(Const.DATE);
-        cafeteriaViewModel.getCafeteriaMenu(cafeteriaId, date)
+        cafeteriaViewModel.getCafeteriaMenus(cafeteriaId, date)
                           .subscribe(menu -> showMenu(root, cafeteriaId, date, true, menu));
         return rootView;
     }

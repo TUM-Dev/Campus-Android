@@ -1,7 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- The toolbar aka SupportActionBar -->
     <include layout="@layout/toolbar"/>
@@ -11,8 +13,9 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="match_parent">
 
         <TextView
@@ -23,9 +26,8 @@
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/divider"
-            android:layout_below="@id/pager_title_strip">
+            android:layout_weight="1"
+            android:layout_height="0dp">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -38,7 +40,7 @@
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:orientation="vertical"
-                    android:padding="@dimen/padding_default">
+                    android:padding="@dimen/material_default_padding">
 
                     <TextView
                         style="?android:attr/listSeparatorTextViewStyle"
@@ -54,6 +56,7 @@
 
                     <EditText
                         android:id="@+id/lrz_id"
+                        android:hint="@string/enter_your_tum_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -62,10 +65,12 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
                         android:layout_marginTop="5dp"
+                        android:padding="@dimen/padding_default"
                         android:text="@string/tumonline_advantages"/>
+
                 </LinearLayout>
+
             </ScrollView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
@@ -74,17 +79,23 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_above="@+id/buttonBar"
             android:background="?android:attr/listDivider"/>
 
-        <Button
-            android:layout_alignParentBottom="true"
-            android:id="@+id/buttonBar"
-            style="@style/ButtonBarButton"
-            android:layout_width="match_parent"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/next_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
             android:onClick="onClickNext"
-            android:text="@string/button_next"/>
-    </RelativeLayout>
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
+            android:layout_marginBottom="@dimen/material_small_padding"
+            android:layout_gravity="end"
+            android:alpha="0.5"
+            android:clickable="false"
+            android:text="@string/button_next"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/color_primary"/>
+
+    </LinearLayout>
+
 </LinearLayout>

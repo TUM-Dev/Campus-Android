@@ -1,271 +1,347 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:key="cards_pref_container">
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="cards_pref_container">
 
-    <PreferenceCategory android:title="@string/cards_settings">
+    <android.support.v7.preference.PreferenceCategory android:title="@string/campus">
+
+        <android.support.v7.preference.ListPreference
+            android:defaultValue="G"
+            android:entries="@array/default_campus_entries"
+            android:entryValues="@array/default_campus_values"
+            android:key="card_default_campus"
+            android:title="@string/default_campus"/>
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory android:title="@string/cards_settings">
 
         <!-- Cafeteria card -->
-        <PreferenceScreen
+        <android.support.v7.preference.PreferenceScreen
             android:key="card_cafeteria"
             android:summary="@string/card_cafeteria_summary"
             android:title="@string/cafeteria">
 
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
+            <android.support.v7.preference.PreferenceCategory android:title="@string/display">
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_start"
                     android:title="@string/startpage"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_phone"
                     android:title="@string/notification"/>
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/default_cafeteria">
-                <ListPreference
+
+            </android.support.v7.preference.PreferenceCategory>
+
+            <android.support.v7.preference.PreferenceCategory android:title="@string/default_cafeteria">
+
+                <android.support.v7.preference.ListPreference
                     android:defaultValue="422"
                     android:entries="@array/cafeterias_G"
                     android:entryValues="@array/cafeterias_G_val"
                     android:key="card_cafeteria_default_G"
                     android:title="@string/campus_garching"/>
-                <ListPreference
+
+                <android.support.v7.preference.ListPreference
                     android:defaultValue="414"
                     android:entries="@array/cafeterias_K"
                     android:entryValues="@array/cafeterias_K_val"
                     android:key="card_cafeteria_default_K"
                     android:title="@string/campus_klinikum"/>
-                <ListPreference
+
+                <android.support.v7.preference.ListPreference
                     android:defaultValue="423"
                     android:entries="@array/cafeterias_W"
                     android:entryValues="@array/cafeterias_W_val"
                     android:key="card_cafeteria_default_W"
                     android:title="@string/campus_weihenstephan"/>
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/categories_to_show">
-                <CheckBoxPreference
+
+            </android.support.v7.preference.PreferenceCategory>
+
+            <android.support.v7.preference.PreferenceCategory android:title="@string/categories_to_show">
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_tg"
                     android:title="Tagesgerichte"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_ae"
                     android:title="Aktionsessen"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_akt"
                     android:title="Aktion"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_bei"
                     android:title="Beilagen"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_bg"
                     android:title="Biogericht"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_bio"
                     android:title="Bio"/>
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/extra">
-                <ListPreference
+
+            </android.support.v7.preference.PreferenceCategory>
+
+            <android.support.v7.preference.PreferenceCategory android:title="@string/extra">
+
+                <android.support.v7.preference.ListPreference
                     android:defaultValue="0"
                     android:entries="@array/roles"
                     android:entryValues="@array/roles_values"
                     android:key="card_role"
                     android:summary="@string/role_summary"
                     android:title="@string/role"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
+
+            </android.support.v7.preference.PreferenceCategory>
+
+        </android.support.v7.preference.PreferenceScreen>
 
         <!-- MVV card -->
-        <PreferenceScreen
+        <android.support.v7.preference.PreferenceScreen
             android:key="card_mvv"
             android:summary="@string/card_mvv_summary"
             android:title="@string/mvv">
 
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
+            <android.support.v7.preference.PreferenceCategory android:title="@string/display">
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_mvv_start"
                     android:title="@string/startpage"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_mvv_phone"
                     android:title="@string/notification"/>
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/default_station">
-                <ListPreference
+
+            </android.support.v7.preference.PreferenceCategory>
+
+            <android.support.v7.preference.PreferenceCategory android:title="@string/default_station">
+
+                <android.support.v7.preference.ListPreference
                     android:defaultValue="Garching-Forschungszentrum"
                     android:entries="@array/stations_G"
                     android:entryValues="@array/stations_G"
                     android:key="card_stations_default_G"
                     android:title="@string/campus_garching"/>
-                <ListPreference
+
+                <android.support.v7.preference.ListPreference
                     android:defaultValue="Theresienstraße"
                     android:entries="@array/stations_C"
                     android:entryValues="@array/stations_C"
                     android:key="card_stations_default_C"
                     android:title="@string/campus_main"/>
-                <ListPreference
+
+                <android.support.v7.preference.ListPreference
                     android:defaultValue="Klinikum Großhadern"
                     android:entries="@array/stations_K"
                     android:entryValues="@array/stations_K"
                     android:key="card_stations_default_K"
                     android:title="@string/campus_klinikum_großhadern"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
+
+            </android.support.v7.preference.PreferenceCategory>
+
+        </android.support.v7.preference.PreferenceScreen>
 
         <!-- Next lecture card -->
-        <PreferenceScreen
+        <android.support.v7.preference.PreferenceScreen
             android:key="card_next_lecture"
             android:summary="@string/card_next_lecture_summary"
             android:title="@string/next_lecture">
 
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
+            <android.support.v7.preference.PreferenceCategory android:title="@string/display">
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_next_lecture_start"
                     android:title="@string/startpage"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_next_lecture_phone"
                     android:title="@string/notification"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
+
+            </android.support.v7.preference.PreferenceCategory>
+
+        </android.support.v7.preference.PreferenceScreen>
 
         <!-- Tuition fee card -->
-        <PreferenceScreen
+        <android.support.v7.preference.PreferenceScreen
             android:key="card_tuition_fee"
             android:summary="@string/card_tuition_fee_summary"
             android:title="@string/tuition_fees">
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
+
+            <android.support.v7.preference.PreferenceCategory android:title="@string/display">
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_tuition_fee_start"
                     android:title="@string/startpage"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_tuition_fee_phone"
                     android:title="@string/notification"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
+
+            </android.support.v7.preference.PreferenceCategory>
+
+        </android.support.v7.preference.PreferenceScreen>
 
         <!-- News card -->
-        <PreferenceScreen
+        <android.support.v7.preference.PreferenceScreen
             android:key="card_news"
             android:summary="@string/card_news_summary"
             android:title="@string/news">
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
+
+            <android.support.v7.preference.PreferenceCategory android:title="@string/display">
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_news_start"
                     android:title="@string/startpage"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_news_phone"
                     android:title="@string/notification"/>
-            </PreferenceCategory>
-            <PreferenceCategory
+
+            </android.support.v7.preference.PreferenceCategory>
+
+            <android.support.v7.preference.PreferenceCategory
                 android:key="card_news_sources"
                 android:title="@string/news_sources">
                 <!-- News sources get inserted here automatically -->
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/extra">
-                <CheckBoxPreference
+            </android.support.v7.preference.PreferenceCategory>
+
+            <android.support.v7.preference.PreferenceCategory android:title="@string/extra">
+
+                <android.support.v7.preference.SwitchPreferenceCompat
                     android:defaultValue="true"
                     android:key="card_news_latest_only"
                     android:summary="@string/only_latest_article_summary"
                     android:title="@string/only_latest_article"/>
-                <ListPreference
+
+                <android.support.v7.preference.ListPreference
                     android:defaultValue="7"
                     android:entries="@array/newspread_entries"
                     android:entryValues="@array/newspread_values"
                     android:key="news_newspread"
                     android:summary="@string/newspread_summary"
                     android:title="@string/newspread"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
+
+            </android.support.v7.preference.PreferenceCategory>
+
+        </android.support.v7.preference.PreferenceScreen>
 
         <!-- Chat card -->
-        <PreferenceScreen
+        <android.support.v7.preference.PreferenceScreen
             android:key="card_chat"
             android:summary="@string/card_chat_summary"
             android:title="@string/chat">
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
+
+            <android.support.v7.preference.PreferenceCategory android:title="@string/display">
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_chat_start"
                     android:title="@string/startpage"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_chat_phone"
                     android:title="@string/notification"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
+
+            </android.support.v7.preference.PreferenceCategory>
+
+        </android.support.v7.preference.PreferenceScreen>
 
         <!-- Eduroam card -->
-        <PreferenceScreen
+        <android.support.v7.preference.PreferenceScreen
             android:key="card_eduroam"
             android:summary="@string/card_eduroam_summary"
             android:title="@string/eduroam">
 
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
+            <android.support.v7.preference.PreferenceCategory android:title="@string/display">
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_eduroam_start"
                     android:title="@string/startpage"/>
-                <CheckBoxPreference
+
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_eduroam_phone"
                     android:title="@string/notification"/>
-            </PreferenceCategory>
 
-            <PreferenceCategory android:title="@string/extra">
-                <Preference
+            </android.support.v7.preference.PreferenceCategory>
+
+            <android.support.v7.preference.PreferenceCategory android:title="@string/extra">
+
+                <android.support.v7.preference.Preference
                     android:key="card_eduroam_setup"
                     android:title="@string/setup_eduroam_now"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
 
-        <ListPreference
-            android:defaultValue="G"
-            android:entries="@array/default_campus_entries"
-            android:entryValues="@array/default_campus_values"
-            android:key="card_default_campus"
-            android:title="@string/default_campus"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/services">
-        <CheckBoxPreference
+            </android.support.v7.preference.PreferenceCategory>
+
+        </android.support.v7.preference.PreferenceScreen>
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory android:title="@string/services">
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:key="silent_mode"
             android:summary="@string/silence_phone_info"
             android:title="@string/silence_phone"/>
-        <ListPreference
+
+        <android.support.v7.preference.ListPreference
             android:defaultValue="0"
             android:dependency="silent_mode"
             android:entries="@array/silent_entries"
             android:entryValues="@array/silent_mode_values"
             android:key="silent_mode_set_to"
             android:title="@string/mode_silent_mode"/>
-        <CheckBoxPreference
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:key="background_mode"
             android:summary="@string/background_info"
             android:title="@string/background_mode"/>
-        <ListPreference
+
+        <android.support.v7.preference.ListPreference
             android:defaultValue="0"
             android:dependency="background_mode"
             android:entries="@array/background_entries"
             android:entryValues="@array/background_mode_values"
             android:key="background_mode_set_to"
             android:title="@string/mode_background_mode"/>
-        <CheckBoxPreference
+
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:key="auto_join_new_rooms"
             android:summary="@string/set_auto_join_chat"
             android:title="@string/auto_join_chat"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/extras">
-        <Preference
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory android:title="@string/extras">
+
+        <android.support.v7.preference.Preference
             android:key="button_clear_cache"
             android:summary="@string/clear_cache_detail"
             android:title="@string/clear_cache"/>
-    </PreferenceCategory>
-</PreferenceScreen>
+
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

@@ -70,8 +70,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mDrawerList != null && mDrawerLayout != null) {
             // Set personalization in the navdrawer
             headerView = mDrawerList.inflateHeaderView(R.layout.drawer_header);
-            TextView nameText = headerView.findViewById(R.id.name);
-            TextView emailText = headerView.findViewById(R.id.email);
+            TextView nameText = headerView.findViewById(R.id.nameTextView);
+            TextView emailText = headerView.findViewById(R.id.emailTextView);
             nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
                                               getString(R.string.token_not_enabled)));
             StringBuffer email = new StringBuffer(Utils.getSetting(this, Const.LRZ_ID, ""));
@@ -150,7 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return;
             }
             runOnUiThread(() -> {
-                CircleImageView picture = headerView.findViewById(R.id.profile_image);
+                CircleImageView picture = headerView.findViewById(R.id.profileImageView);
                 if (result.get()
                           .getImage() != null) {
                     picture.setImageBitmap(result.get()

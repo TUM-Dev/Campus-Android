@@ -1,42 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                style="@style/AppTheme.DrawerHeaderBackground"
-                android:layout_width="match_parent"
-                android:layout_height="172dp"
-                android:orientation="vertical"
-                android:paddingTop="20dp"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme.DrawerHeaderBackground"
+    android:layout_width="match_parent"
+    android:layout_height="172dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp"
-        android:elevation="4dp"
-        android:src="@drawable/photo_not_available"
-        tools:ignore="UnusedAttribute"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"
+        android:background="@android:color/black"/>
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profile_image"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/name"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="@dimen/material_small_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:elevation="4dp"
+            android:src="@drawable/photo_not_available"/>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            tools:text="Name"/>
+
+        <TextView
+            android:id="@+id/emailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="E-mail"/>
+
+    </LinearLayout>
+
+</FrameLayout>
