@@ -180,6 +180,7 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     private void buyTicket() {
+        // TODO: message to server to create ticket
         Intent intent = new Intent(context, BuyTicketActivity.class);
         startActivity(intent);
     }

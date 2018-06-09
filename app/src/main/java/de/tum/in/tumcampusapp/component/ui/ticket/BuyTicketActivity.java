@@ -5,13 +5,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 
 public class BuyTicketActivity extends BaseActivity {
-    private TextView paymentDetailsTextView;
-    private Button paymentButton;
 
     public BuyTicketActivity() {
         super(R.layout.activity_buy_ticket);
@@ -20,16 +22,30 @@ public class BuyTicketActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        paymentDetailsTextView = (TextView) findViewById(R.id.ticketdetail);
-        paymentButton = (Button) findViewById(R.id.paymentbutton);
+        TextView eventView = (TextView) findViewById(R.id.ticket_details_event);
+        TextView locationView = (TextView) findViewById(R.id.ticket_details_location);
+        TextView dateView = (TextView) findViewById(R.id.ticket_details_date);
+        TextView priceView = (TextView) findViewById(R.id.ticket_details_price);
+        TextView ticketTypeView = (TextView) findViewById(R.id.ticket_details_ticket_type);
+        Button paymentButton = (Button) findViewById(R.id.paymentbutton);
 
-        //Get data from Api backend, now it is mock up data
+        // TODO: Get data from Api backend, now it is mock up data
         Ticket ticket = TicketsController.getTickets();
 
-        //load eventdetail
-        String paymentdetail = "1× Ticket for" + "\n" + "         Event Name:" + ticket.getEvent().getTitle() + "\n" + "         Location:" + ticket.getEvent().getLocality() +
-                "\n" + "         Date:" + "\n" + ticket.getEvent().getDate() + "\n" + "         Price" + ticket.getType().getPrice();
-        paymentDetailsTextView.setText(paymentdetail);
+        String eventString = ticket.getEvent().getTitle();
+        String locationString = ticket.getEvent().getLocality();
+        String dateString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
+                format(ticket.getEvent().getDate());
+        String priceString = new DecimalFormat("#.00").format(ticket.getType().getPrice())
+                + " €";
+        String ticketTypeString = ticket.getType().getDescription();
+
+        eventView.append(": " + eventString);
+        locationView.append(": " + locationString);
+        dateView.append(": " + dateString);
+        priceView.append(": " + priceString);
+        ticketTypeView.append(": " + ticketTypeString);
+
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
