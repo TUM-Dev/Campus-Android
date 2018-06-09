@@ -9,6 +9,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import de.tum.in.tumcampusapp.BuildConfig;
+import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.component.ui.news.NewsSourcesDao;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.database.TcaDb;
@@ -16,7 +17,7 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApp.class)
 public class NewsSourcesDaoTest {
     private NewsSourcesDao dao;
 

@@ -1,12 +1,16 @@
 package de.tum.`in`.tumcampusapp.models.tumo
 
+import de.tum.`in`.tumcampusapp.BuildConfig
+import de.tum.`in`.tumcampusapp.TestApp
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineConst
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import org.simpleframework.xml.core.Persister
 
 @RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class, application = TestApp::class)
 class IdentityTest {
 
     @Test

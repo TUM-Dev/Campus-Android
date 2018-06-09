@@ -4,6 +4,7 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.TestApp
 import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
@@ -27,7 +28,7 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class)
+@Config(constants = BuildConfig::class, application = TestApp::class)
 class KinoActivityTest {
     private var kinoActivity: KinoActivity? = null
     private lateinit var dao: KinoDao
