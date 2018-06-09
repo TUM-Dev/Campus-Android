@@ -28,7 +28,9 @@ android:
   - build-tools-$ANDROID_BUILD_TOOLS
   - addon-google_apis-google-$ANDROID_API_LEVEL
   licenses:
-  - ".+"
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
 before_install:
 - chmod +x gradlew
 install:
