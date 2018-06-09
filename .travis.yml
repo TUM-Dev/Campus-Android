@@ -32,7 +32,7 @@ android:
   - android-sdk-license-.+
   - google-gdk-license-.+
 before_install:
-- yes | sdkmanager "platforms;android-$ANDROID_API_LEVEL"
+- yes | sdkmanager "platforms;android-27"
 - chmod +x gradlew
 install:
 - "./gradlew dependencies"
