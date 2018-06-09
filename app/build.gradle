@@ -5,7 +5,6 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply from: '../gradle/scripts/findbugs.gradle'
 apply from: '../gradle/scripts/pmd.gradle'
@@ -73,7 +72,7 @@ android {
 
 def androidSupportVersion = '27.1.1'
 def retrofitVersion = '2.3.0'
-def firebaseVersion = '15.0.1'
+def firebaseVersion = '15.0.0'
 def roomVersion = '1.1.0'
 def ankoVersion='0.10.5'
 
@@ -98,15 +97,15 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "android.arch.lifecycle:runtime:1.1.1"
     implementation "android.arch.lifecycle:extensions:1.1.1"
-    kapt "android.arch.lifecycle:compiler:$roomVersion"
-    kapt "android.arch.persistence.room:compiler:$roomVersion"
+    annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
 
     // Anko
     implementation "org.jetbrains.anko:anko:$ankoVersion"
 
     // Firebase / Play services
     implementation "com.google.android.gms:play-services-base:$firebaseVersion"
-    implementation "com.google.firebase:firebase-messaging:17.0.0"
+    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
 

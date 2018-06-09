@@ -11,6 +11,7 @@ import org.robolectric.annotation.Config;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.BuildConfig;
+import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;

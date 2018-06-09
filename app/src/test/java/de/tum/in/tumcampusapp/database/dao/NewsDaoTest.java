@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.BuildConfig;
+import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.component.ui.news.NewsDao;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.database.TcaDb;
@@ -42,13 +43,13 @@ public class NewsDaoTest {
 
     private News createNewsItem(String source, Date date) {
         News news = new News(Integer.toString(newsIdx),
-                             Integer.toString(newsIdx),
-                             "dummy link",
-                             source,
-                             "dummy image",
-                             date,
-                             date,
-                             0);
+                Integer.toString(newsIdx),
+                "dummy link",
+                source,
+                "dummy image",
+                date,
+                date,
+                0);
         newsIdx++;
         return news;
     }
