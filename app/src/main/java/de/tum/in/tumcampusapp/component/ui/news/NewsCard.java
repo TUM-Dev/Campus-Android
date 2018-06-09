@@ -15,14 +15,14 @@ import java.util.Date;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Card that shows selected news
  */
-public class NewsCard extends NotificationAwareCard {
+public class NewsCard extends Card {
 
     private News mNews;
 
@@ -43,10 +43,12 @@ public class NewsCard extends NotificationAwareCard {
         return Integer.parseInt(mNews.getId());
     }
 
+    /*
     @Override
     public String getTitle() {
         return mNews.getTitle();
     }
+    */
 
     public String getSource() {
         return mNews.getSrc();
@@ -137,7 +139,7 @@ public class NewsCard extends NotificationAwareCard {
     @Override
     public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setTextViewText(R.id.widgetCardTextView, mNews.getTitle());
         final String imgURL = mNews.getImage();
         if (!imgURL.trim().isEmpty() && !"null".equals(imgURL)) {
             Utils.log(imgURL);

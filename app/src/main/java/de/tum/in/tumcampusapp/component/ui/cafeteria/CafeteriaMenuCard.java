@@ -14,13 +14,12 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 
 import static de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment.showMenu;
@@ -29,11 +28,9 @@ import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_CAFE
 /**
  * Card that shows the cafeteria menu
  */
-public class CafeteriaMenuCard extends NotificationAwareCard {
+public class CafeteriaMenuCard extends Card {
 
     private static final String CAFETERIA_DATE = "cafeteria_date";
-    private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
-    private static final Pattern PATTERN = Pattern.compile("[0-9]");
 
     // TODO: Replace with CafeteriaWithMenus
     private CafeteriaWithMenus mCafeteria;
@@ -45,7 +42,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
     private List<CafeteriaMenu> mMenus;
 
     public CafeteriaMenuCard(Context context) {
-        super(CARD_CAFETERIA, context, "card_cafeteria");
+        super(CARD_CAFETERIA, context, "card_cafeteria", true);
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -62,7 +59,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         setMCard(viewHolder.itemView);
         setMLinearLayout(getMCard().findViewById(R.id.card_view));
         setMTitleView(getMCard().findViewById(R.id.card_title));
-        getMTitleView().setText(getTitle());
+        getMTitleView().setText(mCafeteriaName);
 
         // Show date
         TextView mDateView = getMCard().findViewById(R.id.card_date);
@@ -110,10 +107,12 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         mMenus = menus;
     }
 
+    /*
     @Override
     public String getTitle() {
         return mCafeteriaName;
     }
+    */
 
     @Override
     public Intent getIntent() {
@@ -194,7 +193,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
     @Override
     public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setTextViewText(R.id.widgetCardTextView, mCafeteriaName);
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_cutlery);
         return remoteViews;
     }

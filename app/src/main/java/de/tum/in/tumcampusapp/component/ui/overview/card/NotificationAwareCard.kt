@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.overview.card
 
 import android.content.Context
 
+@Deprecated("No longer used")
 abstract class NotificationAwareCard : Card {
 
     /**

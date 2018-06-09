@@ -24,11 +24,11 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 
-public class NextLectureCard extends NotificationAwareCard {
+public class NextLectureCard extends Card {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
     private final static int[] IDS = {
@@ -44,7 +44,7 @@ public class NextLectureCard extends NotificationAwareCard {
     private TextView mEvent;
 
     public NextLectureCard(Context context) {
-        super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture");
+        super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture", true);
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -53,10 +53,16 @@ public class NextLectureCard extends NotificationAwareCard {
         return new CardViewHolder(view);
     }
 
+    public CardCalendarItem getSelected() {
+        return lectures.get(mSelected);
+    }
+
+    /*
     @Override
     public String getTitle() {
         return lectures.get(mSelected).title;
     }
+    */
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
@@ -92,10 +98,10 @@ public class NextLectureCard extends NotificationAwareCard {
                       .setSelected(i == sel);
         }
 
-        final CardCalendarItem item = lectures.get(sel);
+        final CardCalendarItem item = getSelected();
 
         // Set current title
-        getMTitleView().setText(getTitle());
+        getMTitleView().setText(item.title);
 
         //Add content
         mTimeView.setText(DateUtils.getFutureTime(item.start, getContext()));
@@ -188,7 +194,7 @@ public class NextLectureCard extends NotificationAwareCard {
     @Override
     public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setTextViewText(R.id.widgetCardTextView, getSelected().title);
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_my_lectures);
         return remoteViews;
     }

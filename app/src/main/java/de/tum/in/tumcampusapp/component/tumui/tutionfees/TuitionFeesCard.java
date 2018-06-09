@@ -18,21 +18,21 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 
 /**
  * Card that shows information about your fees that have to be paid or have been paid
  */
-public class TuitionFeesCard extends NotificationAwareCard {
+public class TuitionFeesCard extends Card {
 
     private static final String LAST_FEE_FRIST = "fee_frist";
     private static final String LAST_FEE_SOLL = "fee_soll";
     private Tuition mTuition;
 
     public TuitionFeesCard(Context context) {
-        super(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee");
+        super(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee", true);
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -41,10 +41,12 @@ public class TuitionFeesCard extends NotificationAwareCard {
         return new CardViewHolder(view);
     }
 
+    /*
     @Override
     public String getTitle() {
         return getContext().getString(R.string.tuition_fees);
     }
+    */
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
@@ -55,7 +57,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
         setMCard(viewHolder.itemView);
         setMLinearLayout(getMCard().findViewById(R.id.card_view));
         setMTitleView(getMCard().findViewById(R.id.card_title));
-        getMTitleView().setText(getTitle());
+        getMTitleView().setText(getContext().getString(R.string.tuition_fees));
 
         //Remove additional views
         for (View view : addedViews) {
@@ -128,7 +130,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
     @Override
     public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setTextViewText(R.id.widgetCardTextView, context.getString(R.string.tuition_fees));
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_money);
         return remoteViews;
     }

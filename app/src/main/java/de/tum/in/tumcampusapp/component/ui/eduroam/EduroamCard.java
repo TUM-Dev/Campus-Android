@@ -18,14 +18,14 @@ import android.widget.RemoteViews;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
 
 /**
  * Card that can start {@link SetupEduroamActivity}
  */
-public class EduroamCard extends NotificationAwareCard {
+public class EduroamCard extends Card {
 
     public EduroamCard(Context context) {
         super(CardManager.CARD_EDUROAM, context, "card_eduroam", true);
@@ -73,11 +73,13 @@ public class EduroamCard extends NotificationAwareCard {
              .apply();
     }
 
+    /*
     @NonNull
     @Override
     public String getTitle() {
         return getContext().getString(R.string.setup_eduroam);
     }
+    */
 
     @Override
     public Intent getIntent() {
@@ -92,7 +94,7 @@ public class EduroamCard extends NotificationAwareCard {
     @Override
     public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setTextViewText(R.id.widgetCardTextView, context.getString(R.string.setup_eduroam));
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_action_network_wifi);
         return remoteViews;
     }

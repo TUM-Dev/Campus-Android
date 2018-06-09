@@ -16,8 +16,8 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoomDbRow
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager.CARD_CHAT
+import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
-import de.tum.`in`.tumcampusapp.component.ui.overview.card.NotificationAwareCard
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import java.util.*
@@ -25,7 +25,9 @@ import java.util.*
 /**
  * Card that shows the cafeteria menu
  */
-class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwareCard(CARD_CHAT, context, "card_chat") {
+class ChatMessagesCard(context: Context,
+                       room: ChatRoomDbRow) : Card(CARD_CHAT, context, "card_chat") {
+
     private var mUnread: List<ChatMessage> = ArrayList<ChatMessage>()
     private var nrUnread = 0;
     private var mRoomName = ""
@@ -40,7 +42,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
         setChatRoom(room.name, room.room, "${room.semesterId}:${room.name}")
     }
 
-    override val title = mRoomName
+    //override val title = mRoomName
 
     override fun  updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         mCard = viewHolder.itemView
@@ -106,10 +108,11 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
     //override fun shouldShowNotification(prefs: SharedPreferences) = true
 
-    override fun getRemoteViews(context: Context, appWidgetId: Int) = RemoteViews(context.packageName, R.layout.cards_widget_card).apply {
-        setTextViewText(R.id.widgetCardTextView, title)
-        setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_comment)
-    }
+    override fun getRemoteViews(context: Context, appWidgetId: Int) =
+            RemoteViews(context.packageName, R.layout.cards_widget_card).apply {
+                setTextViewText(R.id.widgetCardTextView, mRoomName)
+                setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_comment)
+            }
 
     companion object {
         fun inflateViewHolder(parent: ViewGroup) =

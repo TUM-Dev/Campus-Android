@@ -14,8 +14,8 @@ import android.widget.RemoteViews;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.StationResult;
 
@@ -24,13 +24,14 @@ import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_MVV;
 /**
  * Card that shows MVV departure times
  */
-public class MVVCard extends NotificationAwareCard {
+public class MVVCard extends Card {
+
     private static final String MVV_TIME = "mvv_time";
     private StationResult mStation;
     private List<Departure> mDepartures;
 
     MVVCard(Context context) {
-        super(CARD_MVV, context, "card_mvv");
+        super(CARD_MVV, context, "card_mvv", true);
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -39,10 +40,12 @@ public class MVVCard extends NotificationAwareCard {
         return new CardViewHolder(view);
     }
 
+    /*
     @Override
     public String getTitle() {
         return mStation.getStation();
     }
+    */
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
@@ -140,7 +143,7 @@ public class MVVCard extends NotificationAwareCard {
     @Override
     public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setTextViewText(R.id.widgetCardTextView, mStation.getStation());
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_mvv);
         return remoteViews;
     }
