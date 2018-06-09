@@ -4,6 +4,14 @@ branches:
   - master
 language: android
 jdk: oraclejdk8
+cache:
+ directories:
+ -$HOME/.gradle/caches/
+ -$HOME/.gradle/wrapper/
+env:
+ global:
+ - ANDROID_API=27
+ - ANDROID_BUILD_TOOLS=27.0.3
 android:
   components:
   - tools
@@ -12,8 +20,8 @@ android:
   - extra-android-m2repository
   - extra-google-google_play_services
   - extra-google-m2repository
-  - android-27
-  - build-tools-27.0.3
+  - android-$ANDROID_API_LEVEL
+  - build-tools-$ANDROID_BUILD_TOOLS
   licenses:
   - ".+"
 before_install:
