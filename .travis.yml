@@ -24,7 +24,8 @@ android:
   - android-$ANDROID_API_LEVEL
   - build-tools-$ANDROID_BUILD_TOOLS
   - addon-google_apis-google-$ANDROID_API_LEVEL
-  licenses: - '.+'
+  licenses:
+  - '.+'
 before_install:
 - yes | sdkmanager "platforms;android-27"
 - chmod +x gradlew
