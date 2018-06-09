@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/card_selector"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/material_default_padding">
 
         <TextView
             android:layout_width="match_parent"
@@ -20,5 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/swipe_away"/>
+
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

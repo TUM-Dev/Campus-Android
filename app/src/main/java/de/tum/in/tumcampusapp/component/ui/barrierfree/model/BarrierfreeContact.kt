@@ -15,7 +15,7 @@ data class BarrierfreeContact(var name: String = "",
     val isValid: Boolean
         get() = name != ""
 
-    val isHavingTumID: Boolean
+    val hasTumID: Boolean
         get() = !(tumID == "null" || tumID == "")
 
 

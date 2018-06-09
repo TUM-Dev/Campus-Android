@@ -3,9 +3,9 @@ package de.tum.in.tumcampusapp.component.ui.openinghour;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Location;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * A fragment representing a single Item detail screen. This fragment is either
@@ -67,12 +67,14 @@ public class OpeningHoursDetailFragment extends Fragment {
                                         .locationDao();
         String[] categories = {"library", "info", "cafeteria_gar", "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"};
         List<Location> locations = dao.getAllOfCategory(categories[mItemId]);
+
         RecyclerView recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
-        recyclerView.setAdapter(new OpeningHoursDetailAdapter(locations));
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(new OpeningHoursDetailAdapter(locations));
+
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
+        recyclerView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
 
         return rootView;
     }
@@ -81,15 +83,25 @@ public class OpeningHoursDetailFragment extends Fragment {
      * change presentation of locations in the list
      */
     public void setViewValue(View view, Location location) {
-        TextView tv1 = view.findViewById(R.id.text1);
-        tv1.setText(location.getName());
+        TextView locationTextView = view.findViewById(R.id.headerTextView);
+        locationTextView.setText(location.getName());
 
-        TextView tv2 = view.findViewById(R.id.text2);
+        TextView detailsTextView = view.findViewById(R.id.detailsTextView);
         String transport = location.getTransport();
         String address = location.getAddress();
         String hours = location.getHours();
         String remark = location.getRemark();
         String room = location.getRoom();
+
+        AppCompatButton openLinkButton = view.findViewById(R.id.openLinkButton);
+
+        if (location.getUrl().isEmpty()) {
+            openLinkButton.setVisibility(View.GONE);
+        } else {
+            openLinkButton.setVisibility(View.VISIBLE);
+            openLinkButton.setText(R.string.website);
+            openLinkButton.setTag(location.getUrl());
+        }
 
         StringBuilder sb = new StringBuilder(hours).append('\n')
                                                    .append(address);
@@ -107,25 +119,11 @@ public class OpeningHoursDetailFragment extends Fragment {
               .append(COMPILE.matcher(remark)
                              .replaceAll("\n"));
         }
-        tv2.setText(sb.toString());
+        detailsTextView.setText(sb.toString());
 
         // link email addresses and phone numbers (e.g. 089-123456)
-        Linkify.addLinks(tv2, Linkify.EMAIL_ADDRESSES);
-        Linkify.addLinks(tv2, Pattern.compile("[0-9-]{6,}"), "tel:");
-
-        StringBuilder url = new StringBuilder(location.getUrl());
-        TextView tv3 = view.findViewById(R.id.text3);
-        if (url.toString()
-               .isEmpty()) {
-            tv3.setVisibility(View.GONE);
-        } else {
-            url.insert(0, "<a href=\"")
-               .append("\">")
-               .append(getString(R.string.website))
-               .append("</a>");
-            tv3.setMovementMethod(LinkMovementMethod.getInstance());
-            tv3.setText(Utils.fromHtml(url.toString()));
-        }
+        Linkify.addLinks(detailsTextView, Linkify.EMAIL_ADDRESSES);
+        Linkify.addLinks(detailsTextView, Pattern.compile("[0-9-]{6,}"), "tel:");
     }
 
     private class OpeningHoursDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -152,5 +150,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         public int getItemCount() {
             return locations.size();
         }
+
     }
+
 }

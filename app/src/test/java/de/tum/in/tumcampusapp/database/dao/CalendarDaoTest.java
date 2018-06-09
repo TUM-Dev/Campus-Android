@@ -14,6 +14,7 @@ import org.robolectric.annotation.Config;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.BuildConfig;
+import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao;
@@ -26,7 +27,7 @@ import de.tum.in.tumcampusapp.utils.DateUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApp.class)
 public class CalendarDaoTest {
     private CalendarDao dao;
     private WidgetsTimetableBlacklistDao wtbDao;

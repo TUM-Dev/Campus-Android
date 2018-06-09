@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -77,17 +75,10 @@ public class TuitionFeesCard extends NotificationAwareCard {
                                     .format(d);
             addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_todo), date)));
 
-            String balanceStr = mTuition.getSoll();
-            try {
-                Double balance = NumberFormat.getInstance(Locale.GERMAN)
-                                             .parse(mTuition.getSoll())
-                                             .doubleValue();
-
-                balanceStr = String.format(Locale.GERMAN, "Value of a: %.2f", balance);
-            } catch (ParseException ignore) {
-            }
-            addedViews.add(addTextView(viewHolder.itemView.getContext()
-                                                          .getString(R.string.amount_dots) + ' ' + balanceStr + '€'));
+            String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
+            String cardText = String.format(
+                    Locale.getDefault(), textWithPlaceholder, mTuition.getOutstandingBalanceText());
+            addedViews.add(addTextView(cardText));
         }
     }
 

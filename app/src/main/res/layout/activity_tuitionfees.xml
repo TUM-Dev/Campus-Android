@@ -32,34 +32,34 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="12dp"
+            android:padding="@dimen/material_default_padding"
             android:transitionName="@string/transition_card"
             tools:ignore="UnusedAttribute">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/amount_dots"
-                android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="10dp"/>
+                android:layout_margin="@dimen/material_default_padding"
+                android:text="@string/amount_dots"
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/soll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="0 €"
-                android:textStyle="bold"
-                android:textSize="30sp"
+                android:layout_margin="@dimen/material_default_padding"
+                android:gravity="center_horizontal"
                 android:textColor="@color/sections_green"
-                android:gravity="center_horizontal"/>
+                android:textSize="30sp"
+                android:textStyle="bold"
+                tools:text="0 €"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal">
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -71,18 +71,24 @@
                     android:id="@+id/deadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_tiny_padding"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginStart="10dp"/>
+                    tools:text="Aug 15, 2018"
+                    android:textStyle="bold"/>
+
             </LinearLayout>
 
             <TextView
-                style="@style/InfoBox"
                 android:id="@+id/fees_aid"
-                android:layout_marginTop="25dp"
-                android:text="@string/tuition_fee_more" />
+                style="@style/InfoBox"
+                android:layout_marginTop="@dimen/material_large_padding"
+                android:text="@string/tuition_fee_more"/>
+
         </LinearLayout>
+
     </LinearLayout>
+
     <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer"/>
+
 </android.support.v4.widget.DrawerLayout>
