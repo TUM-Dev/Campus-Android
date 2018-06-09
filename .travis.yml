@@ -35,5 +35,8 @@ install:
 - "./gradlew dependencies"
 script:
 - "./gradlew check"
-after_failure:
-- cat "$TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
+before_deploy:
+- cat "$TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml"
+- cat "$TRAVIS_BUILD_DIR/app/build/reports/pmd/duplicates.xml"
+- cat "$TRAVIS_BUILD_DIR/app/build/reports/detekt/detekt-checkstyle.xml"
+- cat "$TRAVIS_BUILD_DIR/app/build/reports/findbugs/findBugsDebug.xml"
