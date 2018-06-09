@@ -1,23 +1,26 @@
-package de.tum.in.tumcampusapp.activities;
+package de.tum.`in`.tumcampusapp.activities
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
+import de.tum.`in`.tumcampusapp.BuildConfig
+import de.tum.`in`.tumcampusapp.TestApp
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, application = TestApp.class)
-public class RoomFinderActivityTest extends BaseActivityTest {
+@RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class, application = TestApp::class)
+class RoomFinderActivityTest : BaseActivityTest() {
 
-    @Override
     @Test
-    public void mainComponentDisplayedTest() {
+    override fun mainComponentDisplayedTest() {
         //idIsDisplayed(R.id.list);
     }
 
     @Test
-    public void searchTest() throws InterruptedException {
+    @Throws(InterruptedException::class)
+    fun searchTest() {
         // Adapted from https://android.googlesource.com/platform/frameworks/testing/+/android-support-test/espresso/sample/src/androidTest/java/android/support/test/testapp/ActionBarSearchActivityTest.java
-/*
+        /*
         onView(allOf(withId(R.id.action_search), isDisplayed()))
                 .perform(click());
 
