@@ -19,9 +19,14 @@ class NetworkChangeReceiver : BroadcastReceiver() {
         }
 
         // Use applicationContext because context can lead to memory leaks on devices < Android N
-        val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        Utils.log("WifiStateChange")
-        wifiManager.startScan()
+        try {
+            // startScan() can produce a NullPointerException which we can't prevent
+            val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            Utils.log("WifiStateChange")
+            wifiManager.startScan()
+        } catch (e: NullPointerException) {
+            Utils.log(e)
+        }
     }
 
 }

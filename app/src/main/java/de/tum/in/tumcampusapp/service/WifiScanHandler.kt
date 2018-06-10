@@ -24,10 +24,15 @@ class WifiScanHandler : Handler() {
     private class PeriodicalScan(val context: Context) : Runnable {
 
         override fun run() {
-            val wifiManager = context.applicationContext
-                    .getSystemService(Context.WIFI_SERVICE) as WifiManager
-            wifiManager.startScan()
-            Utils.log("WifiScanHandler started")
+            // Use applicationContext because context can lead to memory leaks on devices < Android N
+            try {
+                // startScan() can produce a NullPointerException which we can't prevent
+                val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                wifiManager.startScan()
+                Utils.log("WifiScanHandler started")
+            } catch (e: NullPointerException) {
+                Utils.log(e)
+            }
         }
 
     }
