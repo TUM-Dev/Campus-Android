@@ -4,7 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.widget.Button;
+import android.support.v7.widget.AppCompatButton;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +31,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private Calendar start, end;
     private boolean editing;
     private TextView titleView, descriptionView, startDateView, startTimeView, endDateView, endTimeView;
-    private Button createButton;
+    private AppCompatButton createButton;
     private CalendarItem event;
 
     public CreateEventActivity(){
@@ -50,8 +50,10 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
             descriptionView.setText(extras.getString(Const.EVENT_COMMENT));
             createButton.setText(R.string.event_save_edit_button);
         }
+
         initStartEndDates(extras);
         setDateAndTimeListeners();
+
         createButton.setOnClickListener(view -> {
             if (end.before(start)){
                 showErrorDialog(getString(R.string.create_event_time_error));
@@ -142,7 +144,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         endTimeView.setText(format.format(end.getTime()));
     }
     private void updateDateViews(){
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd.MM.yyyy", Locale.GERMANY);
         startDateView.setText(format.format(start.getTime()));
         endDateView.setText(format.format(end.getTime()));
     }
