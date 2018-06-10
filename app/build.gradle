@@ -23,9 +23,11 @@ android {
             minifyEnabled true
             useProguard true
         }
-        debug.debuggable true
-        debug.testCoverageEnabled true
         release.debuggable false
+        debug {
+            debuggable true
+            testCoverageEnabled true
+        }
     }
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
@@ -67,7 +69,6 @@ android {
         androidTest.assets.srcDirs += files("$projectDir/src/test/java".toString())
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
-
     dataBinding {
         enabled = true
     }
@@ -87,6 +88,7 @@ configurations.all {
 }
 
 dependencies {
+
     // Support Libraries
     implementation "com.android.support:cardview-v7:$androidSupportVersion"
     implementation "com.android.support:design:$androidSupportVersion"
@@ -98,8 +100,8 @@ dependencies {
     // Android arch components
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
-    implementation "android.arch.lifecycle:runtime:1.1.1"
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation 'android.arch.lifecycle:runtime:1.1.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
     annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
 
@@ -110,7 +112,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:$firebaseVersion"
     implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
+    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
 
     // Helpers
     implementation 'net.danlew:android.joda:2.9.9.2'
@@ -120,7 +122,7 @@ dependencies {
         exclude group: 'xpp3', module: 'xpp3'
     }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
     implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.1'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
