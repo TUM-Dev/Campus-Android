@@ -8,6 +8,8 @@ import kotlinx.android.synthetic.main.card_mvv.view.*
 
 class MVVCardViewHolder(itemView: View) : CardViewHolder(itemView) {
 
+    private var didBind = false
+
     fun bind(station: StationResult, departures: List<Departure>) {
         with(itemView) {
             stationNameTextView.text = station.station
@@ -15,19 +17,22 @@ class MVVCardViewHolder(itemView: View) : CardViewHolder(itemView) {
             val controller = TransportController(context)
             val items = Math.min(departures.size, 5)
 
-            departures
-                    .take(items)
-                    .map { departure ->
-                        DepartureView(context).apply {
-                            val isFavorite = controller.isFavorite(departure.symbol)
-                            setSymbol(departure.symbol, isFavorite)
-                            setLine(departure.direction)
-                            setTime(departure.departureTime)
+            if (!didBind) {
+                departures
+                        .take(items)
+                        .map { departure ->
+                            DepartureView(context).apply {
+                                val isFavorite = controller.isFavorite(departure.symbol)
+                                setSymbol(departure.symbol, isFavorite)
+                                setLine(departure.direction)
+                                setTime(departure.departureTime)
+                            }
                         }
-                    }
-                    .forEach { departureView ->
-                        contentContainerLayout.addView(departureView)
-                    }
+                        .forEach { departureView ->
+                            contentContainerLayout.addView(departureView)
+                        }
+                didBind = true
+            }
         }
     }
 
