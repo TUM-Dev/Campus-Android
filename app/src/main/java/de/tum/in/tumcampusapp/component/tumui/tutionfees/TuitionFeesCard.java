@@ -53,6 +53,8 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+
         TextView reregisterInfoTextView =
                 viewHolder.itemView.findViewById(R.id.reregister_info_text_view);
         TextView outstandingBalanceTextView =

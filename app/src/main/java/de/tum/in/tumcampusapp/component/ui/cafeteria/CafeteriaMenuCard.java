@@ -13,9 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +30,6 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-import static de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment.showMenu;
 import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_CAFETERIA;
 
 /**
@@ -53,34 +50,20 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.card_item, parent, false);
-        return new CardViewHolder(view);
+        View view = LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.card_cafeteria_menu, parent, false);
+        return new CafeteriaMenuViewHolder(view);
     }
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
-        List<View> addedViews = cardsViewHolder.getAddedViews();
-        setMCard(viewHolder.itemView);
-        setMLinearLayout(getMCard().findViewById(R.id.card_view));
-        setMTitleView(getMCard().findViewById(R.id.card_title));
-        getMTitleView().setText(getTitle());
 
-        // Show date
-        TextView mDateView = getMCard().findViewById(R.id.card_date);
-        mDateView.setVisibility(View.VISIBLE);
-        mDateView.setText(DateFormat.getDateInstance()
-                                    .format(mDate));
-
-        //Remove additional views
-        for (View view : addedViews) {
-            getMLinearLayout().removeView(view);
+        if (viewHolder instanceof CafeteriaMenuViewHolder) {
+            CafeteriaMenuViewHolder holder = (CafeteriaMenuViewHolder) viewHolder;
+            holder.bind(mCafeteriaId, mCafeteriaName, mDate, mDateStr, mMenus);
         }
-
-        // Show cafeteria menu
-        cardsViewHolder.setAddedViews(showMenu(getMLinearLayout(), mCafeteriaId, mDateStr, false, mMenus));
     }
 
     public void setCardMenus(CafeteriaWithMenus cafeteria) {
