@@ -604,6 +604,7 @@ Signature: %5$s</string>
     <string name="purchasedetail_dots">Details of your purchase:</string>
     <string name="continue_to_payment">CONTINUE TO PAYMENT</string>
     <string name="summary">Summary</string>
+
     <!-- Event Activity -->
     <string name="show_booked_events">Show booked events</string>
     <string name="events_overview">Events Overview</string>
@@ -611,6 +612,14 @@ Signature: %5$s</string>
     <string name="price">Price</string>
     <string name="location">Location</string>
     <string name="event" translatable="false">Event</string>
+    <string name="payment_selection">Payment Selection</string>
+
+    <!-- Payment -->
+    <string name="stripe">Stripe</string>
+    <string name="paypal">PayPal</string>
+    <string name="complete_purchase">Complete Purchase</string>
+    <string name="enter_card_info_title">Card Information</string>
+    <string name="enter_card_info_description">Please enter your card\'s information details to continue:</string>
 
     <string name="create">Create</string>
     <string name="enter_name_placeholder">Enter name …</string>
