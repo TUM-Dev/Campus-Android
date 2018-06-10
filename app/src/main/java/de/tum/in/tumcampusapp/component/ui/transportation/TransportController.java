@@ -337,7 +337,7 @@ public class TransportController implements ProvidesCard {
         String name = point.getString("name");
         String id = point.getJSONObject("ref")
                          .getString("id");
-        int quality = point.getInt("quality");
+        int quality = (point.has("quality")) ? point.getInt("quality") : 0;
         results.add(new StationResult(name, id, quality));
     }
 
