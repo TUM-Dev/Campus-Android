@@ -72,11 +72,14 @@ public abstract class BaseActivity extends AppCompatActivity {
             headerView = mDrawerList.inflateHeaderView(R.layout.drawer_header);
             TextView nameText = headerView.findViewById(R.id.nameTextView);
             TextView emailText = headerView.findViewById(R.id.emailTextView);
+
             nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
                                               getString(R.string.token_not_enabled)));
+
             StringBuffer email = new StringBuffer(Utils.getSetting(this, Const.LRZ_ID, ""));
-            if (!email.toString()
-                      .isEmpty()) {
+            if (email.toString().isEmpty()) {
+                emailText.setVisibility(View.GONE);
+            } else {
                 email.append("@mytum.de");
             }
             emailText.setText(email);
