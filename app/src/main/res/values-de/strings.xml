@@ -97,7 +97,7 @@
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
 
     <!-- Startup Wizard -->
-    <string name="token_not_enabled">TUMonline-Access-Token ist nicht aktiviert</string>
+    <string name="token_not_enabled">Nicht angemeldet</string>
     <string name="startup_wizard_uppercase">TUMonline-Wizard</string>
     <string name="welcome_msg">Um den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
     <string name="button_skip">Überspringen</string>
