@@ -615,11 +615,16 @@ Signature: %5$s</string>
     <string name="payment_selection">Payment Selection</string>
 
     <!-- Payment -->
-    <string name="stripe">Stripe</string>
-    <string name="paypal">PayPal</string>
+    <string name="creditcard">Credit Card</string>
     <string name="complete_purchase">Complete Purchase</string>
     <string name="enter_card_info_title">Card Information</string>
     <string name="enter_card_info_description">Please enter your card\'s information details to continue:</string>
+    <string name="purchase_progress_message">Requesting Ticket, please wait...</string>
+    <string name="purchase_success_title">Purchase successfull</string>
+    <string name="purchase_success_message">You can access your ticket in the ticket section.</string>
+    <string name="purchase_success_continue">Continue</string>
+    <string name="card_data_invalid">The card data is invalid.</string>
+
 
     <string name="create">Create</string>
     <string name="enter_name_placeholder">Enter name …</string>

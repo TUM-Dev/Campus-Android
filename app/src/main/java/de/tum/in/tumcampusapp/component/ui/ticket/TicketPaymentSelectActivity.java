@@ -20,7 +20,7 @@ public class TicketPaymentSelectActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Button stripeButton = findViewById(R.id.stripe_button);
+        Button stripeButton = findViewById(R.id.creditcard_button);
         stripeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
