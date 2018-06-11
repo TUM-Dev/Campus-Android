@@ -73,11 +73,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
             createButton.setText(R.string.event_save_edit_button);
         } else {
             titleView.requestFocus();
-            InputMethodManager inputManager =
-                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputManager != null) {
-                inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-            }
+            showKeyboard();
         }
 
         initStartEndDates(extras);
@@ -247,11 +243,30 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
     @Override
     public void onBackPressed() {
+        hideKeyboard();
+
         boolean handled = handleOnBackPressed();
         if (handled) {
             finish();
         } else {
             displayCloseDialog();
+        }
+    }
+
+    private void showKeyboard() {
+        InputMethodManager inputManager =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputManager =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            inputManager.hideSoftInputFromWindow(titleView.getWindowToken(),0);
         }
     }
 
