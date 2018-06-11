@@ -23,17 +23,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/event_title"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/material_default_padding"
-                android:hint="@string/event_title"
-                android:imeOptions="actionDone"
-                android:maxLines="1"
-                android:inputType="textAutoComplete|textCapSentences"
-                android:textCursorDrawable="@drawable/cursor_text_field_colorful"
-                android:textSize="20sp" />
+                android:layout_margin="@dimen/material_default_padding">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/event_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/event_title"
+                    android:imeOptions="actionDone"
+                    android:inputType="textAutoComplete|textCapSentences"
+                    android:maxLines="1"
+                    android:textCursorDrawable="@drawable/cursor_text_field_colorful"
+                    android:textSize="20sp" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout style="@style/CalendarDateTimeItem">
 
@@ -41,16 +47,23 @@
                     android:id="@+id/event_start_date"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/material_default_padding"
                     android:layout_weight="1"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center_vertical"
+                    android:paddingStart="@dimen/material_default_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:ignore="RtlSymmetry"
                     tools:text="Mon, Jun 11, 2018" />
 
                 <TextView
                     android:id="@+id/event_start_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center_vertical"
                     android:paddingEnd="@dimen/material_default_padding"
                     android:paddingStart="@dimen/material_default_padding"
@@ -65,16 +78,23 @@
                     android:id="@+id/event_end_date"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/material_default_padding"
                     android:layout_weight="1"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center_vertical"
+                    android:paddingStart="@dimen/material_default_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:ignore="RtlSymmetry"
                     tools:text="Mon, Jun 11, 2018" />
 
                 <TextView
                     android:id="@+id/event_end_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center_vertical"
                     android:paddingEnd="@dimen/material_default_padding"
                     android:paddingStart="@dimen/material_default_padding"
@@ -85,18 +105,23 @@
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/event_description"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/material_default_padding"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corners_background"
-            android:gravity="top"
-            android:hint="@string/comment"
-            android:padding="@dimen/material_default_padding"
-            android:textCursorDrawable="@drawable/cursor_text_field_colorful"
-            android:textSize="16sp" />
+            android:layout_weight="1">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/event_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="top"
+                android:hint="@string/comment"
+                android:inputType="textAutoCorrect|textAutoComplete|textCapSentences"
+                android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/create_event_button"

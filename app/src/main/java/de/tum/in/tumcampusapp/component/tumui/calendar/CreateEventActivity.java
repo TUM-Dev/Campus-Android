@@ -28,6 +28,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Allows the user to create (and edit) a private event in TUMonline.
  */
 public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
+
     private Calendar start, end;
     private boolean editing;
     private TextView titleView, descriptionView, startDateView, startTimeView, endDateView, endTimeView;
@@ -217,11 +218,12 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void showErrorDialog(String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message);
-        builder.setTitle(R.string.error);
-        builder.setIcon(R.drawable.ic_error_outline);
-        builder.setNeutralButton(R.string.ok, null);
-        builder.show();
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.error)
+            .setMessage(message)
+            .setIcon(R.drawable.ic_error_outline)
+            .setNeutralButton(R.string.ok, null)
+            .show();
     }
+
 }
