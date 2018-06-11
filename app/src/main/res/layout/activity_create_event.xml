@@ -30,7 +30,8 @@
                 android:layout_margin="@dimen/material_default_padding"
                 android:hint="@string/event_title"
                 android:imeOptions="actionDone"
-                android:lines="1"
+                android:maxLines="1"
+                android:inputType="textAutoComplete|textCapSentences"
                 android:textCursorDrawable="@drawable/cursor_text_field_colorful"
                 android:textSize="20sp" />
 
