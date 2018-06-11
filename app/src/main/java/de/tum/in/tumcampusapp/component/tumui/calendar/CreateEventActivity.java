@@ -35,7 +35,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private AppCompatButton createButton;
     private CalendarItem event;
 
-    public CreateEventActivity(){
+    public CreateEventActivity() {
         super(TUMOnlineConst.Companion.getCREATE_EVENT(), R.layout.activity_create_event);
     }
 
@@ -45,7 +45,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         initViews();
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
+        if (extras != null) {
             editing = true;
             titleView.setText(extras.getString(Const.EVENT_TITLE));
             descriptionView.setText(extras.getString(Const.EVENT_COMMENT));
@@ -56,11 +56,11 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         setDateAndTimeListeners();
 
         createButton.setOnClickListener(view -> {
-            if (end.before(start)){
+            if (end.before(start)) {
                 showErrorDialog(getString(R.string.create_event_time_error));
                 return;
             }
-            if (editing){
+            if (editing) {
                 editEvent();
             } else {
                 createEvent();
@@ -68,7 +68,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
     }
 
-    private void initViews(){
+    private void initViews() {
         titleView = findViewById(R.id.event_title);
         descriptionView = findViewById(R.id.event_description);
         startDateView = findViewById(R.id.event_start_date);
@@ -78,11 +78,11 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         createButton = findViewById(R.id.create_event_button);
     }
 
-    private void initStartEndDates(Bundle extras){
+    private void initStartEndDates(Bundle extras) {
         start = Calendar.getInstance();
         end = Calendar.getInstance();
 
-        if (editing){
+        if (editing) {
             start.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_START)));
             end.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_END)));
         } else {
@@ -99,13 +99,13 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         updateTimeViews();
     }
 
-    private void setDateAndTimeListeners(){
+    private void setDateAndTimeListeners() {
 
         // DATE
         startDateView.setOnClickListener(view -> {
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
                 start.set(year, month, dayOfMonth);
-                if (end.before(start)){
+                if (end.before(start)) {
                     end.set(year, month, dayOfMonth);
                 }
                 updateDateViews();
@@ -139,18 +139,18 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
     }
 
-    private void updateTimeViews(){
+    private void updateTimeViews() {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.GERMANY);
         startTimeView.setText(format.format(start.getTime()));
         endTimeView.setText(format.format(end.getTime()));
     }
-    private void updateDateViews(){
+    private void updateDateViews() {
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd.MM.yyyy", Locale.GERMANY);
         startDateView.setText(format.format(start.getTime()));
         endDateView.setText(format.format(end.getTime()));
     }
 
-    private void editEvent(){
+    private void editEvent() {
         final String eventNr = getIntent().getExtras().getString(Const.EVENT_NR);
         TUMOnlineRequest<DeleteEvent> request = new TUMOnlineRequest<>(
                 TUMOnlineConst.Companion.getDELETE_EVENT(), this, true);
@@ -185,19 +185,19 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
     }
 
-    private void createEvent(){
+    private void createEvent() {
         event = new CalendarItem();
         event.setDtstart(DateUtils.getDateTimeString(start.getTime()));
         event.setDtend(DateUtils.getDateTimeString(end.getTime()));
 
         String title = titleView.getText().toString();
-        if (title.length() > 255){
+        if (title.length() > 255) {
             title = title.substring(0, 255);
         }
         event.setTitle(title);
 
         String description = descriptionView.getText().toString();
-        if (description.length() > 4000){
+        if (description.length() > 4000) {
             description = description.substring(0, 4000);
         }
         event.setDescription(description);
@@ -217,7 +217,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         finish();
     }
 
-    private void showErrorDialog(String message){
+    private void showErrorDialog(String message) {
         new AlertDialog.Builder(this)
             .setTitle(R.string.error)
             .setMessage(message)
