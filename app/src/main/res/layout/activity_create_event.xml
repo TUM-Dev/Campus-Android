@@ -118,7 +118,8 @@
                 android:background="@android:color/transparent"
                 android:gravity="top"
                 android:hint="@string/comment"
-                android:inputType="textAutoCorrect|textAutoComplete|textCapSentences"
+                android:imeOptions="normal"
+                android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
                 android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
         </android.support.design.widget.TextInputLayout>
@@ -129,13 +130,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_margin="@dimen/material_default_padding"
+            android:alpha="0.5"
+            android:enabled="false"
             android:text="@string/save"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/color_primary" />
 
     </LinearLayout>
-
-    <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

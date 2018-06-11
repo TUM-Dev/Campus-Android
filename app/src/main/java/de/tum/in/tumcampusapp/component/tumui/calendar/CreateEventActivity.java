@@ -2,9 +2,14 @@ package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -30,7 +35,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
 
     private Calendar start, end;
-    private boolean editing;
+    private boolean isEditing;
     private TextView titleView, descriptionView, startDateView, startTimeView, endDateView, endTimeView;
     private AppCompatButton createButton;
     private CalendarItem event;
@@ -44,12 +49,35 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         super.onCreate(savedInstanceState);
         initViews();
 
+        titleView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean isEmpty = s.toString().isEmpty();
+                float alpha = isEmpty ? 0.5f : 1.0f;
+                createButton.setEnabled(!isEmpty);
+                createButton.setAlpha(alpha);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            editing = true;
+            isEditing = true;
             titleView.setText(extras.getString(Const.EVENT_TITLE));
             descriptionView.setText(extras.getString(Const.EVENT_COMMENT));
             createButton.setText(R.string.event_save_edit_button);
+        } else {
+            titleView.requestFocus();
+            InputMethodManager inputManager =
+                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputManager != null) {
+                inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            }
         }
 
         initStartEndDates(extras);
@@ -60,7 +88,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
                 showErrorDialog(getString(R.string.create_event_time_error));
                 return;
             }
-            if (editing) {
+            if (isEditing) {
                 editEvent();
             } else {
                 createEvent();
@@ -82,7 +110,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         start = Calendar.getInstance();
         end = Calendar.getInstance();
 
-        if (editing) {
+        if (isEditing) {
             start.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_START)));
             end.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_END)));
         } else {
@@ -217,12 +245,46 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        boolean handled = handleOnBackPressed();
+        if (handled) {
+            finish();
+        } else {
+            displayCloseDialog();
+        }
+    }
+
+    private boolean handleOnBackPressed() {
+        String title = titleView.getText().toString();
+        String description = descriptionView.getText().toString();
+        return title.isEmpty() && description.isEmpty();
+    }
+
+    private void displayCloseDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage("Discard your changes?")
+                .setNegativeButton("Discard", (dialog, which) -> finish())
+                .setPositiveButton("Keep editing", null)
+                .show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void showErrorDialog(String message) {
         new AlertDialog.Builder(this)
             .setTitle(R.string.error)
             .setMessage(message)
             .setIcon(R.drawable.ic_error_outline)
-            .setNeutralButton(R.string.ok, null)
+            .setPositiveButton(R.string.ok, null)
             .show();
     }
 
