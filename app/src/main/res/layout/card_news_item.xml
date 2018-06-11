@@ -1,5 +1,4 @@
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
 
@@ -17,7 +16,7 @@
             android:maxHeight="200dp"
             android:minHeight="50dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/mvv_entire_net_icon"/>
+            android:src="@drawable/mvv_entire_net_icon" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/info_title"
                 android:textSize="20sp"
-                tools:text="News title"/>
+                tools:text="News title" />
 
             <TextView
                 android:id="@+id/news_src_date"
@@ -39,15 +38,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_default_padding"
                 android:textSize="16sp"
-                tools:text="News source date"/>
+                tools:text="News source date" />
 
             <TextView
                 android:id="@+id/news_src_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/material_default_padding"
-                android:drawableStart="@drawable/ic_facebook"
-                tools:text="News source title"/>
+                android:drawableStart="@drawable/news_source_placeholder"
+                tools:text="News source title" />
 
         </LinearLayout>
 
