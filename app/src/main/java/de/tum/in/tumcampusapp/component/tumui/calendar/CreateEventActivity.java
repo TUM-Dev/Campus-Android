@@ -263,9 +263,9 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
     private void displayCloseDialog() {
         new AlertDialog.Builder(this)
-                .setMessage("Discard your changes?")
-                .setNegativeButton("Discard", (dialog, which) -> finish())
-                .setPositiveButton("Keep editing", null)
+                .setMessage(R.string.discard_changes_question)
+                .setNegativeButton(R.string.discard, (dialog, which) -> finish())
+                .setPositiveButton(R.string.keep_editing, null)
                 .show();
     }
 

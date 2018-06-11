@@ -599,4 +599,8 @@ Signature: %5$s</string>
     <string name="feedback_empty">You haven\'t entered any feedback</string>
     <string name="feedback_img_without_text">Please add a description</string>
     <string name="campus">Campus</string>
+
+    <string name="discard_changes_question">Discard your changes?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
 </resources>
