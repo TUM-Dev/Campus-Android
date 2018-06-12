@@ -43,6 +43,7 @@ public final class CardManager {
     public static final int CARD_LOGIN = 14;
     public static final int CARD_EDUROAM_FIX = 15;
     public static final int CARD_TOP_NEWS = 16;
+    public static final int CARD_EVENTS = 17;
 
 
     private CardManager() {}

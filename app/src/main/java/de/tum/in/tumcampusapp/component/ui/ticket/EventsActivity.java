@@ -64,10 +64,10 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         List<Event> events;
         if (mBookedShowMode) {
             icon = R.drawable.ic_action_booked;
-            events = EventsController.getEvents();
+            events = EventsController.getBookedEvents();
         } else {
             icon = R.drawable.ic_all_event;
-            events = EventsController.getBookedEvents();
+            events = EventsController.getEvents();
         }
 
         if (!events.isEmpty()) {
@@ -75,6 +75,7 @@ public class EventsActivity extends ActivityForDownloadingExternal {
             lv.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
+
         if (menuItemSwitchView != null) {
             menuItemSwitchView.setIcon(icon);
         }

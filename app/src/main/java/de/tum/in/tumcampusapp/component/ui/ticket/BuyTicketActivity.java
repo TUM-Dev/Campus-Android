@@ -12,7 +12,9 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 
 
 public class BuyTicketActivity extends BaseActivity {
@@ -31,8 +33,13 @@ public class BuyTicketActivity extends BaseActivity {
         TextView ticketTypeView = findViewById(R.id.ticket_details_ticket_type);
         Button paymentButton = findViewById(R.id.paymentbutton);
 
+        int eventId = getIntent().getIntExtra("eventID", 0);
+
         // TODO: Get data from Api backend, now it is mock up data
-        Ticket ticket = TicketsController.getTickets();
+        Event event = EventsController.getEventById(eventId);
+        // TODO: adjust this; ticket is created locally and temporarily for now to test the UI
+        Ticket ticket = new Ticket(event, "ljipu3rupo567467657",
+                new TicketType(14, 2.5, "good tickets"));
 
         String eventString = ticket.getEvent().getTitle();
         String locationString = ticket.getEvent().getLocality();

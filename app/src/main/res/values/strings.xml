@@ -626,10 +626,12 @@ Signature: %5$s</string>
     <string name="card_data_invalid">The card data is invalid.</string>
 
 
+    <string name="link" translatable="false">Link</string>
     <string name="create">Create</string>
     <string name="enter_name_placeholder">Enter name …</string>
     <string name="send_feedback_question">Send feedback now?</string>
     <string name="feedback_empty">You haven\'t entered any feedback</string>
     <string name="feedback_img_without_text">Please add a description</string>
     <string name="campus">Campus</string>
+
 </resources>
