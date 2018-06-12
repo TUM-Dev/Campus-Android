@@ -19,16 +19,17 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
 
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
     private final List<Event> mEventList;
     private Context mContext;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class EventViewHolder extends CardViewHolder {
         CardView cardView;
         ImageView imgView;
         TextView titleView;
@@ -36,7 +37,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         TextView localityView;
         TextView srcDateView;
 
-        public ViewHolder(View view) {
+        public EventViewHolder(View view) {
             super(view);
             cardView = (CardView) view;
             titleView =  view.findViewById(R.id.events_title);
@@ -50,19 +51,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public EventsAdapter(List<Event> events) {
         mEventList = events;
     }
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         if (mContext==null){
             mContext = parent.getContext();
         }
         View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.card_events_item, parent, false);
-        return new ViewHolder(view);
+        return new EventViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Event event = mEventList.get(position);
+    public static void bindNewsView(RecyclerView.ViewHolder newsViewHolder, Event event, Context context) {
+        EventViewHolder holder = (EventViewHolder) newsViewHolder;
+
         holder.imgView.setVisibility(View.VISIBLE);
         holder.titleView.setVisibility(View.VISIBLE);
 
@@ -107,7 +109,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         String description = event.getDescription();
         String shortenedDescription = description;
         if (description.length() > maxDescriptionLength){
-            shortenedDescription = description.substring(0, 80) + "...";
+            shortenedDescription = description.substring(0, maxDescriptionLength) + "...";
         }
         holder.descriptionView.setText(shortenedDescription);
         //Adds localityView
@@ -121,9 +123,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
     @Override
+    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
+        Event event = mEventList.get(position);
+
+        EventCard eventCard = new EventCard(mContext);
+
+        eventCard.setEvent(event);
+        holder.setCurrentCard(eventCard);
+
+        bindNewsView(holder, event, mContext);
+    }
+
+    @Override
     public int getItemCount() {
         return mEventList.size();
     }
-
-
 }
