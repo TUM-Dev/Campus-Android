@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+
 
 public class BuyTicketActivity extends BaseActivity {
 
@@ -57,6 +59,8 @@ public class BuyTicketActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //TODO: jump to next activity, the activity to pay by Strip
+                Intent intent = new Intent(getApplicationContext(), TicketPaymentSelectActivity.class);
+                startActivity(intent);
             }
         });
     }
