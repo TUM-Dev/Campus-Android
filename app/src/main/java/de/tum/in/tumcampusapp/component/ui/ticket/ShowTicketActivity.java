@@ -11,6 +11,9 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
@@ -34,11 +37,12 @@ public class ShowTicketActivity extends BaseActivity {
 
         //Get data from Api backend, now it is mock up data
         Ticket ticket = TicketsController.getTicketByEventId(eventId);
-
+        String dateString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
+                format(ticket.getEvent().getDate());
         //load eventdetail
         String eventdetail = ticket.getEvent().getTitle() +
                 "\n" + ticket.getEvent().getLocality() +
-                "\n" + ticket.getEvent().getDate();
+                "\n" + dateString;
         eventDetailsTextView.setText(eventdetail);
 
         String code = ticket.getCode();
