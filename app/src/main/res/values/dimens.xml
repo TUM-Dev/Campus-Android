@@ -8,6 +8,8 @@
     <dimen name="material_corner_radius">2dp</dimen>
     <dimen name="material_default_elevation">12dp</dimen>
 
+    <dimen name="compound_drawable_size">16dp</dimen>
+
     <dimen name="padding_chat">2dp</dimen>
     <dimen name="padding_default">8dp</dimen>
     <dimen name="padding_small">4dp</dimen>

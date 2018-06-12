@@ -94,7 +94,7 @@ public final class TUMCabeClient {
         Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer())
                                      .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
-        builder.client(Helper.getOkClient(c));
+        builder.client(Helper.getOkHttpClient(c));
         service = builder.build()
                          .create(TUMCabeAPIService.class);
     }
