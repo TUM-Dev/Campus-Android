@@ -154,6 +154,9 @@ dependencies {
     testImplementation "android.arch.persistence.room:testing:$roomVersion"
     testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+    // TicketSale
+    implementation 'com.stripe:stripe-android:6.1.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

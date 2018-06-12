@@ -506,6 +506,16 @@ Signatur: %5$s</string>
     <string name="price">Preis</string>
     <string name="location">Ort</string>
 
+    <!-- Payment -->
+    <string name="creditcard">Kreditkarte</string>
+    <string name="complete_purchase">Zahlung abschließen</string>
+    <string name="enter_card_info_title">Karteninformationen</string>
+    <string name="enter_card_info_description">Bitte gib deine Karteninformationen an, um fortzufahren:</string>
+    <string name="purchase_progress_message">Ticket wird angefragt, bitte warten…</string>
+    <string name="purchase_success_title">Kauf abgeschlossen</string>
+    <string name="purchase_success_message">Du kannst dein Ticket nun im Ticketbereich einsehen.</string>
+    <string name="purchase_success_continue">Weiter</string>
+    <string name="card_data_invalid">Ungültige Zahlungsdaten.</string>
 
     <!-- Create personal Appointment (Calendar) -->
     <string name="create_event">Termin erstellen</string>
@@ -573,6 +583,7 @@ Signatur: %5$s</string>
     <!-- Events Activity -->
     <string name="show_booked_events">Gebuchte Veranstaltungen anzeigen</string>
     <string name="events_overview">Veranstaltungsübersicht</string>
+    <string name="payment_selection">Zahlungsoption Wählen</string>
 
     <string name="generate_new_token">Neuen Token generieren</string>
     <string name="open_tum_online">TUM Online öffnen</string>
