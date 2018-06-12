@@ -87,11 +87,11 @@ data class CalendarItem(@PrimaryKey
 
 
     fun getEventDateString(): String {
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
+        val dateFormat = SimpleDateFormat("EEE, dd.MM.yyyy", Locale.GERMANY)
         val startDate = DateUtils.getDateTime(dtstart)
         val endDate = DateUtils.getDateTime(dtend)
-        return String.format("%s %s - %s", dateFormat.format(startDate), timeFormat.format(startDate), timeFormat.format(endDate))
+        return String.format("%s  %s – %s", dateFormat.format(startDate), timeFormat.format(startDate), timeFormat.format(endDate))
     }
 
 

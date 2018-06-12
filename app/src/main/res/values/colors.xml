@@ -24,6 +24,8 @@
     <color name="github">#24292E</color>
     <color name="email">#757575</color>
 
+    <color name="news_source_placeholder">#E2E2E2</color>
+
     <!-- official TUM accent colors (style guide) -->
     <color name="tum_orange">#E37222</color>
     <color name="tum_green">#A2AD00</color>
