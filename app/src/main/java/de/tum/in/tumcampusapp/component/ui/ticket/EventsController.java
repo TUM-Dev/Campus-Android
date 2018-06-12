@@ -76,5 +76,23 @@ public class EventsController {
                 "https://mpi.fs.tum.de/fuer-studierende/veranstaltungen/unity/"));
         return events;
     }
+
+    public static boolean isEventBooked(Event event) {
+        for (Event bookedEvent : getBookedEvents()){
+            if (bookedEvent.getId() == event.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Event getEventById(int id) {
+        for (Event event : getEvents()){
+            if(event.getId() == id){
+                return event;
+            }
+        }
+        return null;
+    }
 }
 

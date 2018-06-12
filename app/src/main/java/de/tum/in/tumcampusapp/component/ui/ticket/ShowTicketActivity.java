@@ -30,11 +30,15 @@ public class ShowTicketActivity extends BaseActivity {
         eventDetailsTextView = (TextView) findViewById(R.id.eventdetail);
         ticketQrCode = (ImageView) findViewById(R.id.ticket_qrcode);
 
+        int eventId = getIntent().getIntExtra("eventID", 0);
+
         //Get data from Api backend, now it is mock up data
-        Ticket ticket = TicketsController.getTickets();
+        Ticket ticket = TicketsController.getTicketByEventId(eventId);
 
         //load eventdetail
-        String eventdetail = ticket.getEvent().getTitle() + "\n" + ticket.getEvent().getLocality() + "\n" + ticket.getEvent().getDate();
+        String eventdetail = ticket.getEvent().getTitle() +
+                "\n" + ticket.getEvent().getLocality() +
+                "\n" + ticket.getEvent().getDate();
         eventDetailsTextView.setText(eventdetail);
 
         String code = ticket.getCode();

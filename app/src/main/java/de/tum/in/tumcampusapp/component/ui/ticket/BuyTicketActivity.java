@@ -29,8 +29,10 @@ public class BuyTicketActivity extends BaseActivity {
         TextView ticketTypeView = findViewById(R.id.ticket_details_ticket_type);
         Button paymentButton = findViewById(R.id.paymentbutton);
 
+        int eventId = getIntent().getIntExtra("eventID", 0);
+
         // TODO: Get data from Api backend, now it is mock up data
-        Ticket ticket = TicketsController.getTickets();
+        Ticket ticket = TicketsController.getTicketByEventId(eventId);
 
         String eventString = ticket.getEvent().getTitle();
         String locationString = ticket.getEvent().getLocality();

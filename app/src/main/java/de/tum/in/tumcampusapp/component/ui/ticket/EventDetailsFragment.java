@@ -37,8 +37,6 @@ public class EventDetailsFragment extends Fragment {
     private String url; // link to homepage
     private LayoutInflater inflater;
 
-    private boolean booked = true;
-
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
@@ -55,8 +53,6 @@ public class EventDetailsFragment extends Fragment {
         event = EventsController.getEvents().get(position);
         showDetails(root);
 
-        // TODO: set booked if the user has already bought a ticket
-
         return rootView;
     }
 
@@ -68,8 +64,8 @@ public class EventDetailsFragment extends Fragment {
     private void showDetails(LinearLayout rootView) {
         url = event.getLink();
 
-        createKinoHeader(rootView);
-        createKinoFooter(rootView);
+        createEventHeader(rootView);
+        createEventFooter(rootView);
     }
 
     private void addToRoot(LinearLayout rootView, int headerId, CharSequence contentString) {
@@ -102,14 +98,14 @@ public class EventDetailsFragment extends Fragment {
         rootView.addView(view);
     }
 
-    private void createKinoFooter(LinearLayout root) {
+    private void createEventFooter(LinearLayout root) {
         addToRoot(root, R.string.date, new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
                 format(event.getDate()));
         addToRoot(root, R.string.location, event.getLocality());
         addToRootWithPadding(root, R.string.description, event.getDescription());
     }
 
-    private void createKinoHeader(LinearLayout rootView) {
+    private void createEventHeader(LinearLayout rootView) {
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.event_header, rootView, false);
 
         // initialize all buttons
@@ -123,7 +119,7 @@ public class EventDetailsFragment extends Fragment {
         link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
 
         // Setup "Buy/Show ticket" button according to ticket status for current event
-        if (booked){
+        if (EventsController.isEventBooked(event)){
             ticket.setText(this.getString(R.string.show_ticket));
             ticket.setOnClickListener(view -> showTicket());
         } else{
@@ -151,14 +147,15 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void showTicket() {
-        // TODO: pass the event to know which ticket to display
         Intent intent = new Intent(context, ShowTicketActivity.class);
+        intent.putExtra("eventID", event.getId());
         startActivity(intent);
     }
 
     private void buyTicket() {
         // TODO: message to server to create ticket
         Intent intent = new Intent(context, BuyTicketActivity.class);
+        intent.putExtra("eventID", event.getId());
         startActivity(intent);
     }
 
