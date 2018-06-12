@@ -31,7 +31,7 @@ public class NetUtils {
         cacheManager = new CacheManager(mContext);
 
         //Set our max wait time for each request
-        client = Helper.getOkClient(context);
+        client = Helper.getOkHttpClient(context);
     }
 
     public static Optional<JSONObject> downloadJson(Context context, String url) {
