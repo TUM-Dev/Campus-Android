@@ -34,34 +34,42 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"/>
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pie_chart"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0px"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:visibility="visible"/>
+                android:layout_weight="1">
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/bar_chart"
-                android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:visibility="gone"/>
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefreshLayout"
-                android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_weight="1"
-                android:visibility="gone">
-                <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-                    android:id="@+id/lstGrades"
+                <FrameLayout
+                    android:id="@+id/charts"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="vertical"/>
-            </android.support.v4.widget.SwipeRefreshLayout>
+                    android:layout_margin="@dimen/padding_default">
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pie_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"/>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/bar_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipeRefreshLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
+                    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+                        android:id="@+id/lstGrades"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="vertical"/>
+                </android.support.v4.widget.SwipeRefreshLayout>
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -84,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:drawableLeft="@drawable/ic_list_bulleted"
+                    android:drawableStart="@drawable/ic_list_bulleted"
                     android:gravity="center"
                     android:onClick="showList"
                     android:text="@string/show_list"/>
@@ -95,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:drawableLeft="@drawable/ic_pie_chart"
+                    android:drawableStart="@drawable/ic_pie_chart"
                     android:gravity="center"
                     android:onClick="showChart"
                     android:text="@string/show_chart"
@@ -103,6 +111,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/chartVisibilityToggle"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="@color/tum_300"
