@@ -29,6 +29,8 @@ import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketValidityRequest;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketValidityResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -40,6 +42,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_BUILDINGS_TO_GPS;
@@ -54,6 +57,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CURRICULA;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_EVENT;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
@@ -203,4 +207,8 @@ public interface TUMCabeAPIService {
 
     @GET(API_NEWS + "alert")
     Observable<NewsAlert> getNewsAlert();
+
+    @POST(API_EVENT + "ticket/validate")
+    Call<TicketValidityResponse> getNameForTicket(@Body TicketValidityRequest request);
+
 }

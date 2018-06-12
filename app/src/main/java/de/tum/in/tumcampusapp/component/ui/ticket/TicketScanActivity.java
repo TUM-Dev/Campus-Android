@@ -1,62 +1,72 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.utils.Utils;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+public class TicketScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
-public class TicketScanActivity extends Activity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
 
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        setContentView(R.layout.activity_ticket_scan);
 
-        mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
+        mScannerView = findViewById(R.id.scanner_view);
+
         List<BarcodeFormat> formats = ImmutableList.of(BarcodeFormat.QR_CODE);
         mScannerView.setFormats(formats);
+    }
 
-        // Set the scanner inside the frame layout view as the content view
-        setContentView(mScannerView);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions
+                .request(Manifest.permission.CAMERA)
+                .subscribe(granted -> {
+                    if (!granted) { //
+                        finish();
+                    }
+                });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
-        mScannerView.startCamera();          // Start camera on resume
+        mScannerView.setResultHandler(this);
+        mScannerView.startCamera();
     }
 
     @Override
     public void onPause() {
-        mScannerView.stopCamera();           // Stop camera on pause
         super.onPause();
+        mScannerView.stopCamera();
     }
 
     @Override
     public void handleResult(Result rawResult) {
-
-        Utils.log(rawResult.getText()); // Prints scan results
-        Utils.log(rawResult.getBarcodeFormat()
-                .toString()); // Prints the scan format (qrcode, pdf417 etc.)
-        Intent data = new Intent();
-        data.putExtra("name", rawResult.getText());
+        String code = rawResult.getText();
+        ConfirmCheckInFragment fragment = ConfirmCheckInFragment.newInstance("1", code);
+        fragment.show(getSupportFragmentManager(), "confirm_check_in_fragment");
 
         // TODO: Send the String to the Server and ask the server to return the Name associated with it
         // Until then, we will display a dummy string
 
-        // 3. If correct, user can press "Confirm", if not, user can "Abort" and scan again
-        setResult(RESULT_OK, data);
-        finish();
     }
 
 }

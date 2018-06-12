@@ -574,4 +574,7 @@ Signature: %5$s</string>
     <string name="show_booked_events">Show booked events</string>
     <string name="events_overview">Events Overview</string>
     <string name="scanner">scanner</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

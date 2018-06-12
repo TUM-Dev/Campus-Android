@@ -37,6 +37,8 @@ import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketValidityRequest;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketValidityResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -84,6 +86,8 @@ public final class TUMCabeClient {
     static final String API_KINOS = "kino/";
     static final String API_CARD = "cards/";
     static final String API_NEWS = "news/";
+    static final String API_EVENT = "event/";
+
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -324,4 +328,11 @@ public final class TUMCabeClient {
     public Observable<NewsAlert> getNewsAlert(){
         return service.getNewsAlert();
     }
+
+    public void getTicketValidity(String eventId, String code, Callback<TicketValidityResponse> callback) {
+        TicketValidityRequest request = new TicketValidityRequest(eventId, code);
+        service.getNameForTicket(request)
+                .enqueue(callback);
+    }
+
 }
