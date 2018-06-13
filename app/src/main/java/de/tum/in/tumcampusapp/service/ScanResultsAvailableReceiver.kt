@@ -43,6 +43,8 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
             return
         }
 
+        WifiScanHandler.getInstance().onScanFinished()
+
         //Check if wifi is turned on at all
         val wifiManager = context.applicationContext
                 .getSystemService(Context.WIFI_SERVICE) as WifiManager

@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
 import android.content.Intent
+import android.os.Looper
 import android.support.v4.app.JobIntentService
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -30,6 +31,8 @@ class BackgroundService : JobIntentService() {
             putExtra(Const.APP_LAUNCHES, appLaunches)
         }
         DownloadService.enqueueWork(baseContext, service)
+        Looper.prepare()
+        WifiScanHandler.getInstance().startRepetition(this)
     }
 
     override fun onDestroy() {

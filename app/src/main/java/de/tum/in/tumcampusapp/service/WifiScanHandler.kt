@@ -5,6 +5,7 @@ import android.net.wifi.WifiManager
 import android.os.Handler
 import de.tum.`in`.tumcampusapp.utils.Utils
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * This class is responsible for starting repeating wifi scans.
@@ -14,26 +15,32 @@ import java.util.*
  */
 
 class WifiScanHandler : Handler() {
+    private var isRunning = AtomicBoolean(false)
+    private lateinit var wifiManager: WifiManager
+    private lateinit var wifiLock: WifiManager.WifiLock
+    private val periodicalScan = {
+        wifiLock.acquire()
+        wifiManager.startScan()
+        Utils.log("WifiScanHandler started")
+    }
 
     fun startRepetition(context: Context) {
+        if (!isRunning.compareAndSet(false, true)) {
+            return
+        }
+        wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY, "WifiScanHandler")
         val interval = generateRandomScanInterval(MIN_TIME_PASSED_IN_SECONDS, MAX_TIME_PASSED_IN_SECONDS - MIN_TIME_PASSED_IN_SECONDS)
-        val periodicalScan = PeriodicalScan(context)
         postDelayed(periodicalScan, interval.toLong())
     }
 
-    private class PeriodicalScan(val context: Context) : Runnable {
-
-        override fun run() {
-            val wifiManager = context.applicationContext
-                    .getSystemService(Context.WIFI_SERVICE) as WifiManager
-            wifiManager.startScan()
-            Utils.log("WifiScanHandler started")
+    fun onScanFinished() {
+        if (wifiLock.isHeld) {
+            wifiLock.release()
         }
-
     }
 
     companion object {
-
         private val INSTANCE = WifiScanHandler()
 
         //Big range advised, e.g. 10s to 420s (7min), since there's a possibility for battery drain
