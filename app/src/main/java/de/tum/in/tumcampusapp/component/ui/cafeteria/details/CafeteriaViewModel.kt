@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel
 import android.location.Location
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -30,14 +31,22 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
                     .map { transformCafeteria(it, location) }
                     .defaultIfEmpty(emptyList())
 
+    fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
+        return CafeteriaWithMenus(cafeteriaId).apply {
+            name = getCafeteriaNameFromId(id).blockingFirst()
+            menuDates = getAllMenuDates().blockingFirst()
+            menus = getCafeteriaMenus(id, nextMenuDate).blockingFirst()
+        }
+    }
+
     fun getCafeteriaNameFromId(id: Int): Flowable<String> =
             localRepository.getCafeteria(id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { it.name }
 
-    fun getCafeteriaMenu(id: Int, date: String): Flowable<List<CafeteriaMenu>> =
-            localRepository.getCafeteriaMenu(id,date)
+    fun getCafeteriaMenus(id: Int, date: String): Flowable<List<CafeteriaMenu>> =
+            localRepository.getCafeteriaMenus(id,date)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .defaultIfEmpty(emptyList())

@@ -55,6 +55,7 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:description="@string/app_short_description"
         android:fullBackupContent="true"
@@ -164,7 +165,8 @@
             android:name=".component.other.settings.UserPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:theme="@style/AppTheme.SettingsTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -522,6 +524,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.studycard.CardsActivity" />
         </activity>
+        <activity
+            android:name=".component.tumui.calendar.CreateEventActivity"
+            android:label="@string/activity_create_event_title"
+            android:parentActivityName=".component.tumui.calendar.CalendarActivity" />
+        <activity
+            android:name=".component.ui.plan.PDFViewActivity"
+            android:label="@string/pdf_viewer_title"
+            android:parentActivityName=".component.ui.plan.PlansActivity" />
+        <activity
+            android:name=".component.ui.chat.AddChatMemberActivity"
+            android:label="Add Participant"
+            android:parentActivityName=".component.ui.chat.activity.ChatActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.chat.activity.ChatActivity" />
+        </activity>
+
 
         <!-- receiver for the mensaWidget -->
         <receiver
@@ -709,21 +728,22 @@
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".component.tumui.calendar.CreateEventActivity"
-            android:label="@string/activity_create_event_title"
-            android:parentActivityName=".component.tumui.calendar.CalendarActivity" />
-        <activity
-            android:name=".component.ui.plan.PDFViewActivity"
-            android:label="@string/pdf_viewer_title"
-            android:parentActivityName=".component.ui.plan.PlansActivity" />
         <activity
             android:name=".component.ui.ticket.ShowTicketActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="keyboardHidden|screenSize"
             android:label="@string/your_ticket"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.tufilm.KinoActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.BuyTicketActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/summary"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.tufilm.KinoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -749,7 +769,40 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.component.ui.ticket.TicketScanActivity" />
         </activity>
-        <activity android:name=".component.ui.ticket.TicketScanValidationActivity"></activity>
+        <activity
+            android:name=".component.ui.ticket.TicketScanValidationActivity">
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.EventDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/events"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.ticket.EventsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.ticket.EventsActivity" />
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.TicketPaymentSelectActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/payment_selection"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.ticket.BuyTicketActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.StripePaymentActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/enter_card_info_title"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.ticket.TicketPaymentSelectActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+
+        </activity>
     </application>
 
 </manifest>

@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:padding="@dimen/padding_default"
-              android:baselineAligned="false">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/material_default_padding">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/barrierfreeMoreInfoTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight=".80">
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/large_text_size"
+        tools:text="Title"/>
 
-        <TextView
-            android:id="@+id/barrierfreeMoreInfoTitle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/large_text_size"
-            android:textColor="@android:color/black"
-            android:text=""/>
-
-    </LinearLayout>
-</LinearLayout>
+</FrameLayout>

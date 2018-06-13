@@ -22,17 +22,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" />
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/ptr_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/activity_events_list_view"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:scrollbars="vertical" />
-            </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
 
     </LinearLayout>

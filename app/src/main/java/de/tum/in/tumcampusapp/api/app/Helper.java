@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.api.app;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Build;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -9,6 +10,12 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.common.net.UrlEscapers;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.Writer;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +34,7 @@ public final class Helper {
     private static final int HTTP_TIMEOUT = 25000;
     private static OkHttpClient client;
 
-    public static OkHttpClient getOkClient(Context c) {
+    public static OkHttpClient getOkHttpClient(Context c) {
         if (client != null) {
             return client;
         }
@@ -62,6 +69,8 @@ public final class Helper {
 
         //Add the device identifying header
         builder.addInterceptor(Helper.getDeviceInterceptor(c));
+
+        builder.addInterceptor(new ConnectivityInterceptor(c));
 
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
@@ -107,6 +116,23 @@ public final class Helper {
     public static String encodeUrl(String pUrl) {
         return UrlEscapers.urlPathSegmentEscaper()
                           .escape(pUrl);
+    }
+
+    /**
+     * Creates an offline QR-Code
+     * @param message to be encoded
+     * @return QR-Code or null if there was an error
+     */
+    public static Bitmap createQRCode(String message){
+        Writer multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(message, BarcodeFormat.QR_CODE, 400,400);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            return barcodeEncoder.createBitmap(bitMatrix);
+        } catch (WriterException e) {
+            Utils.log(e);
+            return null;
+        }
     }
 
     private Helper() {

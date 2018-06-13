@@ -5,6 +5,7 @@ import android.arch.persistence.room.Embedded
 
 
 class ChatRoomAndLastMessage {
+
     @Embedded
     var chatRoomDbRow: ChatRoomDbRow? = null
 
@@ -13,4 +14,7 @@ class ChatRoomAndLastMessage {
 
     @ColumnInfo(name = "nr_unread")
     var nrUnread: Int = 0
+
+    fun hasUnread() = nrUnread > 0
+
 }
