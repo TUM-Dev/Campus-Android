@@ -14,28 +14,37 @@ import de.tum.`in`.tumcampusapp.utils.toJoda
 class CalendarNotificationsProvider(context: Context,
                                     private val lectures: List<CalendarItem>) : NotificationsProvider(context) {
 
+    private val timeBeforeLectures = 15 // minutes
+
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.ic_calendar)
-                .setWhen(System.currentTimeMillis())
+                .setShowWhen(false)
     }
 
     override fun getNotifications(): List<AppNotification> {
         val firstItem = lectures.firstOrNull() ?: return emptyList()
         val firstItemStart = DateUtils.getDateTime(firstItem.dtstart)
+        val firstItemEnd = DateUtils.getDateTime(firstItem.dtend)
         val time = DateUtils.getFutureTime(firstItemStart, context)
-
-        val notification = getNotificationBuilder()
-                .setContentText("${firstItem.title}\n$time")
-                .setSmallIcon(R.drawable.ic_notification)
-                .build()
 
         // Schedule the notification 15 minutes before the lecture
         val notificationTime = firstItemStart
                 .toJoda()
-                .minusMinutes(15)
+                .minusMinutes(timeBeforeLectures)
                 .millis
+
+        // automatically remove the notification after the lecture finished
+        val notificationEnd = firstItemEnd
+                .toJoda()
+                .millis
+
+        val notification = getNotificationBuilder()
+                .setContentText("${firstItem.title}\n$time")
+                .setTimeoutAfter(notificationEnd - notificationTime)
+                .build()
+
 
         return ArrayList<AppNotification>().apply {
             add(FutureNotification(AppNotification.CALENDAR_ID, notification, notificationTime))
