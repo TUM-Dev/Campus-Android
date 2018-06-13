@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.model
+package de.tum.`in`.tumcampusapp.component.notifications.model
 
 import android.annotation.TargetApi
 import android.app.NotificationChannel
@@ -9,7 +9,7 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
-import de.tum.`in`.tumcampusapp.component.other.notifications.ProvidesNotifications
+import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager

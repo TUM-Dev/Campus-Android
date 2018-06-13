@@ -10,10 +10,9 @@ import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.NewsNotificationsProvider;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.NotificationsProvider;
-import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
-import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotification;
+import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
+import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;

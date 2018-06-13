@@ -14,10 +14,10 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
-import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotification;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.CafeteriaNotificationsProvider;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
+import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationsProvider;
+import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;

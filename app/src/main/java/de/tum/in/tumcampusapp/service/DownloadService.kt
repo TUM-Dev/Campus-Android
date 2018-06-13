@@ -6,11 +6,11 @@ import android.support.v4.app.JobIntentService
 import android.support.v4.content.LocalBroadcastManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.component.other.notifications.NotificationPresenter
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotificationsManager
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.schedulers.NotificationScheduler
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationPresenter
+import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotificationsManager
+import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
+import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location

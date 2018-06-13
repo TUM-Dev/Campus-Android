@@ -1,9 +1,10 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.providers
+package de.tum.`in`.tumcampusapp.component.ui.transportation
 
 import android.content.Context
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.utils.Const

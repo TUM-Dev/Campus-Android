@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.model
+package de.tum.`in`.tumcampusapp.component.notifications.model
 
 import android.app.Notification
 

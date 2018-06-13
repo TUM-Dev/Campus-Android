@@ -1,6 +1,6 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications
+package de.tum.`in`.tumcampusapp.component.notifications
 
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 
 /**
  * Defines that its implementor provides [AppNotification]s which will be displayed in the user's

@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.schedulers
+package de.tum.`in`.tumcampusapp.component.tumui.tutionfees
 
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.Tuition
 import de.tum.`in`.tumcampusapp.utils.DateUtils

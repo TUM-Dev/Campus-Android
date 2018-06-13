@@ -23,10 +23,9 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.NotificationsProvider;
-import de.tum.in.tumcampusapp.component.other.notifications.ProvidesNotifications;
-import de.tum.in.tumcampusapp.component.other.notifications.providers.TransportNotificationsProvider;
-import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotification;
+import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
+import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;

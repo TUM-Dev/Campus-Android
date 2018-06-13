@@ -1,10 +1,11 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.providers
+package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.content.Context
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
+import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateUtils
@@ -16,7 +17,7 @@ class CalendarNotificationsProvider(context: Context,
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_calendar)
                 .setWhen(System.currentTimeMillis())
     }
 

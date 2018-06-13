@@ -5,7 +5,7 @@ import android.app.Application;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
-import de.tum.in.tumcampusapp.component.other.notifications.model.AppNotificationsManager;
+import de.tum.in.tumcampusapp.component.notifications.model.AppNotificationsManager;
 
 public class App extends Application {
 

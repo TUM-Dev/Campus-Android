@@ -1,13 +1,13 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.providers
+package de.tum.`in`.tumcampusapp.component.ui.news
 
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.InstantNotification
-import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
+import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const

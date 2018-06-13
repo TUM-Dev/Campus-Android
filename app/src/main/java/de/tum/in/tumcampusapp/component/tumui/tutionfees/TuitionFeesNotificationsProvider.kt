@@ -1,12 +1,12 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.providers
+package de.tum.`in`.tumcampusapp.component.tumui.tutionfees
 
 import android.app.PendingIntent
 import android.content.Context
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.schedulers.TuitionNotificationScheduler
+import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.Tuition
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateUtils

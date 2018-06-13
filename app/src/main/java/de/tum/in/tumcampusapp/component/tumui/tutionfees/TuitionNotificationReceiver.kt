@@ -1,11 +1,9 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.receivers
+package de.tum.`in`.tumcampusapp.component.tumui.tutionfees
 
 import android.app.Notification
 import android.content.Context
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.FutureNotification
-import de.tum.`in`.tumcampusapp.component.other.notifications.schedulers.NotificationScheduler
-import de.tum.`in`.tumcampusapp.component.other.notifications.schedulers.TuitionNotificationScheduler
-import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
+import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 
 class TuitionNotificationReceiver(private val context: Context) {
 

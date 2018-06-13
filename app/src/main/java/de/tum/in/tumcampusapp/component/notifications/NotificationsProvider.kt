@@ -1,8 +1,8 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.providers
+package de.tum.`in`.tumcampusapp.component.notifications
 
 import android.content.Context
 import android.support.v4.app.NotificationCompat
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 
 /**
  * Subclasses of this class provide a list of [AppNotification]s that they want to display. These

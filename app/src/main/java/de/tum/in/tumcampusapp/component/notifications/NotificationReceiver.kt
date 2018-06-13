@@ -1,11 +1,12 @@
-package de.tum.`in`.tumcampusapp.component.other.notifications.receivers
+package de.tum.`in`.tumcampusapp.component.notifications
 
 import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationManagerCompat
-import de.tum.`in`.tumcampusapp.component.other.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionNotificationReceiver
 import de.tum.`in`.tumcampusapp.utils.Const
 
 class NotificationReceiver : BroadcastReceiver() {
