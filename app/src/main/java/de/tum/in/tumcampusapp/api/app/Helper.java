@@ -34,7 +34,7 @@ public final class Helper {
     private static final int HTTP_TIMEOUT = 25000;
     private static OkHttpClient client;
 
-    public static OkHttpClient getOkClient(Context c) {
+    public static OkHttpClient getOkHttpClient(Context c) {
         if (client != null) {
             return client;
         }
@@ -69,6 +69,8 @@ public final class Helper {
 
         //Add the device identifying header
         builder.addInterceptor(Helper.getDeviceInterceptor(c));
+
+        builder.addInterceptor(new ConnectivityInterceptor(c));
 
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);

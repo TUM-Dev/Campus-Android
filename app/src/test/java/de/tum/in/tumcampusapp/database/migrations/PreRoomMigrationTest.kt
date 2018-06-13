@@ -5,10 +5,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
 import de.tum.`in`.tumcampusapp.BuildConfig
+import de.tum.`in`.tumcampusapp.TestApp
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -17,8 +19,9 @@ import org.robolectric.annotation.Config
 import org.robolectric.util.ReflectionHelpers
 import java.io.File
 
+@Ignore
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class)
+@Config(constants = BuildConfig::class, application = TestApp::class)
 class PreRoomMigrationTest {
     private val preRoomSchema =
             """CREATE TABLE faculties (faculty INTEGER, name VARCHAR);

@@ -1,7 +1,12 @@
 package de.tum.in.tumcampusapp.component.ui.overview;
 
+import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.component.tumui.calendar.NextLectureCard;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.TuitionFeesCard;
@@ -19,14 +24,14 @@ import de.tum.in.tumcampusapp.component.ui.transportation.MVVCard;
 /**
  * Adapter for the cards start page used in {@link MainActivity}
  */
-public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> implements MainActivity.ItemTouchHelperAdapter{
+public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>
+        implements MainActivity.ItemTouchHelperAdapter {
 
-    public static Card getItem(int i) {
-        return CardManager.getCard(i);
-    }
+    private List<Card> mItems = new ArrayList<>();
 
+    @NonNull
     @Override
-    public CardViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public CardViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case CardManager.CARD_CAFETERIA:
                 return CafeteriaMenuCard.inflateViewHolder(viewGroup);
@@ -61,63 +66,66 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> implements
     }
 
     @Override
-    public void onBindViewHolder(CardViewHolder viewHolder, int position) {
-        Card card = CardManager.getCard(position);
+    public void onBindViewHolder(@NonNull CardViewHolder viewHolder, int position) {
+        Card card = mItems.get(position);
         viewHolder.setCurrentCard(card);
         card.updateViewHolder(viewHolder);
     }
 
     @Override
     public int getItemViewType(int position) {
-        return CardManager.getCard(position)
-                          .getCardType();
+        return mItems.get(position).getCardType();
     }
 
     @Override
-    public long getItemId(int i) {
-        Card card = CardManager.getCard(i);
+    public long getItemId(int position) {
+        Card card = mItems.get(position);
         return card.getCardType() + (card.getId() << 4);
     }
 
     @Override
     public int getItemCount() {
-        return CardManager.getCardCount();
+        return mItems.size();
     }
 
-    public int remove(Card card) {
-        int index = CardManager.remove(card);
-        notifyItemRemoved(index);
-        return index;
+    public void updateItems(List<Card> newCards) {
+        DiffUtil.DiffResult diffResult =
+                DiffUtil.calculateDiff(new Card.DiffCallback(mItems, newCards));
+
+        mItems.clear();
+        mItems.addAll(newCards);
+
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public Card remove(int position) {
-        final Card c = CardManager.remove(position);
+        final Card card = mItems.remove(position);
         notifyItemRemoved(position);
-        return c;
+        return card;
     }
 
-    public void insert(int position, Card item) {
-        CardManager.insert(position, item);
+    public void insert(int position, Card card) {
+        mItems.add(position, card);
         notifyItemInserted(position);
     }
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
         toPosition = validatePosition(fromPosition, toPosition);
-        Card card = CardManager.remove(fromPosition);
-        CardManager.insert(toPosition, card);
+        Card card = mItems.remove(fromPosition);
+        mItems.add(toPosition, card);
 
         //Update card positions so they stay the same even when the app is closed
-        for (int index = 0; index < CardManager.getCardCount(); index++) {
-            CardManager.getCard(index)
-                       .setPosition(index);
+        for (int index = 0; index < mItems.size(); index++) {
+            mItems.get(index).setPosition(index);
         }
         notifyItemMoved(fromPosition, toPosition);
     }
 
     private int validatePosition(int fromPosition, int toPosition) {
-        Card selectedCard = CardManager.getCard(fromPosition);
-        Card cardAtPosition = CardManager.getCard(toPosition);
+        Card selectedCard = mItems.get(fromPosition);
+        Card cardAtPosition = mItems.get(toPosition);
+
         // If there is a support card, it should always be the first one
         // except when it's been dismissed.
         // Restore card should stay at the bottom
@@ -126,6 +134,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> implements
         } else if (selectedCard instanceof SupportCard) {
             return fromPosition;
         }
+
         if (cardAtPosition instanceof SupportCard) {
             return toPosition + 1;
         } else if (cardAtPosition instanceof RestoreCard) {
@@ -134,4 +143,5 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> implements
             return toPosition;
         }
     }
+
 }

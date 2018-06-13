@@ -106,7 +106,7 @@ public abstract class TcaDb extends RoomDatabase {
     private static TcaDb instance;
 
     public static synchronized TcaDb getInstance(Context context) {
-        if (instance == null || !instance.isOpen()) {
+        if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
                            .addMigrations(migrations)
