@@ -6,6 +6,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivit
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateUtils
 import org.joda.time.DateTime
+import org.joda.time.Period
 import java.util.*
 
 typealias AndroidDateUtils = android.text.format.DateUtils
@@ -48,6 +49,9 @@ data class CafeteriaWithMenus(val id: Int) {
                     .millis
         }
 
+    val notificationDuration: Long
+        // Cafeteria is typically opened from 11 to 14 ~= 3 hours
+        get() = Period.hours(3).millis.toLong()
 }
 
 fun Date.isToday() = AndroidDateUtils.isToday(this.time)

@@ -6,9 +6,9 @@ import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
-import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -25,7 +25,7 @@ class CafeteriaNotificationsProvider(
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_cutlery)
                 .setGroup(GROUP_KEY_CAFETERIA)
                 .setGroupSummary(true)
                 .setShowWhen(false)
@@ -34,7 +34,7 @@ class CafeteriaNotificationsProvider(
     private fun getSecondaryNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_cutlery)
                 .setGroup(GROUP_KEY_CAFETERIA)
                 .setShowWhen(false)
     }
@@ -71,6 +71,7 @@ class CafeteriaNotificationsProvider(
                             .setContentTitle(title)
                             .setContentText(text)
                             .setStyle(inboxStyle)
+                            .setTimeoutAfter(cafeteria.notificationDuration)
 
                     notificationBuilder.build()
                 }
