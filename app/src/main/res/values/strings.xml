@@ -593,6 +593,7 @@ Signature: %5$s</string>
     <string name="join_chat_via_qr_code">let others join via QR-code</string>
 
     <string name="Refresh">Refresh</string>
+
     <string name="create">Create</string>
     <string name="enter_name_placeholder">Enter name …</string>
     <string name="send_feedback_question">Send feedback now?</string>
