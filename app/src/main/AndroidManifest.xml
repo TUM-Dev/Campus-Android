@@ -659,13 +659,6 @@
             </intent-filter>
         </receiver>
 
-        <!-- Used for generating the wifi-heatmap data -->
-        <receiver android:name=".service.NetworkChangeReceiver">
-            <intent-filter>
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <!-- Used to set Notification for favoriteDish -->
         <receiver android:name=".service.FavoriteDishAlarmScheduler" />
 
