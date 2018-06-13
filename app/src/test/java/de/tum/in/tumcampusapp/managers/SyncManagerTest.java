@@ -19,7 +19,9 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Ignore;
 
+@Ignore
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, application = TestApp.class)
 public class SyncManagerTest {
