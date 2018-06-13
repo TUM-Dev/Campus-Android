@@ -63,14 +63,17 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="CalendarElement" parent="AppTheme">
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/color_primary</item>
-        <item name="android:textSize">18sp</item>
+    <style name="CalendarDateTimeItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?android:listPreferredItemHeightSmall</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="CalendarElement">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">0px</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="PreferenceThemeOverlay">
@@ -148,8 +151,8 @@
         <item name="cardCornerRadius">@dimen/material_corner_radius</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

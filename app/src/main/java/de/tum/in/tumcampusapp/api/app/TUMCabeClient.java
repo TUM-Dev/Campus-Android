@@ -40,6 +40,7 @@ import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -322,7 +323,7 @@ public final class TUMCabeClient {
         return service.getCafeterias();
     }
 
-    public Observable<List<Kino>> getKinos(String lastId) {
+    public Flowable<List<Kino>> getKinos(String lastId) {
         return service.getKinos(lastId);
     }
 
