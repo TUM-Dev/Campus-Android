@@ -25,7 +25,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-    <!-- GCM requires a Google account. -->
+    <!-- FCM requires a Google account. -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <!-- Allow vibration for chat messages -->
@@ -701,7 +701,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".service.GcmIdentificationService"
+            android:name=".service.FcmIdentificationService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
-import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -21,8 +21,8 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordin
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotificationLocation;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -187,7 +187,7 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public GCMNotification getNotification(int notification) throws IOException {
+    public FcmNotification getNotification(int notification) throws IOException {
         return service.getNotification(notification)
                       .execute()
                       .body();
@@ -204,13 +204,13 @@ public final class TUMCabeClient {
                .execute();
     }
 
-    public List<GCMNotificationLocation> getAllLocations() throws IOException {
+    public List<FcmNotificationLocation> getAllLocations() throws IOException {
         return service.getAllLocations()
                       .execute()
                       .body();
     }
 
-    public GCMNotificationLocation getLocation(int locationId) throws IOException {
+    public FcmNotificationLocation getLocation(int locationId) throws IOException {
         return service.getLocation(locationId)
                       .execute()
                       .body();
@@ -221,7 +221,7 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public void deviceUploadGcmToken(DeviceUploadGcmToken verification, Callback<TUMCabeStatus> cb) {
+    public void deviceUploadGcmToken(DeviceUploadFcmToken verification, Callback<TUMCabeStatus> cb) {
         service.deviceUploadGcmToken(verification)
                .enqueue(cb);
     }
