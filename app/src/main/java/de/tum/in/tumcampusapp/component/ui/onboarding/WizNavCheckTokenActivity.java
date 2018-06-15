@@ -8,11 +8,15 @@ import android.view.View;
 import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
+import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.tumui.person.model.Identity;
 import de.tum.in.tumcampusapp.component.tumui.person.model.IdentitySet;
+import de.tum.in.tumcampusapp.component.tumui.person.model.ObfuscatedIds;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -89,6 +93,32 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
                                                                    .getExtern());
             Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscated_ids()
                                                                    .getBedienstete());
+
+            UploadStatus uploadStatus = TUMCabeClient.getInstance(this)
+                                                    .getUploadStatus(Utils.getSetting(this, Const.LRZ_ID, ""))
+                                                    .blockingSingle();
+
+            // upload only the ids that haven't been uploaded before
+            ObfuscatedIds ids = identity.getObfuscated_ids();
+            ObfuscatedIdsUpload upload = new ObfuscatedIdsUpload();
+            boolean doUpload = false;
+            if(!uploadStatus.getStudentId() && !ids.getStudierende().isEmpty()){
+                upload.setStudentId(ids.getStudierende());
+                doUpload = true;
+            }
+            if(!uploadStatus.getEmployeeId() && !ids.getBedienstete().isEmpty()){
+                upload.setEmployeeId(ids.getBedienstete());
+                doUpload = true;
+            }
+            if(!uploadStatus.getExternalId() && !ids.getExtern().isEmpty()){
+                upload.setExternalId(ids.getExtern());
+                doUpload = true;
+            }
+
+            if(doUpload){
+                Utils.log("Upload obfuscated id(s)");
+                // TODO upload ids
+            }
 
             return null;
         }

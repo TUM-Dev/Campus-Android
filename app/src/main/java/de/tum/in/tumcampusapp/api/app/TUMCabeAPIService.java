@@ -5,6 +5,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
+import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
@@ -137,6 +138,9 @@ public interface TUMCabeAPIService {
 
     @POST(API_DEVICE + "addGcmToken/")
     Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadFcmToken verification);
+
+    @GET(API_DEVICE + "uploaded/{lrzId}")
+    Observable<UploadStatus> getUploadStatus(@Path("lrzId")String lrzId);
 
     //WifiHeatmap
     @POST(API_WIFI_HEATMAP + "create_measurements/")
