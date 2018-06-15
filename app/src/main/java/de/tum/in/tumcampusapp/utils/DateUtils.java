@@ -16,7 +16,6 @@ public final class DateUtils {
     private static final long HOUR_MILLIS = android.text.format.DateUtils.HOUR_IN_MILLIS;
     private static final long DAY_MILLIS = android.text.format.DateUtils.DAY_IN_MILLIS;
 
-    private static final String FORMAT_SQL = "yyyy-MM-dd HH:mm:ss"; // 2014-06-30 16:31:57
     private static final String FORMAT_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57Z
     private static final String FORMAT_ISO_WITH_MILLIS = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"; // 2014-06-30T16:31:57.878Z
 
@@ -50,13 +49,6 @@ public final class DateUtils {
         }
     }
 
-    /*
-     * Format any given timestamp in a relative matter using the android methods
-     */
-    public static String getRelativeTimeISO(String timestamp, Context context) {
-        return DateUtils.getRelativeTime(DateUtils.parseIsoDate(timestamp), context);
-    }
-
     private static String getRelativeTime(Date date, Context context) {
         if (date == null) {
             return "";
@@ -71,10 +63,6 @@ public final class DateUtils {
      */
     public static String getTimeOrDayISO(String datetime, Context context) {
         return DateUtils.getTimeOrDay(DateUtils.parseIsoDate(datetime), context);
-    }
-
-    public static String getTimeOrDay(String datetime, Context context) {
-        return DateUtils.getTimeOrDay(DateUtils.parseSqlDate(datetime), context);
     }
 
     public static String getTimeOrDay(Date time, Context context) {
@@ -103,22 +91,6 @@ public final class DateUtils {
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
             return formatter.format(time);
         }
-    }
-
-    /*
-     * Parsing string timestamps
-     */
-    public static Date parseSqlDate(String datetime) {
-        if (datetime == null) {
-            return null;
-        }
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.FORMAT_SQL, Locale.ENGLISH); // 2014-06-30 16:31:57
-            return formatter.parse(datetime);
-        } catch (ParseException e) {
-            Utils.log("Parsing SQL date failed");
-        }
-        return null;
     }
 
     public static Date parseIsoDate(String datetime) {

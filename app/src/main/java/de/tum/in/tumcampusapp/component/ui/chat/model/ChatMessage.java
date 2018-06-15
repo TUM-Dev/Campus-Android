@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import org.joda.time.DateTime;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,6 +14,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 @Entity(tableName = "chat_message")
@@ -128,15 +131,8 @@ public class ChatMessage {
         this.timestamp = timestamp;
     }
 
-    public Date getTimestampDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-        Date time = new Date();
-        try {
-            time = formatter.parse(this.getTimestamp());
-        } catch (ParseException e) {
-            Utils.log(e);
-        }
-        return time;
+    public DateTime getTimestampDate() {
+        return DateTimeUtils.INSTANCE.parseIsoDate(this.getTimestamp());
     }
 
     public String getSignature() {
