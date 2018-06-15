@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -27,7 +26,6 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_CAFETERIA;
@@ -39,11 +37,8 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
     private static final String CAFETERIA_DATE = "cafeteria_date";
     private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
     private static final Pattern PATTERN = Pattern.compile("[0-9]");
-    private int mCafeteriaId;
-    private String mCafeteriaName;
-    private Date mDate;
-    private String mDateStr;
-    private List<CafeteriaMenu> mMenus;
+
+    private CafeteriaWithMenus mCafeteria;
 
     public CafeteriaMenuCard(Context context) {
         super(CARD_CAFETERIA, context, "card_cafeteria");
@@ -62,58 +57,42 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
         if (viewHolder instanceof CafeteriaMenuViewHolder) {
             CafeteriaMenuViewHolder holder = (CafeteriaMenuViewHolder) viewHolder;
-            holder.bind(mCafeteriaId, mCafeteriaName, mDate, mDateStr, mMenus);
+            holder.bind(mCafeteria);
         }
-    }
-
-    public void setCardMenus(CafeteriaWithMenus cafeteria) {
-        setCardMenus(
-                cafeteria.getId(),
-                cafeteria.getName(),
-                cafeteria.getNextMenuDate(),
-                DateUtils.getDate(cafeteria.getNextMenuDate()),
-                cafeteria.getMenus()
-        );
     }
 
     /**
      * Sets the information needed to build the card
      *
-     * @param id      Cafeteria id
-     * @param name    Cafeteria name
-     * @param dateStr Date of the menu in yyyy-mm-dd format
-     * @param date    Date of the menu
-     * @param menus   List of cafeteria menus
+     * @param cafeteria The CafeteriaWithMenus object to be displayed in the card
      */
-    public void setCardMenus(int id, String name, String dateStr, Date date, List<CafeteriaMenu> menus) {
-        mCafeteriaId = id;
-        mCafeteriaName = name;
-        mDateStr = dateStr;
-        mDate = date;
-        mMenus = menus;
+    public void setCafeteriaWithMenus(CafeteriaWithMenus cafeteria) {
+        this.mCafeteria = cafeteria;
     }
 
     @Override
     public String getTitle() {
-        return mCafeteriaName;
+        return mCafeteria.getName();
     }
 
     @Override
     public Intent getIntent() {
         Intent i = new Intent(getContext(), CafeteriaActivity.class);
-        i.putExtra(Const.CAFETERIA_ID, mCafeteriaId);
+        i.putExtra(Const.CAFETERIA_ID, mCafeteria.getId());
         return i;
     }
 
     @Override
     public void discard(Editor editor) {
-        editor.putLong(CAFETERIA_DATE, mDate.getTime());
+        Date date = mCafeteria.getNextMenuDate();
+        editor.putLong(CAFETERIA_DATE, date.getTime());
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         final long prevDate = prefs.getLong(CAFETERIA_DATE, 0);
-        return prevDate < mDate.getTime();
+        Date date = mCafeteria.getNextMenuDate();
+        return prevDate < date.getTime();
     }
 
     @Override
@@ -124,7 +103,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
         StringBuilder allContent = new StringBuilder();
         StringBuilder firstContent = new StringBuilder();
-        for (CafeteriaMenu menu : mMenus) {
+        for (CafeteriaMenu menu : mCafeteria.getMenus()) {
             if ("bei".equals(menu.getTypeShort())) {
                 continue;
             }
@@ -165,7 +144,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
             }
         }
 
-        notificationBuilder.setWhen(mDate.getTime());
+        notificationBuilder.setWhen(mCafeteria.getNextMenuDate().getTime());
         notificationBuilder.setContentText(firstContent);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(allContent));
         Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_cafeteria);
