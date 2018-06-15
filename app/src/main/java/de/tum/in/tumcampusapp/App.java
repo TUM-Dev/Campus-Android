@@ -1,4 +1,5 @@
 package de.tum.in.tumcampusapp;
+
 import android.app.Application;
 
 import com.squareup.picasso.OkHttp3Downloader;
@@ -9,12 +10,12 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.initPicasso();
+        setupPicasso();
     }
 
-    protected void initPicasso() {
+    protected void setupPicasso() {
         Picasso.Builder builder = new Picasso.Builder(this);
-        builder.downloader(new OkHttp3Downloader(this,Integer.MAX_VALUE));
+        builder.downloader(new OkHttp3Downloader(this, Integer.MAX_VALUE));
 
         Picasso built = builder.build();
         built.setLoggingEnabled(true);

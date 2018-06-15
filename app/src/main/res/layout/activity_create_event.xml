@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,98 +11,131 @@
         android:orientation="vertical">
 
         <!-- The toolbar aka SupportActionBar -->
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar" />
 
         <include
             layout="@layout/layout_all_errors"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_height="fill_parent" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/event_title"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:hint="@string/event_title"
-                android:textCursorDrawable="@drawable/cursor_text_field_colorful"
-                android:textSize="24sp"/>
+                android:layout_margin="@dimen/material_default_padding">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/event_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/from"/>
+                    android:hint="@string/event_title"
+                    android:imeOptions="actionDone"
+                    android:inputType="textAutoComplete|textCapSentences"
+                    android:maxLines="1"
+                    android:textCursorDrawable="@drawable/cursor_text_field_colorful"
+                    android:textSize="20sp" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout style="@style/CalendarDateTimeItem">
 
                 <TextView
                     android:id="@+id/event_start_date"
-                    style="@style/CalendarElement"/>
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/material_default_padding"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:ignore="RtlSymmetry"
+                    tools:text="Mon, Jun 11, 2018" />
 
                 <TextView
                     android:id="@+id/event_start_time"
-                    style="@style/CalendarElement"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="@dimen/material_default_padding"
+                    android:paddingStart="@dimen/material_default_padding"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:text="11:30" />
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/to"/>
+            <LinearLayout style="@style/CalendarDateTimeItem">
 
                 <TextView
                     android:id="@+id/event_end_date"
-                    style="@style/CalendarElement"/>
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/material_default_padding"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:ignore="RtlSymmetry"
+                    tools:text="Mon, Jun 11, 2018" />
 
                 <TextView
                     android:id="@+id/event_end_time"
-                    style="@style/CalendarElement"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="@dimen/material_default_padding"
+                    android:paddingStart="@dimen/material_default_padding"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:text="12:30" />
+
             </LinearLayout>
+
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/event_description"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_margin="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corners_background"
-            android:gravity="top"
-            android:hint="@string/comment"
-            android:maxHeight="150dp"
-            android:minHeight="75dp"
-            android:padding="5dp"
-            android:textCursorDrawable="@drawable/cursor_text_field_colorful"
-            android:textSize="16sp"/>
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/material_default_padding"
+            android:layout_weight="1">
 
-        <Button
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/event_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="top"
+                android:hint="@string/comment"
+                android:imeOptions="normal"
+                android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
+                android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/create_event_button"
-            style="@style/FlatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_margin="10dp"
-            android:text="@string/save"/>
-    </LinearLayout>
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/material_default_padding"
+            android:alpha="0.5"
+            android:enabled="false"
+            android:text="@string/save"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/color_primary" />
 
-    <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer"/>
+    </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>
