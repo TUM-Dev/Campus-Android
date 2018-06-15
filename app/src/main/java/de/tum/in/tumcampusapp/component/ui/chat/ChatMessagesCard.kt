@@ -48,38 +48,6 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
         super.updateViewHolder(viewHolder)
         val chatMessagesViewHolder = viewHolder as? ChatMessagesCardViewHolder
         chatMessagesViewHolder?.bind(mRoomName, mRoomId, mRoomIdString, mUnread)
-
-        // TODO
-
-        /*
-        mCard = viewHolder.itemView
-        val card = viewHolder.itemView
-        val cardsViewHolder = viewHolder as CardViewHolder
-        val addedViews = cardsViewHolder.addedViews
-
-        //Set title
-        mTitleView = card.findViewById(R.id.cafeteriaNameTextView)
-        val titleView = mTitleView
-
-        if(nrUnread > 5){
-            titleView!!.text = context.getString(R.string.card_message_title, mRoomName, nrUnread);
-        } else {
-            titleView!!.text = mRoomName
-        }
-
-        //Remove additional views
-        mLinearLayout = card.findViewById(R.id.card_view)
-        val linearLayout = mLinearLayout
-
-        for (view in addedViews) {
-            linearLayout!!.removeView(view)
-        }
-
-        // Show cafeteria menu
-        mUnread.mapTo(addedViews) {
-            addTextView(context.getString(R.string.card_message_line, it.member.displayName, it.text))
-        }
-        */
     }
 
     /**
