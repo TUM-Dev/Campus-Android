@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
+import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
@@ -59,6 +60,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
@@ -114,6 +116,9 @@ public interface TUMCabeAPIService {
 
     @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
     Call<ChatRegistrationId> uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId);
+
+    @POST(API_MEMBERS + "uploadIds/{lrzId}")
+    Observable<TUMCabeStatus> uploadObfuscatedIds(@Path("lrzId") String lrzId, @Body ObfuscatedIdsUpload ids);
 
     //Curricula
     @GET(API_CURRICULA)

@@ -12,6 +12,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
+import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
@@ -63,6 +64,7 @@ public final class TUMCabeClient {
     private static final String API_CHAT = "chat/";
     static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
+    static final String API_MEMBERS = "members/";
     static final String API_CURRICULA = "curricula/";
     static final String API_NOTIFICATIONS = "notifications/";
     static final String API_LOCATIONS = "locations/";
@@ -186,6 +188,10 @@ public final class TUMCabeClient {
     public void uploadRegistrationId(int memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
         service.uploadRegistrationId(memberId, regId)
                .enqueue(cb);
+    }
+
+    public Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids){
+        return service.uploadObfuscatedIds(lrzId, ids);
     }
 
     public FcmNotification getNotification(int notification) throws IOException {

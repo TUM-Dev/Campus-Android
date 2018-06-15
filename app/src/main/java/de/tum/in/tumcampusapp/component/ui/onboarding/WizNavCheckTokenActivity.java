@@ -77,8 +77,8 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             }
 
             Identity identity = id.get()
-                                  .getIds()
-                                  .get(0);
+                    .getIds()
+                    .get(0);
 
             // Save the name to preferences
             Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, identity
@@ -86,38 +86,38 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
 
             // Save the TUMOnline id to preferences
             Utils.setSetting(this, Const.TUMO_PIDENT_NR, identity.getObfuscated_ids()
-                                                                 .getStudierende()); // Switch to identity.getObfuscated_id() in the future
+                    .getStudierende()); // Switch to identity.getObfuscated_id() in the future
             Utils.setSetting(this, Const.TUMO_STUDENT_ID, identity.getObfuscated_ids()
-                                                                  .getStudierende());
+                    .getStudierende());
             Utils.setSetting(this, Const.TUMO_EXTERNAL_ID, identity.getObfuscated_ids()
-                                                                   .getExtern());
+                    .getExtern());
             Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscated_ids()
-                                                                   .getBedienstete());
+                    .getBedienstete());
 
+            String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
             UploadStatus uploadStatus = TUMCabeClient.getInstance(this)
-                                                    .getUploadStatus(Utils.getSetting(this, Const.LRZ_ID, ""))
-                                                    .blockingSingle();
+                    .getUploadStatus(lrzId)
+                    .blockingSingle();
 
             // upload only the ids that haven't been uploaded before
             ObfuscatedIds ids = identity.getObfuscated_ids();
             ObfuscatedIdsUpload upload = new ObfuscatedIdsUpload();
             boolean doUpload = false;
-            if(!uploadStatus.getStudentId() && !ids.getStudierende().isEmpty()){
+            if (!uploadStatus.getStudentId() && !ids.getStudierende().isEmpty()) {
                 upload.setStudentId(ids.getStudierende());
                 doUpload = true;
             }
-            if(!uploadStatus.getEmployeeId() && !ids.getBedienstete().isEmpty()){
+            if (!uploadStatus.getEmployeeId() && !ids.getBedienstete().isEmpty()) {
                 upload.setEmployeeId(ids.getBedienstete());
                 doUpload = true;
             }
-            if(!uploadStatus.getExternalId() && !ids.getExtern().isEmpty()){
+            if (!uploadStatus.getExternalId() && !ids.getExtern().isEmpty()) {
                 upload.setExternalId(ids.getExtern());
                 doUpload = true;
             }
 
-            if(doUpload){
-                Utils.log("Upload obfuscated id(s)");
-                // TODO upload ids
+            if (doUpload) {
+                TUMCabeClient.getInstance(this).uploadObfuscatedIds(lrzId, upload);
             }
 
             return null;
