@@ -7,7 +7,7 @@ import android.webkit.WebView
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
-import de.tum.`in`.tumcampusapp.component.ui.alarm.model.GCMNotification
+import de.tum.`in`.tumcampusapp.component.ui.alarm.model.FcmNotification
 import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**
@@ -32,8 +32,8 @@ class AlarmActivity : BaseActivity(R.layout.activity_alarmdetails) {
     override fun onNewIntent(intent: Intent) = this.processIntent(intent)
 
     private fun processIntent(intent: Intent) {
-        val notification = intent.getSerializableExtra("info") as GCMNotification
-        //GCMAlert alert = (GCMAlert) intent.getSerializableExtra("alert"); //Currently only has the silent flag, don't need it atm
+        val notification = intent.getSerializableExtra("info") as FcmNotification
+        //FcmAlert alert = (FcmAlert) intent.getSerializableExtra("alert"); //Currently only has the silent flag, don't need it atm
 
         Utils.log(notification.toString())
 
