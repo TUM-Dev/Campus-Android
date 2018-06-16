@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,8 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
-import java.text.DateFormat;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -24,7 +26,6 @@ import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
-import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -36,7 +37,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
     private static final String LAST_FEE_SOLL = "fee_soll";
     private Tuition mTuition;
 
-    public TuitionFeesCard(Context context) {
+    TuitionFeesCard(Context context) {
         super(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee");
     }
 
@@ -46,6 +47,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
         return new CardViewHolder(view);
     }
 
+    @NonNull
     @Override
     public String getTitle() {
         return getContext().getString(R.string.tuition_fees);
@@ -70,9 +72,8 @@ public class TuitionFeesCard extends NotificationAwareCard {
         if ("0".equals(mTuition.getSoll())) {
             addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez())));
         } else {
-            Date d = DateUtils.getDate(mTuition.getFrist());
-            String date = DateFormat.getDateInstance()
-                                    .format(d);
+            DateTime dueDate = mTuition.getDueDate();
+            String date = DateTimeFormat.longDate().print(dueDate);
             addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_todo), date)));
 
             String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
@@ -83,13 +84,13 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    public void discard(Editor editor) {
+    public void discard(@NonNull Editor editor) {
         editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
         editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
         String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
 
@@ -100,7 +101,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
+    protected Notification fillNotification(@NonNull NotificationCompat.Builder notificationBuilder) {
         if ("0".equals(mTuition.getSoll())) {
             notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez()));
         } else {
@@ -129,7 +130,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
+    public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_money);
