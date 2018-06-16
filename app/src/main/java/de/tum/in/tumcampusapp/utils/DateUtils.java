@@ -1,81 +1,12 @@
 package de.tum.in.tumcampusapp.utils;
 
-import android.content.Context;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import de.tum.in.tumcampusapp.R;
-
 public final class DateUtils {
-
-    private static final long MINUTE_MILLIS = android.text.format.DateUtils.MINUTE_IN_MILLIS;
-    private static final long HOUR_MILLIS = android.text.format.DateUtils.HOUR_IN_MILLIS;
-    private static final long DAY_MILLIS = android.text.format.DateUtils.DAY_IN_MILLIS;
-
-    private static final String FORMAT_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57Z
-    private static final String FORMAT_ISO_WITH_MILLIS = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"; // 2014-06-30T16:31:57.878Z
-
-    /*
-     * Format an upcoming string nicely by being more precise as time comes closer
-     */
-    public static String getFutureTime(Date time, Context context) {
-        if (time == null) {
-            return "";
-        }
-
-        long timeInMillis = time.getTime();
-        long now = Calendar.getInstance()
-                           .getTimeInMillis();
-
-        //Catch future dates: current clock might be running behind
-        if (timeInMillis < now || timeInMillis <= 0) {
-            return DateUtils.getTimeOrDay(time, context);
-        }
-
-        final long diff = timeInMillis - now;
-        if (diff < 60 * MINUTE_MILLIS) {
-            SimpleDateFormat formatter = new SimpleDateFormat("m", Locale.ENGLISH);
-            return context.getString(R.string.IN) + ' ' + formatter.format(new Date(diff)) + ' ' + context.getString(R.string.MINUTES);
-        } else if (diff < 3 * HOUR_MILLIS) { // Be more precise by telling the user the exact time if below 3 hours
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-            return context.getString(R.string.AT) + ' ' + formatter.format(time);
-        } else {
-            return android.text.format.DateUtils.getRelativeTimeSpanString(timeInMillis, now, android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE)
-                                                .toString();
-        }
-    }
-
-    public static String getTimeOrDay(Date time, Context context) {
-        if (time == null) {
-            return "";
-        }
-
-        long timeInMillis = time.getTime();
-        long now = Calendar.getInstance()
-                           .getTimeInMillis();
-
-        //Catch future dates: current clock might be running behind
-        if (timeInMillis > now || timeInMillis <= 0) {
-            return context.getString(R.string.just_now);
-        }
-
-        final long diff = now - timeInMillis;
-        if (diff < MINUTE_MILLIS) {
-            return context.getString(R.string.just_now);
-        } else if (diff < 24 * HOUR_MILLIS) {
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-            return formatter.format(time);
-        } else if (diff < 48 * HOUR_MILLIS) {
-            return context.getString(R.string.yesterday);
-        } else {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
-            return formatter.format(time);
-        }
-    }
 
     /**
      * Checks whether two Dates contain the same day

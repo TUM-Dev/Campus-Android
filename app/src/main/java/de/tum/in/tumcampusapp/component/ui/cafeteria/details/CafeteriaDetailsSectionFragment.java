@@ -38,6 +38,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRe
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
@@ -90,7 +91,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             // Show opening hours
             OpenHoursHelper lm = new OpenHoursHelper(context);
             textview = new TextView(context);
-            textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, DateUtils.getDate(dateStr)));
+            textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, DateTimeUtils.INSTANCE.getDate(dateStr)));
             textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
             rootView.addView(textview);
             addedViews.add(textview);

@@ -2,13 +2,16 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.details;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.text.DateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,8 +20,9 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRe
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * A {@link FragmentStatePagerAdapter} that returns a fragment corresponding to one
@@ -45,11 +49,12 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
         CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
         localRepository.setDb(TcaDb.getInstance(context));
         CafeteriaViewModel cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
-        cafeteriaViewModel.getAllMenuDates()
-                          .subscribe(dates -> {
-                              this.dates = dates;
-                              this.notifyDataSetChanged();
-                          });
+        Disposable getAllMenuDates = cafeteriaViewModel.getAllMenuDates()
+                .subscribe(dates -> {
+                    this.dates = dates;
+                    this.notifyDataSetChanged();
+                });
+        mDisposable.add(getAllMenuDates);
         // Tell we just update the data
 
     }
@@ -72,15 +77,14 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
 
     @Override
     public CharSequence getPageTitle(int position) {
-        Date date = DateUtils.getDate(dates.get(position));
+        DateTimeFormatter format = DateTimeFormat.fullDate();
+        DateTime date = DateTimeUtils.INSTANCE.getDate(dates.get(position));
 
-        DateFormat formatDate = DateFormat.getDateInstance(DateFormat.FULL);
-        return formatDate.format(date)
-                         .toUpperCase(Locale.getDefault());
+        return format.print(date).toUpperCase(Locale.getDefault());
     }
 
     @Override
-    public int getItemPosition(Object object) {
+    public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
     }
 }
