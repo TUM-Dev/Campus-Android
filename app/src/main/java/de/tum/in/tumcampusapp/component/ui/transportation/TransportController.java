@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -105,7 +106,6 @@ public class TransportController implements ProvidesCard {
     private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
     private static SparseArray<WidgetDepartures> widgetDeparturesList;
-    private static final Gson gson = new Gson();
 
     private Context mContext;
     private final TransportDao transportDao;
@@ -258,7 +258,9 @@ public class TransportController implements ProvidesCard {
                 JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
                 JSONObject time = departure.getJSONObject("dateTime");
-                Date date = new GregorianCalendar(time.getInt("year"), time.getInt("month") - 1, time.getInt("day"), time.getInt("hour"), time.getInt("minute")).getTime();
+                DateTime date = new DateTime()
+                        .withDate(time.getInt("year"), time.getInt("month"), time.getInt("day"))
+                        .withTime(time.getInt("hour"), time.getInt("minute"), 0, 0);
                 result.add(new Departure(
                         servingLine.getString("name"),
                         servingLine.getString("direction"),
@@ -266,11 +268,11 @@ public class TransportController implements ProvidesCard {
                         String.format("%3.3s", servingLine.getString("symbol"))
                               .trim(),
                         departure.getInt("countdown"),
-                        date.getTime()
+                        date
                 ));
             }
 
-            Collections.sort(result, (lhs, rhs) -> lhs.getCountDown() - rhs.getCountDown());
+            Collections.sort(result, (lhs, rhs) -> Integer.compare(lhs.getCountDown(), rhs.getCountDown()));
         } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
@@ -324,7 +326,7 @@ public class TransportController implements ProvidesCard {
             }
 
             //Sort by quality
-            Collections.sort(results, (lhs, rhs) -> rhs.getQuality() - lhs.getQuality());
+            Collections.sort(results, (lhs, rhs) -> Integer.compare(rhs.getQuality(),lhs.getQuality()));
 
             return results;
         } catch (JSONException e) {
