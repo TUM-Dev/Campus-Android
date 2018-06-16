@@ -1,24 +1,24 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 public class EventsActivity extends ActivityForDownloadingExternal {
 
-    private RecyclerView lv;
-    private boolean mBookedShowMode;
-    private MenuItem menuItemSwitchView;
+    private TabLayout eventTab;
+    private ViewPager viewPager;
 
     public EventsActivity() {
         super(Const.EVENTS, R.layout.activity_events);
@@ -27,58 +27,76 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        setupViewPager(viewPager);
 
-        lv = findViewById(R.id.activity_events_list_view);
-        lv.setLayoutManager(new LinearLayoutManager(this));
+        eventTab = (TabLayout) findViewById(R.id.event_tab);
+        eventTab.setupWithViewPager(viewPager);//setting tab over viewpager
+
+        //Implementing tab selected listener over tablayout
+        eventTab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());//setting current selected item over viewpager
+                switch (tab.getPosition()) {
+                    case 0:
+                        Log.e("TAG", "TAB1");
+                        break;
+                    case 1:
+                        Log.e("TAG", "TAB2");
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
 
-        this.mBookedShowMode = Utils.getSettingBool(this, Const.EVENT_BOOKED_MODE, false);
-        refreshEventView();
+    //Setting View Pager
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new EventFragment(this.getString(R.string.all_events)), this.getString(R.string.all_events));
+        adapter.addFrag(new EventFragment(this.getString(R.string.booked_events)), this.getString(R.string.booked_events));
+        viewPager.setAdapter(adapter);
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_activity_events, menu);
-        menuItemSwitchView = menu.findItem(R.id.action_booked_events);
-        return true;
-    }
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();//fragment arraylist
+        private final List<String> mFragmentTitleList = new ArrayList<>();//title arraylist
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.action_booked_events) {
-            mBookedShowMode = !mBookedShowMode;
-            Utils.setSetting(this, Const.EVENT_BOOKED_MODE, mBookedShowMode);
-            this.refreshEventView();
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
         }
-        return true;
-    }
 
-    private void refreshEventView() {
-        int icon;
-
-        List<Event> events;
-        if (mBookedShowMode) {
-            icon = R.drawable.ic_action_booked;
-            events = EventsController.getBookedEvents();
-        } else {
-            icon = R.drawable.ic_all_event;
-            events = EventsController.getEvents();
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
         }
 
-        if (!events.isEmpty()) {
-            EventsAdapter adapter = new EventsAdapter(events);
-            lv.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
         }
 
-        if (menuItemSwitchView != null) {
-            menuItemSwitchView.setIcon(icon);
+
+        //adding fragments and title method
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
         }
     }
 }
+
 

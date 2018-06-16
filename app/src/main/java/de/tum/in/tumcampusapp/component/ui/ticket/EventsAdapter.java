@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,13 +106,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         holder.titleView.setText(title);
 
         //Adds descriptionView
-        int maxDescriptionLength = 80;
+        int maxDescriptionLength = 60;
         String description = event.getDescription();
         String shortenedDescription = description;
         if (description.length() > maxDescriptionLength){
             shortenedDescription = description.substring(0, maxDescriptionLength) + "...";
         }
         holder.descriptionView.setText(shortenedDescription);
+
         //Adds localityView
         String locality = event.getLocality();
         holder.localityView.setText(locality);
