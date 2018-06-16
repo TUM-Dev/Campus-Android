@@ -108,6 +108,7 @@ public class OpenHoursHelper {
 
     }
 
+    // TODO
     private static Calendar strToCal(Date date, String time) {
         Calendar opens = Calendar.getInstance();
         opens.setTime(date);

@@ -58,13 +58,6 @@ public final class DateUtils {
                                             .toString();
     }
 
-    /*
-     * Format a past timestamp with degrading granularity
-     */
-    public static String getTimeOrDayISO(String datetime, Context context) {
-        return DateUtils.getTimeOrDay(DateUtils.parseIsoDate(datetime), context);
-    }
-
     public static String getTimeOrDay(Date time, Context context) {
         if (time == null) {
             return "";
