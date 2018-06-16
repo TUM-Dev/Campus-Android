@@ -19,11 +19,10 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,7 +32,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
-import de.tum.in.tumcampusapp.utils.DateUtils;
 
 public class NextLectureCard extends NotificationAwareCard {
 
@@ -119,9 +117,9 @@ public class NextLectureCard extends NotificationAwareCard {
             });
         }
 
-        DateFormat week = new SimpleDateFormat("EEEE, ", Locale.getDefault());
-        DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
-        mEvent.setText(String.format("%s%s - %s", week.format(item.start), df.format(item.start), df.format(item.end)));
+        DateTimeFormatter week = DateTimeFormat.forPattern("EEEE, ").withLocale(Locale.getDefault());
+        DateTimeFormatter date = DateTimeFormat.shortDate();
+        mEvent.setText(String.format("%s%s - %s", week.print(item.start), date.print(item.start), date.print(item.end)));
         mEvent.setOnClickListener(view -> {
             Intent i = new Intent(getContext(), CalendarActivity.class);
             CalendarItem item1 = lectures.get(mSelected);
