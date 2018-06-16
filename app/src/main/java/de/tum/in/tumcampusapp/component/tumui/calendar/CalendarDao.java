@@ -5,6 +5,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
@@ -18,10 +20,15 @@ public interface CalendarDao {
     List<CalendarItem> getAllByDate(String date);
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
-           + "AND STATUS != 'CANCEL'"
-           + "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id = :widgetId"
-           + "                AND lecture_title = c.title)"
-           + "ORDER BY dtstart ASC")
+            + "AND STATUS != 'CANCEL'"
+            + "ORDER BY dtstart ASC")
+    List<CalendarItem> getAllBetweenDates(DateTime from, DateTime to);
+
+    @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
+            + "AND STATUS != 'CANCEL'"
+            + "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id = :widgetId"
+            + "                AND lecture_title = c.title)"
+            + "ORDER BY dtstart ASC")
     List<CalendarItem> getNextDays(String from, String to, String widgetId);
 
     @Query("SELECT c.* FROM calendar c WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status != 'CANCEL'")
@@ -31,14 +38,14 @@ public interface CalendarDao {
     boolean hasLectures();
 
     @Query("SELECT c.* FROM calendar c, widgets_timetable_blacklist " +
-           "WHERE widget_id=:widgetId AND lecture_title=title " +
-           "GROUP BY title")
+            "WHERE widget_id=:widgetId AND lecture_title=title " +
+            "GROUP BY title")
     List<CalendarItem> getLecturesInBlacklist(String widgetId);
 
     @Query("SELECT c.* FROM calendar c " +
-           "WHERE NOT EXISTS (SELECT * FROM widgets_timetable_blacklist " +
-           "WHERE widget_id=:widgetId AND c.title=lecture_title) " +
-           "GROUP BY c.title")
+            "WHERE NOT EXISTS (SELECT * FROM widgets_timetable_blacklist " +
+            "WHERE widget_id=:widgetId AND c.title=lecture_title) " +
+            "GROUP BY c.title")
     List<CalendarItem> getLecturesNotInBlacklist(String widgetId);
 
     @Query("DELETE FROM calendar")
@@ -51,16 +58,16 @@ public interface CalendarDao {
     void insert(CalendarItem cal);
 
     @Query("SELECT c.* " +
-           "FROM calendar c LEFT JOIN room_locations r ON " +
-           "c.location=r.title " +
-           "WHERE coalesce(r.latitude, '') = '' " +
-           "GROUP BY c.location")
+            "FROM calendar c LEFT JOIN room_locations r ON " +
+            "c.location=r.title " +
+            "WHERE coalesce(r.latitude, '') = '' " +
+            "GROUP BY c.location")
     List<CalendarItem> getLecturesWithoutCoordinates();
 
     @Query("SELECT c.* FROM calendar c JOIN " +
-           "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
-           "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
-           "ORDER BY dtend, dtstart LIMIT 4")
+            "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
+            "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
+            "ORDER BY dtend, dtstart LIMIT 4")
     List<CalendarItem> getNextCalendarItems();
 
     // TODO: migrate dtstart and dtend to be proper dates

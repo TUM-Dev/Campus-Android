@@ -367,23 +367,19 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     @Override
     public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
-
         // Populate the week view with the events of the month to display
         List<WeekViewEvent> events = new ArrayList<>();
 
-        DateTime newDate = new DateTime()
-                .withDate(newYear, newMonth, 1);
+        DateTime begin = new DateTime().withDate(newYear, newMonth, 1);
 
-        int daysInMonth = newDate.dayOfMonth().getMaximumValue();
+        int daysInMonth = begin.dayOfMonth().getMaximumValue();
 
-        // TODO: Probably refactor this to a proper SQL query
-        for (int curDay = 1; curDay <= daysInMonth; curDay++) {
-            newDate = newDate.withDayOfMonth(curDay);
-            List<CalendarItem> calendarItems = calendarController.getFromDbForDate(newDate);
-            for (CalendarItem calendarItem : calendarItems) {
-                if (Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true) || !calendarItem.getStatus().equals("CANCEL")) {
-                    events.add(new IntegratedCalendarEvent(calendarItem, this));
-                }
+        DateTime end = new DateTime().withDate(newYear, newMonth, daysInMonth);
+
+        List<CalendarItem> calendarItems = calendarController.getFromDbBetweenDates(begin, end);
+        for (CalendarItem calendarItem : calendarItems) {
+            if (Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true) || !calendarItem.getStatus().equals("CANCEL")) {
+                events.add(new IntegratedCalendarEvent(calendarItem, this));
             }
         }
 

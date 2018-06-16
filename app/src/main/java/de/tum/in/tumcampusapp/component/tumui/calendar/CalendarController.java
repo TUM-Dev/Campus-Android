@@ -109,8 +109,8 @@ public class CalendarController implements ProvidesCard {
         }
     }
 
-    public List<CalendarItem> getFromDbForDate(DateTime date) {
-        return calendarDao.getAllByDate(DateTimeUtils.INSTANCE.getDateString(date));
+    public List<CalendarItem> getFromDbBetweenDates(DateTime begin, DateTime end) {
+        return calendarDao.getAllBetweenDates(begin, end);
     }
 
     /**
