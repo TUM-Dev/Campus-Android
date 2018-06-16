@@ -117,9 +117,9 @@ public class NextLectureCard extends NotificationAwareCard {
             });
         }
 
-        DateTimeFormatter week = DateTimeFormat.forPattern("EEEE, ").withLocale(Locale.getDefault());
-        DateTimeFormatter date = DateTimeFormat.shortDate();
-        mEvent.setText(String.format("%s%s - %s", week.print(item.start), date.print(item.start), date.print(item.end)));
+        DateTimeFormatter dayOfWeek = DateTimeFormat.forPattern("EEEE, ").withLocale(Locale.getDefault());
+        DateTimeFormatter time = DateTimeFormat.shortTime();
+        mEvent.setText(String.format("%s%s - %s", dayOfWeek.print(item.start), time.print(item.start), time.print(item.end)));
         mEvent.setOnClickListener(view -> {
             Intent i = new Intent(getContext(), CalendarActivity.class);
             CalendarItem item1 = lectures.get(mSelected);
