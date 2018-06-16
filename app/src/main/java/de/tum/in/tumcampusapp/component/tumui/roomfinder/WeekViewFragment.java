@@ -17,6 +17,7 @@ import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,12 +73,12 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
                     .withMonthOfYear(newMonth)
                     .withDayOfMonth(1);
 
-            org.joda.time.format.DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd")
-                                                                          .withLocale(Locale.getDefault());
+            DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd")
+                    .withLocale(Locale.getDefault());
             String startTime = format.print(start);
 
             int daysInMonth = start.dayOfMonth()
-                                   .getMaximumValue();
+                    .getMaximumValue();
             DateTime end = start.withDayOfMonth(daysInMonth);
             String endTime = format.print(end);
 
@@ -121,7 +122,7 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
         List<WeekViewEvent> events = new ArrayList<>();
         try {
             Optional<List<RoomFinderSchedule>> result = Optional.of(TUMCabeClient.getInstance(context)
-                                                                                 .fetchSchedule(roomId, startDate, endDate));
+                    .fetchSchedule(roomId, startDate, endDate));
             List<RoomFinderSchedule> schedules = result.get();
 
             //Convert to the proper type
@@ -130,10 +131,10 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
                 DateTime end = DateTimeUtils.INSTANCE.getDateTime(schedule.getEnd());
 
                 IntegratedCalendarEvent calendarEvent =
-                        new IntegratedCalendarEvent(String.valueOf(schedule.getEvent_id()), schedule.getTitle(), start.toGregorianCalendar(),
-                                                    end.toGregorianCalendar(), "",
-                                                    IntegratedCalendarEvent.getDisplayColorFromColor(
-                                                            ContextCompat.getColor(requireContext(), R.color.event_lecture)));
+                        new IntegratedCalendarEvent(String.valueOf(schedule.getEvent_id()), schedule.getTitle(), start,
+                                end, "",
+                                IntegratedCalendarEvent.getDisplayColorFromColor(
+                                        ContextCompat.getColor(requireContext(), R.color.event_lecture)));
                 events.add(calendarEvent);
             }
 
