@@ -19,7 +19,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private boolean firstOnDay;
 
     public IntegratedCalendarEvent(CalendarItem calendarItem, Context context) {
-        super(Long.parseLong(calendarItem.getNr()),
+        super(calendarItem.getNr(),
               calendarItem.getFormattedTitle(),
               calendarItem.getEventStart(),
               calendarItem.getEventEnd());
@@ -28,7 +28,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         this.setColor(calendarItem.getEventColor(context));
     }
 
-    public IntegratedCalendarEvent(long id, String title, Calendar startTime, Calendar endTime, String location, int color) {
+    public IntegratedCalendarEvent(String id, String title, Calendar startTime, Calendar endTime, String location, int color) {
         super(id, title, startTime, endTime);
         this.location = location;
         this.setColor(color);

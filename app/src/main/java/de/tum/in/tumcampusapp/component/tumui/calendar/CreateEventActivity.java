@@ -7,8 +7,10 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -21,20 +23,26 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEvent;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEvent;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
  */
 public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
-    private Calendar start, end;
+    private DateTime start;
+    private DateTime end;
     private boolean editing;
-    private TextView titleView, descriptionView, startDateView, startTimeView, endDateView, endTimeView;
+    private TextView titleView;
+    private TextView descriptionView;
+    private TextView startDateView;
+    private TextView startTimeView;
+    private TextView endDateView;
+    private TextView endTimeView;
     private Button createButton;
     private CalendarItem event;
 
-    public CreateEventActivity(){
+    public CreateEventActivity() {
         super(TUMOnlineConst.Companion.getCREATE_EVENT(), R.layout.activity_create_event);
     }
 
@@ -44,7 +52,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         initViews();
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
+        if (extras != null) {
             editing = true;
             titleView.setText(extras.getString(Const.EVENT_TITLE));
             descriptionView.setText(extras.getString(Const.EVENT_COMMENT));
@@ -53,11 +61,11 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         initStartEndDates(extras);
         setDateAndTimeListeners();
         createButton.setOnClickListener(view -> {
-            if (end.before(start)){
+            if (end.isBefore(start)) {
                 showErrorDialog(getString(R.string.create_event_time_error));
                 return;
             }
-            if (editing){
+            if (editing) {
                 editEvent();
             } else {
                 createEvent();
@@ -65,7 +73,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
     }
 
-    private void initViews(){
+    private void initViews() {
         titleView = findViewById(R.id.event_title);
         descriptionView = findViewById(R.id.event_description);
         startDateView = findViewById(R.id.event_start_date);
@@ -75,80 +83,81 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         createButton = findViewById(R.id.create_event_button);
     }
 
-    private void initStartEndDates(Bundle extras){
-        start = Calendar.getInstance();
-        end = Calendar.getInstance();
-
-        if (editing){
-            start.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_START)));
-            end.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_END)));
+    private void initStartEndDates(Bundle extras) {
+        if (editing) { // editing indicates extras are not null
+            start = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_START));
+            end = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_END));
         } else {
             // initial start: round up to the next full hour
-            start.add(Calendar.HOUR_OF_DAY, 1);
-            start.set(Calendar.MINUTE, 0);
+            start = new DateTime()
+                    .plusHours(1)
+                    .withMinuteOfHour(0);
 
             // initial length: 1 hour
-            end.setTimeInMillis(start.getTimeInMillis());
-            end.add(Calendar.HOUR_OF_DAY, 1);
+            end = new DateTime(start)
+                    .plusHours(1);
         }
 
         updateDateViews();
         updateTimeViews();
     }
 
-    private void setDateAndTimeListeners(){
-
+    private void setDateAndTimeListeners() {
         // DATE
         startDateView.setOnClickListener(view -> {
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
-                start.set(year, month, dayOfMonth);
-                if (end.before(start)){
-                    end.set(year, month, dayOfMonth);
+                start = start.withDate(year, month, dayOfMonth);
+                if (end.isBefore(start)) {
+                    end = end.withDate(year, month, dayOfMonth);
                 }
                 updateDateViews();
-            }, start.get(Calendar.YEAR), start.get(Calendar.MONTH), start.get(Calendar.DAY_OF_MONTH)).show();
+            }, start.getYear(), start.getMonthOfYear(), start.getDayOfMonth()).show();
 
         });
         endDateView.setOnClickListener(view -> {
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
-                end.set(year, month, dayOfMonth);
+                end = end.withDate(year, month, dayOfMonth);
                 updateDateViews();
-            }, start.get(Calendar.YEAR), start.get(Calendar.MONTH), start.get(Calendar.DAY_OF_MONTH)).show();
+            }, start.getYear(), start.getMonthOfYear(), start.getDayOfMonth()).show();
         });
 
         // TIME
         startTimeView.setOnClickListener(view -> {
             new TimePickerDialog(this, (timePicker, hour, minute) -> {
-                long eventLength = end.getTimeInMillis() - start.getTimeInMillis();
-                start.set(Calendar.HOUR_OF_DAY, hour);
-                start.set(Calendar.MINUTE, minute);
-                end.setTimeInMillis(start.getTimeInMillis() + eventLength);
+                long eventLength = end.getMillis() - start.getMillis();
+                start = start.withHourOfDay(hour)
+                             .withMinuteOfHour(minute);
+                end = end.withMillis(start.getMillis() + eventLength);
                 updateTimeViews();
-            }, start.get(Calendar.HOUR_OF_DAY), start.get(Calendar.MINUTE), true).show();
+            }, start.getHourOfDay(), start.getMinuteOfDay(), true).show();
         });
 
         endTimeView.setOnClickListener(view -> {
             new TimePickerDialog(this, (timePicker, hour, minute) -> {
-                end.set(Calendar.HOUR_OF_DAY, hour);
-                end.set(Calendar.MINUTE, minute);
+                end = end.withHourOfDay(hour)
+                         .withMinuteOfHour(minute);
                 updateTimeViews();
-            }, end.get(Calendar.HOUR_OF_DAY), end.get(Calendar.MINUTE), true).show();
+            }, end.getHourOfDay(), end.getMinuteOfDay(), true).show();
         });
     }
 
-    private void updateTimeViews(){
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.GERMANY);
-        startTimeView.setText(format.format(start.getTime()));
-        endTimeView.setText(format.format(end.getTime()));
-    }
-    private void updateDateViews(){
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
-        startDateView.setText(format.format(start.getTime()));
-        endDateView.setText(format.format(end.getTime()));
+    private void updateTimeViews() {
+        DateTimeFormatter format = DateTimeFormat.forPattern("HH:mm")
+                                                 .withLocale(Locale.getDefault());
+        startTimeView.setText(format.print(start));
+        endTimeView.setText(format.print(end));
     }
 
-    private void editEvent(){
-        final String eventNr = getIntent().getExtras().getString(Const.EVENT_NR);
+    private void updateDateViews() {
+        DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy")
+                                                 .withLocale(Locale.getDefault());
+        startDateView.setText(format.print(start));
+        endDateView.setText(format.print(end));
+    }
+
+    private void editEvent() {
+        final String eventNr = getIntent().getExtras()
+                                          .getString(Const.EVENT_NR);
         TUMOnlineRequest<DeleteEvent> request = new TUMOnlineRequest<>(
                 TUMOnlineConst.Companion.getDELETE_EVENT(), this, true);
         request.setParameter(Const.EVENT_NR, eventNr);
@@ -161,7 +170,9 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
             @Override
             public void onFetch(DeleteEvent response) {
                 Utils.log("Event successfully deleted (now creating the edited version)");
-                TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventNr);
+                TcaDb.getInstance(getApplicationContext())
+                     .calendarDao()
+                     .delete(eventNr);
                 createEvent();
             }
 
@@ -182,19 +193,21 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
     }
 
-    private void createEvent(){
+    private void createEvent() {
         event = new CalendarItem();
-        event.setDtstart(DateUtils.getDateTimeString(start.getTime()));
-        event.setDtend(DateUtils.getDateTimeString(end.getTime()));
+        event.setDtstart(DateTimeUtils.INSTANCE.getDateTimeString(start));
+        event.setDtend(DateTimeUtils.INSTANCE.getDateTimeString(end));
 
-        String title = titleView.getText().toString();
-        if (title.length() > 255){
+        String title = titleView.getText()
+                                .toString();
+        if (title.length() > 255) {
             title = title.substring(0, 255);
         }
         event.setTitle(title);
 
-        String description = descriptionView.getText().toString();
-        if (description.length() > 4000){
+        String description = descriptionView.getText()
+                                            .toString();
+        if (description.length() > 4000) {
             description = description.substring(0, 4000);
         }
         event.setDescription(description);
@@ -206,15 +219,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         requestFetch();
     }
 
-    @Override
-    public void onFetch(CreateEvent response) {
-        String nr = response.getEventNr();
-        event.setNr(nr);
-        TcaDb.getInstance(this).calendarDao().insert(event);
-        finish();
-    }
-
-    private void showErrorDialog(String message){
+    private void showErrorDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message);
         builder.setTitle(R.string.error);
@@ -222,4 +227,15 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         builder.setNeutralButton(R.string.ok, null);
         builder.show();
     }
+
+    @Override
+    public void onFetch(CreateEvent response) {
+        String nr = response.getEventNr();
+        event.setNr(nr);
+        TcaDb.getInstance(this)
+             .calendarDao()
+             .insert(event);
+        finish();
+    }
+
 }
