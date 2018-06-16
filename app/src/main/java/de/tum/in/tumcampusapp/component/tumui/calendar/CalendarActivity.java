@@ -28,11 +28,13 @@ import com.alamkanak.weekview.WeekViewEvent;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
-import java.text.DateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,7 +71,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
-                                                          Manifest.permission.WRITE_CALENDAR};
+            Manifest.permission.WRITE_CALENDAR};
     private static final int TIME_TO_SYNC_CALENDAR = VALIDITY_FIVE_DAYS;
     private CalendarController calendarController;
     private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
@@ -79,7 +81,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      */
     private boolean isFetched;
     private boolean mWeekMode;
-    private Calendar mShowDate;
+    private DateTime mShowDate;
     private WeekView mWeekView;
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;
@@ -104,12 +106,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
         // Get time to show e.g. a lectures starting time or 0 for now
         Intent i = getIntent();
-        mShowDate = Calendar.getInstance();
+        mShowDate = DateTime.now();
         if (i != null && i.hasExtra(EVENT_TIME)) {
             long time = i.getLongExtra(EVENT_TIME, 0);
-            mShowDate.setTime(new Date(time));
-        } else {
-            mShowDate.setTime(new Date());
+            mShowDate = mShowDate.withMillis(time);
         }
 
         //Get setting from sharedprefs and refresh the view with everything
@@ -136,15 +136,15 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         // parsing and saving xml response
         isFetched = true;
         Completable.fromAction(() -> calendarController.importCalendar(rawResponse))
-                   .compose(provider.bindToLifecycle())
-                   .subscribeOn(Schedulers.io())
-                   .observeOn(AndroidSchedulers.mainThread())
-                   .subscribe(() -> {
-                       showLoadingEnded();
-                       // update the action bar to display the enabled menu options
-                       CalendarActivity.this.invalidateOptionsMenu();
-                       startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
-                   });
+                .compose(provider.bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    showLoadingEnded();
+                    // update the action bar to display the enabled menu options
+                    CalendarActivity.this.invalidateOptionsMenu();
+                    startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
+                });
     }
 
     @Override
@@ -180,7 +180,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
-        switch(i) {
+        switch (i) {
             case R.id.action_switch_view_mode:
                 mWeekMode = !mWeekMode;
                 Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
@@ -238,11 +238,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             mWeekView.setXScrollingSpeed(0.4f);
         }
 
-        //Go to current date or the one givin in the intent
-        mWeekView.goToDate((Calendar) this.mShowDate.clone()); //Pass a deep copy, as this method changes the hour to 0
-        mWeekView.goToHour(this.mShowDate.get(Calendar.HOUR_OF_DAY));
+        // Go to current date or the one given in the intent
+        mWeekView.goToDate(mShowDate.toGregorianCalendar());
+        mWeekView.goToHour(mShowDate.getHourOfDay());
 
-        //When called from constructor this member is not yet initialized
+        // When called from constructor this member is not yet initialized
         if (menuItemSwitchView != null) {
             menuItemSwitchView.setIcon(icon);
         }
@@ -259,19 +259,19 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
         showLoadingStart();
         Completable.fromAction(() -> CalendarController.syncCalendar(this))
-                   .compose(provider.bindToLifecycle())
-                   .subscribeOn(Schedulers.io())
-                   .observeOn(AndroidSchedulers.mainThread())
-                   .subscribe(() -> {
-                       if (!isFinishing()) {
-                           AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                           builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
-                                  .setPositiveButton(CalendarActivity.this.getString(R.string.yes), this)
-                                  .setNegativeButton(CalendarActivity.this.getString(R.string.no), this)
-                                  .show();
-                           showLoadingEnded();
-                       }
-                   });
+                .compose(provider.bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    if (!isFinishing()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
+                                .setPositiveButton(CalendarActivity.this.getString(R.string.yes), this)
+                                .setNegativeButton(CalendarActivity.this.getString(R.string.no), this)
+                                .show();
+                        showLoadingEnded();
+                    }
+                });
     }
 
     /**
@@ -282,14 +282,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      */
     private boolean isPermissionGranted(int id) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
             // For example, if the request has been denied previously.
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CALENDAR) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
+                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
 
                 // Display an AlertDialog with an explanation and a button to trigger the request.
                 new AlertDialog.Builder(this)
@@ -333,8 +333,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      */
     private void displayCalendarOnGoogleCalendar() {
         // displaying Calendar
-        Calendar beginTime = Calendar.getInstance();
-        long startMillis = beginTime.getTimeInMillis();
+        long startMillis = DateTime.now().getMillis();
         Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
         builder.appendPath("time");
         ContentUris.appendId(builder, startMillis);
@@ -352,18 +351,18 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_delete_calendar))
-               .setPositiveButton(getString(R.string.yes), (arg0, arg1) -> {
-                   int deleted = CalendarController.deleteLocalCalendar(this);
-                   Utils.setSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
-                   this.invalidateOptionsMenu();
-                   if (deleted > 0) {
-                       Utils.showToast(this, R.string.calendar_deleted_toast);
-                   } else {
-                       Utils.showToast(this, R.string.calendar_not_existing_toast);
-                   }
-               })
-               .setNegativeButton(getString(R.string.no), null)
-               .show();
+                .setPositiveButton(getString(R.string.yes), (arg0, arg1) -> {
+                    int deleted = CalendarController.deleteLocalCalendar(this);
+                    Utils.setSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
+                    this.invalidateOptionsMenu();
+                    if (deleted > 0) {
+                        Utils.showToast(this, R.string.calendar_deleted_toast);
+                    } else {
+                        Utils.showToast(this, R.string.calendar_not_existing_toast);
+                    }
+                })
+                .setNegativeButton(getString(R.string.no), null)
+                .show();
     }
 
     @Override
@@ -372,16 +371,15 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         // Populate the week view with the events of the month to display
         List<WeekViewEvent> events = new ArrayList<>();
 
-        Calendar calendar = Calendar.getInstance();
+        DateTime newDate = new DateTime()
+                .withDate(newYear, newMonth, 1);
 
-        //Note the (-1), since the calendar starts with month 0, but we get months starting with 1
-        calendar.set(newYear, newMonth - 1, 1);
-        int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int daysInMonth = newDate.dayOfMonth().getMaximumValue();
 
-        //Probably refactor this to a good SQL query
+        // TODO: Probably refactor this to a proper SQL query
         for (int curDay = 1; curDay <= daysInMonth; curDay++) {
-            calendar.set(Calendar.DAY_OF_MONTH, curDay);
-            List<CalendarItem> calendarItems = calendarController.getFromDbForDate(new Date(calendar.getTimeInMillis()));
+            newDate = newDate.withDayOfMonth(curDay);
+            List<CalendarItem> calendarItems = calendarController.getFromDbForDate(newDate);
             for (CalendarItem calendarItem : calendarItems) {
                 if (Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true) || !calendarItem.getStatus().equals("CANCEL")) {
                     events.add(new IntegratedCalendarEvent(calendarItem, this));
@@ -411,18 +409,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat(weekDayFormat, Locale.getDefault());
                 String weekday = weekdayNameFormat.format(date.getTime());
                 String dateString = DateUtils.formatDateTime(getApplicationContext(),
-                                                             date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
+                        date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
 
                 return weekday.toUpperCase(Locale.getDefault()) + ' ' + dateString;
             }
 
             @Override
             public String interpretTime(int hour, int minutes) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.HOUR_OF_DAY, hour);
-                cal.set(Calendar.MINUTE, minutes);
-                DateFormat hourFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                return hourFormat.format(cal.getTime());
+                DateTimeFormatter hourFormat = DateTimeFormat.forPattern("HH:mm").withLocale(Locale.getDefault());
+                DateTime time = new DateTime().withTime(hour, minutes, 0, 0);
+                return hourFormat.print(time);
             }
         });
     }
@@ -440,9 +436,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     /**
      * option to delete is shown to the user for every event that does not contain a url.
      * (it is assumed that this is actually an event that was created by the user)
-     * @param nr
      */
-    protected void deleteEvent(final String nr){
+    protected void deleteEvent(final String nr) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(R.string.event_delete_title);
         dialog.setMessage(R.string.delete_event_info);
@@ -484,7 +479,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         dialog.show();
     }
 
-    protected void editEvent(final CalendarItem calendarItem){
+    protected void editEvent(final CalendarItem calendarItem) {
         Bundle bundle = new Bundle();
         bundle.putString(Const.EVENT_TITLE, calendarItem.getTitle());
         bundle.putString(Const.EVENT_COMMENT, calendarItem.getDescription());
@@ -497,7 +492,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         detailsFragment.dismiss();
     }
 
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         refreshWeekView();
     }
@@ -529,8 +524,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         // to get height of actual calendar section, then divide by 24 to get height of a single hour
         return (mWeekView.getMeasuredHeight()             // height of weekView
                 - mWeekView.getTextSize()                 // height of text in header of weekView
-                - (3*mWeekView.getHeaderRowPadding()))    // height of padding above and below text in header
-               / (max - min);                             // amount of hours
+                - (3 * mWeekView.getHeaderRowPadding()))    // height of padding above and below text in header
+                / (max - min);                             // amount of hours
     }
 
     protected void applyFilterLimitHours(int min, int max) {
@@ -540,7 +535,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Integer.toString(min));
         Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Integer.toString(max));
 
-        if(min >= oldMax) {
+        if (min >= oldMax) {
             mWeekView.setMaxTime(max);
             mWeekView.setMinTime(min);
         } else {

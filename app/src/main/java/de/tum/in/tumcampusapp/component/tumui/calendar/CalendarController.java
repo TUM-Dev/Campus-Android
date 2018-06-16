@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import com.google.common.base.Optional;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,6 +35,7 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
@@ -110,8 +112,8 @@ public class CalendarController implements ProvidesCard {
         }
     }
 
-    public List<CalendarItem> getFromDbForDate(Date date) {
-        return calendarDao.getAllByDate(DateUtils.getDateString(date));
+    public List<CalendarItem> getFromDbForDate(DateTime date) {
+        return calendarDao.getAllByDate(DateTimeUtils.INSTANCE.getDateString(date));
     }
 
     /**
