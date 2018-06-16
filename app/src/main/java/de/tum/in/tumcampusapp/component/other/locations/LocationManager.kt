@@ -241,7 +241,7 @@ class LocationManager(c: Context) {
      *
      * @return the id of current building
      */
-    fun getBuildingIDFromCurrentLocation(): Optional<String> = getBuildingIDFromLocation(getCurrentLocation()!!)
+    fun getBuildingIDFromCurrentLocation(): Optional<String> = getBuildingIDFromLocation(getCurrentOrNextLocation())
 
 
 
