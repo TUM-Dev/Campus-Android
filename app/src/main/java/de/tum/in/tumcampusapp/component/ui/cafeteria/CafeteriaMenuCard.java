@@ -17,8 +17,8 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
-import java.text.DateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -31,7 +31,6 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment.showMenu;
@@ -47,7 +46,6 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
     private int mCafeteriaId;
     private String mCafeteriaName;
     private DateTime mDate;
-    private String mDateStr;
     private List<CafeteriaMenu> mMenus;
 
     public CafeteriaMenuCard(Context context) {
@@ -73,8 +71,8 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         // Show date
         TextView mDateView = getMCard().findViewById(R.id.card_date);
         mDateView.setVisibility(View.VISIBLE);
-        mDateView.setText(DateFormat.getDateInstance()
-                .format(mDate));
+        mDateView.setText(DateTimeFormat.mediumDate()
+                .print(mDate));
 
         //Remove additional views
         for (View view : addedViews) {
@@ -82,7 +80,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         }
 
         // Show cafeteria menu
-        cardsViewHolder.setAddedViews(showMenu(getMLinearLayout(), mCafeteriaId, mDateStr, false, mMenus));
+        cardsViewHolder.setAddedViews(showMenu(getMLinearLayout(), mCafeteriaId, mDate, false, mMenus));
     }
 
     public void setCardMenus(CafeteriaWithMenus cafeteria) {
@@ -90,7 +88,6 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                 cafeteria.getId(),
                 cafeteria.getName(),
                 cafeteria.getNextMenuDate(),
-                DateTimeUtils.INSTANCE.getDate(cafeteria.getNextMenuDate()),
                 cafeteria.getMenus()
         );
     }
@@ -100,14 +97,12 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
      *
      * @param id      Cafeteria id
      * @param name    Cafeteria name
-     * @param dateStr Date of the menu in yyyy-mm-dd format
      * @param date    Date of the menu
      * @param menus   List of cafeteria menus
      */
-    public void setCardMenus(int id, String name, String dateStr, DateTime date, List<CafeteriaMenu> menus) {
+    public void setCardMenus(int id, String name, DateTime date, List<CafeteriaMenu> menus) {
         mCafeteriaId = id;
         mCafeteriaName = name;
-        mDateStr = dateStr;
         mDate = date;
         mMenus = menus;
     }

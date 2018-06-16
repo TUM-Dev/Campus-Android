@@ -8,7 +8,6 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 object DateTimeUtils {
@@ -29,14 +28,18 @@ object DateTimeUtils {
         }
 
         val diff = timeInMillis - now
-        if (diff < 60 * MINUTE_MILLIS) {
-            val formatter = SimpleDateFormat("m", Locale.ENGLISH)
-            return context.getString(R.string.IN) + ' '.toString() + formatter.format(Date(diff)) + ' '.toString() + context.getString(R.string.MINUTES)
-        } else if (diff < 3 * HOUR_MILLIS) { // Be more precise by telling the user the exact time if below 3 hours
-            val formatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)
-            return context.getString(R.string.AT) + ' '.toString() + formatter.format(time)
-        } else {
-            return getRelativeTimeSpanString(timeInMillis, now, android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE)
+        return when {
+            diff < 60 * MINUTE_MILLIS -> {
+                val formatter = DateTimeFormat.forPattern("m")
+                        .withLocale(Locale.ENGLISH)
+                context.getString(R.string.IN) + ' '.toString() + formatter.print(DateTime(diff)) + ' '.toString() + context.getString(R.string.MINUTES)
+            }
+            diff < 3 * HOUR_MILLIS -> { // Be more precise by telling the user the exact time if below 3 hours
+                val formatter = DateTimeFormat.forPattern("HH:mm")
+                        .withLocale(Locale.ENGLISH)
+                context.getString(R.string.AT) + ' '.toString() + formatter.print(time)
+            }
+            else -> getRelativeTimeSpanString(timeInMillis, now, android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE)
                     .toString()
         }
     }
@@ -64,16 +67,19 @@ object DateTimeUtils {
         }
 
         val diff = now - timeInMillis
-        return if (diff < MINUTE_MILLIS) {
-            context.getString(R.string.just_now)
-        } else if (diff < 24 * HOUR_MILLIS) {
-            val formatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)
-            formatter.format(time)
-        } else if (diff < 48 * HOUR_MILLIS) {
-            context.getString(R.string.yesterday)
-        } else {
-            val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH)
-            formatter.format(time)
+        return when {
+            diff < MINUTE_MILLIS ->
+                context.getString(R.string.just_now)
+            diff < 24 * HOUR_MILLIS ->
+                DateTimeFormat.forPattern("HH:mm")
+                        .withLocale(Locale.ENGLISH)
+                        .print(time)
+            diff < 48 * HOUR_MILLIS ->
+                context.getString(R.string.yesterday)
+            else ->
+                DateTimeFormat.forPattern("dd.MM.yyyy")
+                        .withLocale(Locale.ENGLISH)
+                        .print(time)
         }
     }
 
@@ -83,6 +89,7 @@ object DateTimeUtils {
     fun parseIsoDate(datetime: String) = try {
         isoDateFormat.parseDateTime(datetime)
     } catch (e: ParseException) {
+        Utils.log(e)
         null
     }
 
@@ -92,6 +99,7 @@ object DateTimeUtils {
     fun parseIsoDateWithMillis(datetime: String) = try {
         isoDateWithMillisFormat.parseDateTime(datetime)
     } catch (e: ParseException) {
+        Utils.log(e)
         null
     }
 
@@ -115,6 +123,7 @@ object DateTimeUtils {
     fun getDate(str: String): DateTime = try {
         DateTime.parse(str, dateFormat)
     } catch (e: RuntimeException) {
+        Utils.log(e)
         DateTime()
     }
 
@@ -143,6 +152,7 @@ object DateTimeUtils {
     fun getDateTime(str: String): DateTime = try {
         DateTime.parse(str, dateTimeFormat)
     } catch (e: RuntimeException) {
+        Utils.log(e)
         DateTime()
     }
 }

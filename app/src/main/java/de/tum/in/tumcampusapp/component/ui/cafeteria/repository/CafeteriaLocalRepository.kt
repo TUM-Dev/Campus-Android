@@ -7,6 +7,7 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.DateUtils
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
+import org.joda.time.DateTime
 import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -22,10 +23,10 @@ object CafeteriaLocalRepository {
 
     // Menu methods //
 
-    fun getCafeteriaMenus(id: Int, date: String): Flowable<List<CafeteriaMenu>> =
+    fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> =
             db.cafeteriaMenuDao().getTypeNameFromDbCard(id, date)
 
-    fun getAllMenuDates(): Flowable<List<String>> = db.cafeteriaMenuDao().allDates
+    fun getAllMenuDates(): Flowable<List<DateTime>> = db.cafeteriaMenuDao().allDates
 
 
     // Canteen methods //

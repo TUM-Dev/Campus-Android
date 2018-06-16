@@ -427,7 +427,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
         detailsFragment = new CalendarDetailsFragment();
         Bundle bundle = new Bundle();
-        CalendarItem item = calendarController.getCalendarItemByStartAndEndTime(weekViewEvent.getStartTime(), weekViewEvent.getEndTime());
+        CalendarItem item = calendarController.getCalendarItemByStartAndEndTime(
+                new DateTime(weekViewEvent.getStartTime()),
+                new DateTime(weekViewEvent.getEndTime()));
         bundle.putString(CALENDAR_ID_PARAM, item.getNr());
         detailsFragment.setArguments(bundle);
         detailsFragment.show(getSupportFragmentManager(), null);

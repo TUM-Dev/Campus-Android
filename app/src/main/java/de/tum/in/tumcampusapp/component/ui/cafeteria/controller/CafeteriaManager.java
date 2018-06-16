@@ -82,7 +82,7 @@ public class CafeteriaManager implements ProvidesCard {
 
         return createCafeteriaObservableForNonUIThreads(cafeteriaId)
                 .map(cafeteria -> {
-                    String mensaKey = cafeteria.getName() + ' ' + cafeteria.getNextMenuDate();
+                    String mensaKey = cafeteria.getName() + ' ' + cafeteria.getNextMenuDate().toString();
                     Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>(1);
                     selectedMensaMenus.put(mensaKey, cafeteria.getMenus());
                     return selectedMensaMenus;

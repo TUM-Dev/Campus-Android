@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import java.util.*
+import org.joda.time.DateTime
 
 /**
  * CafeteriaMenu
@@ -19,7 +19,7 @@ import java.util.*
 data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
                          var id: Int = 0,
                          var cafeteriaId: Int = -1,
-                         var date: Date? = null,
+                         var date: DateTime? = null,
                          var typeShort: String = "",
                          var typeLong: String = "",
                          var typeNr: Int = -1,

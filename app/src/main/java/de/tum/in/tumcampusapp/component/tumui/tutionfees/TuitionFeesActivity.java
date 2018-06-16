@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import org.joda.time.DateTime;
 
 import java.text.DateFormat;
@@ -40,8 +38,6 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         deadlineTextView = findViewById(R.id.deadline);
         semesterTextView = findViewById(R.id.semester);
         ((TextView) findViewById(R.id.fees_aid)).setMovementMethod(LinkMovementMethod.getInstance());
-
-        JodaTimeAndroid.init(this);
 
         requestFetch();
     }

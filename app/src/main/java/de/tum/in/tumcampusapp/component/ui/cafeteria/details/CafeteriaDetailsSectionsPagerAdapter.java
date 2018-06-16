@@ -31,10 +31,7 @@ import io.reactivex.disposables.Disposable;
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdapter {
     private int mCafeteriaId;
 
-    /**
-     * Current Date selected (ISO format)
-     */
-    private List<String> dates = new ArrayList<>();
+    private List<DateTime> dates = new ArrayList<>();
 
     private final CompositeDisposable mDisposable = new CompositeDisposable();
 
@@ -69,7 +66,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
         // getItem is called to instantiate the fragment for the given page.
         Fragment fragment = new CafeteriaDetailsSectionFragment();
         Bundle args = new Bundle();
-        args.putString(Const.DATE, dates.get(position));
+        args.putString(Const.DATE, DateTimeUtils.INSTANCE.getDateString(dates.get(position)));
         args.putInt(Const.CAFETERIA_ID, mCafeteriaId);
         fragment.setArguments(args);
         return fragment;
@@ -78,7 +75,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     @Override
     public CharSequence getPageTitle(int position) {
         DateTimeFormatter format = DateTimeFormat.fullDate();
-        DateTime date = DateTimeUtils.INSTANCE.getDate(dates.get(position));
+        DateTime date = dates.get(position);
 
         return format.print(date).toUpperCase(Locale.getDefault());
     }
