@@ -49,15 +49,6 @@ public final class DateUtils {
         }
     }
 
-    private static String getRelativeTime(Date date, Context context) {
-        if (date == null) {
-            return "";
-        }
-
-        return android.text.format.DateUtils.getRelativeDateTimeString(context, date.getTime(), MINUTE_MILLIS, DAY_MILLIS * 2L, 0)
-                                            .toString();
-    }
-
     public static String getTimeOrDay(Date time, Context context) {
         if (time == null) {
             return "";
@@ -84,32 +75,6 @@ public final class DateUtils {
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
             return formatter.format(time);
         }
-    }
-
-    public static Date parseIsoDate(String datetime) {
-        if (datetime == null) {
-            return null;
-        }
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat(FORMAT_ISO, Locale.ENGLISH);
-            return formatter.parse(datetime);
-        } catch (ParseException e) {
-            Utils.log(e,"Parsing ISO date failed");
-        }
-        return null;
-    }
-
-    public static Date parseIsoDateWithMillis(String datetime) {
-        if (datetime == null) {
-            return null;
-        }
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat(FORMAT_ISO_WITH_MILLIS, Locale.ENGLISH);
-            return formatter.parse(datetime);
-        } catch (ParseException e) {
-            Utils.log(e,"Parsing ISO date with milliseconds failed");
-        }
-        return null;
     }
 
     /**
