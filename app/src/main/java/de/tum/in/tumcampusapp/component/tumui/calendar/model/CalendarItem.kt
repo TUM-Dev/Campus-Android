@@ -9,7 +9,7 @@ import android.provider.CalendarContract
 import android.support.v4.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent
-import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -24,8 +24,8 @@ data class CalendarItem(@PrimaryKey
                         var url: String = "",
                         var title: String = "",
                         var description: String = "",
-                        var dtstart: String = "",
-                        var dtend: String = "",
+                        var dtstart: DateTime = DateTime(),
+                        var dtend: DateTime = DateTime(),
                         var location: String = "",
                         @Ignore
                         var blacklisted: Boolean = false) {
@@ -48,13 +48,13 @@ data class CalendarItem(@PrimaryKey
      * Get event start as Calendar object
      */
     val eventStart
-        get() = DateTimeUtils.getDateTime(dtstart)
+        get() = dtstart
 
     /**
      * Get event end as Calendar object
      */
     val eventEnd
-        get() = DateTimeUtils.getDateTime(dtstart)
+        get() = dtend
 
     /**
      * Formats title to exclude codes

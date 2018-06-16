@@ -48,6 +48,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEvent;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 import io.reactivex.Completable;
@@ -481,8 +482,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         Bundle bundle = new Bundle();
         bundle.putString(Const.EVENT_TITLE, calendarItem.getTitle());
         bundle.putString(Const.EVENT_COMMENT, calendarItem.getDescription());
-        bundle.putString(Const.EVENT_START, calendarItem.getDtstart());
-        bundle.putString(Const.EVENT_END, calendarItem.getDtend());
+        bundle.putString(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(calendarItem.getDtstart()));
+        bundle.putString(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(calendarItem.getDtend()));
         bundle.putString(Const.EVENT_NR, calendarItem.getNr());
         Intent intent = new Intent(this, CreateEventActivity.class);
         intent.putExtras(bundle);

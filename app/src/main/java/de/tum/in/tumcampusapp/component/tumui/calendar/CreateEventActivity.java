@@ -195,8 +195,8 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
     private void createEvent() {
         event = new CalendarItem();
-        event.setDtstart(DateTimeUtils.INSTANCE.getDateTimeString(start));
-        event.setDtend(DateTimeUtils.INSTANCE.getDateTimeString(end));
+        event.setDtstart(start);
+        event.setDtend(end);
 
         String title = titleView.getText()
                                 .toString();
@@ -214,8 +214,8 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
         requestHandler.setParameter(Const.EVENT_TITLE, title);
         requestHandler.setParameter(Const.EVENT_COMMENT, description);
-        requestHandler.setParameter(Const.EVENT_START, event.getDtstart());
-        requestHandler.setParameter(Const.EVENT_END, event.getDtend());
+        requestHandler.setParameter(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(event.getDtstart()));
+        requestHandler.setParameter(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getDtend()));
         requestFetch();
     }
 

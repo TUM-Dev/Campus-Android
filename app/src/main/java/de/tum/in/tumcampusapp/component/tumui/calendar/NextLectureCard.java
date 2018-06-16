@@ -165,8 +165,8 @@ public class NextLectureCard extends NotificationAwareCard {
     public void setLectures(List<de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem> calendarItems) {
         for (de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem calendarItem : calendarItems) {
             CalendarItem item = new CalendarItem();
-            item.start = DateTimeUtils.INSTANCE.getDateTime(calendarItem.getDtstart());
-            item.end = DateTimeUtils.INSTANCE.getDateTime(calendarItem.getDtend());
+            item.start = calendarItem.getDtstart();
+            item.end = calendarItem.getDtend();
 
             // Extract course title
             item.title = calendarItem.getFormattedTitle();
