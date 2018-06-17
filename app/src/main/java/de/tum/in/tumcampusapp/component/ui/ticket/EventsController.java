@@ -13,6 +13,8 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_ONE_DAY;
@@ -52,13 +54,6 @@ public class EventsController implements ProvidesCard {
             }
         } catch (IOException e) {
             Utils.log(e);
-        }
-
-        // TODO: remove this (only to test server calls)
-        try {
-            List<Ticket> tickets = api.getTickets();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

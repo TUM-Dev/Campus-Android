@@ -16,4 +16,7 @@ data class Ticket(@PrimaryKey
                  @SerializedName("ticket")
                  var event: Event,
                  var code: String = "",
-                 var type: TicketType)
+                  @SerializedName("ticket_type")
+                 var type: TicketType,
+                  @SerializedName("ticket_payment")
+                  var payment: Int = 0)

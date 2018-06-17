@@ -31,6 +31,9 @@ import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketSuccessResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -208,9 +211,36 @@ public interface TUMCabeAPIService {
     @GET(API_NEWS + "alert")
     Observable<NewsAlert> getNewsAlert();
 
+    // TICKET SALE
+
+    // Getting Event information
     @GET(API_EVENTS + "list")
     Call<List<Event>> getEvents();
 
-    @GET(API_EVENTS + API_TICKET + "my")
-    Call<List<Ticket>> getTickets();
+    @GET(API_EVENTS + "list/{eventID}")
+    Call<Event> getEvent(@Path("eventID") int eventID);
+
+    @GET(API_EVENTS + "list/search/{searchTerm}")
+    Call<List<Event>> searchEvents(@Path("searchTerm") String searchTerm);
+
+    // Getting Ticket information
+    @GET(API_EVENTS + API_TICKET + "my/{userID}")
+    Call<List<Ticket>> getTickets(@Path("userID") int userID);
+
+    @GET(API_EVENTS + API_TICKET + "my/{userID}/{eventID}")
+    Call<Ticket> getTicketForEvent(@Path("userID") int userID, @Path("eventID") int eventID);
+
+    @GET(API_EVENTS + API_TICKET + "type/{eventID}")
+    Call<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
+
+    // Ticket reservation
+    @POST(API_EVENTS + API_TICKET + "reserve")
+    Call<TicketReservationResponse> reserveTicket(@Body int member_id, @Body int ticket_type);
+
+    @POST(API_EVENTS + API_TICKET + "reserve/cancel")
+    Call<TicketSuccessResponse> cancelTicketReservation(@Body int ticket_history);
+
+    // Ticket purchase
+    @POST(API_EVENTS + API_TICKET + "reserve/cancel")
+    Call<Ticket> purchaseTicket(@Body int ticket_history, @Body String token);
 }
