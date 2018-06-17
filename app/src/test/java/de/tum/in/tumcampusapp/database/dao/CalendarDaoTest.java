@@ -36,9 +36,12 @@ public class CalendarDaoTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application).calendarDao();
-        wtbDao = TcaDb.getInstance(RuntimeEnvironment.application).widgetsTimetableBlacklistDao();
-        rlDao = TcaDb.getInstance(RuntimeEnvironment.application).roomLocationsDao();
+        dao = TcaDb.getInstance(RuntimeEnvironment.application)
+                   .calendarDao();
+        wtbDao = TcaDb.getInstance(RuntimeEnvironment.application)
+                      .widgetsTimetableBlacklistDao();
+        rlDao = TcaDb.getInstance(RuntimeEnvironment.application)
+                     .roomLocationsDao();
         nr = 0;
         JodaTimeAndroid.init(RuntimeEnvironment.application);
     }
@@ -48,7 +51,8 @@ public class CalendarDaoTest {
         dao.flush();
         wtbDao.flush();
         rlDao.flush();
-        TcaDb.getInstance(RuntimeEnvironment.application).close();
+        TcaDb.getInstance(RuntimeEnvironment.application)
+             .close();
     }
 
     private CalendarItem createCalendarItem(String status, DateTime startDate) {
@@ -61,8 +65,8 @@ public class CalendarDaoTest {
                                              "dummy url",
                                              "title " + Integer.toString(nr),
                                              "dummy description",
-                                             DateUtils.getDateTimeString(startDate.toDate()),
-                                             DateUtils.getDateTimeString(endDate.toDate()),
+                                             startDate,
+                                             endDate,
                                              "dummy location",
                                              false);
         nr++;
@@ -126,7 +130,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("OTHER", now.minusMonths(10)));
         dao.insert(createCalendarItem("COOL", now));
 
-        assertThat(dao.getAllByDate(DateUtils.getDateString(now.toDate()))).hasSize(2);
+        assertThat(dao.getAllByDate(now)).hasSize(2);
     }
 
     /**
@@ -141,7 +145,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("OTHER", now.minusMonths(10)));
         dao.insert(createCalendarItem("COOL", now.minusDays(123)));
 
-        assertThat(dao.getAllByDate(DateUtils.getDateString(now.toDate()))).hasSize(0);
+        assertThat(dao.getAllByDate(now)).hasSize(0);
     }
 
     /**
@@ -156,11 +160,11 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(123)));
         dao.insert(createCalendarItem("CANCEL", now));
 
-        assertThat(dao.getAllByDate(DateUtils.getDateString(now.toDate()))).hasSize(2);
+        assertThat(dao.getAllByDate(now)).hasSize(2);
     }
 
     /**
-     * All 
+     * All
      * Expected output: All items are returned
      */
     @Test
@@ -171,10 +175,8 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
         dao.insert(createCalendarItem("YES", now));
 
-        String from = DateUtils.getDateTimeString(now.minusDays(4)
-                                                     .toDate());
-        String to = DateUtils.getDateTimeString(now.plusDays(4)
-                                                   .toDate());
+        DateTime from = now.minusDays(4);
+        DateTime to = now.plusDays(4);
 
         // widgetId is used only for blacklisting
         assertThat(dao.getNextDays(from, to, "1")).hasSize(4);
@@ -192,10 +194,8 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
         dao.insert(createCalendarItem("YES", now));
 
-        String from = DateUtils.getDateTimeString(now.minusDays(4)
-                                                     .toDate());
-        String to = DateUtils.getDateTimeString(now.plusDays(4)
-                                                   .toDate());
+        String from = now.minusDays(4);
+        String to = now.plusDays(4);
 
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 0"));
 
@@ -215,10 +215,8 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
         dao.insert(createCalendarItem("YES", now));
 
-        String from = DateUtils.getDateTimeString(now.minusDays(2)
-                                                     .toDate());
-        String to = DateUtils.getDateTimeString(now.plusDays(2)
-                                                   .toDate());
+        String from = now.minusDays(2);
+        String to = now.plusDays(2);
 
         // widgetId is used only for blacklisting
         assertThat(dao.getNextDays(from, to, "1")).hasSize(2);
@@ -361,7 +359,6 @@ public class CalendarDaoTest {
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 1"));
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 2"));
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 3"));
-
 
         assertThat(dao.getLecturesInBlacklist("1")).hasSize(4);
     }

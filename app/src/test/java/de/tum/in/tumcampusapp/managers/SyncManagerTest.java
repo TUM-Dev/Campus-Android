@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,12 +9,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.Date;
-
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
@@ -28,14 +27,16 @@ public class SyncManagerTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application).syncDao();
+        dao = TcaDb.getInstance(RuntimeEnvironment.application)
+                   .syncDao();
         dao.removeCache();
         syncManager = new SyncManager(RuntimeEnvironment.application);
     }
 
     @After
     public void tearDown() {
-        TcaDb.getInstance(RuntimeEnvironment.application).close();
+        TcaDb.getInstance(RuntimeEnvironment.application)
+             .close();
     }
 
     /**
@@ -66,7 +67,7 @@ public class SyncManagerTest {
     @Test
     public void needSyncTooEarlyTest() {
         String sync_id = "needSyncTooEarlyTest";
-        String now = DateUtils.getDateTimeString(new Date());
+        String now = DateTimeUtils.INSTANCE.getDateTimeString(DateTime.now());
         dao.insert(new Sync(sync_id, now));
         assertThat(syncManager.needSync(sync_id, 1234)).isFalse();
     }

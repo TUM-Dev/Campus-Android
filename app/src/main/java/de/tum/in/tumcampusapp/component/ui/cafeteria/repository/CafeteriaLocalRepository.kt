@@ -4,11 +4,9 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import de.tum.`in`.tumcampusapp.utils.DateUtils
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
 import org.joda.time.DateTime
-import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -42,7 +40,7 @@ object CafeteriaLocalRepository {
 
     fun getLastSync() = db.syncDao().getSyncSince(CafeteriaManager::class.java.name, TIME_TO_SYNC)
 
-    fun updateLastSync() = db.syncDao().insert(Sync(CafeteriaManager::class.java.name, DateUtils.getDateTimeString(Date())))
+    fun updateLastSync() = db.syncDao().insert(Sync(CafeteriaManager::class.java.name, DateTime.now()))
 
     fun clear() = db.cafeteriaDao().removeCache()
 

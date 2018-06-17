@@ -50,8 +50,8 @@ public class RoomLocationsDaoTest {
                                              "dummy url",
                                              "title " + Integer.toString(nr),
                                              "dummy description",
-                                             DateUtils.getDateTimeString(startDate.toDate()),
-                                             DateUtils.getDateTimeString(startDate.toDate()),
+                                             startDate),
+                                             startDate),
                                              location,
                                              false);
         nr++;

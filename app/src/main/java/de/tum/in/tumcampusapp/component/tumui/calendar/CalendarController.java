@@ -123,12 +123,10 @@ public class CalendarController implements ProvidesCard {
      */
     public List<IntegratedCalendarEvent> getNextDaysFromDb(int dayCount, int widgetId) {
         DateTime fromDate = DateTime.now();
-        String from = DateTimeUtils.INSTANCE.getDateTimeString(fromDate);
         DateTime toDate = fromDate.plusDays(dayCount);
-        String to = DateTimeUtils.INSTANCE.getDateTimeString(toDate);
 
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
-        List<CalendarItem> calendarItems = calendarDao.getNextDays(from, to, String.valueOf(widgetId));
+        List<CalendarItem> calendarItems = calendarDao.getNextDays(fromDate, toDate, String.valueOf(widgetId));
         for (CalendarItem calendarItem : calendarItems) {
             calendarEvents.add(new IntegratedCalendarEvent(calendarItem, mContext));
         }

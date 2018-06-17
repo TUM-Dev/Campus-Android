@@ -17,7 +17,7 @@ public interface CalendarDao {
     List<CalendarItem> getAllNotCancelled();
 
     @Query("SELECT c.* FROM calendar c WHERE dtstart LIKE '%' || :date || '%' ORDER BY dtstart ASC")
-    List<CalendarItem> getAllByDate(String date);
+    List<CalendarItem> getAllByDate(DateTime date);
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
             + "AND STATUS != 'CANCEL'"
@@ -29,7 +29,7 @@ public interface CalendarDao {
             + "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id = :widgetId"
             + "                AND lecture_title = c.title)"
             + "ORDER BY dtstart ASC")
-    List<CalendarItem> getNextDays(String from, String to, String widgetId);
+    List<CalendarItem> getNextDays(DateTime from, DateTime to, String widgetId);
 
     @Query("SELECT c.* FROM calendar c WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status != 'CANCEL'")
     List<CalendarItem> getCurrentLectures();
