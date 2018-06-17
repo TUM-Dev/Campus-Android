@@ -47,7 +47,7 @@ object DateTimeUtils {
         return DateTimeUtils.getTimeOrDay(d, context)
     }
 
-    private fun getTimeOrDay(time: DateTime, context: Context): String {
+    fun getTimeOrDay(time: DateTime, context: Context): String {
         val timeInMillis = time.millis
         val now = DateTime.now().millis
 

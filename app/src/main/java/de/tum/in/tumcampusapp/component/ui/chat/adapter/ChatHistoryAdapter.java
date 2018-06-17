@@ -111,7 +111,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
         }
 
         holder.tvMessage.setText(msg.getText());
-        holder.tvTimestamp.setText(DateTimeUtils.INSTANCE.getTimeOrDayISO(msg.getTimestamp(), mContext));
+        holder.tvTimestamp.setText(DateTimeUtils.INSTANCE.getTimeOrDay(msg.getTimestamp(), mContext));
 
         if (!outgoing) {
             holder.tvUser.setText(msg.getMember()
