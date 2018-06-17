@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.tufilm.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import org.joda.time.DateTime
 
 /**
  * Kino Constructor
@@ -37,11 +37,10 @@ data class Kino(@PrimaryKey
                 var description: String = "",
                 var cover: String = "",
                 var trailer: String? = "",
-                var date: Date = Date(),
-                var created: Date = Date(),
+                var date: DateTime = DateTime(),
+                var created: DateTime = DateTime(),
                 var link: String = "") {
 
-    fun isFutureMovie() = date.after(Date())
-
+    fun isFutureMovie() = date.isAfterNow
 }
 

@@ -104,7 +104,7 @@ object DateTimeUtils {
     }
 
     /**
-     * Checks whether two Dates contain the same day
+     * Checks whether two DateTime contain the same day
      *
      * @return true if both dates are on the same day
      */
@@ -115,10 +115,10 @@ object DateTimeUtils {
     private val dateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     /**
-     * Converts a date-string to Date
+     * Converts a date-string to DateTime
      *
      * @param str String with ISO-Date (yyyy-mm-dd)
-     * @return Date
+     * @return DateTime
      */
     fun getDate(str: String): DateTime = try {
         DateTime.parse(str, dateFormat)
@@ -128,9 +128,9 @@ object DateTimeUtils {
     }
 
     /**
-     * Converts Date to an ISO date-string
+     * Converts DateTime to an ISO date-string
      *
-     * @param d Date
+     * @param d DateTime
      * @return String (yyyy-mm-dd)
      */
     fun getDateString(d: DateTime): String = dateFormat.print(d)
@@ -138,14 +138,14 @@ object DateTimeUtils {
     private val dateTimeFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
 
     /**
-     * Converts Date to an ISO datetime-string
+     * Converts DateTime to an ISO datetime-string
      *
      * @return String (yyyy-mm-dd hh:mm:ss)
      */
     fun getDateTimeString(d: DateTime): String = dateTimeFormat.print(d)
 
     /**
-     * Converts a datetime-string to Date
+     * Converts a datetime-string to DateTime
      *
      * @param str String with ISO-DateTime (yyyy-mm-dd hh:mm:ss)
      */

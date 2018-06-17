@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,8 +17,10 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.text.DateFormat;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -59,7 +62,8 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     public static void bindNewsView(RecyclerView.ViewHolder newsViewHolder, News news, Context context) {
         NewsViewHolder holder = (NewsViewHolder) newsViewHolder;
-        NewsSourcesDao newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();
+        NewsSourcesDao newsSourcesDao = TcaDb.getInstance(context)
+                                             .newsSourcesDao();
         NewsSources newsSource = newsSourcesDao.getNewsSource(Integer.parseInt(news.getSrc()));
         holder.imageView.setVisibility(View.VISIBLE);
         holder.titleTextView.setVisibility(View.VISIBLE);
@@ -67,31 +71,34 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         // Set image
         String imgUrl = news.getImage();
         if (imgUrl.isEmpty() || imgUrl.equals("null")) {
-            if(news.getLink().endsWith(".png") || news.getLink().endsWith(".jpeg")){
+            if (news.getLink()
+                    .endsWith(".png") || news.getLink()
+                                             .endsWith(".jpeg")) {
                 Utils.log("try link as image");
                 // the link points to an image (newspread)
                 Picasso.get()
-                        .load(news.getLink())
-                        .placeholder(R.drawable.chat_background)
-                        .into(holder.imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        holder.titleTextView.setVisibility(View.GONE); // title is included in newspread slide
-                        holder.imageView.setOnClickListener(null); // link doesn't lead to more infos
-                    }
-                    @Override
-                    public void onError(Exception e) {
-                        holder.imageView.setVisibility(View.GONE); // we can't display the image after all
-                    }
-                });
+                       .load(news.getLink())
+                       .placeholder(R.drawable.chat_background)
+                       .into(holder.imageView, new Callback() {
+                           @Override
+                           public void onSuccess() {
+                               holder.titleTextView.setVisibility(View.GONE); // title is included in newspread slide
+                               holder.imageView.setOnClickListener(null); // link doesn't lead to more infos
+                           }
+
+                           @Override
+                           public void onError(Exception e) {
+                               holder.imageView.setVisibility(View.GONE); // we can't display the image after all
+                           }
+                       });
             } else {
                 holder.imageView.setVisibility(View.GONE);
             }
         } else {
             Picasso.get()
-                    .load(imgUrl)
-                    .placeholder(R.drawable.chat_background)
-                    .into(holder.imageView);
+                   .load(imgUrl)
+                   .placeholder(R.drawable.chat_background)
+                   .into(holder.imageView);
         }
 
         String title = news.getTitle();
@@ -102,9 +109,9 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         holder.titleTextView.setText(title);
 
         // Adds date
-        Date date = news.getDate();
-        DateFormat sdf = DateFormat.getDateInstance();
-        holder.dateTextView.setText(sdf.format(date));
+        DateTime date = news.getDate();
+        DateTimeFormatter sdf = DateTimeFormat.mediumDate();
+        holder.dateTextView.setText(sdf.print(date));
 
         holder.sourceTextView.setText(newsSource.getTitle());
         String icon = newsSource.getIcon();
@@ -122,24 +129,28 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
                        }
 
                        @Override
-                       public void onBitmapFailed(Exception e, Drawable errorDrawable) { }
+                       public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                       }
 
                        @Override
-                       public void onPrepareLoad(Drawable placeHolderDrawable) { }
+                       public void onPrepareLoad(Drawable placeHolderDrawable) {
+                       }
                    });
         }
     }
 
+    @NonNull
     @Override
-    public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return newNewsView(parent, viewType == 0);
     }
 
     @Override
-    public void onBindViewHolder(CardViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         NewsViewHolder nHolder = (NewsViewHolder) holder;
         NewsCard card;
-        if (news.get(position).isFilm()) {
+        if (news.get(position)
+                .isFilm()) {
             card = new FilmCard(mContext);
         } else {
             card = new NewsCard(mContext);
@@ -152,7 +163,8 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return news.get(position).isFilm() ? 0 : 1;
+        return news.get(position)
+                   .isFilm() ? 0 : 1;
     }
 
     @Override
