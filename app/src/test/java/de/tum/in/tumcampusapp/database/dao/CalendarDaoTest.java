@@ -22,7 +22,6 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.DateUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

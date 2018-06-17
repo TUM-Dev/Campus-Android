@@ -5,21 +5,21 @@ import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
+import org.joda.time.DateTime;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 @SuppressLint("Registered")
 public class TimetableWidgetService extends RemoteViewsService {
@@ -52,13 +52,11 @@ public class TimetableWidgetService extends RemoteViewsService {
             calendarEvents = calendarController.getNextDaysFromDb(14, this.appWidgetID);
 
             // set isFirstOnDay flags
-            Calendar currentDate = Calendar.getInstance();
-            Date startDate = new Date();
-            startDate.setTime(0);
-            currentDate.setTime(startDate);
+            DateTime currentDate = new DateTime(0);
             for (IntegratedCalendarEvent calendarEvent : calendarEvents) {
-                Calendar calendarDate = calendarEvent.getStartTime();
-                if (!DateUtils.isSameDay(currentDate, calendarDate)) {
+                DateTime calendarDate = new DateTime(calendarEvent.getStartTime()
+                                                                  .getTimeInMillis());
+                if (!DateTimeUtils.INSTANCE.isSameDay(currentDate, calendarDate)) {
                     currentDate = calendarDate;
                     calendarEvent.setIsFirstOnDay(true);
                 }

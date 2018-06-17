@@ -1,8 +1,7 @@
 package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
-import android.text.format.DateUtils.getRelativeDateTimeString
-import android.text.format.DateUtils.getRelativeTimeSpanString
+import android.text.format.DateUtils.*
 import de.tum.`in`.tumcampusapp.R
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -11,11 +10,7 @@ import java.text.ParseException
 import java.util.*
 
 object DateTimeUtils {
-    private const val MINUTE_MILLIS = android.text.format.DateUtils.MINUTE_IN_MILLIS
-    private const val HOUR_MILLIS = android.text.format.DateUtils.HOUR_IN_MILLIS
-    private const val DAY_MILLIS = android.text.format.DateUtils.DAY_IN_MILLIS
-
-    /*
+    /**
      * Format an upcoming string nicely by being more precise as time comes closer
      */
     fun getFutureTime(time: DateTime, context: Context): String {
@@ -29,12 +24,12 @@ object DateTimeUtils {
 
         val diff = timeInMillis - now
         return when {
-            diff < 60 * MINUTE_MILLIS -> {
+            diff < 60 * MINUTE_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("m")
                         .withLocale(Locale.ENGLISH)
                 context.getString(R.string.IN) + ' '.toString() + formatter.print(DateTime(diff)) + ' '.toString() + context.getString(R.string.MINUTES)
             }
-            diff < 3 * HOUR_MILLIS -> { // Be more precise by telling the user the exact time if below 3 hours
+            diff < 3 * HOUR_IN_MILLIS -> { // Be more precise by telling the user the exact time if below 3 hours
                 val formatter = DateTimeFormat.forPattern("HH:mm")
                         .withLocale(Locale.ENGLISH)
                 context.getString(R.string.AT) + ' '.toString() + formatter.print(time)
@@ -44,12 +39,7 @@ object DateTimeUtils {
         }
     }
 
-    private fun getRelativeTime(date: DateTime, context: Context): String {
-        return getRelativeDateTimeString(context, date.millis, MINUTE_MILLIS, DAY_MILLIS * 2L, 0)
-                .toString()
-    }
-
-    /*
+    /**
      * Format a past timestamp with degrading granularity
      */
     fun getTimeOrDayISO(datetime: String, context: Context): String {
@@ -57,24 +47,24 @@ object DateTimeUtils {
         return DateTimeUtils.getTimeOrDay(d, context)
     }
 
-    fun getTimeOrDay(time: DateTime, context: Context): String {
+    private fun getTimeOrDay(time: DateTime, context: Context): String {
         val timeInMillis = time.millis
         val now = DateTime.now().millis
 
-        //Catch future dates: current clock might be running behind
+        // Catch future dates: current clock might be running behind
         if (timeInMillis > now || timeInMillis <= 0) {
             return context.getString(R.string.just_now)
         }
 
         val diff = now - timeInMillis
         return when {
-            diff < MINUTE_MILLIS ->
+            diff < MINUTE_IN_MILLIS ->
                 context.getString(R.string.just_now)
-            diff < 24 * HOUR_MILLIS ->
+            diff < 24 * HOUR_IN_MILLIS ->
                 DateTimeFormat.forPattern("HH:mm")
                         .withLocale(Locale.ENGLISH)
                         .print(time)
-            diff < 48 * HOUR_MILLIS ->
+            diff < 48 * HOUR_IN_MILLIS ->
                 context.getString(R.string.yesterday)
             else ->
                 DateTimeFormat.forPattern("dd.MM.yyyy")
@@ -83,7 +73,7 @@ object DateTimeUtils {
         }
     }
 
-    // 2014-06-30T16:31:57Z)
+    // 2014-06-30T16:31:57Z
     private val isoDateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
     fun parseIsoDate(datetime: String) = try {
