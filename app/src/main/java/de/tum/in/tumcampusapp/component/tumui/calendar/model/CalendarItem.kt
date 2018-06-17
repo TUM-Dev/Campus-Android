@@ -83,7 +83,7 @@ data class CalendarItem(@PrimaryKey
 
     fun getEventDateString(): String {
         val timeFormat = DateTimeFormat.forPattern("HH:mm").withLocale(Locale.US)
-        val dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd").withLocale(Locale.US)
+        val dateFormat = DateTimeFormat.forPattern("EEE, dd.MM.yyyy").withLocale(Locale.US)
         return String.format("%s %s - %s", dateFormat.print(eventStart), timeFormat.print(eventStart), timeFormat.print(eventEnd))
     }
 

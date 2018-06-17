@@ -5,6 +5,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -25,6 +26,7 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Ignore
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, application = TestApp.class)
 public class CalendarDaoTest {

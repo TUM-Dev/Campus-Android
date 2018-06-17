@@ -569,4 +569,8 @@ Signatur: %5$s</string>
     <string name="feedback_empty">Bitte gib hier dein Feedback ein</string>
     <string name="feedback_img_without_text">Bitte füge eine Beschreibung hinzu</string>
     <string name="campus">Campus</string>
+
+    <string name="discard_changes_question">Änderungen verwerfen?</string>
+    <string name="discard">Verwerfen</string>
+    <string name="keep_editing">Weiter bearbeiten</string>
 </resources>

@@ -2,9 +2,14 @@ package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.widget.Button;
+import android.support.v7.widget.AppCompatButton;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -39,7 +44,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private TextView startTimeView;
     private TextView endDateView;
     private TextView endTimeView;
-    private Button createButton;
+    private AppCompatButton createButton;
     private CalendarItem event;
 
     public CreateEventActivity() {
@@ -51,15 +56,36 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         super.onCreate(savedInstanceState);
         initViews();
 
+        titleView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean isEmpty = s.toString().isEmpty();
+                float alpha = isEmpty ? 0.5f : 1.0f;
+                createButton.setEnabled(!isEmpty);
+                createButton.setAlpha(alpha);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             editing = true;
             titleView.setText(extras.getString(Const.EVENT_TITLE));
             descriptionView.setText(extras.getString(Const.EVENT_COMMENT));
             createButton.setText(R.string.event_save_edit_button);
+        } else {
+            titleView.requestFocus();
+            showKeyboard();
         }
+
         initStartEndDates(extras);
         setDateAndTimeListeners();
+
         createButton.setOnClickListener(view -> {
             if (end.isBefore(start)) {
                 showErrorDialog(getString(R.string.create_event_time_error));
@@ -219,13 +245,66 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         requestFetch();
     }
 
+    @Override
+    public void onBackPressed() {
+        hideKeyboard();
+
+        boolean handled = handleOnBackPressed();
+        if (handled) {
+            finish();
+        } else {
+            displayCloseDialog();
+        }
+    }
+
+    private void showKeyboard() {
+        InputMethodManager inputManager =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputManager =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            inputManager.hideSoftInputFromWindow(titleView.getWindowToken(),0);
+        }
+    }
+
+    private boolean handleOnBackPressed() {
+        String title = titleView.getText().toString();
+        String description = descriptionView.getText().toString();
+        return title.isEmpty() && description.isEmpty();
+    }
+
+    private void displayCloseDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.discard_changes_question)
+                .setNegativeButton(R.string.discard, (dialog, which) -> finish())
+                .setPositiveButton(R.string.keep_editing, null)
+                .show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void showErrorDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message);
-        builder.setTitle(R.string.error);
-        builder.setIcon(R.drawable.ic_error_outline);
-        builder.setNeutralButton(R.string.ok, null);
-        builder.show();
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.error)
+            .setMessage(message)
+            .setIcon(R.drawable.ic_error_outline)
+            .setPositiveButton(R.string.ok, null)
+            .show();
     }
 
     @Override

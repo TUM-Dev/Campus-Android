@@ -8,10 +8,10 @@ import java.io.Serializable
 
 @Entity(tableName = "notification")
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class GCMNotification(@PrimaryKey
+data class FcmNotification(@PrimaryKey
                            var notification: Int = 0,
                            var type: Int = 0,
-                           var location: GCMNotificationLocation = GCMNotificationLocation(),
+                           var location: FcmNotificationLocation = FcmNotificationLocation(),
                            var title: String = "",
                            var description: String = "",
                            var signature: String = "",
