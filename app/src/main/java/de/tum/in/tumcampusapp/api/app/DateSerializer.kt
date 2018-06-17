@@ -29,7 +29,7 @@ class DateSerializer : JsonDeserializer<DateTime> {
         dateFormats.forEach {
             try {
                 return it.parseDateTime(json?.asString)
-            } catch (ignored: JsonParseException) {
+            } catch (ignored: Exception) {
             }
         }
         throw JsonParseException("Unparseable date: \"${json?.asString.orEmpty()}\". Supported formats: ${Arrays.toString(formatStrings)}")
