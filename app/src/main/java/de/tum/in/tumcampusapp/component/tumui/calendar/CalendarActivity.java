@@ -187,22 +187,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     }
 
     @Override
-    public void onFetch(final CalendarRowSet rawResponse) {
-        // parsing and saving xml response
-        isFetched = true;
-        Completable.fromAction(() -> calendarController.importCalendar(rawResponse))
-                   .compose(provider.bindToLifecycle())
-                   .subscribeOn(Schedulers.io())
-                   .observeOn(AndroidSchedulers.mainThread())
-                   .subscribe(() -> {
-                       showLoadingEnded();
-                       // update the action bar to display the enabled menu options
-                       CalendarActivity.this.invalidateOptionsMenu();
-                       startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
-                   });
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         switch (i) {
@@ -241,6 +225,22 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         }
     }
 
+    @Override
+    public void onFetch(final CalendarRowSet rawResponse) {
+        // parsing and saving xml response
+        isFetched = true;
+        Completable.fromAction(() -> calendarController.importCalendar(rawResponse))
+                   .compose(provider.bindToLifecycle())
+                   .subscribeOn(Schedulers.io())
+                   .observeOn(AndroidSchedulers.mainThread())
+                   .subscribe(() -> {
+                       showLoadingEnded();
+                       // update the action bar to display the enabled menu options
+                       CalendarActivity.this.invalidateOptionsMenu();
+                       startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
+                   });
+    }
+
     /**
      * Load up the week view with correct settingsPrefix
      */
@@ -249,7 +249,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         int icon;
         if (mWeekMode) {
             icon = R.drawable.ic_action_day_view;
-            mWeekView.setNumberOfVisibleDays(7);
+            mWeekView.setNumberOfVisibleDays(5);
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
@@ -383,8 +383,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             @Override
             public String interpretDate(Calendar date) {
                 final String weekDayFormat;
-                if (shortDate) { //Only one character
-                    weekDayFormat = "EEEEE";
+                if (shortDate) { // 3 characters
+                    weekDayFormat = "E";
                 } else {
                     weekDayFormat = "EEEE";
                 }
@@ -472,22 +472,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         detailsFragment.show(getSupportFragmentManager(), null);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //Check if we got all Calendar permissions
-        for (int result : grantResults) {
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-        }
-        //Rerun the interrupted action
-        if (requestCode == REQUEST_SYNC) {
-            exportCalendarToGoogle();
-        } else if (requestCode == REQUEST_DELETE) {
-            deleteCalendarFromGoogle();
-        }
-    }
-
     protected void editEvent(final CalendarItem calendarItem) {
         Bundle bundle = new Bundle();
         bundle.putString(Const.EVENT_TITLE, calendarItem.getTitle());
@@ -504,6 +488,22 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     protected void onResume() {
         super.onResume();
         refreshWeekView();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //Check if we got all Calendar permissions
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+        //Rerun the interrupted action
+        if (requestCode == REQUEST_SYNC) {
+            exportCalendarToGoogle();
+        } else if (requestCode == REQUEST_DELETE) {
+            deleteCalendarFromGoogle();
+        }
     }
 
     protected int calcHourHeightToFit(int min, int max) {
@@ -537,8 +537,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         mWeekView.setHourHeight(hourHeight);
     }
 
-
-
     protected void applyFilterLimitHours(int min, int max) {
         // Get old max value to check, if new min will be bigger, in which case the order of setting the new values must be reversed
         int oldMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, "0"));
@@ -566,6 +564,5 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     public void onSelected(int min, int max) {
         applyFilterLimitHours(min, max);
     }
-
 }
 
