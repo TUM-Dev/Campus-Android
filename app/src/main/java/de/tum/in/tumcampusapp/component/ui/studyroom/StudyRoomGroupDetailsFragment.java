@@ -13,7 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import org.joda.time.format.DateTimeFormat;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -93,7 +94,9 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
             } else {
                 stringBuilder.append(getString(R.string.occupied))
                              .append(" <b>")
-                             .append(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(room.getOccupiedTill()))
+                             .append(DateTimeFormat.forPattern("HH:mm")
+                                                   .withLocale(Locale.getDefault())
+                                                   .print(room.getOccupiedTill()))
                              .append("</b>");
             }
 
