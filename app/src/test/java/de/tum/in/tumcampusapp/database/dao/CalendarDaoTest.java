@@ -195,8 +195,8 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
         dao.insert(createCalendarItem("YES", now));
 
-        String from = now.minusDays(4);
-        String to = now.plusDays(4);
+        DateTime from = now.minusDays(4);
+        DateTime to = now.plusDays(4);
 
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 0"));
 
@@ -216,8 +216,8 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
         dao.insert(createCalendarItem("YES", now));
 
-        String from = now.minusDays(2);
-        String to = now.plusDays(2);
+        DateTime from = now.minusDays(2);
+        DateTime to = now.plusDays(2);
 
         // widgetId is used only for blacklisting
         assertThat(dao.getNextDays(from, to, "1")).hasSize(2);

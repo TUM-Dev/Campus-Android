@@ -54,8 +54,8 @@ public class RoomLocationsDaoTest {
                                              "dummy url",
                                              "title " + Integer.toString(nr),
                                              "dummy description",
-                                             startDate),
-                                             startDate),
+                                             startDate,
+                                             startDate,
                                              location,
                                              false);
         nr++;

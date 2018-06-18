@@ -48,7 +48,7 @@ public class SyncManagerTest {
     @Test
     public void needSyncNeedsResyncTest() {
         String sync_id = "needSyncNeedsResyncTest";
-        dao.insert(new Sync(sync_id, "0"));
+        dao.insert(new Sync(sync_id, new DateTime(0)));
         assertThat(syncManager.needSync(sync_id, 1234)).isTrue();
     }
 
@@ -69,8 +69,7 @@ public class SyncManagerTest {
     @Test
     public void needSyncTooEarlyTest() {
         String sync_id = "needSyncTooEarlyTest";
-        String now = DateTimeUtils.INSTANCE.getDateTimeString(DateTime.now());
-        dao.insert(new Sync(sync_id, now));
+        dao.insert(new Sync(sync_id, DateTime.now()));
         assertThat(syncManager.needSync(sync_id, 1234)).isFalse();
     }
 
@@ -85,7 +84,7 @@ public class SyncManagerTest {
     @Test
     public void replaceIntoDbNormal() {
         String sync_id = "replaceIntoDbNormal";
-        dao.insert(new Sync(sync_id, "0"));
+        dao.insert(new Sync(sync_id, new DateTime(0)));
         assertThat(syncManager.needSync(sync_id, 1234)).isTrue();
         syncManager.replaceIntoDb(sync_id);
         assertThat(syncManager.needSync(sync_id, 1234)).isFalse();
