@@ -7,25 +7,23 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-
-import java.util.List;
-import java.util.Locale;
+import java.text.DateFormat;
+import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
+import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -35,19 +33,19 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     private static final String LAST_FEE_FRIST = "fee_frist";
     private static final String LAST_FEE_SOLL = "fee_soll";
+
     private Tuition mTuition;
 
-    TuitionFeesCard(Context context) {
+    public TuitionFeesCard(Context context) {
         super(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.card_item, parent, false);
+                                  .inflate(R.layout.card_tuition_fees, parent, false);
         return new CardViewHolder(view);
     }
 
-    @NonNull
     @Override
     public String getTitle() {
         return getContext().getString(R.string.tuition_fees);
@@ -56,41 +54,38 @@ public class TuitionFeesCard extends NotificationAwareCard {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
-        List<View> addedViews = cardsViewHolder.getAddedViews();
 
-        setMCard(viewHolder.itemView);
-        setMLinearLayout(getMCard().findViewById(R.id.card_view));
-        setMTitleView(getMCard().findViewById(R.id.card_title));
-        getMTitleView().setText(getTitle());
+        TextView reregisterInfoTextView =
+                viewHolder.itemView.findViewById(R.id.reregister_info_text_view);
+        TextView outstandingBalanceTextView =
+                viewHolder.itemView.findViewById(R.id.outstanding_balance_text_view);
 
-        //Remove additional views
-        for (View view : addedViews) {
-            getMLinearLayout().removeView(view);
-        }
-
-        if ("0".equals(mTuition.getSoll())) {
-            addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez())));
+        if (mTuition.getSoll().equals("0")) {
+            String placeholderText = getContext().getString(R.string.reregister_success);
+            String text = String.format(placeholderText, mTuition.getSemesterBez());
+            reregisterInfoTextView.setText(text);
         } else {
-            DateTime dueDate = mTuition.getDueDate();
-            String date = DateTimeFormat.longDate().print(dueDate);
-            addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_todo), date)));
+            Date date = DateUtils.getDate(mTuition.getFrist());
+            String dateText = DateFormat.getDateInstance().format(date);
+
+            String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
+            reregisterInfoTextView.setText(text);
 
             String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
-            String cardText = String.format(
-                    Locale.getDefault(), textWithPlaceholder, mTuition.getOutstandingBalanceText());
-            addedViews.add(addTextView(cardText));
+            String balanceText = String.format(textWithPlaceholder, mTuition.getOutstandingBalanceText());
+            outstandingBalanceTextView.setText(balanceText);
+            outstandingBalanceTextView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
-    public void discard(@NonNull Editor editor) {
+    public void discard(Editor editor) {
         editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
         editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
     }
 
     @Override
-    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
+    protected boolean shouldShow(SharedPreferences prefs) {
         String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
         String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
 
@@ -101,7 +96,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    protected Notification fillNotification(@NonNull NotificationCompat.Builder notificationBuilder) {
+    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         if ("0".equals(mTuition.getSoll())) {
             notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez()));
         } else {
@@ -130,7 +125,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
+    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_money);

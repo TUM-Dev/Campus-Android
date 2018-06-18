@@ -63,7 +63,7 @@ public class CafeteriaManager implements ProvidesCard {
 
         CafeteriaMenuCard card = new CafeteriaMenuCard(mContext);
         CafeteriaWithMenus cafeteria = cafeteriaViewModel.getCafeteriaWithMenus(cafeteriaId);
-        card.setCardMenus(cafeteria);
+        card.setCafeteriaWithMenus(cafeteria);
 
         results.add(card.getIfShowOnStart());
         return results;
