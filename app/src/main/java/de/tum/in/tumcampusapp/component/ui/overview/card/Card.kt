@@ -5,12 +5,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.preference.PreferenceManager
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RemoteViews
 import android.widget.TextView
-import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
@@ -80,12 +80,6 @@ abstract class Card(
     protected fun addTextView(text: CharSequence): TextView {
         val textView = TextView(context)
         textView.text = text
-
-        //Give some space to the other stuff on the card
-        val padding = context.resources
-                .getDimension(R.dimen.card_text_padding).toInt()
-        textView.setPadding(padding, 0, padding, 0)
-
         mLinearLayout!!.addView(textView)
         return textView
     }
@@ -101,17 +95,19 @@ abstract class Card(
     }
 
     /**
-     * Must be called after information has been set
-     * Adds the card to CardManager if not dismissed before and notifies the user
+     * Returns the Card if it should be displayed in the overview screen or null otherwise.
+     *
+     * @return The Card to be displayed or null
      */
-    open fun apply() {
-        // Should be shown on start page?
+    open fun getIfShowOnStart(): Card? {
         if (mShowStart) {
             val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
             if (shouldShow(prefs)) {
-                CardManager.addCard(this)
+                return this
             }
         }
+
+        return null
     }
 
     /**
@@ -151,7 +147,19 @@ abstract class Card(
      */
     protected abstract fun discard(editor: Editor)
 
-    companion object {
+    class DiffCallback(private val oldList: List<Card>,
+                       private val newList: List<Card>) : DiffUtil.Callback() {
+
+        override fun getOldListSize() = oldList.size
+
+        override fun getNewListSize() = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                oldList[oldItemPosition].cardType == newList[newItemPosition].cardType
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                oldList[oldItemPosition] == newList[newItemPosition]
 
     }
+
 }

@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,7 +76,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         manager = new ChatRoomController(this);
 
         //Load the lectures list
-        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getLECTURES_PERSONAL(), this, true);
+        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
 
         TabLayout tabLayout = findViewById(R.id.chat_rooms_tabs);
         // Create a tab listener that is called when the user changes tabs.
@@ -155,7 +156,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == JOIN_ROOM_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             String name = data.getStringExtra("name");
             if (name.charAt(3) == ':') {
                 createOrJoinChatRoom(name);
@@ -179,15 +180,16 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
      */
     private void newChatRoom() {
         // Set an EditText view to get user input
-        final EditText input = new EditText(this);
+        final View view = LayoutInflater.from(this)
+                .inflate(R.layout.dialog_input, null);
+        final EditText input = view.findViewById(R.id.inputEditText);
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.new_chat_room)
                 .setMessage(R.string.new_chat_room_desc)
-                .setView(input)
-                .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
-                    String value = input.getText()
-                                        .toString();
+                .setView(view)
+                .setPositiveButton(R.string.create, (dialog, whichButton) -> {
+                    String value = input.getText().toString();
                     String randId = Integer.toHexString((int) (Math.random() * 4096));
                     createOrJoinChatRoom(randId + ':' + value);
                 })
@@ -200,12 +202,12 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
      * Works asynchronously.
      */
     private void createOrJoinChatRoom(String name) {
+        Utils.logv("create or join chat room " + name);
         if (this.currentChatMember == null) {
             Utils.showToast(this, getString(R.string.chat_not_setup));
             return;
         }
 
-        Utils.logv("create or join chat room " + name);
         currentChatRoom = new ChatRoom(name);
 
         ChatVerification verification;

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.NavigationView xmlns:android="http://schemas.android.com/apk/res/android"
-                                              android:id="@+id/left_drawer"
-                                              android:layout_width="280dp"
-                                              android:layout_height="match_parent"
-                                              android:layout_gravity="start"/>
+<android.support.design.widget.NavigationView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/left_drawer"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"/>

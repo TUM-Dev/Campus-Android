@@ -21,11 +21,11 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.BuyTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.component.ui.tufilm.show_ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.ShowTicketActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
@@ -41,7 +41,7 @@ public class KinoDetailsFragment extends Fragment {
     private String url; // link to homepage
     private LayoutInflater inflater;
 
-    private boolean isBooked = true;
+    private boolean isBooked = false;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -61,10 +61,10 @@ public class KinoDetailsFragment extends Fragment {
         // TODO: set isBooked if the user has already bought a ticket
 
         kinoViewModel.getKinoByPosition(position)
-                     .subscribe(kino1 -> {
-                         kino = kino1;
-                         showDetails(root);
-                     });
+                .subscribe(kino1 -> {
+                    kino = kino1;
+                    showDetails(root);
+                });
 
         return rootView;
     }
@@ -102,11 +102,11 @@ public class KinoDetailsFragment extends Fragment {
         text.setText(contentString);
         // padding is done programmatically here because we need more padding at the end
         int padding = (int) context.getResources()
-                                   .getDimension(R.dimen.padding_kino);
+                .getDimension(R.dimen.padding_kino);
         int paddingRight = (int) context.getResources()
-                                        .getDimension(R.dimen.padding_kino_right);
+                .getDimension(R.dimen.padding_kino_right);
         int paddingEnd = (int) context.getResources()
-                                      .getDimension(R.dimen.padding_kino_end);
+                .getDimension(R.dimen.padding_kino_end);
         text.setPadding(padding, padding, paddingRight, paddingEnd);
         rootView.addView(view);
     }
@@ -145,11 +145,11 @@ public class KinoDetailsFragment extends Fragment {
         trailer.setOnClickListener(view -> showTrailer());
 
         // Setup "Buy/Show ticket" button according to ticket status for current event
-        if (isBooked){
-            ticket.setText("Show ticket");
+        if (isBooked) {
+            ticket.setText(this.getString(R.string.show_ticket));
             ticket.setOnClickListener(view -> showTicket());
-        } else{
-            ticket.setText("Buy ticket");
+        } else {
+            ticket.setText(this.getString(R.string.buy_ticket));
             ticket.setOnClickListener(view -> buyTicket());
         }
 
@@ -162,6 +162,7 @@ public class KinoDetailsFragment extends Fragment {
                         progress.setVisibility(View.GONE);
                         error.setVisibility(View.GONE);
                     }
+
                     @Override
                     public void onError(Exception e) {
                         progress.setVisibility(View.GONE);
@@ -171,18 +172,17 @@ public class KinoDetailsFragment extends Fragment {
 
         rootView.addView(headerView);
     }
-    //open show_ticket activity, and transfer current movie data to it.
-    //The String data is just a example, it should be get from correspongding movie which now show on the screen.
-    //time and place of movie  is fixed. Only the movie title and date should be transfered to show_ticket activity
-    private void showTicket(){
-        String data = "KingsMan 08.05 " + "\n"+ "Filmbegin: 20:00 o'clock "+"\n"+ " 1. Stock, Hörsaal 1200 (Carl-von-Linde-Hörsaal) Arcisstraße 21";
-        Intent intent = new Intent(getActivity().getApplicationContext(), show_ticket.class);
-        intent.putExtra("movie_data", data);
+
+    //open ShowTicketActivity activity
+    private void showTicket() {
+        Intent intent = new Intent(context, ShowTicketActivity.class);
         startActivity(intent);
     }
 
-    private void buyTicket(){
-        // TODO: go to payment activity (to be implemented)
+    private void buyTicket() {
+        // TODO: message to server to create ticket
+        Intent intent = new Intent(context, BuyTicketActivity.class);
+        startActivity(intent);
     }
 
     public void showTrailer() {
@@ -195,11 +195,11 @@ public class KinoDetailsFragment extends Fragment {
         }
     }
 
-    private String getTrailerSearchString(){
+    private String getTrailerSearchString() {
         String search = kino.getTitle();
         search = search.split(": ")[1];
         search = "trailer " + search;
-        if(!search.contains("OV")){
+        if (!search.contains("OV")) {
             search += " german deutsch";
         }
         search = search.replace(' ', '+');

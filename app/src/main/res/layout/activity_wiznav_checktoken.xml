@@ -1,20 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- The toolbar aka SupportActionBar -->
     <include layout="@layout/toolbar"/>
 
     <include
         layout="@layout/layout_all_errors"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
-
-    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/pager_title_strip"
@@ -24,9 +26,8 @@
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@id/divider"
-            android:layout_below="@id/pager_title_strip">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -36,7 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/padding_default">
+                    android:padding="@dimen/material_default_padding">
 
                     <TextView
                         style="?android:attr/listSeparatorTextViewStyle"
@@ -49,14 +50,6 @@
                         android:layout_height="wrap_content"
                         android:padding="2dp"
                         android:text="@string/need_to_enable"/>
-
-                    <TextView
-                        android:id="@+id/tvBrowse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="2dp"
-                        android:text="@string/tumonline_link"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -81,6 +74,7 @@
                         android:src="@drawable/wizz_activate_rights"/>
 
                 </LinearLayout>
+
             </ScrollView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
@@ -89,18 +83,37 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_above="@+id/next_button"
             android:background="?android:attr/listDivider"/>
 
-        <Button
-            android:id="@+id/next_button"
-            style="@style/ButtonBarButton"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="end"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:onClick="onClickNext"
-            android:text="@string/button_next"
-            android:layout_alignParentBottom="true"/>
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
+            android:layout_marginBottom="@dimen/material_small_padding"
+            android:orientation="horizontal">
 
-    </RelativeLayout>
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/open_tum_online_button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickTUMOnline"
+                android:text="@string/open_tum_online"
+                android:textColor="@color/color_primary"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/next_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickNext"
+                android:text="@string/button_next"
+                android:textColor="@android:color/white"
+                app:backgroundTint="@color/color_primary"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -215,7 +215,10 @@ class DownloadService : JobIntentService() {
                     Utils.setSetting(service, LAST_UPDATE, System.currentTimeMillis())
                 }
 
-                CardManager.update(service)
+                // TODO Till: Philipp and I have decided to omit the update of Cards here.
+                // In the future, we’ll introduce a better way for Manager classes to update
+                // themselves in the background, independent of their corresponding Card.
+
                 success = true
             }
 

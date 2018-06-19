@@ -21,6 +21,13 @@
     <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
     <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
     <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalender</string>
+    <string name="calendar_filter_title">Filter ändern</string>
+    <string name="calendar_filter_canceled">Abgesagte Veranstaltungen zeigen</string>
+    <string name="calendar_filter_hour_limit">Angezeigte Zeitspanne anpassen</string>
+    <string name="calendar_filter_hour_limit_min_title">Von Uhrzeit</string>
+    <string name="calendar_filter_hour_limit_max_title">Bis Uhrzeit</string>
+    <string name="calendar_filter_hour_limit_error_message">Die Anfangsstunde muss vor dem Ende liegen!</string>
+
 
     <!-- Roomfinder -->
     <string name="no_map_available">Keine Karte verfügbar</string>
@@ -68,15 +75,15 @@
     <string name="open_wizard">Öffne Startup-Wizard</string>
     <string name="open_wizard_detail">Der Startup-Wizard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMonline Dienste einzurichten und das Farbschema der App festzulegen.</string>
     <string name="clear_cache">Lösche Daten</string>
-    <string name="clear_cache_detail">Löscht alle durch die TUM Campus App heruntergeladenen, auf der SD-Karte gespeicherten Daten.</string>
-    <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
+    <string name="clear_cache_detail">Löscht alle Daten der TUM Campus App von deinem Gerät.</string>
+    <string name="delete_cache_sure">Alle Daten wirklich löschen?</string>
     <string name="success_clear_cache">Daten erfolgreich gelöscht</string>
 
     <string name="services">Dienste</string>
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
     <string name="background_mode">Hintergrundmodus (empfohlen)</string>
-    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist. Wird automatisch abgeschalten, wenn du dich mehr als 50km außerhalb von München befindest.</string>
+    <string name="background_info">Aktualisiert die Inhalte der App automatisch einmal täglich, wenn du dich im Großraum München aufhältst.</string>
     <string name="mode_background_mode">Aktivierung des Hintergrundmodus</string>
     <string name="always">Immer</string>
     <string name="wifi_only">Nur bei WLAN-Verbindung</string>
@@ -90,7 +97,7 @@
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
 
     <!-- Startup Wizard -->
-    <string name="token_not_enabled">TUMonline-Access-Token ist nicht aktiviert</string>
+    <string name="token_not_enabled">Nicht angemeldet</string>
     <string name="startup_wizard_uppercase">TUMonline-Wizard</string>
     <string name="welcome_msg">Um den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
     <string name="button_skip">Überspringen</string>
@@ -134,7 +141,7 @@
     <string name="opening_hours">Öffnungszeiten</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
-
+    <string name="events">Ereignisse</string>
     <!-- Activity titles -->
     <string name="lectures_information">Vorlesungsinformationen</string>
     <string name="lectures_appointments">Vorlesungstermine</string>
@@ -169,6 +176,7 @@
     <!-- Tuition fees -->
     <string name="amount_dots">Offener Betrag</string>
     <string name="deadline_dots">Deadline:</string>
+    <string name="amount_dots_card">Offener Betrag: %s</string>
 
     <!-- Persons -->
     <string name="no_search_result">Keine Suchergebnisse</string>
@@ -272,9 +280,9 @@
     <string name="card_cafeteria_summary">Zeigt den Mensa-Speiseplan an</string>
     <string name="card_mvv_summary">Zeigt die Abfahrtszeiten der öffentlich Verkehrmittel an</string>
     <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
-    <string name="card_tuition_fee_summary">Erinnert dich wenn du die Studiengebühren zahlen musst</string>
+    <string name="card_tuition_fee_summary">Erinnert dich, wenn du die Studiengebühren zahlen musst</string>
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
-    <string name="card_chat_summary">Benachrichtigt dich wenn neue Nachrichten verfügbar sind</string>
+    <string name="card_chat_summary">Benachrichtigt dich über neue Nachrichten</string>
     <string name="open_card_settings">Karte anpassen</string>
     <string name="always_hide_card">Karte immer ausblenden</string>
     <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
@@ -291,8 +299,8 @@
     <string name="password">Passwort</string>
     <string name="not_ask_again">Nicht mehr fragen</string>
     <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
-    <string name="eduroam_setup_question_desc">Hier klicken um eduroam einzurichten</string>
-    <string name="card_eduroam_summary">Hilft dir eduroam einzurichten</string>
+    <string name="eduroam_setup_question_desc">Hier klicken, um eduroam einzurichten</string>
+    <string name="card_eduroam_summary">Hilft dir, eduroam einzurichten</string>
     <string name="pin_lock">PIN-Sperre</string>
     <string name="pin_lock_desc">Für die Einrichtung des WLAN-Zugangs wird eine PIN-Sperre benötigt.
         Falls du noch keine PIN-Sperre verwendet kannst du hier eine einrichten.</string>
@@ -485,6 +493,30 @@ Signatur: %5$s</string>
     <string name="show_answer">Antwort anzeigen</string>
     <string name="title_activity_cards_quiz">Lernkarten</string>
 
+    <!-- Ticket Activity -->
+    <string name="eventdetail_dots">Veranstaltungsdetails</string>
+    <string name="qrcode_dots">Ticket QRcode</string>
+    <string name="your_ticket">Dein Ticket</string>
+    <string name="show_ticket">Ticket Zeigen</string>
+    <string name="buy_ticket">Ticket Kaufen</string>
+    <string name="purchasedetail_dots">Details zu Ihrem Kauf:</string>
+    <string name="continue_to_payment">WEITER ZUR ZAHLUNG</string>
+    <string name="summary">Zusammenfassung</string>
+    <string name="ticket_type">Tickettyp</string>
+    <string name="price">Preis</string>
+    <string name="location">Ort</string>
+
+    <!-- Payment -->
+    <string name="creditcard">Kreditkarte</string>
+    <string name="complete_purchase">Zahlung abschließen</string>
+    <string name="enter_card_info_title">Karteninformationen</string>
+    <string name="enter_card_info_description">Bitte gib deine Karteninformationen an, um fortzufahren:</string>
+    <string name="purchase_progress_message">Ticket wird angefragt, bitte warten…</string>
+    <string name="purchase_success_title">Kauf abgeschlossen</string>
+    <string name="purchase_success_message">Du kannst dein Ticket nun im Ticketbereich einsehen.</string>
+    <string name="purchase_success_continue">Weiter</string>
+    <string name="card_data_invalid">Ungültige Zahlungsdaten.</string>
+
     <!-- Create personal Appointment (Calendar) -->
     <string name="create_event">Termin erstellen</string>
     <string name="comment">Anmerkung</string>
@@ -536,5 +568,39 @@ Signatur: %5$s</string>
     <string name="e_mail">E-Mail</string>
     <string name="additional_info">Zusaätzliche Infos</string>
 
+    <!-- Add user to chat via search -->
+    <string name="user_search_hint">Suche Name oder TUM Kennung</string>
+    <string name="error_invalid_tum_id_format">Inkorrekte TUM Kennung</string>
+    <string name="error_user_not_found">Kein Nutzer gefunden</string>
+    <string name="add_user_to_chat_message"><b>%s</b> zum Chatroom <b>%s</b> hinzufügen?</string>
+    <string name="chat_member_added">User wurde hinzugefügt</string>
+
+    <string name="or">oder</string>
+    <string name="join_chat_via_qr_code">via QR-code beitreten</string>
+
     <string name="topic">Über</string>
+
+    <!-- Events Activity -->
+    <string name="show_booked_events">Gebuchte Veranstaltungen anzeigen</string>
+    <string name="events_overview">Veranstaltungsübersicht</string>
+    <string name="payment_selection">Zahlungsoption Wählen</string>
+
+    <string name="generate_new_token">Neuen Token generieren</string>
+    <string name="open_tum_online">TUM Online öffnen</string>
+    <string name="create">Erstellen</string>
+    <string name="enter_name_placeholder">Name eingeben …</string>
+    <string name="go_to_room">Raum anzeigen</string>
+    <string name="enter_your_tum_id">TUM-ID eingeben …</string>
+    <string name="e_mail_us">Schreib uns eine E-Mail</string>
+    <string name="like_us_on_facebook">Like uns auf Facebook</string>
+    <string name="check_us_out_on_github">Besuche uns auf GitHub</string>
+
+    <string name="send_feedback_question">Feedback absenden?</string>
+    <string name="feedback_empty">Bitte gib hier dein Feedback ein</string>
+    <string name="feedback_img_without_text">Bitte füge eine Beschreibung hinzu</string>
+    <string name="campus">Campus</string>
+
+    <string name="discard_changes_question">Änderungen verwerfen?</string>
+    <string name="discard">Verwerfen</string>
+    <string name="keep_editing">Weiter bearbeiten</string>
 </resources>

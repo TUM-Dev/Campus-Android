@@ -14,6 +14,8 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Optional;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +30,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRow;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -252,19 +255,19 @@ public class CalendarController implements ProvidesCard {
         return geo;
     }
 
-    /**
-     * Shows next lecture card if lecture is available
-     *
-     * @param context Context
-     */
+    @NotNull
     @Override
-    public void onRequestCard(Context context) {
+    public List<Card> getCards() {
         List<CalendarItem> nextCalendarItems = getNextCalendarItems();
+        List<Card> results = new ArrayList<>();
+
         if (!nextCalendarItems.isEmpty()) {
-            NextLectureCard card = new NextLectureCard(context);
+            NextLectureCard card = new NextLectureCard(mContext);
             card.setLectures(nextCalendarItems);
-            card.apply();
+            results.add(card.getIfShowOnStart());
         }
+
+        return results;
     }
 
     public static class QueryLocationsService extends IntentService {
