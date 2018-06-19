@@ -14,12 +14,15 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
  */
 public class TicketsController {
 
+
     /**
      * Only for testing purposes as server calls are not yet implemented
      * -> TODO: replace with real data
      *
      * @return
      */
+
+    /*
     public static List<Ticket> getTickets() {
         List<Ticket> tickets = new ArrayList<>();
         tickets.add( new Ticket(EventsController.getEventById(2), "7585685764567467657",
@@ -37,4 +40,5 @@ public class TicketsController {
         }
         return null;
     }
+    */
 }

@@ -38,9 +38,10 @@ public class BuyTicketActivity extends BaseActivity {
         // TODO: Get data from Api backend, now it is mock up data
         Event event = EventsController.getEventById(eventId);
         // TODO: adjust this; ticket is created locally and temporarily for now to test the UI
-        Ticket ticket = new Ticket(event, "ljipu3rupo567467657",
-                new TicketType(14, 2.5, "good tickets"), 0);
+        Ticket ticket = new Ticket(0, 0, "ljipu3rupo567467657", 0);
 
+        // TODO: replace this by database access
+        /*
         String eventString = ticket.getEvent().getTitle();
         String locationString = ticket.getEvent().getLocality();
         String dateString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
@@ -54,6 +55,7 @@ public class BuyTicketActivity extends BaseActivity {
         dateView.append(dateString);
         priceView.append(priceString);
         ticketTypeView.append(ticketTypeString);
+        */
 
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override

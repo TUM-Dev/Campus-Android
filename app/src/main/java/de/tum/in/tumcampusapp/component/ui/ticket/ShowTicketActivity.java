@@ -35,7 +35,8 @@ public class ShowTicketActivity extends BaseActivity {
 
         int eventId = getIntent().getIntExtra("eventID", 0);
 
-        //Get data from Api backend, now it is mock up data
+        //TODO: Get data from Api backend, now it is mock up data
+        /*
         Ticket ticket = TicketsController.getTicketByEventId(eventId);
         String dateString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
                 format(ticket.getEvent().getDate());
@@ -46,8 +47,9 @@ public class ShowTicketActivity extends BaseActivity {
         eventDetailsTextView.setText(eventdetail);
 
         String code = ticket.getCode();
+        */
         //create the qrcode using library  zxing
-        createQRCode(code);
+        createQRCode("testtesttest");
 
     }
 
