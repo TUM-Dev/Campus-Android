@@ -37,6 +37,11 @@ import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketSuccessResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -83,6 +88,8 @@ public final class TUMCabeClient {
     static final String API_KINOS = "kino/";
     static final String API_CARD = "cards/";
     static final String API_NEWS = "news/";
+    static final String API_EVENTS = "event/";
+    static final String API_TICKET = "ticket/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -329,10 +336,54 @@ public final class TUMCabeClient {
     public List<News> getNews(String lastNewsId) throws IOException {
         return service.getNews(lastNewsId).execute().body();
     }
+
     public List<NewsSources> getNewsSources() throws IOException {
         return service.getNewsSources().execute().body();
     }
+
     public Observable<NewsAlert> getNewsAlert(){
         return service.getNewsAlert();
+    }
+
+    // TICKET SALE
+    // Getting event information
+    public List<Event> getEvents() throws IOException {
+        return service.getEvents().execute().body();
+    }
+
+    public Event getEvent(int eventID) throws IOException {
+        Event event = service.getEvent(eventID).execute().body();
+        return event;
+    }
+
+    public List<Event> searchEvents(String searchTerm) throws IOException {
+        return service.searchEvents(searchTerm).execute().body();
+    }
+
+    // Getting ticket information
+    public List<Ticket> getTickets(int userID) throws IOException {
+        return service.getTickets(userID).execute().body();
+    }
+
+    public Ticket getTicketForEvent(int userID, int eventID) throws IOException {
+        return service.getTicketForEvent(userID, eventID).execute().body();
+    }
+
+    public List<TicketType> getTicketTypes(int eventID) throws IOException {
+        return service.getTicketTypes(eventID).execute().body();
+    }
+
+    // Ticket reservation
+    public TicketReservationResponse reserveTicket(int memberID, int ticketType) throws IOException {
+        return service.reserveTicket(memberID, ticketType).execute().body();
+    }
+
+    public TicketSuccessResponse cancelTicketReservation(int ticketHistory) throws IOException {
+        return service.cancelTicketReservation(ticketHistory).execute().body();
+    }
+
+    // Ticket purchase
+    public Ticket purchaseTicket(int ticketHistory, String token) throws IOException {
+        return service.purchaseTicket(ticketHistory, token).execute().body();
     }
 }

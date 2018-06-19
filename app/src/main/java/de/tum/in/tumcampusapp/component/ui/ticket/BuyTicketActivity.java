@@ -39,7 +39,7 @@ public class BuyTicketActivity extends BaseActivity {
         Event event = EventsController.getEventById(eventId);
         // TODO: adjust this; ticket is created locally and temporarily for now to test the UI
         Ticket ticket = new Ticket(event, "ljipu3rupo567467657",
-                new TicketType(14, 2.5, "good tickets"));
+                new TicketType(14, 2.5, "good tickets"), 0);
 
         String eventString = ticket.getEvent().getTitle();
         String locationString = ticket.getEvent().getLocality();
