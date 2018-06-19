@@ -13,17 +13,15 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 
-/**
- * Created by SONU on 16/09/15.
- */
 public class EventFragment extends Fragment {
     private View view;
 
     private String title;//String for tab title
 
-    private static RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
     public EventFragment() {
     }
@@ -46,11 +44,13 @@ public class EventFragment extends Fragment {
     //Setting recycler view
     private void setRecyclerView() {
 
-        recyclerView = (RecyclerView) view
+        recyclerView = view
                 .findViewById(R.id.activity_events_list_view);
         recyclerView.setHasFixedSize(true);
         recyclerView
                 .setLayoutManager(new LinearLayoutManager(getActivity()));//Linear Items
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
+        recyclerView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
         List<Event> events;
         if (title.equals(this.getString(R.string.booked_events))) {
             events = EventsController.getBookedEvents();

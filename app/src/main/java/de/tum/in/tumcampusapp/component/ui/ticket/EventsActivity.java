@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -29,7 +30,8 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         super.onCreate(savedInstanceState);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         setupViewPager(viewPager);
-
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
         eventTab = (TabLayout) findViewById(R.id.event_tab);
         eventTab.setupWithViewPager(viewPager);//setting tab over viewpager
 
