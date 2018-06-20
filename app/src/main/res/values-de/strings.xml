@@ -136,7 +136,6 @@
     <string name="menues">Mensen</string>
     <string name="study_plans">Studienpläne</string>
     <string name="person_search">Personensuche</string>
-    <string name="plans">Pläne</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="opening_hours">Öffnungszeiten</string>
     <string name="mvv">MVV</string>
@@ -213,10 +212,6 @@
     <string name="campus_olympiapark_gyms">Campus Olympiapark Hallenplan</string>
     <string name="campus_main">Stammgelände</string>
     <string name="campus_weihenstephan">Campus Weihenstephan</string>
-    <string name="mvv_fast_train_net">MVV Schnellbahnnetz</string>
-    <string name="mvv_tram">MVV Tramnetz</string>
-    <string name="mvv_entire_net">MVV Gesamtnetz</string>
-    <string name="mvv_nightlines">MVV Nachtliniennetz</string>
     <string name="campus_garching_adress">Walther-Meißner-Straße 3, 85748 Garching</string>
     <string name="campus_klinikum_adress">Ismaninger Straße 22, 81675 München</string>
     <string name="campus_olympiapark_adress">Connollystraße 32, 80809 München</string>
@@ -399,7 +394,6 @@ Signatur: %5$s</string>
     <string name="widget_configure_description">Anzeige der Karten einstellen</string>
     <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
     <string name="chat_not_setup">Chat ist nicht richtig eingerichtet, bitte den Assistenten über die Einstellungen neu starten!</string>
-    <string name="mvv_download">Bitte klicken Sie auf OK, um MVV-Pläne herunterzuladen, sonst können Sie diese Funktion nicht verwenden</string>
     <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
     <string name="IN">in</string>
     <string name="MINUTES">minuten</string>
