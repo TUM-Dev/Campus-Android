@@ -134,25 +134,6 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-            android:name=".component.ui.plan.PlansActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/plans"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.plan.PlansDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/plans"
-            android:parentActivityName=".component.ui.plan.PlansActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.plan.PlansActivity" />
-        </activity>
-        <activity
             android:name=".component.tumui.grades.GradesActivity"
             android:label="@string/empty_string"
             android:launchMode="singleTop"
@@ -528,10 +509,6 @@
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
             android:parentActivityName=".component.tumui.calendar.CalendarActivity" />
-        <activity
-            android:name=".component.ui.plan.PDFViewActivity"
-            android:label="@string/pdf_viewer_title"
-            android:parentActivityName=".component.ui.plan.PlansActivity" />
         <activity
             android:name=".component.ui.chat.AddChatMemberActivity"
             android:label="Add Participant"
