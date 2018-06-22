@@ -20,6 +20,7 @@ import de.tum.`in`.tumcampusapp.utils.CacheManager
 /**
  * Enum for all TUMOnline access possibilities
  */
+@Deprecated(message = "Use Retrofit implementation in TUMOnlineClient")
 class TUMOnlineConst<T> private constructor(private val webservice: String, val validity: Int, val response: Class<T>) {
 
     override fun toString(): String {

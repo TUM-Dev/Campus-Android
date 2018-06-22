@@ -34,6 +34,7 @@ import okhttp3.ResponseBody;
  * XML-RPC backend. ALl communications is based on the base-url which is
  * attached by the Token and additional parameters.
  */
+@Deprecated
 public final class TUMOnlineRequest<T> {
     // server address
     private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
