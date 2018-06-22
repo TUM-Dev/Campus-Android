@@ -190,10 +190,8 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public TUMCabeStatus uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids) throws IOException{
-        return service.uploadObfuscatedIds(lrzId, ids)
-                .execute()
-                .body();
+    public Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids){
+        return service.uploadObfuscatedIds(lrzId, ids);
     }
 
     public FcmNotification getNotification(int notification) throws IOException {
@@ -230,10 +228,8 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public TUMCabeStatus verifyKey() throws IOException {
-        return service.verifyKey()
-                .execute()
-                .body();
+    public Observable<TUMCabeStatus> verifyKey(){
+        return service.verifyKey();
     }
 
     public void deviceUploadGcmToken(DeviceUploadFcmToken verification, Callback<TUMCabeStatus> cb) {
