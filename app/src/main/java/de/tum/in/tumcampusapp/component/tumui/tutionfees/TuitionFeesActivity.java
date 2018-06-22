@@ -20,9 +20,8 @@ import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Activity to show the user's tuition ; based on grades.java / quick solution
@@ -59,22 +58,10 @@ public class TuitionFeesActivity extends ProgressActivity {
         TUMOnlineClient
                 .getInstance(this)
                 .getTuitionFeesStatus()
-                .enqueue(new Callback<TuitionList>() {
-                    @Override
-                    public void onResponse(@NonNull Call<TuitionList> call,
-                                           @NonNull Response<TuitionList> response) {
-                        TuitionList tuitionList = response.body();
-                        if (tuitionList != null) {
-                            displayTuition(tuitionList);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<TuitionList> call, @NonNull Throwable t) {
-                        Utils.log(t);
-                        handleDownloadError();
-                    }
-                });
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .doOnError(this::handleDownloadError)
+                .subscribe(this::displayTuition);
     }
 
     private void displayTuition(@NonNull TuitionList tuitionList) {
@@ -108,7 +95,8 @@ public class TuitionFeesActivity extends ProgressActivity {
         showLoadingEnded();
     }
 
-    private void handleDownloadError() {
+    private void handleDownloadError(Throwable throwable) {
+        Utils.log(throwable);
         finish();
     }
 

@@ -14,6 +14,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -35,7 +36,7 @@ interface TUMOnlineAPIService {
     fun deleteCalendarEvent(@Query("pTerminNr") eventId: String): Call<DeleteEventResponse>
 
     @GET("wbservicesbasic.studienbeitragsstatus")
-    fun getTuitionFeesStatus(): Call<TuitionList>
+    fun getTuitionFeesStatus(): Single<TuitionList>
 
     @GET("wbservicesbasic.veranstaltungenEigene")
     fun getPersonalLectures(): Call<LecturesResponse>
