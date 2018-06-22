@@ -12,4 +12,4 @@ import com.tickaroo.tikxml.annotation.Xml
  * @see [SimpleXML tutorial](http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php)
  */
 @Xml(name = "events")
-data class CalendarRowSet(@Element var kalendarList: List<CalendarRow> = mutableListOf()) // TODO: Rename variable
+data class CalendarRowSet(@Element var kalendarList: List<CalendarRow>? = null) // TODO: Rename variable

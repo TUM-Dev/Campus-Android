@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.departments.model
 
-import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 /**
@@ -9,29 +9,29 @@ import com.tickaroo.tikxml.annotation.Xml
  */
 @Xml(name = "row")
 data class OrgDetailsItem(
-        @Attribute(name = "nr")
+        @PropertyElement(name = "nr")
         var id: String = "",
-        @Attribute(name = "name")
+        @PropertyElement(name = "name")
         var name: String = "",
-        @Attribute(name = "zusatz_info_name")
+        @PropertyElement(name = "zusatz_info_name")
         var additionalInfoCaption: String = "",
-        @Attribute(name = "zusatz_info")
+        @PropertyElement(name = "zusatz_info")
         var additionalInfoText: String = "",
-        @Attribute(name = "kennung")
+        @PropertyElement(name = "kennung")
         var code: String = "", // Organisation Code, e.g. "TUZESSB"
-        @Attribute(name = "email_adresse")
+        @PropertyElement(name = "email_adresse")
         var contactEmail: String = "",
-        @Attribute(name = "fax_nummer")
+        @PropertyElement(name = "fax_nummer")
         var contactFax: String = "", // Fax Number
-        @Attribute(name = "sekretariat_info")
+        @PropertyElement(name = "sekretariat_info")
         var contactLocality: String = "", // Town, to which the organisation belongs to
-        @Attribute(name = "www_homepage")
+        @PropertyElement(name = "www_homepage")
         var contactLocationURL: String = "", // URL to a Google Maps Site containing the
-        @Attribute(name = "ansprechpartner")
+        @PropertyElement(name = "ansprechpartner")
         var contactName: String = "",
-        @Attribute(name = "adresse_text")
+        @PropertyElement(name = "adresse_text")
         var contactStreet: String = "", // Street and Street number of the Organisation
-        @Attribute(name = "telefon_nummer")
+        @PropertyElement(name = "telefon_nummer")
         var contactTelephone: String = "", // Phone Number, usually to the secretary of the organisation
-        @Attribute(name = "bibliothek_info")
-        private var contactAdditionalInfo: String = "")
+        @PropertyElement(name = "bibliothek_info")
+        var contactAdditionalInfo: String = "")

@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model
 
-import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import java.text.NumberFormat
 import java.text.ParseException
@@ -14,11 +14,11 @@ import java.util.*
  * corresponding request.
  */
 @Xml(name = "row")
-data class Tuition(@Attribute(name = "frist")  // TODO: Rename variables
+data class Tuition(@PropertyElement(name = "frist")  // TODO: Rename variables
                    var frist: String = "",
-                   @Attribute(name = "semester_bezeichnung")
+                   @PropertyElement(name = "semester_bezeichnung")
                    var semesterBez: String = "",
-                   @Attribute(name = "soll")
+                   @PropertyElement(name = "soll")
                    var soll: String = "") {
 
     val outstandingBalance: Float

@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
-import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import java.io.Serializable
 
@@ -11,13 +11,13 @@ import java.io.Serializable
  */
 
 @Xml(name = "gruppe")
-data class Group(@Attribute(name = "beschreibung")
+data class Group(@PropertyElement(name = "beschreibung")
                  var description: String = "",
-                 @Attribute(name = "kennung")
+                 @PropertyElement(name = "kennung")
                  var id: String = "",
-                 @Attribute(name = "org")
+                 @PropertyElement(name = "org")
                  var org: String = "",
-                 @Attribute(name = "titel")
+                 @PropertyElement(name = "titel")
                  var title: String = "") :
         Serializable {
     companion object {

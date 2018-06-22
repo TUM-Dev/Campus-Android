@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades.model
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
-import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
@@ -16,21 +16,21 @@ import java.util.*
  * corresponding request.
  */ 
 @Xml(name = "row")
-data class Exam(@Attribute(name = "lv_titel")
+data class Exam(@PropertyElement(name = "lv_titel")
                 var course: String = "",
-                @Attribute(name = "lv_credits")
+                @PropertyElement(name = "lv_credits")
                 var credits: String = "0",
-                @Attribute(name = "datum")
+                @PropertyElement(name = "datum")
                 var date: Date = Date(),
-                @Attribute(name = "pruefer_nachname")
+                @PropertyElement(name = "pruefer_nachname")
                 var examiner: String = "",
-                @Attribute(name = "uninotenamekurz")
+                @PropertyElement(name = "uninotenamekurz")
                 var grade: String = "",
-                @Attribute(name = "modus")
+                @PropertyElement(name = "modus")
                 var modus: String = "",
-                @Attribute(name = "studienidentifikator")
+                @PropertyElement(name = "studienidentifikator")
                 var programID: String = "",
-                @Attribute(name = "lv_semester")
+                @PropertyElement(name = "lv_semester")
                 var semester: String = "") : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun getHeadName() = semester

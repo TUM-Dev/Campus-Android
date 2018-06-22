@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import com.google.common.base.Charsets
-import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
 
@@ -17,31 +17,31 @@ import de.tum.`in`.tumcampusapp.R
  * corresponding request.
  */
 @Xml(name = "person")
-data class Employee(@Attribute(name = "geschlecht")
+data class Employee(@PropertyElement(name = "geschlecht")
                     var gender: String = "",
-                    @Attribute(name = "obfuscated_id")
+                    @PropertyElement(name = "obfuscated_id")
                     var id: String = "",
-                    @Attribute(name = "vorname")
+                    @PropertyElement(name = "vorname")
                     var name: String = "",
-                    @Attribute(name = "familienname")
+                    @PropertyElement(name = "familienname")
                     var surname: String = "",
-                    @Attribute(name = "dienstlich")
+                    @PropertyElement(name = "dienstlich")
                     var businessContact: Contact? = null,
-                    @Attribute(name = "sprechstunde")
+                    @PropertyElement(name = "sprechstunde")
                     var consultationHours: String = "",
-                    @Attribute
+                    @PropertyElement
                     var email: String = "",
-                    @Attribute(name = "gruppen")
+                    @PropertyElement(name = "gruppen")
                     var groupList: GroupList? = null,
-                    @Attribute(name = "image_data")
+                    @PropertyElement(name = "image_data")
                     var imageData: String = "",
-                    @Attribute(name = "privat")
+                    @PropertyElement(name = "privat")
                     var privateContact: Contact? = null,
-                    @Attribute(name = "raeume")
+                    @PropertyElement(name = "raeume")
                     var roomList: RoomList? = null,
-                    @Attribute(name = "telefon_nebenstellen")
+                    @PropertyElement(name = "telefon_nebenstellen")
                     var telSubstationList: TelSubstationList? = null,
-                    @Attribute(name = "titel")
+                    @PropertyElement(name = "titel")
                     var title: String = "") {
 
     val groups: List<Group>?

@@ -5,6 +5,7 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply from: '../gradle/scripts/findbugs.gradle'
 apply from: '../gradle/scripts/pmd.gradle'
@@ -103,8 +104,8 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation 'android.arch.lifecycle:runtime:1.1.1'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
-    annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+    kapt "android.arch.lifecycle:compiler:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     // Anko
     implementation "org.jetbrains.anko:anko:$ankoVersion"
@@ -122,7 +123,7 @@ dependencies {
     // XML Parsing
     implementation "com.tickaroo.tikxml:annotation:$tikXmlVersion"
     implementation "com.tickaroo.tikxml:core:$tikXmlVersion"
-    annotationProcessor "com.tickaroo.tikxml:processor:$tikXmlVersion"
+    kapt "com.tickaroo.tikxml:processor:$tikXmlVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'

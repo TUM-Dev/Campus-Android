@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.lectures.model
 
-import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 /**
@@ -9,22 +9,13 @@ import com.tickaroo.tikxml.annotation.Xml
  */
 @Xml(name = "row")
 data class LectureAppointmentsRow(  // TODO: Rename variable
-        @Attribute
-        var art: String = "",
-        @Attribute
-        var beginn_datum_zeitpunkt: String = "",
-        @Attribute
-        var ende_datum_zeitpunkt: String = "",
-        @Attribute
-        var ort: String = "",
-        @Attribute
-        var raum_nr: String = "",
-        @Attribute
-        var raum_nr_architekt: String = "",
-        @Attribute
-        var termin_betreff: String = "",
-        @Attribute
-        var lv_grp_nr: String = "",
-        @Attribute
-        var lv_grp_name: String = ""
+        @PropertyElement var art: String = "",
+        @PropertyElement var beginn_datum_zeitpunkt: String = "",
+        @PropertyElement var ende_datum_zeitpunkt: String = "",
+        @PropertyElement var ort: String = "",
+        @PropertyElement var raum_nr: String = "",
+        @PropertyElement var raum_nr_architekt: String = "",
+        @PropertyElement var termin_betreff: String = "",
+        @PropertyElement var lv_grp_nr: String = "",
+        @PropertyElement var lv_grp_name: String = ""
 )

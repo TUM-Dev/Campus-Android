@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
-import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 import java.io.Serializable
@@ -11,9 +11,9 @@ import java.io.Serializable
  * corresponding request.
  */
 @Xml(name = "raum")
-data class Room(@Attribute(name = "ortsbeschreibung")
+data class Room(@PropertyElement(name = "ortsbeschreibung")
                 var location: String = "",
-                @Attribute(name = "kurz")
+                @PropertyElement(name = "kurz")
                 var number: String = "") : Serializable {
 
     fun getFullLocation() = "$location ($number)"

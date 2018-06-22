@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.departments.model
 
-import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 /**
@@ -10,23 +10,23 @@ import com.tickaroo.tikxml.annotation.Xml
  */
 @Xml(name = "row")
 data class OrgItem(
-        @Attribute(name = "nr")
+        @PropertyElement(name = "nr")
         var id: String = "",
-        @Attribute(name = "name_de")
+        @PropertyElement(name = "name_de")
         var nameDe: String = "",
-        @Attribute(name = "name_en")
+        @PropertyElement(name = "name_en")
         var nameEn: String = "",
-        @Attribute(name = "parent")
+        @PropertyElement(name = "parent")
         var parentId: String = "",
-        @Attribute
+        @PropertyElement
         var ebene: String = "",
-        @Attribute
+        @PropertyElement
         var org_gruppe_name: String = "",
-        @Attribute
+        @PropertyElement
         var child_cnt: String = "",
-        @Attribute
+        @PropertyElement
         var sort_hierarchie: String = "",
-        @Attribute
+        @PropertyElement
         var kennung: String = "",
-        @Attribute
+        @PropertyElement
         var org_typ_name: String = "")

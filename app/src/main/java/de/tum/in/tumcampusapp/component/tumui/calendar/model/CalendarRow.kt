@@ -1,20 +1,20 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
-import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 
 @Xml(name = "event")
 data class CalendarRow(
-        @Attribute var description: String = "",
-        @Attribute var dtend: String = "",
-        @Attribute var dtstart: String = "",
-        @Attribute var geo: Geo? = null,
-        @Attribute var location: String = "",
-        @Attribute var nr: String = "",
-        @Attribute var status: String = "",
-        @Attribute var title: String = "",
-        @Attribute var url: String = "") {
+        @PropertyElement var description: String = "",
+        @PropertyElement var dtend: String = "",
+        @PropertyElement var dtstart: String = "",
+        @PropertyElement var geo: Geo? = null,
+        @PropertyElement var location: String = "",
+        @PropertyElement var nr: String = "",
+        @PropertyElement var status: String = "",
+        @PropertyElement var title: String = "",
+        @PropertyElement var url: String = "") {
     /**
      * Retrieve related values for calendar item as CalendarItem object
      */
