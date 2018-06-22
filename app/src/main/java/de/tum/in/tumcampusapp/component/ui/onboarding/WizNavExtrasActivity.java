@@ -17,6 +17,8 @@ import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
+import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
@@ -147,6 +149,12 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
             //Store that this key was activated
             Utils.setSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
+
+            // upload obfuscated ids now that we have a member
+            UploadStatus uploadStatus = TUMCabeClient.getInstance(this)
+                    .getUploadStatus(Utils.getSetting(this, Const.LRZ_ID, ""))
+                    .blockingFirst();
+            new AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
 
             return member;
         } catch (IOException | NoPrivateKey e) {

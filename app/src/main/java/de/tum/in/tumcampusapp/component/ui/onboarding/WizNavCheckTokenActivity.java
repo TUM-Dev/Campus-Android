@@ -98,11 +98,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscated_ids()
                     .getBedienstete());
 
-            String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-            UploadStatus uploadStatus = TUMCabeClient.getInstance(this)
-                    .getUploadStatus(lrzId)
-                    .blockingSingle();
-            new AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
+            // we cannot upload the obfuscated ids here since we might not have a (chat) member yet
 
             return null;
         }
