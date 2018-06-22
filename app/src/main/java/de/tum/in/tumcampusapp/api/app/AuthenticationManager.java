@@ -197,9 +197,7 @@ public class AuthenticationManager {
                                  //Remember that we are done, only if we have submitted with the member information
                                  if (response.isSuccessful() && "ok".equals(response.body()
                                                                                     .getStatus())) {
-                                     if (member != null) {
-                                         Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
-                                     }
+                                     Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
 
                                      AuthenticationManager.this.tryToUploadFcmToken();
                                  }
