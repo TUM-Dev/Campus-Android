@@ -18,31 +18,31 @@ import de.tum.`in`.tumcampusapp.R
  */
 @Xml(name = "person")
 data class Employee(@PropertyElement(name = "geschlecht")
-                    var gender: String? = null,
+                    val gender: String? = null,
                     @PropertyElement(name = "obfuscated_id")
-                    var id: String = "",
+                    val id: String = "",
                     @PropertyElement(name = "vorname")
-                    var name: String = "",
+                    val name: String = "",
                     @PropertyElement(name = "familienname")
-                    var surname: String = "",
+                    val surname: String = "",
                     @PropertyElement(name = "dienstlich")
-                    var businessContact: Contact? = null,
+                    val businessContact: Contact? = null,
                     @PropertyElement(name = "sprechstunde")
-                    var consultationHours: String? = null,
+                    val consultationHours: String? = null,
                     @PropertyElement
-                    var email: String? = null,
+                    val email: String? = null,
                     @PropertyElement(name = "gruppen")
-                    var groupList: GroupList? = null,
+                    val groupList: GroupList? = null,
                     @PropertyElement(name = "image_data")
-                    var imageData: String? = null,
+                    val imageData: String? = null,
                     @PropertyElement(name = "privat")
-                    var privateContact: Contact? = null,
+                    val privateContact: Contact? = null,
                     @PropertyElement(name = "raeume")
-                    var roomList: RoomList? = null,
+                    val roomList: RoomList? = null,
                     @PropertyElement(name = "telefon_nebenstellen")
-                    var telSubstationList: TelSubstationList? = null,
+                    val telSubstationList: TelSubstationList? = null,
                     @PropertyElement(name = "titel")
-                    var title: String? = null) {
+                    val title: String? = null) {
 
     val groups: List<Group>?
         get() = groupList?.groups
@@ -72,13 +72,9 @@ data class Employee(@PropertyElement(name = "geschlecht")
     }
 
     override fun toString(): String {
-        var infoText = title
-
-        if (title != "") {
-            infoText = title + ' '
-        }
-
-        return infoText + name + ' ' + surname
+        return arrayOf(title, name, surname)
+                .filterNotNull()
+                .joinToString(" ")
     }
 
     companion object {

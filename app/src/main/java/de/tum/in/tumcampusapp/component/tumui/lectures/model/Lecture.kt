@@ -10,21 +10,21 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyList
  */
 @Xml(name = "row")
 data class Lecture(
-        @PropertyElement(name = "dauer_info") var duration: String = "",  // TODO: TypeConverters
-        @PropertyElement(name = "org_kennung_betreut") var chairTumId: String? = null,
-        @PropertyElement(name = "org_name_betreut") var chairName: String? = null,
-        @PropertyElement(name = "org_nr_betreut") var chairId: Int? = null,
-        @PropertyElement(name = "semester") var semester: String,
-        @PropertyElement(name = "semester_id") var semesterId: String,
-        @PropertyElement(name = "semester_name") var semesterName: String,
-        @PropertyElement(name = "sj_name") var semesterYears: String,
-        @PropertyElement(name = "stp_lv_art_kurz") var shortLectureType: String,
-        @PropertyElement(name = "stp_lv_art_name") var lectureType: String,
-        @PropertyElement(name = "stp_lv_nr") var stp_lv_nr: String,   // TODO: Rename variables
-        @PropertyElement(name = "stp_sp_nr") var stp_sp_nr: String,
-        @PropertyElement(name = "stp_sp_sst") var stp_sp_sst: String,
-        @PropertyElement(name = "stp_sp_titel") var title: String,
-        @PropertyElement(name = "vortragende_mitwirkende") var lecturers: String? = null
+        @PropertyElement(name = "dauer_info") val duration: String = "",  // TODO: TypeConverters
+        @PropertyElement(name = "org_kennung_betreut") val chairTumId: String? = null,
+        @PropertyElement(name = "org_name_betreut") val chairName: String? = null,
+        @PropertyElement(name = "org_nr_betreut") val chairId: Int? = null,
+        @PropertyElement(name = "semester") val semester: String,
+        @PropertyElement(name = "semester_id") val semesterId: String,
+        @PropertyElement(name = "semester_name") val semesterName: String,
+        @PropertyElement(name = "sj_name") val semesterYears: String,
+        @PropertyElement(name = "stp_lv_art_kurz") val shortLectureType: String,
+        @PropertyElement(name = "stp_lv_art_name") val lectureType: String,
+        @PropertyElement(name = "stp_lv_nr") val stp_lv_nr: String,   // TODO: Rename valiables
+        @PropertyElement(name = "stp_sp_nr") val stp_sp_nr: String,
+        @PropertyElement(name = "stp_sp_sst") val stp_sp_sst: String,
+        @PropertyElement(name = "stp_sp_titel") val title: String,
+        @PropertyElement(name = "vortragende_mitwirkende") val lecturers: String? = null
 ) : Comparable<Lecture>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun compareTo(other: Lecture) = other.semesterId.compareTo(semesterId)
@@ -34,7 +34,7 @@ data class Lecture(
     override fun getHeaderId() = semesterId
 
     companion object {
-        var STP_SP_NR = "stp_sp_nr"
+        val STP_SP_NR = "stp_sp_nr"
     }
 
 }

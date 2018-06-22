@@ -6,15 +6,15 @@ import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 
 @Xml(name = "event")
 data class Event(
-        @PropertyElement(name = "description") var description: String? = null,
-        @PropertyElement(name = "dtend") var endTime: String? = null,     // TODO: TypeConverters
-        @PropertyElement(name = "dtstart") var startTime: String? = null,
-        @PropertyElement(name = "geo") var geo: Geo? = null,
-        @PropertyElement(name = "location") var location: String? = null,
-        @PropertyElement(name = "nr") var id: String? = null,
-        @PropertyElement(name = "status") var status: String? = null,
-        @PropertyElement(name = "title") var title: String,
-        @PropertyElement(name = "url") var url: String? = null) {
+        @PropertyElement(name = "description") val description: String? = null,
+        @PropertyElement(name = "dtend") val endTime: String? = null,     // TODO: TypeConverters
+        @PropertyElement(name = "dtstart") val startTime: String? = null,
+        @PropertyElement(name = "geo") val geo: Geo? = null,
+        @PropertyElement(name = "location") val location: String? = null,
+        @PropertyElement(name = "nr") val id: String? = null,
+        @PropertyElement(name = "status") val status: String? = null,
+        @PropertyElement(name = "title") val title: String,
+        @PropertyElement(name = "url") val url: String? = null) {
     /**
      * Retrieve related values for calendar item as CalendarItem object
      */

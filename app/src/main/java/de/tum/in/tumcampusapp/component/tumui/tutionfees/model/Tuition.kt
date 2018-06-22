@@ -14,12 +14,14 @@ import java.util.*
  * corresponding request.
  */
 @Xml(name = "row")
-data class Tuition(@PropertyElement(name = "frist")  // TODO: TypeConverter
-                   var deadline: String,
+data class Tuition(@PropertyElement(name = "frist")
+                   val deadline: String,
                    @PropertyElement(name = "semester_bezeichnung")
-                   var semester: String,
+                   val semester: String,
                    @PropertyElement(name = "soll")
-                   var amount: String) {
+                   val amount: String) {
+
+    // TODO: Add TypeConverter once fully switched to JodaTime
 
     val outstandingBalance: Float
         get() {

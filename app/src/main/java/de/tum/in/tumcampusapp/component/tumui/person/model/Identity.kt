@@ -4,10 +4,10 @@ import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "row")
-data class Identity(@PropertyElement(name = "vorname") var firstName: String = "",
-                    @PropertyElement(name = "familienname") var lastName: String = "",
-                    @PropertyElement(name = "kennung") var id: String = "",
-                    @PropertyElement var obfuscated_id: String = "",
-                    @PropertyElement var obfuscated_ids: ObfuscatedIds = ObfuscatedIds()) {
+data class Identity(@PropertyElement(name = "vorname") val firstName: String = "",
+                    @PropertyElement(name = "familienname") val lastName: String = "",
+                    @PropertyElement(name = "kennung") val id: String = "",
+                    @PropertyElement val obfuscated_id: String = "",
+                    @PropertyElement val obfuscated_ids: ObfuscatedIds = ObfuscatedIds()) {
     override fun toString(): String = "$firstName $lastName"
 }

@@ -19,21 +19,21 @@ import java.util.*
 @Xml(name = "row")
 data class Exam(
         @PropertyElement(name = "lv_titel")
-        var course: String,
+        val course: String,
         @PropertyElement(name = "lv_credits")
-        var credits: String? = null,
+        val credits: String? = null,
         @PropertyElement(name = "datum")
-        var date: Date? = null,
+        val date: Date? = null,
         @PropertyElement(name = "pruefer_nachname")
-        var examiner: String? = null,
+        val examiner: String? = null,
         @PropertyElement(name = "uninotenamekurz")
-        var grade: String? = null,
+        val grade: String? = null,
         @PropertyElement(name = "modus")
-        var modus: String? = null,
+        val modus: String? = null,
         @PropertyElement(name = "studienidentifikator")
-        var programID: String,
+        val programID: String,
         @PropertyElement(name = "lv_semester")
-        var semester: String? = null
+        val semester: String? = null
 ) : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun getHeadName() = semester
