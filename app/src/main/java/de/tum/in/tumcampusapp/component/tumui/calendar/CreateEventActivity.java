@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
@@ -17,10 +18,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
-import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
+import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEventResponse;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
@@ -28,11 +27,14 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
  */
-public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEventResponse> {
+public class CreateEventActivity extends ProgressActivity {
 
     private Calendar start, end;
     private boolean isEditing;
@@ -41,7 +43,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private CalendarItem event;
 
     public CreateEventActivity() {
-        super(TUMOnlineConst.Companion.getCREATE_EVENT(), R.layout.activity_create_event);
+        super(R.layout.activity_create_event);
     }
 
     @Override
@@ -124,7 +126,6 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void setDateAndTimeListeners() {
-
         // DATE
         startDateView.setOnClickListener(view -> {
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
@@ -174,39 +175,34 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         endDateView.setText(format.format(end.getTime()));
     }
 
+    @Override
+    public void onRefresh() {
+        // TODO
+    }
+
     private void editEvent() {
-        final String eventNr = getIntent().getExtras().getString(Const.EVENT_NR);
-        TUMOnlineRequest<DeleteEventResponse> request = new TUMOnlineRequest<>(
-                TUMOnlineConst.Companion.getDELETE_EVENT(), this, true);
-        request.setParameter(Const.EVENT_NR, eventNr);
-        request.fetchInteractive(this, new TUMOnlineRequestFetchListener<DeleteEventResponse>() {
-            @Override
-            public void onNoInternetError() {
-                showErrorDialog(getString(R.string.no_internet_connection));
-            }
+        final String eventId = getIntent().getStringExtra(Const.EVENT_NR);
+        if (eventId == null) {
+            return;
+        }
 
-            @Override
-            public void onFetch(DeleteEventResponse response) {
-                Utils.log("Event successfully deleted (now creating the edited version)");
-                TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventNr);
-                createEvent();
-            }
+        TUMOnlineClient
+                .getInstance(this)
+                .deleteCalendarEvent(eventId)
+                .enqueue(new Callback<DeleteEventResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<DeleteEventResponse> call,
+                                           @NonNull Response<DeleteEventResponse> response) {
+                        Utils.log("Event successfully deleted (now creating the edited version)");
+                        TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventId);
+                        createEvent();
+                    }
 
-            @Override
-            public void onFetchCancelled() {
-                showErrorDialog(getString(R.string.error_something_wrong));
-            }
-
-            @Override
-            public void onFetchError(String errorReason) {
-                showErrorDialog(errorReason);
-            }
-
-            @Override
-            public void onNoDataToShow() {
-                showErrorDialog(getString(R.string.error_something_wrong));
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
+                        showErrorDialog(getString(R.string.error_something_wrong));
+                    }
+                });
     }
 
     private void createEvent() {
@@ -226,16 +222,28 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         }
         event.setDescription(description);
 
-        requestHandler.setParameter(Const.EVENT_TITLE, title);
-        requestHandler.setParameter(Const.EVENT_COMMENT, description);
-        requestHandler.setParameter(Const.EVENT_START, event.getDtstart());
-        requestHandler.setParameter(Const.EVENT_END, event.getDtend());
-        requestFetch();
+        TUMOnlineClient
+                .getInstance(this)
+                .createCalendarEvent(title, description, event.getDtstart(), event.getDtend(), null)
+                .enqueue(new Callback<CreateEventResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<CreateEventResponse> call,
+                                           @NonNull Response<CreateEventResponse> response) {
+                        CreateEventResponse createEventResponse = response.body();
+                        if (createEventResponse != null) {
+                            handleCreateSuccess(createEventResponse);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<CreateEventResponse> call, @NonNull Throwable t) {
+                        showErrorDialog(getString(R.string.error_something_wrong));
+                    }
+                });
     }
 
-    @Override
-    public void onFetch(CreateEventResponse response) {
-        String nr = response.getEventId();
+    private void handleCreateSuccess(@NonNull CreateEventResponse createEventResponse) {
+        String nr = createEventResponse.getEventId();
         event.setNr(nr);
         TcaDb.getInstance(this).calendarDao().insert(event);
         finish();

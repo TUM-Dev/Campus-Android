@@ -19,7 +19,6 @@ import android.text.format.DateUtils;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
@@ -37,13 +36,12 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -51,6 +49,9 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_FIVE_DAYS;
 import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
@@ -440,48 +441,37 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events> impl
     /**
      * option to delete is shown to the user for every event that does not contain a url.
      * (it is assumed that this is actually an event that was created by the user)
-     * @param nr
+     * @param eventId
      */
-    protected void deleteEvent(final String nr){
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle(R.string.event_delete_title);
-        dialog.setMessage(R.string.delete_event_info);
-        dialog.setPositiveButton(R.string.delete, (dialog1, which) -> {
-            TUMOnlineRequest<DeleteEventResponse> request = new TUMOnlineRequest<>(
-                    TUMOnlineConst.Companion.getDELETE_EVENT(), this, true);
-            request.setParameter("pTerminNr", nr);
-            request.fetchInteractive(this, new TUMOnlineRequestFetchListener<DeleteEventResponse>() {
-                @Override
-                public void onNoInternetError() {
-                    Toast.makeText(getApplicationContext(), "Error: you are not connected to the internet", Toast.LENGTH_SHORT).show();
-                }
+    protected void deleteEvent(final String eventId) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.event_delete_title)
+                .setMessage(R.string.delete_event_info)
+                .setPositiveButton(R.string.delete, (dialog, which) -> handleDeleteEvent(eventId))
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
 
-                @Override
-                public void onFetch(DeleteEventResponse response) {
-                    detailsFragment.dismiss();
-                    TcaDb.getInstance(getApplicationContext()).calendarDao().delete(nr);
-                    refreshWeekView();
-                    Toast.makeText(getApplicationContext(), R.string.delete_event_confirmation, Toast.LENGTH_SHORT).show();
-                }
+    private void handleDeleteEvent(String eventId) {
+        TUMOnlineClient
+                .getInstance(this)
+                .deleteCalendarEvent(eventId)
+                .enqueue(new Callback<DeleteEventResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<DeleteEventResponse> call,
+                                           @NonNull Response<DeleteEventResponse> response) {
+                        detailsFragment.dismiss();
+                        TcaDb.getInstance(CalendarActivity.this).calendarDao().delete(eventId);
+                        refreshWeekView();
+                        Utils.showToast(CalendarActivity.this, R.string.delete_event_confirmation);
+                    }
 
-                @Override
-                public void onFetchCancelled() {
-                    Toast.makeText(getApplicationContext(), R.string.something_wrong, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFetchError(String errorReason) {
-                    Toast.makeText(getApplicationContext(), R.string.delete_event_error, Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onNoDataToShow() {
-                    Toast.makeText(getApplicationContext(), R.string.something_wrong, Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
-        dialog.setNegativeButton(R.string.cancel, null);
-        dialog.show();
+                    @Override
+                    public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
+                        Utils.log(t);
+                        Utils.showToast(CalendarActivity.this, R.string.something_wrong);
+                    }
+                });
     }
 
     protected void editEvent(final CalendarItem calendarItem){
