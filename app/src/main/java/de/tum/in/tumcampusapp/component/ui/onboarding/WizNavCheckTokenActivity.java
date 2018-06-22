@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.app.model.DeviceVerification;
 import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
@@ -101,7 +104,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
 
             // upload only the ids that haven't been uploaded before
             ObfuscatedIds ids = identity.getObfuscated_ids();
-            ObfuscatedIdsUpload upload = prepareIdUpload(ids.getStudierende(), ids.getBedienstete(), ids.getExtern(), uploadStatus);
+            ObfuscatedIdsUpload upload = prepareIdUpload(this, ids.getStudierende(), ids.getBedienstete(), ids.getExtern(), uploadStatus);
             if (upload != null) {
                 TUMCabeClient.getInstance(this).uploadObfuscatedIds(lrzId, upload);
             }
@@ -111,11 +114,20 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     }
 
     /**
-     +     * @return null if no update is necessary
-     +     */
-    public static ObfuscatedIdsUpload prepareIdUpload(String studentId, String employeeId,
+     * @return null if no update is necessary
+     */
+    public static ObfuscatedIdsUpload prepareIdUpload(Context context, String studentId, String employeeId,
                                                       String externalId, UploadStatus uploadStatus){
-        ObfuscatedIdsUpload upload = new ObfuscatedIdsUpload();
+        ObfuscatedIdsUpload upload;
+        try {
+            upload = new ObfuscatedIdsUpload(
+                    null, null, null,
+                    DeviceVerification.Companion.getDeviceVerification(context));
+        } catch (NoPrivateKey noPrivateKey) {
+            Utils.log(noPrivateKey, "Can't upload obfuscated ids");
+            return null;
+        }
+
         boolean doUpload = false;
         if (!uploadStatus.getStudentId() && !studentId.isEmpty()) {
             upload.setStudentId(studentId);
