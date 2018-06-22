@@ -118,7 +118,7 @@ public interface TUMCabeAPIService {
     Call<ChatRegistrationId> uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId);
 
     @POST(API_MEMBERS + "uploadIds/{lrzId}")
-    Observable<TUMCabeStatus> uploadObfuscatedIds(@Path("lrzId") String lrzId, @Body ObfuscatedIdsUpload ids);
+    Call<TUMCabeStatus> uploadObfuscatedIds(@Path("lrzId") String lrzId, @Body ObfuscatedIdsUpload ids);
 
     //Curricula
     @GET(API_CURRICULA)
@@ -142,7 +142,7 @@ public interface TUMCabeAPIService {
     Call<TUMCabeStatus> deviceRegister(@Body DeviceRegister verification);
 
     @GET(API_DEVICE + "verifyKey/")
-    Observable<TUMCabeStatus> verifyKey();
+    Call<TUMCabeStatus> verifyKey();
 
     @POST(API_DEVICE + "addGcmToken/")
     Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadFcmToken verification);
