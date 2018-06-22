@@ -136,6 +136,7 @@ class DownloadService : JobIntentService() {
 
         // upload obfuscated ids
         val upload: ObfuscatedIdsUpload? = WizNavCheckTokenActivity.prepareIdUpload(
+                this,
                 Utils.getSetting(this, Const.TUMO_STUDENT_ID, ""),
                 Utils.getSetting(this, Const.TUMO_EMPLOYEE_ID, ""),
                 Utils.getSetting(this, Const.TUMO_EXTERNAL_ID, ""),
