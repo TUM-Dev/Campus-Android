@@ -1,8 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
-
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Xml
 import java.io.Serializable
 
 /**
@@ -11,14 +10,14 @@ import java.io.Serializable
  * for a corresponding request.
  */
 
-@Root(name = "gruppe", strict = false)
-data class Group(@field:Element(name = "beschreibung", required = false)
+@Xml(name = "gruppe")
+data class Group(@Attribute(name = "beschreibung")
                  var description: String = "",
-                 @field:Element(name = "kennung")
+                 @Attribute(name = "kennung")
                  var id: String = "",
-                 @field:Element(name = "org")
+                 @Attribute(name = "org")
                  var org: String = "",
-                 @field:Element(name = "titel", required = false)
+                 @Attribute(name = "titel")
                  var title: String = "") :
         Serializable {
     companion object {

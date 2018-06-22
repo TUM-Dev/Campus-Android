@@ -8,10 +8,9 @@ import android.preference.PreferenceManager;
 
 import com.google.common.base.Optional;
 import com.google.common.net.UrlEscapers;
+import com.tickaroo.tikxml.TikXml;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 import com.trello.rxlifecycle2.LifecycleProvider;
-
-import org.simpleframework.xml.core.Persister;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,6 +27,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 
 /**
  * This class will handle all action needed to communicate with the TUMOnline
@@ -157,11 +157,11 @@ public final class TUMOnlineRequest<T> {
 
         Utils.log("fetching URL " + url);
 
-        Optional<String> result;
+        Optional<ResponseBody> result = Optional.absent();
+
         try {
-            result = cacheManager.getFromCache(url);
-            if (NetUtils.isConnected(mContext) && (!result.isPresent() || fillCache)) {
-                result = net.downloadStringHttp(url);
+            if (NetUtils.isConnected(mContext) && fillCache) {
+                result = net.getOkHttpResponse(url);
             }
         } catch (IOException e) {
             lastError = e.getMessage();
@@ -171,8 +171,12 @@ public final class TUMOnlineRequest<T> {
         T res = null;
         if (result.isPresent()) {
             try {
-                res = new Persister().read(method.getResponse(), result.get());
-                cacheManager.addToCache(url, result.get(), method.getValidity(), CacheManager.CACHE_TYP_DATA);
+                TikXml tikXml = new TikXml.Builder()
+                        .exceptionOnUnreadXml(false)
+                        .build();
+                res = tikXml.read(result.get().source(), method.getResponse());
+
+                cacheManager.addToCache(url, result.get().string(), method.getValidity(), CacheManager.CACHE_TYP_DATA);
                 Utils.logv("added to cache " + url);
                 Utils.logv(result.get() + " " + res.toString());
 
@@ -181,7 +185,8 @@ public final class TUMOnlineRequest<T> {
             } catch (Exception e) {
                 Utils.log(e, "TUMonline request failed");
                 //Serialisation failed - lock for a specific time, save the error message
-                lastError = tumManager.addLock(url, result.get());
+                // TODO
+                // lastError = tumManager.addLock(url, result.get().string());
             }
         }
 

@@ -64,7 +64,7 @@ public class NetUtils {
         return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
 
-    private Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
+    public Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
         if (!isOnline || Strings.isNullOrEmpty(url) || url.equals("null")) {
@@ -159,10 +159,12 @@ public class NetUtils {
      */
     public Optional<JSONObject> downloadJson(String url) {
         try {
-            Optional<String> data = downloadStringHttp(url);
-            if (data.isPresent()) {
+            Optional<ResponseBody> response = getOkHttpResponse(url);
+            //Optional<String> data = downloadStringHttp(url);
+            if (response.isPresent()) {
+                String data = response.get().string();
                 Utils.logv("downloadJson " + data);
-                return Optional.of(new JSONObject(data.get()));
+                return Optional.of(new JSONObject(data));
             }
         } catch (IOException | JSONException e) {
             Utils.log(e);

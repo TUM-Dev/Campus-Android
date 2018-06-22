@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades.model
 
-import org.simpleframework.xml.ElementList
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Element
+import com.tickaroo.tikxml.annotation.Xml
 
 /**
  * Wrapper class holding a list of exams.
@@ -9,6 +9,6 @@ import org.simpleframework.xml.Root
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
-@Root(name = "rowset")
-data class ExamList(@field:ElementList(inline = true)
+@Xml(name = "rowset")
+data class ExamList(@Element
                     var exams: List<Exam> = mutableListOf())

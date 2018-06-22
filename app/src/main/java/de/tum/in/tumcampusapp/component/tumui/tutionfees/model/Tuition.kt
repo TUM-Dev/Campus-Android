@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Xml
 import java.text.NumberFormat
 import java.text.ParseException
 import java.util.*
@@ -13,12 +13,12 @@ import java.util.*
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
-@Root(name = "row", strict = false)
-data class Tuition(@field:Element(name = "frist")
+@Xml(name = "row")
+data class Tuition(@Attribute(name = "frist")  // TODO: Rename variables
                    var frist: String = "",
-                   @field:Element(name = "semester_bezeichnung")
+                   @Attribute(name = "semester_bezeichnung")
                    var semesterBez: String = "",
-                   @field:Element(name = "soll")
+                   @Attribute(name = "soll")
                    var soll: String = "") {
 
     val outstandingBalance: Float

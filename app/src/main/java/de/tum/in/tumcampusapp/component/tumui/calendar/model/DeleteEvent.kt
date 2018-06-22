@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Xml
 
-@Root(name = "termin")
-data class DeleteEvent(@field:Element(name = "delete") var delete: String = "")
+@Xml(name = "termin")
+data class DeleteEvent(@Attribute(name = "delete") var delete: String = "")

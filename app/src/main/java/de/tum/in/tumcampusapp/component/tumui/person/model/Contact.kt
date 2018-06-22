@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
-import org.simpleframework.xml.Element
-
+import com.tickaroo.tikxml.annotation.Attribute
 import java.io.Serializable
 
 /**
@@ -10,15 +9,15 @@ import java.io.Serializable
  * corresponding request.
  */
 data class Contact(
-        @field:Element(name = "zusatz_info", required = false)
+        @Attribute(name = "zusatz_info")
         var additionalInfo: String = "",
-        @field:Element(name = "fax", required = false)
+        @Attribute(name = "fax")
         var fax: String = "",
-        @field:Element(name = "www_homepage", required = false)
+        @Attribute(name = "www_homepage")
         var homepage: String = "",
-        @field:Element(name = "mobiltelefon", required = false)
+        @Attribute(name = "mobiltelefon")
         var mobilephone: String = "",
-        @field:Element(name = "telefon", required = false)
+        @Attribute(name = "telefon")
         var telefon: String = "") :
         Serializable {
 

@@ -79,6 +79,7 @@ def retrofitVersion = '2.3.0'
 def firebaseVersion = '15.0.0'
 def roomVersion = '1.1.0'
 def ankoVersion='0.10.5'
+def tikXmlVersion='0.8.13'
 
 configurations.all {
     resolutionStrategy {
@@ -117,10 +118,12 @@ dependencies {
     // Helpers
     implementation 'net.danlew:android.joda:2.9.9.2'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation('org.simpleframework:simple-xml:2.7.1') {
-        exclude group: 'stax', module: 'stax-api'
-        exclude group: 'xpp3', module: 'xpp3'
-    }
+
+    // XML Parsing
+    implementation "com.tickaroo.tikxml:annotation:$tikXmlVersion"
+    implementation "com.tickaroo.tikxml:core:$tikXmlVersion"
+    annotationProcessor "com.tickaroo.tikxml:processor:$tikXmlVersion"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
@@ -133,6 +136,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "com.tickaroo.tikxml:retrofit-converter:$tikXmlVersion"
 
     // UI
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'

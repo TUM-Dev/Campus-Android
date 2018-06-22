@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.lectures.model
 
-import org.simpleframework.xml.ElementList
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Element
+import com.tickaroo.tikxml.annotation.Xml
 
 /**
  * This class is dealing with the deserialization of the output of TUMOnline to
@@ -9,6 +9,7 @@ import org.simpleframework.xml.Root
  *
  * @see LecturesSearchRow
  */
-@Root(name = "rowset")
-data class LecturesSearchRowSet(@field:ElementList(inline = true, required = false)
-                                var lehrveranstaltungen: List<LecturesSearchRow> = mutableListOf())
+@Xml(name = "rowset")
+data class LecturesSearchRowSet(
+        @Element var lehrveranstaltungen: List<LecturesSearchRow> = mutableListOf()  // TODO: Rename variable
+)

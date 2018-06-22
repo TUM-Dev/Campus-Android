@@ -4,12 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
-
 import com.google.common.base.Charsets
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
-
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
 
 /**
  * An employee of the TUM.
@@ -18,32 +16,32 @@ import org.simpleframework.xml.Root
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
-@Root(name = "person", strict = false)
-data class Employee(@field:Element(name = "geschlecht", required = false)
+@Xml(name = "person")
+data class Employee(@Attribute(name = "geschlecht")
                     var gender: String = "",
-                    @field:Element(name = "obfuscated_id")
+                    @Attribute(name = "obfuscated_id")
                     var id: String = "",
-                    @field:Element(name = "vorname")
+                    @Attribute(name = "vorname")
                     var name: String = "",
-                    @field:Element(name = "familienname")
+                    @Attribute(name = "familienname")
                     var surname: String = "",
-                    @field:Element(name = "dienstlich")
+                    @Attribute(name = "dienstlich")
                     var businessContact: Contact? = null,
-                    @field:Element(name = "sprechstunde", required = false)
+                    @Attribute(name = "sprechstunde")
                     var consultationHours: String = "",
-                    @field:Element(required = false)
+                    @Attribute
                     var email: String = "",
-                    @field:Element(name = "gruppen", required = false)
+                    @Attribute(name = "gruppen")
                     var groupList: GroupList? = null,
-                    @field:Element(name = "image_data", required = false)
+                    @Attribute(name = "image_data")
                     var imageData: String = "",
-                    @field:Element(name = "privat")
+                    @Attribute(name = "privat")
                     var privateContact: Contact? = null,
-                    @field:Element(name = "raeume", required = false)
+                    @Attribute(name = "raeume")
                     var roomList: RoomList? = null,
-                    @field:Element(name = "telefon_nebenstellen", required = false)
+                    @Attribute(name = "telefon_nebenstellen")
                     var telSubstationList: TelSubstationList? = null,
-                    @field:Element(name = "titel", required = false)
+                    @Attribute(name = "titel")
                     var title: String = "") {
 
     val groups: List<Group>?

@@ -1,13 +1,13 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Xml
 
-@Root(name = "row")
-data class Identity(@field:Element var vorname: String = "",
-                    @field:Element var familienname: String = "",
-                    @field:Element var kennung: String = "",
-                    @field:Element var obfuscated_id: String = "",
-                    @field:Element var obfuscated_ids: ObfuscatedIds = ObfuscatedIds()) {
+@Xml(name = "row")
+data class Identity(@Attribute var vorname: String = "",
+                    @Attribute var familienname: String = "",
+                    @Attribute var kennung: String = "",
+                    @Attribute var obfuscated_id: String = "",
+                    @Attribute var obfuscated_ids: ObfuscatedIds = ObfuscatedIds()) {
     override fun toString(): String = "$vorname $familienname"
 }

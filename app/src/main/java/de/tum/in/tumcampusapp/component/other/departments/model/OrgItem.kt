@@ -1,33 +1,32 @@
 package de.tum.`in`.tumcampusapp.component.other.departments.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Xml
 
 /**
  * An Element of the Organisation Tree. In the App a List of those Elements is
  * showed ([OrgItemList]). The shown Elements are for Navigation to an
  * Element without child-Element, whose details are then shown.
  */
-
-@Root(name = "row")
+@Xml(name = "row")
 data class OrgItem(
-        @field:Element(name = "nr")
+        @Attribute(name = "nr")
         var id: String = "",
-        @field:Element(name = "name_de")
+        @Attribute(name = "name_de")
         var nameDe: String = "",
-        @field:Element(name = "name_en")
+        @Attribute(name = "name_en")
         var nameEn: String = "",
-        @field:Element(name = "parent")
+        @Attribute(name = "parent")
         var parentId: String = "",
-        @field:Element(required = false)
+        @Attribute
         var ebene: String = "",
-        @field:Element(required = false)
+        @Attribute
         var org_gruppe_name: String = "",
-        @field:Element(required = false)
+        @Attribute
         var child_cnt: String = "",
-        @field:Element(required = false)
+        @Attribute
         var sort_hierarchie: String = "",
-        @field:Element(required = false)
+        @Attribute
         var kennung: String = "",
-        @field:Element(required = false)
+        @Attribute
         var org_typ_name: String = "")

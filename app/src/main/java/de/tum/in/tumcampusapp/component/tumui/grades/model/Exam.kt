@@ -2,10 +2,10 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades.model
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
 import java.util.*
 
 /**
@@ -14,23 +14,23 @@ import java.util.*
  *
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
- */
-@Root(name = "row", strict = false)
-data class Exam(@field:Element(name = "lv_titel")
+ */ 
+@Xml(name = "row")
+data class Exam(@Attribute(name = "lv_titel")
                 var course: String = "",
-                @field:Element(name = "lv_credits", required = false)
+                @Attribute(name = "lv_credits")
                 var credits: String = "0",
-                @field:Element(name = "datum", required = false)
+                @Attribute(name = "datum")
                 var date: Date = Date(),
-                @field:Element(name = "pruefer_nachname", required = false)
+                @Attribute(name = "pruefer_nachname")
                 var examiner: String = "",
-                @field:Element(name = "uninotenamekurz", required = false)
+                @Attribute(name = "uninotenamekurz")
                 var grade: String = "",
-                @field:Element(name = "modus", required = false)
+                @Attribute(name = "modus")
                 var modus: String = "",
-                @field:Element(name = "studienidentifikator")
+                @Attribute(name = "studienidentifikator")
                 var programID: String = "",
-                @field:Element(name = "lv_semester", required = false)
+                @Attribute(name = "lv_semester")
                 var semester: String = "") : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun getHeadName() = semester

@@ -1,46 +1,31 @@
 package de.tum.`in`.tumcampusapp.component.tumui.lectures.model
 
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
 
 /**
  * This class is dealing with the deserialization of the output of TUMOnline to
  * the method "sucheLehrveranstaltungen".
  */
-
-@Root(name = "row")
-data class LecturesSearchRow(@field:Element
-                             var dauer_info: String = "",
-                             @field:Element(required = false)
-                             var org_kennung_betreut: String = "",
-                             @field:Element(required = false)
-                             var org_name_betreut: String = "",
-                             @field:Element(required = false)
-                             var org_nr_betreut: Int = 0,
-                             @field:Element
-                             var semester: String = "",
-                             @field:Element
-                             var semester_id: String = "",
-                             @field:Element
-                             var semester_name: String = "",
-                             @field:Element
-                             var sj_name: String = "",
-                             @field:Element
-                             var stp_lv_art_kurz: String = "",
-                             @field:Element
-                             var stp_lv_art_name: String = "",
-                             @field:Element(name = "stp_lv_nr")
-                             var stp_lv_nr: String = "",
-                             @field:Element
-                             var stp_sp_nr: String = "",
-                             @field:Element
-                             var stp_sp_sst: String = "",
-                             @field:Element(name = "stp_sp_titel")
-                             var titel: String = "",
-                             @field:Element(required = false)
-                             var vortragende_mitwirkende: String = "")
-    : Comparable<LecturesSearchRow>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
+@Xml(name = "row")
+data class LecturesSearchRow(
+        @Attribute var dauer_info: String = "",  // TODO: Rename variable
+        @Attribute var org_kennung_betreut: String = "",
+        @Attribute var org_name_betreut: String = "",
+        @Attribute var org_nr_betreut: Int = 0,
+        @Attribute var semester: String = "",
+        @Attribute var semester_id: String = "",
+        @Attribute var semester_name: String = "",
+        @Attribute var sj_name: String = "",
+        @Attribute var stp_lv_art_kurz: String = "",
+        @Attribute var stp_lv_art_name: String = "",
+        @Attribute(name = "stp_lv_nr") var stp_lv_nr: String = "",
+        @Attribute var stp_sp_nr: String = "",
+        @Attribute var stp_sp_sst: String = "",
+        @Attribute(name = "stp_sp_titel") var titel: String = "",
+        @Attribute var vortragende_mitwirkende: String = ""
+) : Comparable<LecturesSearchRow>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun compareTo(other: LecturesSearchRow) = other.semester_id.compareTo(semester_id)
 

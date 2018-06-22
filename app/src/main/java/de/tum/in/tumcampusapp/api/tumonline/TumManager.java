@@ -2,9 +2,6 @@ package de.tum.in.tumcampusapp.api.tumonline;
 
 import android.content.Context;
 
-import org.simpleframework.xml.core.Persister;
-
-import de.tum.in.tumcampusapp.api.tumonline.model.Error;
 import de.tum.in.tumcampusapp.api.tumonline.model.TumLock;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.CacheManager;
@@ -73,8 +70,9 @@ public class TumManager {
             if (data.contains(TUMOnlineRequest.NO_ENTRIES)) {
                 return data;
             }
-            Error res = new Persister().read(Error.class, data);
-            msg = res.getMessage();
+            // TODO
+            // Error res = new Persister().read(Error.class, data);
+            // msg = res.getMessage();
         } catch (Exception e) {
             Utils.log(e);
         }

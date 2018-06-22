@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.api.tumonline.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Attribute
+import com.tickaroo.tikxml.annotation.Xml
 
-@Root(name = "error", strict = false)
-data class Error(@field:Element(name = "message", required = false) var message: String = "")
+@Xml(name = "error")
+data class Error(@Attribute var message: String = "")
