@@ -10,7 +10,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.lectures.adapter.LectureAppointmentsListAdapter;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsRowSet;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 
 /**
@@ -21,7 +21,7 @@ import de.tum.in.tumcampusapp.utils.Const;
  * <p>
  * NEEDS: stp_sp_nr and title set in incoming bundle (lecture id, title)
  */
-public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline<LectureAppointmentsRowSet> {
+public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline<LectureAppointmentsResponse> {
 
     /**
      * UI elements
@@ -55,15 +55,15 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline<
      * process data got from TUMOnline request and show the list view
      */
     @Override
-    public void onFetch(LectureAppointmentsRowSet lecturesList) {
+    public void onFetch(LectureAppointmentsResponse lecturesList) {
         // may happen if there are no appointments for the lecture
-        if (lecturesList.getLehrveranstaltungenTermine() == null) {
+        if (lecturesList.getLectureAppointments() == null) {
             showError(R.string.no_appointments);
             return;
         }
 
         // set data to the ListView object nothing to click (yet)
-        lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, lecturesList.getLehrveranstaltungenTermine()));
+        lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, lecturesList.getLectureAppointments()));
         showLoadingEnded();
     }
 }

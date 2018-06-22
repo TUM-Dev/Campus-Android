@@ -4,13 +4,13 @@ import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
 import de.tum.`in`.tumcampusapp.component.other.departments.model.OrgDetailItemList
 import de.tum.`in`.tumcampusapp.component.other.departments.model.OrgItemList
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarRowSet
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEvent
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEvent
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Events
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsRowSet
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetailsRowSet
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsResponse
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
@@ -31,14 +31,14 @@ class TUMOnlineConst<T> private constructor(private val webservice: String, val 
 
         // TODO: Switch to @JvmField for all members and update the Java code accordingly
 
-        val CALENDER = TUMOnlineConst("kalender", CacheManager.VALIDITY_FIVE_DAYS, CalendarRowSet::class.java)
-        val CREATE_EVENT = TUMOnlineConst("terminCreate", CacheManager.VALIDITY_DO_NOT_CACHE, CreateEvent::class.java)
-        val DELETE_EVENT = TUMOnlineConst("terminDelete", CacheManager.VALIDITY_DO_NOT_CACHE, DeleteEvent::class.java)
+        val CALENDER = TUMOnlineConst("kalender", CacheManager.VALIDITY_FIVE_DAYS, Events::class.java)
+        val CREATE_EVENT = TUMOnlineConst("terminCreate", CacheManager.VALIDITY_DO_NOT_CACHE, CreateEventResponse::class.java)
+        val DELETE_EVENT = TUMOnlineConst("terminDelete", CacheManager.VALIDITY_DO_NOT_CACHE, DeleteEventResponse::class.java)
         @JvmField val TUITION_FEE_STATUS = TUMOnlineConst("studienbeitragsstatus", CacheManager.VALIDITY_TWO_DAYS, TuitionList::class.java)
-        @JvmField val LECTURES_PERSONAL = TUMOnlineConst("veranstaltungenEigene", CacheManager.VALIDITY_FIVE_DAYS, LecturesSearchRowSet::class.java)
-        val LECTURES_DETAILS = TUMOnlineConst("veranstaltungenDetails", CacheManager.VALIDITY_TEN_DAYS, LectureDetailsRowSet::class.java)
-        val LECTURES_APPOINTMENTS = TUMOnlineConst("veranstaltungenTermine", CacheManager.VALIDITY_TEN_DAYS, LectureAppointmentsRowSet::class.java)
-        val LECTURES_SEARCH = TUMOnlineConst("veranstaltungenSuche", CacheManager.VALIDITY_DO_NOT_CACHE, LecturesSearchRowSet::class.java)
+        @JvmField val LECTURES_PERSONAL = TUMOnlineConst("veranstaltungenEigene", CacheManager.VALIDITY_FIVE_DAYS, LecturesResponse::class.java)
+        val LECTURES_DETAILS = TUMOnlineConst("veranstaltungenDetails", CacheManager.VALIDITY_TEN_DAYS, LectureDetailsResponse::class.java)
+        val LECTURES_APPOINTMENTS = TUMOnlineConst("veranstaltungenTermine", CacheManager.VALIDITY_TEN_DAYS, LectureAppointmentsResponse::class.java)
+        val LECTURES_SEARCH = TUMOnlineConst("veranstaltungenSuche", CacheManager.VALIDITY_DO_NOT_CACHE, LecturesResponse::class.java)
         val ORG_TREE = TUMOnlineConst("orgBaum", CacheManager.VALIDITY_ONE_MONTH, OrgItemList::class.java)
         val ORG_DETAILS = TUMOnlineConst("orgDetails", CacheManager.VALIDITY_ONE_MONTH, OrgDetailItemList::class.java)
         val PERSON_DETAILS = TUMOnlineConst("personenDetails", CacheManager.VALIDITY_FIVE_DAYS, Employee::class.java)

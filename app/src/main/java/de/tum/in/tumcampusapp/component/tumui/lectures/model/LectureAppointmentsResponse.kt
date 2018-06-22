@@ -7,11 +7,9 @@ import com.tickaroo.tikxml.annotation.Xml
  * This class is dealing with the deserialization of the output of TUMOnline to
  * the method "TermineLehrveranstaltungen".
  *
- * @see LectureAppointmentsRow
- *
- * @see [SimpleXML tutorial](http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php)
+ * @see LectureAppointment
  */
 @Xml(name = "rowset")
-data class LectureAppointmentsRowSet(
-        @Element var lehrveranstaltungenTermine: List<LectureAppointmentsRow> = mutableListOf() // TODO: Rename variable
+data class LectureAppointmentsResponse(
+        @Element var lectureAppointments: List<LectureAppointment>? = null
 )

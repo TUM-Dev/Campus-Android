@@ -10,5 +10,4 @@ import com.tickaroo.tikxml.annotation.Xml
  * corresponding request.
  */
 @Xml(name = "rowset")
-data class ExamList(@Element
-                    var exams: List<Exam> = mutableListOf())
+data class ExamList(@Element var exams: List<Exam> = mutableListOf())

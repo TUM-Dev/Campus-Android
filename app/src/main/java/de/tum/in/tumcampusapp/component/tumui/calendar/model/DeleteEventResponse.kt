@@ -4,4 +4,4 @@ import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "termin")
-data class CreateEvent (@PropertyElement(name = "nr") var eventNr: String = "")
+data class DeleteEventResponse(@PropertyElement(name = "delete") var delete: String = "")

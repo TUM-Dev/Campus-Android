@@ -26,8 +26,8 @@ import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRow;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -194,18 +194,18 @@ public class CalendarController implements ProvidesCard {
         return calendarDao.getCalendarItemByStartAndEndTime(DateUtils.getDateTimeString(start.getTime()), DateUtils.getDateTimeString(end.getTime()));
     }
 
-    public void importCalendar(CalendarRowSet myCalendarList) {
+    public void importCalendar(Events myCalendarList) {
 
         // Cleanup cache before importing
         removeCache();
 
         // reading xml
-        List<CalendarRow> myCalendar = myCalendarList.getKalendarList();
-        if (myCalendar != null) {
-            for (CalendarRow row : myCalendar) {
+        List<Event> events = myCalendarList.getEvents();
+        if (events != null) {
+            for (Event event : events) {
                 // insert into database
                 try {
-                    replaceIntoDb(row);
+                    replaceIntoDb(event);
                 } catch (Exception e) {
                     Utils.log(e);
                 }
@@ -221,18 +221,16 @@ public class CalendarController implements ProvidesCard {
         calendarDao.flush();
     }
 
-    void replaceIntoDb(CalendarRow row) {
-        if (row.getNr()
-               .isEmpty()) {
+    void replaceIntoDb(Event event) {
+        if (event.getId().isEmpty()) {
             throw new IllegalArgumentException("Invalid id.");
         }
 
-        if (row.getTitle()
-               .isEmpty()) {
+        if (event.getTitle().isEmpty()) {
             throw new IllegalArgumentException("Invalid lecture Title.");
         }
 
-        calendarDao.insert(row.toCalendarItem());
+        calendarDao.insert(event.toCalendarItem());
     }
 
     /**

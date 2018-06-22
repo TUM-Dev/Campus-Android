@@ -29,8 +29,8 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.NoResultsAdapter;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRow;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.ui.chat.adapter.ChatRoomListAdapter;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
@@ -56,7 +56,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
-    private TUMOnlineRequest<LecturesSearchRowSet> requestHandler;
+    private TUMOnlineRequest<LecturesResponse> requestHandler;
     private ChatRoomController manager;
     private int mCurrentMode = 1;
     private ChatRoomListAdapter chatRoomAdapter;
@@ -258,10 +258,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
     @Override
     protected List<ChatRoomAndLastMessage> onLoadInBackground(Void... arg) {
-        Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
+        Optional<LecturesResponse> lecturesList = requestHandler.fetch();
         if (lecturesList.isPresent()) {
-            List<LecturesSearchRow> lectures = lecturesList.get()
-                                                           .getLehrveranstaltungen();
+            List<Lecture> lectures = lecturesList.get().getLectures();
             manager.createLectureRooms(lectures);
         }
 

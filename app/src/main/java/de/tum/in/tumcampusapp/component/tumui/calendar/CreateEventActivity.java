@@ -22,8 +22,8 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEvent;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEvent;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEventResponse;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateUtils;
@@ -32,7 +32,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
  */
-public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
+public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEventResponse> {
 
     private Calendar start, end;
     private boolean isEditing;
@@ -176,17 +176,17 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
     private void editEvent() {
         final String eventNr = getIntent().getExtras().getString(Const.EVENT_NR);
-        TUMOnlineRequest<DeleteEvent> request = new TUMOnlineRequest<>(
+        TUMOnlineRequest<DeleteEventResponse> request = new TUMOnlineRequest<>(
                 TUMOnlineConst.Companion.getDELETE_EVENT(), this, true);
         request.setParameter(Const.EVENT_NR, eventNr);
-        request.fetchInteractive(this, new TUMOnlineRequestFetchListener<DeleteEvent>() {
+        request.fetchInteractive(this, new TUMOnlineRequestFetchListener<DeleteEventResponse>() {
             @Override
             public void onNoInternetError() {
                 showErrorDialog(getString(R.string.no_internet_connection));
             }
 
             @Override
-            public void onFetch(DeleteEvent response) {
+            public void onFetch(DeleteEventResponse response) {
                 Utils.log("Event successfully deleted (now creating the edited version)");
                 TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventNr);
                 createEvent();
@@ -234,8 +234,8 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     @Override
-    public void onFetch(CreateEvent response) {
-        String nr = response.getEventNr();
+    public void onFetch(CreateEventResponse response) {
+        String nr = response.getEventId();
         event.setNr(nr);
         TcaDb.getInstance(this).calendarDao().insert(event);
         finish();

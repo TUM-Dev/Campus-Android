@@ -13,8 +13,8 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForSearch
 import de.tum.in.tumcampusapp.component.other.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider;
 import de.tum.in.tumcampusapp.component.tumui.lectures.adapter.LecturesListAdapter;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRow;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -25,7 +25,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * <p>
  * HINT: a TUMOnline access token is needed
  */
-public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<LecturesSearchRowSet> {
+public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<LecturesResponse> {
     private final static String P_SUCHE = "pSuche";
 
     /**
@@ -47,12 +47,12 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
         // handle on click events by showing its LectureDetails
         lvMyLecturesList.setOnItemClickListener((a, v, position, id) -> {
             Object o = lvMyLecturesList.getItemAtPosition(position);
-            LecturesSearchRow item = (LecturesSearchRow) o;
+            Lecture item = (Lecture) o;
 
             // set bundle for LectureDetails and show it
             Bundle bundle = new Bundle();
             // we need the stp_sp_nr
-            bundle.putString(LecturesSearchRow.Companion.getSTP_SP_NR(), item.getStp_sp_nr());
+            bundle.putString(Lecture.Companion.getSTP_SP_NR(), item.getStp_sp_nr());
             Intent intent = new Intent(LecturesPersonalActivity.this, LecturesDetailsActivity.class);
             intent.putExtras(bundle);
             // start LectureDetails for given stp_sp_nr
@@ -78,13 +78,13 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
     }
 
     @Override
-    public void onLoadFinished(LecturesSearchRowSet response) {
-        if (response == null || response.getLehrveranstaltungen() == null) {
+    public void onLoadFinished(LecturesResponse response) {
+        if (response == null || response.getLectures() == null) {
             // no results found
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
         } else {
             // Sort lectures by semester id
-            List<LecturesSearchRow> lectures = response.getLehrveranstaltungen();
+            List<Lecture> lectures = response.getLectures();
             Collections.sort(lectures);
 
             // set ListView to data via the LecturesListAdapter

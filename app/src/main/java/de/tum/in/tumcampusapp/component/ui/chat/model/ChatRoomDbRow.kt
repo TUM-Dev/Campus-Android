@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.chat.model
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesSearchRow
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 
 
 @Entity(tableName = "chat_room", primaryKeys = arrayOf("name", "_id"))
@@ -21,11 +21,11 @@ data class ChatRoomDbRow(var room: Int = 0,
 
 
     companion object {
-        fun fromLecture(lecture: LecturesSearchRow): ChatRoomDbRow {
-            return ChatRoomDbRow(-1, lecture.titel, lecture.semester_name,
-                    lecture.semester_id, -1,
+        fun fromLecture(lecture: Lecture): ChatRoomDbRow {
+            return ChatRoomDbRow(-1, lecture.title, lecture.semesterName,
+                    lecture.semesterId, -1,
                     lecture.stp_lv_nr.toInt(),
-                    lecture.vortragende_mitwirkende, 0, -1)
+                    lecture.lecturers ?: "", 0, -1)
         }
     }
 }

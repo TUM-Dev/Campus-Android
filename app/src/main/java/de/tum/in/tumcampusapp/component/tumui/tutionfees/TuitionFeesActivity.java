@@ -85,12 +85,12 @@ public class TuitionFeesActivity extends ProgressActivity {
 
         Date deadline = DateUtils.getDate(tuitionList.getTuitions()
                 .get(0)
-                .getFrist());
+                .getDeadline());
         deadlineTextView.setText(DateFormat.getDateInstance()
                 .format(deadline));
         semesterTextView.setText(tuitionList.getTuitions()
                 .get(0)
-                .getSemesterBez()
+                .getSemester()
                 .toUpperCase(Locale.getDefault()));
 
         if (tuition.getOutstandingBalance() == 0) {

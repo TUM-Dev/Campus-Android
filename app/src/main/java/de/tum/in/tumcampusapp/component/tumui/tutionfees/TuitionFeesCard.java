@@ -60,12 +60,12 @@ public class TuitionFeesCard extends NotificationAwareCard {
         TextView outstandingBalanceTextView =
                 viewHolder.itemView.findViewById(R.id.outstanding_balance_text_view);
 
-        if (mTuition.getSoll().equals("0")) {
+        if (mTuition.getAmount().equals("0")) {
             String placeholderText = getContext().getString(R.string.reregister_success);
-            String text = String.format(placeholderText, mTuition.getSemesterBez());
+            String text = String.format(placeholderText, mTuition.getSemester());
             reregisterInfoTextView.setText(text);
         } else {
-            Date date = DateUtils.getDate(mTuition.getFrist());
+            Date date = DateUtils.getDate(mTuition.getDeadline());
             String dateText = DateFormat.getDateInstance().format(date);
 
             String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
@@ -80,28 +80,28 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     @Override
     public void discard(Editor editor) {
-        editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
-        editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
+        editor.putString(LAST_FEE_FRIST, mTuition.getDeadline());
+        editor.putString(LAST_FEE_SOLL, mTuition.getAmount());
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
-        String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
+        String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getAmount());
 
         // If app gets started for the first time and fee is already paid don't annoy user
         // by showing him that he has been re-registered successfully
-        return !(prevFrist.isEmpty() && "0".equals(mTuition.getSoll())) &&
-               (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
+        return !(prevFrist.isEmpty() && "0".equals(mTuition.getAmount())) &&
+               (prevFrist.compareTo(mTuition.getDeadline()) < 0 || prevSoll.compareTo(mTuition.getAmount()) > 0);
     }
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        if ("0".equals(mTuition.getSoll())) {
-            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez()));
+        if ("0".equals(mTuition.getAmount())) {
+            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemester()));
         } else {
-            notificationBuilder.setContentText(mTuition.getSoll() + "€\n" +
-                                               String.format(getContext().getString(R.string.reregister_todo), mTuition.getFrist()));
+            notificationBuilder.setContentText(mTuition.getAmount() + "€\n" +
+                                               String.format(getContext().getString(R.string.reregister_todo), mTuition.getDeadline()));
         }
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
         notificationBuilder.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_money));

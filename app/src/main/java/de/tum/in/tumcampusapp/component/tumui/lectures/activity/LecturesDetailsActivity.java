@@ -12,8 +12,8 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetailsRow;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetailsRowSet;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetails;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 
 /**
@@ -28,7 +28,7 @@ import de.tum.in.tumcampusapp.utils.Const;
  * <p/>
  * NEEDS: stp_sp_nr set in incoming bundle (lecture id)
  */
-public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<LectureDetailsRowSet> implements OnClickListener {
+public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<LectureDetailsResponse> implements OnClickListener {
 
     /**
      * UI elements
@@ -38,7 +38,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     /**
      * the current processing Lecture item (model: LectureDetailsRow)
      */
-    private LectureDetailsRow currentItem;
+    private LectureDetails currentItem;
     private TextView tvLDetailsDozent;
     private TextView tvLDetailsInhalt;
     private TextView tvLDetailsLiteratur;
@@ -62,7 +62,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
             Bundle bundle = new Bundle();
             // LectureAppointments need the name and id of the facing lecture
             bundle.putString("stp_sp_nr", currentItem.getStp_sp_nr());
-            bundle.putString(Const.TITLE_EXTRA, currentItem.getStp_sp_titel());
+            bundle.putString(Const.TITLE_EXTRA, currentItem.getTitle());
 
             Intent i = new Intent(this, LecturesAppointmentsActivity.class);
             i.putExtras(bundle);
@@ -101,27 +101,25 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
      * @param xmllv Raw text response
      */
     @Override
-    public void onFetch(LectureDetailsRowSet xmllv) {
+    public void onFetch(LectureDetailsResponse xmllv) {
         // we got exactly one row, that's fine
-        currentItem = xmllv.getLehrveranstaltungenDetails()
-                           .get(0);
-        tvLDetailsName.setText(currentItem.getStp_sp_titel()
-                                          .toUpperCase(Locale.getDefault()));
+        currentItem = xmllv.getLectureDetails().get(0);
+        tvLDetailsName.setText(currentItem.getTitle().toUpperCase(Locale.getDefault()));
 
-        StringBuilder strLectureLanguage = new StringBuilder(currentItem.getSemester_name());
-        if (currentItem.getHaupt_unterrichtssprache() != null) {
+        StringBuilder strLectureLanguage = new StringBuilder(currentItem.getSemesterName());
+        if (currentItem.getMainLanguage() != null) {
             strLectureLanguage.append(" - ")
-                              .append(currentItem.getHaupt_unterrichtssprache());
+                              .append(currentItem.getMainLanguage());
         }
         tvLDetailsSemester.setText(strLectureLanguage);
-        tvLDetailsSWS.setText(String.format("%s - %s SWS", currentItem.getStp_lv_art_name(), currentItem.getDauer_info()));
-        tvLDetailsDozent.setText(currentItem.getVortragende_mitwirkende());
-        tvLDetailsOrg.setText(currentItem.getOrg_name_betreut());
-        tvLDetailsInhalt.setText(currentItem.getLehrinhalt());
-        tvLDetailsMethode.setText(currentItem.getLehrmethode());
-        tvLDetailsZiele.setText(currentItem.getLehrziel());
-        tvLDetailsLiteratur.setText(currentItem.getStudienbehelfe());
-        tvLDetailsTermin.setText(currentItem.getErsttermin());
+        tvLDetailsSWS.setText(String.format("%s - %s SWS", currentItem.getLectureType(), currentItem.getDuration()));
+        tvLDetailsDozent.setText(currentItem.getLecturers());
+        tvLDetailsOrg.setText(currentItem.getChairName());
+        tvLDetailsInhalt.setText(currentItem.getLectureContent());
+        tvLDetailsMethode.setText(currentItem.getTeachingMethod());
+        tvLDetailsZiele.setText(currentItem.getTeachingTargets());
+        tvLDetailsLiteratur.setText(currentItem.getExaminationAids());
+        tvLDetailsTermin.setText(currentItem.getFirstAppointment());
 
         showLoadingEnded();
     }

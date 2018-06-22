@@ -108,7 +108,10 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
 
         // Setup contact items
         val contactItems = arrayListOf<AbstractContactItem>().apply {
-            add(EmailContactItem(employee.email))
+            employee.email?.let { email ->
+                add(EmailContactItem(email))
+            }
+
             employee.businessContact?.let { contact ->
                 if (contact.homepage.isNotBlank()) {
                     add(HomepageContactItem(contact.homepage))
@@ -132,8 +135,10 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
             }
         }
 
-        if (employee.consultationHours.isNotBlank()) {
-            contactItems.add(OfficeHoursContactItem(employee.consultationHours))
+        employee.consultationHours?.let { consultationHours ->
+            if (consultationHours.isNotBlank()) {
+                contactItems.add(OfficeHoursContactItem(consultationHours))
+            }
         }
 
         employee.rooms?.let { rooms ->

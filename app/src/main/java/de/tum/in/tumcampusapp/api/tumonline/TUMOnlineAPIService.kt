@@ -3,13 +3,13 @@ package de.tum.`in`.tumcampusapp.api.tumonline
 import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
 import de.tum.`in`.tumcampusapp.component.other.departments.model.OrgItemList
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarRowSet
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEvent
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEvent
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Events
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsRowSet
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetailsRowSet
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsResponse
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
@@ -22,32 +22,32 @@ interface TUMOnlineAPIService {
 
     @GET("wbservicesbasic.kalender")
     fun getCalendar(@Query("pMonateVor") start: Int,
-                    @Query("pMonateNach") end: Int): Call<CalendarRowSet>
+                    @Query("pMonateNach") end: Int): Call<Events>
 
     @GET("wbservicesbasic.terminCreate")
     fun createCalendarEvent(@Query("pTitel") title: String,
                             @Query("pAnmerkung") description: String,
                             @Query("pVon") start: String,
                             @Query("pBis") end: String,
-                            @Query("pTerminNr") eventId: String? = null): Call<CreateEvent>
+                            @Query("pTerminNr") eventId: String? = null): Call<CreateEventResponse>
 
     @GET("wbservicesbasic.terminDelete")
-    fun deleteCalendarEvent(@Query("pTerminNr") eventId: String): Call<DeleteEvent>
+    fun deleteCalendarEvent(@Query("pTerminNr") eventId: String): Call<DeleteEventResponse>
 
     @GET("wbservicesbasic.studienbeitragsstatus")
     fun getTuitionFeesStatus(): Call<TuitionList>
 
     @GET("wbservicesbasic.veranstaltungenEigene")
-    fun getPersonalLectures(): Call<LecturesSearchRowSet>
+    fun getPersonalLectures(): Call<LecturesResponse>
 
     @GET("wbservicesbasic.veranstaltungenDetails")
-    fun getLectureDetails(@Query("pLVNr") id: String): Call<LectureDetailsRowSet>
+    fun getLectureDetails(@Query("pLVNr") id: String): Call<LectureDetailsResponse>
 
     @GET("wbservicesbasic.veranstaltungenTermine")
-    fun getLectureAppointments(@Query("pLVNr") id: String): Call<LectureAppointmentsRowSet>
+    fun getLectureAppointments(@Query("pLVNr") id: String): Call<LectureAppointmentsResponse>
 
     @GET("wbservicesbasic.veranstaltungenSuche")
-    fun searchLectures(@Query("pSuche") query: String): Call<LecturesSearchRowSet>
+    fun searchLectures(@Query("pSuche") query: String): Call<LecturesResponse>
 
     @GET("wbservicesbasic.orgBaum")
     fun getOrgTree(): Call<OrgItemList>

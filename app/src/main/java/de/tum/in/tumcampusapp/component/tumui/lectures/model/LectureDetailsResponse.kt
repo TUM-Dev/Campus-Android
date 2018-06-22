@@ -5,11 +5,11 @@ import com.tickaroo.tikxml.annotation.Xml
 
 /**
  * This class is dealing with the deserialization of the output of TUMOnline to
- * the method "sucheLehrveranstaltungen" or "eigeneLehrveranstaltungen".
+ * the method "DetailsLehrveranstaltungen"
  *
- * @see LecturesSearchRow
+ * @see LectureDetails
  */
 @Xml(name = "rowset")
-data class LecturesSearchRowSet(
-        @Element var lehrveranstaltungen: List<LecturesSearchRow> = mutableListOf()  // TODO: Rename variable
+data class LectureDetailsResponse(
+        @Element var lectureDetails: List<LectureDetails> = mutableListOf()
 )

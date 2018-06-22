@@ -8,8 +8,6 @@ import com.tickaroo.tikxml.annotation.Xml
  * the method "sucheLehrveranstaltungen" or "eigeneLehrveranstaltungen".
  *
  * @see LecturesSearchRow
- *
- * @see [SimpleXML tutorial](http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php)
  */
 @Xml(name = "events")
-data class CalendarRowSet(@Element var kalendarList: List<CalendarRow>? = null) // TODO: Rename variable
+data class Events(@Element var events: List<Event>? = null)

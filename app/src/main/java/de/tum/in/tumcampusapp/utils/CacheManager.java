@@ -16,9 +16,9 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.other.departments.model.OrgItemList;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRow;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
 
@@ -111,11 +111,11 @@ public class CacheManager {
     }
 
     public void syncCalendar() {
-        TUMOnlineRequest<CalendarRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getCALENDER(), mContext);
+        TUMOnlineRequest<Events> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getCALENDER(), mContext);
         requestHandler.setParameter("pMonateVor", "2");
         requestHandler.setParameter("pMonateNach", "3");
         if (shouldRefresh(requestHandler.getRequestURL())) {
-            Optional<CalendarRowSet> set = requestHandler.fetch();
+            Optional<Events> set = requestHandler.fetch();
             if (set.isPresent()) {
                 CalendarController calendarController = new CalendarController(mContext);
                 calendarController.importCalendar(set.get());
@@ -185,17 +185,16 @@ public class CacheManager {
      */
     private void importLecturesFromTUMOnline() {
         // get my lectures
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
+        TUMOnlineRequest<LecturesResponse> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
         if (!shouldRefresh(requestHandler.getRequestURL())) {
             return;
         }
 
-        Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
+        Optional<LecturesResponse> lecturesList = requestHandler.fetch();
         if (!lecturesList.isPresent()) {
             return;
         }
-        List<LecturesSearchRow> lectures = lecturesList.get()
-                                                       .getLehrveranstaltungen();
+        List<Lecture> lectures = lecturesList.get().getLectures();
 
         ChatRoomController manager = new ChatRoomController(mContext);
         manager.createLectureRooms(lectures);

@@ -4,7 +4,7 @@ import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "confirmed")
-data class TokenConfirmation(@PropertyElement var confirmed: String = "false") {
+data class TokenConfirmation(@PropertyElement var confirmed: String) {
     val isConfirmed: Boolean
         get() = "true" == confirmed
 }

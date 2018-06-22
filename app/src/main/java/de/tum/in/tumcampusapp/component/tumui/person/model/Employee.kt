@@ -18,7 +18,7 @@ import de.tum.`in`.tumcampusapp.R
  */
 @Xml(name = "person")
 data class Employee(@PropertyElement(name = "geschlecht")
-                    var gender: String = "",
+                    var gender: String? = null,
                     @PropertyElement(name = "obfuscated_id")
                     var id: String = "",
                     @PropertyElement(name = "vorname")
@@ -28,13 +28,13 @@ data class Employee(@PropertyElement(name = "geschlecht")
                     @PropertyElement(name = "dienstlich")
                     var businessContact: Contact? = null,
                     @PropertyElement(name = "sprechstunde")
-                    var consultationHours: String = "",
+                    var consultationHours: String? = null,
                     @PropertyElement
-                    var email: String = "",
+                    var email: String? = null,
                     @PropertyElement(name = "gruppen")
                     var groupList: GroupList? = null,
                     @PropertyElement(name = "image_data")
-                    var imageData: String = "",
+                    var imageData: String? = null,
                     @PropertyElement(name = "privat")
                     var privateContact: Contact? = null,
                     @PropertyElement(name = "raeume")
@@ -42,14 +42,14 @@ data class Employee(@PropertyElement(name = "geschlecht")
                     @PropertyElement(name = "telefon_nebenstellen")
                     var telSubstationList: TelSubstationList? = null,
                     @PropertyElement(name = "titel")
-                    var title: String = "") {
+                    var title: String? = null) {
 
     val groups: List<Group>?
         get() = groupList?.groups
 
     val image: Bitmap?
         get() {
-            val imageAsBytes = Base64.decode(imageData.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
+            val imageAsBytes = Base64.decode(imageData?.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
             return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.size)
         }
 
@@ -64,7 +64,7 @@ data class Employee(@PropertyElement(name = "geschlecht")
         val salutation = context.getString(resourceId)
         val salutationWithName = "$salutation $name $surname"
 
-        if (title.isEmpty()) {
+        if (title?.isEmpty() == true) {
             return salutationWithName
         } else {
             return "$salutationWithName, $title"

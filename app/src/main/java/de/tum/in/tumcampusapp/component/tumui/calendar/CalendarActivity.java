@@ -42,8 +42,8 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEvent;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -58,7 +58,7 @@ import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener, LimitPickerDialogListener {
+public class CalendarActivity extends ActivityForAccessingTumOnline<Events> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener, LimitPickerDialogListener {
 
     /**
      * The space between the first and the last date
@@ -132,7 +132,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     }
 
     @Override
-    public void onFetch(final CalendarRowSet rawResponse) {
+    public void onFetch(final Events rawResponse) {
         // parsing and saving xml response
         isFetched = true;
         Completable.fromAction(() -> calendarController.importCalendar(rawResponse))
@@ -447,17 +447,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         dialog.setTitle(R.string.event_delete_title);
         dialog.setMessage(R.string.delete_event_info);
         dialog.setPositiveButton(R.string.delete, (dialog1, which) -> {
-            TUMOnlineRequest<DeleteEvent> request = new TUMOnlineRequest<>(
+            TUMOnlineRequest<DeleteEventResponse> request = new TUMOnlineRequest<>(
                     TUMOnlineConst.Companion.getDELETE_EVENT(), this, true);
             request.setParameter("pTerminNr", nr);
-            request.fetchInteractive(this, new TUMOnlineRequestFetchListener<DeleteEvent>() {
+            request.fetchInteractive(this, new TUMOnlineRequestFetchListener<DeleteEventResponse>() {
                 @Override
                 public void onNoInternetError() {
                     Toast.makeText(getApplicationContext(), "Error: you are not connected to the internet", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onFetch(DeleteEvent response) {
+                public void onFetch(DeleteEventResponse response) {
                     detailsFragment.dismiss();
                     TcaDb.getInstance(getApplicationContext()).calendarDao().delete(nr);
                     refreshWeekView();

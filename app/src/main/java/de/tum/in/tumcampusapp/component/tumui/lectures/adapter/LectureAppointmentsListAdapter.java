@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesAppointmentsActivity;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsRow;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointment;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class LectureAppointmentsListAdapter extends BaseAdapter {
 
     // list of Appointments to one lecture
-    private final List<LectureAppointmentsRow> appointmentList;
+    private final List<LectureAppointment> appointmentList;
     private final LayoutInflater mInflater;
     // date formats for the day output
     private final DateFormat endHoursOutput = DateFormat.getTimeInstance();
@@ -35,7 +35,7 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
     // this is the template for the date in the xml file
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
 
-    public LectureAppointmentsListAdapter(Context context, List<LectureAppointmentsRow> results) {
+    public LectureAppointmentsListAdapter(Context context, List<LectureAppointment> results) {
         appointmentList = results;
         mInflater = LayoutInflater.from(context);
     }
@@ -72,24 +72,24 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        LectureAppointmentsRow lvItem = appointmentList.get(position);
+        LectureAppointment lvItem = appointmentList.get(position);
 
         // only show if lecture has a title and enough info
         if (lvItem != null) {
-            holder.tvTerminOrt.setText(lvItem.getOrt());
-            StringBuilder line2 = new StringBuilder(lvItem.getArt());
+            holder.tvTerminOrt.setText(lvItem.getLocation());
+            StringBuilder line2 = new StringBuilder(lvItem.getType());
             // only show betreff if available
-            if (lvItem.getTermin_betreff() != null) {
+            if (lvItem.getTitle() != null) {
                 line2.append(" - ")
-                     .append(lvItem.getTermin_betreff());
+                     .append(lvItem.getTitle());
             }
             holder.tvTerminBetreff.setText(line2.toString());
 
             Calendar start = Calendar.getInstance();
             Calendar ende = Calendar.getInstance();
             try {
-                start.setTime(formatter.parse(lvItem.getBeginn_datum_zeitpunkt()));
-                ende.setTime(formatter.parse(lvItem.getEnde_datum_zeitpunkt()));
+                start.setTime(formatter.parse(lvItem.getStartTime()));
+                ende.setTime(formatter.parse(lvItem.getEndTime()));
 
                 // make two calendar instances
                 Calendar cnow = Calendar.getInstance();
@@ -119,8 +119,8 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
                 holder.tvTerminZeit.setText(Utils.fromHtml(output.toString()));
 
             } catch (ParseException e) {
-                holder.tvTerminZeit.setText(String.format("%s - %s",
-                                                          lvItem.getBeginn_datum_zeitpunkt(), lvItem.getEnde_datum_zeitpunkt()));
+                holder.tvTerminZeit.setText(
+                        String.format("%s - %s", lvItem.getStartTime(), lvItem.getEndTime()));
             }
 
         }

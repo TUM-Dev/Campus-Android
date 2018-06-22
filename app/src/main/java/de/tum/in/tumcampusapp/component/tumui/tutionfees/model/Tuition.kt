@@ -14,18 +14,18 @@ import java.util.*
  * corresponding request.
  */
 @Xml(name = "row")
-data class Tuition(@PropertyElement(name = "frist")  // TODO: Rename variables
-                   var frist: String = "",
+data class Tuition(@PropertyElement(name = "frist")  // TODO: TypeConverter
+                   var deadline: String,
                    @PropertyElement(name = "semester_bezeichnung")
-                   var semesterBez: String = "",
+                   var semester: String,
                    @PropertyElement(name = "soll")
-                   var soll: String = "") {
+                   var amount: String) {
 
     val outstandingBalance: Float
         get() {
             return try {
                 NumberFormat.getInstance(Locale.GERMAN)
-                        .parse(soll)
+                        .parse(amount)
                         .toFloat()
             } catch (e: ParseException) {
                 0f
@@ -38,7 +38,7 @@ data class Tuition(@PropertyElement(name = "frist")  // TODO: Rename variables
                 val amountText = String.format(Locale.getDefault(), "%.2f", outstandingBalance)
                 return "$amountText €"
             } catch (e: ParseException) {
-                soll
+                amount
             }
         }
 

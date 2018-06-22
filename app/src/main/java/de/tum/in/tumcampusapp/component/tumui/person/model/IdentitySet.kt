@@ -4,7 +4,7 @@ import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "rowset")
-data class IdentitySet(@Element var ids: List<Identity> = mutableListOf()) {
+data class IdentitySet(@Element var ids: List<Identity>) {
 
     override fun toString(): String =
             if (ids.isEmpty())

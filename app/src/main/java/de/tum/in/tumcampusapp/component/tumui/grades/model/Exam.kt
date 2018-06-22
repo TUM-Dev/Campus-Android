@@ -6,6 +6,7 @@ import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
+import de.tum.`in`.tumcampusapp.utils.compareTo
 import java.util.*
 
 /**
@@ -14,38 +15,46 @@ import java.util.*
  *
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
- */ 
+ */
 @Xml(name = "row")
-data class Exam(@PropertyElement(name = "lv_titel")
-                var course: String = "",
-                @PropertyElement(name = "lv_credits")
-                var credits: String = "0",
-                @PropertyElement(name = "datum")
-                var date: Date = Date(),
-                @PropertyElement(name = "pruefer_nachname")
-                var examiner: String = "",
-                @PropertyElement(name = "uninotenamekurz")
-                var grade: String = "",
-                @PropertyElement(name = "modus")
-                var modus: String = "",
-                @PropertyElement(name = "studienidentifikator")
-                var programID: String = "",
-                @PropertyElement(name = "lv_semester")
-                var semester: String = "") : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
+data class Exam(
+        @PropertyElement(name = "lv_titel")
+        var course: String,
+        @PropertyElement(name = "lv_credits")
+        var credits: String? = null,
+        @PropertyElement(name = "datum")
+        var date: Date? = null,
+        @PropertyElement(name = "pruefer_nachname")
+        var examiner: String? = null,
+        @PropertyElement(name = "uninotenamekurz")
+        var grade: String? = null,
+        @PropertyElement(name = "modus")
+        var modus: String? = null,
+        @PropertyElement(name = "studienidentifikator")
+        var programID: String,
+        @PropertyElement(name = "lv_semester")
+        var semester: String? = null
+) : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun getHeadName() = semester
 
     override fun getHeaderId() = semester
 
-    override fun compareTo(other: Exam): Int =
-            if (headerId == other.headerId) {
-                course.compareTo(other.course) * (-1)
-            } else {
-                headerId.compareTo(other.headerId) * (-1)
-            }
+    override fun compareTo(other: Exam): Int {
+        if (this.semester == other.semester) {
+            return course.compareTo(other.course) * (-1)
+        } else {
+            return semester?.compareTo(other.semester) ?: 1  // TODO
+        }
+    }
 
-    fun getGradeColor(c: Context) = GRADE_COLOR.getOrDefault(grade, R.color.grade_default).let {
-        ContextCompat.getColor(c, it)
+    fun getGradeColor(c: Context): Int {
+        return if (grade != null) {
+            val resourceId = GRADE_COLOR.getOrDefault(grade!!, R.color.grade_default)
+            return ContextCompat.getColor(c, resourceId)
+        } else {
+            R.color.grade_default
+        }
     }
 
     companion object {

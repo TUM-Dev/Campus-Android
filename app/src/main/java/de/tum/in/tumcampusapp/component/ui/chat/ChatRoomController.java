@@ -17,8 +17,8 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRow;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
@@ -66,7 +66,7 @@ public class ChatRoomController implements ProvidesCard {
     /**
      * Saves the given lectures into database
      */
-    public void createLectureRooms(Iterable<LecturesSearchRow> lectures) {
+    public void createLectureRooms(Iterable<Lecture> lectures) {
         // Create a Set of all existing lectures
         List<Integer> roomLvIds = chatRoomDao.getLvIds();
         Collection<String> set = new HashSet<>();
@@ -75,7 +75,7 @@ public class ChatRoomController implements ProvidesCard {
         }
 
         // Add lectures that are not yet in DB
-        for (LecturesSearchRow lecture : lectures) {
+        for (Lecture lecture : lectures) {
             if (!set.contains(lecture.getStp_lv_nr())) {
                 chatRoomDao.replaceRoom(ChatRoomDbRow.Companion.fromLecture(lecture));
             }
@@ -146,11 +146,11 @@ public class ChatRoomController implements ProvidesCard {
         List<Card> results = new ArrayList<>();
 
         // Get all of the users lectures and save them as possible chat rooms
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler =
+        TUMOnlineRequest<LecturesResponse> requestHandler =
                 new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext, true);
-        Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
+        Optional<LecturesResponse> lecturesList = requestHandler.fetch();
         if (lecturesList.isPresent()) {
-            List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
+            List<Lecture> lectures = lecturesList.get().getLectures();
             this.createLectureRooms(lectures);
         }
 
