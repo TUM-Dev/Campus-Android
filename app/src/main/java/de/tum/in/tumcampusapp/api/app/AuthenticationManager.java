@@ -18,7 +18,10 @@ import java.util.UUID;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
+import de.tum.in.tumcampusapp.api.app.model.DeviceVerification;
+import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
+import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
@@ -237,6 +240,51 @@ public class AuthenticationManager {
                                     .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
             FcmIdentificationService idService = new FcmIdentificationService(mContext);
             idService.checkSetup();
+        }
+    }
+
+    /**
+     * synchronous method!
+     * @param uploadStatus
+     */
+    public void uploadObfuscatedIds(UploadStatus uploadStatus) {
+        String lrzId = Utils.getSetting(mContext, Const.LRZ_ID, "");
+        if(lrzId.isEmpty()){
+            Utils.log("Can't upload obfuscated ids: no lrz id");
+            return;
+        }
+
+        ObfuscatedIdsUpload upload;
+        try {
+            upload = new ObfuscatedIdsUpload(
+                    "", "", "",
+                    DeviceVerification.Companion.getDeviceVerification(mContext));
+        } catch (NoPrivateKey noPrivateKey) {
+            Utils.log(noPrivateKey, "Can't upload obfuscated ids: no private key");
+            return;
+        }
+
+        String studentId = Utils.getSetting(mContext, Const.TUMO_STUDENT_ID, "");
+        String employeeId = Utils.getSetting(mContext, Const.TUMO_EMPLOYEE_ID, "");
+        String externalId = Utils.getSetting(mContext, Const.TUMO_EXTERNAL_ID, "");
+
+        boolean doUpload = false;
+        if (!uploadStatus.getStudentId() && !studentId.isEmpty()) {
+            upload.setStudentId(studentId);
+            doUpload = true;
+        }
+        if (!uploadStatus.getEmployeeId() && !employeeId.isEmpty()) {
+            upload.setEmployeeId(employeeId);
+            doUpload = true;
+        }
+        if (!uploadStatus.getExternalId() && !externalId.isEmpty()) {
+            upload.setExternalId(externalId);
+            doUpload = true;
+        }
+
+        if (doUpload) {
+            Utils.log("uploading obfuscated ids");
+            TUMCabeClient.getInstance(mContext).uploadObfuscatedIds(lrzId, upload);
         }
     }
 

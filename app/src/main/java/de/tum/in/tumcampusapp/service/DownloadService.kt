@@ -110,6 +110,8 @@ class DownloadService : JobIntentService() {
      * asks to verify private key, uploads fcm token and obfuscated ids (if missing)
     */
     private fun uploadMissingIds() {
+        Utils.log("upload missing ids")
+
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
         val server = TUMCabeClient.getInstance(this)
 
@@ -119,6 +121,7 @@ class DownloadService : JobIntentService() {
 
         // upload FCM Token if not uploaded or invalid
         if (!uploadStatus.fcmToken.equals("uploaded")){
+            Utils.log("upload fcm token")
             AuthenticationManager(this).tryToUploadFcmToken()
         }
 
@@ -128,6 +131,7 @@ class DownloadService : JobIntentService() {
 
         // ask server to verify our key
         if (uploadStatus.publicKey.equals("uploaded")) { // uploaded but not verified
+            Utils.log("ask server to verify key")
             val keyStatus = server.verifyKey().blockingFirst()
             if (!keyStatus.status.equals("verified")){
                 return // we can only upload obfuscated ids if we are verified
@@ -135,16 +139,7 @@ class DownloadService : JobIntentService() {
         }
 
         // upload obfuscated ids
-        val upload: ObfuscatedIdsUpload? = WizNavCheckTokenActivity.prepareIdUpload(
-                this,
-                Utils.getSetting(this, Const.TUMO_STUDENT_ID, ""),
-                Utils.getSetting(this, Const.TUMO_EMPLOYEE_ID, ""),
-                Utils.getSetting(this, Const.TUMO_EXTERNAL_ID, ""),
-                uploadStatus);
-
-        if (upload != null) {
-            server.uploadObfuscatedIds(lrzId, upload)
-        }
+        AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {

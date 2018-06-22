@@ -9,6 +9,7 @@ import android.view.View;
 import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceVerification;
@@ -101,53 +102,11 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             UploadStatus uploadStatus = TUMCabeClient.getInstance(this)
                     .getUploadStatus(lrzId)
                     .blockingSingle();
-
-            // upload only the ids that haven't been uploaded before
-            ObfuscatedIds ids = identity.getObfuscated_ids();
-            ObfuscatedIdsUpload upload = prepareIdUpload(this, ids.getStudierende(), ids.getBedienstete(), ids.getExtern(), uploadStatus);
-            if (upload != null) {
-                TUMCabeClient.getInstance(this).uploadObfuscatedIds(lrzId, upload);
-            }
+            new AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
 
             return null;
         }
     }
-
-    /**
-     * @return null if no update is necessary
-     */
-    public static ObfuscatedIdsUpload prepareIdUpload(Context context, String studentId, String employeeId,
-                                                      String externalId, UploadStatus uploadStatus){
-        ObfuscatedIdsUpload upload;
-        try {
-            upload = new ObfuscatedIdsUpload(
-                    "", "", "",
-                    DeviceVerification.Companion.getDeviceVerification(context));
-        } catch (NoPrivateKey noPrivateKey) {
-            Utils.log(noPrivateKey, "Can't upload obfuscated ids");
-            return null;
-        }
-
-        boolean doUpload = false;
-        if (!uploadStatus.getStudentId() && !studentId.isEmpty()) {
-            upload.setStudentId(studentId);
-            doUpload = true;
-        }
-        if (!uploadStatus.getEmployeeId() && !employeeId.isEmpty()) {
-            upload.setEmployeeId(employeeId);
-            doUpload = true;
-        }
-        if (!uploadStatus.getExternalId() && !externalId.isEmpty()) {
-            upload.setExternalId(externalId);
-            doUpload = true;
-        }
-
-        if (doUpload) {
-            return upload;
-        }
-        return null;
-    }
-
 
     /**
      * If everything worked, start the next activity page
