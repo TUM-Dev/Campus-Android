@@ -101,28 +101,41 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
 
             // upload only the ids that haven't been uploaded before
             ObfuscatedIds ids = identity.getObfuscated_ids();
-            ObfuscatedIdsUpload upload = new ObfuscatedIdsUpload();
-            boolean doUpload = false;
-            if (!uploadStatus.getStudentId() && !ids.getStudierende().isEmpty()) {
-                upload.setStudentId(ids.getStudierende());
-                doUpload = true;
-            }
-            if (!uploadStatus.getEmployeeId() && !ids.getBedienstete().isEmpty()) {
-                upload.setEmployeeId(ids.getBedienstete());
-                doUpload = true;
-            }
-            if (!uploadStatus.getExternalId() && !ids.getExtern().isEmpty()) {
-                upload.setExternalId(ids.getExtern());
-                doUpload = true;
-            }
-
-            if (doUpload) {
+            ObfuscatedIdsUpload upload = prepareIdUpload(ids.getStudierende(), ids.getBedienstete(), ids.getExtern(), uploadStatus);
+            if (upload != null) {
                 TUMCabeClient.getInstance(this).uploadObfuscatedIds(lrzId, upload);
             }
 
             return null;
         }
     }
+
+    /**
+     +     * @return null if no update is necessary
+     +     */
+    public static ObfuscatedIdsUpload prepareIdUpload(String studentId, String employeeId,
+                                                      String externalId, UploadStatus uploadStatus){
+        ObfuscatedIdsUpload upload = new ObfuscatedIdsUpload();
+        boolean doUpload = false;
+        if (!uploadStatus.getStudentId() && !studentId.isEmpty()) {
+            upload.setStudentId(studentId);
+            doUpload = true;
+        }
+        if (!uploadStatus.getEmployeeId() && !employeeId.isEmpty()) {
+            upload.setEmployeeId(employeeId);
+            doUpload = true;
+        }
+        if (!uploadStatus.getExternalId() && !externalId.isEmpty()) {
+            upload.setExternalId(externalId);
+            doUpload = true;
+        }
+
+        if (doUpload) {
+            return upload;
+        }
+        return null;
+    }
+
 
     /**
      * If everything worked, start the next activity page

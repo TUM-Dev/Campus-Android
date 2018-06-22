@@ -5,7 +5,11 @@ import android.content.Intent
 import android.support.v4.app.JobIntentService
 import android.support.v4.content.LocalBroadcastManager
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.app.model.DeviceUploadFcmToken
+import de.tum.`in`.tumcampusapp.api.app.model.DeviceVerification
+import de.tum.`in`.tumcampusapp.api.app.model.ObfuscatedIdsUpload
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
@@ -18,6 +22,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavCheckTokenActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -25,6 +30,7 @@ import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import io.reactivex.disposables.CompositeDisposable
+import retrofit2.Callback
 import java.io.IOException
 
 /**
@@ -96,7 +102,48 @@ class DownloadService : JobIntentService() {
         val kinoSuccess = downloadKino(force)
         val newsSuccess = downloadNews(force)
         val topNewsSuccess = downloadTopNews()
+        uploadMissingIds()
         return cafeSuccess && kinoSuccess && newsSuccess && topNewsSuccess
+    }
+
+    /**
+     * asks to verify private key, uploads fcm token and obfuscated ids (if missing)
+    */
+    private fun uploadMissingIds() {
+        val lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
+        val server = TUMCabeClient.getInstance(this)
+
+        val uploadStatus = TUMCabeClient.getInstance(this)
+                .getUploadStatus(lrzId)
+                .blockingSingle()
+
+        // upload FCM Token if not uploaded or invalid
+        if (!uploadStatus.fcmToken.equals("uploaded")){
+            AuthenticationManager(this).tryToUploadFcmToken()
+        }
+
+        if (lrzId.isEmpty()) {
+            return // nothing else to be done
+        }
+
+        // ask server to verify our key
+        if (uploadStatus.publicKey.equals("uploaded")) { // uploaded but not verified
+            val keyStatus = server.verifyKey().blockingFirst()
+            if (!keyStatus.status.equals("verified")){
+                return // we can only upload obfuscated ids if we are verified
+            }
+        }
+
+        // upload obfuscated ids
+        val upload: ObfuscatedIdsUpload? = WizNavCheckTokenActivity.prepareIdUpload(
+                Utils.getSetting(this, Const.TUMO_STUDENT_ID, ""),
+                Utils.getSetting(this, Const.TUMO_EMPLOYEE_ID, ""),
+                Utils.getSetting(this, Const.TUMO_EXTERNAL_ID, ""),
+                uploadStatus);
+
+        if (upload != null) {
+            server.uploadObfuscatedIds(lrzId, upload)
+        }
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {

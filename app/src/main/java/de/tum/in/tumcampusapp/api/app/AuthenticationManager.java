@@ -231,7 +231,7 @@ public class AuthenticationManager {
         thread.start();
     }
 
-    private void tryToUploadFcmToken() {
+    public void tryToUploadFcmToken() {
         // Check device for Play Services APK. If check succeeds, proceed with FCM registration.
         // Can only be done after the public key has been uploaded
         if (Utils.getSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)

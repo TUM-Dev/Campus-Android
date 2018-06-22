@@ -141,6 +141,9 @@ public interface TUMCabeAPIService {
     @POST(API_DEVICE + "register/")
     Call<TUMCabeStatus> deviceRegister(@Body DeviceRegister verification);
 
+    @GET(API_DEVICE + "verifyKey/")
+    Observable<TUMCabeStatus> verifyKey();
+
     @POST(API_DEVICE + "addGcmToken/")
     Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadFcmToken verification);
 

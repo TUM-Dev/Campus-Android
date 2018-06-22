@@ -228,6 +228,10 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
+    public Observable<TUMCabeStatus> verifyKey(){
+        return service.verifyKey();
+    }
+
     public void deviceUploadGcmToken(DeviceUploadFcmToken verification, Callback<TUMCabeStatus> cb) {
         service.deviceUploadGcmToken(verification)
                .enqueue(cb);
