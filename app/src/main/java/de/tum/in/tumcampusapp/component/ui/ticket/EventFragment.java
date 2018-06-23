@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,12 +17,11 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 
-public class EventFragment extends Fragment {
+public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private View view;
-
     private String title;//String for tab title
-
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout mSwipeLayout;
 
     public EventFragment() {
     }
@@ -35,8 +35,9 @@ public class EventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.event_fragment, container, false);
-
         setRecyclerView();
+        mSwipeLayout = view.findViewById(R.id.even_refresh);
+        mSwipeLayout.setOnRefreshListener(this);
         return view;
 
     }
@@ -46,6 +47,7 @@ public class EventFragment extends Fragment {
 
         recyclerView = view
                 .findViewById(R.id.activity_events_list_view);
+
         recyclerView.setHasFixedSize(true);
         recyclerView
                 .setLayoutManager(new LinearLayoutManager(getActivity()));//Linear Items
@@ -60,5 +62,19 @@ public class EventFragment extends Fragment {
         EventsAdapter adapter = new EventsAdapter(events);
         recyclerView.setAdapter(adapter);// set adapter on recyclerview
 
+    }
+
+    @Override
+    public void onRefresh() {
+        List<Event> events;
+        if (title.equals(this.getString(R.string.booked_events))) {
+            events = EventsController.getBookedEvents();
+        } else {
+            events = EventsController.getEvents();
+        }
+        EventsAdapter adapter = new EventsAdapter(events);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        mSwipeLayout.setRefreshing(false);
     }
 }

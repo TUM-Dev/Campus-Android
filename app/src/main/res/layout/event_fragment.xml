@@ -6,11 +6,15 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <!--  Recycler View  -->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/activity_events_list_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="none" />
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/even_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--  Recycler View  -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_events_list_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="none" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

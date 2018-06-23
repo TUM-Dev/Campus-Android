@@ -43,7 +43,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             cardView = (CardView) view;
             titleView =  view.findViewById(R.id.events_title);
             imgView = view.findViewById(R.id.events_img);
-            descriptionView =view.findViewById(R.id.events_description);
             localityView = view.findViewById(R.id.events_src_locality);
             srcDateView = view.findViewById(R.id.events_src_date);
         }
@@ -104,15 +103,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         title = COMPILE.matcher(title)
                 .replaceAll("");
         holder.titleView.setText(title);
-
-        //Adds descriptionView
-        int maxDescriptionLength = 60;
-        String description = event.getDescription();
-        String shortenedDescription = description;
-        if (description.length() > maxDescriptionLength){
-            shortenedDescription = description.substring(0, maxDescriptionLength) + "...";
-        }
-        holder.descriptionView.setText(shortenedDescription);
 
         //Adds localityView
         String locality = event.getLocality();
