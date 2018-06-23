@@ -584,6 +584,7 @@ Signatur: %5$s</string>
     <string name="show_booked_events">Gebuchte Veranstaltungen anzeigen</string>
     <string name="events_overview">Veranstaltungsübersicht</string>
     <string name="payment_selection">Zahlungsoption Wählen</string>
+    <string name="add_eventcalendar">Hinzufügen im Kalender</string>
 
     <string name="generate_new_token">Neuen Token generieren</string>
     <string name="open_tum_online">TUM Online öffnen</string>
