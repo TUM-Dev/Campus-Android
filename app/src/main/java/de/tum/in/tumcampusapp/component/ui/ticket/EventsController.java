@@ -1,19 +1,61 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.content.Context;
+import android.util.SparseArray;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.utils.Utils;
 
-/**
- * Mock class, only used to provide static event data for testing purposes
- * TODO: replace this when the actual data is available
- */
+import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_ONE_DAY;
+
 public class EventsController {
 
+    private static final int TIME_TO_SYNC = VALIDITY_ONE_DAY;
+    private final Context context;
+
+    // TODO: replace by database connection (@Dao classes etc.; see NewDao etc. for reference)
+    private SparseArray<Event> eventsMap = new SparseArray<>();
+
     /**
-     * Only for testing purposes as server calls are not yet implemented
+     * Constructor, open/create database, create table if necessary
+     *
+     * @param context Context
+     */
+    public EventsController(Context context) {
+        this.context = context;
+    }
+
+    /**
+     * Download events from external interface (JSON)
+     *
+     * @param force True to force download over normal sync period, else false
+     */
+    public void downloadFromExternal(boolean force) {
+        TUMCabeClient api = TUMCabeClient.getInstance(context);
+
+        // Load all events
+        try {
+            List<Event> events = api.getEvents();
+
+            // Add events to map
+            for (Event event : events){
+                eventsMap.put(event.getId(), event);
+            }
+        } catch (IOException e) {
+            Utils.log(e);
+        }
+    }
+
+    /**
+     * The following methods are only for testing purposes as server calls are not yet implemented
+     * NOTE: I kept them after merging the server calls to not break the UI prototype code
+     *       But obviously we want to adjust these methods as soon as real data is available!
      * -> TODO: replace with real data
      *
      * @return
