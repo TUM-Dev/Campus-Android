@@ -55,6 +55,15 @@
                     android:textSize="@dimen/large_text_size" />
 
                 <TextView
+                    android:id="@+id/ticket_event_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text=""
+                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="italic"/>
+
+                <TextView
                     style="@style/SmallListSeparatorTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
