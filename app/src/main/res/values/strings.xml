@@ -596,8 +596,6 @@ Signature: %5$s</string>
     <string name="Refresh">Refresh</string>
     
     <!-- Ticket Activity -->
-    <string name="eventdetail_dots">Event Details</string>
-    <string name="qrcode_dots">Ticket QRcode</string>
     <string name="your_ticket">Your Ticket</string>
     <string name="show_ticket">Show Ticket</string>
     <string name="buy_ticket">Buy Ticket</string>

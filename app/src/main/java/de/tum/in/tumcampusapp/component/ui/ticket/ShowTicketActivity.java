@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +12,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -19,7 +22,7 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 
 public class ShowTicketActivity extends BaseActivity {
-
+    private TextView eventTitleTextView;
     private TextView eventDetailsTextView;
     private ImageView ticketQrCode;
 
@@ -30,6 +33,8 @@ public class ShowTicketActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+        eventTitleTextView = (TextView)findViewById(R.id.ticket_event_title);
         eventDetailsTextView = (TextView) findViewById(R.id.eventdetail);
         ticketQrCode = (ImageView) findViewById(R.id.ticket_qrcode);
 
@@ -37,12 +42,15 @@ public class ShowTicketActivity extends BaseActivity {
 
         //Get data from Api backend, now it is mock up data
         Ticket ticket = TicketsController.getTicketByEventId(eventId);
-        String dateString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
+        Locale current = getResources().getConfiguration().locale;
+        String dateString = new SimpleDateFormat("yyyy-MM-dd hh:mm", current).
                 format(ticket.getEvent().getDate());
         //load eventdetail
-        String eventdetail = ticket.getEvent().getTitle() +
-                "\n" + ticket.getEvent().getLocality() +
-                "\n" + dateString;
+        String eventtitle = ticket.getEvent().getTitle();
+        String eventdetail = ticket.getEvent().getLocality() +
+                "\n" + dateString+
+                "\n" + "Price: " +ticket.getType().getPrice();
+        eventTitleTextView.setText(eventtitle);
         eventDetailsTextView.setText(eventdetail);
 
         String code = ticket.getCode();

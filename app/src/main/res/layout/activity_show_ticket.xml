@@ -32,11 +32,14 @@
                 tools:ignore="UnusedAttribute">
 
                 <TextView
-                    style="@style/SmallListSeparatorTextViewStyle"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/ticket_event_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/eventdetail_dots"
-                    android:textSize="16sp" />
+                    android:layout_margin="16dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/eventdetail"
@@ -50,7 +53,6 @@
                     style="@style/SmallListSeparatorTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/qrcode_dots"
                     android:textSize="16sp" />
 
                 <ImageView
