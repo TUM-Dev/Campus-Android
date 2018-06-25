@@ -247,6 +247,9 @@ public interface TUMCabeAPIService {
     Call<TicketSuccessResponse> cancelTicketReservation(@Body int ticket_history);
 
     // Ticket purchase
-    @POST(API_EVENTS + API_TICKET + "reserve/cancel")
-    Call<Ticket> purchaseTicket(@Body int ticket_history, @Body String token);
+    @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
+    Call<Ticket> purchaseTicketStripe(@Body int ticket_history, @Body String token);
+
+    @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
+    Call<String> retrieveEphemeralKey(@Body String api_version, @Body String customer_mail);
 }

@@ -509,6 +509,7 @@ Signatur: %5$s</string>
     <!-- Payment -->
     <string name="creditcard">Kreditkarte</string>
     <string name="complete_purchase">Zahlung abschließen</string>
+    <string name="saved_cards">Gespeicherte Karten</string>
     <string name="enter_card_info_title">Karteninformationen</string>
     <string name="enter_card_info_description">Bitte gib deine Karteninformationen an, um fortzufahren:</string>
     <string name="purchase_progress_message">Ticket wird angefragt, bitte warten…</string>

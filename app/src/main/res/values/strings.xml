@@ -617,6 +617,7 @@ Signature: %5$s</string>
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>
     <string name="complete_purchase">Complete Purchase</string>
+    <string name="saved_cards">Saved Cards</string>
     <string name="enter_card_info_title">Card Information</string>
     <string name="enter_card_info_description">Please enter your card\'s information details to continue:</string>
     <string name="purchase_progress_message">Requesting Ticket, please wait…</string>

@@ -31,6 +31,30 @@
                 android:layout_margin="15dp"
                 android:layout_marginTop="30dp"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/saved_cards_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="20dp"
+                    android:background="#00000000"
+                    android:textSize="20sp"
+                    android:textAllCaps="false"
+                    android:text="@string/saved_cards" />
+
+                <ProgressBar
+                    android:id="@+id/stripe_session_init_progressbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
             <TextView
                 style="@style/SmallListSeparatorTextViewStyle"
                 android:layout_width="wrap_content"
