@@ -18,6 +18,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -95,8 +96,9 @@ class DownloadService : JobIntentService() {
         val cafeSuccess = downloadCafeterias(force)
         val kinoSuccess = downloadKino(force)
         val newsSuccess = downloadNews(force)
+        val eventsSuccess = downloadEvents(force)
         val topNewsSuccess = downloadTopNews()
-        return cafeSuccess && kinoSuccess && newsSuccess && topNewsSuccess
+        return cafeSuccess && kinoSuccess && newsSuccess && topNewsSuccess && eventsSuccess
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
@@ -115,6 +117,12 @@ class DownloadService : JobIntentService() {
         NewsController(this).downloadFromExternal(force)
         return true
     }
+
+    private fun downloadEvents(force: Boolean): Boolean {
+        EventsController(this).downloadFromService(force)
+        return true
+    }
+
 
     private fun downloadTopNews() = topNewsViewModel.getNewsAlertFromService(this)
 
@@ -176,6 +184,7 @@ class DownloadService : JobIntentService() {
                 Utils.logv("Handle action <$action>")
 
                 when (action) {
+                    Const.EVENTS -> success = service.downloadEvents(force)
                     Const.NEWS -> success = service.downloadNews(force)
                     Const.CAFETERIAS -> success = service.downloadCafeterias(force)
                     Const.KINO -> success = service.downloadKino(force)

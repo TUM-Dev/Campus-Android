@@ -33,6 +33,7 @@ public class EventDetailsActivity extends BaseActivity{
         int clickedEventId = getIntent().getIntExtra("event_id", 0);
 
         List<Event> events = eventsController.getEvents();
+
         EventDetailsAdapter eventDetailsAdapter = new EventDetailsAdapter(getSupportFragmentManager(),
                 events);
 

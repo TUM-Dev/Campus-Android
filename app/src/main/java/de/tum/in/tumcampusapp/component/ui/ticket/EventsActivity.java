@@ -13,7 +13,6 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownlo
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.Flowable;
 
 public class EventsActivity extends ActivityForDownloadingExternal {
 
@@ -66,15 +65,18 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     private void refreshEventView() {
         int icon;
 
-        Flowable<List<Event>> eventsFlowable;
+        List<Event> events;
         if (mBookedShowMode) {
             icon = R.drawable.ic_action_booked;
             // TODO: integrate server call for getTickets to extract booked events
-            eventsController.getBookedEvents();
+            events = eventsController.getBookedEvents();
         } else {
             icon = R.drawable.ic_all_event;
-            eventsController.getEvents();
+            events = eventsController.getEvents();
         }
+
+        EventsAdapter adapter = new EventsAdapter(events);
+        lv.setAdapter(adapter);
 
         if (menuItemSwitchView != null) {
             menuItemSwitchView.setIcon(icon);
