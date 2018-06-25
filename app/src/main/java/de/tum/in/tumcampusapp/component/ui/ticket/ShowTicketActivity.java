@@ -16,12 +16,15 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 
 public class ShowTicketActivity extends BaseActivity {
 
     private TextView eventDetailsTextView;
     private ImageView ticketQrCode;
+
+    private EventsController eventsController;
 
     public ShowTicketActivity() {
         super(R.layout.activity_show_ticket);
@@ -30,26 +33,27 @@ public class ShowTicketActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        eventDetailsTextView = (TextView) findViewById(R.id.eventdetail);
-        ticketQrCode = (ImageView) findViewById(R.id.ticket_qrcode);
+
+        eventsController = new EventsController(this);
+
+        eventDetailsTextView = findViewById(R.id.eventdetail);
+        ticketQrCode = findViewById(R.id.ticket_qrcode);
 
         int eventId = getIntent().getIntExtra("eventID", 0);
 
-        //TODO: Get data from Api backend, now it is mock up data
-        /*
-        Ticket ticket = TicketsController.getTicketByEventId(eventId);
+        Ticket ticket = eventsController.getTicketByEventId(eventId);
+        Event event = eventsController.getEventById(ticket.getEventId());
+
         String dateString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
-                format(ticket.getEvent().getDate());
+                format(event.getDate());
         //load eventdetail
-        String eventdetail = ticket.getEvent().getTitle() +
-                "\n" + ticket.getEvent().getLocality() +
+        String eventdetail = event.getTitle() +
+                "\n" + event.getLocality() +
                 "\n" + dateString;
         eventDetailsTextView.setText(eventdetail);
 
-        String code = ticket.getCode();
-        */
         //create the qrcode using library  zxing
-        createQRCode("testtesttest");
+        createQRCode(ticket.getCode());
 
     }
 

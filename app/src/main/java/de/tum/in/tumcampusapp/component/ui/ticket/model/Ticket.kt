@@ -21,4 +21,5 @@ data class Ticket(
         var eventId: Int,
         var code: String = "",
         @SerializedName("ticket_type")
-        var ticketTypeId: Int)
+        var ticketTypeId: Int,
+        var redeemed: Boolean = false)

@@ -41,7 +41,11 @@ public class BuyTicketActivity extends BaseActivity {
         int eventId = getIntent().getIntExtra("eventID", 0);
 
         Event event = eventsController.getEventById(eventId);
-        Ticket ticket = eventsController.getTicketByEventId(eventId);
+        // TODO: get ticket from server here as soon as the backend implementation is ready
+        // Create ticket locally for now for testing purposes
+        //Ticket ticket = eventsController.getTicketByEventId(eventId);
+        Ticket ticket = new Ticket(42, eventId, "4242424242424242kjladhslfkjhasdf",
+                0, false);
         TicketType ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
 
         String eventString = event.getTitle();

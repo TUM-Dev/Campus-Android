@@ -50,7 +50,16 @@ public class EventsController {
 
         // Load all events since the last sync
         try {
-            List events = api.getEvents();
+            List<Event> events = api.getEvents();
+
+            // NOTE: the dummy data on the server contains a dummy ticket for event id 2
+            //       thus, we add another event with id 2 for testing purposes
+            // TODO: remove this when dummy data on server is made consistent or real data is used!
+            Event event = events.get(0);
+            events.add(new Event(2,event.getImage(), event.getTitle() + "2",
+                    event.getDescription() + " Not to say extremely nice!",
+                    event.getLocality(), event.getDate(), event.getLink()));
+
             eventDao.insert(events);
         } catch (IOException e) {
             Utils.log(e);
@@ -58,7 +67,7 @@ public class EventsController {
 
         // Load all tickets
         try {
-            // TODO: replace by real uesr id (dummy ticket with user id 1 for now)
+            // TODO: replace by real user id (dummy ticket with user id 1 for now)
             List tickets = api.getTickets(1);
             ticketDao.insert(tickets);
         } catch (IOException e) {
@@ -82,8 +91,13 @@ public class EventsController {
     }
 
     public List<Event> getBookedEvents() {
-        // TODO: adjust this! connection between ticket and event database is necessary
-        return eventDao.getAll();
+        // Return all events for which a ticket exists
+        List<Ticket> tickets = ticketDao.getAll();
+        List<Event> bookedEvents = new ArrayList<>();
+        for (Ticket ticket : tickets){
+            bookedEvents.add(getEventById(ticket.getEventId()));
+        }
+        return bookedEvents;
     }
 
     public boolean isEventBooked(Event event) {
