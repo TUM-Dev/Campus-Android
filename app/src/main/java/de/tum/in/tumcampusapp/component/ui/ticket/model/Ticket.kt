@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
