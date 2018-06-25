@@ -23,9 +23,9 @@ public class TicketsController {
     public static List<Ticket> getTickets() {
         List<Ticket> tickets = new ArrayList<>();
         tickets.add( new Ticket(EventsController.getEventById(2), "7585685764567467657",
-                new TicketType(45, 4.5, "good tickets")));
+                new TicketType(45, 4.5, "good tickets"), 0));
         tickets.add( new Ticket(EventsController.getEventById(3), "ljipu3rupo567467657",
-                new TicketType(23, 2.5, "good tickets")));
+                new TicketType(23, 2.5, "good tickets"),0));
         return tickets;
     }
 
