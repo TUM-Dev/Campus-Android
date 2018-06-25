@@ -79,7 +79,7 @@ public class EventsActivity extends ActivityForDownloadingExternal {
             EventsAdapter adapter = new EventsAdapter(events);
             lv.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-         }
+        }
 
         if (menuItemSwitchView != null) {
             menuItemSwitchView.setIcon(icon);
