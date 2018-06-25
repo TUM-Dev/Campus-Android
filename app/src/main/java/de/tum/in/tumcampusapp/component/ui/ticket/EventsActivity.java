@@ -5,20 +5,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventRemoteRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
-import io.reactivex.disposables.CompositeDisposable;
 
 public class EventsActivity extends ActivityForDownloadingExternal {
 
@@ -26,9 +21,7 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     private boolean mBookedShowMode;
     private MenuItem menuItemSwitchView;
 
-    private EventViewModel eventViewModel;
-
-    private final CompositeDisposable disposable = new CompositeDisposable();
+    private EventsController eventsController;
 
     public EventsActivity() {
         super(Const.EVENTS, R.layout.activity_events);
@@ -38,10 +31,6 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        EventLocalRepository.db = TcaDb.getInstance(this);
-        eventViewModel = new EventViewModel(EventLocalRepository.INSTANCE,
-                EventRemoteRepository.INSTANCE, disposable);
-
         lv = findViewById(R.id.activity_events_list_view);
         lv.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -49,6 +38,8 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     @Override
     protected void onStart() {
         super.onStart();
+
+        eventsController = new EventsController(this);
 
         this.mBookedShowMode = Utils.getSettingBool(this, Const.EVENT_BOOKED_MODE, false);
         refreshEventView();
@@ -79,33 +70,15 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         if (mBookedShowMode) {
             icon = R.drawable.ic_action_booked;
             // TODO: integrate server call for getTickets to extract booked events
-            //eventsFlowable = eventViewModel.getBookdedEvents();
-            eventsFlowable = eventViewModel.getAllEvents();
+            eventsController.getBookedEvents();
         } else {
             icon = R.drawable.ic_all_event;
-            eventsFlowable = eventViewModel.getAllEvents();
+            eventsController.getEvents();
         }
 
         if (menuItemSwitchView != null) {
             menuItemSwitchView.setIcon(icon);
         }
-
-        View noMovies = findViewById(R.id.no_movies_layout);
-
-        // TODO: comment this
-        eventsFlowable
-                .doOnError(throwable -> setContentView(R.layout.layout_error))
-                .subscribe(events -> {
-                    if (events.isEmpty()) {
-                        noMovies.setVisibility(View.VISIBLE);
-                    } else {
-                        noMovies.setVisibility(View.GONE);
-
-                        EventsAdapter adapter = new EventsAdapter(events);
-                        lv.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
     }
 }
 

@@ -21,10 +21,10 @@ public interface EventDao {
     void cleanUp();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Event event);
+    void insert(List<Event> event);
 
     @Query("SELECT * FROM event ORDER BY date")
-    Flowable<List<Event>> getAll();
+    List<Event> getAll();
 
     @Query("SELECT id FROM event ORDER BY id DESC LIMIT 1")
     int getLatestId();
@@ -33,8 +33,12 @@ public interface EventDao {
     int getPosition(String date);
 
     @Query("SELECT * FROM event ORDER BY date LIMIT 1 OFFSET :position")
-    Flowable<Event> getByPosition(int position);
+    Event getByPosition(int position);
+
+    @Query("SELECT * FROM event where id = :id")
+    Event getEventById(int id);
 
     @Query("DELETE FROM event")
     void flush();
+
 }

@@ -5,22 +5,29 @@ import android.util.SparseArray;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.ui.news.NewsDao;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
+import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
 import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_ONE_DAY;
 
 public class EventsController {
 
-    private static final int TIME_TO_SYNC = VALIDITY_ONE_DAY;
     private final Context context;
 
-    // TODO: replace by database connection (@Dao classes etc.; see NewDao etc. for reference)
-    private SparseArray<Event> eventsMap = new SparseArray<>();
+    private final EventDao eventDao;
+    private final TicketDao ticketDao;
+    private final TicketTypeDao ticketTypeDao;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -29,79 +36,56 @@ public class EventsController {
      */
     public EventsController(Context context) {
         this.context = context;
+        eventDao = TcaDb.getInstance(context).eventDao();
+        ticketDao = TcaDb.getInstance(context).ticketDao();
+        ticketTypeDao = TcaDb.getInstance(context).ticketTypeDao();
     }
 
-    /**
-     * Download events from external interface (JSON)
-     *
-     * @param force True to force download over normal sync period, else false
-     */
-    public void downloadFromExternal(boolean force) {
+
+    public void downloadFromService(boolean force) {
         TUMCabeClient api = TUMCabeClient.getInstance(context);
 
-        // Load all events
-        try {
-            List<Event> events = api.getEvents();
+        // Delete all too old items
+        eventDao.cleanUp();
 
-            // Add events to map
-            for (Event event : events){
-                eventsMap.put(event.getId(), event);
-            }
+        // Load all events since the last sync
+        try {
+            List events = api.getEvents();
+            eventDao.insert(events);
+        } catch (IOException e) {
+            Utils.log(e);
+        }
+
+        // Load all tickets
+        try {
+            // TODO: get user id?
+            List tickets = api.getTickets(0);
+            ticketDao.insert(tickets);
+        } catch (IOException e) {
+            Utils.log(e);
+        }
+
+        // Load all ticket types
+        try {
+            List tickets = api.getTicketTypes(1);
+            ticketDao.insert(tickets);
         } catch (IOException e) {
             Utils.log(e);
         }
     }
 
-    /**
-     * The following methods are only for testing purposes as server calls are not yet implemented
-     * NOTE: I kept them after merging the server calls to not break the UI prototype code
-     *       But obviously we want to adjust these methods as soon as real data is available!
-     * -> TODO: replace with real data
-     *
-     * @return
-     */
-    public static List<Event> getEvents() {
-        List<Event> events = new ArrayList<>();
-        events.add(new Event(1, "https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/30704066_10156075719240336_971954058317266944_o.jpg?_nc_cat=0&oh=870eb884fbe5f493e049c70b59fc70d1&oe=5BA83F31", "TUNIX 2018",
-                "Auch im Sommer 2018 stellt sich für Münchner Studierende erneut die Frage: Warum bei schönem Wetter im Hörsaal sitzen, wenn man auch draußen im TUNIX-Biergarten sein könnte? Dann ist es bereits das 38. Mal, dass Studierende der Technischen Universität München Bühne und Biergarten auf der Wiese zwischen Glyptothek und Mensa errichten.",
-                "Arcisstraße 17, 80333",
-                new GregorianCalendar(2018, 6, 5).getTime(),
-                "https://www.facebook.com/events/369289900243997/"));
+    // Event methods
 
-        events.add(new Event(2, "https://mpi.fs.tum.de/wordpress/wp-content/uploads/2016/10/banner_ball.jpg", "WINTERBALL",
-                "Wir freuen uns dieses Jahr schon zum dritten Mal den Winterball zu veranstalten. Am 24.11. öffnen wir im MI-Gebäude wieder die Pforten für einen winterlichen Tanzabend. Für den kleinen Hunger zwischendurch ist mit Häppchen gesorgt. Getränke können an der Bar gekauft werden.",
-                "Boltzmannstr. 3, 85748",
-                new GregorianCalendar(2018, 11, 24).getTime(),
-                "https://www.facebook.com/events/315001705559152/"));
-        events.add(new Event(3, "https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/32308876_1719567341432183_1385171384396677120_o.jpg?_nc_cat=0&oh=6fc99c924ce44dc60dbd19caa9eccccb&oe=5BC4215C", "GARNIX 2018",
-                "Es ist so weit: Das Garchinger Kulturfestival mit Biergarten-Charme - kurz gesagt das #GARNIX - steht vor der Tür, heuer allerdings nicht vor der Fakultät für Chemie, sondern auf dem Vorplatz des Mathe/Info-Gebäudes!",
-                "Vorplatz Mathe Informatik, Boltzmannstraße 3, 85748",
-                new GregorianCalendar(2018, 6, 18).getTime(),
-                "https://www.facebook.com/events/1655640211224074/"));
-        events.add(new Event(4, "https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/34561792_1949757885037095_8460877383170260992_n.jpg?_nc_cat=0&oh=05320ed40f56232b1f406e86baed4fc5&oe=5BAF5FC0", "TUM SOM Midterm Party",
-                "Na, schon angefangen zu lernen? Halt Stopp!! Es ist wieder soweit: Die Fachschaft TUM SOM feiert mit Dir ihre legendäre Midterm Party! Am Donnerstag, den 21.06. geht’s in der 089 Bar rund. Feier zu extra nicem House und Hits die ganze Nacht ab! Die Klausuren können warten!",
-                "Maximiliansplatz 5, 80333",
-                new GregorianCalendar(2018, 6, 21).getTime(),
-                "https://www.facebook.com/events/2048930862027728/"));
-        return events;
+    public List<Event> getEvents() {
+        return eventDao.getAll();
     }
 
-    public static List<Event> getBookedEvents() {
-        List<Event> events = new ArrayList<>();
-        events.add(new Event(2, "https://mpi.fs.tum.de/wordpress/wp-content/uploads/2016/10/banner_ball.jpg", "WINTERBALL",
-                "Wir freuen uns dieses Jahr schon zum dritten Mal den Winterball zu veranstalten. Am 24.11. öffnen wir im MI-Gebäude wieder die Pforten für einen winterlichen Tanzabend. Für den kleinen Hunger zwischendurch ist mit Häppchen gesorgt. Getränke können an der Bar gekauft werden.",
-                "Boltzmannstr. 3, 85748",
-                new GregorianCalendar(2018, 11, 24).getTime(),
-                "https://www.facebook.com/events/315001705559152/"));
-        events.add(new Event(3, "https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/32308876_1719567341432183_1385171384396677120_o.jpg?_nc_cat=0&oh=6fc99c924ce44dc60dbd19caa9eccccb&oe=5BC4215C", "GARNIX 2018",
-                "Es ist so weit: Das Garchinger Kulturfestival mit Biergarten-Charme - kurz gesagt das #GARNIX - steht vor der Tür, heuer allerdings nicht vor der Fakultät für Chemie, sondern auf dem Vorplatz des Mathe/Info-Gebäudes!",
-                "Vorplatz Mathe Informatik, Boltzmannstraße 3, 85748",
-                new GregorianCalendar(2018, 6, 18).getTime(),
-                "https://www.facebook.com/events/1655640211224074/"));
-        return events;
+    public List<Event> getBookedEvents() {
+        // TODO: adjust this! connection between ticket and event database is necessary
+        return eventDao.getAll();
     }
 
-    public static boolean isEventBooked(Event event) {
+    public boolean isEventBooked(Event event) {
         for (Event bookedEvent : getBookedEvents()) {
             if (bookedEvent.getId() == event.getId()) {
                 return true;
@@ -110,13 +94,18 @@ public class EventsController {
         return false;
     }
 
-    public static Event getEventById(int id) {
-        for (Event event : getEvents()) {
-            if (event.getId() == id) {
-                return event;
-            }
-        }
-        return null;
+    public Event getEventById(int id) {
+        return eventDao.getEventById(id);
+    }
+
+    // Ticket methods
+
+    public Ticket getTicketByEventId(int eventId) {
+        return ticketDao.getByEventId(eventId);
+    }
+
+    public TicketType getTicketTypeById(int id) {
+        return ticketTypeDao.getById(id);
     }
 }
 

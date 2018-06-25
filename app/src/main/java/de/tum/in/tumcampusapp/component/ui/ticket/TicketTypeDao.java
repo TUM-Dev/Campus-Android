@@ -7,20 +7,20 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 
 @Dao
-public interface TicketDao {
+public interface TicketTypeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<Ticket> ticket);
+    void insert(List<TicketType> ticketType);
 
-    @Query("SELECT * FROM ticket")
-    List<Ticket> getAll();
+    @Query("SELECT * FROM tickettype")
+    List<TicketType> getAll();
 
-    @Query("SELECT * FROM ticket where eventId = :eventId")
-    Ticket getByEventId(int eventId);
+    @Query("SELECT * FROM tickettype WHERE id = :id")
+    TicketType getById(int id);
 
-    @Query("DELETE FROM ticket")
+    @Query("DELETE FROM tickettype")
     void flush();
 }
