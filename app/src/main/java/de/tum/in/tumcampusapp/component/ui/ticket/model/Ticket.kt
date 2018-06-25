@@ -19,4 +19,5 @@ data class Ticket(@PrimaryKey
                   @SerializedName("ticket_type")
                  var type: TicketType,
                   @SerializedName("ticket_payment")
-                  var payment: Int = 0)
+                  var payment: Int = 0,
+                  var redeemed: Boolean = false)

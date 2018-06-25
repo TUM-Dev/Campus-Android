@@ -635,5 +635,6 @@ Signature: %5$s</string>
     <string name="discard_changes_question">Discard your changes?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep editing</string>
+    <string name="redeemed">Redeemed</string>
 
 </resources>
