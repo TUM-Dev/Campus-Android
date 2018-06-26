@@ -613,6 +613,7 @@ Signature: %5$s</string>
     <string name="location">Location</string>
     <string name="event" translatable="false">Event</string>
     <string name="payment_selection">Payment Selection</string>
+    <string name="add_eventcalendar">Add In Calendar</string>
     <string name="all_events">All Events</string>
     <string name="booked_events">Booked Events</string>
 
