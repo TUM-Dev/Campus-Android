@@ -217,12 +217,16 @@ public class AuthenticationManager {
         }
     }
 
+    /**
+     * upload the rsa public key to tumonline so we can verify it later
+     * @throws NoPublicKey
+     */
     public void uploadPublicKey() throws NoPublicKey {
         final String publicKey = this.getPublicKeyString();
         Thread thread = new Thread() {
             @Override
             public void run() {
-                //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
+                //Upload the public key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
                 TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getSECRET_UPLOAD(), AuthenticationManager.this.mContext, false);
                 requestSavePublicKey.setParameter("pToken", Utils.getSetting(AuthenticationManager.this.mContext, Const.ACCESS_TOKEN, ""));
                 requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
@@ -283,8 +287,9 @@ public class AuthenticationManager {
         }
 
         if (doUpload) {
-            Utils.log("uploading obfuscated ids");
-            TUMCabeClient.getInstance(mContext).uploadObfuscatedIds(lrzId, upload);
+            Utils.log("uploading obfuscated ids: " + upload.toString());
+            TUMCabeStatus status = TUMCabeClient.getInstance(mContext).uploadObfuscatedIds(lrzId, upload).blockingSingle();
+            Utils.log("uplod obfuscated ids status: " + status.getStatus());
         }
     }
 
@@ -309,7 +314,6 @@ public class AuthenticationManager {
      */
     private void saveKeys(String privateKeyString, String publicKeyString) {
         Utils.setSetting(mContext, Const.PRIVATE_KEY, privateKeyString);
-        Utils.setSetting(mContext, Const.PRIVATE_KEY_ACTIVE, false); //We need to remember this state in order to activate it later
         Utils.setSetting(mContext, Const.PUBLIC_KEY, publicKeyString);
     }
 

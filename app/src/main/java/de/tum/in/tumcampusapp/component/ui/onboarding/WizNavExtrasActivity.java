@@ -91,12 +91,12 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             return null;
         }
 
+        // by now we should have generated rsa key and uploaded it to our server and tumonline
+
         // Get the users lrzId and initialise chat member
         ChatMember currentChatMember = new ChatMember(Utils.getSetting(this, Const.LRZ_ID, ""));
         currentChatMember.setDisplayName(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, ""));
-
-        if (currentChatMember.getLrzId()
-                             .equals("")) {
+        if (currentChatMember.getLrzId().equals("")) {
             return currentChatMember;
         }
 
@@ -118,11 +118,10 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             return null;
         }
 
-        // Generate the private key and upload the public key to the server
-        AuthenticationManager am = new AuthenticationManager(this);
-        if (!am.generatePrivateKey(member)) {
-            Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key)); //We cannot continue if the upload of the Public Key does not work
-            return null;
+        TUMCabeStatus status = TUMCabeClient.getInstance(this).verifyKey().blockingSingle();
+        if (!status.getStatus().equals("verified")){
+            // TODO what should we do if verification failed?
+            Utils.log("verification status: " + status.getStatus());
         }
 
         // Try to restore already joined chat rooms from server
@@ -130,9 +129,6 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
                                                 .getMemberRooms(member.getId(), ChatVerification.Companion.getChatVerification(this, member));
             new ChatRoomController(this).replaceIntoRooms(rooms);
-
-            //Store that this key was activated
-            Utils.setSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
 
             // upload obfuscated ids now that we have a member
             UploadStatus uploadStatus = TUMCabeClient.getInstance(this)

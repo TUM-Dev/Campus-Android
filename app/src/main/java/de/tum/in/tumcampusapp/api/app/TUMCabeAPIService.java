@@ -117,7 +117,7 @@ public interface TUMCabeAPIService {
     @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
     Call<ChatRegistrationId> uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId);
 
-    @POST(API_MEMBERS + "uploadIds/{lrzId}")
+    @POST(API_MEMBERS + "uploadIds/{lrzId}/")
     Observable<TUMCabeStatus> uploadObfuscatedIds(@Path("lrzId") String lrzId, @Body ObfuscatedIdsUpload ids);
 
     //Curricula

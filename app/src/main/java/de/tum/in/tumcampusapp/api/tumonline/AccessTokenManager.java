@@ -10,6 +10,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.tumonline.model.AccessToken;
+import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;

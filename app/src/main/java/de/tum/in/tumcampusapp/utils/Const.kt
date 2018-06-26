@@ -18,7 +18,6 @@ object Const {
     const val ERROR = "error"
     const val MESSAGE = "message"
     const val FORCE_DOWNLOAD = "force_download"
-    const val HIDE_WIZARD_ON_STARTUP = "hide_wizard_on_startup"
     const val LRZ_ID = "lrz_id"
     const val NEWS = "news"
     const val KINO = "kino"
@@ -35,7 +34,6 @@ object Const {
     const val CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name"
     const val CHAT_ROOM_NAME = "chat_room_name"
 
-    const val PRIVATE_KEY_ACTIVE = "chat_member_private_key_active"
     const val PRIVATE_KEY = "chat_member_private_key"
     const val PUBLIC_KEY = "chat_member_public_key"
     const val PUBLIC_KEY_UPLOADED = "chat_member_public_key_uploaded"
