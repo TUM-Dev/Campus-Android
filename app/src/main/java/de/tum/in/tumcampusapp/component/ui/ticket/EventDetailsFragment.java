@@ -113,7 +113,7 @@ public class EventDetailsFragment extends Fragment {
         // initialize all buttons
         Button link = headerView.findViewById(R.id.button_link);
         Button ticket = headerView.findViewById(R.id.button_ticket);
-        Button export_calendar = headerView.findViewById(R.id.button_export_eventcalendar);
+        Button exportCalendar = headerView.findViewById(R.id.button_export_eventcalendar);
         ImageView cover = headerView.findViewById(R.id.kino_cover);
         ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
         View error = headerView.findViewById(R.id.kino_cover_error);
@@ -121,7 +121,7 @@ public class EventDetailsFragment extends Fragment {
         // onClickListeners
         link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
         // Export current activity to google calendar
-        export_calendar.setOnClickListener(view -> addToCalendar());
+        exportCalendar.setOnClickListener(view -> addToCalendar());
         // Setup "Buy/Show ticket" button according to ticket status for current event
         if (EventsController.isEventBooked(event)) {
             ticket.setText(this.getString(R.string.show_ticket));
@@ -171,7 +171,7 @@ public class EventDetailsFragment extends Fragment {
                 .putExtra(CalendarContract.Events.TITLE, event.getTitle())
                 .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
-                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);//Indicates that this event is free time and will not conflict with other events.
         startActivity(intent);
     }
 
