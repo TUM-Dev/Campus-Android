@@ -605,12 +605,14 @@ Signature: %5$s</string>
 
     <!-- Event Activity -->
     <string name="show_booked_events">Show booked events</string>
-    <string name="events_overview">Events Overview</string>
+    <string name="events_tickets">Events &amp; Tickets</string>
     <string name="ticket_type">Ticket Type</string>
     <string name="price">Price</string>
     <string name="location">Location</string>
     <string name="event" translatable="false">Event</string>
     <string name="payment_selection">Payment Selection</string>
+    <string name="all_events">All Events</string>
+    <string name="booked_events">Booked Events</string>
 
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>
