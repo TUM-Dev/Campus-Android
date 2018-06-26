@@ -35,11 +35,10 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         eventTab = (TabLayout) findViewById(R.id.event_tab);
         eventTab.setupWithViewPager(viewPager);//setting tab over viewpager
 
-        //Implementing tab selected listener over tablayout
-        eventTab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        eventTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());//setting current selected item over viewpager
+                viewPager.setCurrentItem(tab.getPosition());
                 switch (tab.getPosition()) {
                     case 0:
                         Log.e("TAG", "TAB1");
@@ -61,7 +60,6 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     }
 
 
-    //Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new EventFragment(this.getString(R.string.all_events)), this.getString(R.string.all_events));
@@ -70,8 +68,8 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();//fragment arraylist
-        private final List<String> mFragmentTitleList = new ArrayList<>();//title arraylist
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
@@ -87,8 +85,6 @@ public class EventsActivity extends ActivityForDownloadingExternal {
             return mFragmentList.size();
         }
 
-
-        //adding fragments and title method
         public void addFrag(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);

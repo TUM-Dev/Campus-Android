@@ -28,7 +28,7 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @SuppressLint("ValidFragment")
     public EventFragment(String title) {
-        this.title = title;//Setting tab title
+        this.title = title;
     }
 
     @Nullable
@@ -36,13 +36,12 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.event_fragment, container, false);
         setRecyclerView();
-        mSwipeLayout = view.findViewById(R.id.even_refresh);
+        mSwipeLayout = view.findViewById(R.id.event_refresh);
         mSwipeLayout.setOnRefreshListener(this);
         return view;
 
     }
 
-    //Setting recycler view
     private void setRecyclerView() {
 
         recyclerView = view
@@ -50,7 +49,7 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         recyclerView.setHasFixedSize(true);
         recyclerView
-                .setLayoutManager(new LinearLayoutManager(getActivity()));//Linear Items
+                .setLayoutManager(new LinearLayoutManager(getActivity()));
         int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
         recyclerView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
         List<Event> events;
@@ -60,12 +59,13 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             events = EventsController.getEvents();
         }
         EventsAdapter adapter = new EventsAdapter(events);
-        recyclerView.setAdapter(adapter);// set adapter on recyclerview
+        recyclerView.setAdapter(adapter);
 
     }
 
     @Override
     public void onRefresh() {
+        //TODO: should be rewrote again after intergration of backend, the following is just for testing purpose.
         List<Event> events;
         if (title.equals(this.getString(R.string.booked_events))) {
             events = EventsController.getBookedEvents();

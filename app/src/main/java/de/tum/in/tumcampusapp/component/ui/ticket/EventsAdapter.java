@@ -34,7 +34,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         CardView cardView;
         ImageView imgView;
         TextView titleView;
-        TextView descriptionView;
         TextView localityView;
         TextView srcDateView;
 

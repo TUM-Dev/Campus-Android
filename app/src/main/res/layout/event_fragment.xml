@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/even_refresh"
+        android:id="@+id/event_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!--  Recycler View  -->
