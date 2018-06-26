@@ -13,11 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
@@ -34,6 +33,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     private static final String LAST_FEE_FRIST = "fee_frist";
     private static final String LAST_FEE_SOLL = "fee_soll";
+
     private Tuition mTuition;
 
     public TuitionFeesCard(Context context) {
@@ -42,7 +42,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.card_item, parent, false);
+                                  .inflate(R.layout.card_tuition_fees, parent, false);
         return new CardViewHolder(view);
     }
 
@@ -54,31 +54,27 @@ public class TuitionFeesCard extends NotificationAwareCard {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
-        List<View> addedViews = cardsViewHolder.getAddedViews();
 
-        setMCard(viewHolder.itemView);
-        setMLinearLayout(getMCard().findViewById(R.id.card_view));
-        setMTitleView(getMCard().findViewById(R.id.card_title));
-        getMTitleView().setText(getTitle());
+        TextView reregisterInfoTextView =
+                viewHolder.itemView.findViewById(R.id.reregister_info_text_view);
+        TextView outstandingBalanceTextView =
+                viewHolder.itemView.findViewById(R.id.outstanding_balance_text_view);
 
-        //Remove additional views
-        for (View view : addedViews) {
-            getMLinearLayout().removeView(view);
-        }
-
-        if ("0".equals(mTuition.getSoll())) {
-            addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez())));
+        if (mTuition.getSoll().equals("0")) {
+            String placeholderText = getContext().getString(R.string.reregister_success);
+            String text = String.format(placeholderText, mTuition.getSemesterBez());
+            reregisterInfoTextView.setText(text);
         } else {
-            Date d = DateUtils.getDate(mTuition.getFrist());
-            String date = DateFormat.getDateInstance()
-                                    .format(d);
-            addedViews.add(addTextView(String.format(getContext().getString(R.string.reregister_todo), date)));
+            Date date = DateUtils.getDate(mTuition.getFrist());
+            String dateText = DateFormat.getDateInstance().format(date);
+
+            String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
+            reregisterInfoTextView.setText(text);
 
             String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
-            String cardText = String.format(
-                    Locale.getDefault(), textWithPlaceholder, mTuition.getOutstandingBalanceText());
-            addedViews.add(addTextView(cardText));
+            String balanceText = String.format(textWithPlaceholder, mTuition.getOutstandingBalanceText());
+            outstandingBalanceTextView.setText(balanceText);
+            outstandingBalanceTextView.setVisibility(View.VISIBLE);
         }
     }
 
