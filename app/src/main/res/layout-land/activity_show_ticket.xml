@@ -37,33 +37,62 @@
                 tools:ignore="UnusedAttribute">
 
                 <TextView
-                    style="@style/SmallListSeparatorTextViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/eventdetail_dots"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/eventdetail"
+                    android:id="@+id/ticket_event_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text=""
-                    android:textSize="@dimen/large_text_size" />
+                    tools:text="Title"
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/ticket_event_date_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textSize="@dimen/large_text_size"
+                    tools:text="20.04.2018 12:45" />
+
+                <TextView
+                    android:id="@+id/ticket_event_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:textSize="@dimen/large_text_size"
+                    tools:text="Price: 10€" />
+
+                <TextView
+                    android:id="@+id/ticket_event_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="italic"
+                    tools:text="location" />
+
+                <TextView
+                    android:id="@+id/ticket_event_redemption_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:textSize="@dimen/large_text_size"
+                    tools:text="Redeemed: No" />
 
                 <TextView
                     style="@style/SmallListSeparatorTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/qrcode_dots"
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/ticket_qrcode"
+                    android:id="@+id/ticket_qr_code"
                     android:layout_width="1200px"
                     android:layout_height="1200px"
                     android:layout_gravity="center"
-                    android:src="@drawable/qrcodedemo" />
+                    android:src="@drawable/qr_code_demo" />
 
             </LinearLayout>
         </LinearLayout>

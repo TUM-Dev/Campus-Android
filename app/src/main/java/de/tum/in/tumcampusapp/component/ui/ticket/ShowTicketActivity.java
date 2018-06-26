@@ -1,7 +1,13 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,11 +24,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 
 public class ShowTicketActivity extends BaseActivity {
 
-    private TextView eventDetailsTextView;
-    private ImageView ticketQrCode;
+    private TextView eventLocationTextView;
+    private ImageView ticketQrCodeImageView;
 
     private EventsController eventsController;
 
@@ -33,28 +40,66 @@ public class ShowTicketActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+        eventLocationTextView = findViewById(R.id.ticket_event_location);
+        TextView eventTitleTextView = findViewById(R.id.ticket_event_title);
+        TextView eventDateTimeTextView = findViewById(R.id.ticket_event_date_time);
+        TextView eventPriceTextView = findViewById(R.id.ticket_event_price);
+        TextView eventRedemptionStateTextView = findViewById(R.id.ticket_event_redemption_state);
+        ticketQrCodeImageView = findViewById(R.id.ticket_qr_code);
 
         eventsController = new EventsController(this);
-
-        eventDetailsTextView = findViewById(R.id.eventdetail);
-        ticketQrCode = findViewById(R.id.ticket_qrcode);
 
         int eventId = getIntent().getIntExtra("eventID", 0);
 
         Ticket ticket = eventsController.getTicketByEventId(eventId);
         Event event = eventsController.getEventById(ticket.getEventId());
+        TicketType ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
 
-        String dateString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
+        String timeString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
                 format(event.getDate());
-        //load eventdetail
-        String eventdetail = event.getTitle() +
-                "\n" + event.getLocality() +
-                "\n" + dateString;
-        eventDetailsTextView.setText(eventdetail);
+        String[] time = timeString.split(" ");
+        //set date format to current locale setting
+        java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+        String dateString = dateFormat.format(event.getDate());
+        //load event details
+        String String = event.getTitle();
+        String eventLocationString = event.getLocality();
+        String eventDateTimeString = dateString + " " + time[1];
+        String eventPriceString = String.format(Locale.GERMANY, "%.2f",
+                ticketType.getPrice()) + " €";
 
+        String redemptionStateString = this.getString(R.string.redeemed) + ": " +
+                (ticket.getRedeemed() ?  this.getString(R.string.yes) : this.getString(R.string.no));
+
+        eventTitleTextView.setText(String);
+        eventDateTimeTextView.setText(eventDateTimeString);
+        eventPriceTextView.setText(eventPriceString);
+        eventRedemptionStateTextView.setText(redemptionStateString);
+
+        //set location text underline to show it can link to google map
+        eventLocationTextView.setText(eventLocationString);
+        eventLocationTextView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        eventLocationTextView.setOnClickListener(view -> showMap());
+        String code = ticket.getCode();
         //create the qrcode using library  zxing
-        createQRCode(ticket.getCode());
+        createQRCode(code);
+        //set current screen brightness 100%
+        setWindowBrightness(WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_FULL);
+    }
 
+    private void showMap() {
+        eventLocationTextView.setTextColor(Color.RED);
+        String map = "http://maps.google.co.in/maps?q=" + eventLocationTextView.getText();
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
+        startActivity(mapIntent);
+    }
+
+    private void setWindowBrightness(float brightness) {
+        Window window = getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.screenBrightness = brightness;
+        window.setAttributes(lp);
     }
 
     private void createQRCode(String text) {
@@ -63,7 +108,7 @@ public class ShowTicketActivity extends BaseActivity {
             BitMatrix bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.QR_CODE, 200, 200);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-            ticketQrCode.setImageBitmap(bitmap);
+            ticketQrCodeImageView.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();
         }
