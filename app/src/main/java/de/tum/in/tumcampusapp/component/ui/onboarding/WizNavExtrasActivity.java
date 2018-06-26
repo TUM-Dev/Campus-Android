@@ -36,7 +36,6 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
     private CheckBox checkSilentMode;
     private CheckBox bugReport;
     private CheckBox groupChatMode;
-    private boolean tokenSetup;
 
     public WizNavExtrasActivity() {
         super(R.layout.activity_wiznav_extras);
@@ -49,28 +48,13 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        // If called because app version changed remove "Step 4" and close on back pressed
-        Intent i = getIntent();
-        if (i != null && i.hasExtra(Const.TOKEN_IS_SETUP)) {
-            //If coming from a 6X version we need to upload the public key to TUMO
-            AuthenticationManager am = new AuthenticationManager(this);
-            try {
-                am.uploadPublicKey();
-            } catch (NoPublicKey noPublicKey) {
-                Utils.log(noPublicKey);
-            }
-
-            //Remember that we are only running through a limited setup
-            tokenSetup = i.getBooleanExtra(Const.TOKEN_IS_SETUP, false);
-        }
-
-        // Get handles to all UI elements
-        checkSilentMode = findViewById(R.id.chk_silent_mode);
+        // set up bug report option
         bugReport = findViewById(R.id.chk_bug_reports);
         bugReport.setChecked(preferences.getBoolean(Const.BUG_REPORTS, true));
 
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
+        checkSilentMode = findViewById(R.id.chk_silent_mode);
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, false));
             checkSilentMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -85,7 +69,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             checkSilentMode.setEnabled(false);
         }
 
-        // Get handles to all UI elements
+        // set up groupChat option
         groupChatMode = findViewById(R.id.chk_group_chat);
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
@@ -176,7 +160,6 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
         editor.putBoolean(Const.BACKGROUND_MODE, true); // Enable by default
         editor.putBoolean(Const.BUG_REPORTS, bugReport.isChecked());
-        editor.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, true);
 
         if (!member.getLrzId()
                    .equals("")) {
@@ -206,10 +189,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
     @Override
     public void onBackPressed() {
         finish();
-        Intent intent = new Intent(this, WizNavStartActivity.class);
-        intent.putExtra(Const.TOKEN_IS_SETUP, tokenSetup);
-        startActivity(intent);
+        startActivity(new Intent(this, WizNavStartActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-
     }
 }

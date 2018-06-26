@@ -59,7 +59,6 @@ object Const {
     const val EVERYTHING_SETUP = "everything_setup"
     const val SYNC_CALENDAR_IMPORT = "calendar_import"
     const val GROUP_CHAT_ENABLED = "group_chat_enabled"
-    const val TOKEN_IS_SETUP = "token_is_setup"
     const val BUG_REPORTS = "bug_reports"
     const val DEFAULT_CAMPUS = "card_default_campus"
     const val AUTO_JOIN_NEW_ROOMS = "auto_join_new_rooms"
