@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.grades;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -56,14 +55,16 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
 
         Exam exam = infoList.get(position);
         if (exam != null) {
-            holder.tvName.setText(exam.getCourse());
-            holder.tvGrade.setText(exam.getGrade());
-            holder.gradeBackground.setTint(exam.getGradeColor(context));
+            holder.nameTextView.setText(exam.getCourse());
+            holder.gradeTextView.setText(exam.getGrade());
 
-            holder.tvDetails1.setText(String.format("%s: %s", context.getString(R.string.date), DF.format(exam.getDate())));
+            int gradeColor = exam.getGradeColor(context);
+            holder.gradeTextView.getBackground().setTint(gradeColor);
 
-            holder.tvDetails2.setText(String.format("%s: %s, " +
-                            "%s: %s",
+            holder.examDateTextView.setText(String.format(
+                    "%s: %s", context.getString(R.string.date), DF.format(exam.getDate())));
+
+            holder.additionalInfoTextView.setText(String.format("%s: %s, %s: %s",
                     context.getString(R.string.examiner), exam.getExaminer(),
                     context.getString(R.string.mode), exam.getModus()));
         }
@@ -73,17 +74,16 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
 
     static class ViewHolder {
 
-        TextView tvName;
-        TextView tvGrade;
-        TextView tvDetails1;
-        TextView tvDetails2;
-        Drawable gradeBackground;
+        TextView nameTextView;
+        TextView gradeTextView;
+        TextView examDateTextView;
+        TextView additionalInfoTextView;
 
         public ViewHolder(View itemView) {
-            tvName = itemView.findViewById(R.id.courseNameTextView);
-            tvGrade = itemView.findViewById(R.id.gradeTextView);
-            tvDetails1 = itemView.findViewById(R.id.examDateTextView);
-            gradeBackground = tvGrade.getBackground();
+            nameTextView = itemView.findViewById(R.id.courseNameTextView);
+            gradeTextView = itemView.findViewById(R.id.gradeTextView);
+            examDateTextView = itemView.findViewById(R.id.examDateTextView);
+            additionalInfoTextView = itemView.findViewById(R.id.additionalInfoTextView);
         }
 
     }
