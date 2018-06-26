@@ -494,8 +494,6 @@ Signatur: %5$s</string>
     <string name="title_activity_cards_quiz">Lernkarten</string>
 
     <!-- Ticket Activity -->
-    <string name="eventdetail_dots">Veranstaltungsdetails</string>
-    <string name="qrcode_dots">Ticket QRcode</string>
     <string name="your_ticket">Dein Ticket</string>
     <string name="show_ticket">Ticket Zeigen</string>
     <string name="buy_ticket">Ticket Kaufen</string>
@@ -606,4 +604,5 @@ Signatur: %5$s</string>
     <string name="discard_changes_question">Änderungen verwerfen?</string>
     <string name="discard">Verwerfen</string>
     <string name="keep_editing">Weiter bearbeiten</string>
+    <string name="redeemed">Eingelöst</string>
 </resources>
