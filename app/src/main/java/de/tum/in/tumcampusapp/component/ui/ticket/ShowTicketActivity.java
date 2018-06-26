@@ -54,7 +54,10 @@ public class ShowTicketActivity extends BaseActivity {
 
         Ticket ticket = eventsController.getTicketByEventId(eventId);
         Event event = eventsController.getEventById(ticket.getEventId());
-        TicketType ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
+        // TODO: replace the dummy value 0 by the actual ticket type of the ticket
+        //       we need to use this value now to prevent a crash
+        TicketType ticketType = eventsController.getTicketTypeById(0);
+        //TicketType ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
 
         String timeString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
                 format(event.getDate());
