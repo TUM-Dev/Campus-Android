@@ -68,7 +68,7 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
             holder.tvGrade.setText(exam.getGrade());
             holder.gradeBackground.setTint(exam.getGradeColor(context));
 
-            holder.tvDetails1.setText(String.format("%s: %s, ", context.getString(R.string.date), DF.format(exam.getDate())));
+            holder.tvDetails1.setText(String.format("%s: %s", context.getString(R.string.date), DF.format(exam.getDate())));
 
             holder.tvDetails2.setText(String.format("%s: %s, " +
                                                     "%s: %s",
