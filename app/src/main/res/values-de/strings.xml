@@ -584,6 +584,7 @@ Signatur: %5$s</string>
     <string name="show_booked_events">Gebuchte Veranstaltungen anzeigen</string>
     <string name="events_tickets"> Veranstaltungen &amp; Tickets</string>
     <string name="payment_selection">Zahlungsoption Wählen</string>
+    <string name="add_eventcalendar">Hinzufügen im Kalender</string>
     <string name="all_events">Alle Veranstaltungen</string>
     <string name="booked_events">Gebuchte Veranstaltungen</string>
 
