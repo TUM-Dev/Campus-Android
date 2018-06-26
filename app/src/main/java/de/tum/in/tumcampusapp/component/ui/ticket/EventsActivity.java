@@ -28,11 +28,12 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+
+        viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        eventTab = (TabLayout) findViewById(R.id.event_tab);
+        eventTab = findViewById(R.id.event_tab);
         eventTab.setupWithViewPager(viewPager);//setting tab over viewpager
 
         eventTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

@@ -19,9 +19,11 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 
 public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private View view;
-    private String title;//String for tab title
+    private String title;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeLayout;
+
+    private EventsController eventsController;
 
     public EventFragment() {
     }
@@ -29,6 +31,7 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @SuppressLint("ValidFragment")
     public EventFragment(String title) {
         this.title = title;
+        eventsController = new EventsController(this.getContext());
     }
 
     @Nullable
@@ -43,7 +46,6 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private void setRecyclerView() {
-
         recyclerView = view
                 .findViewById(R.id.activity_events_list_view);
 
@@ -52,29 +54,25 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 .setLayoutManager(new LinearLayoutManager(getActivity()));
         int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
         recyclerView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
-        List<Event> events;
-        if (title.equals(this.getString(R.string.booked_events))) {
-            events = EventsController.getBookedEvents();
-        } else {
-            events = EventsController.getEvents();
-        }
-        EventsAdapter adapter = new EventsAdapter(events);
-        recyclerView.setAdapter(adapter);
+        loadEvents();
 
     }
 
-    @Override
-    public void onRefresh() {
-        //TODO: should be rewrote again after intergration of backend, the following is just for testing purpose.
+    private void loadEvents(){
         List<Event> events;
         if (title.equals(this.getString(R.string.booked_events))) {
-            events = EventsController.getBookedEvents();
+            events = eventsController.getBookedEvents();
         } else {
-            events = EventsController.getEvents();
+            events = eventsController.getEvents();
         }
         EventsAdapter adapter = new EventsAdapter(events);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRefresh() {
+        loadEvents();
         mSwipeLayout.setRefreshing(false);
     }
 }

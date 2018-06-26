@@ -39,6 +39,8 @@ public class EventDetailsFragment extends Fragment {
     private String url; // link to homepage
     private LayoutInflater inflater;
 
+    private EventsController eventsController;
+
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
@@ -47,12 +49,14 @@ public class EventDetailsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_kinodetails_section, container, false);
         LinearLayout root = rootView.findViewById(R.id.layout);
 
+        eventsController = new EventsController(this.getContext());
+
         // position in database
         int position = getArguments().getInt(Const.POSITION);
 
         context = root.getContext();
 
-        event = EventsController.getEvents().get(position);
+        event = eventsController.getEvents().get(position);
         showDetails(root);
 
         return rootView;
@@ -123,7 +127,7 @@ public class EventDetailsFragment extends Fragment {
         // Export current activity to google calendar
         exportCalendar.setOnClickListener(view -> addToCalendar());
         // Setup "Buy/Show ticket" button according to ticket status for current event
-        if (EventsController.isEventBooked(event)) {
+        if (eventsController.isEventBooked(event)) {
             ticket.setText(this.getString(R.string.show_ticket));
             ticket.setOnClickListener(view -> showTicket());
         } else {
