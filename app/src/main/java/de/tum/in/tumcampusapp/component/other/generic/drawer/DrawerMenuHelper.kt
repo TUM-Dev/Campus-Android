@@ -94,7 +94,7 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
                 SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity::class.java, false, false),
                 SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonSearchActivity::class.java, true, false),
                 SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity::class.java, false, false),
-                SideNavigationItem(R.string.events, R.drawable.ic_events, EventsActivity::class.java, false, false),
+                SideNavigationItem(R.string.events_tickets, R.drawable.ic_events, EventsActivity::class.java, false, false),
                 SideNavigationItem(R.string.barrier_free, R.drawable.ic_accessible, BarrierFreeInfoActivity::class.java, false, false),
                 SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity::class.java, false, false),
                 SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity::class.java, false, false)
