@@ -5,9 +5,14 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
+import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.UnknownErrorException;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -76,6 +81,25 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
             showLoadingStart();
             requestHandler.setForce(force);
             requestHandler.fetchInteractive(this, this);
+        }
+    }
+
+    protected final void handleDownloadError(Throwable throwable) {
+        Utils.log(throwable);
+        showLoadingEnded();
+
+        if (throwable instanceof NoNetworkConnectionException) {
+            showNoInternetLayout();
+        } else if (throwable instanceof InactiveTokenException) {
+            String message = getString(R.string.dialog_access_token_invalid);
+            showFailedTokenLayout(message);
+        } else if (throwable instanceof InvalidTokenException) {
+            showNoTokenLayout();
+        } else if (throwable instanceof MissingPermissionException) {
+            String message = getString(R.string.dialog_no_rights_function);
+            showFailedTokenLayout(message);
+        } else if (throwable instanceof UnknownErrorException) {
+            showError(R.string.exception_unknown);
         }
     }
 

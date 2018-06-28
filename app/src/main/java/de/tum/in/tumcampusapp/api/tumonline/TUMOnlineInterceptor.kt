@@ -31,8 +31,7 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
     @Throws(InactiveTokenException::class,
             InvalidTokenException::class,
             MissingPermissionException::class,
-            UnknownErrorException::class
-    )
+            UnknownErrorException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
 
@@ -57,6 +56,7 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
                     .addQueryParameter("pToken", it)
                     .build()
         }
+
         val modifiedRequest = request
                 .newBuilder()
                 .url(modifiedUrl)
