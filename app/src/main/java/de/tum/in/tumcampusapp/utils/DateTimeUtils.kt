@@ -15,7 +15,7 @@ object DateTimeUtils {
      */
     fun getFutureTime(time: DateTime, context: Context): String {
         val timeInMillis = time.millis
-        val now = Calendar.getInstance().timeInMillis
+        val now = DateTime.now().millis
 
         //Catch future dates: current clock might be running behind
         if (timeInMillis < now || timeInMillis <= 0) {
@@ -27,15 +27,17 @@ object DateTimeUtils {
             diff < 60 * MINUTE_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("m")
                         .withLocale(Locale.ENGLISH)
-                context.getString(R.string.IN) + ' '.toString() + formatter.print(DateTime(diff)) + ' '.toString() + context.getString(R.string.MINUTES)
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} " +
+                        context.getString(R.string.MINUTES)
             }
-            diff < 3 * HOUR_IN_MILLIS -> { // Be more precise by telling the user the exact time if below 3 hours
+        // Be more precise by telling the user the exact time if below 3 hours
+            diff < 3 * HOUR_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("HH:mm")
                         .withLocale(Locale.ENGLISH)
-                context.getString(R.string.AT) + ' '.toString() + formatter.print(time)
+                "${context.getString(R.string.AT)} ${formatter.print(time)}"
             }
-            else -> getRelativeTimeSpanString(timeInMillis, now, android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE)
-                    .toString()
+            else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
+                    FORMAT_ABBREV_RELATIVE).toString()
         }
     }
 
@@ -74,20 +76,22 @@ object DateTimeUtils {
     }
 
     // 2014-06-30T16:31:57Z
-    private val isoDateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private val isoDateFormatter: DateTimeFormatter =
+            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
     fun parseIsoDate(datetime: String) = try {
-        isoDateFormat.parseDateTime(datetime)
+        isoDateFormatter.parseDateTime(datetime)
     } catch (e: ParseException) {
         Utils.log(e)
         null
     }
 
     // 2014-06-30T16:31:57.878Z
-    private val isoDateWithMillisFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private val isoDateWithMillisFormatter: DateTimeFormatter =
+            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
     fun parseIsoDateWithMillis(datetime: String) = try {
-        isoDateWithMillisFormat.parseDateTime(datetime)
+        isoDateWithMillisFormatter.parseDateTime(datetime)
     } catch (e: ParseException) {
         Utils.log(e)
         null
@@ -102,7 +106,7 @@ object DateTimeUtils {
             first.year() == second.year() && first.dayOfYear() == second.dayOfYear()
 
 
-    private val dateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+    private val dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     /**
      * Converts a date-string to DateTime
@@ -111,7 +115,7 @@ object DateTimeUtils {
      * @return DateTime
      */
     fun getDate(str: String): DateTime = try {
-        DateTime.parse(str, dateFormat)
+        DateTime.parse(str, dateFormatter)
     } catch (e: RuntimeException) {
         Utils.log(e)
         DateTime()
@@ -123,16 +127,17 @@ object DateTimeUtils {
      * @param d DateTime
      * @return String (yyyy-mm-dd)
      */
-    fun getDateString(d: DateTime): String = dateFormat.print(d)
+    fun getDateString(d: DateTime): String = dateFormatter.print(d)
 
-    private val dateTimeFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
+    private val dateTimeFormatter: DateTimeFormatter =
+            DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
 
     /**
      * Converts DateTime to an ISO datetime-string
      *
      * @return String (yyyy-mm-dd hh:mm:ss)
      */
-    fun getDateTimeString(d: DateTime): String = dateTimeFormat.print(d)
+    fun getDateTimeString(d: DateTime): String = dateTimeFormatter.print(d)
 
     /**
      * Converts a datetime-string to DateTime
@@ -140,7 +145,7 @@ object DateTimeUtils {
      * @param str String with ISO-DateTime (yyyy-mm-dd hh:mm:ss)
      */
     fun getDateTime(str: String): DateTime = try {
-        DateTime.parse(str, dateTimeFormat)
+        DateTime.parse(str, dateTimeFormatter)
     } catch (e: RuntimeException) {
         Utils.log(e)
         DateTime()
