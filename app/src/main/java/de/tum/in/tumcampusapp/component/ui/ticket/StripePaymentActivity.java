@@ -8,33 +8,47 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatButton;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stripe.android.CustomerSession;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.PaymentSession;
 import com.stripe.android.PaymentSessionConfig;
 import com.stripe.android.PaymentSessionData;
-import com.stripe.android.model.Customer;
-import com.stripe.android.view.CardInputWidget;
+import com.stripe.android.model.Source;
+import com.stripe.android.model.SourceCardData;
+import com.stripe.android.view.PaymentMethodsActivity;
+
+import java.io.IOException;
+import java.text.MessageFormat;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 
 public class StripePaymentActivity extends BaseActivity {
 
     ProgressDialog progressDialog;
-    CardInputWidget cardInputWidget;
     Button savedCardsButton;
-    Button buyButton;
-    ProgressBar stripeProgressBar;
+    AppCompatButton buyButton;
+    ProgressBar progressBar;
+    EditText cardholderEditText;
 
     PaymentSession paymentSession;
+    Boolean setSource = false;
+    int ticketHistory;
+    long price = -1; // ticket price IN CENTS
 
 
     public StripePaymentActivity() {
@@ -50,26 +64,43 @@ public class StripePaymentActivity extends BaseActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        cardInputWidget = findViewById(R.id.card_input_widget);
+        // Get price from intent; convert it to CENTS (as required by Stripe)
+        price = (long) (getIntent().getDoubleExtra("ticketPrice", -1.0) * 100);
+        // Reserve ticket
+        ticketHistory = reserveTicket();
 
-        initStripeSession();
+        if (ticketHistory < 0 || price < 0) {
+            Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
+            finish();
+        }
+
         initSubviews();
+        initStripeSession();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        paymentSession.onDestroy();
     }
 
 
     private void initSubviews() {
         buyButton = findViewById(R.id.complete_purchase_button);
         buyButton.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if (isCardValid()) {
-                     requestTicket();
-                 } else {
-                     showError(getString(R.string.card_data_invalid));
-                 }
-             }
-            }
+                                         @Override
+                                         public void onClick(View v) {
+                                             requestTicket();
+                                         }
+                                     }
         );
+        buyButton.setEnabled(false);
+
+        cardholderEditText = findViewById(R.id.cardholder_edit_text);
+
+        progressBar = findViewById(R.id.stripe_purchase_progress);
+        progressBar.setVisibility(View.INVISIBLE);
 
         savedCardsButton = findViewById(R.id.saved_cards_button);
         savedCardsButton.setOnClickListener(new View.OnClickListener() {
@@ -78,30 +109,49 @@ public class StripePaymentActivity extends BaseActivity {
                 paymentSession.presentPaymentMethodSelection();
             }
         });
-        savedCardsButton.setEnabled(false);
 
-        stripeProgressBar = findViewById(R.id.stripe_session_init_progressbar);
-        stripeProgressBar.animate();
+        // Create formated string to remind users about which amount they are going to pay
+        TextView priceReminder = findViewById(R.id.payment_info_price_textview);
+        MessageFormat fmt = new MessageFormat(getString(R.string.payment_info_price_reminder));
+        Object[] args = {String.format("%.2f", getIntent().getDoubleExtra("ticketPrice", -1.0))};
+        priceReminder.setText(fmt.format(args));
     }
 
 
-    //TODO: implement Stripe and Backend interaction for purchase here
     private void requestTicket() {
+        String cardholder = cardholderEditText.getText().toString();
+        if (cardholder.length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.empty_cardholder_message, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!setSource) {
+            // No payment source selected yet
+            Toast.makeText(getApplicationContext(), R.string.card_data_invalid, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         setPurchaseRequestLoading();
 
-        // Get Card info
+        try {
+            Ticket ticket = TUMCabeClient
+                    .getInstance(getApplicationContext())
+                    .purchaseTicketStripe(0, paymentSession.getPaymentSessionData().getSelectedPaymentMethodId());
+            //TODO: Add Ticket to local database and jump to ticketOverview
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            finishLoadingPurchaseRequestError(getString(R.string.purchase_error_message));
+            return;
+        }
 
-        // Request token from Stripe
-
-        // Request Ticket synchronously
-
-        // Depending on if there was an error, continue
         finishLoadingPurchaseRequestSuccess();
     }
+
 
     private void setPurchaseRequestLoading() {
         progressDialog = ProgressDialog.show(StripePaymentActivity.this, "", getString(R.string.purchase_progress_message), true);
     }
+
 
     private void finishLoadingPurchaseRequestSuccess() {
         progressDialog.dismiss();
@@ -140,42 +190,28 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
 
-    private boolean isCardValid() {
-        /* Stripe component returns null when client-side checks conclude to invalid card data */
-        return cardInputWidget.getCard() != null;
-    }
-
-
     /* On return of the saved creditcard selection */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*String selectedSource = data.getStringExtra(PaymentMethodsActivity.EXTRA_SELECTED_PAYMENT);
-        Source source = Source.fromString(selectedSource);
-        // Note: it isn't possible for a null or non-card source to be returned.
-        if (source != null && Source.CARD.equals(source.getType())) {
-            SourceCardData cardData = (SourceCardData) source.getSourceTypeModel();
-        }*/
-    }
-
-    /* Set status of button and progressbar for the credit card overview */
-    private void setInitStateLoading(boolean val) {
-        if(val) {
-            stripeProgressBar.setVisibility(View.VISIBLE);
-            savedCardsButton.setEnabled(false);
-            savedCardsButton.setBackgroundColor(getResources().getColor(R.color.text_dark_gray));
-        } else {
-            stripeProgressBar.setVisibility(View.INVISIBLE);
-            savedCardsButton.setEnabled(true);
-            savedCardsButton.setBackgroundColor(getResources().getColor(R.color.tum_200));
+        // Data might be null if user tapped Back button from Credit Card selection
+        if (data != null) {
+            String selectedSource = data.getStringExtra(PaymentMethodsActivity.EXTRA_SELECTED_PAYMENT);
+            Source source = Source.fromString(selectedSource);
+            // Note: it isn't possible for a null or non-card source to be returned.
+            if (source != null && Source.CARD.equals(source.getType())) {
+                SourceCardData cardData = (SourceCardData) source.getSourceTypeModel();
+                savedCardsButton.setText(buildCardString(cardData));
+                setSource = true;
+            }
         }
     }
 
 
     private void initStripeSession() {
-        setInitStateLoading(true);
         PaymentConfiguration.init(Const.STRIPE_API_PUBLISHABLE_KEY);
         initCustomerSession();
+        initPaymentSession();
     }
 
 
@@ -184,25 +220,10 @@ public class StripePaymentActivity extends BaseActivity {
             @Override
             public void onStringResponse(String string) {
                 if (string.startsWith("Error: ")) {
-                    // Show the error to the user.
-                    System.out.println(string);
-                    return;
+                    showError(string);
                 }
             }
         }, getApplicationContext()));
-        CustomerSession.getInstance().retrieveCurrentCustomer(
-                new CustomerSession.CustomerRetrievalListener() {
-                    @Override
-                    public void onCustomerRetrieved(@NonNull Customer customer) {
-                        initPaymentSession();
-                    }
-
-                    @Override
-                    public void onError(int errorCode, @Nullable String errorMessage) {
-                        showError(errorMessage);
-                    }
-                }
-        );
     }
 
 
@@ -213,26 +234,55 @@ public class StripePaymentActivity extends BaseActivity {
 
             @Override
             public void onCommunicatingStateChanged(boolean isCommunicating) {
+                // Show network activity to user
                 if (isCommunicating) {
-                    System.out.println("eiwfub");
+                    progressBar.setVisibility(View.VISIBLE);
                 } else {
-                    System.out.println("eiwfub");
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onError(int errorCode, @Nullable String errorMessage) {
-                showError(errorMessage);
+                System.out.println("Error: " + errorMessage);
+                showError(getString(R.string.customersession_init_failed));
+                buyButton.setEnabled(false);
             }
 
             @Override
             public void onPaymentSessionDataChanged(@NonNull PaymentSessionData data) {
-                System.out.println(data.describeContents());
             }
-        }, new PaymentSessionConfig.Builder().build());
+
+        }, new PaymentSessionConfig.Builder()
+                .setShippingMethodsRequired(false)
+                .setShippingInfoRequired(false)
+                .build());
 
         if (initSuccess) {
-            setInitStateLoading(false);
+            paymentSession.setCartTotal(price);
+            buyButton.setEnabled(true);
+        }
+    }
+
+    private String buildCardString(@NonNull SourceCardData data) {
+        return data.getBrand() + ",  " + getString(R.string.creditcard_ending_in) + "  " + data.getLast4();
+    }
+
+    private int reserveTicket() {
+        int ticketType = getIntent().getIntExtra("ticketType", -1);
+        int memberID = 0; //TODO
+
+        if(ticketType < 0) {
+            Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        try {
+            TicketReservationResponse response = TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(memberID, ticketType);
+            return response.getTicketHistory();
+        } catch (IOException exception) {
+            showError(getString(R.string.internal_error));
+            return -1;
         }
     }
 

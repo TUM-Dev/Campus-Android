@@ -60,6 +60,8 @@ public class BuyTicketActivity extends BaseActivity {
             public void onClick(View v) {
                 //TODO: jump to next activity, the activity to pay by Strip
                 Intent intent = new Intent(getApplicationContext(), StripePaymentActivity.class);
+                intent.putExtra("ticketPrice", ticket.getType().getPrice());
+                intent.putExtra("ticketType", ticket.getType().getId());
                 startActivity(intent);
             }
         });

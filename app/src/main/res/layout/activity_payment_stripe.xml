@@ -1,7 +1,8 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                         android:id="@+id/drawer_layout"
                                         android:layout_width="match_parent"
-                                        android:layout_height="match_parent">
+                                        android:layout_height="match_parent"
+                                        android:fillViewport="false">
     <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,58 +22,88 @@
                 android:layout_height="wrap_content"
                 android:text="@string/enter_card_info_description"
                 android:textSize="20sp"
-                android:layout_margin="15dp"
+                android:textStyle="bold"
+                android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="30dp"/>
-
-            <com.stripe.android.view.CardInputWidget
-                android:id="@+id/card_input_widget"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:layout_marginTop="30dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/saved_cards_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingVertical="10dp"
-                    android:paddingHorizontal="20dp"
-                    android:background="#00000000"
-                    android:textSize="20sp"
-                    android:textAllCaps="false"
-                    android:text="@string/saved_cards" />
-
-                <ProgressBar
-                    android:id="@+id/stripe_session_init_progressbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
 
             <TextView
                 style="@style/SmallListSeparatorTextViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"/>
+                android:layout_marginHorizontal="5dp"/>
 
-            <Button
-                android:id="@+id/complete_purchase_button"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_gravity="center"
+                android:text="@string/cardholer"
+                android:textSize="20sp"
+                android:layout_margin="15dp"
+                android:layout_marginTop="30dp"/>
+
+            <EditText
+                android:id="@+id/cardholder_edit_text"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textSize="20sp"
+                android:layout_marginHorizontal="40dp"
+                android:inputType="text"/>
+
+            <TextView
+                android:id="@+id/payment_info_price_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"/>
+
+            <Button
+                android:id="@+id/saved_cards_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:paddingVertical="10dp"
                 android:paddingHorizontal="20dp"
-                android:background="@color/tum_100"
+                android:background="#00000000"
+                android:textColor="@color/tum_200"
                 android:textSize="20sp"
                 android:textAllCaps="false"
-                android:text="@string/complete_purchase" />
+                android:text="@string/saved_cards"/>
+
+            <TextView
+                style="@style/SmallListSeparatorTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"/>
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/complete_purchase_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:layout_gravity="center"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="20dp"
+                    android:layout_centerInParent="true"
+                    android:textSize="20sp"
+                    android:textAllCaps="false"
+                    android:text="@string/complete_purchase" />
+
+                <ProgressBar
+                    android:id="@+id/stripe_purchase_progress"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_toRightOf="@+id/complete_purchase_button"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"/>
+
+            </RelativeLayout>
+
+
 
         </LinearLayout>
 
