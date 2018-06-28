@@ -22,12 +22,16 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 
 public class ShowTicketActivity extends BaseActivity {
 
     private TextView eventLocationTextView;
     private ImageView ticketQrCodeImageView;
+
+    private EventsController eventsController;
 
     public ShowTicketActivity() {
         super(R.layout.activity_show_ticket);
@@ -44,22 +48,26 @@ public class ShowTicketActivity extends BaseActivity {
         TextView eventRedemptionStateTextView = findViewById(R.id.ticket_event_redemption_state);
         ticketQrCodeImageView = findViewById(R.id.ticket_qr_code);
 
+        eventsController = new EventsController(this);
+
         int eventId = getIntent().getIntExtra("eventID", 0);
 
-        //Get data from Api backend, now it is mock up data
-        Ticket ticket = TicketsController.getTicketByEventId(eventId);
+        Ticket ticket = eventsController.getTicketByEventId(eventId);
+        Event event = eventsController.getEventById(ticket.getEventId());
+        TicketType ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
+
         String timeString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
-                format(ticket.getEvent().getDate());
+                format(event.getDate());
         String[] time = timeString.split(" ");
         //set date format to current locale setting
         java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
-        String dateString = dateFormat.format(ticket.getEvent().getDate());
+        String dateString = dateFormat.format(event.getDate());
         //load event details
-        String String = ticket.getEvent().getTitle();
-        String eventLocationString = ticket.getEvent().getLocality();
+        String String = event.getTitle();
+        String eventLocationString = event.getLocality();
         String eventDateTimeString = dateString + " " + time[1];
         String eventPriceString = String.format(Locale.GERMANY, "%.2f",
-                ticket.getType().getPrice()) + " €";
+                ticketType.getPrice()) + " €";
 
         String redemptionStateString = this.getString(R.string.redeemed) + ": " +
                 (ticket.getRedeemed() ?  this.getString(R.string.yes) : this.getString(R.string.no));

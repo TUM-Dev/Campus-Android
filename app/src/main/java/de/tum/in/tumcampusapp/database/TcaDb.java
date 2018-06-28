@@ -47,6 +47,12 @@ import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomGroupDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventDao;
+import de.tum.in.tumcampusapp.component.ui.ticket.TicketDao;
+import de.tum.in.tumcampusapp.component.ui.ticket.TicketTypeDao;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportDao;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
@@ -75,6 +81,9 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         TumLock.class,
         BuildingToGps.class,
         Kino.class,
+        Event.class,
+        Ticket.class,
+        TicketType.class,
         ChatMessage.class,
         Location.class,
         News.class,
@@ -129,6 +138,12 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract BuildingToGpsDao buildingToGpsDao();
 
     public abstract KinoDao kinoDao();
+
+    public abstract EventDao eventDao();
+
+    public abstract TicketDao ticketDao();
+
+    public abstract TicketTypeDao ticketTypeDao();
 
     public abstract CafeteriaLocationDao locationDao();
 

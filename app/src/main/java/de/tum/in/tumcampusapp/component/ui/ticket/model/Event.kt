@@ -26,4 +26,7 @@ data class Event(@PrimaryKey
                 var description: String = "",
                 var locality: String = "",
                 var date: Date = Date(),
-                var link:  String = "")
+                var link:  String = ""){
+
+    fun isFutureEvent() = date.after(Date())
+}

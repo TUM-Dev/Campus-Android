@@ -18,7 +18,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
@@ -94,10 +93,10 @@ class DownloadService : JobIntentService() {
      * @return if all downloads were successful
      */
     private fun downloadAll(force: Boolean): Boolean {
-        val eventsSuccess = downloadEvents(force)
         val cafeSuccess = downloadCafeterias(force)
         val kinoSuccess = downloadKino(force)
         val newsSuccess = downloadNews(force)
+        val eventsSuccess = downloadEvents(force)
         val topNewsSuccess = downloadTopNews()
         return cafeSuccess && kinoSuccess && newsSuccess && topNewsSuccess && eventsSuccess
     }
@@ -120,9 +119,10 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadEvents(force: Boolean): Boolean {
-        EventsController(this).downloadFromExternal(force)
+        EventsController(this).downloadFromService(force)
         return true
     }
+
 
     private fun downloadTopNews() = topNewsViewModel.getNewsAlertFromService(this)
 
