@@ -506,6 +506,7 @@ Signatur: %5$s</string>
     <string name="ticket_type">Tickettyp</string>
     <string name="price">Preis</string>
     <string name="location">Ort</string>
+    <string name="choose_ticket_type">Wähle deinen Ticket-Typ</string>
 
     <!-- Payment -->
     <string name="creditcard">Kreditkarte</string>
@@ -598,4 +599,5 @@ Signatur: %5$s</string>
     <string name="discard_changes_question">Änderungen verwerfen?</string>
     <string name="discard">Verwerfen</string>
     <string name="keep_editing">Weiter bearbeiten</string>
+    <string name="no_network_connection">Keine Verbindung zum Server möglich</string>
 </resources>

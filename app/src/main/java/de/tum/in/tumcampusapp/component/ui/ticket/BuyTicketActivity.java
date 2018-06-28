@@ -19,6 +19,9 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.utils.Utils;
+
+import static java.text.DateFormat.getDateTimeInstance;
 
 public class BuyTicketActivity extends BaseActivity {
 
@@ -40,8 +43,6 @@ public class BuyTicketActivity extends BaseActivity {
 
         eventId = getIntent().getIntExtra("eventID", 0);
 
-        initEventTextViews();
-
         // get ticket type information from API
         Thread thread = new Thread(){
             public void run(){
@@ -50,43 +51,36 @@ public class BuyTicketActivity extends BaseActivity {
         };
         thread.start();
         try {
-            // TODO: insert something to visualize that the system is loading if necessary
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        // TODO: remove this (only for testing purposes)
-        ticketTypes.add(new TicketType(42,4.2,"Test Ticket"));
-
-        ticketTypeSpinner = findViewById(R.id.ticket_type_spinner);
-        ticketTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String ticketTypeName = (String)parent.getItemAtPosition(position);
-                setTicketTypeInformation(ticketTypeName);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // TODO: what to do here?
-            }
-        });
-
-        initializeTicketTypeSpinner();
-
-        // TODO: check if this is necessary; OnItemSelected already called initially
-        setTicketTypeInformation((String)ticketTypeSpinner.getSelectedItem());
-
-        Button paymentButton = findViewById(R.id.paymentbutton);
-        paymentButton.setOnClickListener(v -> {
-            // Jump to the payment activity
-            Intent intent = new Intent(getApplicationContext(), TicketPaymentSelectActivity.class);
-            intent.putExtra("ticketTypeId", getTicketTypeForName(
-                    (String)ticketTypeSpinner.getSelectedItem()).getId());
-            intent.putExtra("eventId", eventId);
+        // if ticketTypes could not be retrieved from server, e.g. due to network problems
+        if (ticketTypes == null){
+            Utils.showToast(getApplicationContext(), R.string.no_network_connection);
+            // go back to event details
+            Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
+            intent.putExtra("event_id", eventId);
             startActivity(intent);
-        });
+        }else{
+            initEventTextViews();
+
+            // TODO: remove this (only for testing purposes)
+            ticketTypes.add(new TicketType(42,4.2,"Test Ticket"));
+
+            initializeTicketTypeSpinner();
+
+            Button paymentButton = findViewById(R.id.paymentbutton);
+            paymentButton.setOnClickListener(v -> {
+                // Jump to the payment activity
+                Intent intent = new Intent(getApplicationContext(), TicketPaymentSelectActivity.class);
+                intent.putExtra("ticketTypeId", getTicketTypeForName(
+                        (String)ticketTypeSpinner.getSelectedItem()).getId());
+                intent.putExtra("eventId", eventId);
+                startActivity(intent);
+            });
+        }
     }
 
     private void initEventTextViews() {
@@ -98,14 +92,29 @@ public class BuyTicketActivity extends BaseActivity {
 
         String eventString = event.getTitle();
         String locationString = event.getLocality();
-        String dateString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
-                format(event.getDate());
+
+        String dateString = getDateTimeInstance().format(event.getDate());
+
         eventView.append(eventString);
         locationView.append(locationString);
         dateView.append(dateString);
     }
 
     private void initializeTicketTypeSpinner() {
+        ticketTypeSpinner = findViewById(R.id.ticket_type_spinner);
+        ticketTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String ticketTypeName = (String)parent.getItemAtPosition(position);
+                setTicketTypeInformation(ticketTypeName);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // do nothing here for now
+            }
+        });
+
         ArrayList<String> ticketTypeNames = new ArrayList<>();
         for (TicketType ticketType : ticketTypes){
             ticketTypeNames.add(ticketType.getDescription());
@@ -129,14 +138,11 @@ public class BuyTicketActivity extends BaseActivity {
         TicketType ticketType = getTicketTypeForName(ticketTypeName);
 
         TextView priceView = findViewById(R.id.ticket_details_price);
-        TextView ticketTypeView = findViewById(R.id.ticket_details_ticket_type);
 
         String priceString = new DecimalFormat("#.00").format(ticketType.getPrice())
                 + " €";
-        String ticketTypeString = ticketType.getDescription();
 
         priceView.setText(priceString);
-        ticketTypeView.setText(ticketTypeString);
     }
 
 

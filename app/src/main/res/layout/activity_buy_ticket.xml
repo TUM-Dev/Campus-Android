@@ -29,9 +29,22 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent" />
 
-                <Spinner android:id="@+id/ticket_type_spinner"
+                <TextView
+                    android:id="@+id/ticket_details_choose_type_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="0dp"
+                    android:layout_margin="16dp"
+                    android:layout_weight="0.3"
+                    android:text="@string/choose_ticket_type"
+                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/ticket_type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/events"
+                    android:layout_margin="16dp"/>
 
                 <TextView
                     style="@style/SmallListSeparatorTextViewStyle"
@@ -138,29 +151,6 @@
                         android:layout_weight="0.7"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/large_text_size" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10pt"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/ticket_details_ticket_type_title"
-                            android:layout_width="0pt"
-                            android:layout_weight="0.3"
-                            android:layout_height="wrap_content"
-                            android:text="@string/ticket_type"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/large_text_size" />
-
-                        <TextView
-                            android:id="@+id/ticket_details_ticket_type"
-                            android:layout_width="0pt"
-                            android:layout_weight="0.7"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/large_text_size" />
                     </LinearLayout>
 
 
