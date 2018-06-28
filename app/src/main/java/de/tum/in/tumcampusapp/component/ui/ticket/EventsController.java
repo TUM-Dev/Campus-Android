@@ -122,5 +122,15 @@ public class EventsController {
     public TicketType getTicketTypeById(int id) {
         return ticketTypeDao.getById(id);
     }
+
+    public List<TicketType> getTicketTypesByEventId(int eventId) {
+        try {
+            TUMCabeClient api = TUMCabeClient.getInstance(context);
+            return api.getTicketTypes(eventId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 
