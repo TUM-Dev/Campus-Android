@@ -134,9 +134,13 @@ public class StripePaymentActivity extends BaseActivity {
         setPurchaseRequestLoading();
 
         try {
+            //TODO: get user mail
             Ticket ticket = TUMCabeClient
                     .getInstance(getApplicationContext())
-                    .purchaseTicketStripe(0, paymentSession.getPaymentSessionData().getSelectedPaymentMethodId());
+                    .purchaseTicketStripe(0,
+                            paymentSession.getPaymentSessionData().getSelectedPaymentMethodId(),
+                            "test@user.bla",
+                            cardholder);
             //TODO: Add Ticket to local database and jump to ticketOverview
         } catch (IOException exception) {
             exception.printStackTrace();

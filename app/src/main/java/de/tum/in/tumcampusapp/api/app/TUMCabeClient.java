@@ -383,8 +383,9 @@ public final class TUMCabeClient {
     }
 
     // Ticket purchase
-    public Ticket purchaseTicketStripe(int ticketHistory, String token) throws IOException {
-        return service.purchaseTicketStripe(ticketHistory, token).execute().body();
+    public Ticket purchaseTicketStripe(int ticketHistory, String token, String customerMail,
+                                       String customerName) throws IOException {
+        return service.purchaseTicketStripe(ticketHistory, token, customerMail, customerName).execute().body();
     }
 
     public String retrieveEphemeralKey(String apiVersion, String customerMail) throws IOException {

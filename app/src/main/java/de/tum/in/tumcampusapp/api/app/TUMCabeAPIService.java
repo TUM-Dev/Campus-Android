@@ -248,7 +248,8 @@ public interface TUMCabeAPIService {
 
     // Ticket purchase
     @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
-    Call<Ticket> purchaseTicketStripe(@Body int ticket_history, String token);
+    Call<Ticket> purchaseTicketStripe(@Body int ticket_history, String token,
+                                      String customer_mail, String customer_name);
 
     @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
     Call<String> retrieveEphemeralKey(@Body String api_version, String customer_mail);
