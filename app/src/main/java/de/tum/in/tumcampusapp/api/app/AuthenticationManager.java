@@ -23,7 +23,7 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
-import de.tum.in.tumcampusapp.service.GcmIdentificationService;
+import de.tum.in.tumcampusapp.service.FcmIdentificationService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -181,7 +181,7 @@ public class AuthenticationManager {
     private void uploadKey(String publicKey, final ChatMember member) {
         //If we already uploaded it we don't need to redo that
         if (Utils.getSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)) {
-            this.tryToUploadGcmToken();
+            this.tryToUploadFcmToken();
             return;
         }
 
@@ -201,7 +201,7 @@ public class AuthenticationManager {
                                          Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
                                      }
 
-                                     AuthenticationManager.this.tryToUploadGcmToken();
+                                     AuthenticationManager.this.tryToUploadFcmToken();
                                  }
                              }
 
@@ -231,13 +231,13 @@ public class AuthenticationManager {
         thread.start();
     }
 
-    private void tryToUploadGcmToken() {
-        // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
+    private void tryToUploadFcmToken() {
+        // Check device for Play Services APK. If check succeeds, proceed with FCM registration.
         // Can only be done after the public key has been uploaded
         if (Utils.getSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)
             && GoogleApiAvailability.getInstance()
                                     .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
-            GcmIdentificationService idService = new GcmIdentificationService(mContext);
+            FcmIdentificationService idService = new FcmIdentificationService(mContext);
             idService.checkSetup();
         }
     }

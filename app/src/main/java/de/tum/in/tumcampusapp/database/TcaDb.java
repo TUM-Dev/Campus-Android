@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBla
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.tumui.person.FacultyDao;
 import de.tum.in.tumcampusapp.component.tumui.person.model.Faculty;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao;
@@ -87,7 +87,7 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         Faculty.class,
         StudyRoomGroup.class,
         StudyRoom.class,
-        GCMNotification.class,
+        FcmNotification.class,
         TransportFavorites.class,
         WidgetsTransport.class,
         ChatRoomDbRow.class

@@ -11,21 +11,24 @@ data class CafeteriaWithMenus(val id: Int) {
     var menus: List<CafeteriaMenu> = ArrayList()
     var menuDates: List<String> = ArrayList()
 
-    val nextMenuDate: String
+    val nextMenuDate: Date
         get() {
             val now = Calendar.getInstance();
-            var nextDateString = menuDates
+            var nextDate = menuDates
+                    .map { s -> DateUtils.getDate(s) }
                     .getOrElse(0) {
-                        DateUtils.getDateTimeString(Date())
+                        Date()
                     }
-            val nextDate = DateUtils.getDate(nextDateString)
 
             if (nextDate.isToday() && now.hour >= 15 && menuDates.size > 1) {
-                nextDateString = menuDates[1]
+                nextDate = DateUtils.getDate(menuDates[1])
             }
 
-            return nextDateString
+            return nextDate
         }
+
+    val nextMenuDateText: String
+        get() = DateUtils.getDateTimeString(nextMenuDate)
 
 }
 
