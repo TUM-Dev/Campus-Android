@@ -37,7 +37,6 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
@@ -59,7 +58,8 @@ import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline<Events> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener, LimitPickerDialogListener {
+public class CalendarActivity extends ActivityForAccessingTumOnline implements OnClickListener,
+        MonthLoader.MonthChangeListener, WeekView.EventClickListener, LimitPickerDialogListener {
 
     /**
      * The space between the first and the last date
@@ -88,7 +88,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events> impl
     private CalendarDetailsFragment detailsFragment;
 
     public CalendarActivity() {
-        super(TUMOnlineConst.Companion.getCALENDER(), R.layout.activity_calendar);
+        super(R.layout.activity_calendar);
     }
 
     @Override
@@ -119,33 +119,49 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events> impl
 
         calendarController = new CalendarController(this);
 
-        // Set the time space between now and after this date and before this
-        // Dates before the current date
-        requestHandler.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
-        // Dates after the current date
-        requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
-
         if (new SyncManager(this).needSync(Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
-            requestFetch();
+            loadEvents();
         } else {
             isFetched = true;
         }
     }
 
-    @Override
-    public void onFetch(final Events rawResponse) {
-        // parsing and saving xml response
+    private void loadEvents() {
+        showLoadingStart();
+        TUMOnlineClient
+                .getInstance(this)
+                .getCalendar(MONTH_BEFORE, MONTH_AFTER)
+                .enqueue(new Callback<Events>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Events> call, @NonNull Response<Events> response) {
+                        Events events = response.body();
+                        if (events != null) {
+                            handleDownloadSuccess(events);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Events> call, @NonNull Throwable t) {
+                        handleDownloadError(t);
+                    }
+                });
+    }
+
+    private void handleDownloadSuccess(Events events) {
+        showLoadingEnded();
         isFetched = true;
-        Completable.fromAction(() -> calendarController.importCalendar(rawResponse))
-                   .compose(provider.bindToLifecycle())
-                   .subscribeOn(Schedulers.io())
-                   .observeOn(AndroidSchedulers.mainThread())
-                   .subscribe(() -> {
-                       showLoadingEnded();
-                       // update the action bar to display the enabled menu options
-                       CalendarActivity.this.invalidateOptionsMenu();
-                       startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
-                   });
+
+        // parsing and saving xml response
+        Completable.fromAction(() -> calendarController.importCalendar(events))
+                .compose(provider.bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    showLoadingEnded();
+                    // update the action bar to display the enabled menu options
+                    CalendarActivity.this.invalidateOptionsMenu();
+                    startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
+                });
     }
 
     @Override
@@ -208,7 +224,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events> impl
                 showHourLimitFilterDialog();
                 return true;
             case R.id.action_update_calendar:
-                requestFetch(true);
+                loadEvents();
                 refreshWeekView();
                 return true;
             default:
@@ -468,8 +484,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events> impl
 
                     @Override
                     public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
-                        Utils.log(t);
-                        Utils.showToast(CalendarActivity.this, R.string.something_wrong);
+                        handleDownloadError(t);
                     }
                 });
     }

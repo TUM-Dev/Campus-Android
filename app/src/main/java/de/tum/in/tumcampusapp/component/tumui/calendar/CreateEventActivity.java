@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
-import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
+import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEventResponse;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
@@ -34,7 +34,7 @@ import retrofit2.Response;
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
  */
-public class CreateEventActivity extends ProgressActivity {
+public class CreateEventActivity extends ActivityForAccessingTumOnline {
 
     private Calendar start, end;
     private boolean isEditing;
@@ -175,11 +175,6 @@ public class CreateEventActivity extends ProgressActivity {
         endDateView.setText(format.format(end.getTime()));
     }
 
-    @Override
-    public void onRefresh() {
-        // TODO
-    }
-
     private void editEvent() {
         final String eventId = getIntent().getStringExtra(Const.EVENT_NR);
         if (eventId == null) {
@@ -193,16 +188,21 @@ public class CreateEventActivity extends ProgressActivity {
                     @Override
                     public void onResponse(@NonNull Call<DeleteEventResponse> call,
                                            @NonNull Response<DeleteEventResponse> response) {
-                        Utils.log("Event successfully deleted (now creating the edited version)");
-                        TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventId);
-                        createEvent();
+                        handleDeleteEventSuccess(eventId);
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
-                        showErrorDialog(getString(R.string.error_something_wrong));
+                        handleDownloadError(t);
                     }
                 });
+    }
+
+    private void handleDeleteEventSuccess(String eventId) {
+        showLoadingEnded();
+        Utils.log("Event successfully deleted (now creating the edited version)");
+        TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventId);
+        createEvent();
     }
 
     private void createEvent() {
@@ -237,12 +237,13 @@ public class CreateEventActivity extends ProgressActivity {
 
                     @Override
                     public void onFailure(@NonNull Call<CreateEventResponse> call, @NonNull Throwable t) {
-                        showErrorDialog(getString(R.string.error_something_wrong));
+                        handleDownloadError(t);
                     }
                 });
     }
 
     private void handleCreateSuccess(@NonNull CreateEventResponse createEventResponse) {
+        showLoadingEnded();
         String nr = createEventResponse.getEventId();
         event.setNr(nr);
         TcaDb.getInstance(this).calendarDao().insert(event);
