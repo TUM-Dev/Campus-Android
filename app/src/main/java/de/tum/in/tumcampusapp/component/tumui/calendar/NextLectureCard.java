@@ -171,7 +171,9 @@ public class NextLectureCard extends NotificationAwareCard {
 
             // Handle location
             item.location = calendarItem.getEventLocation();
+            // This is the location in a format which is useful for searches:
             item.locationForSearch = calendarItem.getLocation();
+
             lectures.add(item);
         }
     }

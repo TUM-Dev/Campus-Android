@@ -72,10 +72,9 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
 
     @Override
     protected Optional<List<RoomFinderRoom>> onSearchInBackground(String query) {
-        Utils.log("Starting Room Finder query with: " + query+ "  , "+ userRoomSearchMatching(query));
-
         try {
-            List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this).fetchRooms(userRoomSearchMatching(query));
+            List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this)
+                    .fetchRooms(userRoomSearchMatching(query));
             return Optional.of(rooms);
         } catch (IOException e) {
             Utils.log(e);
@@ -139,9 +138,17 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
         return roomList;
     }
 
+    /**
+     * Distinguishes between some room searches, eg. MW 2001 or MI 01.15.069 and takes the
+     * number part so that the search can return (somewhat) meaningful results
+     * (Temporary and non-optimal)
+     *
+     * @return a new query or the original one if nothing was matched
+     */
     private static String userRoomSearchMatching(String roomSearchQuery) {
+        // Matches the number part if the String is composed of two words, probably wrong:
         Pattern pattern = Pattern.compile("(\\w+(?:\\.\\w+)+)|(\\w+\\d+)");
-        //Pattern pattern = Pattern.compile("(\\w+(?:\\.\\w+)+)|([\\d]+)|([\\w]+)");
+
         Matcher matcher = pattern.matcher(roomSearchQuery);
 
         if (matcher.find()) {
