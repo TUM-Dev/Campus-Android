@@ -32,7 +32,7 @@
             tools:text="Exam date"/>
 
         <TextView
-            android:id="@+id/examinerTextView"
+            android:id="@+id/additionalInfoTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Examiner"/>

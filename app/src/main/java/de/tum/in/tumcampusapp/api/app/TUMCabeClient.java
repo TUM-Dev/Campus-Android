@@ -34,7 +34,6 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
-import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
@@ -65,7 +64,6 @@ public final class TUMCabeClient {
     static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
     static final String API_MEMBERS = "members/";
-    static final String API_CURRICULA = "curricula/";
     static final String API_NOTIFICATIONS = "notifications/";
     static final String API_LOCATIONS = "locations/";
     static final String API_DEVICE = "device/";
@@ -196,12 +194,6 @@ public final class TUMCabeClient {
 
     public FcmNotification getNotification(int notification) throws IOException {
         return service.getNotification(notification)
-                      .execute()
-                      .body();
-    }
-
-    public List<Curriculum> getAllCurriculas() throws IOException {
-        return service.getAllCurriculas()
                       .execute()
                       .body();
     }
