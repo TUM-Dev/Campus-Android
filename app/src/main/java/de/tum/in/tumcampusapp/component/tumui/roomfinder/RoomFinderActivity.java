@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -70,9 +72,10 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
 
     @Override
     protected Optional<List<RoomFinderRoom>> onSearchInBackground(String query) {
+        Utils.log("Starting Room Finder query with: " + query+ "  , "+ userRoomSearchMatching(query));
+
         try {
-            List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this)
-                                                      .fetchRooms(query);
+            List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this).fetchRooms(userRoomSearchMatching(query));
             return Optional.of(rooms);
         } catch (IOException e) {
             Utils.log(e);
@@ -134,5 +137,17 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
             }
         }
         return roomList;
+    }
+
+    private static String userRoomSearchMatching(String roomSearchQuery) {
+        Pattern pattern = Pattern.compile("(\\w+(?:\\.\\w+)+)|(\\w+\\d+)");
+        //Pattern pattern = Pattern.compile("(\\w+(?:\\.\\w+)+)|([\\d]+)|([\\w]+)");
+        Matcher matcher = pattern.matcher(roomSearchQuery);
+
+        if (matcher.find()) {
+            return matcher.group();
+        } else {
+            return roomSearchQuery;
+        }
     }
 }
