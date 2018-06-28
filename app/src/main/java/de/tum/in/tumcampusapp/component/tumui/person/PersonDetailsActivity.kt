@@ -54,6 +54,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
     }
 
     private fun loadPersonDetails(personId: String) {
+        showLoadingStart()
         TUMOnlineClient
                 .getInstance(this)
                 .getPersonDetails(personId)
