@@ -15,18 +15,18 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
-import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
+import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import de.tum.in.tumcampusapp.utils.DateUtils;
-import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Activity to show the user's tuition ; based on grades.java / quick solution
  */
-public class TuitionFeesActivity extends ProgressActivity {
+public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
 
     private TextView amountTextView;
     private TextView deadlineTextView;
@@ -58,10 +58,21 @@ public class TuitionFeesActivity extends ProgressActivity {
         TUMOnlineClient
                 .getInstance(this)
                 .getTuitionFeesStatus()
-                .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .doOnError(this::handleDownloadError)
-                .subscribe(this::displayTuition);
+                .enqueue(new Callback<TuitionList>() {
+                    @Override
+                    public void onResponse(@NonNull Call<TuitionList> call,
+                                           @NonNull Response<TuitionList> response) {
+                        TuitionList tuitionList = response.body();
+                        if (tuitionList != null) {
+                            displayTuition(tuitionList);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<TuitionList> call, @NonNull Throwable t) {
+                        handleDownloadError(t);
+                    }
+                });
     }
 
     private void displayTuition(@NonNull TuitionList tuitionList) {
@@ -93,11 +104,6 @@ public class TuitionFeesActivity extends ProgressActivity {
         }
 
         showLoadingEnded();
-    }
-
-    private void handleDownloadError(Throwable throwable) {
-        Utils.log(throwable);
-        finish();
     }
 
 }
