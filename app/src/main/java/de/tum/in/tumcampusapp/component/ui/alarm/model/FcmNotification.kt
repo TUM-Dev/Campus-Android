@@ -7,10 +7,10 @@ import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = "notification")
-data class GCMNotification(@PrimaryKey
+data class FcmNotification(@PrimaryKey
                            var notification: Int = 0,
                            var type: Int = 0,
-                           var location: GCMNotificationLocation = GCMNotificationLocation(),
+                           var location: FcmNotificationLocation = FcmNotificationLocation(),
                            var title: String = "",
                            var description: String = "",
                            var signature: String = "",

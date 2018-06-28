@@ -6,7 +6,6 @@ import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.view.Menu
 import android.view.MenuItem
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
@@ -26,7 +25,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
-import de.tum.`in`.tumcampusapp.component.ui.plan.PlansActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventDetailsActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
@@ -90,7 +88,6 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
                 SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, CafeteriaActivity::class.java, false, false),
                 SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work, StudyRoomsActivity::class.java, false, false),
                 SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, RoomFinderActivity::class.java, false, false),
-                SideNavigationItem(R.string.plans, R.drawable.ic_plans, PlansActivity::class.java, false, false),
                 SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity::class.java, false, false),
                 SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonSearchActivity::class.java, true, false),
                 SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity::class.java, false, false),

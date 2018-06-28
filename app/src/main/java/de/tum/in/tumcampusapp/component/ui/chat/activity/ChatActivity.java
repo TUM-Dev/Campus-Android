@@ -45,7 +45,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.AddChatMemberActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageValidator;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageViewModel;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
-import de.tum.in.tumcampusapp.component.ui.chat.GCMChat;
+import de.tum.in.tumcampusapp.component.ui.chat.FcmChat;
 import de.tum.in.tumcampusapp.component.ui.chat.adapter.ChatHistoryAdapter;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
@@ -153,7 +153,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         @Override
         public void onReceive(Context context, Intent intent) {
             Utils.logv("Message send. Trying to parse...");
-            GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
+            FcmChat extras = (FcmChat) intent.getSerializableExtra("FcmChat");
             if (extras == null) {
                 return;
             }
@@ -183,7 +183,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
      *
      * @param extras model that contains infos about the message we should get
      */
-    private void handleRoomBroadcast(GCMChat extras) {
+    private void handleRoomBroadcast(FcmChat extras) {
 
         if (extras.getRoom() != currentChatRoom.getId() || chatHistoryAdapter == null) {
             return;

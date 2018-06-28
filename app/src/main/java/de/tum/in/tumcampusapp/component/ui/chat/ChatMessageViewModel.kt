@@ -87,7 +87,7 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
 
                         // Send broadcast to eventually open ChatActivity
                         val extras = Bundle()
-                        extras.putSerializable("GCMChat", GCMChat(it.getRoom(), it.getMember().id, 0))
+                        extras.putSerializable("FcmChat", FcmChat(it.getRoom(), it.getMember().id, 0))
                         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(Const.CHAT_BROADCAST_NAME).putExtras(extras))
                     })
             )

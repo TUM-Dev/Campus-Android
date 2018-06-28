@@ -12,56 +12,59 @@ import android.view.View
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
 import de.tum.`in`.tumcampusapp.utils.Const
-import java.util.*
 
-open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
+open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener, View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
+
     var currentCard: Card? = null
-    var addedViews: MutableList<View> = ArrayList()
-    private val mActivity: Activity
+    private val activity: Activity
 
     init {
         itemView.setOnClickListener(this)
         itemView.setOnLongClickListener(this)
-        mActivity = itemView.context as Activity
+        activity = itemView.context as Activity
     }
 
     override fun onClick(v: View) {
-        val i = currentCard!!.getIntent()
-        val transitionName = mActivity.getString(R.string.transition_card)
-        if (i != null) {
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    mActivity, v, transitionName
-            )
-            ContextCompat.startActivity(mActivity, i, options.toBundle())
-        }
+        val intent = currentCard?.getIntent() ?: return
+        val transitionName = activity.getString(R.string.transition_card)
+
+        val options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(activity, v, transitionName)
+        ContextCompat.startActivity(activity, intent, options.toBundle())
     }
 
     override fun onLongClick(v: View): Boolean {
-        val menu = PopupMenu(v.context, v, Gravity.CENTER_HORIZONTAL)
-        val inf = menu.menuInflater
-        inf.inflate(R.menu.card_popup_menu, menu.menu)
-        menu.setOnMenuItemClickListener(this)
-
-        menu.show()
+        PopupMenu(v.context, v, Gravity.CENTER_HORIZONTAL).apply {
+            menuInflater.inflate(R.menu.card_popup_menu, menu)
+            setOnMenuItemClickListener(this@CardViewHolder)
+            show()
+        }
         return true
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-        val i = item.itemId
-        if (i == R.id.open_card_setting) {// Open card's preference screen
-            val key = (currentCard ?: return true).settingsPrefix
-
-            val intent = Intent(itemView.context, UserPreferencesActivity::class.java)
-            intent.putExtra(Const.PREFERENCE_SCREEN, key)
-            itemView.context
-                    .startActivity(intent)
-            return true
-        } else if (i == R.id.always_hide_card) {
-            currentCard!!.hideAlways()
-            currentCard!!.discardCard()
-            return true
-        } else {
-            return false
+        return when (item.itemId) {
+            R.id.open_card_setting -> handleOpenCardSettings()
+            R.id.always_hide_card -> handleAlwaysHideCard()
+            else -> false
         }
     }
+
+    private fun handleOpenCardSettings(): Boolean {
+        val key = currentCard?.settingsPrefix ?: return true
+
+        val intent = Intent(itemView.context, UserPreferencesActivity::class.java).apply {
+            putExtra(Const.PREFERENCE_SCREEN, key)
+        }
+        itemView.context.startActivity(intent)
+        return true
+    }
+
+    private fun handleAlwaysHideCard(): Boolean {
+        currentCard?.hideAlways()
+        currentCard?.discardCard()
+        return true
+    }
+
 }

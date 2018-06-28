@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +31,10 @@ import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_MVV;
  * Card that shows MVV departure times
  */
 public class MVVCard extends NotificationAwareCard {
+
     private static final String MVV_TIME = "mvv_time";
-    private Pair<String, String> mStationNameIDPair;
+
+    private StationResult mStationResult;
     private List<Departure> mDepartures;
 
     MVVCard(Context context) {
@@ -41,55 +42,32 @@ public class MVVCard extends NotificationAwareCard {
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.card_item, parent, false);
-        return new CardViewHolder(view);
+        View view = LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.card_mvv, parent, false);
+        return new MVVCardViewHolder(view);
     }
 
     @Override
     public String getTitle() {
-        return mStationNameIDPair.first;
+        return mStationResult.getStation();
     }
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        setMCard(viewHolder.itemView);
-        setMLinearLayout(getMCard().findViewById(R.id.card_view));
-        setMTitleView(getMCard().findViewById(R.id.card_title));
-        getMTitleView().setText(mStationNameIDPair.first);
-        getMCard().findViewById(R.id.place_holder)
-                  .setVisibility(View.VISIBLE);
 
-        //Remove old DepartureViews
-        for (int i = 0; i < getMLinearLayout().getChildCount(); i++) {
-            if (getMLinearLayout().getChildAt(i) instanceof DepartureView) {
-                getMLinearLayout().removeViewAt(i);
-                i--; // Check the same location again, since the childCount changed
-            }
-        }
-
-        // Fetch transport favorites, can only be updated in the detailed view
-        TransportController transportManager = new TransportController(getContext());
-        for (int i = 0; i < mDepartures.size() && i < 5; i++) {
-            Departure curr = mDepartures.get(i);
-            DepartureView view = new DepartureView(getContext());
-            if (transportManager.isFavorite(curr.getSymbol())) {
-                view.setSymbol(curr.getSymbol(), true);
-            } else {
-                view.setSymbol(curr.getSymbol(), false);
-            }
-            view.setLine(curr.getDirection());
-            view.setTime(curr.getDepartureTime());
-            getMLinearLayout().addView(view);
+        if (viewHolder instanceof MVVCardViewHolder) {
+            MVVCardViewHolder holder = (MVVCardViewHolder) viewHolder;
+            holder.bind(mStationResult, mDepartures);
         }
     }
 
     @Override
     public Intent getIntent() {
         Intent i = new Intent(getContext(), TransportationDetailsActivity.class);
-        i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationNameIDPair.first);
-        i.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, mStationNameIDPair.second);
+        i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationResult.getStation());
+        i.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, mStationResult.getId());
         return i;
     }
 
@@ -133,12 +111,8 @@ public class MVVCard extends NotificationAwareCard {
                                    .build();
     }
 
-    public void setStation(Pair<String, String> stationNameIDPair) {
-        this.mStationNameIDPair = stationNameIDPair;
-    }
-
     public void setStation(StationResult station) {
-        setStation(new Pair<>(station.getStation(), station.getId()));
+        mStationResult = station;
     }
 
     public void setDepartures(List<Departure> departures) {
