@@ -98,7 +98,7 @@ public class OpenHoursHelper {
         }
 
         //Get the relative string
-        String relativeTime = DateTimeUtils.INSTANCE.getFutureTime(relativeTo, context);
+        String relativeTime = DateTimeUtils.INSTANCE.printFutureTime(relativeTo, context);
 
         //Return an assembly
         return context.getString(relation) + " " + relativeTime.substring(0, 1)

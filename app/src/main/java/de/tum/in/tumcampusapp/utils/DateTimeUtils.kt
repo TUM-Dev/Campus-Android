@@ -13,13 +13,13 @@ object DateTimeUtils {
     /**
      * Format an upcoming string nicely by being more precise as time comes closer
      */
-    fun getFutureTime(time: DateTime, context: Context): String {
+    fun printFutureTime(time: DateTime, context: Context): String {
         val timeInMillis = time.millis
         val now = DateTime.now().millis
 
         //Catch future dates: current clock might be running behind
         if (timeInMillis < now || timeInMillis <= 0) {
-            return DateTimeUtils.getTimeOrDay(time, context)
+            return DateTimeUtils.printTimeOrDay(time, context)
         }
 
         val diff = timeInMillis - now
@@ -42,14 +42,15 @@ object DateTimeUtils {
     }
 
     /**
-     * Format a past timestamp with degrading granularity
+     * Format a *past* ISO string timestamp with degrading granularity
+     * This is similar to printFutureTime(), but not specialized on future dates
      */
-    fun getTimeOrDayISO(datetime: String, context: Context): String {
+    fun printTimeOrDayFromISO(datetime: String, context: Context): String {
         val d = DateTimeUtils.parseIsoDate(datetime) ?: return ""
-        return DateTimeUtils.getTimeOrDay(d, context)
+        return DateTimeUtils.printTimeOrDay(d, context)
     }
 
-    fun getTimeOrDay(time: DateTime, context: Context): String {
+    fun printTimeOrDay(time: DateTime, context: Context): String {
         val timeInMillis = time.millis
         val now = DateTime.now().millis
 

@@ -103,7 +103,7 @@ public class NextLectureCard extends NotificationAwareCard {
         getMTitleView().setText(getTitle());
 
         //Add content
-        mTimeView.setText(DateTimeUtils.INSTANCE.getFutureTime(item.start, getContext()));
+        mTimeView.setText(DateTimeUtils.INSTANCE.printFutureTime(item.start, getContext()));
 
         //Add location with link to room finder
         if (item.location == null || item.location.isEmpty()) {
@@ -154,7 +154,7 @@ public class NextLectureCard extends NotificationAwareCard {
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         CalendarItem item = lectures.get(0);
-        final String time = DateTimeUtils.INSTANCE.getFutureTime(item.start, getContext());
+        final String time = DateTimeUtils.INSTANCE.printFutureTime(item.start, getContext());
         notificationBuilder.setContentText(item.title + '\n' + time);
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
         Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_next_lecture);
