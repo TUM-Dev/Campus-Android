@@ -33,7 +33,6 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
-import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
@@ -189,12 +188,6 @@ public final class TUMCabeClient {
 
     public FcmNotification getNotification(int notification) throws IOException {
         return service.getNotification(notification)
-                      .execute()
-                      .body();
-    }
-
-    public List<Curriculum> getAllCurriculas() throws IOException {
-        return service.getAllCurriculas()
                       .execute()
                       .body();
     }

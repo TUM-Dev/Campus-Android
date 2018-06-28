@@ -24,7 +24,6 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
-import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
@@ -53,7 +52,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CAFETERIAS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CARD;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CURRICULA;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
@@ -113,10 +111,6 @@ public interface TUMCabeAPIService {
 
     @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
     Call<ChatRegistrationId> uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId);
-
-    //Curricula
-    @GET(API_CURRICULA)
-    Call<List<Curriculum>> getAllCurriculas();
 
     @GET(API_NOTIFICATIONS + "{notification}/")
     Call<FcmNotification> getNotification(@Path("notification") int notification);
