@@ -25,7 +25,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-    <!-- GCM requires a Google account. -->
+    <!-- FCM requires a Google account. -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <!-- Allow vibration for chat messages -->
@@ -132,25 +132,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.plan.PlansActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/plans"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.plan.PlansDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/plans"
-            android:parentActivityName=".component.ui.plan.PlansActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.plan.PlansActivity" />
         </activity>
         <activity
             android:name=".component.tumui.grades.GradesActivity"
@@ -529,10 +510,6 @@
             android:label="@string/activity_create_event_title"
             android:parentActivityName=".component.tumui.calendar.CalendarActivity" />
         <activity
-            android:name=".component.ui.plan.PDFViewActivity"
-            android:label="@string/pdf_viewer_title"
-            android:parentActivityName=".component.ui.plan.PlansActivity" />
-        <activity
             android:name=".component.ui.chat.AddChatMemberActivity"
             android:label="Add Participant"
             android:parentActivityName=".component.ui.chat.activity.ChatActivity">
@@ -659,13 +636,6 @@
             </intent-filter>
         </receiver>
 
-        <!-- Used for generating the wifi-heatmap data -->
-        <receiver android:name=".service.NetworkChangeReceiver">
-            <intent-filter>
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <!-- Used to set Notification for favoriteDish -->
         <receiver android:name=".service.FavoriteDishAlarmScheduler" />
 
@@ -708,7 +678,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".service.GcmIdentificationService"
+            android:name=".service.FcmIdentificationService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
