@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -120,8 +121,9 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         TUMCabeStatus status = TUMCabeClient.getInstance(this).verifyKey().blockingSingle();
         if (!status.getStatus().equals("verified")){
-            // TODO what should we do if verification failed?
             Utils.log("verification status: " + status.getStatus());
+            Utils.showToastOnUIThread(this, getString(R.string.error_pk_verification));
+            return null;
         }
 
         // Try to restore already joined chat rooms from server
