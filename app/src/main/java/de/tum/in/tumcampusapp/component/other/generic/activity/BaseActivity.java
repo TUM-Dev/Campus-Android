@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.other.generic.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -12,17 +13,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.common.base.Optional;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.drawer.DrawerMenuHelper;
 import de.tum.in.tumcampusapp.component.tumui.person.model.Employee;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Takes care of the navigation drawer which might be attached to the activity and also handles up navigation
@@ -144,22 +145,23 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        final TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getPERSON_DETAILS(), this, true);
-        request.setParameter("pIdentNr", id);
+        TUMOnlineClient
+                .getInstance(this)
+                .getPersonDetails(id)
+                .enqueue(new Callback<Employee>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Employee> call, @NonNull Response<Employee> response) {
+                        Employee employee = response.body();
+                        if (employee != null) {
+                            CircleImageView imageView = headerView.findViewById(R.id.profileImageView);
+                            imageView.setImageBitmap(employee.getImage());
+                        }
+                    }
 
-        new Thread(() -> {
-            final Optional<Employee> result = request.fetch();
-            if (!result.isPresent()) {
-                return;
-            }
-            runOnUiThread(() -> {
-                CircleImageView picture = headerView.findViewById(R.id.profileImageView);
-                if (result.get()
-                          .getImage() != null) {
-                    picture.setImageBitmap(result.get()
-                                                 .getImage());
-                }
-            });
-        }).start();
+                    @Override
+                    public void onFailure(@NonNull Call<Employee> call, @NonNull Throwable t) {
+                        Utils.log(t);
+                    }
+                });
     }
 }

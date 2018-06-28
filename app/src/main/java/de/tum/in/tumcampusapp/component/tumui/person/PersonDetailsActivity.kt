@@ -12,7 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineConst
+import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
@@ -20,28 +20,60 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.ContactsHelper
 import kotlinx.android.synthetic.main.activity_person_details.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
- * Activity to show information about an person at TUM.
+ * Activity to show information about a person at TUM.
  */
-class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_person_details) {
+class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_person_details) {
 
+    private var personId: String? = null
     private var employee: Employee? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val bundle = intent.extras
-        if (bundle == null) {
+        val person = intent.extras.getSerializable("personObject") as? Person
+        if (person == null) {
             finish()
             return
         }
 
-        val person = bundle.getSerializable("personObject") as Person
-
+        personId = person.id
         title = person.getFullName()
-        requestHandler.setParameter("pIdentNr", person.id)
-        super.requestFetch()
+
+        loadPersonDetails(person.id)
+    }
+
+    override fun onRefresh() {
+        personId?.let {
+            loadPersonDetails(it)
+        }
+    }
+
+    private fun loadPersonDetails(personId: String) {
+        TUMOnlineClient
+                .getInstance(this)
+                .getPersonDetails(personId)
+                .enqueue(object : Callback<Employee> {
+                    override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
+                        val employee = response.body() ?: return
+                        handleDownloadSuccess(employee)
+                    }
+
+                    override fun onFailure(call: Call<Employee>, t: Throwable) {
+                        handleDownloadError(t)
+                    }
+                })
+    }
+
+    private fun handleDownloadSuccess(employee: Employee) {
+        this.employee = employee
+        displayResult(employee)
+        invalidateOptionsMenu()
+        showLoadingEnded()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -73,13 +105,6 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
                 .setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
                 .setIcon(R.drawable.ic_action_add_person_blue)
                 .show()
-    }
-
-    override fun onFetch(response: Employee) {
-        employee = response
-        displayResult(response)
-        invalidateOptionsMenu()
-        showLoadingEnded()
     }
 
     /**
