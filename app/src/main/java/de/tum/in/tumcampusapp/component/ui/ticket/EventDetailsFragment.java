@@ -123,7 +123,8 @@ public class EventDetailsFragment extends Fragment {
         View error = headerView.findViewById(R.id.kino_cover_error);
 
         // onClickListeners
-        link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
+        link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse(url))));
         // Export current activity to google calendar
         exportCalendar.setOnClickListener(view -> addToCalendar());
         // Setup "Buy/Show ticket" button according to ticket status for current event

@@ -124,13 +124,14 @@ public class EventsController {
     }
 
     public List<TicketType> getTicketTypesByEventId(int eventId) {
+        List<TicketType> ticketTypes = null;
         try {
             TUMCabeClient api = TUMCabeClient.getInstance(context);
-            return api.getTicketTypes(eventId);
+            ticketTypes = api.getTicketTypes(eventId);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return ticketTypes;
     }
 }
 
