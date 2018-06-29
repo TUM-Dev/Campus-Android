@@ -499,7 +499,7 @@ Signatur: %5$s</string>
     <!-- Ticket Activity -->
     <string name="your_ticket">Dein Ticket</string>
     <string name="show_ticket">Ticket Zeigen</string>
-    <string name="buy_ticket">Ticket Kaufen</string>
+    <string name="buy_ticket">JETZT KAUFEN</string>
     <string name="purchasedetail_dots">Details zu Ihrem Kauf:</string>
     <string name="continue_to_payment">WEITER ZUR ZAHLUNG</string>
     <string name="summary">Zusammenfassung</string>

@@ -6,11 +6,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -38,7 +40,6 @@ public class EventDetailsFragment extends Fragment {
     private Event event;
     private String url; // link to homepage
     private LayoutInflater inflater;
-
     private EventsController eventsController;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -69,61 +70,59 @@ public class EventDetailsFragment extends Fragment {
      */
     private void showDetails(LinearLayout rootView) {
         url = event.getLink();
-
         createEventHeader(rootView);
         createEventFooter(rootView);
     }
 
-    private void addToRoot(LinearLayout rootView, int headerId, CharSequence contentString) {
-        View view = inflater.inflate(R.layout.list_header_big, rootView, false);
-        TextView text = view.findViewById(R.id.list_header);
-        text.setText(headerId);
-        rootView.addView(view);
-        view = inflater.inflate(R.layout.kino_content, rootView, false);
-        text = view.findViewById(R.id.line_name);
-        text.setText(contentString);
-        rootView.addView(view);
-    }
+    /*    private void addToRoot(LinearLayout rootView, int headerId, CharSequence contentString) {
+            View view = inflater.inflate(R.layout.list_header_big, rootView, false);
+            TextView text = view.findViewById(R.id.list_header);
+            text.setText(headerId);
+            rootView.addView(view);
+            view = inflater.inflate(R.layout.kino_content, rootView, false);
+            text = view.findViewById(R.id.line_name);
+            text.setText(contentString);
+            rootView.addView(view);
+        }
 
-    private void addToRootWithPadding(LinearLayout rootView, int headerId, CharSequence contentString) {
-        View view = inflater.inflate(R.layout.list_header_big, rootView, false);
-        TextView text = view.findViewById(R.id.list_header);
-        text.setText(headerId);
-        rootView.addView(view);
-        view = inflater.inflate(R.layout.kino_content, rootView, false);
-        text = view.findViewById(R.id.line_name);
-        text.setText(contentString);
-        // padding is done programmatically here because we need more padding at the end
-        int padding = (int) context.getResources()
-                                   .getDimension(R.dimen.padding_kino);
-        int paddingRight = (int) context.getResources()
-                                        .getDimension(R.dimen.padding_kino_right);
-        int paddingEnd = (int) context.getResources()
-                                      .getDimension(R.dimen.padding_kino_end);
-        text.setPadding(padding, padding, paddingRight, paddingEnd);
-        rootView.addView(view);
-    }
+        private void addToRootWithPadding(LinearLayout rootView, int headerId, CharSequence contentString) {
+            View view = inflater.inflate(R.layout.list_header_big, rootView, false);
+            TextView text = view.findViewById(R.id.list_header);
+            text.setText(headerId);
+            rootView.addView(view);
+            view = inflater.inflate(R.layout.kino_content, rootView, false);
+            text = view.findViewById(R.id.line_name);
+            text.setText(contentString);
+            // padding is done programmatically here because we need more padding at the end
+            int padding = (int) context.getResources()
+                                       .getDimension(R.dimen.padding_kino);
+            int paddingRight = (int) context.getResources()
+                                            .getDimension(R.dimen.padding_kino_right);
+            int paddingEnd = (int) context.getResources()
+                                          .getDimension(R.dimen.padding_kino_end);
+            text.setPadding(padding, padding, paddingRight, paddingEnd);
+            rootView.addView(view);
+        }
 
-    private void createEventFooter(LinearLayout root) {
-        addToRoot(root, R.string.date, new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
-                format(event.getDate()));
-        addToRoot(root, R.string.location, event.getLocality());
-        addToRootWithPadding(root, R.string.description, event.getDescription());
-    }
-
+        private void createEventFooter(LinearLayout root) {
+            addToRoot(root, R.string.date, new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
+                    format(event.getDate()));
+            addToRoot(root, R.string.location, event.getLocality());
+            addToRootWithPadding(root, R.string.description, event.getDescription());
+        }*/
     private void createEventHeader(LinearLayout rootView) {
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.event_header, rootView, false);
 
         // initialize all buttons
-        Button link = headerView.findViewById(R.id.button_link);
+        //Button link = headerView.findViewById(R.id.button_link);
         Button ticket = headerView.findViewById(R.id.button_ticket);
-        Button exportCalendar = headerView.findViewById(R.id.button_export_eventcalendar);
+        ImageButton exportCalendar = headerView.findViewById(R.id.button_export_eventcalendar);
         ImageView cover = headerView.findViewById(R.id.kino_cover);
         ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
         View error = headerView.findViewById(R.id.kino_cover_error);
 
         // onClickListeners
-        link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
+        //link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
         // Export current activity to google calendar
         exportCalendar.setOnClickListener(view -> addToCalendar());
         // Setup "Buy/Show ticket" button according to ticket status for current event
@@ -144,6 +143,52 @@ public class EventDetailsFragment extends Fragment {
                         progress.setVisibility(View.GONE);
                         error.setVisibility(View.GONE);
                     }
+
+                    @Override
+                    public void onError(Exception e) {
+                        progress.setVisibility(View.GONE);
+                        error.setVisibility(View.VISIBLE);
+                    }
+                });
+
+        rootView.addView(headerView);
+    }
+
+
+    private void createEventFooter(LinearLayout rootView) {
+        LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.event_header, rootView, false);
+
+        // initialize all buttons
+        //Button link = headerView.findViewById(R.id.button_link);
+        Button ticket = headerView.findViewById(R.id.button_ticket);
+        ImageButton exportCalendar = headerView.findViewById(R.id.button_export_eventcalendar);
+        ImageView cover = headerView.findViewById(R.id.kino_cover);
+        ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
+        View error = headerView.findViewById(R.id.kino_cover_error);
+
+        // onClickListeners
+        //link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
+        // Export current activity to google calendar
+        exportCalendar.setOnClickListener(view -> addToCalendar());
+        // Setup "Buy/Show ticket" button according to ticket status for current event
+        if (eventsController.isEventBooked(event)) {
+            ticket.setText(this.getString(R.string.show_ticket));
+            ticket.setOnClickListener(view -> showTicket());
+        } else {
+            ticket.setText(this.getString(R.string.buy_ticket));
+            ticket.setOnClickListener(view -> buyTicket());
+        }
+
+        // cover
+        Picasso.get()
+                .load(event.getImage())
+                .into(cover, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progress.setVisibility(View.GONE);
+                        error.setVisibility(View.GONE);
+                    }
+
                     @Override
                     public void onError(Exception e) {
                         progress.setVisibility(View.GONE);
