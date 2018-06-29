@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 
 import com.google.common.base.Charsets;
@@ -23,6 +24,7 @@ import java.security.spec.X509EncodedKeySpec;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.generic.GenericNotification;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMAlert;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
@@ -158,6 +160,7 @@ public class AlarmNotification extends GenericNotification {
                 .setLights(0xff0000ff, 500, 500)
                 .setSound(sound)
                 .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(context, R.color.color_primary))
                 .build();
     }
 

@@ -22,6 +22,7 @@ class NewsNotificationsProvider(context: Context,
                 .setSmallIcon(R.drawable.ic_notification)
                 .setGroupSummary(true)
                 .setGroup(GROUP_KEY_NEWS)
+                .setColor(notificationColorAccent)
     }
 
     private fun getSecondaryNotificationBuilder(): NotificationCompat.Builder {
@@ -30,6 +31,7 @@ class NewsNotificationsProvider(context: Context,
                 .setSmallIcon(R.drawable.ic_notification)
                 .setGroup(GROUP_KEY_NEWS)
                 .setShowWhen(false)
+                .setColor(notificationColorAccent)
     }
 
     override fun getNotifications(): List<AppNotification> {

@@ -29,6 +29,7 @@ class CafeteriaNotificationsProvider(
                 .setGroup(GROUP_KEY_CAFETERIA)
                 .setGroupSummary(true)
                 .setShowWhen(false)
+                .setColor(notificationColorAccent)
     }
 
     private fun getSecondaryNotificationBuilder(): NotificationCompat.Builder {
@@ -37,6 +38,7 @@ class CafeteriaNotificationsProvider(
                 .setSmallIcon(R.drawable.ic_cutlery)
                 .setGroup(GROUP_KEY_CAFETERIA)
                 .setShowWhen(false)
+                .setColor(notificationColorAccent)
     }
 
     override fun getNotifications(): List<AppNotification> {
