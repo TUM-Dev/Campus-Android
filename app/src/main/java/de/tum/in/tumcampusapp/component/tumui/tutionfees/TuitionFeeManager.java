@@ -4,16 +4,17 @@ import android.content.Context;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
+import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 /**
  * Tuition manager, handles tuition card
@@ -31,18 +32,27 @@ public class TuitionFeeManager implements ProvidesCard {
     public List<Card> getCards() {
         List<Card> results = new ArrayList<>();
 
-        TuitionList tuitionList = TUMOnlineClient
-                .getInstance(mContext)
-                .getTuitionFeesStatus()
-                .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .doOnError(Utils::log)
-                .blockingGet();
+        try {
+            Response<TuitionList> response = TUMOnlineClient
+                    .getInstance(mContext)
+                    .getTuitionFeesStatus()
+                    .execute();
 
-        if (tuitionList != null) {
+            if (response == null) {
+                return results;
+            }
+
+            TuitionList tuitionList = response.body();
+            if (tuitionList == null) {
+                return results;
+            }
+
+            Tuition tuition = tuitionList.getTuitions().get(0);
             TuitionFeesCard card = new TuitionFeesCard(mContext);
-            card.setTuition(tuitionList.getTuitions().get(0));
+            card.setTuition(tuition);
             results.add(card.getIfShowOnStart());
+        } catch (IOException e) {
+            Utils.log(e);
         }
 
         return results;

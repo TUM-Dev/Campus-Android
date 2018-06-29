@@ -36,7 +36,7 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
         val request = chain.request()
 
         // check for special requests
-        val segments = request.url().pathSegments()
+        val segments = request.url().pathSegments()  // TODO: Is that correct?
         val isTokenRequest = segments.contains("requestToken")
         val isTokenConfirmationCheck = segments.contains("isTokenConfirmed")
 
