@@ -71,6 +71,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
         // TODO: Remove
     }
 
+    // TODO: Duplicated code - fix it!
     protected final void handleDownloadError(Throwable throwable) {
         Utils.log(throwable);
         showLoadingEnded();

@@ -56,7 +56,7 @@ public class ChatRoomController implements ProvidesCard {
      * @return List of chat messages
      */
     public List<ChatRoomAndLastMessage> getAllByStatus(int joined) {
-        if (joined == 1) {
+        if (joined == ChatRoom.MODE_JOINED) {
             return chatRoomDao.getAllRoomsJoinedList();
         } else {
             return chatRoomDao.getAllRoomsNotJoinedList();

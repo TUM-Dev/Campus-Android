@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 
-import com.google.common.base.Optional;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -25,9 +24,8 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
+import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
@@ -48,17 +46,18 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List<ChatRoomAndLastMessage>> implements OnItemClickListener {
+public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements OnItemClickListener {
+
     private static final int CAMERA_REQUEST_CODE = 34;
     private static final int JOIN_ROOM_REQUEST_CODE = 22;
 
-    private StickyListHeadersListView lvMyChatRoomList;
+    private ChatRoomController manager;
+    private int mCurrentMode = ChatRoom.MODE_JOINED;
 
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
-    private TUMOnlineRequest<LecturesResponse> requestHandler;
-    private ChatRoomController manager;
-    private int mCurrentMode = 1;
+
+    private StickyListHeadersListView lvMyChatRoomList;
     private ChatRoomListAdapter chatRoomAdapter;
 
     public ChatRoomsActivity() {
@@ -69,14 +68,10 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // bind UI elements
         lvMyChatRoomList = findViewById(R.id.lvMyChatRoomList);
         lvMyChatRoomList.setOnItemClickListener(this);
 
         manager = new ChatRoomController(this);
-
-        //Load the lectures list
-        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
 
         TabLayout tabLayout = findViewById(R.id.chat_rooms_tabs);
         // Create a tab listener that is called when the user changes tabs.
@@ -85,7 +80,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
             public void onTabSelected(TabLayout.Tab tab) {
                 // show the given tab
                 mCurrentMode = 1 - tab.getPosition();
-                startLoading();
+                loadPersonalLectures();
+                //startLoading();
             }
 
             @Override
@@ -95,20 +91,83 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                // TODO: Caching?
                 // probably ignore this event
             }
         });
 
-        tabLayout.addTab(tabLayout.newTab()
-                                  .setText(R.string.joined));
-        tabLayout.addTab(tabLayout.newTab()
-                                  .setText(R.string.not_joined));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.joined));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.not_joined));
+
+        loadPersonalLectures();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        startLoading();
+    protected void onStart() {
+        super.onStart();
+        loadPersonalLectures();
+    }
+
+    private void loadPersonalLectures() {
+        TUMOnlineClient
+                .getInstance(this)
+                .getPersonalLectures()
+                .enqueue(new Callback<LecturesResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<LecturesResponse> call,
+                                           @NonNull Response<LecturesResponse> response) {
+                        LecturesResponse lecturesResponse = response.body();
+                        if (lecturesResponse != null) {
+                            handleLecturesDownloadSuccess(lecturesResponse);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<LecturesResponse> call, @NonNull Throwable t) {
+                        handleDownloadError(t);
+                    }
+                });
+    }
+
+    private void handleLecturesDownloadSuccess(LecturesResponse response) {
+        List<Lecture> lectures = response.getLectures();
+        manager.createLectureRooms(lectures);
+
+        populateCurrentChatMember();
+
+        if (currentChatMember != null) {
+            updateDatabase(currentChatMember);
+        }
+
+        List<ChatRoomAndLastMessage> chatRoomAndLastMessages = manager.getAllByStatus(mCurrentMode);
+        displayChatRoomsAndMessages(chatRoomAndLastMessages);
+        showLoadingEnded();
+    }
+
+    private void displayChatRoomsAndMessages(List<ChatRoomAndLastMessage> results) {
+        if (results.isEmpty()) {
+            lvMyChatRoomList.setAdapter(new NoResultsAdapter(this));
+        } else {
+            chatRoomAdapter = new ChatRoomListAdapter(this, results, mCurrentMode);
+            lvMyChatRoomList.setAdapter(chatRoomAdapter);
+        }
+    }
+
+    private void updateDatabase(@NonNull ChatMember currentChatMember) {
+        try {
+            ChatVerification verification =
+                    ChatVerification.Companion.getChatVerification(this, currentChatMember);
+
+            List<ChatRoom> rooms = TUMCabeClient
+                    .getInstance(this)
+                    .getMemberRooms(currentChatMember.getId(), verification);
+
+            manager.replaceIntoRooms(rooms);
+        } catch (NoPrivateKey e) {
+            finish();
+        } catch (IOException e) {
+            Utils.log(e);
+        }
     }
 
     /**
@@ -233,7 +292,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
                 manager.join(currentChatRoom);
 
                 // When we show joined chat rooms open chat room directly
-                if (mCurrentMode == 1) {
+                if (mCurrentMode == ChatRoom.MODE_JOINED) {
                     moveToChatActivity();
                 } else { //Otherwise show a nice information, that we added the room
                     final List<ChatRoomAndLastMessage> rooms = manager.getAllByStatus(mCurrentMode);
@@ -254,43 +313,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
 
         TUMCabeClient.getInstance(this)
                      .createRoom(currentChatRoom, verification, callback);
-    }
-
-    @Override
-    protected List<ChatRoomAndLastMessage> onLoadInBackground(Void... arg) {
-        Optional<LecturesResponse> lecturesList = requestHandler.fetch();
-        if (lecturesList.isPresent()) {
-            List<Lecture> lectures = lecturesList.get().getLectures();
-            manager.createLectureRooms(lectures);
-        }
-
-        this.populateCurrentChatMember();
-
-        // Try to restore joined chat rooms from server
-        if (currentChatMember != null) {
-            try {
-                List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
-                                                    .getMemberRooms(currentChatMember.getId(), ChatVerification.Companion.getChatVerification(this, currentChatMember));
-                manager.replaceIntoRooms(rooms);
-            } catch (NoPrivateKey e) {
-                this.finish();
-            } catch (IOException e) {
-                Utils.log(e);
-            }
-        }
-        return manager.getAllByStatus(mCurrentMode);
-    }
-
-    @Override
-    protected void onLoadFinished(List<ChatRoomAndLastMessage> result) {
-        showLoadingEnded();
-        if (result.isEmpty()) {
-            lvMyChatRoomList.setAdapter(new NoResultsAdapter(this));
-        } else {
-            // set ListView to data via the LecturesListAdapter
-            chatRoomAdapter = new ChatRoomListAdapter(this, result, mCurrentMode);
-            lvMyChatRoomList.setAdapter(chatRoomAdapter);
-        }
     }
 
     /**
@@ -320,4 +342,5 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List
         intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
         startActivity(intent);
     }
+
 }
