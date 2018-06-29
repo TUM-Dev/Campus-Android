@@ -136,7 +136,6 @@
     <string name="tuition_fees">Tuition Fees</string>
     <string name="common_info">General Information</string>
     <string name="menues">Cafeterias</string>
-    <string name="study_plans">Study Plans</string>
     <string name="person_search">Person Search</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="study_rooms">Study Rooms</string>
@@ -198,8 +197,6 @@
     <string name="room">Room</string>
     <string name="add_contact">Add to contacts</string>
     <string name="contact_added">Contact is successfully added!</string>
-
-    <!-- Curricula -->
     <string name="something_wrong">An unknown error occurred</string>
 
     <!-- Opening hours -->
