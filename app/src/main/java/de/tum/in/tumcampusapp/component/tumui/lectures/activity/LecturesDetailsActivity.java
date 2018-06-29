@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -10,11 +11,14 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetails;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse;
 import de.tum.in.tumcampusapp.utils.Const;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * This Activity will show all details found on the TUMOnline web service
@@ -28,7 +32,7 @@ import de.tum.in.tumcampusapp.utils.Const;
  * <p/>
  * NEEDS: stp_sp_nr set in incoming bundle (lecture id)
  */
-public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<LectureDetailsResponse> implements OnClickListener {
+public class LecturesDetailsActivity extends ActivityForAccessingTumOnline implements OnClickListener {
 
     /**
      * UI elements
@@ -51,7 +55,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     private TextView tvLDetailsZiele;
 
     public LecturesDetailsActivity() {
-        super(TUMOnlineConst.Companion.getLECTURES_DETAILS(), R.layout.activity_lecturedetails);
+        super(R.layout.activity_lecturedetails);
     }
 
     @Override
@@ -87,23 +91,44 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
         btnLDetailsTermine = findViewById(R.id.btnLDetailsTermine);
         btnLDetailsTermine.setOnClickListener(this);
 
-        // Reads lecture id from bundle
         Bundle bundle = this.getIntent()
                             .getExtras();
-        requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
-        super.requestFetch();
+        String lectureId = getIntent().getStringExtra("stp_sp_nr");
+        if (lectureId == null) {
+            finish();
+            return;
+        }
+
+        loadLectureDetails(lectureId);
     }
 
-    /**
-     * process the given TUMOnline Data and display the details
-     *
-     * @param xmllv Raw text response
-     */
-    @Override
-    public void onFetch(LectureDetailsResponse xmllv) {
+    // TODO: Pull-to-refresh
+
+    private void loadLectureDetails(@NonNull String lectureId) {
+        showLoadingStart();
+        TUMOnlineClient
+                .getInstance(this)
+                .getLectureDetails(lectureId)
+                .enqueue(new Callback<LectureDetailsResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<LectureDetailsResponse> call,
+                                           @NonNull Response<LectureDetailsResponse> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<LectureDetailsResponse> call, @NonNull Throwable t) {
+                        handleDownloadError(t);
+                    }
+                });
+    }
+
+    public void handleDownloadSuccess(LectureDetailsResponse lectureDetailsResponse) {
+        showLoadingEnded();
+
         // we got exactly one row, that's fine
-        currentItem = xmllv.getLectureDetails().get(0);
+        currentItem = lectureDetailsResponse.getLectureDetails().get(0);
         tvLDetailsName.setText(currentItem.getTitle().toUpperCase(Locale.getDefault()));
 
         StringBuilder strLectureLanguage = new StringBuilder(currentItem.getSemesterName());
@@ -123,4 +148,5 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
 
         showLoadingEnded();
     }
+
 }
