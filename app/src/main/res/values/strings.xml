@@ -15,7 +15,7 @@
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
     <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
-
+    
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
@@ -541,6 +541,8 @@ Signature: %5$s</string>
     <string name="error">Error</string>
     <string name="edit_event_button">Edit</string>
     <string name="event_canceled">Canceled</string>
+
+    <string name="request_limit_reached">You reached the request limit for TUMonline. Try again later.</string>
 
     <string name="token_limit_reached">Token limit was reached (max 10). You have delete a Token in TUMonline before you can continue.</string>
     <string name="back">Back</string>

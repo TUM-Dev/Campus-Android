@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.api.tumonline.model
 
-import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.TextContent
 import com.tickaroo.tikxml.annotation.Xml
 
-@Xml(name = "token")
-data class AccessToken(@PropertyElement val token: String)
+@Xml
+data class AccessToken(@TextContent val token: String)

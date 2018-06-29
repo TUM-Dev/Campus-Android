@@ -8,6 +8,8 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.UnknownErrorException;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -50,6 +52,12 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
             showNoTokenLayout();
         } else if (throwable instanceof MissingPermissionException) {
             String message = getString(R.string.dialog_no_rights_function);
+            showFailedTokenLayout(message);
+        } else if (throwable instanceof TokenLimitReachedException) {
+            String message = getString(R.string.token_limit_reached);
+            showFailedTokenLayout(message);
+        } else if (throwable instanceof RequestLimitReachedException) {
+            String message = getString(R.string.request_limit_reached);
             showFailedTokenLayout(message);
         } else if (throwable instanceof UnknownErrorException) {
             showError(R.string.exception_unknown);

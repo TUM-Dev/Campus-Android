@@ -1,31 +1,45 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
+import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
-import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
+import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.UnknownErrorException;
+import de.tum.in.tumcampusapp.api.tumonline.model.AccessToken;
+import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
  */
-public class WizNavStartActivity extends ActivityForLoadingInBackground<String, Boolean> implements OnClickListener, TextWatcher {
+public class WizNavStartActivity
+        extends ActivityForAccessingTumOnline implements OnClickListener, TextWatcher {
 
     private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
     private String lrzId;
@@ -44,17 +58,17 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         disableRefresh();
         findViewById(R.id.wizard_start_layout).requestFocus();
 
-        lrzIdEditText = findViewById(R.id.lrz_id);
-        lrzIdEditText.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
-        lrzIdEditText.addTextChangedListener(this);
-
         nextButton = findViewById(R.id.next_button);
+
+        lrzIdEditText = findViewById(R.id.lrz_id);
+        lrzIdEditText.addTextChangedListener(this);
+        lrzIdEditText.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // make sure to delete to delete information that might lead the app to believe the user enabled TUMonline
+        // Make sure to delete information that might lead the app to believe the user enabled TUMonline
         Utils.setSetting(this, Const.LRZ_ID, null);
         Utils.setSetting(this, Const.ACCESS_TOKEN, null);
     }
@@ -64,15 +78,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
      *
      * @param next Next button handle
      */
-    @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
-        // Upon clicking on next button and there is no internet connection -> toast to the user.
-        if (!NetUtils.isConnected(getApplicationContext())) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
-                 .show();
-            return;
-        }
-
         String enteredId = lrzIdEditText.getText().toString().toLowerCase(Locale.GERMANY);
 
         // check if lrz could be valid?
@@ -93,7 +99,89 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                     .setNegativeButton(getString(R.string.cancel), this)
                     .show();
         } else {
-            startLoading(lrzId); // create a new token
+            requestNewToken(lrzId);
+        }
+    }
+
+    private void requestNewToken(String publicKey) {
+        showLoadingStart();
+        String tokenName = "TUMCampusApp-" + Build.PRODUCT;
+        TUMOnlineClient
+                .getInstance(this)
+                .requestToken(publicKey, tokenName)
+                .enqueue(new Callback<AccessToken>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AccessToken> call,
+                                           @NonNull Response<AccessToken> response) {
+                        AccessToken accessToken = response.body();
+                        if (accessToken != null) {
+                            handleTokenDownloadSuccess(accessToken);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AccessToken> call, @NonNull Throwable t) {
+                        handleTokenDownloadFailure(t);
+                    }
+                });
+    }
+
+    private void handleTokenDownloadSuccess(AccessToken accessToken) {
+        Utils.log("AcquiredAccessToken = " + accessToken.getToken());
+
+        // Save access token to preferences
+        Utils.setSetting(this, Const.ACCESS_TOKEN, accessToken.getToken());
+
+        // Upload the secret to this new generated token
+        AuthenticationManager am = new AuthenticationManager(this);
+        try {
+            am.uploadPublicKey();
+        } catch (NoPublicKey noPublicKey) {
+            Utils.log(noPublicKey);
+        }
+
+        openNextWizardStep();
+    }
+
+    private void handleTokenDownloadFailure(Throwable throwable) {
+        Utils.log(throwable);
+
+        int messageResId;
+
+        if (throwable instanceof InactiveTokenException) {
+            messageResId = R.string.dialog_access_token_invalid;  // TODO: Rename strings
+        } else if (throwable instanceof InvalidTokenException) {
+            messageResId = R.string.token_not_enabled;
+        } else if (throwable instanceof UnknownErrorException) {
+            messageResId = R.string.exception_unknown;
+        } else if (throwable instanceof TokenLimitReachedException) {
+            messageResId = R.string.token_limit_reached;
+        } else if (throwable instanceof RequestLimitReachedException) {
+            messageResId = R.string.request_limit_reached;
+        } else {
+            messageResId = R.string.access_token_wasnt_generated;
+        }
+
+        // Set access token to null
+        Utils.setSetting(this, Const.ACCESS_TOKEN, null);
+        showLoadingEnded();
+        displayErrorDialog(messageResId);
+    }
+
+    private void displayErrorDialog(int messageResId) {
+        hideKeyboard();
+        new AlertDialog.Builder(this)
+                .setMessage(messageResId)
+                .setPositiveButton(R.string.ok, null)
+                .setCancelable(true)
+                .show();
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null) {
+            inputMethodManager.hideSoftInputFromWindow(lrzIdEditText.getWindowToken(), 0);
         }
     }
 
@@ -127,36 +215,15 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             AuthenticationManager am = new AuthenticationManager(this);
             am.clearKeys();
             am.generatePrivateKey(null);
-            startLoading(lrzId); // create a new token
+            requestNewToken(lrzId);
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
-            onLoadFinished(true);
+            openNextWizardStep();
         }
     }
 
-    /**
-     * Requests an access-token from the TumOnline server in background.
-     *
-     * @param arg Unused
-     * @return True if the access token was successfully created
-     */
-    @Override
-    protected Boolean onLoadInBackground(String... arg) {
-        return accessTokenManager.requestAccessToken(this, arg[0]);
-    }
-
-    /**
-     * Opens second wizard page if access token available.
-     *
-     * @param result Was access token successfully created
-     */
-    @Override
-    protected void onLoadFinished(Boolean result) {
-        if (result) {
-            startActivity(new Intent(this, WizNavCheckTokenActivity.class));
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        } else {
-            showLoadingEnded();
-        }
+    private void openNextWizardStep() {
+        startActivity(new Intent(this, WizNavCheckTokenActivity.class));
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     @Override
