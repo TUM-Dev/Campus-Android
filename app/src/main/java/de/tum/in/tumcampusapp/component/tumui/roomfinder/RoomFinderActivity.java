@@ -147,7 +147,12 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
      */
     private static String userRoomSearchMatching(String roomSearchQuery) {
         // Matches the number part if the String is composed of two words, probably wrong:
+
         Pattern pattern = Pattern.compile("(\\w+(?:\\.\\w+)+)|(\\w+\\d+)");
+        /*  First group captures numbers with dots, like the 01.15.069 part from 'MI 01.15.069'
+        (This is the best search format for MI room numbers)
+        The second group captures numbers and mixed formats with letters, like 'MW2001'
+        Only the first match will be returned  */
 
         Matcher matcher = pattern.matcher(roomSearchQuery);
 
