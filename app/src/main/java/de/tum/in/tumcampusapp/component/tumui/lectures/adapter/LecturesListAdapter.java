@@ -23,11 +23,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity;
 
 public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<Lecture> {
 
-    public static LecturesListAdapter newInstance(Context context, List<Lecture> results) {
-        return new LecturesListAdapter(context, results);
-    }
-
-    private LecturesListAdapter(Context context, List<Lecture> results) {
+    public LecturesListAdapter(Context context, List<Lecture> results) {
         super(context, results);
     }
 

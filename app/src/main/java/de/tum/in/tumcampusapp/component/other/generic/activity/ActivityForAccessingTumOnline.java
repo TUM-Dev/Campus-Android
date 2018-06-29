@@ -56,6 +56,7 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
         }
     }
 
+    // TODO: Remove
     @Override
     public void onNoInternetError() {
         showNoInternetLayout();
