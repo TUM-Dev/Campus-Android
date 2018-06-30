@@ -62,10 +62,6 @@ public class StripePaymentActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //TODO: remove, only for testing
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
         // Get price from intent; convert it to CENTS (as required by Stripe)
         price = (long) (getIntent().getDoubleExtra("ticketPrice", -1.0) * 100);
         // Reserve ticket
