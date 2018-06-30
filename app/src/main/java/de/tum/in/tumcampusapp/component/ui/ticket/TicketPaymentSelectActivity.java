@@ -11,7 +11,6 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 
 public class TicketPaymentSelectActivity extends BaseActivity {
 
-
     public TicketPaymentSelectActivity() {
         super(R.layout.activity_payment_selection);
     }
