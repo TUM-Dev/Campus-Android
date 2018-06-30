@@ -34,7 +34,6 @@ import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
- * TODO: combine this with KinoDetailsFragment
  */
 public class EventDetailsFragment extends Fragment {
 
@@ -126,7 +125,7 @@ public class EventDetailsFragment extends Fragment {
         // initialize all TextView
         TextView eventDateTextView = footerView.findViewById(R.id.event_date);
         eventLocationTextView = footerView.findViewById(R.id.event_location);
-        TextView eventRemainticketTextView = footerView.findViewById(R.id.event_remainingticket);
+        TextView eventRemainingTicketTextView = footerView.findViewById(R.id.event_remainingticket);
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
@@ -139,6 +138,8 @@ public class EventDetailsFragment extends Fragment {
         String eventDateTimeString = dateString + " " + time[1];
         eventDateTextView.setText(eventDateTimeString);
 
+        eventDateTextView.setOnClickListener(v -> addToCalendar());
+
         //set Location link
         String eventLocationString = event.getLocality();
         eventLocationTextView.setText(eventLocationString);
@@ -148,8 +149,8 @@ public class EventDetailsFragment extends Fragment {
         //set remaining tickets,following code is just for testing purpose.
         //TODO:The remaining tickets should get from backend.Like event.getremainningtickets()
         int remainingTickets = 30;
-        String remainingTicketsString = Integer.toString(remainingTickets) + " Tickets left!";
-        eventRemainticketTextView.setText(remainingTicketsString);
+        String remainingTicketsString = remainingTickets + " Tickets left!";
+        eventRemainingTicketTextView.setText(remainingTicketsString);
 
         String eventDescriptionString = event.getDescription();
         eventDescriptionTextView.setText(eventDescriptionString);
