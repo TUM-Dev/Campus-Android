@@ -42,7 +42,7 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
         // Add the access token as a parameter to the URL
         var modifiedUrl = request.url()
         accessToken?.let {
-            modifiedUrl = request.url()
+            modifiedUrl = modifiedUrl
                     .newBuilder()
                     .addQueryParameter("pToken", it)
                     .build()
@@ -63,6 +63,7 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
         error?.let {
             throw it.exception.also {
                 if (it is InvalidTokenException) {
+                    // If it is an InvalidTokenException, we disable interaction with TUMonline.
                     Utils.setSetting(context, Const.TUMO_DISABLED, true)
                 }
             }
