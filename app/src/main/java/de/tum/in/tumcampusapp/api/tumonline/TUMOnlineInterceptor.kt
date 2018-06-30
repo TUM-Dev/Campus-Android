@@ -13,7 +13,8 @@ import okhttp3.Response
 
 class TUMOnlineInterceptor(private val context: Context) : Interceptor {
 
-    private var accessToken: String? = loadAccessTokenFromPreferences(context)
+    private val accessToken: String?
+        get() = loadAccessTokenFromPreferences(context)
 
     private var tikXml = TikXml.Builder()
             .exceptionOnUnreadXml(false)

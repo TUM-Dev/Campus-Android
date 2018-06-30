@@ -35,32 +35,28 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
         super(layoutId, auth, minLen);
     }
 
-    // TODO: Duplicated code - fix it!
     protected final void handleDownloadError(Throwable throwable) {
         Utils.log(throwable);
         showLoadingEnded();
 
-        // TODO: Update string names
-        // TODO: Update design of error layouts
-
         if (throwable instanceof NoNetworkConnectionException) {
             showNoInternetLayout();
         } else if (throwable instanceof InactiveTokenException) {
-            String message = getString(R.string.dialog_access_token_invalid);
+            String message = getString(R.string.error_access_token_inactive);
             showFailedTokenLayout(message);
         } else if (throwable instanceof InvalidTokenException) {
             showNoTokenLayout();
         } else if (throwable instanceof MissingPermissionException) {
-            String message = getString(R.string.dialog_no_rights_function);
+            String message = getString(R.string.error_no_rights_to_access_function);
             showFailedTokenLayout(message);
         } else if (throwable instanceof TokenLimitReachedException) {
-            String message = getString(R.string.token_limit_reached);
+            String message = getString(R.string.error_access_token_limit_reached);
             showFailedTokenLayout(message);
         } else if (throwable instanceof RequestLimitReachedException) {
-            String message = getString(R.string.request_limit_reached);
+            String message = getString(R.string.error_request_limit_reached);
             showFailedTokenLayout(message);
         } else if (throwable instanceof UnknownErrorException) {
-            showError(R.string.exception_unknown);
+            showError(R.string.error_unknown);
         }
     }
 

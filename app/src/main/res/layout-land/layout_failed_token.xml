@@ -24,7 +24,7 @@
         android:layout_toRightOf="@id/failed_token_image"
         android:layout_toEndOf="@id/failed_token_image"
         android:gravity="center"
-        android:text="@string/error_fetching_tumonline"
+        android:text="@string/error_accessing_tumonline"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="12sp"/>
 

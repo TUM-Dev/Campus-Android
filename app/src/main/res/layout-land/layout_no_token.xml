@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imageView"
         android:gravity="center"
-        android:text="@string/error_no_token_setup"
+        android:text="@string/error_no_access_token_setup"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="12sp"/>
 </RelativeLayout>

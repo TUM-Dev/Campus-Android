@@ -83,7 +83,7 @@ public class WizNavStartActivity
 
         // check if lrz could be valid?
         if (!enteredId.matches(Const.TUM_ID_PATTERN)) {
-            Utils.showToast(this, R.string.error_lrz_wrong);
+            Utils.showToast(this, R.string.error_invalid_tum_id);
             return;
         }
 
@@ -94,7 +94,7 @@ public class WizNavStartActivity
         if (accessTokenManager.hasValidAccessToken()) {
             // show Dialog first
             new AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.dialog_new_token))
+                    .setMessage(getString(R.string.error_access_token_already_set_generate_new))
                     .setPositiveButton(getString(R.string.generate_new_token), this)
                     .setNegativeButton(getString(R.string.cancel), this)
                     .show();
@@ -149,17 +149,17 @@ public class WizNavStartActivity
         int messageResId;
 
         if (throwable instanceof InactiveTokenException) {
-            messageResId = R.string.dialog_access_token_invalid;  // TODO: Rename strings
+            messageResId = R.string.error_access_token_inactive;
         } else if (throwable instanceof InvalidTokenException) {
-            messageResId = R.string.token_not_enabled;
+            messageResId = R.string.error_invalid_access_token;
         } else if (throwable instanceof UnknownErrorException) {
-            messageResId = R.string.exception_unknown;
+            messageResId = R.string.error_unknown;
         } else if (throwable instanceof TokenLimitReachedException) {
-            messageResId = R.string.token_limit_reached;
+            messageResId = R.string.error_access_token_limit_reached;
         } else if (throwable instanceof RequestLimitReachedException) {
-            messageResId = R.string.request_limit_reached;
+            messageResId = R.string.error_request_limit_reached;
         } else {
-            messageResId = R.string.access_token_wasnt_generated;
+            messageResId = R.string.error_access_token_could_not_be_generated;
         }
 
         // Set access token to null

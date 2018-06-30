@@ -75,7 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             TextView emailText = headerView.findViewById(R.id.emailTextView);
 
             nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
-                                              getString(R.string.token_not_enabled)));
+                                              getString(R.string.not_connected_to_tumonline)));
 
             StringBuffer email = new StringBuffer(Utils.getSetting(this, Const.LRZ_ID, ""));
             if (email.toString().isEmpty()) {

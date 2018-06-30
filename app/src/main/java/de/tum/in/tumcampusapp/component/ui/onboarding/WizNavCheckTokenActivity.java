@@ -98,9 +98,9 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
         if (t instanceof NoNetworkConnectionException) {
             messageResId = R.string.no_internet_connection;
         } else if (t instanceof InactiveTokenException) {
-            messageResId = R.string.token_not_enabled;
+            messageResId = R.string.error_access_token_inactive;
         } else {
-            messageResId = R.string.exception_unknown;
+            messageResId = R.string.error_unknown;
         }
 
         showLoadingEnded();

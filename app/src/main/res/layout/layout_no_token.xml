@@ -13,7 +13,7 @@
         android:layout_below="@+id/no_token_image"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:text="@string/error_no_token_setup"
+        android:text="@string/error_no_access_token_setup"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="12sp"/>
 
