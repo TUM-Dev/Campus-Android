@@ -420,17 +420,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
     }
 
     @Override
-    public void onFetchError(String errorReason) {
-        super.onFetchError(errorReason);
-        Utils.log("Noten failed due to: " + errorReason);
-    }
-
-    @Override
-    public void onNoDataToShow() {
-        showError(R.string.no_grades);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.bar_chart_menu) {

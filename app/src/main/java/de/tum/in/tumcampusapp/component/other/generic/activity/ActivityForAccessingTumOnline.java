@@ -30,6 +30,11 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity {
         super(layoutId);
     }
 
+    @Override
+    public void onRefresh() {
+        // Subclasses can override this method
+    }
+
     protected final void handleDownloadError(Throwable throwable) {
         Utils.log(throwable);
         showLoadingEnded();
