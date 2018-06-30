@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBla
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.tumui.person.FacultyDao;
 import de.tum.in.tumcampusapp.component.tumui.person.model.Faculty;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao;
@@ -47,6 +47,12 @@ import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomGroupDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventDao;
+import de.tum.in.tumcampusapp.component.ui.ticket.TicketDao;
+import de.tum.in.tumcampusapp.component.ui.ticket.TicketTypeDao;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportDao;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
@@ -75,6 +81,9 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         TumLock.class,
         BuildingToGps.class,
         Kino.class,
+        Event.class,
+        Ticket.class,
+        TicketType.class,
         ChatMessage.class,
         Location.class,
         News.class,
@@ -87,7 +96,7 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         Faculty.class,
         StudyRoomGroup.class,
         StudyRoom.class,
-        GCMNotification.class,
+        FcmNotification.class,
         TransportFavorites.class,
         WidgetsTransport.class,
         ChatRoomDbRow.class
@@ -106,7 +115,7 @@ public abstract class TcaDb extends RoomDatabase {
     private static TcaDb instance;
 
     public static synchronized TcaDb getInstance(Context context) {
-        if (instance == null || !instance.isOpen()) {
+        if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
                            .addMigrations(migrations)
@@ -129,6 +138,12 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract BuildingToGpsDao buildingToGpsDao();
 
     public abstract KinoDao kinoDao();
+
+    public abstract EventDao eventDao();
+
+    public abstract TicketDao ticketDao();
+
+    public abstract TicketTypeDao ticketTypeDao();
 
     public abstract CafeteriaLocationDao locationDao();
 

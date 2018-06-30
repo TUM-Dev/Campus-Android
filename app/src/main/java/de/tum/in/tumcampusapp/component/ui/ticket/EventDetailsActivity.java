@@ -10,9 +10,7 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import io.reactivex.disposables.CompositeDisposable;
 
-/**
- * TODO: combine this with KinoActivity
- */
+
 public class EventDetailsActivity extends BaseActivity{
 
     public EventDetailsActivity() {
@@ -20,10 +18,13 @@ public class EventDetailsActivity extends BaseActivity{
     }
 
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private EventsController eventsController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        eventsController = new EventsController(this);
 
         // set up ViewPager and adapter
         ViewPager mPager = findViewById(R.id.pager);
@@ -31,8 +32,8 @@ public class EventDetailsActivity extends BaseActivity{
         // TODO: extract key to const class
         int clickedEventId = getIntent().getIntExtra("event_id", 0);
 
-        // TODO: replace by real data -> for now, using static method with mock data for testing purposes
-        List<Event> events = EventsController.getEvents();
+        List<Event> events = eventsController.getEvents();
+
         EventDetailsAdapter eventDetailsAdapter = new EventDetailsAdapter(getSupportFragmentManager(),
                 events);
 

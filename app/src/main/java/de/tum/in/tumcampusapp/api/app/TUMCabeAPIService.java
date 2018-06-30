@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
-import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -14,8 +14,8 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordin
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotificationLocation;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -36,6 +36,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationRespons
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -126,24 +127,24 @@ public interface TUMCabeAPIService {
     Call<List<Curriculum>> getAllCurriculas();
 
     @GET(API_NOTIFICATIONS + "{notification}/")
-    Call<GCMNotification> getNotification(@Path("notification") int notification);
+    Call<FcmNotification> getNotification(@Path("notification") int notification);
 
     @GET(API_NOTIFICATIONS + "confirm/{notification}/")
     Call<String> confirm(@Path("notification") int notification);
 
     //Locations
     @GET(API_LOCATIONS)
-    Call<List<GCMNotificationLocation>> getAllLocations();
+    Call<List<FcmNotificationLocation>> getAllLocations();
 
     @GET(API_LOCATIONS + "{locationId}/")
-    Call<GCMNotificationLocation> getLocation(@Path("locationId") int locationId);
+    Call<FcmNotificationLocation> getLocation(@Path("locationId") int locationId);
 
     //Device
     @POST(API_DEVICE + "register/")
     Call<TUMCabeStatus> deviceRegister(@Body DeviceRegister verification);
 
     @POST(API_DEVICE + "addGcmToken/")
-    Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadGcmToken verification);
+    Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadFcmToken verification);
 
     //WifiHeatmap
     @POST(API_WIFI_HEATMAP + "create_measurements/")
@@ -201,7 +202,7 @@ public interface TUMCabeAPIService {
     Observable<List<Cafeteria>> getCafeterias();
 
     @GET(API_KINOS + "{lastId}")
-    Observable<List<Kino>> getKinos(@Path("lastId") String lastId);
+    Flowable<List<Kino>> getKinos(@Path("lastId") String lastId);
 
     @GET(API_CARD)
     Call<List<StudyCard>> getStudyCards();

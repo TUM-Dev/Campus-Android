@@ -136,12 +136,11 @@
     <string name="menues">Mensen</string>
     <string name="study_plans">Studienpläne</string>
     <string name="person_search">Personensuche</string>
-    <string name="plans">Pläne</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="opening_hours">Öffnungszeiten</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
-    <string name="events">Ereignisse</string>
+
     <!-- Activity titles -->
     <string name="lectures_information">Vorlesungsinformationen</string>
     <string name="lectures_appointments">Vorlesungstermine</string>
@@ -213,10 +212,6 @@
     <string name="campus_olympiapark_gyms">Campus Olympiapark Hallenplan</string>
     <string name="campus_main">Stammgelände</string>
     <string name="campus_weihenstephan">Campus Weihenstephan</string>
-    <string name="mvv_fast_train_net">MVV Schnellbahnnetz</string>
-    <string name="mvv_tram">MVV Tramnetz</string>
-    <string name="mvv_entire_net">MVV Gesamtnetz</string>
-    <string name="mvv_nightlines">MVV Nachtliniennetz</string>
     <string name="campus_garching_adress">Walther-Meißner-Straße 3, 85748 Garching</string>
     <string name="campus_klinikum_adress">Ismaninger Straße 22, 81675 München</string>
     <string name="campus_olympiapark_adress">Connollystraße 32, 80809 München</string>
@@ -399,7 +394,6 @@ Signatur: %5$s</string>
     <string name="widget_configure_description">Anzeige der Karten einstellen</string>
     <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
     <string name="chat_not_setup">Chat ist nicht richtig eingerichtet, bitte den Assistenten über die Einstellungen neu starten!</string>
-    <string name="mvv_download">Bitte klicken Sie auf OK, um MVV-Pläne herunterzuladen, sonst können Sie diese Funktion nicht verwenden</string>
     <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
     <string name="IN">in</string>
     <string name="MINUTES">minuten</string>
@@ -493,9 +487,16 @@ Signatur: %5$s</string>
     <string name="show_answer">Antwort anzeigen</string>
     <string name="title_activity_cards_quiz">Lernkarten</string>
 
+    <!-- Events Activity -->
+    <string name="show_booked_events">Gebuchte Veranstaltungen anzeigen</string>
+    <string name="events_tickets"> Veranstaltungen &amp; Tickets</string>
+    <string name="payment_selection">Zahlungsoption Wählen</string>
+    <string name="add_eventcalendar">Hinzufügen im Kalender</string>
+    <string name="all_events">Alle Veranstaltungen</string>
+    <string name="booked_events">Gebuchte Veranstaltungen</string>
+    <string name="redeemed">Eingelöst</string>
+
     <!-- Ticket Activity -->
-    <string name="eventdetail_dots">Veranstaltungsdetails</string>
-    <string name="qrcode_dots">Ticket QRcode</string>
     <string name="your_ticket">Dein Ticket</string>
     <string name="show_ticket">Ticket Zeigen</string>
     <string name="buy_ticket">Ticket Kaufen</string>
@@ -588,12 +589,6 @@ Signatur: %5$s</string>
     <string name="join_chat_via_qr_code">via QR-code beitreten</string>
 
     <string name="topic">Über</string>
-
-    <!-- Events Activity -->
-    <string name="show_booked_events">Gebuchte Veranstaltungen anzeigen</string>
-    <string name="events_overview">Veranstaltungsübersicht</string>
-    <string name="payment_selection">Zahlungsoption Wählen</string>
-
     <string name="generate_new_token">Neuen Token generieren</string>
     <string name="open_tum_online">TUM Online öffnen</string>
     <string name="create">Erstellen</string>

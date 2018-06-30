@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         CardView cardView;
         ImageView imgView;
         TextView titleView;
-        TextView descriptionView;
         TextView localityView;
         TextView srcDateView;
 
@@ -42,7 +42,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             cardView = (CardView) view;
             titleView =  view.findViewById(R.id.events_title);
             imgView = view.findViewById(R.id.events_img);
-            descriptionView =view.findViewById(R.id.events_description);
             localityView = view.findViewById(R.id.events_src_locality);
             srcDateView = view.findViewById(R.id.events_src_date);
         }
@@ -104,14 +103,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
                 .replaceAll("");
         holder.titleView.setText(title);
 
-        //Adds descriptionView
-        int maxDescriptionLength = 80;
-        String description = event.getDescription();
-        String shortenedDescription = description;
-        if (description.length() > maxDescriptionLength){
-            shortenedDescription = description.substring(0, maxDescriptionLength) + "...";
-        }
-        holder.descriptionView.setText(shortenedDescription);
         //Adds localityView
         String locality = event.getLocality();
         holder.localityView.setText(locality);

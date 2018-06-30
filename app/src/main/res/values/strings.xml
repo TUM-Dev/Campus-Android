@@ -138,13 +138,12 @@
     <string name="menues">Cafeterias</string>
     <string name="study_plans">Study Plans</string>
     <string name="person_search">Person Search</string>
-    <string name="plans">Plans</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="study_rooms">Study Rooms</string>
     <string name="opening_hours">Opening Hours</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
-    <string name="events">Events</string>
+    <string name="events" translatable="false">Events</string>
     <string name="barrier_free">Barrier-free Information</string>
 
     <!-- Activity titles -->
@@ -223,10 +222,6 @@
     <string name="campus_olympiapark_gyms">Campus Olympiapark hall plan</string>
     <string name="campus_main">Main Campus</string>
     <string name="campus_weihenstephan">Campus Weihenstephan</string>
-    <string name="mvv_fast_train_net">MVV Train-Network</string>
-    <string name="mvv_tram">MVV Tram-Network</string>
-    <string name="mvv_entire_net">MVV Overall-Network</string>
-    <string name="mvv_nightlines">MVV Nightlines</string>
     <string name="campus_garching_adress">Walther-Meißner-Straße 3, 85748 Garching</string>
     <string name="campus_klinikum_adress">Ismaninger Straße 22, 81675 Munich</string>
     <string name="campus_olympiapark_adress">Connollystraße 32, 80809 Munich</string>
@@ -426,7 +421,6 @@ Signature: %5$s</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
     <string name="www" translatable="false">TU Film</string>
-    <string name="mvv_download">Please press OK to download MVV-Plans otherwise you can\'t use this feature</string>
     <string name="more_info">More Information</string>
     <string name="event_plan">Event plan</string>
     <string name="please_connect_to_internet">Please connect to internet in order to proceed the first app start</string>
@@ -594,10 +588,18 @@ Signature: %5$s</string>
     <string name="join_chat_via_qr_code">let others join via QR-code</string>
 
     <string name="Refresh">Refresh</string>
-    
+    <string name="create">Create</string>
+    <string name="enter_name_placeholder">Enter name …</string>
+    <string name="send_feedback_question">Send feedback now?</string>
+    <string name="feedback_empty">You haven\'t entered any feedback</string>
+    <string name="feedback_img_without_text">Please add a description</string>
+    <string name="campus">Campus</string>
+
+    <string name="discard_changes_question">Discard your changes?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+
     <!-- Ticket Activity -->
-    <string name="eventdetail_dots">Event Details</string>
-    <string name="qrcode_dots">Ticket QRcode</string>
     <string name="your_ticket">Your Ticket</string>
     <string name="show_ticket">Show Ticket</string>
     <string name="buy_ticket">Buy Ticket</string>
@@ -607,12 +609,16 @@ Signature: %5$s</string>
 
     <!-- Event Activity -->
     <string name="show_booked_events">Show booked events</string>
-    <string name="events_overview">Events Overview</string>
+    <string name="events_tickets">Events &amp; Tickets</string>
     <string name="ticket_type">Ticket Type</string>
     <string name="price">Price</string>
     <string name="location">Location</string>
     <string name="event" translatable="false">Event</string>
     <string name="payment_selection">Payment Selection</string>
+    <string name="add_eventcalendar">Add In Calendar</string>
+    <string name="all_events">All Events</string>
+    <string name="booked_events">Booked Events</string>
+    <string name="link" translatable="false">Link</string>
 
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>
@@ -633,17 +639,6 @@ Signature: %5$s</string>
     <string name="creditcard_ending_in">ending in</string>
     <string name="empty_cardholder_message">No cardholder specified.</string>
 
-
-    <string name="link" translatable="false">Link</string>
-    <string name="create">Create</string>
-    <string name="enter_name_placeholder">Enter name …</string>
-    <string name="send_feedback_question">Send feedback now?</string>
-    <string name="feedback_empty">You haven\'t entered any feedback</string>
-    <string name="feedback_img_without_text">Please add a description</string>
-    <string name="campus">Campus</string>
-
-    <string name="discard_changes_question">Discard your changes?</string>
-    <string name="discard">Discard</string>
-    <string name="keep_editing">Keep editing</string>
+    <string name="redeemed">Redeemed</string>
 
 </resources>

@@ -15,7 +15,9 @@ import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Ignore;
 
+@Ignore
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, application = TestApp.class)
 public class NewsSourcesDaoTest {

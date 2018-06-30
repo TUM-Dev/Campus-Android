@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -37,6 +39,8 @@ public class EventDetailsFragment extends Fragment {
     private String url; // link to homepage
     private LayoutInflater inflater;
 
+    private EventsController eventsController;
+
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
@@ -45,12 +49,14 @@ public class EventDetailsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_kinodetails_section, container, false);
         LinearLayout root = rootView.findViewById(R.id.layout);
 
+        eventsController = new EventsController(this.getContext());
+
         // position in database
         int position = getArguments().getInt(Const.POSITION);
 
         context = root.getContext();
 
-        event = EventsController.getEvents().get(position);
+        event = eventsController.getEvents().get(position);
         showDetails(root);
 
         return rootView;
@@ -111,18 +117,20 @@ public class EventDetailsFragment extends Fragment {
         // initialize all buttons
         Button link = headerView.findViewById(R.id.button_link);
         Button ticket = headerView.findViewById(R.id.button_ticket);
+        Button exportCalendar = headerView.findViewById(R.id.button_export_eventcalendar);
         ImageView cover = headerView.findViewById(R.id.kino_cover);
         ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
         View error = headerView.findViewById(R.id.kino_cover_error);
 
         // onClickListeners
         link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
-
+        // Export current activity to google calendar
+        exportCalendar.setOnClickListener(view -> addToCalendar());
         // Setup "Buy/Show ticket" button according to ticket status for current event
-        if (EventsController.isEventBooked(event)){
+        if (eventsController.isEventBooked(event)) {
             ticket.setText(this.getString(R.string.show_ticket));
             ticket.setOnClickListener(view -> showTicket());
-        } else{
+        } else {
             ticket.setText(this.getString(R.string.buy_ticket));
             ticket.setOnClickListener(view -> buyTicket());
         }
@@ -156,6 +164,18 @@ public class EventDetailsFragment extends Fragment {
         // TODO: message to server to create ticket
         Intent intent = new Intent(context, BuyTicketActivity.class);
         intent.putExtra("eventID", event.getId());
+        startActivity(intent);
+    }
+
+    private void addToCalendar() {
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTime())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().getTime() + 7200000)
+                .putExtra(CalendarContract.Events.TITLE, event.getTitle())
+                .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);//Indicates that this event is free time and will not conflict with other events.
         startActivity(intent);
     }
 
