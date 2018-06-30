@@ -13,17 +13,18 @@
         android:layout_height="wrap_content"
         android:background="@color/color_primary"
         android:elevation="2dp"
-        android:padding="@dimen/material_small_padding"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/material_small_padding">
 
         <TextView
             android:id="@+id/mvv_widget_station"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ellipsize="end"
             android:background="@color/color_primary"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
             android:lines="1"
             android:textColor="@android:color/white"
             android:textSize="20sp"

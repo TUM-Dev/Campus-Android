@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -66,10 +67,7 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
         rv.setTextViewText(R.id.menu_content, menuContent + " (" + currentItem.getTypeShort() + ")");
 
         String price = CafeteriaPrices.INSTANCE.getPrice(applicationContext, currentItem.getTypeLong());
-        if (price == null) {
-            price = "____";
-        }
-
+        rv.setViewVisibility(R.id.menu_price, price == null ? View.INVISIBLE : View.VISIBLE);
         rv.setTextViewText(R.id.menu_price, price + " €");
         return rv;
     }
