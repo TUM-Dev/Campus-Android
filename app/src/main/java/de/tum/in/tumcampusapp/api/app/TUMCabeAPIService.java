@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.api.app;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
@@ -248,9 +249,8 @@ public interface TUMCabeAPIService {
 
     // Ticket purchase
     @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
-    Call<Ticket> purchaseTicketStripe(@Body int ticket_history, String token,
-                                      String customer_mail, String customer_name);
+    Call<HashMap<String, Object>> purchaseTicketStripe(@Body HashMap<String, Object> map);
 
     @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
-    Call<String> retrieveEphemeralKey(@Body String api_version, String customer_mail);
+    Call<HashMap<String, Object>> retrieveEphemeralKey(@Body HashMap<String, Object> map);
 }

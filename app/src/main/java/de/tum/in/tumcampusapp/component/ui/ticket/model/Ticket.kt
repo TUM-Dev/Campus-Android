@@ -13,7 +13,6 @@ import com.google.gson.annotations.SerializedName
  */
 @Entity
 data class Ticket(@PrimaryKey
-                 @SerializedName("ticket")
                  var event: Event,
                  var code: String = "",
                   @SerializedName("ticket_type")

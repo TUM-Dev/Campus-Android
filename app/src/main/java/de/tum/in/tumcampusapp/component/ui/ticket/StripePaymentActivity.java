@@ -36,6 +36,7 @@ import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class StripePaymentActivity extends BaseActivity {
 
@@ -48,6 +49,7 @@ public class StripePaymentActivity extends BaseActivity {
     PaymentSession paymentSession;
     Boolean setSource = false;
     int ticketHistory;
+    int eventID;
     long price = -1; // ticket price IN CENTS
 
 
@@ -67,7 +69,7 @@ public class StripePaymentActivity extends BaseActivity {
         // Get price from intent; convert it to CENTS (as required by Stripe)
         price = (long) (getIntent().getDoubleExtra("ticketPrice", -1.0) * 100);
         // Reserve ticket
-        ticketHistory = reserveTicket();
+        ticketHistory = 1;//reserveTicket();//TODO: need real user ID (as saved in database) to reserve a ticket
 
         if (ticketHistory < 0 || price < 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
@@ -83,6 +85,11 @@ public class StripePaymentActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         paymentSession.onDestroy();
+        try {
+            TUMCabeClient.getInstance(getApplicationContext()).cancelTicketReservation(ticketHistory);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -95,7 +102,6 @@ public class StripePaymentActivity extends BaseActivity {
                                          }
                                      }
         );
-        buyButton.setEnabled(false);
 
         cardholderEditText = findViewById(R.id.cardholder_edit_text);
 
@@ -132,23 +138,20 @@ public class StripePaymentActivity extends BaseActivity {
         }
 
         setPurchaseRequestLoading();
-
         try {
-            //TODO: get user mail
             Ticket ticket = TUMCabeClient
-                    .getInstance(getApplicationContext())
-                    .purchaseTicketStripe(0,
+                    .getInstance(StripePaymentActivity.this)
+                    .purchaseTicketStripe(1,
                             paymentSession.getPaymentSessionData().getSelectedPaymentMethodId(),
-                            "test@user.bla",
+                            getUserMailAddress(),
                             cardholder);
-            //TODO: Add Ticket to local database and jump to ticketOverview
+            //TODO: Add Ticket to local database and jump to ShowTicketActivity
+            finishLoadingPurchaseRequestSuccess(ticket);
         } catch (IOException exception) {
             exception.printStackTrace();
             finishLoadingPurchaseRequestError(getString(R.string.purchase_error_message));
             return;
         }
-
-        finishLoadingPurchaseRequestSuccess();
     }
 
 
@@ -157,9 +160,8 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
 
-    private void finishLoadingPurchaseRequestSuccess() {
+    private void finishLoadingPurchaseRequestSuccess(Ticket ticket) {
         progressDialog.dismiss();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
         // Show success message to user
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
@@ -169,6 +171,10 @@ public class StripePaymentActivity extends BaseActivity {
                 .setPositiveButton(getString(R.string.purchase_success_continue), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(StripePaymentActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        intent = new Intent(StripePaymentActivity.this, ShowTicketActivity.class);
+                        intent.putExtra("eventID", ticket.getEvent().getId());
                         startActivity(intent);
                     }
                 })
@@ -194,7 +200,7 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
 
-    /* On return of the saved creditcard selection */
+    /* On return of the credit card selection */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -220,6 +226,8 @@ public class StripePaymentActivity extends BaseActivity {
 
 
     private void initCustomerSession() {
+        String customerMail = getUserMailAddress();
+
         CustomerSession.initCustomerSession(new TicketEphemeralKeyProvider(new TicketEphemeralKeyProvider.ProgressListener() {
             @Override
             public void onStringResponse(String string) {
@@ -227,14 +235,13 @@ public class StripePaymentActivity extends BaseActivity {
                     showError(string);
                 }
             }
-        }, getApplicationContext()));
+        }, getApplicationContext(), customerMail));
     }
 
 
     private void initPaymentSession() {
         paymentSession = new PaymentSession(this);
-
-        boolean initSuccess = paymentSession.init(new PaymentSession.PaymentSessionListener() {
+        paymentSession.init(new PaymentSession.PaymentSessionListener() {
 
             @Override
             public void onCommunicatingStateChanged(boolean isCommunicating) {
@@ -250,7 +257,6 @@ public class StripePaymentActivity extends BaseActivity {
             public void onError(int errorCode, @Nullable String errorMessage) {
                 System.out.println("Error: " + errorMessage);
                 showError(getString(R.string.customersession_init_failed));
-                buyButton.setEnabled(false);
             }
 
             @Override
@@ -261,11 +267,6 @@ public class StripePaymentActivity extends BaseActivity {
                 .setShippingMethodsRequired(false)
                 .setShippingInfoRequired(false)
                 .build());
-
-        if (initSuccess) {
-            paymentSession.setCartTotal(price);
-            buyButton.setEnabled(true);
-        }
     }
 
     private String buildCardString(@NonNull SourceCardData data) {
@@ -274,9 +275,9 @@ public class StripePaymentActivity extends BaseActivity {
 
     private int reserveTicket() {
         int ticketType = getIntent().getIntExtra("ticketType", -1);
-        int memberID = 0; //TODO
+        int memberID = 0; //TODO: get real user ID (id used in database)
 
-        if(ticketType < 0) {
+        if (ticketType < 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
             finish();
         }
@@ -288,6 +289,15 @@ public class StripePaymentActivity extends BaseActivity {
             showError(getString(R.string.internal_error));
             return -1;
         }
+    }
+
+    private String getUserMailAddress() {
+        String customerMail = Utils.getSetting(StripePaymentActivity.this, Const.LRZ_ID, "");
+        if(customerMail.length() == 0) {
+            showError(getString(R.string.internal_error));
+            finish();
+        }
+        return customerMail + "@mytum.de";
     }
 
 }
