@@ -618,7 +618,8 @@ Signature: %5$s</string>
     <string name="add_eventcalendar">Add In Calendar</string>
     <string name="all_events">All Events</string>
     <string name="booked_events">Booked Events</string>
-    <string name="link" translatable="false">Link</string>
+    <string name="link" translatable="false">VISIT WEBSITE</string>
+
 
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>
