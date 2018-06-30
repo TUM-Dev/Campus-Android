@@ -389,8 +389,8 @@ public final class TUMCabeClient {
     // Ticket purchase
     public Ticket purchaseTicketStripe(int ticketHistory, String token, String customerMail,
                                        String customerName) throws IOException {
-        return new Ticket(EventsController.getEventById(2), "codeblablabla918gr182gr9128g2u8f393u2vu32",
-                new TicketType(1, 5.5, "TU Students"), 1);
+        return new Ticket(1, 2, "codeblablabla918gr182gr9128g2u8f393u2vu32",
+                1, false);
         /*
         HashMap<String, Object> argsMap = new HashMap<>();
         argsMap.put("ticket_history", ticketHistory);

@@ -62,14 +62,10 @@ public class StripePaymentActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //TODO: remove, only for testing
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
         // Get price from intent; convert it to CENTS (as required by Stripe)
         price = (long) (getIntent().getDoubleExtra("ticketPrice", -1.0) * 100);
         // Reserve ticket
-        ticketHistory = 1;//reserveTicket();//TODO: need real user ID (as saved in database) to reserve a ticket
+        ticketHistory = 1;//reserveTicket();
 
         if (ticketHistory < 0 || price < 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
@@ -174,7 +170,7 @@ public class StripePaymentActivity extends BaseActivity {
                         Intent intent = new Intent(StripePaymentActivity.this, MainActivity.class);
                         startActivity(intent);
                         intent = new Intent(StripePaymentActivity.this, ShowTicketActivity.class);
-                        intent.putExtra("eventID", ticket.getEvent().getId());
+                        intent.putExtra("eventID", ticket.getEventId());
                         startActivity(intent);
                     }
                 })
