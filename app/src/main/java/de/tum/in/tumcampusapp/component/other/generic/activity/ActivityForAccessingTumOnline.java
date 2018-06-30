@@ -4,7 +4,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
@@ -15,9 +14,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Generic class which handles all basic tasks to communicate with TUMOnline. It
- * implements the {@link TUMOnlineRequestFetchListener} in order to receive data from
- * TUMOnline and implements a rich user feedback with error progress and token
- * related layouts.
+ * implements a rich user feedback with error progress and token-related layouts.
  */
 public abstract class ActivityForAccessingTumOnline extends ProgressActivity {
 
