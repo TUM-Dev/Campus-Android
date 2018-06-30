@@ -15,6 +15,7 @@ import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
+@Deprecated
 public class CacheManager {
     public static final int CACHE_TYP_DATA = 0;
     public static final int CACHE_TYP_IMAGE = 1;
