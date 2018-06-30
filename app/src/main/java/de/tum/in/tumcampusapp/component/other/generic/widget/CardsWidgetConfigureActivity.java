@@ -29,6 +29,7 @@ public class CardsWidgetConfigureActivity extends Activity {
     private CheckBox mNewsCheck;
     private CheckBox mLectureCheck;
     private CheckBox mTutionFeesCheck;
+
     final private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
