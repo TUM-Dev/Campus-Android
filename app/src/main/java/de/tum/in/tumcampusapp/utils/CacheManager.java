@@ -9,18 +9,8 @@ import com.google.common.base.Optional;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.component.other.departments.model.OrgItemList;
-import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
-import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
-import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -92,6 +82,7 @@ public class CacheManager {
         // ALL STUFF BELOW HERE NEEDS A VALID ACCESS TOKEN
 
         // Sync organisation tree
+        /*
         TUMOnlineRequest<OrgItemList> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getORG_TREE(), mContext);
         if (shouldRefresh(requestHandler.getRequestURL())) {
             requestHandler.fetch();
@@ -102,6 +93,7 @@ public class CacheManager {
         if (shouldRefresh(requestHandler2.getRequestURL())) {
             requestHandler2.fetch();
         }
+        */
 
         // Sync lectures, details and appointments
         importLecturesFromTUMOnline();
@@ -111,6 +103,7 @@ public class CacheManager {
     }
 
     public void syncCalendar() {
+        /*
         TUMOnlineRequest<Events> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getCALENDER(), mContext);
         requestHandler.setParameter("pMonateVor", "2");
         requestHandler.setParameter("pMonateNach", "3");
@@ -122,6 +115,7 @@ public class CacheManager {
                 CalendarController.QueryLocationsService.loadGeo(mContext);
             }
         }
+        */
     }
 
     /**
@@ -184,6 +178,7 @@ public class CacheManager {
      * this function allows us to import all lecture items from TUMOnline
      */
     private void importLecturesFromTUMOnline() {
+        /*
         // get my lectures
         TUMOnlineRequest<LecturesResponse> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
         if (!shouldRefresh(requestHandler.getRequestURL())) {
@@ -198,6 +193,7 @@ public class CacheManager {
 
         ChatRoomController manager = new ChatRoomController(mContext);
         manager.createLectureRooms(lectures);
+        */
     }
 
     public static synchronized void clearCache(Context context) {

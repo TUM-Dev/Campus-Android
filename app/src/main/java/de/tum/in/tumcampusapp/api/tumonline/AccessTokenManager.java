@@ -1,17 +1,8 @@
 package de.tum.in.tumcampusapp.api.tumonline;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 
-import com.google.common.base.Optional;
-
-import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
-import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
-import de.tum.in.tumcampusapp.api.tumonline.model.AccessToken;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -33,6 +24,7 @@ public class AccessTokenManager {
      * @param lrzId lrz user id
      * @return the access token
      */
+    /*
     String generateAccessToken(String lrzId) throws TUMOException {
         // we don't have an access token yet, though we take the constructor with only one parameter to set the method
         TUMOnlineRequest<AccessToken> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getREQUEST_TOKEN(), context, false);
@@ -47,6 +39,7 @@ public class AccessTokenManager {
 
         return token.get().getToken();
     }
+    */
 
     /**
      * If a valid access token already exists.
@@ -66,6 +59,7 @@ public class AccessTokenManager {
      * @param lrzId LRZ id
      * @return True if new access token has been set successfully
      */
+    /*
     public boolean requestAccessToken(Activity activity, String lrzId) {
         try {
             if (!NetUtils.isConnected(context)) {
@@ -114,4 +108,6 @@ public class AccessTokenManager {
         }
         return false;
     }
+    */
+
 }

@@ -4,6 +4,7 @@ package de.tum.in.tumcampusapp.api.tumonline;
  * this interface should frame, how to implement a listener for the
  * fetchInteractive method in TUMOnlineRequest
  */
+@Deprecated
 public interface TUMOnlineRequestFetchListener<T> {
 
     /**

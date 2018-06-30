@@ -5,7 +5,6 @@ import android.content.Context;
 import de.tum.in.tumcampusapp.api.tumonline.model.TumLock;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.CacheManager;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * TUMOnline lock manager: prevent too many requests send to TUMO
@@ -50,6 +49,7 @@ public class TumManager {
         }
     }
 
+    /*
     public String addLock(String url, String data) {
         //Check if we have a lock already
         TumLock r = dao.getFromUrl(url);
@@ -81,4 +81,6 @@ public class TumManager {
         dao.setLock(TumLock.Companion.create(url, msg, lockTime));
         return msg;
     }
+    */
+
 }

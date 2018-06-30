@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * TUMOnline and implements a rich user feedback with error progress and token
  * related layouts.
  */
-public abstract class ActivityForAccessingTumOnline extends ProgressActivity implements TUMOnlineRequestFetchListener {
+public abstract class ActivityForAccessingTumOnline extends ProgressActivity {
 
     /**
      * Standard constructor for ActivityForAccessingTumOnline.
@@ -31,12 +31,6 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
      */
     public ActivityForAccessingTumOnline(int layoutId) {
         super(layoutId);
-    }
-
-    // TODO: Remove this once TUMOnlineRequestFetchListener is refactored
-    @Override
-    public void onFetch(Object response) {
-        // Ignore
     }
 
     protected final void handleDownloadError(Throwable throwable) {
@@ -62,32 +56,6 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
         } else if (throwable instanceof UnknownErrorException) {
             showError(R.string.exception_unknown);
         }
-    }
-
-    // TODO: Remove
-    @Override
-    public void onNoInternetError() {
-        showNoInternetLayout();
-    }
-
-    @Override
-    public void onFetchCancelled() {
-        finish();
-    }
-
-    @Override
-    public void onFetchError(String errorReason) {
-        showFailedTokenLayout(errorReason);
-    }
-
-    @Override
-    public void onRefresh() {
-        // Subclasses can override this method
-    }
-
-    @Override
-    public void onNoDataToShow() {
-        showError(R.string.no_data_to_show);
     }
 
 }

@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -109,6 +108,7 @@ public final class TUMOnlineRequest<T> {
     }
 
     public static boolean checkTokenInactive(Context c) {
+        /*
         TUMOnlineRequest<TokenConfirmation> checkActiveToken = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTOKEN_CONFIRMED(), c, true);
         Optional<TokenConfirmation> tc = checkActiveToken.fetch();
         if (tc.isPresent()) { //Check that the token is actually active
@@ -120,6 +120,7 @@ public final class TUMOnlineRequest<T> {
                 return true;
             }
         }
+        */
         //If we don't get anything, fail gracefully
         return false;
     }
@@ -260,7 +261,7 @@ public final class TUMOnlineRequest<T> {
                       }
 
                       //Release any lock present in the database
-                      tumManager.releaseLock(TUMOnlineRequest.this.getRequestURL());
+                      //tumManager.releaseLock(TUMOnlineRequest.this.getRequestURL());
 
                       // If there could not be found any problems return usual on Fetch method
                       listener.onFetch(result.get());
