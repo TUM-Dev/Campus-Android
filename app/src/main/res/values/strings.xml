@@ -616,14 +616,22 @@ Signature: %5$s</string>
 
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>
-    <string name="complete_purchase">Complete Purchase</string>
-    <string name="enter_card_info_title">Card Information</string>
-    <string name="enter_card_info_description">Please enter your card\'s information details to continue:</string>
+    <string name="complete_purchase">Buy now</string>
+    <string name="saved_cards">Please select a payment method</string>
+    <string name="enter_card_info_title">Payment Information</string>
+    <string name="enter_card_info_description">Please enter your payment information to conclude the purchase:</string>
     <string name="purchase_progress_message">Requesting Ticket, please wait…</string>
     <string name="purchase_success_title">Purchase successful</string>
     <string name="purchase_success_message">You can access your ticket in the ticket section.</string>
     <string name="purchase_success_continue">Continue</string>
+    <string name="purchase_error_message">Failure during server call.</string>
     <string name="card_data_invalid">The card data is invalid.</string>
+    <string name="customersession_init_failed">Failed to load saved credit cards.</string>
+    <string name="cardholer">Cardholder:</string>
+    <string name="payment_info_price_reminder">Pay {0} € with:</string>
+    <string name="internal_error">Internal Failure</string>
+    <string name="creditcard_ending_in">ending in</string>
+    <string name="empty_cardholder_message">No cardholder specified.</string>
 
 
     <string name="link" translatable="false">Link</string>
