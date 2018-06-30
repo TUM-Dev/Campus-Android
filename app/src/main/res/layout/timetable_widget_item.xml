@@ -23,7 +23,6 @@
             android:id="@+id/timetable_widget_date_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-3dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:textSize="18sp"
@@ -34,10 +33,10 @@
             android:id="@+id/timetable_widget_date_weekday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-3dp"
             android:layout_weight="1"
+            android:layout_marginTop="-6dp"
             android:background="@android:color/transparent"
-            android:textSize="12sp"
+            android:textSize="13sp"
             tools:text="Do."/>
 
     </LinearLayout>
@@ -47,10 +46,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/timetable_widget_date_month"
-        android:layout_marginLeft="30dp"
         android:layout_marginStart="30dp"
+        android:background="@android:color/black"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="@dimen/material_small_padding">
 
         <TextView
             android:id="@+id/timetable_widget_event_title"
@@ -79,7 +78,6 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingEnd="5dp"
-                android:paddingRight="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
                 tools:text="TextView"/>
@@ -94,7 +92,9 @@
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
                 tools:text="TextView"/>
+
         </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

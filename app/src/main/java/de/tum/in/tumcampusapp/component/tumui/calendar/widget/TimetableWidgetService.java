@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -103,7 +102,9 @@ public class TimetableWidgetService extends RemoteViewsService {
             // TODO add month labels every new month
 
             // Setup event color
+            // TODO Fix this
             rv.setInt(R.id.timetable_widget_event, "setBackgroundColor", currentItem.getColor());
+            //rv.setInt(R.id.timetable_widget_event, "setBackgroundTint", currentItem.getColor());
 
             // Setup event title
             rv.setTextViewText(R.id.timetable_widget_event_title, currentItem.getName());
@@ -112,7 +113,7 @@ public class TimetableWidgetService extends RemoteViewsService {
             DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(applicationContext);
             String time = timeFormat.format(currentItem.getStartTime()
                                                        .getTime());
-            time += "-" + timeFormat.format(currentItem.getEndTime()
+            time += " – " + timeFormat.format(currentItem.getEndTime()
                                                        .getTime());
             rv.setTextViewText(R.id.timetable_widget_event_time, time);
 
