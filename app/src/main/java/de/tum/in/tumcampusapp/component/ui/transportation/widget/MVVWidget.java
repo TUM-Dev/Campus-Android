@@ -140,6 +140,8 @@ public class MVVWidget extends AppWidgetProvider {
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mvv_widget);
         rv.setTextViewText(R.id.mvv_widget_station, widgetDepartures.getStation());
 
+        // TODO Offline layout
+
         // Set up offline symbol (may be shown one update delayed)
         rv.setViewVisibility(R.id.mvv_widget_offline, widgetDepartures.isOffline() ? View.VISIBLE : View.INVISIBLE);
 
@@ -155,7 +157,9 @@ public class MVVWidget extends AppWidgetProvider {
         reloadIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(context, appWidgetId, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.mvv_widget_reload, pendingReloadIntent);
-        rv.setViewVisibility(R.id.mvv_widget_reload, widgetDepartures.getAutoReload() ? View.GONE : View.VISIBLE);
+
+        boolean isAutoReload = widgetDepartures.getAutoReload();
+        rv.setViewVisibility(R.id.mvv_widget_reload, isAutoReload ? View.GONE : View.VISIBLE);
 
         // Set up the intent that starts the MVVWidgetService, which will
         // provide the departure times for this station
