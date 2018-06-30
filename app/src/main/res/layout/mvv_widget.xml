@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/color_primary"
-            android:padding="@dimen/material_small_padding"
+            android:padding="@dimen/material_tiny_padding"
             android:src="@drawable/ic_autorenew" />
 
         <ImageView
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/color_primary"
-            android:padding="@dimen/material_small_padding"
+            android:padding="@dimen/material_tiny_padding"
             android:src="@drawable/ic_action_settings" />
 
     </LinearLayout>
