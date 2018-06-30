@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +23,14 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
 import io.reactivex.disposables.CompositeDisposable;
+
+import static java.text.DateFormat.getDateInstance;
 
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
@@ -81,7 +81,6 @@ public class EventDetailsFragment extends Fragment {
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.event_header, rootView, false);
 
         // initialize all buttons
-        //Button link = headerView.findViewById(R.id.button_link);
         Button ticket = headerView.findViewById(R.id.button_ticket);
         ImageButton exportCalendar = headerView.findViewById(R.id.button_export_eventcalendar);
         ImageView cover = headerView.findViewById(R.id.kino_cover);
@@ -129,13 +128,11 @@ public class EventDetailsFragment extends Fragment {
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
-        String timeString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
+        String timeString = new SimpleDateFormat("hh:mm", Locale.GERMANY).
                 format(event.getDate());
-        String[] time = timeString.split(" ");
         //set date format to current locale setting
-        java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
-        String dateString = dateFormat.format(event.getDate());
-        String eventDateTimeString = dateString + " " + time[1];
+        String dateString = getDateInstance().format(event.getDate());
+        String eventDateTimeString = dateString + " " + timeString;
         eventDateTextView.setText(eventDateTimeString);
 
         eventDateTextView.setOnClickListener(v -> addToCalendar());
