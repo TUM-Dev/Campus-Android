@@ -122,5 +122,9 @@ public class EventsController {
     public TicketType getTicketTypeById(int id) {
         return ticketTypeDao.getById(id);
     }
+
+    public void addTickets(List<Ticket> tickets) {
+        ticketDao.insert(tickets);
+    }
 }
 

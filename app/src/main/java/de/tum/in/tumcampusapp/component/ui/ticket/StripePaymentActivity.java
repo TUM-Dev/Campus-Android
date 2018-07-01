@@ -28,6 +28,8 @@ import com.stripe.android.view.PaymentMethodsActivity;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -142,6 +144,10 @@ public class StripePaymentActivity extends BaseActivity {
                             getUserMailAddress(),
                             cardholder);
             //TODO: Add Ticket to local database and jump to ShowTicketActivity
+            EventsController ec = new EventsController(StripePaymentActivity.this);
+            List<Ticket> ticketList = new ArrayList<>();
+            ticketList.add(ticket);
+            ec.addTickets(ticketList);
             finishLoadingPurchaseRequestSuccess(ticket);
         } catch (IOException exception) {
             exception.printStackTrace();
