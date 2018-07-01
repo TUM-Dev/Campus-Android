@@ -123,6 +123,23 @@ public class EventsController {
         return ticketTypeDao.getById(id);
     }
 
+    /**
+     * This is not a database access but a API call
+     * Thus, it needs to be called in a thread
+     * @param eventId
+     * @return
+     */
+    public List<TicketType> getTicketTypesByEventId(int eventId) {
+        List<TicketType> ticketTypes = null;
+        try {
+            TUMCabeClient api = TUMCabeClient.getInstance(context);
+            ticketTypes = api.getTicketTypes(eventId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ticketTypes;
+    }
+
     public void addTickets(List<Ticket> tickets) {
         ticketDao.insert(tickets);
     }
