@@ -632,5 +632,7 @@ Signature: %5$s</string>
     <string name="purchase_success_continue">Continue</string>
     <string name="card_data_invalid">The card data is invalid.</string>
     <string name="redeemed">Redeemed</string>
+    <string name="no_network_connection">Currently no connection to server possible</string>
+    <string name="choose_ticket_type">Choose your ticket type</string>
 
 </resources>
