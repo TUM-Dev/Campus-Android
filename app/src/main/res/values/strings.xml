@@ -602,7 +602,7 @@ Signature: %5$s</string>
     <!-- Ticket Activity -->
     <string name="your_ticket">Your Ticket</string>
     <string name="show_ticket">Show Ticket</string>
-    <string name="buy_ticket">Buy Ticket</string>
+    <string name="buy_ticket">BUY NOW</string>
     <string name="purchasedetail_dots">Details of your purchase:</string>
     <string name="continue_to_payment">CONTINUE TO PAYMENT</string>
     <string name="summary">Summary</string>
@@ -618,7 +618,8 @@ Signature: %5$s</string>
     <string name="add_eventcalendar">Add In Calendar</string>
     <string name="all_events">All Events</string>
     <string name="booked_events">Booked Events</string>
-    <string name="link" translatable="false">Link</string>
+    <string name="link">VISIT WEBSITE</string>
+
 
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>

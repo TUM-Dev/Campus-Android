@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -20,7 +22,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -28,17 +29,18 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
 import io.reactivex.disposables.CompositeDisposable;
 
+import static java.text.DateFormat.getDateInstance;
+
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
- * TODO: combine this with KinoDetailsFragment
  */
 public class EventDetailsFragment extends Fragment {
 
     private Context context;
     private Event event;
+    private TextView eventLocationTextView;
     private String url; // link to homepage
     private LayoutInflater inflater;
-
     private EventsController eventsController;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -69,63 +71,21 @@ public class EventDetailsFragment extends Fragment {
      */
     private void showDetails(LinearLayout rootView) {
         url = event.getLink();
-
         createEventHeader(rootView);
         createEventFooter(rootView);
     }
 
-    private void addToRoot(LinearLayout rootView, int headerId, CharSequence contentString) {
-        View view = inflater.inflate(R.layout.list_header_big, rootView, false);
-        TextView text = view.findViewById(R.id.list_header);
-        text.setText(headerId);
-        rootView.addView(view);
-        view = inflater.inflate(R.layout.kino_content, rootView, false);
-        text = view.findViewById(R.id.line_name);
-        text.setText(contentString);
-        rootView.addView(view);
-    }
-
-    private void addToRootWithPadding(LinearLayout rootView, int headerId, CharSequence contentString) {
-        View view = inflater.inflate(R.layout.list_header_big, rootView, false);
-        TextView text = view.findViewById(R.id.list_header);
-        text.setText(headerId);
-        rootView.addView(view);
-        view = inflater.inflate(R.layout.kino_content, rootView, false);
-        text = view.findViewById(R.id.line_name);
-        text.setText(contentString);
-        // padding is done programmatically here because we need more padding at the end
-        int padding = (int) context.getResources()
-                                   .getDimension(R.dimen.padding_kino);
-        int paddingRight = (int) context.getResources()
-                                        .getDimension(R.dimen.padding_kino_right);
-        int paddingEnd = (int) context.getResources()
-                                      .getDimension(R.dimen.padding_kino_end);
-        text.setPadding(padding, padding, paddingRight, paddingEnd);
-        rootView.addView(view);
-    }
-
-    private void createEventFooter(LinearLayout root) {
-        addToRoot(root, R.string.date, new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
-                format(event.getDate()));
-        addToRoot(root, R.string.location, event.getLocality());
-        addToRootWithPadding(root, R.string.description, event.getDescription());
-    }
 
     private void createEventHeader(LinearLayout rootView) {
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.event_header, rootView, false);
 
         // initialize all buttons
-        Button link = headerView.findViewById(R.id.button_link);
         Button ticket = headerView.findViewById(R.id.button_ticket);
-        Button exportCalendar = headerView.findViewById(R.id.button_export_eventcalendar);
         ImageView cover = headerView.findViewById(R.id.kino_cover);
         ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
         View error = headerView.findViewById(R.id.kino_cover_error);
 
         // onClickListeners
-        link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
-        // Export current activity to google calendar
-        exportCalendar.setOnClickListener(view -> addToCalendar());
         // Setup "Buy/Show ticket" button according to ticket status for current event
         if (eventsController.isEventBooked(event)) {
             ticket.setText(this.getString(R.string.show_ticket));
@@ -144,14 +104,61 @@ public class EventDetailsFragment extends Fragment {
                         progress.setVisibility(View.GONE);
                         error.setVisibility(View.GONE);
                     }
+
                     @Override
                     public void onError(Exception e) {
                         progress.setVisibility(View.GONE);
                         error.setVisibility(View.VISIBLE);
                     }
                 });
-
         rootView.addView(headerView);
+    }
+
+
+    private void createEventFooter(LinearLayout rootView) {
+        View footerView = inflater.inflate(R.layout.event_footer, rootView, false);
+        // initialize all TextView
+        TextView eventDateTextView = footerView.findViewById(R.id.event_date);
+        eventLocationTextView = footerView.findViewById(R.id.event_location);
+        TextView eventRemainingTicketTextView = footerView.findViewById(R.id.event_remainingticket);
+        TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
+        TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
+
+        String timeString = new SimpleDateFormat("hh:mm", Locale.GERMANY).
+                format(event.getDate());
+        //set date format to current locale setting
+        String dateString = getDateInstance().format(event.getDate());
+        String eventDateTimeString = dateString + " " + timeString;
+        eventDateTextView.setText(eventDateTimeString);
+
+        eventDateTextView.setOnClickListener(v -> addToCalendar());
+
+        //set Location link
+        String eventLocationString = event.getLocality();
+        eventLocationTextView.setText(eventLocationString);
+        eventLocationTextView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        eventLocationTextView.setOnClickListener(view -> showMap());
+
+        //set remaining tickets,following code is just for testing purpose.
+        //TODO:The remaining tickets should get from backend.Like event.getremainningtickets()
+        int remainingTickets = 30;
+        String remainingTicketsString = remainingTickets + " Tickets left!";
+        eventRemainingTicketTextView.setText(remainingTicketsString);
+
+        String eventDescriptionString = event.getDescription();
+        eventDescriptionTextView.setText(eventDescriptionString);
+
+        eventLinkTextView.setText(this.getString(R.string.link));
+        eventLinkTextView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        eventLinkTextView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
+        int padding = (int) context.getResources()
+                .getDimension(R.dimen.padding_kino);
+        int paddingRight = (int) context.getResources()
+                .getDimension(R.dimen.padding_kino_right);
+        int paddingEnd = (int) context.getResources()
+                .getDimension(R.dimen.padding_kino_end);
+        eventLinkTextView.setPadding(padding, padding, paddingRight, paddingEnd);
+        rootView.addView(footerView);
     }
 
     private void showTicket() {
@@ -177,6 +184,13 @@ public class EventDetailsFragment extends Fragment {
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
                 .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);//Indicates that this event is free time and will not conflict with other events.
         startActivity(intent);
+    }
+
+    private void showMap() {
+        eventLocationTextView.setTextColor(Color.RED);
+        String map = "http://maps.google.co.in/maps?q=" + eventLocationTextView.getText();
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
+        startActivity(mapIntent);
     }
 
     @Override
