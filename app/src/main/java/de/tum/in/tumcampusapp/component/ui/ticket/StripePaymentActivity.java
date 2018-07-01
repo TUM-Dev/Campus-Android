@@ -83,11 +83,12 @@ public class StripePaymentActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         paymentSession.onDestroy();
+        /* Comment out until real reservation is invoked
         try {
             TUMCabeClient.getInstance(getApplicationContext()).cancelTicketReservation(ticketHistory);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 
