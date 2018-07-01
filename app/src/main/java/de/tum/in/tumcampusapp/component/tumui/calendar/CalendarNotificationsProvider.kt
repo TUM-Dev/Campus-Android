@@ -21,6 +21,7 @@ class CalendarNotificationsProvider(context: Context,
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.ic_calendar)
                 .setShowWhen(false)
+                .setColor(notificationColorAccent)
     }
 
     override fun getNotifications(): List<AppNotification> {

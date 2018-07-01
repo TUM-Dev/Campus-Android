@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.common.collect.Lists;
@@ -199,6 +200,7 @@ public class ChatNotification extends GenericNotification implements ChatMessage
                     .setLights(0xff0000ff, 500, 500)
                     .setSound(sound)
                     .setAutoCancel(true)
+                    .setColor(ContextCompat.getColor(context, R.color.color_primary))
                     .build();
 
             NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

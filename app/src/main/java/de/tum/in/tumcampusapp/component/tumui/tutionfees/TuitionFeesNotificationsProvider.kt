@@ -20,6 +20,7 @@ class TuitionFeesNotificationsProvider(
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setShowWhen(false)
+                .setColor(notificationColorAccent)
     }
 
     override fun getNotifications(): List<AppNotification> {

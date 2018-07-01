@@ -17,6 +17,7 @@ class TransportNotificationsProvider(
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_MVV)
                 .setSmallIcon(R.drawable.ic_notification)
+                .setColor(notificationColorAccent)
     }
 
     override fun getNotifications(): List<AppNotification> {
