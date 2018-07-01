@@ -639,6 +639,8 @@ Signature: %5$s</string>
     <string name="internal_error">Internal Failure</string>
     <string name="creditcard_ending_in">ending in</string>
     <string name="empty_cardholder_message">No cardholder specified.</string>
+    <string name="not_logged_in_title">Sorry</string>
+    <string name="not_logged_in_message">You have to be logged in to purchase tickets.</string>
 
     <string name="redeemed">Redeemed</string>
     <string name="no_network_connection">Currently no connection to server possible</string>

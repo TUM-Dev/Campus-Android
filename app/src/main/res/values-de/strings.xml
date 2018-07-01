@@ -527,6 +527,7 @@ Signatur: %5$s</string>
     <string name="internal_error">Interner Fehler</string>
     <string name="creditcard_ending_in">endet mit</string>
     <string name="empty_cardholder_message">Kein Karteninhaber angegeben.</string>
+    <string name="not_logged_in_message">Du musst eingeloggt sein, um Tickets zu kaufen.</string>
 
 
     <!-- Create personal Appointment (Calendar) -->
