@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -82,14 +81,11 @@ public class EventDetailsFragment extends Fragment {
 
         // initialize all buttons
         Button ticket = headerView.findViewById(R.id.button_ticket);
-        ImageButton exportCalendar = headerView.findViewById(R.id.button_export_eventcalendar);
         ImageView cover = headerView.findViewById(R.id.kino_cover);
         ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
         View error = headerView.findViewById(R.id.kino_cover_error);
 
         // onClickListeners
-        // Export current activity to google calendar
-        exportCalendar.setOnClickListener(view -> addToCalendar());
         // Setup "Buy/Show ticket" button according to ticket status for current event
         if (eventsController.isEventBooked(event)) {
             ticket.setText(this.getString(R.string.show_ticket));

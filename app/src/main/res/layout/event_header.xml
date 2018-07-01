@@ -45,17 +45,6 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/button_export_eventcalendar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="top|end"
-            android:layout_marginEnd="19dp"
-            android:layout_marginTop="20dp"
-            android:background="#00ffffff"
-            android:src="@drawable/star_unselected_yellow" />
 
     </RelativeLayout>
 
