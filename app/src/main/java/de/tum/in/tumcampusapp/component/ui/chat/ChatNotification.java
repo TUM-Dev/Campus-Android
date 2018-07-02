@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -44,7 +43,7 @@ public class ChatNotification extends GenericNotification implements ChatMessage
 
     private static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
 
-    private final GCMChat extras;
+    private final FcmChat extras;
 
     private ChatRoom chatRoom;
     private String notificationText;
@@ -58,7 +57,7 @@ public class ChatNotification extends GenericNotification implements ChatMessage
                               .chatMessageDao();
 
         //Initialize the object keeping important infos about the update
-        this.extras = new GCMChat();
+        this.extras = new FcmChat();
 
         //Get the update details
         this.extras.setRoom(Integer.parseInt(extras.getString("room")));
@@ -89,7 +88,7 @@ public class ChatNotification extends GenericNotification implements ChatMessage
         }
 
         // parse data
-        this.extras = new Gson().fromJson(payload, GCMChat.class);
+        this.extras = new Gson().fromJson(payload, FcmChat.class);
 
         try {
             this.prepare();
@@ -135,7 +134,7 @@ public class ChatNotification extends GenericNotification implements ChatMessage
     public void onDataLoaded(){
         List<ChatMessage> messages = Lists.reverse(chatMessageDao.getLastUnread(chatRoom.getId()));
         Intent intent = new Intent(Const.CHAT_BROADCAST_NAME);
-        intent.putExtra("GCMChat", this.extras);
+        intent.putExtra("FcmChat", this.extras);
         LocalBroadcastManager.getInstance(context)
                              .sendBroadcast(intent);
         notificationText = null;
@@ -170,7 +169,7 @@ public class ChatNotification extends GenericNotification implements ChatMessage
 
             PendingIntent contentIntent = sBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
-            // GCMNotification sound
+            // FcmNotification sound
             Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
 
             /* TODO(jacqueline8711): Create the reply action and add the remote input

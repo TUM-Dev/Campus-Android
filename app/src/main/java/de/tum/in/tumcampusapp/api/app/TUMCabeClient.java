@@ -8,10 +8,11 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
-import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -21,8 +22,8 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordin
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotificationLocation;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -37,11 +38,18 @@ import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketSuccessResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketValidityRequest;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketValidityResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -85,8 +93,8 @@ public final class TUMCabeClient {
     static final String API_KINOS = "kino/";
     static final String API_CARD = "cards/";
     static final String API_NEWS = "news/";
-    static final String API_EVENT = "event/";
-
+    static final String API_EVENTS = "event/";
+    static final String API_TICKET = "ticket/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -96,11 +104,11 @@ public final class TUMCabeClient {
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
         Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer())
-                                     .create();
+                .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
         builder.client(Helper.getOkHttpClient(c));
         service = builder.build()
-                         .create(TUMCabeAPIService.class);
+                .create(TUMCabeAPIService.class);
     }
 
     public static synchronized TUMCabeClient getInstance(Context c) {
@@ -113,50 +121,51 @@ public final class TUMCabeClient {
     public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
         verification.setData(chatRoom);
         service.createRoom(verification)
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
     public ChatRoom createRoom(ChatRoom chatRoom, ChatVerification verification) throws IOException {
         verification.setData(chatRoom);
         return service.createRoom(verification)
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public ChatRoom getChatRoom(int id) throws IOException {
         return service.getChatRoom(id)
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public ChatMember createMember(ChatMember chatMember) throws IOException {
         return service.createMember(chatMember)
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public List<StudyCard> getStudyCards() throws IOException {
         return service.getStudyCards()
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public StudyCard addStudyCard(StudyCard card, ChatVerification verification) throws IOException {
         verification.setData(card);
         return service.addStudyCard(verification)
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
         service.leaveChatRoom(chatRoom.getId(), verification)
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
     public void addUserToChat(ChatRoom chatRoom, ChatMember member, ChatVerification verification, Callback<ChatRoom> cb) {
         service.addUserToChat(chatRoom.getId(), member.getId(), verification)
                 .enqueue(cb);
     }
+
     public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessage) {
         //If the id is zero then its an new entry otherwise try to update it
         Utils.log("Sending: " + chatMessage.getId() + " " + chatMessage.getText());
@@ -176,133 +185,133 @@ public final class TUMCabeClient {
 
     public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) throws IOException {
         return service.getMemberRooms(memberId, verification)
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public void getPublicKeysForMember(ChatMember member, Callback<List<ChatPublicKey>> cb) {
         service.getPublicKeysForMember(member.getId())
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
     public void uploadRegistrationId(int memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
         service.uploadRegistrationId(memberId, regId)
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
-    public GCMNotification getNotification(int notification) throws IOException {
+    public FcmNotification getNotification(int notification) throws IOException {
         return service.getNotification(notification)
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public List<Curriculum> getAllCurriculas() throws IOException {
         return service.getAllCurriculas()
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public void confirm(int notification) throws IOException {
         service.confirm(notification)
-               .execute();
+                .execute();
     }
 
-    public List<GCMNotificationLocation> getAllLocations() throws IOException {
+    public List<FcmNotificationLocation> getAllLocations() throws IOException {
         return service.getAllLocations()
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
-    public GCMNotificationLocation getLocation(int locationId) throws IOException {
+    public FcmNotificationLocation getLocation(int locationId) throws IOException {
         return service.getLocation(locationId)
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public void deviceRegister(DeviceRegister verification, Callback<TUMCabeStatus> cb) {
         service.deviceRegister(verification)
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
-    public void deviceUploadGcmToken(DeviceUploadGcmToken verification, Callback<TUMCabeStatus> cb) {
+    public void deviceUploadGcmToken(DeviceUploadFcmToken verification, Callback<TUMCabeStatus> cb) {
         service.deviceUploadGcmToken(verification)
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
     public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) {
         service.createMeasurements(wifiMeasurementList)
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
     public List<BarrierfreeContact> getBarrierfreeContactList() throws IOException {
         return service.getBarrierfreeContactList()
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public List<BarrierfreeMoreInfo> getMoreInfoList() throws IOException {
         return service.getMoreInfoList()
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public List<RoomFinderRoom> getListOfToilets() throws IOException {
         return service.getListOfToilets()
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public List<RoomFinderRoom> getListOfElevators() throws IOException {
         return service.getListOfElevators()
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public List<RoomFinderRoom> getListOfNearbyFacilities(String buildingId) throws IOException {
         return service.getListOfNearbyFacilities(buildingId)
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public List<BuildingToGps> getBuilding2Gps() throws IOException {
         return service.getBuilding2Gps()
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) {
         service.fetchAvailableMaps(Helper.encodeUrl(archId))
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
     public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
         return service.fetchRooms(Helper.encodeUrl(searchStrings))
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public RoomFinderCoordinate fetchCoordinates(String archId)
             throws IOException {
         return service.fetchCoordinates(Helper.encodeUrl(archId))
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) {
         service.fetchCoordinates(Helper.encodeUrl(archId))
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
     public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException {
         return service.fetchSchedule(Helper.encodeUrl(roomId),
-                                     Helper.encodeUrl(start), Helper.encodeUrl(end))
-                      .execute()
-                      .body();
+                Helper.encodeUrl(start), Helper.encodeUrl(end))
+                .execute()
+                .body();
     }
 
     public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
         service.sendFeedback(feedback)
-               .enqueue(cb);
+                .enqueue(cb);
 
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
@@ -310,15 +319,15 @@ public final class TUMCabeClient {
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
 
             service.sendFeedbackImage(body, i + 1, feedback.getId())
-                   .enqueue(cb);
+                    .enqueue(cb);
         }
     }
 
-    public void searchChatMember(String query, Callback<List<ChatMember>> callback){
+    public void searchChatMember(String query, Callback<List<ChatMember>> callback) {
         service.searchMemberByName(query).enqueue(callback);
     }
 
-    public void getChatMemberByLrzId(String lrzId, Callback<ChatMember> callback){
+    public void getChatMemberByLrzId(String lrzId, Callback<ChatMember> callback) {
         service.getMember(lrzId).enqueue(callback);
     }
 
@@ -326,18 +335,98 @@ public final class TUMCabeClient {
         return service.getCafeterias();
     }
 
-    public Observable<List<Kino>> getKinos(String lastId) {
+    public Flowable<List<Kino>> getKinos(String lastId) {
         return service.getKinos(lastId);
     }
 
     public List<News> getNews(String lastNewsId) throws IOException {
         return service.getNews(lastNewsId).execute().body();
     }
+
     public List<NewsSources> getNewsSources() throws IOException {
         return service.getNewsSources().execute().body();
     }
-    public Observable<NewsAlert> getNewsAlert(){
+
+    public Observable<NewsAlert> getNewsAlert() {
         return service.getNewsAlert();
+    }
+
+    // TICKET SALE
+    // Getting event information
+    public List<Event> getEvents() throws IOException {
+        return service.getEvents().execute().body();
+    }
+
+    public Event getEvent(int eventID) throws IOException {
+        Event event = service.getEvent(eventID).execute().body();
+        return event;
+    }
+
+    public List<Event> searchEvents(String searchTerm) throws IOException {
+        return service.searchEvents(searchTerm).execute().body();
+    }
+
+    // Getting ticket information
+    public List<Ticket> getTickets(int userID) throws IOException {
+        return service.getTickets(userID).execute().body();
+    }
+
+    public Ticket getTicketForEvent(int userID, int eventID) throws IOException {
+        return service.getTicketForEvent(userID, eventID).execute().body();
+    }
+
+    public List<TicketType> getTicketTypes(int eventID) throws IOException {
+        return service.getTicketTypes(eventID).execute().body();
+    }
+
+    // Ticket reservation
+    public TicketReservationResponse reserveTicket(int memberID, int ticketType) throws IOException {
+        return service.reserveTicket(memberID, ticketType).execute().body();
+    }
+
+    public TicketSuccessResponse cancelTicketReservation(int ticketHistory) throws IOException {
+        return service.cancelTicketReservation(ticketHistory).execute().body();
+    }
+
+    // Ticket purchase
+    public Ticket purchaseTicketStripe(int ticketHistory, String token, String customerMail,
+                                       String customerName) throws IOException {
+        return new Ticket(1, 2, "codeblablabla918gr182gr9128g2u8f393u2vu32",
+                1, false);
+        /*
+        HashMap<String, Object> argsMap = new HashMap<>();
+        argsMap.put("ticket_history", ticketHistory);
+        argsMap.put("token", token);
+        argsMap.put("customer_mail", customerMail);
+        argsMap.put("customer_name", customerName);
+
+        HashMap<String, Object> map = service.purchaseTicketStripe(argsMap).execute().body();
+        List<TicketType> ticketTypes = service.getTicketTypes((int) map.get("event")).execute().body();
+
+        // Directly create the associated ticket type as an object
+        TicketType tt = null;
+        for (TicketType curr : ticketTypes) {
+            if (curr.getId() == (int) map.get("ticket_type")) {
+                tt = curr;
+                break;
+            }
+        }
+        if (tt == null) {
+            throw new IOException();
+        }
+
+        return new Ticket(EventsController.getEventById((int) map.get("event")),
+                (String) map.get("code"),
+                tt,
+                (int) map.get("ticket_payment"));
+                */
+    }
+
+    public HashMap<String, Object> retrieveEphemeralKey(String apiVersion, String customerMail) throws IOException {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("api_version", apiVersion);
+        map.put("customer_mail", customerMail);
+        return service.retrieveEphemeralKey(map).execute().body();
     }
 
     public void getTicketValidity(String eventId, String code, Callback<TicketValidityResponse> callback) {
@@ -345,5 +434,4 @@ public final class TUMCabeClient {
         service.getNameForTicket(request)
                 .enqueue(callback);
     }
-
 }

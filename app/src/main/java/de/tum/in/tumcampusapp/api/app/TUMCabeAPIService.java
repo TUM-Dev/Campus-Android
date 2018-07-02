@@ -1,9 +1,10 @@
 package de.tum.in.tumcampusapp.api.app;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
-import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -13,8 +14,8 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordin
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotificationLocation;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -29,9 +30,15 @@ import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketSuccessResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketValidityRequest;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketValidityResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -57,7 +64,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CURRICULA;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_EVENT;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_EVENTS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
@@ -68,6 +75,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAIL
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_COORDINATES;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SEARCH;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_WIFI_HEATMAP;
 
 public interface TUMCabeAPIService {
@@ -122,24 +130,24 @@ public interface TUMCabeAPIService {
     Call<List<Curriculum>> getAllCurriculas();
 
     @GET(API_NOTIFICATIONS + "{notification}/")
-    Call<GCMNotification> getNotification(@Path("notification") int notification);
+    Call<FcmNotification> getNotification(@Path("notification") int notification);
 
     @GET(API_NOTIFICATIONS + "confirm/{notification}/")
     Call<String> confirm(@Path("notification") int notification);
 
     //Locations
     @GET(API_LOCATIONS)
-    Call<List<GCMNotificationLocation>> getAllLocations();
+    Call<List<FcmNotificationLocation>> getAllLocations();
 
     @GET(API_LOCATIONS + "{locationId}/")
-    Call<GCMNotificationLocation> getLocation(@Path("locationId") int locationId);
+    Call<FcmNotificationLocation> getLocation(@Path("locationId") int locationId);
 
     //Device
     @POST(API_DEVICE + "register/")
     Call<TUMCabeStatus> deviceRegister(@Body DeviceRegister verification);
 
     @POST(API_DEVICE + "addGcmToken/")
-    Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadGcmToken verification);
+    Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadFcmToken verification);
 
     //WifiHeatmap
     @POST(API_WIFI_HEATMAP + "create_measurements/")
@@ -197,7 +205,7 @@ public interface TUMCabeAPIService {
     Observable<List<Cafeteria>> getCafeterias();
 
     @GET(API_KINOS + "{lastId}")
-    Observable<List<Kino>> getKinos(@Path("lastId") String lastId);
+    Flowable<List<Kino>> getKinos(@Path("lastId") String lastId);
 
     @GET(API_CARD)
     Call<List<StudyCard>> getStudyCards();
@@ -214,7 +222,43 @@ public interface TUMCabeAPIService {
     @GET(API_NEWS + "alert")
     Observable<NewsAlert> getNewsAlert();
 
-    @POST(API_EVENT + "ticket/validate")
+    // TICKET SALE
+
+    // Getting Event information
+    @GET(API_EVENTS + "list")
+    Call<List<Event>> getEvents();
+
+    @GET(API_EVENTS + "list/{eventID}")
+    Call<Event> getEvent(@Path("eventID") int eventID);
+
+    @GET(API_EVENTS + "list/search/{searchTerm}")
+    Call<List<Event>> searchEvents(@Path("searchTerm") String searchTerm);
+
+    // Getting Ticket information
+    @GET(API_EVENTS + API_TICKET + "my/{userID}")
+    Call<List<Ticket>> getTickets(@Path("userID") int userID);
+
+    @GET(API_EVENTS + API_TICKET + "my/{userID}/{eventID}")
+    Call<Ticket> getTicketForEvent(@Path("userID") int userID, @Path("eventID") int eventID);
+
+    @GET(API_EVENTS + API_TICKET + "type/{eventID}")
+    Call<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
+
+    // Ticket reservation
+    @POST(API_EVENTS + API_TICKET + "reserve")
+    Call<TicketReservationResponse> reserveTicket(@Body int member_id, int ticket_type);
+
+    @POST(API_EVENTS + API_TICKET + "reserve/cancel")
+    Call<TicketSuccessResponse> cancelTicketReservation(@Body int ticket_history);
+
+    // Ticket purchase
+    @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
+    Call<HashMap<String, Object>> purchaseTicketStripe(@Body HashMap<String, Object> map);
+
+    @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
+    Call<HashMap<String, Object>> retrieveEphemeralKey(@Body HashMap<String, Object> map);
+
+    @POST(API_EVENTS + "ticket/validate")
     Call<TicketValidityResponse> getNameForTicket(@Body TicketValidityRequest request);
 
 }

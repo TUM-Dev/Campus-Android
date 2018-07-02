@@ -20,6 +20,7 @@ import io.reactivex.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -27,6 +28,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
+@Ignore
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class, application = TestApp::class)
 class KinoActivityTest {

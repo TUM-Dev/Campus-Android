@@ -138,13 +138,12 @@
     <string name="menues">Cafeterias</string>
     <string name="study_plans">Study Plans</string>
     <string name="person_search">Person Search</string>
-    <string name="plans">Plans</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="study_rooms">Study Rooms</string>
     <string name="opening_hours">Opening Hours</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
-    <string name="events">Events</string>
+    <string name="events" translatable="false">Events</string>
     <string name="barrier_free">Barrier-free Information</string>
 
     <!-- Activity titles -->
@@ -223,10 +222,6 @@
     <string name="campus_olympiapark_gyms">Campus Olympiapark hall plan</string>
     <string name="campus_main">Main Campus</string>
     <string name="campus_weihenstephan">Campus Weihenstephan</string>
-    <string name="mvv_fast_train_net">MVV Train-Network</string>
-    <string name="mvv_tram">MVV Tram-Network</string>
-    <string name="mvv_entire_net">MVV Overall-Network</string>
-    <string name="mvv_nightlines">MVV Nightlines</string>
     <string name="campus_garching_adress">Walther-Meißner-Straße 3, 85748 Garching</string>
     <string name="campus_klinikum_adress">Ismaninger Straße 22, 81675 Munich</string>
     <string name="campus_olympiapark_adress">Connollystraße 32, 80809 Munich</string>
@@ -426,7 +421,6 @@ Signature: %5$s</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
     <string name="www" translatable="false">TU Film</string>
-    <string name="mvv_download">Please press OK to download MVV-Plans otherwise you can\'t use this feature</string>
     <string name="more_info">More Information</string>
     <string name="event_plan">Event plan</string>
     <string name="please_connect_to_internet">Please connect to internet in order to proceed the first app start</string>
@@ -594,43 +588,6 @@ Signature: %5$s</string>
     <string name="join_chat_via_qr_code">let others join via QR-code</string>
 
     <string name="Refresh">Refresh</string>
-    
-    <!-- Ticket Activity -->
-    <string name="eventdetail_dots">Event Details</string>
-    <string name="qrcode_dots">Ticket QRcode</string>
-    <string name="your_ticket">Your Ticket</string>
-    <string name="show_ticket">Show Ticket</string>
-    <string name="buy_ticket">Buy Ticket</string>
-    <string name="purchasedetail_dots">Details of your purchase:</string>
-    <string name="continue_to_payment">CONTINUE TO PAYMENT</string>
-    <string name="summary">Summary</string>
-
-    <!-- Event Activity -->
-    <string name="show_booked_events">Show booked events</string>
-    <string name="events_overview">Events Overview</string>
-    <string name="scanner">scanner</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="ticket_type">Ticket Type</string>
-    <string name="price">Price</string>
-    <string name="location">Location</string>
-    <string name="event" translatable="false">Event</string>
-    <string name="payment_selection">Payment Selection</string>
-
-    <!-- Payment -->
-    <string name="creditcard">Credit Card</string>
-    <string name="complete_purchase">Complete Purchase</string>
-    <string name="enter_card_info_title">Card Information</string>
-    <string name="enter_card_info_description">Please enter your card\'s information details to continue:</string>
-    <string name="purchase_progress_message">Requesting Ticket, please wait…</string>
-    <string name="purchase_success_title">Purchase successful</string>
-    <string name="purchase_success_message">You can access your ticket in the ticket section.</string>
-    <string name="purchase_success_continue">Continue</string>
-    <string name="card_data_invalid">The card data is invalid.</string>
-
-
-    <string name="link" translatable="false">Link</string>
     <string name="create">Create</string>
     <string name="enter_name_placeholder">Enter name …</string>
     <string name="send_feedback_question">Send feedback now?</string>
@@ -641,5 +598,56 @@ Signature: %5$s</string>
     <string name="discard_changes_question">Discard your changes?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep editing</string>
+
+    <!-- Ticket Activity -->
+    <string name="your_ticket">Your Ticket</string>
+    <string name="show_ticket">Show Ticket</string>
+    <string name="buy_ticket">BUY NOW</string>
+    <string name="purchasedetail_dots">Details of your purchase:</string>
+    <string name="continue_to_payment">CONTINUE TO PAYMENT</string>
+    <string name="summary">Summary</string>
+
+    <!-- Event Activity -->
+    <string name="show_booked_events">Show booked events</string>
+    <string name="events_tickets">Events &amp; Tickets</string>
+    <string name="ticket_type">Ticket Type</string>
+    <string name="price">Price</string>
+    <string name="location">Location</string>
+    <string name="event" translatable="false">Event</string>
+    <string name="payment_selection">Payment Selection</string>
+    <string name="add_eventcalendar">Add In Calendar</string>
+    <string name="all_events">All Events</string>
+    <string name="booked_events">Booked Events</string>
+    <string name="link">VISIT WEBSITE</string>
+
+    <string name="scanner">Scanner</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Payment -->
+    <string name="creditcard">Credit Card</string>
+    <string name="complete_purchase">Buy now</string>
+    <string name="saved_cards">Please select a payment method</string>
+    <string name="enter_card_info_title">Payment Information</string>
+    <string name="enter_card_info_description">Please enter your payment information to conclude the purchase:</string>
+    <string name="purchase_progress_message">Requesting Ticket, please wait…</string>
+    <string name="purchase_success_title">Purchase successful</string>
+    <string name="purchase_success_message">You can access your ticket in the ticket section.</string>
+    <string name="purchase_success_continue">Continue</string>
+    <string name="purchase_error_message">Failure during server call.</string>
+    <string name="card_data_invalid">The card data is invalid.</string>
+    <string name="customersession_init_failed">Failed to load saved credit cards.</string>
+    <string name="cardholer">Cardholder:</string>
+    <string name="payment_info_price_reminder">Pay {0} € with:</string>
+    <string name="internal_error">Internal Failure</string>
+    <string name="creditcard_ending_in">ending in</string>
+    <string name="empty_cardholder_message">No cardholder specified.</string>
+    <string name="not_logged_in_title">Sorry</string>
+    <string name="not_logged_in_message">You have to be logged in to purchase tickets.</string>
+
+    <string name="redeemed">Redeemed</string>
+    <string name="no_network_connection">Currently no connection to server possible</string>
+    <string name="choose_ticket_type">Choose your ticket type</string>
 
 </resources>

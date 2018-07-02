@@ -5,52 +5,48 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:layout_height="390dp">
 
-        <RelativeLayout
-            android:layout_width="160dp"
-            android:layout_height="240dp">
-            <ImageView
-                android:id="@+id/kino_cover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:contentDescription="@string/kino_cover_description"/>
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:id="@+id/kino_cover_progress"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone"
-                android:src="@drawable/error"
-                android:id="@+id/kino_cover_error"/>
-        </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <ImageView
+            android:id="@+id/kino_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/kino_cover_description"
+            android:scaleType="centerCrop" />
+
+        <ProgressBar
+            android:id="@+id/kino_cover_progress"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.25"
-            android:orientation="vertical">
+            android:layout_centerInParent="true" />
 
-            <Button
-                android:id="@+id/button_link"
-                style="@style/KinoHeaderButton"
-                android:drawableStart="@drawable/ic_link"
-                android:text="@string/link"/>
+        <ImageView
+            android:id="@+id/kino_cover_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/error"
+            android:visibility="gone" />
 
-            <Button
-                android:id="@+id/button_ticket"
-                style="@style/KinoHeaderButton" />
-        </LinearLayout>
-    </LinearLayout>
+        <Button
+            android:id="@+id/button_ticket"
+            style="@style/KinoHeaderButton"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="17dp"
+            android:background="@drawable/buttonshape_ticket"
+            android:backgroundTint="@color/tum_500"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
 
 </LinearLayout>

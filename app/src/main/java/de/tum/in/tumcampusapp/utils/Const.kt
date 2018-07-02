@@ -48,11 +48,11 @@ object Const {
     const val TUMO_EMPLOYEE_ID = "tumoBediensteteNr"
     const val TUMO_DISABLED = "tumo_is_disabled"
 
-    const val GCM_REG_ID = "gcm_registration_id"
-    const val GCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server"
-    const val GCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission"
-    const val GCM_INSTANCE_ID = "gcm_instance_id"
-    const val GCM_TOKEN_ID = "gcm_token_id"
+    const val FCM_REG_ID = "gcm_registration_id"
+    const val FCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server"
+    const val FCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission"
+    const val FCM_INSTANCE_ID = "gcm_instance_id"
+    const val FCM_TOKEN_ID = "gcm_token_id"
     const val APP_LAUNCHES = "app_launches"
     const val SYNC_CALENDAR = "sync_calendar"
     const val PREFERENCE_SCREEN = "preference_screen"
@@ -151,4 +151,6 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX = "calendar_filter_hour_limit_max"
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
+
+    const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_OJHHpeotVOpaRO4veynROu18"
 }

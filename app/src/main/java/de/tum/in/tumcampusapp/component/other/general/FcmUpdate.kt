@@ -3,9 +3,9 @@ package de.tum.`in`.tumcampusapp.component.other.general
 import java.io.Serializable
 
 /**
- * Used for parsing the GCM json payload for the 'update' type
+ * Used for parsing the FCM json payload for the 'update' type
  */
-data class GCMUpdate(var packageVersion: Int = 0,
+data class FcmUpdate(var packageVersion: Int = 0,
                      var sdkVersion: Int = 0,
                      var releaseDate: String = "",
                      var lowestVersion: Int = 0) : Serializable {

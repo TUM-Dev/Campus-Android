@@ -20,9 +20,13 @@ import java.util.*
 data class Event(@PrimaryKey
                 @SerializedName("event")
                 var id: Int = 0,
+                 @SerializedName("file")
                 var image: String = "",
                 var title: String = "",
                 var description: String = "",
                 var locality: String = "",
                 var date: Date = Date(),
-                var link:  String = "")
+                var link:  String = ""){
+
+    fun isFutureEvent() = date.after(Date())
+}
