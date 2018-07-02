@@ -35,7 +35,9 @@ data class ChatVerification(var signature: String = "",
 
         @Throws(NoPrivateKey::class)
         fun getChatVerification(c: Context, member: ChatMember, data: Any?): ChatVerification {
-            return this.getChatVerification(c, member, data)
+            val ret = this.getChatVerification(c, member, data);
+            ret.data = data
+            return ret
         }
     }
 }
