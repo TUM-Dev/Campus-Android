@@ -28,6 +28,7 @@ import com.stripe.android.view.PaymentMethodsActivity;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -69,7 +70,7 @@ public class StripePaymentActivity extends BaseActivity {
         // Get price from intent; convert it to CENTS (as required by Stripe)
         price = getIntent().getDoubleExtra("ticketPrice", -1.0);
         // Reserve ticket
-        reserveTicket();
+        ticketHistory = 1;//reserveTicket();
 
         if (ticketHistory < 0 || price < 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
@@ -85,11 +86,21 @@ public class StripePaymentActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         paymentSession.onDestroy();
-        try {
-            TUMCabeClient.getInstance(getApplicationContext()).cancelTicketReservation(ticketHistory);
+        /*try {
+            TUMCabeClient.getInstance(getApplicationContext()).cancelTicketReservation(StripePaymentActivity.this, ticketHistory, new Callback<TicketSuccessResponse>() {
+                @Override
+                public void onResponse(Call<TicketSuccessResponse> call, Response<TicketSuccessResponse> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<TicketSuccessResponse> call, Throwable t) {
+
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 
@@ -139,18 +150,26 @@ public class StripePaymentActivity extends BaseActivity {
 
         setPurchaseRequestLoading();
         try {
-            Ticket ticket = TUMCabeClient
+            TUMCabeClient
                     .getInstance(StripePaymentActivity.this)
-                    .purchaseTicketStripe(1,
+                    .purchaseTicketStripe(StripePaymentActivity.this, ticketHistory,
                             paymentSession.getPaymentSessionData().getSelectedPaymentMethodId(),
                             getUserMailAddress(),
-                            cardholder);
-            //TODO: Add Ticket to local database and jump to ShowTicketActivity
-            EventsController ec = new EventsController(StripePaymentActivity.this);
-            List<Ticket> ticketList = new ArrayList<>();
-            ticketList.add(ticket);
-            ec.addTickets(ticketList);
-            finishLoadingPurchaseRequestSuccess(ticket);
+                            cardholder, new Callback<Ticket>() {
+                                @Override
+                                public void onResponse(Call<Ticket> call, Response<Ticket> response) {
+                                    EventsController ec = new EventsController(StripePaymentActivity.this);
+                                    List<Ticket> ticketList = new ArrayList<>();
+                                    ticketList.add(response.body());
+                                    ec.addTickets(ticketList);
+                                    finishLoadingPurchaseRequestSuccess(response.body());
+                                }
+
+                                @Override
+                                public void onFailure(Call<Ticket> call, Throwable t) {
+
+                                }
+                            });
         } catch (IOException exception) {
             exception.printStackTrace();
             finishLoadingPurchaseRequestError(getString(R.string.purchase_error_message));
@@ -284,18 +303,19 @@ public class StripePaymentActivity extends BaseActivity {
             finish();
         }
 
-        progressDialog = ProgressDialog.show(StripePaymentActivity.this, "", getString(R.string.purchase_progress_message), true);
+        //progressDialog = ProgressDialog.show(StripePaymentActivity.this, "", getString(R.string.purchase_progress_message), true);
         try {
             TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(StripePaymentActivity.this, ticketType, new Callback<TicketReservationResponse>() {
                 @Override
                 public void onResponse(Call<TicketReservationResponse> call, Response<TicketReservationResponse> response) {
                     ticketHistory = response.body().getTicketHistory();
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<TicketReservationResponse> call, Throwable t) {
-                    finish();
+                    t.printStackTrace();
+                    //finish();
                 }
             });
         } catch (IOException exception) {

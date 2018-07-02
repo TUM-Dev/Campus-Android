@@ -44,7 +44,9 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.EphimeralKey;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationCancelation;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -382,37 +384,42 @@ public final class TUMCabeClient {
 
     // Ticket reservation
     public void reserveTicket(Context context, int ticketType, Callback<TicketReservationResponse> cb) throws IOException {
-        ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
-        ChatVerification chatVerification = null;
-        try {
-            chatVerification = ChatVerification.Companion.getChatVerification(context, currentChatMember, new TicketReservation(ticketType));
-        } catch (NoPrivateKey noPrivateKey) {
-            noPrivateKey.printStackTrace();
-            throw new IOException();
-        }
+        ChatVerification chatVerification = createChatVerification(context, new TicketReservation(ticketType));
         service.reserveTicket(chatVerification).enqueue(cb);
     }
 
-    public TicketSuccessResponse cancelTicketReservation(int ticketHistory) throws IOException {
-        return service.cancelTicketReservation(ticketHistory).execute().body();
+    public void cancelTicketReservation(Context context, int ticketHistory, Callback<TicketSuccessResponse> cb) throws IOException {
+        ChatVerification chatVerification = createChatVerification(context, new TicketReservationCancelation(ticketHistory));
+        service.cancelTicketReservation(chatVerification).enqueue(cb);
     }
 
     // Ticket purchase
-    public Ticket purchaseTicketStripe(int ticketHistory, String token, String customerMail,
-                                       String customerName) throws IOException {
+    public void purchaseTicketStripe(Context context, int ticketHistory, String token, String customerMail,
+                                       String customerName, Callback<Ticket> cb) throws IOException {
         HashMap<String, Object> argsMap = new HashMap<>();
         argsMap.put("ticket_history", ticketHistory);
         argsMap.put("token", token);
         argsMap.put("customer_mail", customerMail);
         argsMap.put("customer_name", customerName);
 
-        return service.purchaseTicketStripe(argsMap).execute().body();
+        ChatVerification chatVerification = createChatVerification(context, argsMap);
+        service.purchaseTicketStripe(chatVerification).enqueue(cb);
     }
 
-    public HashMap<String, Object> retrieveEphemeralKey(String apiVersion, String customerMail) throws IOException {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("api_version", apiVersion);
-        map.put("customer_mail", customerMail);
-        return service.retrieveEphemeralKey(map).execute().body();
+    public void retrieveEphemeralKey(Context context, String apiVersion, String customerMail, Callback<HashMap<String, Object>> cb) throws IOException {
+        ChatVerification chatVerification = createChatVerification(context, new EphimeralKey(customerMail, apiVersion));
+        service.retrieveEphemeralKey(chatVerification).enqueue(cb);
+    }
+
+    private ChatVerification createChatVerification(Context context, Object object) throws IOException {
+        ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
+        ChatVerification chatVerification = null;
+        try {
+            chatVerification = ChatVerification.Companion.getChatVerification(context, currentChatMember, object);
+        } catch (NoPrivateKey noPrivateKey) {
+            noPrivateKey.printStackTrace();
+            throw new IOException();
+        }
+        return chatVerification;
     }
 }
