@@ -52,7 +52,7 @@ public class StripePaymentActivity extends BaseActivity {
     Boolean setSource = false;
     int ticketHistory;
     int eventID;
-    long price = -1; // ticket price IN CENTS
+    double price = -1; // ticket price IN CENTS
 
 
     public StripePaymentActivity() {
@@ -65,9 +65,9 @@ public class StripePaymentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // Get price from intent; convert it to CENTS (as required by Stripe)
-        price = (long) (getIntent().getDoubleExtra("ticketPrice", -1.0) * 100);
+        price = getIntent().getDoubleExtra("ticketPrice", -1.0);
         // Reserve ticket
-        ticketHistory = 1;//reserveTicket();
+        ticketHistory = reserveTicket();
 
         if (ticketHistory < 0 || price < 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
@@ -83,12 +83,11 @@ public class StripePaymentActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         paymentSession.onDestroy();
-        /* Comment out until real reservation is invoked
         try {
             TUMCabeClient.getInstance(getApplicationContext()).cancelTicketReservation(ticketHistory);
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
 
@@ -278,7 +277,7 @@ public class StripePaymentActivity extends BaseActivity {
 
     private int reserveTicket() {
         int ticketType = getIntent().getIntExtra("ticketType", -1);
-        int memberID = 0; //TODO: get real user ID (id used in database)
+        int memberID = 1; //TODO: get real user ID (id used in database)
 
         if (ticketType < 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
@@ -286,7 +285,7 @@ public class StripePaymentActivity extends BaseActivity {
         }
 
         try {
-            TicketReservationResponse response = TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(memberID, ticketType);
+            TicketReservationResponse response = TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(StripePaymentActivity.this, ticketType);
             return response.getTicketHistory();
         } catch (IOException exception) {
             showError(getString(R.string.internal_error));

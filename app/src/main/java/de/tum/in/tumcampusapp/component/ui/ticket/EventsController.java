@@ -55,11 +55,12 @@ public class EventsController {
             // NOTE: the dummy data on the server contains a dummy ticket for event id 2
             //       thus, we add another event with id 2 for testing purposes
             // TODO: remove this when dummy data on server is made consistent or real data is used!
-            Event event = events.get(0);
+            /*Event event = events.get(0);
+
             events.add(new Event(2,event.getImage(), event.getTitle() + "2",
                     event.getDescription() + " Not to say extremely nice!",
                     event.getLocality(), event.getDate(), event.getLink()));
-
+            */
             eventDao.insert(events);
         } catch (IOException e) {
             Utils.log(e);

@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
@@ -44,6 +45,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -352,7 +354,9 @@ public final class TUMCabeClient {
     // TICKET SALE
     // Getting event information
     public List<Event> getEvents() throws IOException {
-        return service.getEvents().execute().body();
+        List<Event> list = service.getEvents().execute().body();
+
+        return list;
     }
 
     public Event getEvent(int eventID) throws IOException {
@@ -378,8 +382,16 @@ public final class TUMCabeClient {
     }
 
     // Ticket reservation
-    public TicketReservationResponse reserveTicket(int memberID, int ticketType) throws IOException {
-        return service.reserveTicket(memberID, ticketType).execute().body();
+    public TicketReservationResponse reserveTicket(Context context, int ticketType) throws IOException {
+        ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
+        ChatVerification chatVerification = null;
+        try {
+            chatVerification = ChatVerification.Companion.getChatVerification(context, currentChatMember, new TicketReservation(ticketType));
+        } catch (NoPrivateKey noPrivateKey) {
+            noPrivateKey.printStackTrace();
+            throw new IOException();
+        }
+        return service.reserveTicket(chatVerification).execute().body();
     }
 
     public TicketSuccessResponse cancelTicketReservation(int ticketHistory) throws IOException {
@@ -389,35 +401,13 @@ public final class TUMCabeClient {
     // Ticket purchase
     public Ticket purchaseTicketStripe(int ticketHistory, String token, String customerMail,
                                        String customerName) throws IOException {
-        return new Ticket(1, 2, "codeblablabla918gr182gr9128g2u8f393u2vu32",
-                1, false);
-        /*
         HashMap<String, Object> argsMap = new HashMap<>();
         argsMap.put("ticket_history", ticketHistory);
         argsMap.put("token", token);
         argsMap.put("customer_mail", customerMail);
         argsMap.put("customer_name", customerName);
 
-        HashMap<String, Object> map = service.purchaseTicketStripe(argsMap).execute().body();
-        List<TicketType> ticketTypes = service.getTicketTypes((int) map.get("event")).execute().body();
-
-        // Directly create the associated ticket type as an object
-        TicketType tt = null;
-        for (TicketType curr : ticketTypes) {
-            if (curr.getId() == (int) map.get("ticket_type")) {
-                tt = curr;
-                break;
-            }
-        }
-        if (tt == null) {
-            throw new IOException();
-        }
-
-        return new Ticket(EventsController.getEventById((int) map.get("event")),
-                (String) map.get("code"),
-                tt,
-                (int) map.get("ticket_payment"));
-                */
+        return service.purchaseTicketStripe(argsMap).execute().body();
     }
 
     public HashMap<String, Object> retrieveEphemeralKey(String apiVersion, String customerMail) throws IOException {

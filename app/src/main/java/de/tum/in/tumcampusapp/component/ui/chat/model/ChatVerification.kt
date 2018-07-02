@@ -32,5 +32,10 @@ data class ChatVerification(var signature: String = "",
                     data = null
             )
         }
+
+        @Throws(NoPrivateKey::class)
+        fun getChatVerification(c: Context, member: ChatMember, data: Any?): ChatVerification {
+            return this.getChatVerification(c, member, data)
+        }
     }
 }
