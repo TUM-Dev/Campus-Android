@@ -1,7 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,6 +21,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 import static java.text.DateFormat.getDateTimeInstance;
@@ -73,12 +76,22 @@ public class BuyTicketActivity extends BaseActivity {
 
             Button paymentButton = findViewById(R.id.paymentbutton);
             paymentButton.setOnClickListener(v -> {
-                // Jump to the payment activity
-                Intent intent = new Intent(getApplicationContext(), TicketPaymentSelectActivity.class);
-                intent.putExtra("ticketTypeId", getTicketTypeForName(
-                        (String)ticketTypeSpinner.getSelectedItem()).getId());
-                intent.putExtra("eventId", eventId);
-                startActivity(intent);
+                // Check if user is logged in and LRZ ID is available
+                if(Utils.getSetting(BuyTicketActivity.this, Const.LRZ_ID, "").length() > 0) {
+                    // Jump to the payment activity
+                    TicketType selectedType = getTicketTypeForName((String)ticketTypeSpinner.getSelectedItem());
+                    Intent intent = new Intent(getApplicationContext(), StripePaymentActivity.class);
+                    intent.putExtra("ticketPrice", selectedType.getPrice());
+                    intent.putExtra("ticketType", selectedType.getId());
+                    startActivity(intent);
+                } else {
+                    ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
+                    builder.setTitle(getString(R.string.not_logged_in_title))
+                            .setMessage(R.string.not_logged_in_message);
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
             });
         }
     }

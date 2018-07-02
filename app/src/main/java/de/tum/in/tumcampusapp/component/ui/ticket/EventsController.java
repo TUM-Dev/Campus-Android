@@ -139,5 +139,9 @@ public class EventsController {
         }
         return ticketTypes;
     }
+
+    public void addTickets(List<Ticket> tickets) {
+        ticketDao.insert(tickets);
+    }
 }
 
