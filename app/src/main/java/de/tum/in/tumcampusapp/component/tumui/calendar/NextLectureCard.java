@@ -112,7 +112,7 @@ public class NextLectureCard extends NotificationAwareCard {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(v -> {
                 Intent i = new Intent(getContext(), RoomFinderActivity.class);
-                i.putExtra(SearchManager.QUERY, item.location);
+                i.putExtra(SearchManager.QUERY, item.locationForSearch);
                 getContext().startActivity(i);
             });
         }
@@ -173,6 +173,9 @@ public class NextLectureCard extends NotificationAwareCard {
 
             // Handle location
             item.location = calendarItem.getEventLocation();
+            // This is the location in a format which is useful for searches:
+            item.locationForSearch = calendarItem.getLocation();
+
             lectures.add(item);
         }
     }
@@ -182,6 +185,7 @@ public class NextLectureCard extends NotificationAwareCard {
         DateTime start;
         DateTime end;
         String location;
+        String locationForSearch;
     }
 
     @Override
