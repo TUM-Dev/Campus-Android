@@ -1,8 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -14,7 +12,6 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.utils.Utils;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class TicketScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
