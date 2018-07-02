@@ -382,7 +382,7 @@ public final class TUMCabeClient {
     }
 
     // Ticket reservation
-    public TicketReservationResponse reserveTicket(Context context, int ticketType) throws IOException {
+    public void reserveTicket(Context context, int ticketType, Callback<TicketReservationResponse> cb) throws IOException {
         ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
         ChatVerification chatVerification = null;
         try {
@@ -391,7 +391,7 @@ public final class TUMCabeClient {
             noPrivateKey.printStackTrace();
             throw new IOException();
         }
-        return service.reserveTicket(chatVerification).execute().body();
+        service.reserveTicket(chatVerification).enqueue(cb);
     }
 
     public TicketSuccessResponse cancelTicketReservation(int ticketHistory) throws IOException {

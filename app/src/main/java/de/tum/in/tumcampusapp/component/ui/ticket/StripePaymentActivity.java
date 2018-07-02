@@ -39,6 +39,9 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StripePaymentActivity extends BaseActivity {
 
@@ -67,7 +70,7 @@ public class StripePaymentActivity extends BaseActivity {
         // Get price from intent; convert it to CENTS (as required by Stripe)
         price = getIntent().getDoubleExtra("ticketPrice", -1.0);
         // Reserve ticket
-        ticketHistory = reserveTicket();
+        reserveTicket();
 
         if (ticketHistory < 0 || price < 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
@@ -275,19 +278,30 @@ public class StripePaymentActivity extends BaseActivity {
         return data.getBrand() + ",  " + getString(R.string.creditcard_ending_in) + "  " + data.getLast4();
     }
 
-    private int reserveTicket() {
+    private void reserveTicket() {
         int ticketType = getIntent().getIntExtra("ticketType", -1);
         if (ticketType <= 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
             finish();
         }
 
+        progressDialog = ProgressDialog.show(StripePaymentActivity.this, "", getString(R.string.purchase_progress_message), true);
         try {
-            TicketReservationResponse response = TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(StripePaymentActivity.this, ticketType);
-            return response.getTicketHistory();
+            TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(StripePaymentActivity.this, ticketType, new Callback<TicketReservationResponse>() {
+                @Override
+                public void onResponse(Call<TicketReservationResponse> call, Response<TicketReservationResponse> response) {
+                    ticketHistory = response.body().getTicketHistory();
+                    progressDialog.dismiss();
+                }
+
+                @Override
+                public void onFailure(Call<TicketReservationResponse> call, Throwable t) {
+                    finish();
+                }
+            });
         } catch (IOException exception) {
             showError(getString(R.string.internal_error));
-            return -1;
+            finish();
         }
     }
 
