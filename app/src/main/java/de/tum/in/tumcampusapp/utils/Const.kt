@@ -11,6 +11,7 @@ object Const {
     const val CAFETERIA_ID = "cafeteriasId"
     const val CAFETERIAS = "cafeterias"
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
+    const val EVENT_BOOKED_MODE = "event_booked_mode"
     const val COMPLETED = "completed"
     const val DATABASE_NAME = "database.db"
     const val DATE = "date"
@@ -21,6 +22,7 @@ object Const {
     const val HIDE_WIZARD_ON_STARTUP = "hide_wizard_on_startup"
     const val LRZ_ID = "lrz_id"
     const val NEWS = "news"
+    const val EVENTS = "events"
     const val KINO = "kino"
     const val STUDY_ROOM_GROUP_ID = "study_room_group_id"
     const val ROLE = "card_role"
@@ -33,6 +35,7 @@ object Const {
     const val API_HOSTNAME_NEW = "app.tum.de"
     const val CURRENT_CHAT_ROOM = "current_chat_room"
     const val CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name"
+    const val CHAT_ROOM_NAME = "chat_room_name"
 
     const val PRIVATE_KEY_ACTIVE = "chat_member_private_key_active"
     const val PRIVATE_KEY = "chat_member_private_key"
@@ -121,7 +124,7 @@ object Const {
     const val LRZ = "lrz"
 
     const val CHAT_BROADCAST_NAME = "chat-message-received"
-  
+
     const val EVENT_TITLE = "pTitel"
     const val EVENT_COMMENT = "pAnmerkung"
     const val EVENT_START = "pVon"
@@ -129,7 +132,7 @@ object Const {
     const val EVENT_NR = "pTerminNr"
 
     const val KINO_DATE = "kinoDate"
-  
+
     const val PDF_TITLE = "pdfTitle"
     const val PDF_PATH = "pdfPath"
 
@@ -140,4 +143,12 @@ object Const {
 
     const val CONTACTS_PERMISSION_REQUEST_CODE = 0
     const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
+
+    const val TUM_CAMPUS_URL = "http://campus.tum.de"
+
+    const val CALENDAR_FILTER_CANCELED = "calendar_filter_canceled"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MIN = "calendar_filter_hour_limit_min"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MAX = "calendar_filter_hour_limit_max"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
 }

@@ -2,9 +2,14 @@ package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.widget.Button;
+import android.support.v7.widget.AppCompatButton;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -28,13 +33,14 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Allows the user to create (and edit) a private event in TUMonline.
  */
 public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
+
     private Calendar start, end;
-    private boolean editing;
+    private boolean isEditing;
     private TextView titleView, descriptionView, startDateView, startTimeView, endDateView, endTimeView;
-    private Button createButton;
+    private AppCompatButton createButton;
     private CalendarItem event;
 
-    public CreateEventActivity(){
+    public CreateEventActivity() {
         super(TUMOnlineConst.Companion.getCREATE_EVENT(), R.layout.activity_create_event);
     }
 
@@ -43,21 +49,42 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         super.onCreate(savedInstanceState);
         initViews();
 
+        titleView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean isEmpty = s.toString().isEmpty();
+                float alpha = isEmpty ? 0.5f : 1.0f;
+                createButton.setEnabled(!isEmpty);
+                createButton.setAlpha(alpha);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
-            editing = true;
+        if (extras != null) {
+            isEditing = true;
             titleView.setText(extras.getString(Const.EVENT_TITLE));
             descriptionView.setText(extras.getString(Const.EVENT_COMMENT));
             createButton.setText(R.string.event_save_edit_button);
+        } else {
+            titleView.requestFocus();
+            showKeyboard();
         }
+
         initStartEndDates(extras);
         setDateAndTimeListeners();
+
         createButton.setOnClickListener(view -> {
-            if (end.before(start)){
+            if (end.before(start)) {
                 showErrorDialog(getString(R.string.create_event_time_error));
                 return;
             }
-            if (editing){
+            if (isEditing) {
                 editEvent();
             } else {
                 createEvent();
@@ -65,7 +92,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
     }
 
-    private void initViews(){
+    private void initViews() {
         titleView = findViewById(R.id.event_title);
         descriptionView = findViewById(R.id.event_description);
         startDateView = findViewById(R.id.event_start_date);
@@ -75,11 +102,11 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         createButton = findViewById(R.id.create_event_button);
     }
 
-    private void initStartEndDates(Bundle extras){
+    private void initStartEndDates(Bundle extras) {
         start = Calendar.getInstance();
         end = Calendar.getInstance();
 
-        if (editing){
+        if (isEditing) {
             start.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_START)));
             end.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_END)));
         } else {
@@ -96,13 +123,13 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         updateTimeViews();
     }
 
-    private void setDateAndTimeListeners(){
+    private void setDateAndTimeListeners() {
 
         // DATE
         startDateView.setOnClickListener(view -> {
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
                 start.set(year, month, dayOfMonth);
-                if (end.before(start)){
+                if (end.before(start)) {
                     end.set(year, month, dayOfMonth);
                 }
                 updateDateViews();
@@ -136,18 +163,18 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
     }
 
-    private void updateTimeViews(){
+    private void updateTimeViews() {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.GERMANY);
         startTimeView.setText(format.format(start.getTime()));
         endTimeView.setText(format.format(end.getTime()));
     }
-    private void updateDateViews(){
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
+    private void updateDateViews() {
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd.MM.yyyy", Locale.GERMANY);
         startDateView.setText(format.format(start.getTime()));
         endDateView.setText(format.format(end.getTime()));
     }
 
-    private void editEvent(){
+    private void editEvent() {
         final String eventNr = getIntent().getExtras().getString(Const.EVENT_NR);
         TUMOnlineRequest<DeleteEvent> request = new TUMOnlineRequest<>(
                 TUMOnlineConst.Companion.getDELETE_EVENT(), this, true);
@@ -182,19 +209,19 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
     }
 
-    private void createEvent(){
+    private void createEvent() {
         event = new CalendarItem();
         event.setDtstart(DateUtils.getDateTimeString(start.getTime()));
         event.setDtend(DateUtils.getDateTimeString(end.getTime()));
 
         String title = titleView.getText().toString();
-        if (title.length() > 255){
+        if (title.length() > 255) {
             title = title.substring(0, 255);
         }
         event.setTitle(title);
 
         String description = descriptionView.getText().toString();
-        if (description.length() > 4000){
+        if (description.length() > 4000) {
             description = description.substring(0, 4000);
         }
         event.setDescription(description);
@@ -214,12 +241,66 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         finish();
     }
 
-    private void showErrorDialog(String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message);
-        builder.setTitle(R.string.error);
-        builder.setIcon(R.drawable.ic_error_outline);
-        builder.setNeutralButton(R.string.ok, null);
-        builder.show();
+    @Override
+    public void onBackPressed() {
+        hideKeyboard();
+
+        boolean handled = handleOnBackPressed();
+        if (handled) {
+            finish();
+        } else {
+            displayCloseDialog();
+        }
     }
+
+    private void showKeyboard() {
+        InputMethodManager inputManager =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputManager =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            inputManager.hideSoftInputFromWindow(titleView.getWindowToken(),0);
+        }
+    }
+
+    private boolean handleOnBackPressed() {
+        String title = titleView.getText().toString();
+        String description = descriptionView.getText().toString();
+        return title.isEmpty() && description.isEmpty();
+    }
+
+    private void displayCloseDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.discard_changes_question)
+                .setNegativeButton(R.string.discard, (dialog, which) -> finish())
+                .setPositiveButton(R.string.keep_editing, null)
+                .show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showErrorDialog(String message) {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.error)
+            .setMessage(message)
+            .setIcon(R.drawable.ic_error_outline)
+            .setPositiveButton(R.string.ok, null)
+            .show();
+    }
+
 }

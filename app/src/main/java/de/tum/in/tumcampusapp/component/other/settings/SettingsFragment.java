@@ -18,6 +18,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
@@ -32,21 +33,19 @@ import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
-import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements
-                                                               SharedPreferences.OnSharedPreferenceChangeListener,
-                                                               Preference.OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragmentCompat
+        implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     public static final String FRAGMENT_TAG = "my_preference_fragment";
     private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
     private static final String SETUP_EDUROAM = "card_eduroam_setup";
+
     private FragmentActivity mContext;
 
     @Override
@@ -55,10 +54,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
 
+        populateNewsSources();
+
         // Disables silence service if the app is used without TUMOnline access
-        CheckBoxPreference silent = (CheckBoxPreference) findPreference("silent_mode");
-        if (silent != null && !new AccessTokenManager(mContext).hasValidAccessToken()) {
-            silent.setEnabled(false);
+        SwitchPreferenceCompat silentSwitch =
+                (SwitchPreferenceCompat) findPreference(Const.SILENCE_SERVICE);
+        if (silentSwitch != null && !new AccessTokenManager(mContext).hasValidAccessToken()) {
+            silentSwitch.setEnabled(false);
         }
 
         //Only do these things if we are in the root of the preferences
@@ -67,18 +69,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             // (since it is not possible to add a button to the preferences screen)
             findPreference(BUTTON_CLEAR_CACHE).setOnPreferenceClickListener(this);
 
-            // Set summary for these preferences
+            setSummary("card_default_campus");
+            setSummary("silent_mode_set_to");
+            setSummary("background_mode_set_to");
+        } else if (rootKey.equals("card_cafeteria")) {
             setSummary("card_cafeteria_default_G");
             setSummary("card_cafeteria_default_K");
             setSummary("card_cafeteria_default_W");
             setSummary("card_role");
+        } else if (rootKey.equals("card_mvv")) {
             setSummary("card_stations_default_G");
             setSummary("card_stations_default_C");
             setSummary("card_stations_default_K");
-            setSummary("card_default_campus");
-            setSummary("silent_mode_set_to");
-            setSummary("background_mode_set_to");
-
         } else if (rootKey.equals("card_eduroam")) {
             findPreference(SETUP_EDUROAM).setOnPreferenceClickListener(this);
         }
@@ -94,21 +96,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         // Set the default white background in the view so as to avoid transparency
         view.setBackgroundColor(Color.WHITE);
-
-        // Populate news sources
-        populateNewsSources();
     }
 
     private void populateNewsSources() {
-        PreferenceCategory newsSourcesPreference = (PreferenceCategory) findPreference("card_news_sources");
+        PreferenceCategory newsSourcesPreference =
+                (PreferenceCategory) findPreference("card_news_sources");
 
         NewsController newsController = new NewsController(mContext);
         List<NewsSources> newsSources = newsController.getNewsSources();
-        final NetUtils net = new NetUtils(mContext);
         for (NewsSources newsSource : newsSources) {
             final CheckBoxPreference pref = new CheckBoxPreference(mContext);
             pref.setKey("card_news_source_" + newsSource.getId());
             pref.setDefaultValue(true);
+            
+            // reserve space so that when the icon is loaded the text is not moved again
+            pref.setIconSpaceReserved(true);
 
             // Load news source icon in background and set it
             final String url = newsSource.getIcon();
@@ -139,12 +141,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         Preference pref = findPreference(key);
         if (pref instanceof ListPreference) {
             ListPreference listPreference = (ListPreference) pref;
-            listPreference.setSummary(listPreference.getEntry());
-        }
-
-        //Refresh the cards after a change has been made to them
-        if (key.startsWith("card_")) {
-            CardManager.setShouldRefresh();
+            String entry = listPreference.getEntry().toString();
+            listPreference.setSummary(entry);
         }
 
         // When newspread selection changes
@@ -162,7 +160,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             String newSource = sharedPreferences.getString(key, "7");
             e.putBoolean("card_news_source_" + newSource, value);
             e.apply();
-            CardManager.setShouldRefresh();
         }
 
         // If the silent mode was activated, start the service. This will invoke
@@ -172,9 +169,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             if (sharedPreferences.getBoolean(key, false)) {
                 if (!SilenceService.hasPermissions(mContext)) {
                     // disable until silence service permission is resolved
-                    CheckBoxPreference silenceCheckbox = (CheckBoxPreference) findPreference(Const.SILENCE_SERVICE);
-                    if (silenceCheckbox != null) {
-                        silenceCheckbox.setChecked(false);
+                    SwitchPreferenceCompat silenceSwitch =
+                            (SwitchPreferenceCompat) findPreference(Const.SILENCE_SERVICE);
+                    if (silenceSwitch != null) {
+                        silenceSwitch.setChecked(false);
                     }
                     Utils.setSetting(mContext, Const.SILENCE_SERVICE, false);
 
@@ -200,10 +198,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     }
 
     private void setSummary(CharSequence key) {
-        Preference t = findPreference(key);
-        if (t instanceof ListPreference) {
-            ListPreference pref = (ListPreference) t;
-            pref.setSummary(pref.getEntry());
+        Preference pref = findPreference(key);
+        if (pref instanceof ListPreference) {
+            ListPreference listPref = (ListPreference) pref;
+            String entry = listPref.getEntry().toString();
+            listPref.setSummary(entry);
         }
     }
 
@@ -224,11 +223,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             case BUTTON_CLEAR_CACHE:
                 // This button invokes the clear cache method
                 new AlertDialog.Builder(mContext)
-                        .setMessage(R.string.delete_chache_sure)
-                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> clearCache())
-                        .setNegativeButton(R.string.no, null)
+                        .setMessage(R.string.delete_cache_sure)
+                        .setPositiveButton(R.string.delete, (dialogInterface, i) -> clearCache())
+                        .setNegativeButton(R.string.cancel, null)
                         .show();
-
                 break;
             default:
                 return false;
@@ -256,4 +254,5 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         mContext.finish();
         startActivity(new Intent(mContext, StartupActivity.class));
     }
+
 }

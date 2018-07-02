@@ -27,11 +27,14 @@ class TUMOnlineConst<T> private constructor(private val webservice: String, val 
     }
 
     companion object {
+
+        // TODO: Switch to @JvmField for all members and update the Java code accordingly
+
         val CALENDER = TUMOnlineConst("kalender", CacheManager.VALIDITY_FIVE_DAYS, CalendarRowSet::class.java)
         val CREATE_EVENT = TUMOnlineConst("terminCreate", CacheManager.VALIDITY_DO_NOT_CACHE, CreateEvent::class.java)
         val DELETE_EVENT = TUMOnlineConst("terminDelete", CacheManager.VALIDITY_DO_NOT_CACHE, DeleteEvent::class.java)
-        val TUITION_FEE_STATUS = TUMOnlineConst("studienbeitragsstatus", CacheManager.VALIDITY_TWO_DAYS, TuitionList::class.java)
-        val LECTURES_PERSONAL = TUMOnlineConst("veranstaltungenEigene", CacheManager.VALIDITY_FIVE_DAYS, LecturesSearchRowSet::class.java)
+        @JvmField val TUITION_FEE_STATUS = TUMOnlineConst("studienbeitragsstatus", CacheManager.VALIDITY_TWO_DAYS, TuitionList::class.java)
+        @JvmField val LECTURES_PERSONAL = TUMOnlineConst("veranstaltungenEigene", CacheManager.VALIDITY_FIVE_DAYS, LecturesSearchRowSet::class.java)
         val LECTURES_DETAILS = TUMOnlineConst("veranstaltungenDetails", CacheManager.VALIDITY_TEN_DAYS, LectureDetailsRowSet::class.java)
         val LECTURES_APPOINTMENTS = TUMOnlineConst("veranstaltungenTermine", CacheManager.VALIDITY_TEN_DAYS, LectureAppointmentsRowSet::class.java)
         val LECTURES_SEARCH = TUMOnlineConst("veranstaltungenSuche", CacheManager.VALIDITY_DO_NOT_CACHE, LecturesSearchRowSet::class.java)

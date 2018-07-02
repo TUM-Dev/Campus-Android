@@ -11,6 +11,7 @@ import org.robolectric.annotation.Config;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.BuildConfig;
+import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
@@ -20,7 +21,7 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApp.class)
 public class SyncManagerTest {
     private SyncManager syncManager;
     private SyncDao dao;

@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -107,8 +106,6 @@ public class SetupEduroamActivity extends BaseActivity {
             Utils.showToast(this, R.string.eduroam_success);
             Utils.setSetting(this, Const.REFRESH_CARDS, true);
             finish();
-
-            CardManager.setShouldRefresh();
         } else {
             findViewById(R.id.eduroam_config_error).setVisibility(View.VISIBLE);
         }

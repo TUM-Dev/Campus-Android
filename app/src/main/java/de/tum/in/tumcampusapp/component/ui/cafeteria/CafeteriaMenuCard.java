@@ -25,9 +25,11 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment.showMenu;
@@ -79,6 +81,16 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
         // Show cafeteria menu
         cardsViewHolder.setAddedViews(showMenu(getMLinearLayout(), mCafeteriaId, mDateStr, false, mMenus));
+    }
+
+    public void setCardMenus(CafeteriaWithMenus cafeteria) {
+        setCardMenus(
+                cafeteria.getId(),
+                cafeteria.getName(),
+                cafeteria.getNextMenuDate(),
+                DateUtils.getDate(cafeteria.getNextMenuDate()),
+                cafeteria.getMenus()
+        );
     }
 
     /**

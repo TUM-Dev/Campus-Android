@@ -4,9 +4,15 @@ import android.content.Context;
 
 import com.google.common.base.Optional;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 
 /**
@@ -14,22 +20,32 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
  */
 public class TuitionFeeManager implements ProvidesCard {
 
-    /**
-     * Shows tuition card with current fee status
-     *
-     * @param context Context
-     */
+    private Context mContext;
+
+    public TuitionFeeManager(Context context) {
+        mContext = context;
+    }
+
+    @NotNull
     @Override
-    public void onRequestCard(Context context) {
-        TUMOnlineRequest<TuitionList> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getTUITION_FEE_STATUS(), context, true);
+    public List<Card> getCards() {
+        List<Card> results = new ArrayList<>();
+
+        TUMOnlineRequest<TuitionList> requestHandler =
+                new TUMOnlineRequest<>(TUMOnlineConst.TUITION_FEE_STATUS, mContext, true);
+
         Optional<TuitionList> tuitionList = requestHandler.fetch();
         if (!tuitionList.isPresent()) {
-            return;
+            return results;
         }
-        TuitionFeesCard card = new TuitionFeesCard(context);
+
+        TuitionFeesCard card = new TuitionFeesCard(mContext);
         card.setTuition(tuitionList.get()
                                    .getTuitions()
                                    .get(0));
-        card.apply();
+
+        results.add(card.getIfShowOnStart());
+        return results;
     }
+
 }

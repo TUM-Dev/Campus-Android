@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.BuyTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.component.ui.ticket.ShowTicketActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
@@ -40,7 +41,7 @@ public class KinoDetailsFragment extends Fragment {
     private String url; // link to homepage
     private LayoutInflater inflater;
 
-    private boolean isBooked = true;
+    private boolean isBooked = false;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -145,10 +146,10 @@ public class KinoDetailsFragment extends Fragment {
 
         // Setup "Buy/Show ticket" button according to ticket status for current event
         if (isBooked) {
-            ticket.setText("Show ticket");
+            ticket.setText(this.getString(R.string.show_ticket));
             ticket.setOnClickListener(view -> showTicket());
         } else {
-            ticket.setText("Buy ticket");
+            ticket.setText(this.getString(R.string.buy_ticket));
             ticket.setOnClickListener(view -> buyTicket());
         }
 
@@ -172,19 +173,16 @@ public class KinoDetailsFragment extends Fragment {
         rootView.addView(headerView);
     }
 
-    //open ShowTicketActivity activity, and transfer current movie data to it.
-    //TODO: The String data is just a example, it should be get from correspongding movie which now show on the screen.
-    //Time and place of movie  is fixed. Only the movie title and date should be transfered to ShowTicketActivity activity
-    //somethings in event class,object
+    //open ShowTicketActivity activity
     private void showTicket() {
-        String data = "KingsMan 08.05 " + "\n" + "Filmbegin: 20:00 o'clock " + "\n" + " 1. Stock, Hörsaal 1200 (Carl-von-Linde-Hörsaal) Arcisstraße 21";
-        Intent intent = new Intent(getActivity().getApplicationContext(), ShowTicketActivity.class);
-        intent.putExtra("movie_data", data);
+        Intent intent = new Intent(context, ShowTicketActivity.class);
         startActivity(intent);
     }
 
     private void buyTicket() {
-        // TODO: go to payment activity (to be implemented)
+        // TODO: message to server to create ticket
+        Intent intent = new Intent(context, BuyTicketActivity.class);
+        startActivity(intent);
     }
 
     public void showTrailer() {

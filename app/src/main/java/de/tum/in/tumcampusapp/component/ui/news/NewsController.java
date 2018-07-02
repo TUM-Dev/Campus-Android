@@ -1,7 +1,8 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
@@ -143,13 +145,10 @@ public class NewsController implements ProvidesCard {
         return sources;
     }
 
-    /**
-     * Adds the newest news card
-     *
-     * @param context Context
-     */
+    @NotNull
     @Override
-    public void onRequestCard(@NonNull Context context) {
+    public List<Card> getCards() {
+        List<Card> results = new ArrayList<>();
         Collection<Integer> sources = getActiveSources(context);
 
         List<News> news;
@@ -167,8 +166,11 @@ public class NewsController implements ProvidesCard {
             } else {
                 card = new NewsCard(context);
             }
+
             card.setNews(n);
-            card.apply();
+            results.add(card.getIfShowOnStart());
         }
+
+        return results;
     }
 }

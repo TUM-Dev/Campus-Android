@@ -1,9 +1,18 @@
 sudo: false
-branches:
-  only:
-  - master
 language: android
-jdk: oraclejdk7
+jdk: oraclejdk8
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+env:
+ global:
+ - ANDROID_API=27
+ - ANDROID_BUILD_TOOLS=27.0.3
 android:
   components:
   - tools
@@ -12,18 +21,20 @@ android:
   - extra-android-m2repository
   - extra-google-google_play_services
   - extra-google-m2repository
-  - android-23
-  - build-tools-23.0.3
+  - android-$ANDROID_API_LEVEL
+  - build-tools-$ANDROID_BUILD_TOOLS
+  - addon-google_apis-google-$ANDROID_API_LEVEL
   licenses:
-  - ".+"
+  - '.+'
 before_install:
+- yes | sdkmanager "platforms;android-27"
 - chmod +x gradlew
 install:
 - "./gradlew dependencies"
 script:
 - "./gradlew check"
-after_failure:
-- cat "$TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
-notifications:
-  slack:
-    secure: c7J5L/t2sikz/osUHooZuI3kbi9ZOFh/JauLsoEuTVf28faaMDrD6HkfmElhCLxTgQaCDXBeFaOK9E6QNBuy9s5+VuBjKDnSyGOG0dI+fFvZkmha+LuxwpjoOjiSXyGdvVW+zxzQfCmyJMSTip15zBJi7z0Q3l/iRM6JKq5A1Tg=
+before_deploy:
+- cat "$TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml"
+- cat "$TRAVIS_BUILD_DIR/app/build/reports/pmd/duplicates.xml"
+- cat "$TRAVIS_BUILD_DIR/app/build/reports/detekt/detekt-checkstyle.xml"
+- cat "$TRAVIS_BUILD_DIR/app/build/reports/findbugs/findBugsDebug.xml"

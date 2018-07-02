@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <size android:height="@dimen/compound_drawable_size" android:width="@dimen/compound_drawable_size"/>
+    <corners android:radius="2dp"/>
+    <solid android:color="@color/news_source_placeholder"/>
+</shape>
