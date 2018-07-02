@@ -277,9 +277,7 @@ public class StripePaymentActivity extends BaseActivity {
 
     private int reserveTicket() {
         int ticketType = getIntent().getIntExtra("ticketType", -1);
-        int memberID = 1; //TODO: get real user ID (id used in database)
-
-        if (ticketType < 0) {
+        if (ticketType <= 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
             finish();
         }

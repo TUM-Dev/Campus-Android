@@ -12,10 +12,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
@@ -68,9 +66,6 @@ public class BuyTicketActivity extends BaseActivity {
             startActivity(intent);
         }else{
             initEventTextViews();
-
-            // TODO: remove this (only for testing purposes)
-            ticketTypes.add(new TicketType(42,4.2,"Test Ticket"));
 
             initializeTicketTypeSpinner();
 
