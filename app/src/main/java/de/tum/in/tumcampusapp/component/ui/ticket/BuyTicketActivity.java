@@ -147,7 +147,7 @@ public class BuyTicketActivity extends BaseActivity {
 
         TextView priceView = findViewById(R.id.ticket_details_price);
 
-        String priceString = new DecimalFormat("#.00").format(ticketType.getPrice())
+        String priceString = new DecimalFormat("#.00").format(ticketType.getPrice() / 100)
                 + " €";
 
         priceView.setText(priceString);
