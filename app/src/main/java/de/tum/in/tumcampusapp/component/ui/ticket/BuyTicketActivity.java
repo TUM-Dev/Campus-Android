@@ -76,7 +76,7 @@ public class BuyTicketActivity extends BaseActivity {
                     // Jump to the payment activity
                     TicketType selectedType = getTicketTypeForName((String)ticketTypeSpinner.getSelectedItem());
                     Intent intent = new Intent(getApplicationContext(), StripePaymentActivity.class);
-                    intent.putExtra("ticketPrice", selectedType.getPrice());
+                    intent.putExtra("ticketPrice", selectedType.getPrice() / 100);
                     intent.putExtra("ticketType", selectedType.getId());
                     startActivity(intent);
                 } else {

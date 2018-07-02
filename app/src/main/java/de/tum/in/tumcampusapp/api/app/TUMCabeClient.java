@@ -370,12 +370,9 @@ public final class TUMCabeClient {
     }
 
     // Getting ticket information
-    public List<Ticket> getTickets(int userID) throws IOException {
-        return service.getTickets(userID).execute().body();
-    }
-
-    public Ticket getTicketForEvent(int userID, int eventID) throws IOException {
-        return service.getTicketForEvent(userID, eventID).execute().body();
+    public void getTickets(Context context, Callback<List<Ticket>> cb) throws IOException {
+        ChatVerification chatVerification = createChatVerification(context, null);
+        service.getTickets(chatVerification).enqueue(cb);
     }
 
     public List<TicketType> getTicketTypes(int eventID) throws IOException {

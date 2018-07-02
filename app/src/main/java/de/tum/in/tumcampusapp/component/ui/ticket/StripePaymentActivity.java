@@ -70,7 +70,7 @@ public class StripePaymentActivity extends BaseActivity {
         // Get price from intent; convert it to CENTS (as required by Stripe)
         price = getIntent().getDoubleExtra("ticketPrice", -1.0);
         // Reserve ticket
-        ticketHistory = 1;//reserveTicket();
+        reserveTicket();
 
         if (ticketHistory < 0 || price < 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();

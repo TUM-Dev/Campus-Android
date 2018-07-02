@@ -232,11 +232,8 @@ public interface TUMCabeAPIService {
     Call<List<Event>> searchEvents(@Path("searchTerm") String searchTerm);
 
     // Getting Ticket information
-    @GET(API_EVENTS + API_TICKET + "my/{userID}")
-    Call<List<Ticket>> getTickets(@Path("userID") int userID);
-
-    @GET(API_EVENTS + API_TICKET + "my/{userID}/{eventID}")
-    Call<Ticket> getTicketForEvent(@Path("userID") int userID, @Path("eventID") int eventID);
+    @POST(API_EVENTS + API_TICKET + "my")
+    Call<List<Ticket>> getTickets(@Body ChatVerification chatVerification);
 
     @GET(API_EVENTS + API_TICKET + "type/{eventID}")
     Call<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);

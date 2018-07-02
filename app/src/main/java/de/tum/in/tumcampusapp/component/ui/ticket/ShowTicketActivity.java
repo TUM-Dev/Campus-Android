@@ -54,10 +54,7 @@ public class ShowTicketActivity extends BaseActivity {
 
         Ticket ticket = eventsController.getTicketByEventId(eventId);
         Event event = eventsController.getEventById(ticket.getEventId());
-        // TODO: replace the dummy value 0 by the actual ticket type of the ticket
-        //       we need to use this value now to prevent a crash
-        TicketType ticketType = eventsController.getTicketTypeById(0);
-        //TicketType ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
+        TicketType ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
 
         String timeString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
                 format(event.getDate());
@@ -69,9 +66,11 @@ public class ShowTicketActivity extends BaseActivity {
         String String = event.getTitle();
         String eventLocationString = event.getLocality();
         String eventDateTimeString = dateString + " " + time[1];
-        String eventPriceString = String.format(Locale.GERMANY, "%.2f",
-                ticketType.getPrice()) + " €";
-
+        String eventPriceString = "";
+        if(ticketType != null) {
+            eventPriceString = String.format(Locale.GERMANY, "%.2f",
+                    ticketType.getPrice() / 100) + " €";
+        }
         String redemptionStateString = this.getString(R.string.redeemed) + ": " +
                 (ticket.getRedeemed() ?  this.getString(R.string.yes) : this.getString(R.string.no));
 
