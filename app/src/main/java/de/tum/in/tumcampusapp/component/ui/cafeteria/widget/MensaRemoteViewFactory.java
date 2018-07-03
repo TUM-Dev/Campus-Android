@@ -19,17 +19,17 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
 
-    private final Context mContext;
+    private final Context mApplicationContext;
     private List<CafeteriaMenu> mMenus = new ArrayList<>();
 
     public MensaRemoteViewFactory(Context context) {
-        this.mContext = context;
+        this.mApplicationContext = context;
     }
 
     @Override
     public void onCreate() {
-        CafeteriaManager mensaManager = new CafeteriaManager(mContext);
-        Map<String, List<CafeteriaMenu>> menus = mensaManager.getBestMatchMensaInfo(mContext)
+        CafeteriaManager mensaManager = new CafeteriaManager(mApplicationContext);
+        Map<String, List<CafeteriaMenu>> menus = mensaManager.getBestMatchMensaInfo(mApplicationContext)
                                                              .blockingFirst();
         mMenus = menus.get(menus.keySet().iterator().next());
     }
@@ -56,14 +56,14 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
             return null;
         }
 
-        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.mensa_widget_item);
+        RemoteViews rv = new RemoteViews(mApplicationContext.getPackageName(), R.layout.mensa_widget_item);
 
         String menuContent = COMPILE.matcher(currentItem.getName())
                                     .replaceAll("")
                                     .trim();
         rv.setTextViewText(R.id.menu_content, menuContent + " (" + currentItem.getTypeShort() + ")");
 
-        String price = CafeteriaPrices.INSTANCE.getPrice(mContext, currentItem.getTypeLong());
+        String price = CafeteriaPrices.INSTANCE.getPrice(mApplicationContext, currentItem.getTypeLong());
         rv.setViewVisibility(R.id.menu_price, price == null ? View.INVISIBLE : View.VISIBLE);
         rv.setTextViewText(R.id.menu_price, price + " €");
 

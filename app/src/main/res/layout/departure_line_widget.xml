@@ -17,7 +17,7 @@
         <TextView
             android:id="@+id/line_symbol"
             android:layout_width="40dp"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:gravity="center"
             android:textSize="16sp"
             android:textStyle="bold"
