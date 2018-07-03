@@ -16,6 +16,18 @@ public class TicketValidityResponse {
     @SerializedName("name")
     public String lastName;
 
+    @SerializedName("tumid")
+    public String tumID;
+
+    @SerializedName("purchasedate")
+    public String purchaseDate;
+
+    @SerializedName("redeemdate")
+    public String redeemDate;
+
+    @SerializedName("status")
+    public String status;
+
     public String getFullName() {
         return firstName + " " + lastName;
     }

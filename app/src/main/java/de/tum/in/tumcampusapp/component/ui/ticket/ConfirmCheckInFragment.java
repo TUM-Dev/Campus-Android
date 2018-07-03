@@ -82,6 +82,10 @@ public class ConfirmCheckInFragment extends BottomSheetDialogFragment {
                         ticketValidityResponse.valid = true;
                         ticketValidityResponse.firstName = "Rick";
                         ticketValidityResponse.lastName = "Schuber";
+                        ticketValidityResponse.tumID = "ga123qir";
+                        ticketValidityResponse.purchaseDate = "May 16, 2018";
+                        ticketValidityResponse.redeemDate = "July 2, 2018";
+                        ticketValidityResponse.status = "Not yet checked in";
 
                         if (ticketValidityResponse == null || !ticketValidityResponse.valid) {
                             closeWithErrorMessage();
