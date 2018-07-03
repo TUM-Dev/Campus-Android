@@ -84,6 +84,7 @@ public class EventsController {
 
                     @Override
                     public void onFailure(Call<List<Ticket>> call, Throwable t) {
+                        //TODO: inform user about failure
                         t.printStackTrace();
                     }
                 });
