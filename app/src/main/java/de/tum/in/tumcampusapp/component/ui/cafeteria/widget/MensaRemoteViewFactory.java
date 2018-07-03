@@ -1,11 +1,11 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria.widget;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -18,20 +18,20 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
-    private final Context applicationContext;
-    private List<CafeteriaMenu> mensaMenu;
 
-    public MensaRemoteViewFactory(Context applicationContext, Intent intent) {
-        this.applicationContext = applicationContext.getApplicationContext();
+    private final Context mContext;
+    private List<CafeteriaMenu> mMenus = new ArrayList<>();
+
+    public MensaRemoteViewFactory(Context context) {
+        this.mContext = context;
     }
 
     @Override
     public void onCreate() {
-        CafeteriaManager mensaManager = new CafeteriaManager(applicationContext);
-        Map<String, List<CafeteriaMenu>> menus = mensaManager.getBestMatchMensaInfo(applicationContext)
+        CafeteriaManager mensaManager = new CafeteriaManager(mContext);
+        Map<String, List<CafeteriaMenu>> menus = mensaManager.getBestMatchMensaInfo(mContext)
                                                              .blockingFirst();
-        mensaMenu = menus.get(menus.keySet().iterator().next());
-
+        mMenus = menus.get(menus.keySet().iterator().next());
     }
 
     @Override
@@ -46,29 +46,27 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public int getCount() {
-        if (mensaMenu == null) {
-            return 0;
-        }
-        return mensaMenu.size();
+        return mMenus.size();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-
-        CafeteriaMenu currentItem = mensaMenu.get(position);
+        CafeteriaMenu currentItem = mMenus.get(position);
         if (currentItem == null) {
             return null;
         }
-        RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mensa_widget_item);
+
+        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.mensa_widget_item);
 
         String menuContent = COMPILE.matcher(currentItem.getName())
                                     .replaceAll("")
                                     .trim();
         rv.setTextViewText(R.id.menu_content, menuContent + " (" + currentItem.getTypeShort() + ")");
 
-        String price = CafeteriaPrices.INSTANCE.getPrice(applicationContext, currentItem.getTypeLong());
+        String price = CafeteriaPrices.INSTANCE.getPrice(mContext, currentItem.getTypeLong());
         rv.setViewVisibility(R.id.menu_price, price == null ? View.INVISIBLE : View.VISIBLE);
         rv.setTextViewText(R.id.menu_price, price + " €");
+
         return rv;
     }
 

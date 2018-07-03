@@ -25,19 +25,12 @@ import de.tum.in.tumcampusapp.utils.DateUtils;
  */
 public class MensaWidget extends AppWidgetProvider {
 
-    AppWidgetManager appWidgetManager;
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
-        // There may be multiple widgets active, so update all of them
-        this.appWidgetManager = appWidgetManager;
-
         for (int appWidgetId : appWidgetIds) {
-
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
 
-            // set the header for the Widget layout
+            // Set the header for the Widget layout
             CafeteriaManager mensaManager = new CafeteriaManager(context);
             CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
             localRepository.setDb(TcaDb.getInstance(context));
@@ -49,22 +42,21 @@ public class MensaWidget extends AppWidgetProvider {
             String date = DateUtils.getDateString(new Date());
             rv.setTextViewText(R.id.mensa_widget_subhead, date);
 
-            // set the header on click to open the mensa activity
+            // Set the header on click to open the mensa activity
             Intent mensaIntent = new Intent(context, CafeteriaActivity.class);
             mensaIntent.putExtra(Const.CAFETERIA_ID, mensaManager.getBestMatchMensaId(context));
             PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, mensaIntent, 0);
             rv.setOnClickPendingIntent(R.id.mensa_widget_header_container, pendingIntent);
 
-            // set the adapter for the list view in the mensaWidget
+            // Set the adapter for the list view in the mensa widget
             Intent intent = new Intent(context, MensaWidgetService.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            rv.setRemoteAdapter(R.id.food_item, intent); //appWidgetIds[i],
+            rv.setRemoteAdapter(R.id.food_item, intent);
             rv.setEmptyView(R.id.empty_view, R.id.empty_view);
-            appWidgetManager.updateAppWidget(appWidgetId, rv);
 
+            appWidgetManager.updateAppWidget(appWidgetId, rv);
         }
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
 }
