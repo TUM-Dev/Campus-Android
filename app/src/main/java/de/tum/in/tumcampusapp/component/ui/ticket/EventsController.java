@@ -69,7 +69,7 @@ public class EventsController {
         try {
             // TODO: replace by real user id (dummy ticket with user id 1 for now)
             List tickets = api.getTickets(1);
-            ticketDao.insert(tickets);
+            //ticketDao.insert(tickets);
         } catch (IOException e) {
             Utils.log(e);
         }
@@ -78,7 +78,7 @@ public class EventsController {
         try {
             // TODO: replace by real event ids! -> loop over all found ids
             List ticketTypes = api.getTicketTypes(1);
-            ticketTypeDao.insert(ticketTypes);
+            //ticketTypeDao.insert(ticketTypes);
         } catch (IOException e) {
             Utils.log(e);
         }

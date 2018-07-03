@@ -21,7 +21,7 @@ data class Event(@PrimaryKey
                 @SerializedName("event")
                 var id: Int = 0,
                  @SerializedName("file")
-                var image: String = "",
+                var image: String? = null,
                 var title: String = "",
                 var description: String = "",
                 var locality: String = "",

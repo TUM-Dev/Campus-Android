@@ -29,7 +29,7 @@ public class TicketValidityResponse {
     public String status;
 
     public String getFullName() {
-        return firstName + " " + lastName + " " + tumID + " " + purchaseDate + " " + redeemDate + " " + status;
+        return firstName + " " + lastName + "\n" + tumID + "\n" + purchaseDate + "\n" + redeemDate + "\n" + status;
 
     }
 
