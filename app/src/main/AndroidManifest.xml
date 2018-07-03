@@ -556,28 +556,6 @@
             </intent-filter>
         </activity>
 
-        <!-- receiver for the CardWidget -->
-
-        <receiver android:name=".component.other.generic.widget.CardsWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/cards_widget_info" />
-        </receiver>
-
-        <service
-            android:name=".component.other.generic.widget.CardsWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-
-        <activity android:name=".component.other.generic.widget.CardsWidgetConfigureActivity">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
         <!-- receiver for the TimetableWidget -->
 
         <receiver

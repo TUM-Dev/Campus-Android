@@ -136,10 +136,6 @@ abstract class Card(
         return Integer.compare(position, other.position)
     }
 
-    open fun getRemoteViews(context: Context, appWidgetId: Int): RemoteViews? {
-        return null
-    }
-
     /**
      * Save information about the dismissed card/notification to decide later if the card should be shown again
      *
