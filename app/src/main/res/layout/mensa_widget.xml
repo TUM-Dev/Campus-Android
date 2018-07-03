@@ -1,8 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/rounded_corners_background"
+    android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
     <LinearLayout
@@ -11,8 +12,8 @@
         android:layout_height="wrap_content"
         android:background="@color/color_primary"
         android:elevation="2dp"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="@dimen/material_small_padding">
 
         <LinearLayout
@@ -52,20 +53,27 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/food_item"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mensa_widget_header_container" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        android:textColor="#ff656865"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif-medium" />
+        <ListView
+            android:id="@+id/food_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:textColor="#ff656865"
+            android:textSize="20sp"
+            tools:text="Empty view"
+            tools:visibility="visible" />
+
+    </FrameLayout>
+
+</LinearLayout>
