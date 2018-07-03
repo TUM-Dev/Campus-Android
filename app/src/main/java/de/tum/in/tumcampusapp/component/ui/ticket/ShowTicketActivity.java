@@ -68,8 +68,7 @@ public class ShowTicketActivity extends BaseActivity {
         String eventDateTimeString = dateString + " " + time[1];
         String eventPriceString = "";
         if(ticketType != null) {
-            eventPriceString = String.format(Locale.GERMANY, "%.2f",
-                    ticketType.getPrice() / 100) + " €";
+            eventPriceString = ticketType.formatedPrice();
         }
         String redemptionStateString = this.getString(R.string.redeemed) + ": " +
                 (ticket.getRedeemed() ?  this.getString(R.string.yes) : this.getString(R.string.no));

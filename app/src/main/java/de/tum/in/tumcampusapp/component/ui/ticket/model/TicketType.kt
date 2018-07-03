@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.text.DecimalFormat
 
 /**
  * Ticket
@@ -15,5 +16,10 @@ import com.google.gson.annotations.SerializedName
 data class TicketType(@PrimaryKey
                   @SerializedName("ticket_type")
                   var id: Int = 0,
-                  var price: Double = 0.toDouble(),
-                  var description: String = "")
+                  var price: Int = 0,
+                  var description: String = "") {
+
+    fun formatedPrice(): String {
+        return DecimalFormat("#.00").format((price / 100).toLong()) + " €"
+    }
+}

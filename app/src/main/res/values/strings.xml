@@ -635,7 +635,7 @@ Signature: %5$s</string>
     <string name="card_data_invalid">The card data is invalid.</string>
     <string name="customersession_init_failed">Failed to load saved credit cards.</string>
     <string name="cardholer">Cardholder:</string>
-    <string name="payment_info_price_reminder">Pay {0} € with:</string>
+    <string name="payment_info_price_reminder">Pay {0} with:</string>
     <string name="internal_error">Internal Failure</string>
     <string name="creditcard_ending_in">ending in</string>
     <string name="empty_cardholder_message">No cardholder specified.</string>

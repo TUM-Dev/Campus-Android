@@ -54,8 +54,7 @@ public class StripePaymentActivity extends BaseActivity {
     PaymentSession paymentSession;
     Boolean setSource = false;
     int ticketHistory;
-    int eventID;
-    double price = -1; // ticket price IN CENTS
+    String price = ""; // ticket price is only used to display in textView -> String
 
 
     public StripePaymentActivity() {
@@ -68,11 +67,11 @@ public class StripePaymentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // Get price from intent; convert it to CENTS (as required by Stripe)
-        price = getIntent().getDoubleExtra("ticketPrice", -1.0);
+        price = getIntent().getStringExtra("ticketPrice");
         // Reserve ticket
         reserveTicket();
 
-        if (ticketHistory < 0 || price < 0) {
+        if (ticketHistory < 0 || price.length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
             finish();
         }
@@ -127,10 +126,10 @@ public class StripePaymentActivity extends BaseActivity {
             }
         });
 
-        // Create formated string to remind users about which amount they are going to pay
+        // Insert formated string to remind users about which amount they are going to pay
         TextView priceReminder = findViewById(R.id.payment_info_price_textview);
         MessageFormat fmt = new MessageFormat(getString(R.string.payment_info_price_reminder));
-        Object[] args = {String.format("%.2f", getIntent().getDoubleExtra("ticketPrice", -1.0))};
+        Object[] args = {price};
         priceReminder.setText(fmt.format(args));
     }
 
@@ -303,6 +302,7 @@ public class StripePaymentActivity extends BaseActivity {
             finish();
         }
 
+        //TODO: Show loading screen until reservation has succeeded, callback
         //progressDialog = ProgressDialog.show(StripePaymentActivity.this, "", getString(R.string.purchase_progress_message), true);
         try {
             TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(StripePaymentActivity.this, ticketType, new Callback<TicketReservationResponse>() {

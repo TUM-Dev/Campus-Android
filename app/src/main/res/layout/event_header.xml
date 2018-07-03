@@ -56,6 +56,7 @@
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
+        android:layout_margin="5dp"
         tools:layout_editor_absoluteX="142dp"
         tools:layout_editor_absoluteY="140dp" />
 
