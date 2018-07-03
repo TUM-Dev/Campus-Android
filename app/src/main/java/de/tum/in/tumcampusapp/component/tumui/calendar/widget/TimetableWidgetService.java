@@ -35,7 +35,7 @@ public class TimetableWidgetService extends RemoteViewsService {
         private List<IntegratedCalendarEvent> calendarEvents;
 
         TimetableRemoteViewFactory(Context applicationContext, Intent intent) {
-            this.applicationContext = applicationContext.getApplicationContext();
+            this.applicationContext = applicationContext;
             this.appWidgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
             calendarEvents = new ArrayList<>();
         }
@@ -80,7 +80,7 @@ public class TimetableWidgetService extends RemoteViewsService {
                 return rv;
             }
 
-            // get the lecture for this view
+            // Get the lecture for this view
             IntegratedCalendarEvent currentItem = this.calendarEvents.get(position);
             if (currentItem == null) {
                 return null;
@@ -94,17 +94,16 @@ public class TimetableWidgetService extends RemoteViewsService {
                 rv.setTextViewText(R.id.timetable_widget_date_weekday, calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
                 rv.setViewPadding(R.id.timetable_widget_item, 0, 15, 0, 0);
             } else {
-                // overwrite unused parameters, as the elements are reused they may could be filled with old parameters
+                // Overwrite unused parameters, as the elements are reused they may could be filled with old parameters
                 rv.setTextViewText(R.id.timetable_widget_date_day, "");
                 rv.setTextViewText(R.id.timetable_widget_date_weekday, "");
                 rv.setViewPadding(R.id.timetable_widget_item, 0, 0, 0, 0);
             }
-            // TODO add month labels every new month
+
+            // TODO: Display month label if event is the first event in a new month
 
             // Setup event color
-            // TODO Fix this
             rv.setInt(R.id.timetable_widget_event, "setBackgroundColor", currentItem.getColor());
-            //rv.setInt(R.id.timetable_widget_event, "setBackgroundTint", currentItem.getColor());
 
             // Setup event title
             rv.setTextViewText(R.id.timetable_widget_event_title, currentItem.getName());
@@ -120,7 +119,7 @@ public class TimetableWidgetService extends RemoteViewsService {
             // Setup event location
             rv.setTextViewText(R.id.timetable_widget_event_location, currentItem.getLocation());
 
-            // Setup action to open roomFinder
+            // Setup action to open room finder
             Intent fillInIntent = new Intent();
             fillInIntent.putExtra(SearchManager.QUERY, currentItem.getLocation());
             rv.setOnClickFillInIntent(R.id.timetable_widget_event, fillInIntent);
@@ -147,5 +146,6 @@ public class TimetableWidgetService extends RemoteViewsService {
         public boolean hasStableIds() {
             return true;
         }
+
     }
 }

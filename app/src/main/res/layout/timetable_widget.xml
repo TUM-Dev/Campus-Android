@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/rounded_corners_background"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
     <LinearLayout
         android:id="@+id/timetable_widget_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_primary"
-        android:elevation="2dp"
-        android:padding="10dp"
-        tools:ignore="UnusedAttribute">
+        android:background="@drawable/widget_header_rounded_corners_background"
+        android:padding="@dimen/material_small_padding">
 
         <TextView
             android:id="@+id/timetable_widget_day"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/color_primary"
             android:fontFamily="sans-serif-medium"
             android:textColor="@android:color/white"
             android:textSize="20sp"
@@ -31,26 +27,32 @@
             android:id="@+id/timetable_widget_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/color_primary"
             android:src="@drawable/ic_filter_list" />
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/timetable_widget_listview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/timetable_widget_header"
-        android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/widget_content_rounded_corners_background">
 
-    <TextView
-        android:id="@+id/empty_list_item"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/timetable_widget_header"
-        android:gravity="center"
-        android:text="@string/timetable_widget_no_lectures"
-        android:visibility="gone" />
+        <ListView
+            android:id="@+id/timetable_widget_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp" />
 
-</RelativeLayout> 
+        <TextView
+            android:id="@+id/empty_list_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/timetable_widget_no_lectures"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </FrameLayout>
+
+</LinearLayout>

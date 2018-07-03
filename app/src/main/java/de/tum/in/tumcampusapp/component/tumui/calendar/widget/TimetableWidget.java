@@ -32,13 +32,17 @@ public class TimetableWidget extends AppWidgetProvider {
         if (alarmIsSet) {
             return;
         }
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
         Intent intent = new Intent(context, TimetableWidget.class);
         intent.setAction(BROADCAST_UPDATE_TIMETABLE_WIDGETS);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-        am.cancel(pi);
-        am.setRepeating(AlarmManager.RTC, UPDATE_ALARM_DELAY, UPDATE_ALARM_DELAY, pi);
-        alarmIsSet = true;
+
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (am != null) {
+            am.cancel(pi);
+            am.setRepeating(AlarmManager.RTC, UPDATE_ALARM_DELAY, UPDATE_ALARM_DELAY, pi);
+            alarmIsSet = true;
+        }
     }
 
     /**
@@ -59,7 +63,6 @@ public class TimetableWidget extends AppWidgetProvider {
      */
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
         // Instantiate the RemoteViews object for the app widget layout.
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.timetable_widget);
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE, dd. MMM", Locale.getDefault());
@@ -105,7 +108,6 @@ public class TimetableWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         updateAppWidgets(context, appWidgetManager, appWidgetIds);
         setAlarm(context);
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
@@ -126,15 +128,16 @@ public class TimetableWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, TimetableWidget.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.cancel(sender);
-        alarmIsSet = false;
-        super.onDisabled(context);
+        if (am != null) {
+            am.cancel(sender);
+            alarmIsSet = false;
+        }
     }
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        if (intent.getAction()
-                  .equals(TimetableWidget.BROADCAST_UPDATE_TIMETABLE_WIDGETS)) {
+        String action = intent.getAction();
+        if (action != null && action.equals(TimetableWidget.BROADCAST_UPDATE_TIMETABLE_WIDGETS)) {
             // There may be multiple widgets active, so update all of them
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName thisWidget = new ComponentName(context, TimetableWidget.class);
@@ -143,4 +146,5 @@ public class TimetableWidget extends AppWidgetProvider {
         }
         super.onReceive(context, intent);
     }
+
 }
