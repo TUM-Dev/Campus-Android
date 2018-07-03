@@ -30,6 +30,10 @@ public class TicketValidityResponse {
 
     public String getFullName() {
         return firstName + " " + lastName;
+        return tumID;
+        return purchaseDate;
+        return redeemDate;
+        return status;
     }
 
 }
