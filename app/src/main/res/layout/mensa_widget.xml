@@ -9,8 +9,8 @@
         android:id="@+id/mensa_widget_header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:background="@drawable/widget_header_rounded_corners_background"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/material_small_padding">
 
@@ -51,8 +51,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/widget_content_rounded_corners_background"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@drawable/widget_content_rounded_corners_background">
 
         <ListView
             android:id="@+id/food_item"
