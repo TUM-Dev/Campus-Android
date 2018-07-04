@@ -11,15 +11,23 @@ import java.util.*
 
 object DateTimeUtils {
     /**
+     * TODO this uses inconsistent capitalization: "Just now" and "in 30 minutes"
      * Format an upcoming string nicely by being more precise as time comes closer
+     * E.g.:
+     *      Just now
+     *      in 30 minutes
+     *      at 15:20
+     *      in 5 hours
+     *      tomorrow
+     * @see getRelativeTimeSpanString()
      */
-    fun printFutureTime(time: DateTime, context: Context): String {
+    fun formatFutureTime(time: DateTime, context: Context): String {
         val timeInMillis = time.millis
         val now = DateTime.now().millis
 
         //Catch future dates: current clock might be running behind
         if (timeInMillis < now || timeInMillis <= 0) {
-            return DateTimeUtils.printTimeOrDay(time, context)
+            return DateTimeUtils.formatTimeOrDay(time, context)
         }
 
         val diff = timeInMillis - now
@@ -42,15 +50,30 @@ object DateTimeUtils {
     }
 
     /**
-     * Format a *past* ISO string timestamp with degrading granularity
-     * This is similar to printFutureTime(), but not specialized on future dates
+     * @Deprecated use formatTimeOrDay(DateTime, Context)
      */
-    fun printTimeOrDayFromISO(datetime: String, context: Context): String {
+    @Deprecated("Use the version with a proper DateTime object, there's really no reason to pass datetimes as strings")
+    fun formatTimeOrDayFromISO(datetime: String, context: Context): String {
         val d = DateTimeUtils.parseIsoDate(datetime) ?: return ""
-        return DateTimeUtils.printTimeOrDay(d, context)
+        return DateTimeUtils.formatTimeOrDay(d, context)
     }
 
-    fun printTimeOrDay(time: DateTime, context: Context): String {
+    /**
+     * Format a *past* ISO string timestamp with degrading granularity as time goes by
+     * E.g.:
+     *      Just now
+     *      18:20
+     *      Yesterday
+     *      12.03.2016
+     *
+     * Please note, that this does *not* use getRelativeTimeSpanString(), because lectures scheduled
+     * at 12:00 and starting at 12:15 get a bit annoying nagging you with "12 minutes ago", when
+     * they actually only start in a couple of minutes
+     * This is similar to formatFutureTime(), but not specialized on future dates
+     * When in doubt, use formatFutureTime()
+     * @see formatFutureTime()
+     */
+    fun formatTimeOrDay(time: DateTime, context: Context): String {
         val timeInMillis = time.millis
         val now = DateTime.now().millis
 
@@ -76,7 +99,9 @@ object DateTimeUtils {
         }
     }
 
-    // 2014-06-30T16:31:57Z
+    /**
+     * 2014-06-30T16:31:57Z
+     */
     private val isoDateFormatter: DateTimeFormatter =
             DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
@@ -87,7 +112,9 @@ object DateTimeUtils {
         null
     }
 
-    // 2014-06-30T16:31:57.878Z
+    /**
+     * 2014-06-30T16:31:57.878Z
+     */
     private val isoDateWithMillisFormatter: DateTimeFormatter =
             DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
