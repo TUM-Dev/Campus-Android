@@ -31,7 +31,11 @@ class BackgroundService : JobIntentService() {
             putExtra(Const.APP_LAUNCHES, appLaunches)
         }
         DownloadService.enqueueWork(baseContext, service)
-        Looper.prepare()
+
+        if (Looper.myLooper() == null) {
+            Looper.prepare()
+        }
+
         WifiScanHandler.getInstance().startRepetition(this)
     }
 
