@@ -36,9 +36,10 @@ class WifiScanHandler : Handler() {
     }
 
     fun onScanFinished() {
-        wifiLock?.apply {
-            if (isHeld)
-                release()
+        wifiLock?.let {
+            if (it.isHeld) {
+                it.release()
+            }
         }
     }
 
