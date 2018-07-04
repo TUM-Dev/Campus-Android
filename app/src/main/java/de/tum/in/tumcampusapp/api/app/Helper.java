@@ -70,6 +70,8 @@ public final class Helper {
         //Add the device identifying header
         builder.addInterceptor(Helper.getDeviceInterceptor(c));
 
+        builder.addInterceptor(new ChaosMonkeyInterceptor());
+
         builder.addInterceptor(new ConnectivityInterceptor(c));
 
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
