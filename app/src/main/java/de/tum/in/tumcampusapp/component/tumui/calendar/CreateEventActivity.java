@@ -37,7 +37,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
     private DateTime start;
     private DateTime end;
-    private boolean editing;
+    private boolean isEditing;
     private TextView titleView;
     private TextView descriptionView;
     private TextView startDateView;
@@ -74,7 +74,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            editing = true;
+            isEditing = true;
             titleView.setText(extras.getString(Const.EVENT_TITLE));
             descriptionView.setText(extras.getString(Const.EVENT_COMMENT));
             createButton.setText(R.string.event_save_edit_button);
@@ -91,7 +91,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
                 showErrorDialog(getString(R.string.create_event_time_error));
                 return;
             }
-            if (editing) {
+            if (isEditing) {
                 editEvent();
             } else {
                 createEvent();
@@ -110,7 +110,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void initStartEndDates(Bundle extras) {
-        if (editing) { // editing indicates extras are not null
+        if (isEditing) { // editing indicates extras are not null
             start = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_START));
             end = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_END));
         } else {

@@ -56,7 +56,6 @@ import retrofit2.http.Body;
  */
 public final class TUMCabeClient {
 
-    static final String API_CURRICULA = "curricula/";
     static final String API_NOTIFICATIONS = "notifications/";
     static final String API_LOCATIONS = "locations/";
     static final String API_DEVICE = "device/";
