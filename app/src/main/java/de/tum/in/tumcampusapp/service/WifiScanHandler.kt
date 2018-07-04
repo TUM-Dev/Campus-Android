@@ -17,9 +17,10 @@ import java.util.concurrent.atomic.AtomicBoolean
 class WifiScanHandler : Handler() {
     private var isRunning = AtomicBoolean(false)
     private lateinit var wifiManager: WifiManager
-    private lateinit var wifiLock: WifiManager.WifiLock
-    private val periodicalScan = {
-        wifiLock.acquire()
+    private var wifiLock: WifiManager.WifiLock? = null
+
+    private val periodicalScan = Runnable {
+        wifiLock!!.acquire()
         wifiManager.startScan()
         Utils.log("WifiScanHandler started")
     }
@@ -35,8 +36,10 @@ class WifiScanHandler : Handler() {
     }
 
     fun onScanFinished() {
-        if (wifiLock.isHeld) {
-            wifiLock.release()
+        wifiLock?.let {
+            if (it.isHeld) {
+                it.release()
+            }
         }
     }
 
