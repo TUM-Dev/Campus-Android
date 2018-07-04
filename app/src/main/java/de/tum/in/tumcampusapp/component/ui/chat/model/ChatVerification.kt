@@ -3,6 +3,9 @@ package de.tum.`in`.tumcampusapp.component.ui.chat.model
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.exception.NoPrivateKey
+import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
+import java.io.IOException
 import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*
@@ -38,6 +41,20 @@ data class ChatVerification(var signature: String = "",
             val ret = this.getChatVerification(c, member)
             ret.data = data
             return ret
+        }
+
+        @Throws(IOException::class)
+        fun createChatVerification(context: Context, `object`: Any?): ChatVerification {
+            val currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember::class.java)
+            var chatVerification: ChatVerification? = null
+            try {
+                chatVerification = ChatVerification.getChatVerification(context, currentChatMember!!, `object`)
+            } catch (noPrivateKey: NoPrivateKey) {
+                noPrivateKey.printStackTrace()
+                throw IOException()
+            }
+
+            return chatVerification
         }
     }
 }

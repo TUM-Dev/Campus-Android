@@ -371,7 +371,7 @@ public final class TUMCabeClient {
 
     // Getting ticket information
     public void getTickets(Context context, Callback<List<Ticket>> cb) throws IOException {
-        ChatVerification chatVerification = createChatVerification(context, null);
+        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, null);
         service.getTickets(chatVerification).enqueue(cb);
     }
 
@@ -381,12 +381,12 @@ public final class TUMCabeClient {
 
     // Ticket reservation
     public void reserveTicket(Context context, int ticketType, Callback<TicketReservationResponse> cb) throws IOException {
-        ChatVerification chatVerification = createChatVerification(context, new TicketReservation(ticketType));
+        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new TicketReservation(ticketType));
         service.reserveTicket(chatVerification).enqueue(cb);
     }
 
     public void cancelTicketReservation(Context context, int ticketHistory, Callback<TicketSuccessResponse> cb) throws IOException {
-        ChatVerification chatVerification = createChatVerification(context, new TicketReservationCancelation(ticketHistory));
+        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new TicketReservationCancelation(ticketHistory));
         service.cancelTicketReservation(chatVerification).enqueue(cb);
     }
 
@@ -399,24 +399,13 @@ public final class TUMCabeClient {
         argsMap.put("customer_mail", customerMail);
         argsMap.put("customer_name", customerName);
 
-        ChatVerification chatVerification = createChatVerification(context, argsMap);
+        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, argsMap);
         service.purchaseTicketStripe(chatVerification).enqueue(cb);
     }
 
     public void retrieveEphemeralKey(Context context, String apiVersion, String customerMail, Callback<HashMap<String, Object>> cb) throws IOException {
-        ChatVerification chatVerification = createChatVerification(context, new EphimeralKey(customerMail, apiVersion));
+        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new EphimeralKey(customerMail, apiVersion));
         service.retrieveEphemeralKey(chatVerification).enqueue(cb);
     }
 
-    private ChatVerification createChatVerification(Context context, Object object) throws IOException {
-        ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
-        ChatVerification chatVerification = null;
-        try {
-            chatVerification = ChatVerification.Companion.getChatVerification(context, currentChatMember, object);
-        } catch (NoPrivateKey noPrivateKey) {
-            noPrivateKey.printStackTrace();
-            throw new IOException();
-        }
-        return chatVerification;
-    }
 }

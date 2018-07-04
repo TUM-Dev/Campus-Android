@@ -7,5 +7,5 @@ import com.google.gson.annotations.SerializedName
 
 @Entity
 data class TicketReservationCancelation(@PrimaryKey
-                        @SerializedName("ticket_history")
-                      var ticket_history: Int = 0)
+                                        @SerializedName("ticket_history")
+                                        var ticketHistory: Int = 0)

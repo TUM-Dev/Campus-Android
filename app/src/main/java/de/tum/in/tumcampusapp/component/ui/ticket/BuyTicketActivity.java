@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -10,17 +11,26 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
+import de.tum.in.tumcampusapp.api.tumonline.model.AccessToken;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static java.text.DateFormat.getDateTimeInstance;
 
@@ -45,8 +55,8 @@ public class BuyTicketActivity extends BaseActivity {
         eventId = getIntent().getIntExtra("eventID", 0);
 
         // get ticket type information from API
-        Thread thread = new Thread(){
-            public void run(){
+        Thread thread = new Thread() {
+            public void run() {
                 ticketTypes = eventsController.getTicketTypesByEventId(eventId);
             }
         };
@@ -58,13 +68,13 @@ public class BuyTicketActivity extends BaseActivity {
         }
 
         // if ticketTypes could not be retrieved from server, e.g. due to network problems
-        if (ticketTypes == null){
+        if (ticketTypes == null) {
             Utils.showToast(getApplicationContext(), R.string.no_network_connection);
             // go back to event details
             Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
             intent.putExtra("event_id", eventId);
             startActivity(intent);
-        }else{
+        } else {
             initEventTextViews();
 
             initializeTicketTypeSpinner();
@@ -72,13 +82,9 @@ public class BuyTicketActivity extends BaseActivity {
             Button paymentButton = findViewById(R.id.paymentbutton);
             paymentButton.setOnClickListener(v -> {
                 // Check if user is logged in and LRZ ID is available
-                if(Utils.getSetting(BuyTicketActivity.this, Const.LRZ_ID, "").length() > 0) {
-                    // Jump to the payment activity
-                    TicketType selectedType = getTicketTypeForName((String)ticketTypeSpinner.getSelectedItem());
-                    Intent intent = new Intent(getApplicationContext(), StripePaymentActivity.class);
-                    intent.putExtra("ticketPrice", selectedType.formatedPrice());
-                    intent.putExtra("ticketType", selectedType.getId());
-                    startActivity(intent);
+                if (new AccessTokenManager(BuyTicketActivity.this).hasValidAccessToken() &&
+                        Utils.getSetting(BuyTicketActivity.this, Const.LRZ_ID, "").length() > 0) {
+                    reserveTicket();
                 } else {
                     ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
                     AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
@@ -113,7 +119,7 @@ public class BuyTicketActivity extends BaseActivity {
         ticketTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String ticketTypeName = (String)parent.getItemAtPosition(position);
+                String ticketTypeName = (String) parent.getItemAtPosition(position);
                 setTicketTypeInformation(ticketTypeName);
             }
 
@@ -124,7 +130,7 @@ public class BuyTicketActivity extends BaseActivity {
         });
 
         ArrayList<String> ticketTypeNames = new ArrayList<>();
-        for (TicketType ticketType : ticketTypes){
+        for (TicketType ticketType : ticketTypes) {
             ticketTypeNames.add(ticketType.getDescription());
         }
 
@@ -133,16 +139,16 @@ public class BuyTicketActivity extends BaseActivity {
         ticketTypeSpinner.setAdapter(adapter);
     }
 
-    private TicketType getTicketTypeForName(String ticketTypeName){
-        for(TicketType ticketType : ticketTypes){
-            if (ticketType.getDescription().equals(ticketTypeName)){
+    private TicketType getTicketTypeForName(String ticketTypeName) {
+        for (TicketType ticketType : ticketTypes) {
+            if (ticketType.getDescription().equals(ticketTypeName)) {
                 return ticketType;
             }
         }
         return null;
     }
 
-    private void setTicketTypeInformation(String ticketTypeName){
+    private void setTicketTypeInformation(String ticketTypeName) {
         TicketType ticketType = getTicketTypeForName(ticketTypeName);
 
         TextView priceView = findViewById(R.id.ticket_details_price);
@@ -150,6 +156,41 @@ public class BuyTicketActivity extends BaseActivity {
         String priceString = ticketType.formatedPrice();
 
         priceView.setText(priceString);
+    }
+
+    private void reserveTicket() {
+        TicketType ticketType = getTicketTypeForName((String) ticketTypeSpinner.getSelectedItem());
+        if (ticketType == null) {
+            Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        ProgressDialog progressDialog = ProgressDialog.show(BuyTicketActivity.this, "", getString(R.string.reserving_ticket), true);
+        try {
+            TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(BuyTicketActivity.this, ticketType.getId(), new Callback<TicketReservationResponse>() {
+                @Override
+                public void onResponse(Call<TicketReservationResponse> call, Response<TicketReservationResponse> response) {
+                    progressDialog.dismiss();
+
+                    // Jump to the payment activity
+                    Intent intent = new Intent(getApplicationContext(), StripePaymentActivity.class);
+                    intent.putExtra("ticketPrice", ticketType.formatedPrice());
+                    intent.putExtra("ticketType", ticketType.getId());
+                    intent.putExtra("ticketHistory", response.body().getTicketHistory());
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(Call<TicketReservationResponse> call, Throwable t) {
+                    t.printStackTrace();
+                    progressDialog.dismiss();
+                    StripePaymentActivity.showError(BuyTicketActivity.this, getString(R.string.purchase_error_message));
+                }
+            });
+        } catch (IOException exception) {
+            progressDialog.dismiss();
+            StripePaymentActivity.showError(BuyTicketActivity.this, getString(R.string.internal_error));
+        }
     }
 
 

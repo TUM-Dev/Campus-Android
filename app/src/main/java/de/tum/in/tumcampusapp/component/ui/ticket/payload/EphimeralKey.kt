@@ -7,5 +7,7 @@ import com.google.gson.annotations.SerializedName
 
 @Entity
 data class EphimeralKey(@PrimaryKey
-                      var customer_mail: String = "",
-                      var api_version: String = "")
+                        @SerializedName("customer_mail")
+                        var customerMail: String = "",
+                        @SerializedName("api_version")
+                        var apiVersion: String = "")
