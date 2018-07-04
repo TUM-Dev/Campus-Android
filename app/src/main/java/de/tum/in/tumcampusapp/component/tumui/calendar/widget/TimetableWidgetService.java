@@ -110,11 +110,11 @@ public class TimetableWidgetService extends RemoteViewsService {
 
             // Setup event time
             DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(applicationContext);
-            String time = timeFormat.format(currentItem.getStartTime()
-                                                       .getTime());
-            time += " – " + timeFormat.format(currentItem.getEndTime()
-                                                       .getTime());
-            rv.setTextViewText(R.id.timetable_widget_event_time, time);
+            String startTime = timeFormat.format(currentItem.getStartTime().getTime());
+            String endTime = timeFormat.format(currentItem.getEndTime().getTime());
+
+            String eventTime = getString(R.string.event_start_end_format_string, startTime, endTime);
+            rv.setTextViewText(R.id.timetable_widget_event_time, eventTime);
 
             // Setup event location
             rv.setTextViewText(R.id.timetable_widget_event_location, currentItem.getLocation());
