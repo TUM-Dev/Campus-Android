@@ -6,11 +6,13 @@ import com.google.gson.annotations.SerializedName
 
 
 /**
- * New News
+ * This class contains information about the source of a [News] item.
  *
- * @param id      News source id
- * @param title   Title
- * @param icon    TODO
+ * Find the currently available news sources at [https://app.tum.de/api/news/sources].
+ *
+ * @param id The ID of the news source
+ * @param title The title of the news source
+ * @param icon The image URL of the icon of the news source
  */
 @Entity(tableName = "news_sources")
 data class NewsSources(@PrimaryKey
@@ -20,6 +22,6 @@ data class NewsSources(@PrimaryKey
                        var icon: String = "") {
 
     val isNewspread: Boolean
-        get() = id == 7
+        get() = setOf(7, 8, 9, 13).contains(id)
 
 }
