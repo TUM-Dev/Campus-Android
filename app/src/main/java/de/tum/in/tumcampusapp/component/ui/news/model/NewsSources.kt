@@ -17,4 +17,9 @@ data class NewsSources(@PrimaryKey
                        @SerializedName("source")
                        var id: Int = -1,
                        var title: String = "",
-                       var icon: String = "")
+                       var icon: String = "") {
+
+    val isNewspread: Boolean
+        get() = id == 7
+
+}

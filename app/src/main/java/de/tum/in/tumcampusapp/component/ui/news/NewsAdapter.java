@@ -59,25 +59,29 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         NewsViewHolder holder = (NewsViewHolder) newsViewHolder;
         NewsSourcesDao newsSourcesDao = TcaDb.getInstance(context).newsSourcesDao();
         NewsSources newsSource = newsSourcesDao.getNewsSource(Integer.parseInt(news.getSrc()));
-        holder.imageView.setVisibility(View.VISIBLE);
-        holder.titleTextView.setVisibility(View.VISIBLE);
 
+        // Hide the image view if the news item doesn't contain an image.
         String imageUrl = news.getImage();
-        if (imageUrl.isEmpty()) {
-            holder.imageView.setVisibility(View.GONE);
-        } else {
+        holder.imageView.setVisibility(imageUrl.isEmpty() ? View.GONE : View.VISIBLE);
+        if (!imageUrl.isEmpty()) {
             Picasso.get()
                     .load(imageUrl)
                     .placeholder(R.drawable.chat_background)
                     .into(holder.imageView);
         }
 
-        String title = news.getTitle();
-        if (news.isFilm()) {
-            title = COMPILE.matcher(title)
-                           .replaceAll("");
+        // The newspread image already contains the news title. Thus, we hide the dedicated title
+        // text view.
+        boolean showTitle = !newsSource.isNewspread();
+        holder.titleTextView.setVisibility(showTitle ? View.VISIBLE : View.GONE);
+        if (showTitle) {
+            String title = news.getTitle();
+            if (news.isFilm()) {
+                title = COMPILE.matcher(title)
+                               .replaceAll("");
+            }
+            holder.titleTextView.setText(title);
         }
-        holder.titleTextView.setText(title);
 
         // Adds date
         Date date = news.getDate();
@@ -97,7 +101,8 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
                        @Override
                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                            Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
-                           holder.sourceTextView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                           holder.sourceTextView.setCompoundDrawablesWithIntrinsicBounds(
+                                   drawable, null, null, null);
                        }
 
                        @Override
