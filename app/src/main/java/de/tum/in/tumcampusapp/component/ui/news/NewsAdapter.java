@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -27,7 +26,6 @@ import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
@@ -64,32 +62,12 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         holder.imageView.setVisibility(View.VISIBLE);
         holder.titleTextView.setVisibility(View.VISIBLE);
 
-        // Set image
-        String imgUrl = news.getImage();
-        if (imgUrl.isEmpty() || imgUrl.equals("null")) {
-            if(news.getLink().endsWith(".png") || news.getLink().endsWith(".jpeg")){
-                Utils.log("try link as image");
-                // the link points to an image (newspread)
-                Picasso.get()
-                        .load(news.getLink())
-                        .placeholder(R.drawable.chat_background)
-                        .into(holder.imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        holder.titleTextView.setVisibility(View.GONE); // title is included in newspread slide
-                        holder.imageView.setOnClickListener(null); // link doesn't lead to more infos
-                    }
-                    @Override
-                    public void onError(Exception e) {
-                        holder.imageView.setVisibility(View.GONE); // we can't display the image after all
-                    }
-                });
-            } else {
-                holder.imageView.setVisibility(View.GONE);
-            }
+        String imageUrl = news.getImage();
+        if (imageUrl.isEmpty()) {
+            holder.imageView.setVisibility(View.GONE);
         } else {
             Picasso.get()
-                    .load(imgUrl)
+                    .load(imageUrl)
                     .placeholder(R.drawable.chat_background)
                     .into(holder.imageView);
         }
@@ -107,6 +85,7 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         holder.dateTextView.setText(sdf.format(date));
 
         holder.sourceTextView.setText(newsSource.getTitle());
+
         String icon = newsSource.getIcon();
         if (icon.isEmpty() || "null".equals(icon)) {
             Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_comment);
