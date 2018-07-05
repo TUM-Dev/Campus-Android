@@ -44,8 +44,6 @@ data class Exam(@field:Element(name = "lv_titel")
                 headerId.compareTo(other.headerId) * (-1)
             }
 
-
-
     fun getGradeColor(context: Context): Int {
         // While using getOrDefault() compiles, it results in a NoSuchMethodError on devices with
         // API levels lower than 24.
