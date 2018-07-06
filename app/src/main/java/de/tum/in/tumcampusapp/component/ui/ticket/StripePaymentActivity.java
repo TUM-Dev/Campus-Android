@@ -88,12 +88,12 @@ public class StripePaymentActivity extends BaseActivity {
             TUMCabeClient.getInstance(getApplicationContext()).cancelTicketReservation(StripePaymentActivity.this, ticketHistory, new Callback<TicketSuccessResponse>() {
                 @Override
                 public void onResponse(Call<TicketSuccessResponse> call, Response<TicketSuccessResponse> response) {
-
+                    System.out.println("Cancalation Success!");
                 }
 
                 @Override
                 public void onFailure(Call<TicketSuccessResponse> call, Throwable t) {
-
+                    System.out.println("Cancalation Error!");
                 }
             });
         } catch (IOException e) {

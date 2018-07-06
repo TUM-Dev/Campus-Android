@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,8 @@ public class BuyTicketActivity extends BaseActivity {
     private int eventId;
 
     private Spinner ticketTypeSpinner;
+    private ProgressBar reservationProgressBar;
+    private Button paymentButton;
 
     private List<TicketType> ticketTypes;
 
@@ -79,7 +82,10 @@ public class BuyTicketActivity extends BaseActivity {
 
             initializeTicketTypeSpinner();
 
-            Button paymentButton = findViewById(R.id.paymentbutton);
+            reservationProgressBar = findViewById(R.id.ticket_reservation_progressbar);
+            reservationProgressBar.setVisibility(View.INVISIBLE);
+
+            paymentButton = findViewById(R.id.paymentbutton);
             paymentButton.setOnClickListener(v -> {
                 // Check if user is logged in and LRZ ID is available
                 if (new AccessTokenManager(BuyTicketActivity.this).hasValidAccessToken() &&
@@ -165,12 +171,14 @@ public class BuyTicketActivity extends BaseActivity {
             return;
         }
 
-        ProgressDialog progressDialog = ProgressDialog.show(BuyTicketActivity.this, "", getString(R.string.reserving_ticket), true);
+        reservationProgressBar.setVisibility(View.VISIBLE);
+        paymentButton.setEnabled(false);
         try {
             TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(BuyTicketActivity.this, ticketType.getId(), new Callback<TicketReservationResponse>() {
                 @Override
                 public void onResponse(Call<TicketReservationResponse> call, Response<TicketReservationResponse> response) {
-                    progressDialog.dismiss();
+                    reservationProgressBar.setVisibility(View.INVISIBLE);
+                    paymentButton.setEnabled(true);
 
                     // Jump to the payment activity
                     Intent intent = new Intent(getApplicationContext(), StripePaymentActivity.class);
@@ -183,12 +191,14 @@ public class BuyTicketActivity extends BaseActivity {
                 @Override
                 public void onFailure(Call<TicketReservationResponse> call, Throwable t) {
                     t.printStackTrace();
-                    progressDialog.dismiss();
+                    reservationProgressBar.setVisibility(View.INVISIBLE);
+                    paymentButton.setEnabled(true);
                     StripePaymentActivity.showError(BuyTicketActivity.this, getString(R.string.purchase_error_message));
                 }
             });
         } catch (IOException exception) {
-            progressDialog.dismiss();
+            reservationProgressBar.setVisibility(View.INVISIBLE);
+            paymentButton.setEnabled(true);
             StripePaymentActivity.showError(BuyTicketActivity.this, getString(R.string.internal_error));
         }
     }

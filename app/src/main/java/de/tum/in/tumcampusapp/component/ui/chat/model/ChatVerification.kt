@@ -44,11 +44,14 @@ data class ChatVerification(var signature: String = "",
         }
 
         @Throws(IOException::class)
-        fun createChatVerification(context: Context, `object`: Any?): ChatVerification {
+        fun createChatVerification(context: Context, data: Any?): ChatVerification {
             val currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember::class.java)
+            if(currentChatMember == null) {
+                throw IOException("Failed to retrieve chat member!")
+            }
             var chatVerification: ChatVerification? = null
             try {
-                chatVerification = ChatVerification.getChatVerification(context, currentChatMember!!, `object`)
+                chatVerification = ChatVerification.getChatVerification(context, currentChatMember!!, data)
             } catch (noPrivateKey: NoPrivateKey) {
                 noPrivateKey.printStackTrace()
                 throw IOException()
