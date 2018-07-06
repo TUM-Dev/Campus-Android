@@ -9,7 +9,7 @@ import java.io.Serializable
  * the TUMOnline web service response format for a corresponding request.
  */
 @Xml(name = "raeume")
-data class RoomList(@Element var rooms: List<Room> = mutableListOf()) : Serializable {
+data class RoomList(@Element val rooms: List<Room>? = null) : Serializable {
     companion object {
         private const val serialVersionUID = 1115343203243361774L
     }

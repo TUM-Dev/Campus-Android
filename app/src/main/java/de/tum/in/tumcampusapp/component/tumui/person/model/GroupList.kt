@@ -11,7 +11,7 @@ import java.io.Serializable
  */
 
 @Xml(name = "gruppen")
-data class GroupList(@Element var groups: List<Group> = mutableListOf()) : Serializable {
+data class GroupList(@Element var groups: List<Group>? = null) : Serializable {
     companion object {
         private const val serialVersionUID = 2713473533623487005L
     }

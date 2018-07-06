@@ -11,8 +11,7 @@ import java.io.Serializable
  * request.
  */
 @Xml(name = "telefon_nebenstellen")
-data class TelSubstationList(@Element
-                             var substations: List<TelSubstation> = mutableListOf()) : Serializable {
+data class TelSubstationList(@Element var substations: List<TelSubstation>? = null) : Serializable {
     companion object {
         private const val serialVersionUID = -3790189526859194869L
     }

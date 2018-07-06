@@ -138,9 +138,9 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
                 add(EmailContactItem(email))
             }
 
-            employee.businessContact?.let { contact ->
-                if (contact.homepage.isNotBlank()) {
-                    add(HomepageContactItem(contact.homepage))
+            employee.businessContact?.homepage?.let { homepage ->
+                if (homepage.isNotBlank()) {
+                    add(HomepageContactItem(homepage))
                 }
             }
         }
@@ -151,14 +151,14 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
             }
         }
 
-        employee.businessContact?.let { contact ->
-            if (contact.mobilephone.isNotBlank()) {
-                contactItems.add(MobilePhoneContactItem(contact.mobilephone))
+        employee.businessContact?.mobilephone?.let { mobilephone ->
+            if (mobilephone.isNotBlank()) {
+                contactItems.add(MobilePhoneContactItem(mobilephone))
             }
+        }
 
-            if (contact.additionalInfo.isNotBlank()) {
-                contactItems.add(InformationContactItem(contact.additionalInfo))
-            }
+        employee.businessContact?.additionalInfo?.let { additionalInfo ->
+            contactItems.add(InformationContactItem(additionalInfo))
         }
 
         employee.consultationHours?.let { consultationHours ->

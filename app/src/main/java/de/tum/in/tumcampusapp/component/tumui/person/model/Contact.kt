@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
 import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
 import java.io.Serializable
 
 /**
@@ -8,18 +9,18 @@ import java.io.Serializable
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
+@Xml
 data class Contact(
         @PropertyElement(name = "zusatz_info")
-        var additionalInfo: String = "",
+        var additionalInfo: String? = null,
         @PropertyElement(name = "fax")
-        var fax: String = "",
+        var fax: String? = null,
         @PropertyElement(name = "www_homepage")
-        var homepage: String = "",
+        var homepage: String? = null,
         @PropertyElement(name = "mobiltelefon")
-        var mobilephone: String = "",
+        var mobilephone: String? = null,
         @PropertyElement(name = "telefon")
-        var telefon: String = "") :
-        Serializable {
+        var telefon: String? = null) : Serializable {
 
     companion object {
         private const val serialVersionUID = 4413581972047241018L

@@ -145,6 +145,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
 
+        // TODO: Cache image!
+
         TUMOnlineClient
                 .getInstance(this)
                 .getPersonDetails(id)

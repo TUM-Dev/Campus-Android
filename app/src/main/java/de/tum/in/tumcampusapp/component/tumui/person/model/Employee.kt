@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import com.google.common.base.Charsets
+import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
@@ -25,21 +26,21 @@ data class Employee(@PropertyElement(name = "geschlecht")
                     val name: String = "",
                     @PropertyElement(name = "familienname")
                     val surname: String = "",
-                    @PropertyElement(name = "dienstlich")
+                    @Element(name = "dienstlich")
                     val businessContact: Contact? = null,
                     @PropertyElement(name = "sprechstunde")
                     val consultationHours: String? = null,
                     @PropertyElement
                     val email: String? = null,
-                    @PropertyElement(name = "gruppen")
+                    @Element(name = "gruppen")
                     val groupList: GroupList? = null,
                     @PropertyElement(name = "image_data")
                     val imageData: String? = null,
-                    @PropertyElement(name = "privat")
+                    @Element(name = "privat")
                     val privateContact: Contact? = null,
-                    @PropertyElement(name = "raeume")
+                    @Element(name = "raeume")
                     val roomList: RoomList? = null,
-                    @PropertyElement(name = "telefon_nebenstellen")
+                    @Element(name = "telefon_nebenstellen")
                     val telSubstationList: TelSubstationList? = null,
                     @PropertyElement(name = "titel")
                     val title: String? = null) {
