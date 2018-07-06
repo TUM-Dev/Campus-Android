@@ -1,0 +1,2 @@
+json_key_file(ENV["TCA_KEY_PATH"] + "/GooglePlayAndroidDeveloper-6abfb5ac51c5.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("de.tum.in.tumcampus") # e.g. com.krausefx.app
