@@ -44,12 +44,15 @@ data class Exam(@field:Element(name = "lv_titel")
                 headerId.compareTo(other.headerId) * (-1)
             }
 
-    fun getGradeColor(c: Context) = GRADE_COLOR.getOrDefault(grade, R.color.grade_default).let {
-        ContextCompat.getColor(c, it)
+    fun getGradeColor(context: Context): Int {
+        // While using getOrDefault() compiles, it results in a NoSuchMethodError on devices with
+        // API levels lower than 24.
+        val resId = GRADE_COLORS[grade] ?: R.color.grade_default
+        return ContextCompat.getColor(context, resId)
     }
 
     companion object {
-        private val GRADE_COLOR = mapOf(
+        private val GRADE_COLORS = mapOf(
                 "1,0" to R.color.grade_1_0,
                 "1,3" to R.color.grade_1_3,
                 "1,4" to R.color.grade_1_3,
