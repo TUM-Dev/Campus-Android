@@ -5,12 +5,9 @@ import android.support.annotation.NonNull;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -18,7 +15,6 @@ import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
-import de.tum.in.tumcampusapp.utils.DateUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,7 +41,6 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
         semesterTextView = findViewById(R.id.semester);
         ((TextView) findViewById(R.id.fees_aid)).setMovementMethod(LinkMovementMethod.getInstance());
 
-        JodaTimeAndroid.init(this);
         refreshData();
     }
 
@@ -81,22 +76,18 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
         String amountText = tuition.getOutstandingBalanceText();
         amountTextView.setText(amountText);
 
-        Date deadline = DateUtils.getDate(tuitionList.getTuitions()
-                .get(0)
-                .getDeadline());
-        deadlineTextView.setText(DateFormat.getDateInstance()
-                .format(deadline));
-        semesterTextView.setText(tuitionList.getTuitions()
-                .get(0)
-                .getSemester()
-                .toUpperCase(Locale.getDefault()));
+        DateTime deadline = tuitionList.getTuitions().get(0).getDueDate();
+        deadlineTextView.setText(DateTimeFormat.longDate().print(deadline));
+
+        String semester = tuition.getSemester().toUpperCase(Locale.getDefault());
+        semesterTextView.setText(semester);
 
         if (tuition.getOutstandingBalance() == 0) {
             amountTextView.setTextColor(getResources().getColor(R.color.sections_green));
         } else {
             // check if the deadline is less than a week from now
             DateTime nextWeek = new DateTime().plusWeeks(1);
-            if(nextWeek.isAfter(deadline.getTime())){
+            if (nextWeek.isAfter(deadline)) {
                 amountTextView.setTextColor(getResources().getColor(R.color.error));
             } else {
                 amountTextView.setTextColor(getResources().getColor(R.color.black));

@@ -7,7 +7,7 @@ import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.utils.compareTo
-import java.util.*
+import org.joda.time.DateTime
 
 /**
  * Exam passed by the user.
@@ -22,8 +22,8 @@ data class Exam(
         val course: String,
         @PropertyElement(name = "lv_credits")
         val credits: String? = null,
-        @PropertyElement(name = "datum")
-        val date: Date? = null,
+        @PropertyElement(name = "datum")  // TODO: TypeConverter
+        val date: DateTime? = null,
         @PropertyElement(name = "pruefer_nachname")
         val examiner: String? = null,
         @PropertyElement(name = "uninotenamekurz")

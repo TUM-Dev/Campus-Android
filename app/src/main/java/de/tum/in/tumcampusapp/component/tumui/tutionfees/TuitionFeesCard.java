@@ -15,15 +15,15 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -52,6 +52,31 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
+    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
+        if ("0".equals(mTuition.getAmount())) {
+            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemester()));
+        } else {
+            notificationBuilder.setContentText(mTuition.getAmount() + "€\n" +
+                    String.format(getContext().getString(R.string.reregister_todo), mTuition.getDeadline()));
+        }
+        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
+        notificationBuilder.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_money));
+        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_tuition_fee);
+        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
+        return notificationBuilder.build();
+    }
+
+    @Override
+    public int getId() {
+        return 0;
+    }
+
+    @Override
+    public Intent getIntent() {
+        return new Intent(getContext(), TuitionFeesActivity.class);
+    }
+
+    @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
 
@@ -65,8 +90,8 @@ public class TuitionFeesCard extends NotificationAwareCard {
             String text = String.format(placeholderText, mTuition.getSemester());
             reregisterInfoTextView.setText(text);
         } else {
-            Date date = DateUtils.getDate(mTuition.getDeadline());
-            String dateText = DateFormat.getDateInstance().format(date);
+            DateTime date = DateTimeUtils.INSTANCE.getDate(mTuition.getDeadline());
+            String dateText = DateTimeFormat.mediumDate().print(date);
 
             String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
             reregisterInfoTextView.setText(text);
@@ -76,12 +101,6 @@ public class TuitionFeesCard extends NotificationAwareCard {
             outstandingBalanceTextView.setText(balanceText);
             outstandingBalanceTextView.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public void discard(Editor editor) {
-        editor.putString(LAST_FEE_FRIST, mTuition.getDeadline());
-        editor.putString(LAST_FEE_SOLL, mTuition.getAmount());
     }
 
     @Override
@@ -96,39 +115,20 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        if ("0".equals(mTuition.getAmount())) {
-            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemester()));
-        } else {
-            notificationBuilder.setContentText(mTuition.getAmount() + "€\n" +
-                                               String.format(getContext().getString(R.string.reregister_todo), mTuition.getDeadline()));
-        }
-        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        notificationBuilder.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_money));
-        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_tuition_fee);
-        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
-        return notificationBuilder.build();
-    }
-
-    @Override
-    public Intent getIntent() {
-        return new Intent(getContext(), TuitionFeesActivity.class);
-    }
-
-    @Override
-    public int getId() {
-        return 0;
-    }
-
-    public void setTuition(Tuition tuition) {
-        mTuition = tuition;
-    }
-
-    @Override
     public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_money);
         return remoteViews;
+    }
+
+    @Override
+    public void discard(Editor editor) {
+        editor.putString(LAST_FEE_FRIST, mTuition.getDeadline());
+        editor.putString(LAST_FEE_SOLL, mTuition.getAmount());
+    }
+
+    public void setTuition(Tuition tuition) {
+        mTuition = tuition;
     }
 }

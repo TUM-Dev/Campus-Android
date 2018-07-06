@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.support.v4.util.Pair;
 import android.support.v7.preference.PreferenceManager;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.ReadableDateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -21,11 +25,6 @@ public class CafeteriaNotificationSettings {
     private final String HOUR = "_HOUR";
     private final CafeteriaMenuManager cafeteriaMenuManager;
 
-    //Used for initializing preferred hour for every weekday
-    private static final int DEFAULT_HOUR = 9;
-    //Used for initializing preferred minute for every weekday
-    private static final int DEFAULT_MINUTE = 30;
-
     /**
      * Checks if there's already a preferred notification time for every weekday(Monday-Friday)
      * and for every day missing it defaults to DEFAULT_HOUR:DEFAULT_MINUTE
@@ -33,14 +32,14 @@ public class CafeteriaNotificationSettings {
     public CafeteriaNotificationSettings(Context context) {
         cafeteriaMenuManager = new CafeteriaMenuManager(context);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        Calendar it = Calendar.getInstance();
-        it.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        DateTime it = DateTime.now()
+                .withDayOfWeek(DateTimeConstants.MONDAY);
         boolean wasAlreadyInitialized = true;
-        while (it.get(Calendar.DAY_OF_WEEK) < Calendar.SATURDAY) {
+        while (it.getDayOfWeek() < DateTimeConstants.SATURDAY) {
             if (writeDayToSettings(it, 9, 30, false)) {
                 wasAlreadyInitialized = false;
             }
-            it.add(Calendar.DAY_OF_WEEK, 1);
+            it = it.plusWeeks(1);
         }
         if (!wasAlreadyInitialized) {
             cafeteriaMenuManager.scheduleFoodAlarms(true);
@@ -50,13 +49,9 @@ public class CafeteriaNotificationSettings {
     /**
      * If weekday is in range [Monday, Friday], set the preferred notification time for weekday
      * to hour:minute
-     *
-     * @param weekday
-     * @param hour
-     * @param minute
      */
-    private void writeDayToSettings(Calendar weekday, int hour, int minute) {
-        int dayOfWeek = weekday.get(Calendar.DAY_OF_WEEK);
+    private void writeDayToSettings(ReadableDateTime weekday, int hour, int minute) {
+        int dayOfWeek = weekday.getDayOfWeek();
         if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt(PREFIX + dayOfWeek + HOUR, hour);
@@ -69,11 +64,8 @@ public class CafeteriaNotificationSettings {
      * If weekday is in range [Monday, Friday], set the preferred notification time for weekday,
      * but only if, its either not set yet, or overwrite is set to true and the new hour:minute pair
      * differs from the one currently set
-     *
-     * @param hour
-     * @param minute
      */
-    private boolean writeDayToSettings(Calendar weekday, int hour, int minute, boolean overwrite) {
+    private boolean writeDayToSettings(ReadableDateTime weekday, int hour, int minute, boolean overwrite) {
         Pair<Integer, Integer> hourMinuteStored = retrieveHourMinute(weekday);
         if (hourMinuteStored == null) {
             writeDayToSettings(weekday, hour, minute);
@@ -89,11 +81,10 @@ public class CafeteriaNotificationSettings {
      * Returns the currently stored preferred hour and minute of a given day of the week.
      *
      * @param day A day from the interval [MONDAY, FRIDAY]
-     * @return
      */
 
-    public Pair<Integer, Integer> retrieveHourMinute(Calendar day) {
-        int dayOfWeek = day.get(Calendar.DAY_OF_WEEK);
+    public Pair<Integer, Integer> retrieveHourMinute(ReadableDateTime day) {
+        int dayOfWeek = day.getDayOfWeek();
         if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
             int hour = sharedPreferences.getInt(PREFIX + dayOfWeek + HOUR, -2);
             int minute = sharedPreferences.getInt(PREFIX + dayOfWeek + MINUTE, -2);
@@ -112,17 +103,13 @@ public class CafeteriaNotificationSettings {
      * @param weekday A day ranging from MONDAY to FRIDAY
      * @param hour    The preferred hour for a notification
      * @param minute  The preferred minute for a notification
-     * @return
      */
-    private boolean updateHourMinuteOfDay(Calendar weekday, int hour, int minute) {
+    private boolean updateHourMinuteOfDay(DateTime weekday, int hour, int minute) {
         Pair<Integer, Integer> currentlyStored = retrieveHourMinute(weekday);
         if (currentlyStored != null && currentlyStored.first == hour && currentlyStored.second == minute) {
             return false;
         }
-        if ((hour == -1 && minute == -1) || (hour >= 0 && hour < 24 && minute >= 0 && minute < 60)) {
-            return (writeDayToSettings(weekday, hour, minute, true));
-        }
-        return false;
+        return ((hour == -1 && minute == -1) || (hour >= 0 && hour < 24 && minute >= 0 && minute < 60)) && (writeDayToSettings(weekday, hour, minute, true));
     }
 
     /**
@@ -135,11 +122,11 @@ public class CafeteriaNotificationSettings {
         if (mondayToFriday == null || mondayToFriday.size() != 5) {
             return false;
         } else {
-            Calendar monday = Calendar.getInstance();
+            DateTime monday = DateTime.now();
             boolean storedSomething = false;
             for (int i = 0; i < mondayToFriday.size(); i++) {
-                monday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                monday.add(Calendar.DAY_OF_WEEK, i);
+                monday = monday.plusWeeks(1)
+                        .withDayOfWeek(DateTimeConstants.MONDAY);
                 if (updateHourMinuteOfDay(monday, mondayToFriday.get(i).first, mondayToFriday.get(i).second)) {
                     storedSomething = true;
                 }

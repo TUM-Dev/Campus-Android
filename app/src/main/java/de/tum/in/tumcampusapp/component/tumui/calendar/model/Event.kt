@@ -3,12 +3,13 @@ package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
+import org.joda.time.DateTime
 
 @Xml(name = "event")
 data class Event(
         @PropertyElement(name = "description") val description: String? = null,
-        @PropertyElement(name = "dtend") val endTime: String? = null,     // TODO: TypeConverters
-        @PropertyElement(name = "dtstart") val startTime: String? = null,
+        @PropertyElement(name = "dtend") val endTime: DateTime? = null,     // TODO: TypeConverters
+        @PropertyElement(name = "dtstart") val startTime: DateTime? = null,
         @PropertyElement(name = "geo") val geo: Geo? = null,
         @PropertyElement(name = "location") val location: String? = null,
         @PropertyElement(name = "nr") val id: String? = null,
@@ -21,8 +22,8 @@ data class Event(
     fun toCalendarItem(): CalendarItem {
         return CalendarItem(
                 id ?: "", status ?: "", url ?: "", title,
-                description ?: "", startTime ?: "",
-                endTime ?: "", location ?: "", false
+                description ?: "", startTime ?: DateTime(),  // TODO: DateTime
+                endTime ?: DateTime(), location ?: "", false
         )
     }
 }

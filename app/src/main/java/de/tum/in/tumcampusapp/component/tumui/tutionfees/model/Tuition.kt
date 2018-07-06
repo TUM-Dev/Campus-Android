@@ -2,6 +2,10 @@ package de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model
 
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
+
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import org.joda.time.DateTime
+
 import java.text.NumberFormat
 import java.text.ParseException
 import java.util.*
@@ -44,4 +48,6 @@ data class Tuition(@PropertyElement(name = "frist")
             }
         }
 
+    val dueDate: DateTime
+        get() = DateTimeUtils.getDate(deadline)
 }

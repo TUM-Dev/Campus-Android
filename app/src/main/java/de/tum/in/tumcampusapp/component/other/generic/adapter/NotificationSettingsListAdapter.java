@@ -10,12 +10,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Checkable;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -65,11 +69,6 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
      * For each day (Monday-Friday) add a list-item and display
      * in a checkbox whether the alarm is disabled for that day (hour == -1)
      * or enabled (hour != 1)
-     *
-     * @param position
-     * @param view
-     * @param viewGroup
-     * @return
      */
     @Override
     public View getView(final int position, View view, ViewGroup viewGroup) {
@@ -84,11 +83,12 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-        Calendar it = Calendar.getInstance();
-        it.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        it.add(Calendar.DAY_OF_WEEK, position);
-        SimpleDateFormat format = new SimpleDateFormat("EEEE", Locale.getDefault());
-        String dayOfWeekString = format.format(it.getTime());
+        DateTimeFormatter format = DateTimeFormat.forPattern("EEEE")
+                .withLocale(Locale.getDefault());
+        DateTime it = DateTime.now()
+                .withDayOfWeek(DateTimeConstants.MONDAY)
+                .plusDays(position);
+        String dayOfWeekString = format.print(it);
         viewHolder.weekday.setText(dayOfWeekString);
         viewHolder.isActive.setOnClickListener(new AlarmActivatedListener(position));
         final Pair<Integer, Integer> hourMinute = dailySchedule.get(position);
@@ -105,10 +105,6 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
 
     /**
      * Returns a String in the format [one digit hour]:[zero prepended two digit minute]
-     *
-     * @param hour
-     * @param minute
-     * @return
      */
     private String getTimeString(int hour, int minute) {
         return (hour + ":" + ((minute < 10) ? "0" + minute : minute));
@@ -124,7 +120,7 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
         private int defaultHour;
         private int defaultMinute;
 
-        public OnTimeClickListener(Context context, int position, int hour, int minute) {
+        OnTimeClickListener(Context context, int position, int hour, int minute) {
             this.context = context;
             this.position = position;
             if (hour == -1 || minute == -1) {
@@ -163,13 +159,13 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
     private class AlarmActivatedListener implements View.OnClickListener {
         private final int position;
 
-        public AlarmActivatedListener(int position) {
+        AlarmActivatedListener(int position) {
             this.position = position;
         }
 
         @Override
         public void onClick(View checkBox) {
-            final boolean isChecked = ((CheckBox) checkBox).isChecked();
+            final boolean isChecked = ((Checkable) checkBox).isChecked();
             if (!isChecked) {
                 dailySchedule.set(position, new Pair<>(-1, -1));
             } else {

@@ -15,8 +15,10 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.text.DateFormat;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -84,9 +86,9 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         }
 
         // Adds date
-        Date date = news.getDate();
-        DateFormat sdf = DateFormat.getDateInstance();
-        holder.dateTextView.setText(sdf.format(date));
+        DateTime date = news.getDate();
+        DateTimeFormatter sdf = DateTimeFormat.mediumDate();
+        holder.dateTextView.setText(sdf.print(date));
 
         holder.sourceTextView.setText(newsSource.getTitle());
 
