@@ -6,7 +6,6 @@ import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.view.Menu
 import android.view.MenuItem
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
@@ -14,17 +13,16 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesActivity
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity
-import de.tum.`in`.tumcampusapp.component.tumui.person.PersonsSearchActivity
+import de.tum.`in`.tumcampusapp.component.tumui.person.PersonSearchActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeInfoActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity
-import de.tum.`in`.tumcampusapp.component.ui.curricula.CurriculaActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
-import de.tum.`in`.tumcampusapp.component.ui.plan.PlansActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -44,14 +42,17 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
         val hasTUMOAccess = AccessTokenManager(mContext).hasValidAccessToken()
         val chatEnabled = Utils.getSettingBool(mContext, Const.GROUP_CHAT_ENABLED, false)
 
+        val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
         if (hasTUMOAccess) {
-            val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
             for (item in MY_TUM) {
                 if (!(item.needsChatAccess && !chatEnabled)) {
                     myTumMenu.add(item.titleRes)
                             .setIcon(item.iconRes).intent = Intent(mContext, item.activity)
                 }
             }
+        } else {
+            myTumMenu.add(R.string.tumonline_login)
+                    .setIcon(R.drawable.ic_link).intent = Intent(mContext, WizNavStartActivity::class.java)
         }
 
         // General information which mostly can be used without a TUMonline token
@@ -84,13 +85,11 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
                 SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, CafeteriaActivity::class.java, false, false),
                 SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work, StudyRoomsActivity::class.java, false, false),
                 SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, RoomFinderActivity::class.java, false, false),
-                SideNavigationItem(R.string.plans, R.drawable.ic_plans, PlansActivity::class.java, false, false),
                 SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity::class.java, false, false),
-                SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity::class.java, true, false),
+                SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonSearchActivity::class.java, true, false),
                 SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity::class.java, false, false),
                 SideNavigationItem(R.string.barrier_free, R.drawable.ic_accessible, BarrierFreeInfoActivity::class.java, false, false),
-                SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity::class.java, false, false),
-                SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity::class.java, false, false)
+                SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity::class.java, false, false)
         )
 
         private val APP = arrayOf(

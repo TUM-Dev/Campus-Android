@@ -21,23 +21,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -56,6 +55,9 @@ import retrofit2.Response;
 
 public class FeedbackActivity extends BaseActivity {
 
+    private static final int GENERAL_FEEDBACK = 0;
+    private static final int TCA_FEEDBACK = 0;
+
     private static final int REQUEST_TAKE_PHOTO = 11;
     private static final int REQUEST_GALLERY = 12;
     private static final int PERMISSION_LOCATION = 13;
@@ -69,13 +71,14 @@ public class FeedbackActivity extends BaseActivity {
     private int feedbackTopic;
     private String email;
     private String lrzId;
+
     private Location location;
     private LocationListener locationListener;
     private LocationManager locationManager;
 
-    private ArrayList<String> picPaths;
+    private ArrayList<String> picturePaths;
 
-    private RecyclerView.Adapter thumbAdapter;
+    private RecyclerView.Adapter thumbnailsAdapter;
 
     private int sentCount;
     private Dialog progress;
@@ -89,7 +92,7 @@ public class FeedbackActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        feedbackTopic = 0; // General feedback by default
+        feedbackTopic = GENERAL_FEEDBACK; // General feedback by default
 
         feedbackView = findViewById(R.id.feedback_message);
         customEmailView = findViewById(R.id.feedback_custom_email);
@@ -98,21 +101,22 @@ public class FeedbackActivity extends BaseActivity {
 
         lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
 
-        initTopicSpinner(savedInstanceState);
+        initRadioGroup(savedInstanceState);
         initIncludeLocation(savedInstanceState);
         initIncludeEmail(savedInstanceState);
 
         if (savedInstanceState == null) {
-            picPaths = new ArrayList<>();
+            picturePaths = new ArrayList<>();
         } else {
-            picPaths = savedInstanceState.getStringArrayList(Const.FEEDBACK_PIC_PATHS);
+            picturePaths = savedInstanceState.getStringArrayList(Const.FEEDBACK_PIC_PATHS);
             feedbackView.setText(savedInstanceState.getString(Const.FEEDBACK_MESSAGE));
         }
 
         RecyclerView pictureList = findViewById(R.id.feedback_image_list);
-        pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        thumbAdapter = new FeedbackThumbAdapter(picPaths);
-        pictureList.setAdapter(thumbAdapter);
+        pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        thumbnailsAdapter = new FeedbackThumbnailsAdapter(picturePaths);
+        pictureList.setAdapter(thumbnailsAdapter);
     }
 
     @SuppressLint("NewApi")
@@ -128,7 +132,7 @@ public class FeedbackActivity extends BaseActivity {
         if (savedInstanceState != null) {
             includeLocation.setChecked(savedInstanceState.getBoolean(Const.FEEDBACK_INCL_LOCATION));
         } else {
-            includeLocation.setChecked(true);
+            includeLocation.setChecked(false);
         }
 
         if (includeLocation.isChecked()
@@ -245,36 +249,17 @@ public class FeedbackActivity extends BaseActivity {
         }
     }
 
-    private void initTopicSpinner(Bundle savedInstanceState) {
-        Spinner spinner = findViewById(R.id.feedback_topic_spinner);
-        spinner.requestFocus();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.feedback_options, R.layout.spinner_item_bold);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                feedbackTopic = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                feedbackTopic = 0;
-            }
+    private void initRadioGroup(Bundle savedInstanceState) {
+        RadioGroup radioGroup = findViewById(R.id.radioButtonsGroup);
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            feedbackTopic = (checkedId == R.id.tumInGeneralRadioButton) ? GENERAL_FEEDBACK : TCA_FEEDBACK;
         });
 
         if (savedInstanceState != null) {
-            spinner.getOnItemSelectedListener()
-                   .onItemSelected(null, null, savedInstanceState.getInt(Const.FEEDBACK_TOPIC), 0);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        for (String path : picPaths) {
-            new File(path).delete();
+            int feedbackTopic = savedInstanceState.getInt(Const.FEEDBACK_TOPIC);
+            int radioButtonId = (feedbackTopic == GENERAL_FEEDBACK) ? R.id.tumInGeneralRadioButton : R.id.tumCampusAppRadioButton;
+            radioGroup.check(-1); // Clear the selection
+            radioGroup.check(radioButtonId);
         }
     }
 
@@ -282,6 +267,184 @@ public class FeedbackActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         stopListeningForLocation();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        for (String path : picturePaths) {
+            new File(path).delete();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Const.FEEDBACK_TOPIC, feedbackTopic);
+        outState.putString(Const.FEEDBACK_MESSAGE, feedbackView.getText()
+                                                               .toString());
+        outState.putStringArrayList(Const.FEEDBACK_PIC_PATHS, picturePaths);
+        outState.putBoolean(Const.FEEDBACK_INCL_EMAIL, includeEmail.isChecked());
+        outState.putBoolean(Const.FEEDBACK_INCL_LOCATION, includeLocation.isChecked());
+        outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText()
+                                                                .toString());
+    }
+
+    private boolean isValidEmail() {
+        email = customEmailView.getText()
+                               .toString();
+        boolean isValid = Patterns.EMAIL_ADDRESS.matcher(email)
+                                                .matches();
+        if (isValid) {
+            customEmailView.setTextColor(getResources().getColor(R.color.valid));
+        } else {
+            customEmailView.setTextColor(getResources().getColor(R.color.error));
+        }
+        return isValid;
+    }
+
+    private Feedback getFeedback() {
+        return new Feedback(UUID.randomUUID()
+                                .toString(),
+                            (feedbackTopic == 0 ? Const.FEEDBACK_TOPIC_GENERAL : Const.FEEDBACK_TOPIC_APP),
+                            feedbackView.getText()
+                                        .toString(),
+                            (includeEmail.isChecked() ? email : ""),
+                            (includeLocation.isChecked() ? location.getLatitude() : 0),
+                            (includeLocation.isChecked() ? location.getLongitude() : 0),
+                            picturePaths == null ? 0 : picturePaths.size(),
+                            Build.VERSION.RELEASE,
+                            BuildConfig.VERSION_NAME);
+    }
+
+    public void onSendClicked(View view) {
+        if (feedbackView.getText()
+                        .toString()
+                        .trim()
+                        .isEmpty()) {
+            if (picturePaths.isEmpty()) {
+                feedbackView.setError(getString(R.string.feedback_empty));
+            } else {
+                feedbackView.setError(getString(R.string.feedback_img_without_text));
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.send_feedback_question);
+        builder.setIcon(R.drawable.ic_feedback);
+        builder.setPositiveButton(R.string.send, (dialogInterface, i) -> sendFeedback());
+        builder.setNegativeButton(R.string.no, null);
+        builder.show();
+    }
+
+    public void sendFeedback() {
+        sentCount = 0;
+        stopListeningForLocation();
+
+        if (includeEmail.isChecked() && Strings.isNullOrEmpty(lrzId) && !isValidEmail()) {
+            return;
+        }
+
+        showProgressBarDialog();
+        TUMCabeClient client = TUMCabeClient.getInstance(this);
+
+        client.sendFeedback(getFeedback(), picturePaths.toArray(new String[picturePaths.size()]), new Callback<Success>() {
+            @Override
+            public void onResponse(Call<Success> call, Response<Success> response) {
+                Success success = response.body();
+                if (success != null && success.wasSuccessfullySent()) {
+                    sentCount++;
+                    Utils.log(success.getSuccess());
+                    if (sentCount == picturePaths.size() + 1) {
+                        progress.cancel();
+                        finish();
+                        Toast.makeText(feedbackView.getContext(), R.string.feedback_send_success, Toast.LENGTH_SHORT)
+                             .show();
+                    }
+                    Utils.log("sent " + sentCount + " of " + (picturePaths.size() + 1) + " message parts");
+                } else {
+                    showErrorDialog();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Success> call, Throwable t) {
+                showErrorDialog();
+            }
+        });
+    }
+
+    private void showProgressBarDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.feedback_sending);
+        builder.setView(new ProgressBar(this));
+        builder.setCancelable(false);
+        builder.setNeutralButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+        progress = builder.show();
+    }
+
+    private void showErrorDialog() {
+        if (errorDialog != null && errorDialog.isShowing()) {
+            return;
+        }
+        progress.cancel();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.feedback_sending_error);
+        builder.setIcon(R.drawable.ic_error_outline);
+        builder.setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback());
+
+        // Or save message to send later -> db table needed? / sharedPreferences
+        builder.setNegativeButton(R.string.ok, null);
+        errorDialog = builder.show();
+    }
+
+    @SuppressLint("NewApi")
+    public void addPicture(View view) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(R.string.feedback_add_picture);
+        dialog.setIcon(R.drawable.ic_add_photo_colored);
+        String[] options = {getString(R.string.feedback_take_picture), getString(R.string.gallery)};
+        dialog.setItems(options, (dialogInterface, i) -> {
+            if (i == 0) {
+                if (checkPermission(Manifest.permission.CAMERA)) {
+                    startTakingPicture();
+                }
+            } else {
+                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    openGallery();
+                }
+            }
+        });
+        dialog.setNegativeButton(R.string.cancel, null);
+        dialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_TAKE_PHOTO) {
+                // get picture, resize it and write back the image
+                rescaleBitmap(Uri.fromFile(new File(mCurrentPhotoPath)), new File(mCurrentPhotoPath));
+
+                picturePaths.add(mCurrentPhotoPath);
+                thumbnailsAdapter.notifyDataSetChanged();
+            } else if (requestCode == REQUEST_GALLERY) {
+
+                File destination = null;
+                try {
+                    destination = createImageFile();
+                } catch (IOException e) {
+                    Utils.log(e);
+                }
+                rescaleBitmap(data.getData(), destination);
+
+                if (destination != null) {
+                    picturePaths.add(destination.getAbsolutePath());
+                    thumbnailsAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+
     }
 
     @Override
@@ -316,161 +479,6 @@ public class FeedbackActivity extends BaseActivity {
         }
     }
 
-    private boolean isValidEmail() {
-        email = customEmailView.getText()
-                               .toString();
-        boolean isValid = Patterns.EMAIL_ADDRESS.matcher(email)
-                                                .matches();
-        if (isValid) {
-            customEmailView.setTextColor(getResources().getColor(R.color.valid));
-        } else {
-            customEmailView.setTextColor(getResources().getColor(R.color.error));
-        }
-        return isValid;
-    }
-
-    private Feedback getFeedback() {
-        return new Feedback(UUID.randomUUID()
-                                .toString(),
-                            (feedbackTopic == 0 ? Const.FEEDBACK_TOPIC_GENERAL : Const.FEEDBACK_TOPIC_APP),
-                            feedbackView.getText()
-                                        .toString(),
-                            (includeEmail.isChecked() ? email : ""),
-                            (includeLocation.isChecked() ? location.getLatitude() : 0),
-                            (includeLocation.isChecked() ? location.getLongitude() : 0),
-                            picPaths == null ? 0 : picPaths.size(),
-                            Build.VERSION.RELEASE,
-                            BuildConfig.VERSION_NAME);
-    }
-
-    public void sendFeedback(View view) {
-        sentCount = 0;
-        stopListeningForLocation();
-
-        if (includeEmail.isChecked() && Strings.isNullOrEmpty(lrzId) && !isValidEmail()) {
-            return;
-        }
-
-        try {
-            showProgressBarDialog();
-            TUMCabeClient client = TUMCabeClient.getInstance(this);
-
-            client.sendFeedback(getFeedback(), picPaths.toArray(new String[0]), new Callback<Success>() {
-                @Override
-                public void onResponse(Call<Success> call, Response<Success> response) {
-                    Success success = response.body();
-                    if (success != null && success.wasSuccessfullySent()) {
-                        sentCount++;
-                        Utils.log(success.getSuccess());
-                        if (sentCount == picPaths.size() + 1) {
-                            progress.cancel();
-                            finish();
-                            Toast.makeText(feedbackView.getContext(), R.string.feedback_send_success, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        Utils.log("sent " + sentCount + " of " + (picPaths.size() + 1) + " message parts");
-                    } else {
-                        showErrorDialog();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Success> call, Throwable t) {
-                    showErrorDialog();
-                }
-            });
-        } catch (IOException e) {
-            showErrorDialog();
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBarDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.feedback_sending);
-        builder.setView(new ProgressBar(this));
-        builder.setCancelable(false);
-        builder.setNeutralButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
-        progress = builder.show();
-    }
-
-    private void showErrorDialog() {
-        if (errorDialog != null && errorDialog.isShowing()) {
-            return;
-        }
-        progress.cancel();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.feedback_sending_error);
-        builder.setIcon(R.drawable.ic_error_outline);
-        builder.setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback(null));
-
-        // Or save message to send later -> db table needed? / sharedPreferences
-        builder.setNegativeButton(R.string.ok, null);
-        errorDialog = builder.show();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(Const.FEEDBACK_TOPIC, feedbackTopic);
-        outState.putString(Const.FEEDBACK_MESSAGE, feedbackView.getText()
-                                                               .toString());
-        outState.putStringArrayList(Const.FEEDBACK_PIC_PATHS, picPaths);
-        outState.putBoolean(Const.FEEDBACK_INCL_EMAIL, includeEmail.isChecked());
-        outState.putBoolean(Const.FEEDBACK_INCL_LOCATION, includeLocation.isChecked());
-        outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText()
-                                                                .toString());
-    }
-
-    @SuppressLint("NewApi")
-    public void addPicture(View view) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle(R.string.feedback_add_picture);
-        dialog.setIcon(R.drawable.ic_add_photo_colored);
-        String[] options = {getString(R.string.feedback_take_picture), getString(R.string.gallery)};
-        dialog.setItems(options, (dialogInterface, i) -> {
-            if (i == 0) {
-                if (checkPermission(Manifest.permission.CAMERA)) {
-                    startTakingPicture();
-                }
-            } else {
-                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    openGallery();
-                }
-            }
-        });
-        dialog.setNegativeButton(R.string.cancel, null);
-        dialog.show();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_TAKE_PHOTO) {
-                // get picture, resize it and write back the image
-                rescaleBitmap(Uri.fromFile(new File(mCurrentPhotoPath)), new File(mCurrentPhotoPath));
-
-                picPaths.add(mCurrentPhotoPath);
-                thumbAdapter.notifyDataSetChanged();
-            } else if (requestCode == REQUEST_GALLERY) {
-
-                File destination = null;
-                try {
-                    destination = createImageFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                rescaleBitmap(data.getData(), destination);
-
-                if (destination != null) {
-                    picPaths.add(destination.getAbsolutePath());
-                    thumbAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-
-    }
-
     /**
      * scales down the image and writes it to the destination file
      *
@@ -490,7 +498,7 @@ public class FeedbackActivity extends BaseActivity {
             fileOut.close();
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Utils.log(e);
         }
     }
 
@@ -527,8 +535,8 @@ public class FeedbackActivity extends BaseActivity {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException e) {
+                Utils.log(e);
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -544,7 +552,9 @@ public class FeedbackActivity extends BaseActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String timeStamp = DateTimeFormat.forPattern("yyyyMMdd_HHmmss")
+                                         .withLocale(Locale.GERMANY)
+                                         .print(DateTime.now());
         String imageFileName = "IMG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(

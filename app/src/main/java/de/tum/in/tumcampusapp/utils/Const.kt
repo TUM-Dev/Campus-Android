@@ -19,7 +19,6 @@ object Const {
     const val MESSAGE = "message"
     const val FORCE_DOWNLOAD = "force_download"
     const val HIDE_WIZARD_ON_STARTUP = "hide_wizard_on_startup"
-    const val JSON_LINK = "link"
     const val LRZ_ID = "lrz_id"
     const val NEWS = "news"
     const val KINO = "kino"
@@ -34,6 +33,7 @@ object Const {
     const val API_HOSTNAME_NEW = "app.tum.de"
     const val CURRENT_CHAT_ROOM = "current_chat_room"
     const val CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name"
+    const val CHAT_ROOM_NAME = "chat_room_name"
 
     const val PRIVATE_KEY_ACTIVE = "chat_member_private_key_active"
     const val PRIVATE_KEY = "chat_member_private_key"
@@ -46,24 +46,15 @@ object Const {
     const val TUMO_EMPLOYEE_ID = "tumoBediensteteNr"
     const val TUMO_DISABLED = "tumo_is_disabled"
 
-    const val GCM_REG_ID = "gcm_registration_id"
-    const val GCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server"
-    const val GCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission"
-    const val GCM_INSTANCE_ID = "gcm_instance_id"
-    const val GCM_TOKEN_ID = "gcm_token_id"
+    const val FCM_REG_ID = "gcm_registration_id"
+    const val FCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server"
+    const val FCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission"
+    const val FCM_INSTANCE_ID = "gcm_instance_id"
+    const val FCM_TOKEN_ID = "gcm_token_id"
     const val APP_LAUNCHES = "app_launches"
     const val SYNC_CALENDAR = "sync_calendar"
     const val PREFERENCE_SCREEN = "preference_screen"
     const val P_TOKEN = "pToken"
-    const val APP_VERSION = "app_version"
-    const val JSON_NEWS = "news"
-    const val JSON_DATE = "date"
-    const val JSON_TITLE = "title"
-    const val JSON_IMAGE = "image"
-    const val JSON_CREATED = "created"
-    const val JSON_SRC = "src"
-    const val JSON_ICON = "icon"
-    const val JSON_SOURCE = "source"
 
     const val EVERYTHING_SETUP = "everything_setup"
     const val SYNC_CALENDAR_IMPORT = "calendar_import"
@@ -121,17 +112,41 @@ object Const {
     const val DATE_ONLY = "yyyy-MM-dd"
 
     const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
+    const val DISCARD_SETTINGS_START = "discard_settings_start"
+    const val DISCARD_SETTINGS_PHONE = "discard_settings_phone"
     const val CALENDAR_ID_PARAM = "calendar_id"
 
     const val RAINBOW_MODE = "rainbow_enabled"
     const val REFRESH_CARDS = "refresh_cards"
     const val EDUROAM_SSID = "eduroam"
+    const val LRZ = "lrz"
 
     const val CHAT_BROADCAST_NAME = "chat-message-received"
-  
+
     const val EVENT_TITLE = "pTitel"
     const val EVENT_COMMENT = "pAnmerkung"
     const val EVENT_START = "pVon"
     const val EVENT_END = "pBis"
     const val EVENT_NR = "pTerminNr"
+
+    const val KINO_DATE = "kinoDate"
+
+    const val PDF_TITLE = "pdfTitle"
+    const val PDF_PATH = "pdfPath"
+
+    const val TOP_NEWS = "topNewsDownload"
+    const val NEWS_ALERT_IMAGE = "newsAlertImageURL"
+    const val NEWS_ALERT_LINK = "newsAlertLink"
+    const val NEWS_ALERT_SHOW_UNTIL = "newsAlertShowUntil"
+
+    const val CONTACTS_PERMISSION_REQUEST_CODE = 0
+    const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
+
+    const val TUM_CAMPUS_URL = "http://campus.tum.de"
+
+    const val CALENDAR_FILTER_CANCELED = "calendar_filter_canceled"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MIN = "calendar_filter_hour_limit_min"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MAX = "calendar_filter_hour_limit_max"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
+    const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
 }

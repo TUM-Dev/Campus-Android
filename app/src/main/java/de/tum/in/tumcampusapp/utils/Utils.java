@@ -20,8 +20,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.common.base.Charsets;
-import com.google.common.escape.CharEscaperBuilder;
-import com.google.common.escape.Escaper;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 
@@ -80,7 +78,7 @@ public final class Utils {
         }
         prefsEditor.apply();
 
-        //Delete any old settings
+        //Delete any old settingsPrefix
         prefsLegacy.edit()
                    .clear()
                    .apply();

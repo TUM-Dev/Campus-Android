@@ -2,12 +2,14 @@ package de.tum.`in`.tumcampusapp.component.other.wifimeasurement.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import de.tum.`in`.tumcampusapp.utils.DateUtils
-import java.util.*
+import android.arch.persistence.room.RoomWarnings
+import android.net.wifi.ScanResult
+import org.joda.time.DateTime
 
 @Entity(tableName = "wifi_measurement")
+@SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class WifiMeasurement(@PrimaryKey
-                           var date: String = DateUtils.getDateTimeString(Date()),
+                           var date: DateTime = DateTime(),
                            var ssid: String = "",
                            var bssid: String = "",
                            var dBm: Int = -1,
@@ -15,9 +17,16 @@ data class WifiMeasurement(@PrimaryKey
                            var latitude: Double = -1.0,
                            var longitude: Double = -1.0) {
     companion object {
+
         fun create(ssid: String, bssid: String, dBm: Int, accuracyInMeters: Float, latitude: Double, longitude: Double): WifiMeasurement {
             return WifiMeasurement(ssid = ssid, bssid = bssid, dBm = dBm,
                     accuracyInMeters = accuracyInMeters, latitude = latitude, longitude = longitude)
         }
+
+        fun fromScanResult(scanResult: ScanResult): WifiMeasurement {
+            return WifiMeasurement(ssid = scanResult.SSID, bssid = scanResult.BSSID, dBm = scanResult.level,
+                    accuracyInMeters = -1f, latitude = -1.0, longitude = -1.0)
+        }
+
     }
 }

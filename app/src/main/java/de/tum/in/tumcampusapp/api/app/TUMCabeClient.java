@@ -5,13 +5,14 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.joda.time.DateTime;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
-import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -21,8 +22,8 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordin
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotificationLocation;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -32,11 +33,14 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
-import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
+import de.tum.in.tumcampusapp.component.ui.news.model.News;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -52,13 +56,6 @@ import retrofit2.http.Body;
  */
 public final class TUMCabeClient {
 
-    private static final String API_HOSTNAME = Const.API_HOSTNAME;
-    private static final String API_BASEURL = "/Api/";
-    private static final String API_CHAT = "chat/";
-    static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
-    static final String API_CHAT_MEMBERS = API_CHAT + "members/";
-    static final String API_CURRICULA = "curricula/";
-    static final String API_STATISTICS = "statistics/";
     static final String API_NOTIFICATIONS = "notifications/";
     static final String API_LOCATIONS = "locations/";
     static final String API_DEVICE = "device/";
@@ -79,7 +76,12 @@ public final class TUMCabeClient {
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
     static final String API_CARD = "cards/";
-
+    static final String API_NEWS = "news/";
+    private static final String API_HOSTNAME = Const.API_HOSTNAME;
+    private static final String API_BASEURL = "/Api/";
+    private static final String API_CHAT = "chat/";
+    static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
+    static final String API_CHAT_MEMBERS = API_CHAT + "members/";
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
 
@@ -87,11 +89,10 @@ public final class TUMCabeClient {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
-        Gson gson = new GsonBuilder().
-                registerTypeAdapter(Date.class,new DateSerializer())
-                .create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateSerializer())
+                                     .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
-        builder.client(Helper.getOkClient(c));
+        builder.client(Helper.getOkHttpClient(c));
         service = builder.build()
                          .create(TUMCabeAPIService.class);
     }
@@ -129,16 +130,25 @@ public final class TUMCabeClient {
     }
 
     public List<StudyCard> getStudyCards() throws IOException {
-        return service.getStudyCards().execute().body();
+        return service.getStudyCards()
+                      .execute()
+                      .body();
     }
 
     public StudyCard addStudyCard(StudyCard card, ChatVerification verification) throws IOException {
         verification.setData(card);
-        return service.addStudyCard(verification).execute().body();
+        return service.addStudyCard(verification)
+                      .execute()
+                      .body();
     }
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
         service.leaveChatRoom(chatRoom.getId(), verification)
+               .enqueue(cb);
+    }
+
+    public void addUserToChat(ChatRoom chatRoom, ChatMember member, ChatVerification verification, Callback<ChatRoom> cb) {
+        service.addUserToChat(chatRoom.getId(), member.getId(), verification)
                .enqueue(cb);
     }
 
@@ -175,31 +185,24 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public GCMNotification getNotification(int notification) throws IOException {
+    public FcmNotification getNotification(int notification) throws IOException {
         return service.getNotification(notification)
-                      .execute()
-                      .body();
-    }
-
-    public List<Curriculum> getAllCurriculas() throws IOException {
-        return service.getAllCurriculas()
                       .execute()
                       .body();
     }
 
     public void confirm(int notification) throws IOException {
         service.confirm(notification)
-               .execute()
-               .body();
+               .execute();
     }
 
-    public List<GCMNotificationLocation> getAllLocations() throws IOException {
+    public List<FcmNotificationLocation> getAllLocations() throws IOException {
         return service.getAllLocations()
                       .execute()
                       .body();
     }
 
-    public GCMNotificationLocation getLocation(int locationId) throws IOException {
+    public FcmNotificationLocation getLocation(int locationId) throws IOException {
         return service.getLocation(locationId)
                       .execute()
                       .body();
@@ -210,12 +213,12 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public void deviceUploadGcmToken(DeviceUploadGcmToken verification, Callback<TUMCabeStatus> cb) {
+    public void deviceUploadGcmToken(DeviceUploadFcmToken verification, Callback<TUMCabeStatus> cb) {
         service.deviceUploadGcmToken(verification)
                .enqueue(cb);
     }
 
-    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) throws IOException {
+    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) {
         service.createMeasurements(wifiMeasurementList)
                .enqueue(cb);
     }
@@ -256,7 +259,7 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) throws IOException {
+    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) {
         service.fetchAvailableMaps(Helper.encodeUrl(archId))
                .enqueue(cb);
     }
@@ -274,7 +277,7 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) throws IOException {
+    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) {
         service.fetchCoordinates(Helper.encodeUrl(archId))
                .enqueue(cb);
     }
@@ -286,21 +289,51 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) throws IOException {
-        service.sendFeedback(feedback).enqueue(cb);
-        for(int i = 0; i < imagePaths.length; i++){
+    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
+        service.sendFeedback(feedback)
+               .enqueue(cb);
+
+        for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
-            service.sendFeedbackImage(body, i+1, feedback.getId()).enqueue(cb);
+
+            service.sendFeedbackImage(body, i + 1, feedback.getId())
+                   .enqueue(cb);
         }
     }
+
+    public void searchChatMember(String query, Callback<List<ChatMember>> callback) {
+        service.searchMemberByName(query)
+               .enqueue(callback);
+    }
+
+    public void getChatMemberByLrzId(String lrzId, Callback<ChatMember> callback) {
+        service.getMember(lrzId)
+               .enqueue(callback);
+    }
+
     public Observable<List<Cafeteria>> getCafeterias() {
         return service.getCafeterias();
     }
 
-
-    public Observable<List<Kino>> getKinos(String lastId){
+    public Flowable<List<Kino>> getKinos(String lastId) {
         return service.getKinos(lastId);
+    }
+
+    public List<News> getNews(String lastNewsId) throws IOException {
+        return service.getNews(lastNewsId)
+                      .execute()
+                      .body();
+    }
+
+    public List<NewsSources> getNewsSources() throws IOException {
+        return service.getNewsSources()
+                      .execute()
+                      .body();
+    }
+
+    public Observable<NewsAlert> getNewsAlert() {
+        return service.getNewsAlert();
     }
 }

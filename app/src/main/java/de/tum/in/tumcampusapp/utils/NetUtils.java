@@ -1,21 +1,12 @@
 package de.tum.in.tumcampusapp.utils;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
-import android.widget.ImageView;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
-import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
-import com.trello.rxlifecycle2.LifecycleProvider;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,10 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.app.Helper;
-import io.reactivex.Observable;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -37,7 +24,6 @@ public class NetUtils {
     private final Context mContext;
     private final CacheManager cacheManager;
     private final OkHttpClient client;
-    private final Optional<LifecycleProvider<Lifecycle.Event>> lifecycleProvider;
 
     public NetUtils(Context context) {
         //Manager caches all requests
@@ -45,13 +31,7 @@ public class NetUtils {
         cacheManager = new CacheManager(mContext);
 
         //Set our max wait time for each request
-        client = Helper.getOkClient(context);
-
-        if (context instanceof LifecycleOwner) {
-            lifecycleProvider = Optional.of(AndroidLifecycle.createLifecycleProvider((LifecycleOwner) context));
-        } else {
-            lifecycleProvider = Optional.absent();
-        }
+        client = Helper.getOkHttpClient(context);
     }
 
     public static Optional<JSONObject> downloadJson(Context context, String url) {
@@ -69,20 +49,6 @@ public class NetUtils {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-    /**
-     * Check if a network connection is available or can be available soon
-     * and if the available connection is a mobile internet connection
-     *
-     * @return true if available
-     */
-    public static boolean isConnectedMobileData(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_MOBILE;
     }
 
     /**
@@ -186,100 +152,6 @@ public class NetUtils {
     }
 
     /**
-     * Downloads an image synchronously from the given url
-     *
-     * @param pUrl Image url
-     * @return Downloaded image as {@link Bitmap}
-     */
-    public Optional<File> downloadImage(String pUrl) {
-        try {
-            String url = pUrl.replaceAll(" ", "%20");
-
-            Optional<String> file = cacheManager.getFromCache(url);
-            if (file.isPresent()) {
-                File result = new File(file.get());
-
-                // The cache could have been cleaned manually, so we need an existence check
-                return Optional.of(result);
-            }
-
-            file = Optional.of(mContext.getCacheDir()
-                                       .getAbsolutePath() + '/' + Utils.hash(url) + ".jpg");
-            File f = new File(file.get());
-            downloadToFile(url, file.get());
-
-            // At this point, we are certain, that the file really has been downloaded and can safely be added to the cache
-            cacheManager.addToCache(url, file.get(), CacheManager.VALIDITY_TEN_DAYS, CacheManager.CACHE_TYP_IMAGE);
-            return Optional.of(f);
-        } catch (IOException e) {
-            Utils.log(e, pUrl);
-            return Optional.absent();
-        } catch (IllegalArgumentException e) {
-            Utils.log(e, pUrl);
-            return Optional.absent();
-        }
-    }
-
-    /**
-     * Downloads an image synchronously from the given url
-     *
-     * @param url Image url
-     * @return Downloaded image as {@link Bitmap}
-     */
-    public Optional<Bitmap> downloadImageToBitmap(@NonNull String url) {
-        Optional<File> f = downloadImage(url);
-        if (f.isPresent()) {
-            return Optional.fromNullable(BitmapFactory.decodeFile(f.get()
-                                                                   .getAbsolutePath()));
-        }
-        return Optional.absent();
-    }
-
-    /**
-     * Download an image in background and sets the image to the image view
-     *
-     * @param url       URL
-     * @param imageView Image
-     */
-    public void loadAndSetImage(final String url, final ImageView imageView) {
-        synchronized (CacheManager.BITMAP_CACHE) {
-            Bitmap bmp = CacheManager.BITMAP_CACHE.get(url);
-            if (bmp != null) {
-                imageView.setImageBitmap(bmp);
-                return;
-            }
-        }
-        CacheManager.IMAGE_VIEWS.put(imageView, url);
-        imageView.setImageBitmap(null);
-
-        Observable.just(url)
-                  .map(this::downloadImageToBitmap)
-                  .compose(handleLifecycle())
-                  .subscribeOn(Schedulers.io())
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .subscribe((bitmap) -> {
-                      if (!bitmap.isPresent()) {
-                          return;
-                      }
-                      synchronized (CacheManager.BITMAP_CACHE) {
-                          CacheManager.BITMAP_CACHE.put(url, bitmap.get());
-                      }
-                      String tag = CacheManager.IMAGE_VIEWS.get(imageView);
-                      if (tag != null && tag.equals(url)) {
-                          imageView.setImageBitmap(bitmap.get());
-                      }
-                  });
-    }
-
-    private <T> ObservableTransformer<T, T> handleLifecycle() {
-        if (lifecycleProvider.isPresent()) {
-            return lifecycleProvider.get()
-                                    .bindToLifecycle();
-        }
-        return observable -> observable;
-    }
-
-    /**
      * Download a JSON stream from a URL
      *
      * @param url Valid URL
@@ -296,26 +168,6 @@ public class NetUtils {
             Utils.log(e);
         }
         return Optional.absent();
-    }
-
-    /**
-     * Download a JSON stream from a URL or load it from cache
-     *
-     * @param url   Valid URL
-     * @param force Load data anyway and fill cache, even if valid cached version exists
-     * @return JSONObject
-     */
-    public Optional<JSONArray> downloadJsonArray(String url, int validity, boolean force) {
-        Optional<String> download = downloadStringAndCache(url, validity, force);
-        JSONArray result = null;
-        if (download.isPresent()) {
-            try {
-                result = new JSONArray(download.get());
-            } catch (JSONException e) {
-                Utils.log(e);
-            }
-        }
-        return Optional.fromNullable(result);
     }
 
     /**

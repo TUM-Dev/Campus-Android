@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,19 +18,20 @@ import android.widget.Button;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 public class NextLectureCard extends NotificationAwareCard {
 
@@ -50,10 +52,10 @@ public class NextLectureCard extends NotificationAwareCard {
         super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture");
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_next_lecture_item, parent, false);
-        return new Card.CardViewHolder(view);
+        return new CardViewHolder(view);
     }
 
     @Override
@@ -64,12 +66,12 @@ public class NextLectureCard extends NotificationAwareCard {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        mCard = viewHolder.itemView;
-        mLinearLayout = mCard.findViewById(R.id.card_view);
-        mTitleView = mCard.findViewById(R.id.card_title);
-        mTimeView = mCard.findViewById(R.id.card_time);
-        mLocation = mCard.findViewById(R.id.card_location_action);
-        mEvent = mCard.findViewById(R.id.card_event_action);
+        setMCard(viewHolder.itemView);
+        setMLinearLayout(getMCard().findViewById(R.id.card_view));
+        setMTitleView(getMCard().findViewById(R.id.card_title));
+        mTimeView = getMCard().findViewById(R.id.card_time);
+        mLocation = getMCard().findViewById(R.id.card_location_action);
+        mEvent = getMCard().findViewById(R.id.card_event_action);
 
         showItem(0);
 
@@ -77,12 +79,12 @@ public class NextLectureCard extends NotificationAwareCard {
         if (lectures.size() > 1) {
             for (; i < lectures.size(); i++) {
                 final int j = i;
-                Button text = mCard.findViewById(IDS[i]);
+                Button text = getMCard().findViewById(IDS[i]);
                 text.setOnClickListener(view -> showItem(j));
             }
         }
         for (; i < 4; i++) {
-            View text = mCard.findViewById(IDS[i]);
+            View text = getMCard().findViewById(IDS[i]);
             text.setVisibility(View.GONE);
         }
     }
@@ -91,17 +93,17 @@ public class NextLectureCard extends NotificationAwareCard {
         // Set selection on the buttons
         mSelected = sel;
         for (int i = 0; i < 4; i++) {
-            mCard.findViewById(IDS[i])
-                 .setSelected(i == sel);
+            getMCard().findViewById(IDS[i])
+                      .setSelected(i == sel);
         }
 
         final CalendarItem item = lectures.get(sel);
 
         // Set current title
-        mTitleView.setText(getTitle());
+        getMTitleView().setText(getTitle());
 
         //Add content
-        mTimeView.setText(DateUtils.getFutureTime(item.start, mContext));
+        mTimeView.setText(DateTimeUtils.INSTANCE.formatFutureTime(item.start, getContext()));
 
         //Add location with link to room finder
         if (item.location == null || item.location.isEmpty()) {
@@ -109,34 +111,34 @@ public class NextLectureCard extends NotificationAwareCard {
         } else {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(v -> {
-                Intent i = new Intent(mContext, RoomFinderActivity.class);
-                i.putExtra(SearchManager.QUERY, item.location);
-                mContext.startActivity(i);
+                Intent i = new Intent(getContext(), RoomFinderActivity.class);
+                i.putExtra(SearchManager.QUERY, item.locationForSearch);
+                getContext().startActivity(i);
             });
         }
 
-        DateFormat week = new SimpleDateFormat("EEEE, ", Locale.getDefault());
-        DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
-        mEvent.setText(String.format("%s%s - %s", week.format(item.start), df.format(item.start), df.format(item.end)));
+        DateTimeFormatter dayOfWeek = DateTimeFormat.forPattern("EEEE, ").withLocale(Locale.getDefault());
+        DateTimeFormatter time = DateTimeFormat.shortTime();
+        mEvent.setText(String.format("%s%s - %s", dayOfWeek.print(item.start), time.print(item.start), time.print(item.end)));
         mEvent.setOnClickListener(view -> {
-            Intent i = new Intent(mContext, CalendarActivity.class);
+            Intent i = new Intent(getContext(), CalendarActivity.class);
             CalendarItem item1 = lectures.get(mSelected);
-            i.putExtra(CalendarActivity.EVENT_TIME, item1.start.getTime());
-            mContext.startActivity(i);
+            i.putExtra(CalendarActivity.EVENT_TIME, item1.start.getMillis());
+            getContext().startActivity(i);
         });
     }
 
     @Override
     protected void discard(Editor editor) {
         CalendarItem item = lectures.get(lectures.size() - 1);
-        editor.putLong(NEXT_LECTURE_DATE, item.start.getTime());
+        editor.putLong(NEXT_LECTURE_DATE, item.start.getMillis());
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         CalendarItem item = lectures.get(0);
         long prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0);
-        return item.start.getTime() > prevTime;
+        return item.start.getMillis() > prevTime;
     }
 
     @Override
@@ -152,10 +154,10 @@ public class NextLectureCard extends NotificationAwareCard {
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         CalendarItem item = lectures.get(0);
-        final String time = DateUtils.getFutureTime(item.start, mContext);
+        final String time = DateTimeUtils.INSTANCE.formatFutureTime(item.start, getContext());
         notificationBuilder.setContentText(item.title + '\n' + time);
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_next_lecture);
+        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_next_lecture);
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();
     }
@@ -163,27 +165,31 @@ public class NextLectureCard extends NotificationAwareCard {
     public void setLectures(List<de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem> calendarItems) {
         for (de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem calendarItem : calendarItems) {
             CalendarItem item = new CalendarItem();
-            item.start = DateUtils.getDateTime(calendarItem.getDtstart());
-            item.end = DateUtils.getDateTime(calendarItem.getDtend());
+            item.start = calendarItem.getDtstart();
+            item.end = calendarItem.getDtend();
 
             // Extract course title
             item.title = calendarItem.getFormattedTitle();
 
             // Handle location
             item.location = calendarItem.getEventLocation();
+            // This is the location in a format which is useful for searches:
+            item.locationForSearch = calendarItem.getLocation();
+
             lectures.add(item);
         }
     }
 
     private static class CalendarItem {
         String title;
-        Date start;
-        Date end;
+        DateTime start;
+        DateTime end;
         String location;
+        String locationForSearch;
     }
 
     @Override
-    public RemoteViews getRemoteViews(Context context) {
+    public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_my_lectures);

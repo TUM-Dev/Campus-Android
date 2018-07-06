@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -19,40 +20,52 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class SupportCard extends Card {
 
     public SupportCard(Context context) {
-        super(CardManager.CARD_SUPPORT, context);
+        super(CardManager.CARD_SUPPORT, context, "", true);
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         final View view = LayoutInflater.from(parent.getContext())
                                         .inflate(R.layout.card_support, parent, false);
-        //Add links to imageviews
-        view.findViewById(R.id.facebook)
+
+        view.findViewById(R.id.facebook_button)
             .setOnClickListener(v -> {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW);
                 browserIntent.setData(Uri.parse(view.getContext()
                                                     .getString(R.string.facebook_link)));
-                view.getContext()
-                    .startActivity(browserIntent);
+                v.getContext()
+                 .startActivity(browserIntent);
             });
-        view.findViewById(R.id.github)
+
+        view.findViewById(R.id.github_button)
             .setOnClickListener(v -> {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW);
                 browserIntent.setData(Uri.parse(view.getContext()
                                                     .getString(R.string.github_link)));
-                view.getContext()
-                    .startActivity(browserIntent);
+                v.getContext()
+                 .startActivity(browserIntent);
             });
-        return new Card.CardViewHolder(view);
+
+        view.findViewById(R.id.email_button)
+            .setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setType("text/plain");
+                intent.setData(Uri.parse(view.getContext().getString(R.string.support_email_link)));
+                intent.putExtra(Intent.EXTRA_SUBJECT, view.getContext().getString(R.string.feedback));
+                v.getContext()
+                 .startActivity(Intent.createChooser(intent, "Send Email"));
+            });
+
+        return new CardViewHolder(view);
     }
 
     @Override
     public void discard(Editor editor) {
-        Utils.setSetting(mContext, CardManager.SHOW_SUPPORT, false);
+        Utils.setSetting(getContext(), CardManager.SHOW_SUPPORT, false);
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences p) {
-        return Utils.getSettingBool(mContext, CardManager.SHOW_SUPPORT, true);
+        return Utils.getSettingBool(getContext(), CardManager.SHOW_SUPPORT, true);
     }
 
     @Override

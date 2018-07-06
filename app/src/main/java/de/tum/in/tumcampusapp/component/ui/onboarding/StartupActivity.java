@@ -10,13 +10,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,18 +25,14 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
-import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.FileUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -63,7 +56,8 @@ public class StartupActivity extends AppCompatActivity {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (DownloadService.BROADCAST_NAME.equals(intent.getAction())) {
+            if (DownloadService.BROADCAST_NAME
+                                         .equals(intent.getAction())) {
 
                 //Only proceed to start the App, if initialization is finished
                 if (initializationFinished.compareAndSet(false, true)) {
@@ -76,43 +70,12 @@ public class StartupActivity extends AppCompatActivity {
 
     private void init() {
 
-        //Migrate all settings - we somehow ended up having two different shared prefs: join them back together
+        //Migrate all settingsPrefix - we somehow ended up having two different shared prefs: join them back together
         Utils.migrateSharedPreferences(this.getApplicationContext());
 
         //Check that we have a private key setup in order to authenticate this device
         AuthenticationManager am = new AuthenticationManager(this);
         am.generatePrivateKey(null);
-
-        // For compatibility reasons: big update happened with version 35
-        int prevVersion = Utils.getSettingInt(this, Const.APP_VERSION, 35);
-
-        // get current app version
-        int currentVersion = Utils.getAppVersion(this);
-        boolean newVersion = prevVersion < currentVersion;
-        if (newVersion) {
-            this.setupNewVersion();
-            Utils.setSetting(this, Const.APP_VERSION, currentVersion);
-        }
-
-        // Also First run wizard for setup of id and token
-        // Check the flag if user wants the wizard to open at startup
-        boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
-        String lrzId = Utils.getSetting(this, Const.LRZ_ID, ""); // If new version and LRZ ID is empty, start the full wizard
-
-        if (!hideWizardOnStartup || (newVersion && lrzId.isEmpty())) {
-            startActivity(new Intent(this, WizNavStartActivity.class));
-            finish();
-            return;
-        } else if (newVersion) {
-            Utils.setSetting(this, Const.BACKGROUND_MODE, true);
-            Utils.setSetting(this, CardManager.SHOW_SUPPORT, true);
-
-            Intent intent = new Intent(this, WizNavExtrasActivity.class);
-            intent.putExtra(Const.TOKEN_IS_SETUP, true);
-            startActivity(intent);
-            finish();
-            return;
-        }
 
         // On first setup show remark that loading could last longer than normally
         boolean isSetup = Utils.getSettingBool(this, Const.EVERYTHING_SETUP, false);
@@ -290,31 +253,6 @@ public class StartupActivity extends AppCompatActivity {
             return values.getDimensionPixelSize(0, 0);
         } finally {
             values.recycle();
-        }
-    }
-
-    /**
-     * Delete stuff from old version
-     */
-    private void setupNewVersion() {
-        // drop database
-        TcaDb.resetDb(this);
-
-        // delete tumcampus directory
-        File f = new File(Environment.getExternalStorageDirectory()
-                                     .getPath() + "/tumcampus");
-        FileUtils.deleteRecursive(f);
-
-        // Load all on start
-        Utils.setSetting(this, Const.EVERYTHING_SETUP, false);
-
-        // rename hide_wizzard_on_startup
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!sp.contains(Const.HIDE_WIZARD_ON_STARTUP)) {
-            SharedPreferences.Editor e = sp.edit();
-            e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
-            e.remove("hide_wizzard_on_startup");
-            e.apply();
         }
     }
 

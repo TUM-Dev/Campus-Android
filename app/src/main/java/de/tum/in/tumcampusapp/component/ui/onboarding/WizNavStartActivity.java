@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,10 +25,13 @@ import de.tum.in.tumcampusapp.utils.Utils;
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
  */
-public class WizNavStartActivity extends ActivityForLoadingInBackground<String, Boolean> implements OnClickListener {
+public class WizNavStartActivity extends ActivityForLoadingInBackground<String, Boolean> implements OnClickListener, TextWatcher {
+
     private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
-    private EditText editTxtLrzId;
     private String lrzId;
+
+    private EditText lrzIdEditText;
+    private AppCompatButton nextButton;
 
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
@@ -34,33 +40,23 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         disableRefresh();
         findViewById(R.id.wizard_start_layout).requestFocus();
 
-        editTxtLrzId = findViewById(R.id.lrz_id);
-        editTxtLrzId.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
+        lrzIdEditText = findViewById(R.id.lrz_id);
+        lrzIdEditText.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
+        lrzIdEditText.addTextChangedListener(this);
+
+        nextButton = findViewById(R.id.next_button);
     }
 
-    /**
-     * Handle click on skip button
-     *
-     * @param skip Skip button handle
-     */
-    @SuppressWarnings("UnusedParameters")
-    public void onClickSkip(View skip) {
-        // Upon clicking on the skip button and there is no internet connection -> toast to the user
-        if (!NetUtils.isConnected(getApplicationContext())) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG)
-                 .show();
-            return;
-        }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // make sure to delete to delete information that might lead the app to believe the user enabled TUMonline
         Utils.setSetting(this, Const.LRZ_ID, null);
         Utils.setSetting(this, Const.ACCESS_TOKEN, null);
-
-        finish();
-        startActivity(new Intent(this, WizNavExtrasActivity.class));
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     /**
@@ -77,7 +73,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             return;
         }
 
-        String enteredId = editTxtLrzId.getText().toString().toLowerCase(Locale.GERMANY);
+        String enteredId = lrzIdEditText.getText().toString().toLowerCase(Locale.GERMANY);
 
         // check if lrz could be valid?
         if (!enteredId.matches(Const.TUM_ID_PATTERN)) {
@@ -93,12 +89,30 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
             // show Dialog first
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.dialog_new_token))
-                    .setPositiveButton(getString(R.string.yes), this)
-                    .setNegativeButton(getString(R.string.no), this)
+                    .setPositiveButton(getString(R.string.generate_new_token), this)
+                    .setNegativeButton(getString(R.string.cancel), this)
                     .show();
         } else {
             startLoading(lrzId); // create a new token
         }
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        boolean isEmpty = s.toString().trim().isEmpty();
+        float alpha = (isEmpty) ? 0.5f : 1.0f;
+        nextButton.setClickable(!isEmpty);
+        nextButton.setAlpha(alpha);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        // Pass
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        // Pass
     }
 
     /**
@@ -138,11 +152,17 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     @Override
     protected void onLoadFinished(Boolean result) {
         if (result) {
-            finish();
             startActivity(new Intent(this, WizNavCheckTokenActivity.class));
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {
             showLoadingEnded();
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        lrzIdEditText.removeTextChangedListener(this);
+    }
+
 }

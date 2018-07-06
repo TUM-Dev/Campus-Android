@@ -29,24 +29,24 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
 
-import java.text.DateFormat;
+import org.joda.time.format.DateTimeFormat;
+
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
+import de.tum.in.tumcampusapp.component.ui.chat.AddChatMemberActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageValidator;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageViewModel;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
-import de.tum.in.tumcampusapp.component.ui.chat.GCMChat;
+import de.tum.in.tumcampusapp.component.ui.chat.FcmChat;
 import de.tum.in.tumcampusapp.component.ui.chat.adapter.ChatHistoryAdapter;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
@@ -59,7 +59,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
@@ -80,9 +79,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
 
     public static ChatRoom mCurrentOpenChatRoom; // determines whether there will be a notification or not
     private final Handler mUpdateHandler = new Handler();
-    private ChatMessageViewModel chatMessageViewModel;
     private final CompositeDisposable mDisposable = new CompositeDisposable();
-
+    private ChatMessageViewModel chatMessageViewModel;
     /**
      * UI elements.
      */
@@ -94,6 +92,18 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
     private boolean loadingMore;
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Utils.logv("Message send. Trying to parse...");
+            FcmChat extras = (FcmChat) intent.getSerializableExtra("GCMChat");
+            if (extras == null) {
+                return;
+            }
+            Utils.log("Broadcast receiver got room=" + extras.getRoom() + " member=" + extras.getMember());
+            handleRoomBroadcast(extras);
+        }
+    };
     private ActionMode mActionMode;
     private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
@@ -130,7 +140,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                 imm.showSoftInput(etMessage, 0);
 
                 etMessage.setText(msg.getText());
-                int position = msg.getText().length();
+                int position = msg.getText()
+                                  .length();
                 etMessage.setSelection(position);
                 mode.finish();
                 return true;
@@ -151,18 +162,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             chatHistoryAdapter.notifyDataSetChanged();
         }
     };
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Utils.logv("Message send. Trying to parse...");
-            GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
-            if (extras == null) {
-                return;
-            }
-            Utils.log("Broadcast receiver got room=" + extras.getRoom() + " member=" + extras.getMember());
-            handleRoomBroadcast(extras);
-        }
-    };
 
     public ChatActivity() {
         super(Const.CURRENT_CHAT_ROOM, R.layout.activity_chat);
@@ -180,19 +179,29 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         return null;
     }
 
+    @SuppressWarnings("deprecation")
+    @TargetApi(android.os.Build.VERSION_CODES.O)
+    private static void vibrate(Vibrator v) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            v.vibrate(500);
+        }
+    }
+
     /**
      * Method to handle any incoming GCM/Firebase notifications
      *
      * @param extras model that contains infos about the message we should get
      */
-    private void handleRoomBroadcast(GCMChat extras) {
+    private void handleRoomBroadcast(FcmChat extras) {
 
         if (extras.getRoom() != currentChatRoom.getId() || chatHistoryAdapter == null) {
             return;
         }
 
         if (extras.getMember() != currentChatMember.getId()
-                   && extras.getMessage() == -1) { // this is a new message from a different user
+            && extras.getMessage() == -1) { // this is a new message from a different user
 
             //Check first, if sounds are enabled
             AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -211,16 +220,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         getNextHistoryFromServer(true);
     }
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(android.os.Build.VERSION_CODES.O)
-    private static void vibrate(Vibrator v) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            v.vibrate(500);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -236,17 +235,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         localRepository.setDb(tcaDb);
         chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, mDisposable);
         this.bindUIElements();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getNextHistoryFromServer(true);
-        mCurrentOpenChatRoom = currentChatRoom;
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel((currentChatRoom.getId() << 4) + CardManager.CARD_CHAT);
-        LocalBroadcastManager.getInstance(this)
-                             .registerReceiver(receiver, new IntentFilter(Const.CHAT_BROADCAST_NAME));
     }
 
     @Override
@@ -268,8 +256,11 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         super.onNewIntent(intent);
 
         //Try to get the room from the extras
-        final ChatRoom room = new Gson().fromJson(intent.getExtras()
-                                                        .getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
+        ChatRoom room = null;
+        if (intent.getExtras() != null) {
+            room = new Gson().fromJson(intent.getExtras()
+                                             .getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
+        }
 
         //Check, maybe it wasn't there
         if (room != null && room.getId() != currentChatRoom.getId()) {
@@ -285,6 +276,17 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getNextHistoryFromServer(true);
+        mCurrentOpenChatRoom = currentChatRoom;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel((currentChatRoom.getId() << 4) + CardManager.CARD_CHAT);
+        LocalBroadcastManager.getInstance(this)
+                             .registerReceiver(receiver, new IntentFilter(Const.CHAT_BROADCAST_NAME));
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_activity_chat, menu);
@@ -295,7 +297,10 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_add_chat_member) {
-            showQRCode();
+            Intent intent = new Intent(this, AddChatMemberActivity.class);
+            intent.putExtra(Const.CURRENT_CHAT_ROOM, currentChatRoom.getId());
+            intent.putExtra(Const.CHAT_ROOM_NAME, currentChatRoom.getName());
+            startActivity(intent);
             return true;
         } else if (i == R.id.action_leave_chat_room) {
             new AlertDialog.Builder(this).setTitle(R.string.leave_chat_room)
@@ -310,46 +315,6 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         }
     }
 
-    private void showQRCode() {
-        String url = "http://chart.apis.google.com/chart?cht=qr&chs=500x500&chld=M&choe=UTF-8&chl=" +
-                     UrlEscapers.urlPathSegmentEscaper()
-                                .escape(currentChatRoom.getName());
-
-        final ImageView qrCode = new ImageView(this);
-        new NetUtils(this).loadAndSetImage(url, qrCode);
-
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.add_chat_member)
-                .setView(qrCode)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
-    }
-
-    /**
-     * Handles clicks on send and load messages buttons
-     *
-     * @param view Handle of the button
-     */
-    @Override
-    public void onClick(View view) {
-        // Create / send message
-        if (view.getId() == btnSend.getId()) {
-
-            //Check if something was entered
-            if (etMessage.getText()
-                         .toString()
-                         .isEmpty()) {
-                return;
-            }
-
-            this.sendMessage(etMessage.getText()
-                                      .toString());
-
-            //Set TextField to empty, when done
-            etMessage.setText("");
-        }
-    }
-
     private void sendMessage(String text) {
 
         if (chatHistoryAdapter.mEditedItem == null) {
@@ -358,7 +323,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             chatHistoryAdapter.add(message);
             chatMessageViewModel.addToUnsent(message);
         } else {
-            chatHistoryAdapter.mEditedItem.setText(etMessage.getText().toString());
+            chatHistoryAdapter.mEditedItem.setText(etMessage.getText()
+                                                            .toString());
             chatHistoryAdapter.mEditedItem.setRoom(currentChatRoom.getId());
             chatHistoryAdapter.mEditedItem.setSendingStatus(ChatMessage.STATUS_SENDING);
             chatHistoryAdapter.mEditedItem.setMember(currentChatMember);
@@ -380,7 +346,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
         currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
+            getSupportActionBar().setTitle(currentChatRoom.getName()
+                                                          .substring(4));
         }
 
         CharSequence message = getMessageText(getIntent());
@@ -444,7 +411,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
         }).start();
     }
 
-    private void onMessagesLoaded(){
+    private void onMessagesLoaded() {
         final List<ChatMessage> msgs = chatMessageViewModel.getAll(currentChatRoom.getId());
         // Update results in UI
         runOnUiThread(() -> {
@@ -557,8 +524,8 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                                                                       .getDisplayName(),
                                                                message.getMember()
                                                                       .getLrzId(),
-                                                               DateFormat.getDateTimeInstance()
-                                                                         .format(message.getTimestampDate()),
+                                                               DateTimeFormat.mediumDateTime()
+                                                                             .print(message.getTimestamp()),
                                                                getString(message.getStatusStringRes()),
                                                                getString(result ? R.string.valid : R.string.not_valid));
 
@@ -581,5 +548,30 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     protected void onDestroy() {
         super.onDestroy();
         mUpdateHandler.removeCallbacksAndMessages(null);
+    }
+
+    /**
+     * Handles clicks on send and load messages buttons
+     *
+     * @param view Handle of the button
+     */
+    @Override
+    public void onClick(View view) {
+        // Create / send message
+        if (view.getId() == btnSend.getId()) {
+
+            //Check if something was entered
+            if (etMessage.getText()
+                         .toString()
+                         .isEmpty()) {
+                return;
+            }
+
+            this.sendMessage(etMessage.getText()
+                                      .toString());
+
+            //Set TextField to empty, when done
+            etMessage.setText("");
+        }
     }
 }

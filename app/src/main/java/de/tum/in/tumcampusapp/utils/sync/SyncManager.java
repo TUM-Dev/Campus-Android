@@ -2,14 +2,13 @@ package de.tum.in.tumcampusapp.utils.sync;
 
 import android.content.Context;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.DateUtils;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
 /**
- * Sync Manager, tracks last successful syncs
+ * Sync Manager, tracks last successful syncs and prevents api fetch spams
  */
 public class SyncManager {
 
@@ -67,8 +66,7 @@ public class SyncManager {
         if (id.isEmpty()) {
             return;
         }
-        String now = DateUtils.getDateTimeString(new Date());
-        dao.insert(new Sync(id, now));
+        dao.insert(new Sync(id, DateTime.now()));
     }
 
     /**

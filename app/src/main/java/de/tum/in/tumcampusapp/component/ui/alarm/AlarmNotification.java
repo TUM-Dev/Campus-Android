@@ -24,8 +24,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.GenericNotification;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMAlert;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmAlert;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -40,8 +40,8 @@ public class AlarmNotification extends GenericNotification {
      */
     private static final String PUB_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvSukueIrdowjJB/IHR6+tsCbYLF9kmC/2Sa8/kI9Ttq0aUyC0hDt2SBzuDDmp/RwnUap5/0xT/h3z+WgKOjrzWig4lmb7G2+RuuVn8466AErfp3YQVFiovNLGMqwfJzPZ9aV3sZBXCTeEbDkd/CLRp3kBYkAtL8NfIlbNaII9CWKdhS907JyEWRZO2DLiYLm37vK/hwg58eXHwL9jNYY3gFqGUlfWXwGC2a0yTOk9rgJejhUbU9GLWSL3OwiHVXlpPsvTC1Ry0H4kQQeisjCgpkPjOQAnAFRN9zZLtBZlIsssYvL3ohY/C1HfGzDwGTaELjhtzY9qHdFW/4GDZh8swIDAQAB";
 
-    private final GCMAlert alert;
-    private final GCMNotification info;
+    private final FcmAlert alert;
+    private final FcmNotification info;
 
     public AlarmNotification(String payload, Context context, int notification) {
         super(context, 3, notification, true); //Let the base class know which id this notification has
@@ -55,10 +55,10 @@ public class AlarmNotification extends GenericNotification {
         info = getNotificationFromServer();
 
         // parse data
-        this.alert = new Gson().fromJson(payload, GCMAlert.class);
+        this.alert = new Gson().fromJson(payload, FcmAlert.class);
     }
 
-    private GCMNotification getNotificationFromServer() {
+    private FcmNotification getNotificationFromServer() {
         try {
             return TUMCabeClient.getInstance(this.context)
                                 .getNotification(this.notification);
@@ -140,7 +140,7 @@ public class AlarmNotification extends GenericNotification {
             return null;
         }
 
-        // GCMNotification sound
+        // FcmNotification sound
         Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
         Intent alarm = new Intent(this.context, AlarmActivity.class);
         alarm.putExtra("info", this.info);

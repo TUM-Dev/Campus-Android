@@ -9,15 +9,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Optional;
 
+import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -30,16 +30,17 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
 /**
  * Calendar Manager, handles database stuff, external imports.
  */
-public class CalendarController implements Card.ProvidesCard {
+public class CalendarController implements ProvidesCard {
     private static final String[] PROJECTION = {"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
@@ -54,11 +55,11 @@ public class CalendarController implements Card.ProvidesCard {
     public CalendarController(Context context) {
         mContext = context;
         calendarDao = TcaDb.getInstance(context)
-                           .calendarDao();
+                .calendarDao();
         roomLocationsDao = TcaDb.getInstance(context)
-                                .roomLocationsDao();
+                .roomLocationsDao();
         widgetsTimetableBlacklistDao = TcaDb.getInstance(context)
-                                            .widgetsTimetableBlacklistDao();
+                .widgetsTimetableBlacklistDao();
     }
 
     /**
@@ -96,7 +97,7 @@ public class CalendarController implements Card.ProvidesCard {
         }
 
         CalendarDao calendarDao = TcaDb.getInstance(c)
-                                       .calendarDao();
+                .calendarDao();
 
         List<CalendarItem> calendarItems = calendarDao.getAllNotCancelled();
         for (CalendarItem calendarItem : calendarItems) {
@@ -108,8 +109,8 @@ public class CalendarController implements Card.ProvidesCard {
         }
     }
 
-    public List<CalendarItem> getFromDbForDate(Date date) {
-        return calendarDao.getAllByDate(DateUtils.getDateString(date));
+    public List<CalendarItem> getFromDbBetweenDates(DateTime begin, DateTime end) {
+        return calendarDao.getAllBetweenDates(begin, end);
     }
 
     /**
@@ -121,13 +122,11 @@ public class CalendarController implements Card.ProvidesCard {
      * @return List<IntegratedCalendarEvent> List of Events
      */
     public List<IntegratedCalendarEvent> getNextDaysFromDb(int dayCount, int widgetId) {
-        Calendar calendar = Calendar.getInstance();
-        String from = DateUtils.getDateTimeString(calendar.getTime());
-        calendar.add(Calendar.DAY_OF_YEAR, dayCount);
-        String to = DateUtils.getDateTimeString(calendar.getTime());
+        DateTime fromDate = DateTime.now();
+        DateTime toDate = fromDate.plusDays(dayCount);
 
         List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
-        List<CalendarItem> calendarItems = calendarDao.getNextDays(from, to, String.valueOf(widgetId));
+        List<CalendarItem> calendarItems = calendarDao.getNextDays(fromDate, toDate, String.valueOf(widgetId));
         for (CalendarItem calendarItem : calendarItems) {
             calendarEvents.add(new IntegratedCalendarEvent(calendarItem, mContext));
         }
@@ -137,8 +136,6 @@ public class CalendarController implements Card.ProvidesCard {
 
     /**
      * Get current lecture from the database
-     *
-     * @return
      */
     public List<CalendarItem> getCurrentFromDb() {
         return calendarDao.getCurrentLectures();
@@ -188,8 +185,10 @@ public class CalendarController implements Card.ProvidesCard {
         return lectures;
     }
 
-    public CalendarItem getCalendarItemByStartAndEndTime(Calendar start, Calendar end) {
-        return calendarDao.getCalendarItemByStartAndEndTime(DateUtils.getDateTimeString(start.getTime()), DateUtils.getDateTimeString(end.getTime()));
+    public CalendarItem getCalendarItemByStartAndEndTime(DateTime start, DateTime end) {
+        String startString = DateTimeUtils.INSTANCE.getDateTimeString(start);
+        String endString = DateTimeUtils.INSTANCE.getDateTimeString(end);
+        return calendarDao.getCalendarItemByStartAndEndTime(startString, endString);
     }
 
     public void importCalendar(CalendarRowSet myCalendarList) {
@@ -199,14 +198,12 @@ public class CalendarController implements Card.ProvidesCard {
 
         // reading xml
         List<CalendarRow> myCalendar = myCalendarList.getKalendarList();
-        if (myCalendar != null) {
-            for (CalendarRow row : myCalendar) {
-                // insert into database
-                try {
-                    replaceIntoDb(row);
-                } catch (Exception e) {
-                    Utils.log(e);
-                }
+        for (CalendarRow row : myCalendar) {
+            // insert into database
+            try {
+                replaceIntoDb(row);
+            } catch (Exception e) {
+                Utils.log(e);
             }
         }
         new SyncManager(mContext).replaceIntoDb(Const.SYNC_CALENDAR_IMPORT);
@@ -219,14 +216,14 @@ public class CalendarController implements Card.ProvidesCard {
         calendarDao.flush();
     }
 
-    void replaceIntoDb(CalendarRow row) {
+    private void replaceIntoDb(CalendarRow row) {
         if (row.getNr()
-               .isEmpty()) {
+                .isEmpty()) {
             throw new IllegalArgumentException("Invalid id.");
         }
 
         if (row.getTitle()
-               .isEmpty()) {
+                .isEmpty()) {
             throw new IllegalArgumentException("Invalid lecture Title.");
         }
 
@@ -253,19 +250,19 @@ public class CalendarController implements Card.ProvidesCard {
         return geo;
     }
 
-    /**
-     * Shows next lecture card if lecture is available
-     *
-     * @param context Context
-     */
+    @NotNull
     @Override
-    public void onRequestCard(Context context) {
+    public List<Card> getCards() {
         List<CalendarItem> nextCalendarItems = getNextCalendarItems();
-        if (!nextCalendarItems.isEmpty() && Build.VERSION.SDK_INT >= 21) {
-            NextLectureCard card = new NextLectureCard(context);
+        List<Card> results = new ArrayList<>();
+
+        if (!nextCalendarItems.isEmpty()) {
+            NextLectureCard card = new NextLectureCard(mContext);
             card.setLectures(nextCalendarItems);
-            card.apply();
+            results.add(card.getIfShowOnStart());
         }
+
+        return results;
     }
 
     public static class QueryLocationsService extends IntentService {
@@ -279,9 +276,9 @@ public class CalendarController implements Card.ProvidesCard {
         public static void loadGeo(Context c) {
             LocationManager locationManager = new LocationManager(c);
             final CalendarDao calendarDao = TcaDb.getInstance(c)
-                                                 .calendarDao();
+                    .calendarDao();
             final RoomLocationsDao roomLocationsDao = TcaDb.getInstance(c)
-                                                           .roomLocationsDao();
+                    .roomLocationsDao();
 
             List<CalendarItem> calendarItems = calendarDao.getLecturesWithoutCoordinates();
             for (CalendarItem calendarItem : calendarItems) {
@@ -298,8 +295,8 @@ public class CalendarController implements Card.ProvidesCard {
 
             // Do sync of google calendar if necessary
             boolean syncCalendar = Utils.getSettingBool(c, Const.SYNC_CALENDAR, false)
-                                   && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) ==
-                                      PackageManager.PERMISSION_GRANTED;
+                    && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) ==
+                    PackageManager.PERMISSION_GRANTED;
 
             if (syncCalendar && new SyncManager(c).needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
                 syncCalendar(c);

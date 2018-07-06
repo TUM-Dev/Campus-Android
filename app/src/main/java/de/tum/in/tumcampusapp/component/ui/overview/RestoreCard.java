@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.StickyCard;
 
 /**
@@ -19,10 +19,10 @@ public class RestoreCard extends StickyCard {
         super(CardManager.CARD_RESTORE, context);
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_restore, parent, false);
-        return new Card.CardViewHolder(view);
+        return new CardViewHolder(view);
     }
 
     @Override

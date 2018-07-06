@@ -13,20 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -36,65 +33,76 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     private static final String LAST_FEE_FRIST = "fee_frist";
     private static final String LAST_FEE_SOLL = "fee_soll";
+
     private Tuition mTuition;
 
     public TuitionFeesCard(Context context) {
         super(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee");
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.card_item, parent, false);
-        return new Card.CardViewHolder(view);
+                                  .inflate(R.layout.card_tuition_fees, parent, false);
+        return new CardViewHolder(view);
     }
 
     @Override
     public String getTitle() {
-        return mContext.getString(R.string.tuition_fees);
+        return getContext().getString(R.string.tuition_fees);
+    }
+
+    @Override
+    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
+        if ("0".equals(mTuition.getSoll())) {
+            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez()));
+        } else {
+            notificationBuilder.setContentText(mTuition.getSoll() + "€\n" +
+                                               String.format(getContext().getString(R.string.reregister_todo), mTuition.getFrist()));
+        }
+        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
+        notificationBuilder.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_money));
+        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_tuition_fee);
+        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
+        return notificationBuilder.build();
+    }
+
+    @Override
+    public int getId() {
+        return 0;
+    }
+
+    @Override
+    public Intent getIntent() {
+        return new Intent(getContext(), TuitionFeesActivity.class);
     }
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
-        List<View> addedViews = cardsViewHolder.getAddedViews();
 
-        mCard = viewHolder.itemView;
-        mLinearLayout = mCard.findViewById(R.id.card_view);
-        mTitleView = mCard.findViewById(R.id.card_title);
-        mTitleView.setText(getTitle());
+        TextView reregisterInfoTextView =
+                viewHolder.itemView.findViewById(R.id.reregister_info_text_view);
+        TextView outstandingBalanceTextView =
+                viewHolder.itemView.findViewById(R.id.outstanding_balance_text_view);
 
-        //Remove additional views
-        for (View view : addedViews) {
-            mLinearLayout.removeView(view);
-        }
-
-        if ("0".equals(mTuition.getSoll())) {
-            addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez())));
+        if (mTuition.getSoll()
+                    .equals("0")) {
+            String placeholderText = getContext().getString(R.string.reregister_success);
+            String text = String.format(placeholderText, mTuition.getSemesterBez());
+            reregisterInfoTextView.setText(text);
         } else {
-            Date d = DateUtils.getDate(mTuition.getFrist());
-            String date = DateFormat.getDateInstance()
-                                    .format(d);
-            addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_todo), date)));
+            DateTime date = DateTimeUtils.INSTANCE.getDate(mTuition.getFrist());
+            String dateText = DateTimeFormat.mediumDate()
+                                            .print(date);
 
-            String balanceStr = mTuition.getSoll();
-            try {
-                Double balance = NumberFormat.getInstance(Locale.GERMAN)
-                                             .parse(mTuition.getSoll())
-                                             .doubleValue();
+            String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
+            reregisterInfoTextView.setText(text);
 
-                balanceStr = String.format(Locale.GERMAN, "Value of a: %.2f", balance);
-            } catch (ParseException ignore) {
-            }
-            addedViews.add(addTextView(viewHolder.itemView.getContext()
-                                                          .getString(R.string.amount_dots) + ' ' + balanceStr + '€'));
+            String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
+            String balanceText = String.format(textWithPlaceholder, mTuition.getOutstandingBalanceText());
+            outstandingBalanceTextView.setText(balanceText);
+            outstandingBalanceTextView.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public void discard(Editor editor) {
-        editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
-        editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
     }
 
     @Override
@@ -109,38 +117,20 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        if ("0".equals(mTuition.getSoll())) {
-            notificationBuilder.setContentText(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez()));
-        } else {
-            notificationBuilder.setContentText(mTuition.getSoll() + "€\n" + String.format(mContext.getString(R.string.reregister_todo), mTuition.getFrist()));
-        }
-        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        notificationBuilder.setLargeIcon(Utils.getLargeIcon(mContext, R.drawable.ic_money));
-        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_tuition_fee);
-        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
-        return notificationBuilder.build();
-    }
-
-    @Override
-    public Intent getIntent() {
-        return new Intent(mContext, TuitionFeesActivity.class);
-    }
-
-    @Override
-    public int getId() {
-        return 0;
-    }
-
-    public void setTuition(Tuition tuition) {
-        mTuition = tuition;
-    }
-
-    @Override
-    public RemoteViews getRemoteViews(Context context) {
+    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_money);
         return remoteViews;
+    }
+
+    @Override
+    public void discard(Editor editor) {
+        editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
+        editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
+    }
+
+    public void setTuition(Tuition tuition) {
+        mTuition = tuition;
     }
 }

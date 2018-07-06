@@ -25,7 +25,7 @@
     </string-array>
     <string-array name="stations_G" translatable="false">
         <item>Garching-Forschungszentrum</item>
-        <item>Garching, Techn. Universität</item>
+        <item>Garching-Technische Universität</item>
     </string-array>
 
     <!-- Campus Stammgelände -->
@@ -47,7 +47,7 @@
     <string-array name="stations_K" translatable="false">
         <item>Klinikum Großhadern</item>
         <item>Waldhüterstraße</item>
-        <item>Martinsried, Großhader. Str.</item>
+        <item>LMU Martinsried</item>
     </string-array>
 
     <!-- Campus Weihenstephan -->

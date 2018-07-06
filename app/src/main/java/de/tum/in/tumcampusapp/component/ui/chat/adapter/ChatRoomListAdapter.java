@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -29,26 +29,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
-    private List<ChatRoomAndLastMessage> rooms;
-    private final LayoutInflater mInflater;
     private final boolean showDateAndNumber;
     private final List<String> filters;
+    private List<ChatRoomAndLastMessage> rooms;
     private Context mContext;
-
-    // the layout of the list
-    static class ViewHolder {
-        TextView tvDozent;
-        TextView tvLectureName;
-        TextView tvMembers;
-        TextView tvLastmsg;
-        LinearLayout llAdditionalInfo;
-        TextView tvUnreadCounter;
-
-    }
 
     // constructor
     public ChatRoomListAdapter(Context context, List<ChatRoomAndLastMessage> results, int mode) {
-        this.mInflater = LayoutInflater.from(context);
         this.filters = new ArrayList<>();
         this.showDateAndNumber = mode == 1;
         this.rooms = results;
@@ -56,73 +43,26 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View listItem = convertView;
-        ViewHolder holder;
-        ChatRoomAndLastMessage room = getItem(position);
-
-        if (listItem == null) {
-            listItem = mInflater.inflate(R.layout.activity_lectures_listview, parent, false);
-            holder = new ViewHolder();
-            //set UI elements
-            holder.tvLectureName = listItem.findViewById(R.id.tvLectureName);
-            holder.tvDozent = listItem.findViewById(R.id.tvDozent);
-            holder.tvMembers = listItem.findViewById(R.id.tvMembers);
-            holder.tvLastmsg = listItem.findViewById(R.id.tvLastmsg);
-            holder.llAdditionalInfo = listItem.findViewById(R.id.llAdditionalInfo);
-            holder.tvUnreadCounter = listItem.findViewById(R.id.nrUnreadMessages);
-            listItem.findViewById(R.id.tvTypeSWSSemester)
-                    .setVisibility(View.GONE);
-
-            listItem.setTag(holder);
-        } else {
-            holder = (ViewHolder) listItem.getTag();
-        }
-        holder.tvLectureName.setText(room.getChatRoomDbRow()
-                                         .getName());
-        holder.tvDozent.setText(room.getText());
-
-        if (room.getNrUnread() > 0 && holder.tvUnreadCounter != null){
-            holder.tvUnreadCounter.setVisibility(View.VISIBLE);
-            holder.tvUnreadCounter.setText(room.getNrUnread() >= 25 ? "25+" : room.getNrUnread() + "");
-        } else {
-            holder.tvUnreadCounter.setVisibility(View.GONE);
-        }
-
-        if (showDateAndNumber) {
-            holder.tvMembers.setText(String.format(Locale.getDefault(), "%d", room.getChatRoomDbRow()
-                                                                                  .getMembers()));
-            holder.tvLastmsg.setText(DateUtils.getTimeOrDayISO(room.getTimestamp(), mContext));
-            holder.llAdditionalInfo.setVisibility(View.VISIBLE);
-        } else {
-            holder.tvDozent.setText(room.getChatRoomDbRow()
-                                        .getContributor());
-        }
-
-        return listItem;
-    }
-
-    @Override
-    public View getHeaderView(int pos, View view, ViewGroup parent) {
+    public View getHeaderView(int pos, View convertView, ViewGroup parent) {
         HeaderViewHolder holder;
-        View convertview = view;
-        if (convertview == null) {
-            holder = new HeaderViewHolder();
-            convertview = mInflater.inflate(R.layout.header, parent, false);
-            holder.text = convertview.findViewById(R.id.lecture_header);
-            convertview.setTag(holder);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(parent.getContext())
+                                        .inflate(R.layout.header, parent, false);
+            holder = new HeaderViewHolder(convertView);
+            convertView.setTag(holder);
         } else {
-            holder = (HeaderViewHolder) convertview.getTag();
+            holder = (HeaderViewHolder) convertView.getTag();
         }
         //set header text as first char in name
         ChatRoomAndLastMessage item = getItem(pos);
         String semester = item.getChatRoomDbRow()
                               .getSemester();
+
         if (semester.isEmpty()) {
             semester = mContext.getString(R.string.my_chat_rooms);
         }
-        holder.text.setText(semester);
-        return convertview;
+        holder.textView.setText(semester);
+        return convertView;
     }
 
     @Override
@@ -134,6 +74,11 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
             filters.add(semester);
         }
         return filters.indexOf(semester);
+    }
+
+    @Override
+    public int getCount() {
+        return rooms.size();
     }
 
     @Override
@@ -156,17 +101,111 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         }
     }
 
-    static class HeaderViewHolder {
-        TextView text;
-    }
-
     @Override
-    public int getCount() {
-        return rooms.size();
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        ChatRoomAndLastMessage room = getItem(position);
+
+        if (convertView == null) {
+            convertView = LayoutInflater.from(parent.getContext())
+                                        .inflate(R.layout.activity_lectures_listview, parent, false);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        ChatRoomDbRow chatRoom = room.getChatRoomDbRow();
+        if (chatRoom == null) {
+            return convertView;
+        }
+
+        holder.lectureNameTextView.setText(chatRoom.getName());
+        if (room.getText() != null) {
+            holder.professorTextView.setVisibility(View.VISIBLE);
+            holder.professorTextView.setText(room.getText());
+        } else {
+            holder.professorTextView.setVisibility(View.GONE);
+        }
+
+        if (holder.unreadMessagesTextView != null && room.hasUnread()) {
+            holder.unreadMessagesTextView.setVisibility(View.VISIBLE);
+            holder.unreadMessagesTextView.setText(room.getNrUnread() >= 25 ? "25+" : room.getNrUnread() + "");
+        } else if (holder.unreadMessagesTextView != null) {
+            holder.unreadMessagesTextView.setVisibility(View.GONE);
+        }
+
+        if (showDateAndNumber) {
+            holder.additionalInfoLayout.setVisibility(View.VISIBLE);
+
+            String membersText = Integer.toString(chatRoom.getMembers());
+            if (!membersText.isEmpty()) {
+                holder.membersTextView.setVisibility(View.VISIBLE);
+                holder.membersTextView.setText(membersText);
+            } else {
+                holder.membersTextView.setVisibility(View.GONE);
+            }
+
+            String timeStamp = room.getTimestamp();
+            String lastMessageText = "";
+            if (timeStamp != null) {
+                lastMessageText = DateTimeUtils.INSTANCE.formatTimeOrDayFromISO(timeStamp, mContext);
+            }
+            if (!lastMessageText.isEmpty()) {
+                holder.lastMessageTextView.setVisibility(View.VISIBLE);
+                holder.lastMessageTextView.setText(lastMessageText);
+            } else {
+                holder.lastMessageTextView.setVisibility(View.GONE);
+            }
+        } else {
+            holder.additionalInfoLayout.setVisibility(View.GONE);
+
+            String contributor = chatRoom.getContributor();
+            if (!contributor.isEmpty()) {
+                holder.professorTextView.setVisibility(View.VISIBLE);
+                holder.professorTextView.setText(contributor);
+            } else {
+                holder.professorTextView.setVisibility(View.GONE);
+            }
+        }
+
+        return convertView;
     }
 
     public void updateRooms(List<ChatRoomAndLastMessage> newRoomlist) {
         rooms = newRoomlist;
         notifyDataSetChanged();
     }
+
+    // the layout of the list
+    static class ViewHolder {
+
+        TextView lectureNameTextView;
+        TextView membersTextView;
+        TextView lastMessageTextView;
+        TextView professorTextView;
+        LinearLayout additionalInfoLayout;
+        TextView unreadMessagesTextView;
+
+        public ViewHolder(View itemView) {
+            lectureNameTextView = itemView.findViewById(R.id.lectureNameTextView);
+            professorTextView = itemView.findViewById(R.id.professorTextView);
+            membersTextView = itemView.findViewById(R.id.membersTextView);
+            lastMessageTextView = itemView.findViewById(R.id.lastMessageTextView);
+            additionalInfoLayout = itemView.findViewById(R.id.additionalInfoLayout);
+            unreadMessagesTextView = itemView.findViewById(R.id.unreadMessagesTextView);
+        }
+
+    }
+
+    static class HeaderViewHolder {
+
+        TextView textView;
+
+        HeaderViewHolder(View itemView) {
+            textView = itemView.findViewById(R.id.lecture_header);
+        }
+
+    }
+
 }

@@ -20,4 +20,8 @@ class ChatMember {
         this.lrzId = lrzId
         this.displayName = displayName
     }
+
+    override fun toString(): String {
+        return displayName as String
+    }
 }

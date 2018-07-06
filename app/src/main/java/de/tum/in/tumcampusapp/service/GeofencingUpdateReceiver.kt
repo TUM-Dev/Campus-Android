@@ -39,11 +39,10 @@ class GeofencingUpdateReceiver : BroadcastReceiver() {
             Utils.logwithTag(TAG, "Geofencing detected user leaving munich, " +
                     "disabling Auto updates")
         }
-
-
     }
 
     companion object {
         const val TAG = "GeofencingUpdateReceiver"
     }
+
 }

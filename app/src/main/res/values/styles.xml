@@ -8,7 +8,7 @@
         <item name="android:gravity">center</item>
         <item name="android:padding">4dp</item>
         <item name="android:scrollHorizontally">false</item>
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/section_text_size</item>
     </style>
 
@@ -17,7 +17,19 @@
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_primary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="colorControlActivated">@color/tum_100</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_text_field</item>
+    </style>
+
+    <style name="AppTheme.SettingsTheme" parent="AppTheme">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
+
+    <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
+    <style name="TumToolbarPopUp" parent="ThemeOverlay.AppCompat.Light">
+        <item name="actionMenuTextColor">@android:color/primary_text_light</item>
     </style>
 
     <style name="AppTheme.WhiteBackground" parent="AppTheme">
@@ -51,14 +63,17 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="CalendarElement" parent="AppTheme">
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/color_primary</item>
-        <item name="android:textSize">18sp</item>
+    <style name="CalendarDateTimeItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?android:listPreferredItemHeightSmall</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="CalendarElement">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">0px</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="PreferenceThemeOverlay">
@@ -93,6 +108,15 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
+    <style name="KinoHeaderButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:backgroundTint">@color/tum_100</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:drawablePadding">2dp</item>
+    </style>
+
     <style name="FlatButton" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">30dp</item>
@@ -107,7 +131,28 @@
         <item name="android:layout_margin">5dp</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="InfoBox">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:drawableStart">@drawable/ic_action_info_blue</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:background">@drawable/rounded_corners_background</item>
+        <item name="android:padding">12dp</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="StandardCard" parent="CardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:elevation">@dimen/card_view_elevation</item>
+        <item name="android:transitionName">@string/transition_card</item>
+        <item name="cardBackgroundColor">#FFFFFF</item>
+        <item name="cardCornerRadius">@dimen/material_corner_radius</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

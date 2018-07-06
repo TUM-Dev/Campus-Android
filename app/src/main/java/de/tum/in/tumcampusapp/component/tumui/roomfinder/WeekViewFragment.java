@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,12 @@ import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.google.common.base.Optional;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,7 +29,7 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class WeekViewFragment extends Fragment implements MonthLoader.MonthChangeListener {
@@ -47,15 +50,8 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
         return fragment;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        roomApiCode = getArguments().getString(Const.ROOM_ID);
-
-        View view = inflater.inflate(R.layout.fragment_day_view, container, false);
-        mWeekView = view.findViewById(R.id.weekView);
-        mWeekView.setMonthChangeListener(this);
-        mWeekView.goToHour(8);
-        return mWeekView;
+    private static int calculateLoadedKey(int year, int month) {
+        return (year * 16) | (month % 12);
     }
 
     @Override
@@ -72,16 +68,19 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
     private void loadEventsInBackground(final int newYear, final int newMonth) {
         new Thread(() -> {
             // Populate the week view with the events of the month to display
-            Calendar calendar = Calendar.getInstance();
-            //Note the (-1), since the calendar starts with month 0, but we get months starting with 1
-            calendar.set(newYear, newMonth - 1, 1);
-            int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            DateTime start = new DateTime()
+                    .withYear(newYear)
+                    .withMonthOfYear(newMonth)
+                    .withDayOfMonth(1);
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-            String startTime = format.format(calendar.getTime());
+            DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd")
+                    .withLocale(Locale.getDefault());
+            String startTime = format.print(start);
 
-            calendar.set(newYear, newMonth - 1, daysInMonth);
-            String endTime = format.format(calendar.getTime());
+            int daysInMonth = start.dayOfMonth()
+                    .getMaximumValue();
+            DateTime end = start.withDayOfMonth(daysInMonth);
+            String endTime = format.print(end);
 
             //Convert to the proper type
             final List<WeekViewEvent> events = fetchEventList(roomApiCode, startTime, endTime);
@@ -104,40 +103,44 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
 
     }
 
-    private boolean isLoaded(int year, int month) {
-        return loadedEvents.get(calculateLoadedKey(year, month)) != null;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        roomApiCode = getArguments().getString(Const.ROOM_ID);
+
+        View view = inflater.inflate(R.layout.fragment_day_view, container, false);
+        mWeekView = view.findViewById(R.id.weekView);
+        mWeekView.setMonthChangeListener(this);
+        mWeekView.goToHour(8);
+        return mWeekView;
     }
 
-    private static int calculateLoadedKey(int year, int month) {
-        return (year * 16) | (month % 12);
+    private boolean isLoaded(int year, int month) {
+        return loadedEvents.get(calculateLoadedKey(year, month)) != null;
     }
 
     private List<WeekViewEvent> fetchEventList(String roomId, String startDate, String endDate) {
         List<WeekViewEvent> events = new ArrayList<>();
         try {
             Optional<List<RoomFinderSchedule>> result = Optional.of(TUMCabeClient.getInstance(context)
-                                                                                 .fetchSchedule(roomId, startDate, endDate));
+                    .fetchSchedule(roomId, startDate, endDate));
             List<RoomFinderSchedule> schedules = result.get();
 
             //Convert to the proper type
             for (RoomFinderSchedule schedule : schedules) {
-                Calendar startCal = Calendar.getInstance();
-                startCal.setTime(DateUtils.getDateTime(schedule.getStart()));
-
-                Calendar endCal = Calendar.getInstance();
-                endCal.setTime(DateUtils.getDateTime(schedule.getEnd()));
+                DateTime start = DateTimeUtils.INSTANCE.getDateTime(schedule.getStart());
+                DateTime end = DateTimeUtils.INSTANCE.getDateTime(schedule.getEnd());
 
                 IntegratedCalendarEvent calendarEvent =
-                        new IntegratedCalendarEvent(schedule.getEvent_id(), schedule.getTitle(), startCal, endCal, "",
-                                                    IntegratedCalendarEvent.getDisplayColorFromColor(
-                                                            getContext().getResources().getColor(R.color.event_lecture)));
-
+                        new IntegratedCalendarEvent(String.valueOf(schedule.getEvent_id()), schedule.getTitle(), start,
+                                end, "",
+                                IntegratedCalendarEvent.getDisplayColorFromColor(
+                                        ContextCompat.getColor(requireContext(), R.color.event_lecture)));
                 events.add(calendarEvent);
             }
 
             return events;
 
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException | NullPointerException | IllegalStateException e) {
             Utils.log(e);
         }
         return events;

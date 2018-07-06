@@ -3,7 +3,7 @@ package de.tum.in.tumcampusapp.api.app;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
-import de.tum.in.tumcampusapp.api.app.model.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
@@ -13,8 +13,8 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordin
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotificationLocation;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -24,9 +24,12 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
-import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
+import de.tum.in.tumcampusapp.component.ui.news.model.News;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -49,11 +52,11 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CAFETERIAS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CARD;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CURRICULA;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
@@ -73,6 +76,9 @@ public interface TUMCabeAPIService {
 
     @POST(API_CHAT_ROOMS + "{room}/leave/")
     Call<ChatRoom> leaveChatRoom(@Path("room") int roomId, @Body ChatVerification verification);
+
+    @POST(API_CHAT_ROOMS + "{room}/add/{member}")
+    Call<ChatRoom> addUserToChat(@Path("room") int roomId, @Path("member") int userId, @Body ChatVerification verification);
 
     //Get/Update single message
     @PUT(API_CHAT_ROOMS + "{room}/message/")
@@ -94,6 +100,9 @@ public interface TUMCabeAPIService {
     @GET(API_CHAT_MEMBERS + "{lrz_id}/")
     Call<ChatMember> getMember(@Path("lrz_id") String lrzId);
 
+    @GET(API_CHAT_MEMBERS + "search/{query}/")
+    Call<List<ChatMember>> searchMemberByName(@Path("query") String nameQuery);
+
     @POST(API_CHAT_MEMBERS + "{memberId}/rooms/")
     Call<List<ChatRoom>> getMemberRooms(@Path("memberId") int memberId, @Body ChatVerification verification);
 
@@ -103,29 +112,25 @@ public interface TUMCabeAPIService {
     @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
     Call<ChatRegistrationId> uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId);
 
-    //Curricula
-    @GET(API_CURRICULA)
-    Call<List<Curriculum>> getAllCurriculas();
-
     @GET(API_NOTIFICATIONS + "{notification}/")
-    Call<GCMNotification> getNotification(@Path("notification") int notification);
+    Call<FcmNotification> getNotification(@Path("notification") int notification);
 
     @GET(API_NOTIFICATIONS + "confirm/{notification}/")
     Call<String> confirm(@Path("notification") int notification);
 
     //Locations
     @GET(API_LOCATIONS)
-    Call<List<GCMNotificationLocation>> getAllLocations();
+    Call<List<FcmNotificationLocation>> getAllLocations();
 
     @GET(API_LOCATIONS + "{locationId}/")
-    Call<GCMNotificationLocation> getLocation(@Path("locationId") int locationId);
+    Call<FcmNotificationLocation> getLocation(@Path("locationId") int locationId);
 
     //Device
     @POST(API_DEVICE + "register/")
     Call<TUMCabeStatus> deviceRegister(@Body DeviceRegister verification);
 
     @POST(API_DEVICE + "addGcmToken/")
-    Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadGcmToken verification);
+    Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadFcmToken verification);
 
     //WifiHeatmap
     @POST(API_WIFI_HEATMAP + "create_measurements/")
@@ -182,12 +187,21 @@ public interface TUMCabeAPIService {
     @GET(API_CAFETERIAS)
     Observable<List<Cafeteria>> getCafeterias();
 
-    @GET(API_KINOS+"{lastId}")
-    Observable<List<Kino>> getKinos(@Path("lastId") String lastId);
+    @GET(API_KINOS + "{lastId}")
+    Flowable<List<Kino>> getKinos(@Path("lastId") String lastId);
 
     @GET(API_CARD)
     Call<List<StudyCard>> getStudyCards();
 
     @PUT(API_CARD)
     Call<StudyCard> addStudyCard(@Body ChatVerification verification);
+
+    @GET(API_NEWS + "{lastNewsId}")
+    Call<List<News>> getNews(@Path("lastNewsId") String lastNewsId);
+
+    @GET(API_NEWS + "sources")
+    Call<List<NewsSources>> getNewsSources();
+
+    @GET(API_NEWS + "alert")
+    Observable<NewsAlert> getNewsAlert();
 }
