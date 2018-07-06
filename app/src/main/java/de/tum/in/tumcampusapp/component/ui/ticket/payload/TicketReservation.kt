@@ -8,4 +8,4 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class TicketReservation(@PrimaryKey
                              @SerializedName("ticket_type")
-                             var ticketType: Int = 0)
+                             var id: Int = 0)
