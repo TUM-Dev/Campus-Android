@@ -32,8 +32,8 @@ import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketReservationResponse;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketSuccessResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Flowable;
@@ -232,26 +232,23 @@ public interface TUMCabeAPIService {
     Call<List<Event>> searchEvents(@Path("searchTerm") String searchTerm);
 
     // Getting Ticket information
-    @GET(API_EVENTS + API_TICKET + "my/{userID}")
-    Call<List<Ticket>> getTickets(@Path("userID") int userID);
-
-    @GET(API_EVENTS + API_TICKET + "my/{userID}/{eventID}")
-    Call<Ticket> getTicketForEvent(@Path("userID") int userID, @Path("eventID") int eventID);
+    @POST(API_EVENTS + API_TICKET + "my")
+    Call<List<Ticket>> getTickets(@Body ChatVerification chatVerification);
 
     @GET(API_EVENTS + API_TICKET + "type/{eventID}")
     Call<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
 
     // Ticket reservation
     @POST(API_EVENTS + API_TICKET + "reserve")
-    Call<TicketReservationResponse> reserveTicket(@Body int member_id, int ticket_type);
+    Call<TicketReservationResponse> reserveTicket(@Body ChatVerification chatVerification);
 
     @POST(API_EVENTS + API_TICKET + "reserve/cancel")
-    Call<TicketSuccessResponse> cancelTicketReservation(@Body int ticket_history);
+    Call<TicketSuccessResponse> cancelTicketReservation(@Body ChatVerification chatVerification);
 
     // Ticket purchase
     @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
-    Call<HashMap<String, Object>> purchaseTicketStripe(@Body HashMap<String, Object> map);
+    Call<Ticket> purchaseTicketStripe(@Body ChatVerification chatVerification);
 
     @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
-    Call<HashMap<String, Object>> retrieveEphemeralKey(@Body HashMap<String, Object> map);
+    Call<HashMap<String, Object>> retrieveEphemeralKey(@Body ChatVerification chatVerification);
 }

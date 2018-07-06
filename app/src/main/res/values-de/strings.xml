@@ -523,11 +523,13 @@ Signatur: %5$s</string>
     <string name="card_data_invalid">Ungültige Zahlungsdaten.</string>
     <string name="customersession_init_failed">Fehler beim Laden der gespeicherten Kreditkarten.</string>
     <string name="cardholer">Karteninhaber:</string>
-    <string name="payment_info_price_reminder">{0} € zahlen mit:</string>
-    <string name="internal_error">Interner Fehler</string>
+    <string name="payment_info_price_reminder">{0} zahlen mit:</string>
+    <string name="internal_error">Interner Fehler!</string>
     <string name="creditcard_ending_in">endet mit</string>
     <string name="empty_cardholder_message">Kein Karteninhaber angegeben.</string>
     <string name="not_logged_in_message">Du musst eingeloggt sein, um Tickets zu kaufen.</string>
+    <string name="ticket_retrieval_error">Fehler bei der Übertragung des Tickets.</string>
+    <string name="reserving_ticket">Dein Ticket wird reserviert, bitte warten...</string>
 
 
     <!-- Create personal Appointment (Calendar) -->
