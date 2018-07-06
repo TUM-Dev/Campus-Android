@@ -87,9 +87,10 @@ public class BuyTicketActivity extends BaseActivity {
 
             paymentButton = findViewById(R.id.paymentbutton);
             paymentButton.setOnClickListener(v -> {
-                // Check if user is logged in and LRZ ID is available
+                // Check if user is logged in and name and LRZ ID are available (needed to create ChatVerification)
                 if (new AccessTokenManager(BuyTicketActivity.this).hasValidAccessToken() &&
-                        Utils.getSetting(BuyTicketActivity.this, Const.LRZ_ID, "").length() > 0) {
+                        Utils.getSetting(BuyTicketActivity.this, Const.LRZ_ID, "").length() > 0 &&
+                        Utils.getSetting(BuyTicketActivity.this, Const.CHAT_ROOM_DISPLAY_NAME, "").length() > 0) {
                     reserveTicket();
                 } else {
                     ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
