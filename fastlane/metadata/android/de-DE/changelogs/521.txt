@@ -1,0 +1,5 @@
+Wir haben die Art wie wir Daten in der App abspeichern verbessert. Das heißt weniger Abstürze. 
+
+Zudem gibt es eine neue Noten Ansicht und ihr könnt über die Feedback Option euch bekannte Probleme der TUM direkt melden. 
+
+Der Chat sollte nun wieder zuverlässiger funktionieren. Die TUM weiter Notfallalarmierung für den Katastrophenfall wird hiermit aktiviert.

@@ -1,0 +1,7 @@
+* Fixed the anonymous identity for eduroam causing some disconnects
+* Improved UI for searching *blink blink*
+* Improved the roomfinder to now find even more rooms
+* Added clarification that eduroam profiles need to be manually deleted prior to automatic setup
+* Fix news icons
+* Remove MVG Störungsticker cause who was using that anyway?
+* Updated MVG Plans as well as the Stammgelände Map
