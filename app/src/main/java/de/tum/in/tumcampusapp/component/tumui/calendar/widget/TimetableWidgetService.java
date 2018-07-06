@@ -8,17 +8,18 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import java.text.DateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 @SuppressLint("Registered")
 public class TimetableWidgetService extends RemoteViewsService {
@@ -51,15 +52,22 @@ public class TimetableWidgetService extends RemoteViewsService {
             calendarEvents = calendarController.getNextDaysFromDb(14, this.appWidgetID);
 
             // set isFirstOnDay flags
-            Calendar currentDate = Calendar.getInstance();
-            Date startDate = new Date();
-            startDate.setTime(0);
-            currentDate.setTime(startDate);
-            for (IntegratedCalendarEvent calendarEvent : calendarEvents) {
-                Calendar calendarDate = calendarEvent.getStartTime();
-                if (!DateUtils.isSameDay(currentDate, calendarDate)) {
-                    currentDate = calendarDate;
-                    calendarEvent.setIsFirstOnDay(true);
+            if (!calendarEvents.isEmpty()) {
+                calendarEvents.get(0)
+                              .setIsFirstOnDay(true);
+            }
+
+            for (int i = 1; i < calendarEvents.size(); i++) {
+                IntegratedCalendarEvent lastEvent = calendarEvents.get(i - 1);
+                DateTime lastTime = new DateTime(lastEvent.getStartTime()
+                                                          .getTimeInMillis());
+
+                IntegratedCalendarEvent thisEvent = calendarEvents.get(i);
+                DateTime thisTime = new DateTime(thisEvent.getStartTime()
+                                                          .getTimeInMillis());
+
+                if (!DateTimeUtils.INSTANCE.isSameDay(lastTime, thisTime)) {
+                    thisEvent.setIsFirstOnDay(true);
                 }
             }
         }
@@ -86,12 +94,13 @@ public class TimetableWidgetService extends RemoteViewsService {
                 return null;
             }
 
-            Calendar calendar = currentItem.getStartTime();
+            DateTime startTime = new DateTime(currentItem.getStartTime().getTimeInMillis());
 
             // Setup the date
             if (currentItem.isFirstOnDay()) {
-                rv.setTextViewText(R.id.timetable_widget_date_day, String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
-                rv.setTextViewText(R.id.timetable_widget_date_weekday, calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+                rv.setTextViewText(R.id.timetable_widget_date_day, String.valueOf(startTime.getDayOfMonth()));
+                rv.setTextViewText(R.id.timetable_widget_date_weekday, startTime.dayOfWeek()
+                                                                                .getAsShortText(Locale.getDefault()));
                 rv.setViewPadding(R.id.timetable_widget_item, 0, 15, 0, 0);
             } else {
                 // Overwrite unused parameters, as the elements are reused they may could be filled with old parameters
@@ -109,9 +118,11 @@ public class TimetableWidgetService extends RemoteViewsService {
             rv.setTextViewText(R.id.timetable_widget_event_title, currentItem.getName());
 
             // Setup event time
-            DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(applicationContext);
-            String startTime = timeFormat.format(currentItem.getStartTime().getTime());
-            String endTime = timeFormat.format(currentItem.getEndTime().getTime());
+            DateTimeFormatter timeFormat = DateTimeFormat.mediumTime();
+
+            String startTimeText = timeFormat.print(startTime);
+            DateTime endTime = new DateTime(currentItem.getEndTime().getTimeInMillis());
+            String endTimeText = timeFormat.print(endTime);
 
             String eventTime = getString(R.string.event_start_end_format_string, startTime, endTime);
             rv.setTextViewText(R.id.timetable_widget_event_time, eventTime);

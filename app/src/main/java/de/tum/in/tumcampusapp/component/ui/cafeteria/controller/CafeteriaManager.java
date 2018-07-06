@@ -82,7 +82,7 @@ public class CafeteriaManager implements ProvidesCard {
 
         return createCafeteriaObservableForNonUIThreads(cafeteriaId)
                 .map(cafeteria -> {
-                    String mensaKey = cafeteria.getName() + ' ' + cafeteria.getNextMenuDate();
+                    String mensaKey = cafeteria.getName() + ' ' + cafeteria.getNextMenuDate().toString();
                     Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>(1);
                     selectedMensaMenus.put(mensaKey, cafeteria.getMenus());
                     return selectedMensaMenus;
@@ -124,7 +124,7 @@ public class CafeteriaManager implements ProvidesCard {
                 .flatMap(menuDates -> {
                     cafeteria.setMenuDates(menuDates);
                     return  CafeteriaLocalRepository.INSTANCE.getCafeteriaMenus(
-                            cafeteria.getId(), cafeteria.getNextMenuDateText());
+                            cafeteria.getId(), cafeteria.getNextMenuDate());
                 })
                 .map(menus -> {
                     cafeteria.setMenus(menus);
@@ -145,7 +145,7 @@ public class CafeteriaManager implements ProvidesCard {
                 .flatMap(menuDates -> {
                     cafeteria.setMenuDates(menuDates);
                     return cafeteriaViewModel.getCafeteriaMenus(
-                            cafeteria.getId(), cafeteria.getNextMenuDateText());
+                            cafeteria.getId(), cafeteria.getNextMenuDate());
                 })
                 .map(menus -> {
                     cafeteria.setMenus(menus);

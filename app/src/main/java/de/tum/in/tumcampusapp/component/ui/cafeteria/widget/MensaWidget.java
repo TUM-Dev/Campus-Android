@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRe
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.MensaWidgetService;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 /**
  * Implementation of Mensa Widget functionality.
@@ -39,7 +39,7 @@ public class MensaWidget extends AppWidgetProvider {
                     .getCafeteria(mensaManager.getBestMatchMensaId(context))
                     .subscribe(c -> rv.setTextViewText(R.id.mensa_widget_header, c.getName()));
 
-            String date = DateUtils.getDateString(new Date());
+            String date = DateTimeUtils.INSTANCE.getDateString(DateTime.now());
             rv.setTextViewText(R.id.mensa_widget_subhead, date);
 
             // Set the header on click to open the mensa activity

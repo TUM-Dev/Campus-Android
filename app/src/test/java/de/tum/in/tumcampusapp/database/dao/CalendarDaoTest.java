@@ -23,7 +23,6 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.DateUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,8 +66,8 @@ public class CalendarDaoTest {
                                              "dummy url",
                                              "title " + Integer.toString(nr),
                                              "dummy description",
-                                             DateUtils.getDateTimeString(startDate.toDate()),
-                                             DateUtils.getDateTimeString(endDate.toDate()),
+                                             startDate,
+                                             endDate,
                                              "dummy location",
                                              false);
         nr++;
@@ -132,7 +131,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("OTHER", now.minusMonths(10)));
         dao.insert(createCalendarItem("COOL", now));
 
-        assertThat(dao.getAllByDate(DateUtils.getDateString(now.toDate()))).hasSize(2);
+        assertThat(dao.getAllByDate(now)).hasSize(2);
     }
 
     /**
@@ -147,7 +146,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("OTHER", now.minusMonths(10)));
         dao.insert(createCalendarItem("COOL", now.minusDays(123)));
 
-        assertThat(dao.getAllByDate(DateUtils.getDateString(now.toDate()))).hasSize(0);
+        assertThat(dao.getAllByDate(now)).hasSize(0);
     }
 
     /**
@@ -162,7 +161,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(123)));
         dao.insert(createCalendarItem("CANCEL", now));
 
-        assertThat(dao.getAllByDate(DateUtils.getDateString(now.toDate()))).hasSize(2);
+        assertThat(dao.getAllByDate(now)).hasSize(2);
     }
 
     /**
@@ -177,10 +176,8 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
         dao.insert(createCalendarItem("YES", now));
 
-        String from = DateUtils.getDateTimeString(now.minusDays(4)
-                                                     .toDate());
-        String to = DateUtils.getDateTimeString(now.plusDays(4)
-                                                   .toDate());
+        DateTime from = now.minusDays(4);
+        DateTime to = now.plusDays(4);
 
         // widgetId is used only for blacklisting
         assertThat(dao.getNextDays(from, to, "1")).hasSize(4);
@@ -198,10 +195,8 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
         dao.insert(createCalendarItem("YES", now));
 
-        String from = DateUtils.getDateTimeString(now.minusDays(4)
-                                                     .toDate());
-        String to = DateUtils.getDateTimeString(now.plusDays(4)
-                                                   .toDate());
+        DateTime from = now.minusDays(4);
+        DateTime to = now.plusDays(4);
 
         wtbDao.insert(new WidgetsTimetableBlacklist(1, "title 0"));
 
@@ -221,10 +216,8 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now.plusDays(3)));
         dao.insert(createCalendarItem("YES", now));
 
-        String from = DateUtils.getDateTimeString(now.minusDays(2)
-                                                     .toDate());
-        String to = DateUtils.getDateTimeString(now.plusDays(2)
-                                                   .toDate());
+        DateTime from = now.minusDays(2);
+        DateTime to = now.plusDays(2);
 
         // widgetId is used only for blacklisting
         assertThat(dao.getNextDays(from, to, "1")).hasSize(2);

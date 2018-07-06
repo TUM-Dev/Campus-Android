@@ -6,12 +6,15 @@ import android.os.StrictMode;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 public class App extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
         setupPicasso();
+        JodaTimeAndroid.init(this);
         setupStrictMode();
     }
 

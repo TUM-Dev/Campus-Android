@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model
 
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import org.joda.time.DateTime
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 import java.text.NumberFormat
@@ -42,4 +44,6 @@ data class Tuition(@field:Element(name = "frist")
             }
         }
 
+    val dueDate: DateTime
+        get() = DateTimeUtils.getDate(frist)
 }
