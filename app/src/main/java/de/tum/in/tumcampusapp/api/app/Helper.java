@@ -19,6 +19,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.concurrent.TimeUnit;
 
+import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.utils.Utils;
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
@@ -69,6 +70,10 @@ public final class Helper {
 
         //Add the device identifying header
         builder.addInterceptor(Helper.getDeviceInterceptor(c));
+
+        if (!BuildConfig.DEBUG) {
+            builder.addInterceptor(new ChaosMonkeyInterceptor());
+        }
 
         builder.addInterceptor(new ConnectivityInterceptor(c));
 
