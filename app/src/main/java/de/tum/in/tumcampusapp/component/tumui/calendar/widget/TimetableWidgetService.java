@@ -52,13 +52,22 @@ public class TimetableWidgetService extends RemoteViewsService {
             calendarEvents = calendarController.getNextDaysFromDb(14, this.appWidgetID);
 
             // set isFirstOnDay flags
-            DateTime currentDate = new DateTime(0);
-            for (IntegratedCalendarEvent calendarEvent : calendarEvents) {
-                DateTime calendarDate = new DateTime(calendarEvent.getStartTime()
-                                                                  .getTimeInMillis());
-                if (!DateTimeUtils.INSTANCE.isSameDay(currentDate, calendarDate)) {
-                    currentDate = calendarDate;
-                    calendarEvent.setIsFirstOnDay(true);
+            if (!calendarEvents.isEmpty()) {
+                calendarEvents.get(0)
+                              .setIsFirstOnDay(true);
+            }
+
+            for (int i = 1; i < calendarEvents.size(); i++) {
+                IntegratedCalendarEvent lastEvent = calendarEvents.get(i - 1);
+                DateTime lastTime = new DateTime(lastEvent.getStartTime()
+                                                          .getTimeInMillis());
+
+                IntegratedCalendarEvent thisEvent = calendarEvents.get(i);
+                DateTime thisTime = new DateTime(thisEvent.getStartTime()
+                                                          .getTimeInMillis());
+
+                if (!DateTimeUtils.INSTANCE.isSameDay(lastTime, thisTime)) {
+                    thisEvent.setIsFirstOnDay(true);
                 }
             }
         }
