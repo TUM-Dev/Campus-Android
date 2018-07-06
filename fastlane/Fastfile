@@ -20,10 +20,23 @@ platform :android do
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     #Increment version number
+    google_play_track_version_codes(track: 'beta')
     android_set_version_code()
 
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store(track: 'beta')
+    gradle(task: 'clean')
+    gradle(
+        task: "assemble",
+        build_type: "Release",
+        print_command: false,
+        properties: {
+            "android.injected.signing.store.file" => ENV["TCA_KEY_PATH"] + "/TCAkeystore.jks",
+            "android.injected.signing.store.password" => ENV["TCA_KEY_PW"],
+            "android.injected.signing.key.alias" => "key",
+            "android.injected.signing.key.password" => ENV["TCA_KEY_ALIAS_PW"],
+        }
+    )
+
+    upload_to_play_store(track: 'beta', skip_upload_screenshots: true, skip_upload_metadata: true, skip_upload_images: true)
   end
 
   desc "Deploy a new version to the Google Play"
