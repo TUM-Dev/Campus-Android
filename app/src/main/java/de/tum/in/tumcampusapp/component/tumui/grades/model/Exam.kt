@@ -4,9 +4,9 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
+import org.joda.time.DateTime
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
-import java.util.*
 
 /**
  * Exam passed by the user.
@@ -21,7 +21,7 @@ data class Exam(@field:Element(name = "lv_titel")
                 @field:Element(name = "lv_credits", required = false)
                 var credits: String = "0",
                 @field:Element(name = "datum", required = false)
-                var date: Date = Date(),
+                var date: DateTime = DateTime(),
                 @field:Element(name = "pruefer_nachname", required = false)
                 var examiner: String = "",
                 @field:Element(name = "uninotenamekurz", required = false)

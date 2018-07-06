@@ -5,9 +5,10 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.joda.time.DateTime;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
@@ -55,12 +56,6 @@ import retrofit2.http.Body;
  */
 public final class TUMCabeClient {
 
-    private static final String API_HOSTNAME = Const.API_HOSTNAME;
-    private static final String API_BASEURL = "/Api/";
-
-    private static final String API_CHAT = "chat/";
-    static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
-    static final String API_CHAT_MEMBERS = API_CHAT + "members/";
     static final String API_NOTIFICATIONS = "notifications/";
     static final String API_LOCATIONS = "locations/";
     static final String API_DEVICE = "device/";
@@ -82,7 +77,11 @@ public final class TUMCabeClient {
     static final String API_KINOS = "kino/";
     static final String API_CARD = "cards/";
     static final String API_NEWS = "news/";
-
+    private static final String API_HOSTNAME = Const.API_HOSTNAME;
+    private static final String API_BASEURL = "/Api/";
+    private static final String API_CHAT = "chat/";
+    static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
+    static final String API_CHAT_MEMBERS = API_CHAT + "members/";
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
 
@@ -90,7 +89,7 @@ public final class TUMCabeClient {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer())
+        Gson gson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateSerializer())
                                      .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
         builder.client(Helper.getOkHttpClient(c));
@@ -150,8 +149,9 @@ public final class TUMCabeClient {
 
     public void addUserToChat(ChatRoom chatRoom, ChatMember member, ChatVerification verification, Callback<ChatRoom> cb) {
         service.addUserToChat(chatRoom.getId(), member.getId(), verification)
-                .enqueue(cb);
+               .enqueue(cb);
     }
+
     public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessage) {
         //If the id is zero then its an new entry otherwise try to update it
         Utils.log("Sending: " + chatMessage.getId() + " " + chatMessage.getText());
@@ -303,12 +303,14 @@ public final class TUMCabeClient {
         }
     }
 
-    public void searchChatMember(String query, Callback<List<ChatMember>> callback){
-        service.searchMemberByName(query).enqueue(callback);
+    public void searchChatMember(String query, Callback<List<ChatMember>> callback) {
+        service.searchMemberByName(query)
+               .enqueue(callback);
     }
 
-    public void getChatMemberByLrzId(String lrzId, Callback<ChatMember> callback){
-        service.getMember(lrzId).enqueue(callback);
+    public void getChatMemberByLrzId(String lrzId, Callback<ChatMember> callback) {
+        service.getMember(lrzId)
+               .enqueue(callback);
     }
 
     public Observable<List<Cafeteria>> getCafeterias() {
@@ -320,12 +322,18 @@ public final class TUMCabeClient {
     }
 
     public List<News> getNews(String lastNewsId) throws IOException {
-        return service.getNews(lastNewsId).execute().body();
+        return service.getNews(lastNewsId)
+                      .execute()
+                      .body();
     }
+
     public List<NewsSources> getNewsSources() throws IOException {
-        return service.getNewsSources().execute().body();
+        return service.getNewsSources()
+                      .execute()
+                      .body();
     }
-    public Observable<NewsAlert> getNewsAlert(){
+
+    public Observable<NewsAlert> getNewsAlert() {
         return service.getNewsAlert();
     }
 }

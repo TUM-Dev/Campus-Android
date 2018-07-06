@@ -5,6 +5,7 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply from: '../gradle/scripts/findbugs.gradle'
 apply from: '../gradle/scripts/pmd.gradle'
@@ -35,7 +36,9 @@ android {
         targetSdkVersion 27
         versionCode 532
         versionName "1.6.1-dev"
-        javaCompileOptions.annotationProcessorOptions.arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+        kapt.arguments {
+            arg("room.schemaLocation", "$projectDir/schemas".toString())
+        }
     }
     lintOptions {
         checkAllWarnings true
@@ -102,8 +105,8 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation 'android.arch.lifecycle:runtime:1.1.1'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
-    annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+    kapt "android.arch.lifecycle:compiler:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     // Anko
     implementation "org.jetbrains.anko:anko:$ankoVersion"

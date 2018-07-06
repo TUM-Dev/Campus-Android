@@ -2,8 +2,9 @@ package de.tum.`in`.tumcampusapp.component.ui.news.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import org.joda.time.DateTime
 
 /**
  * New News
@@ -16,6 +17,7 @@ import java.util.*
  * @param created Creation date
  */
 @Entity
+@SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class News(@PrimaryKey
                 @SerializedName("news")
                 var id: String = "",
@@ -23,8 +25,8 @@ data class News(@PrimaryKey
                 var link: String = "",
                 var src: String = "",
                 var image: String = "",
-                var date: Date = Date(),
-                var created: Date = Date(),
+                var date: DateTime = DateTime(),
+                var created: DateTime = DateTime(),
                 var dismissed: Int = 0) {
     /**
      * Identifies News as a film.

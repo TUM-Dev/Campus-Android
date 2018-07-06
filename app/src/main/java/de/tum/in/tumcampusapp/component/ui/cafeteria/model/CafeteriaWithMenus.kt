@@ -1,38 +1,29 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
-import de.tum.`in`.tumcampusapp.utils.DateUtils
+import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import java.util.*
-
-typealias AndroidDateUtils = android.text.format.DateUtils
 
 data class CafeteriaWithMenus(val id: Int) {
 
     var name: String? = null
     var menus: List<CafeteriaMenu> = ArrayList()
-    var menuDates: List<String> = ArrayList()
+    var menuDates: List<DateTime> = ArrayList()
 
-    val nextMenuDate: Date
+    val nextMenuDate: DateTime
         get() {
-            val now = Calendar.getInstance();
+            val now = DateTime.now()
             var nextDate = menuDates
-                    .map { s -> DateUtils.getDate(s) }
                     .getOrElse(0) {
-                        Date()
+                        DateTime.now()
                     }
 
-            if (nextDate.isToday() && now.hour >= 15 && menuDates.size > 1) {
-                nextDate = DateUtils.getDate(menuDates[1])
+            if (nextDate.isToday() && now.hourOfDay >= 15 && menuDates.size > 1) {
+                nextDate = menuDates[1]
             }
 
             return nextDate
         }
-
-    val nextMenuDateText: String
-        get() = DateUtils.getDateTimeString(nextMenuDate)
-
 }
 
-fun Date.isToday() = AndroidDateUtils.isToday(this.time)
-
-val Calendar.hour: Int
-    get() = this.get(Calendar.HOUR_OF_DAY)
+fun DateTime.isToday() = LocalDate.now() == LocalDate(this)

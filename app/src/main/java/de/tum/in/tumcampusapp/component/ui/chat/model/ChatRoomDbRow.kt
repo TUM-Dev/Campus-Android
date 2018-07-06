@@ -2,10 +2,12 @@ package de.tum.`in`.tumcampusapp.component.ui.chat.model
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.RoomWarnings
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesSearchRow
 
 
-@Entity(tableName = "chat_room", primaryKeys = arrayOf("name", "_id"))
+@Entity(tableName = "chat_room", primaryKeys = ["name", "_id"])
+@SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class ChatRoomDbRow(var room: Int = 0,
                          var name: String = "",
                          var semester: String = "",

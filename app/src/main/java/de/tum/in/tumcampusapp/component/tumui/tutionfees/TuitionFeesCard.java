@@ -15,15 +15,15 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -52,50 +52,6 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
-        super.updateViewHolder(viewHolder);
-
-        TextView reregisterInfoTextView =
-                viewHolder.itemView.findViewById(R.id.reregister_info_text_view);
-        TextView outstandingBalanceTextView =
-                viewHolder.itemView.findViewById(R.id.outstanding_balance_text_view);
-
-        if (mTuition.getSoll().equals("0")) {
-            String placeholderText = getContext().getString(R.string.reregister_success);
-            String text = String.format(placeholderText, mTuition.getSemesterBez());
-            reregisterInfoTextView.setText(text);
-        } else {
-            Date date = DateUtils.getDate(mTuition.getFrist());
-            String dateText = DateFormat.getDateInstance().format(date);
-
-            String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
-            reregisterInfoTextView.setText(text);
-
-            String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
-            String balanceText = String.format(textWithPlaceholder, mTuition.getOutstandingBalanceText());
-            outstandingBalanceTextView.setText(balanceText);
-            outstandingBalanceTextView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void discard(Editor editor) {
-        editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
-        editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
-    }
-
-    @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
-        String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
-        String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
-
-        // If app gets started for the first time and fee is already paid don't annoy user
-        // by showing him that he has been re-registered successfully
-        return !(prevFrist.isEmpty() && "0".equals(mTuition.getSoll())) &&
-               (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
-    }
-
-    @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         if ("0".equals(mTuition.getSoll())) {
             notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez()));
@@ -111,17 +67,53 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
+    public int getId() {
+        return 0;
+    }
+
+    @Override
     public Intent getIntent() {
         return new Intent(getContext(), TuitionFeesActivity.class);
     }
 
     @Override
-    public int getId() {
-        return 0;
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+
+        TextView reregisterInfoTextView =
+                viewHolder.itemView.findViewById(R.id.reregister_info_text_view);
+        TextView outstandingBalanceTextView =
+                viewHolder.itemView.findViewById(R.id.outstanding_balance_text_view);
+
+        if (mTuition.getSoll()
+                    .equals("0")) {
+            String placeholderText = getContext().getString(R.string.reregister_success);
+            String text = String.format(placeholderText, mTuition.getSemesterBez());
+            reregisterInfoTextView.setText(text);
+        } else {
+            DateTime date = DateTimeUtils.INSTANCE.getDate(mTuition.getFrist());
+            String dateText = DateTimeFormat.mediumDate()
+                                            .print(date);
+
+            String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
+            reregisterInfoTextView.setText(text);
+
+            String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
+            String balanceText = String.format(textWithPlaceholder, mTuition.getOutstandingBalanceText());
+            outstandingBalanceTextView.setText(balanceText);
+            outstandingBalanceTextView.setVisibility(View.VISIBLE);
+        }
     }
 
-    public void setTuition(Tuition tuition) {
-        mTuition = tuition;
+    @Override
+    protected boolean shouldShow(SharedPreferences prefs) {
+        String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
+        String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
+
+        // If app gets started for the first time and fee is already paid don't annoy user
+        // by showing him that he has been re-registered successfully
+        return !(prevFrist.isEmpty() && "0".equals(mTuition.getSoll())) &&
+               (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
     }
 
     @Override
@@ -130,5 +122,15 @@ public class TuitionFeesCard extends NotificationAwareCard {
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_money);
         return remoteViews;
+    }
+
+    @Override
+    public void discard(Editor editor) {
+        editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
+        editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
+    }
+
+    public void setTuition(Tuition tuition) {
+        mTuition = tuition;
     }
 }
