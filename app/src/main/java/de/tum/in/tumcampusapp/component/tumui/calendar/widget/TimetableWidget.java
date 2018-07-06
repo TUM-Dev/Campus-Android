@@ -11,8 +11,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -62,9 +64,9 @@ public class TimetableWidget extends AppWidgetProvider {
 
         // Instantiate the RemoteViews object for the app widget layout.
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.timetable_widget);
-        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE, dd. MMM", Locale.getDefault());
-        Calendar calendar = Calendar.getInstance();
-        String title = dayFormat.format(calendar.getTime());
+        DateTimeFormatter dayFormat = DateTimeFormat.forPattern("EEEE, dd. MMM")
+                .withLocale(Locale.getDefault());
+        String title = dayFormat.print(DateTime.now());
         rv.setTextViewText(R.id.timetable_widget_day, title);
 
         // Set up the configuration activity listeners

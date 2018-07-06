@@ -2,8 +2,10 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.RoomWarnings
 
 @Entity
+@SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class FavoriteDish(@PrimaryKey(autoGenerate = true)
                         var id: Int = 0,
                         var cafeteriaId: Int = -1,

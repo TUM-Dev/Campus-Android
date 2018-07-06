@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.joda.time.format.DateTimeFormat;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -40,8 +40,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle
-            savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
         StudyRoomGroupManager manager = new StudyRoomGroupManager(getActivity());
 
@@ -64,8 +63,9 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
             this.studyRooms = studyRooms;
         }
 
+        @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                                       .inflate(R.layout.two_line_list_item, parent, false);
             return new RecyclerView.ViewHolder(view) {
@@ -73,7 +73,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             StudyRoom room = studyRooms.get(position);
             CardView cardView = holder.itemView.findViewById(R.id.card_view);
 
@@ -88,12 +88,15 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
 
             StringBuilder stringBuilder = new StringBuilder(room.getLocation()).append("<br>");
 
-            if (room.getOccupiedTill().compareTo(new Date()) < 0) {
+            if (room.getOccupiedTill()
+                    .isBeforeNow()) {
                 stringBuilder.append(getString(R.string.free));
             } else {
                 stringBuilder.append(getString(R.string.occupied))
                              .append(" <b>")
-                             .append(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(room.getOccupiedTill()))
+                             .append(DateTimeFormat.forPattern("HH:mm")
+                                                   .withLocale(Locale.getDefault())
+                                                   .print(room.getOccupiedTill()))
                              .append("</b>");
             }
 
@@ -101,8 +104,8 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
 
             int color;
             if (detailsTextView.getText()
-                                .toString()
-                                .contains(getString(R.string.free))) {
+                               .toString()
+                               .contains(getString(R.string.free))) {
                 color = Color.rgb(200, 230, 201);
             } else {
                 color = Color.rgb(255, 205, 210);
