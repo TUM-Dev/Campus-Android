@@ -71,7 +71,7 @@ public final class Helper {
         //Add the device identifying header
         builder.addInterceptor(Helper.getDeviceInterceptor(c));
 
-        if (!BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             builder.addInterceptor(new ChaosMonkeyInterceptor());
         }
 
