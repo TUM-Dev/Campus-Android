@@ -4,8 +4,6 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import de.tum.`in`.tumcampusapp.utils.Const.DATE_AND_TIME
-import de.tum.`in`.tumcampusapp.utils.Const.DATE_ONLY
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.lang.reflect.Type
@@ -18,8 +16,9 @@ import java.util.*
  */
 class DateSerializer : JsonDeserializer<DateTime> {
     private val formatStrings = arrayOf(
-            DATE_AND_TIME,
-            DATE_ONLY
+            "yyyy-MM-dd",
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd'T'HH:mm:ss'Z'"
     )
     private val dateFormats = formatStrings.map {
         DateTimeFormat.forPattern(it).withLocale(Locale.GERMAN)
