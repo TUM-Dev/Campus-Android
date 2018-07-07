@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -48,7 +49,7 @@ public class EventDetailsFragment extends Fragment {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    private long eventDuration = 7200000;
+    long eventDuration = 7200000; // TODO: remove this once duration is implemented as part of event
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,7 +140,8 @@ public class EventDetailsFragment extends Fragment {
         String eventDateTimeString = dateString + " " + timeString;
         eventDateTextView.setText(eventDateTimeString);
 
-        eventDateTextView.setOnClickListener(v -> addToCalendar());
+        // open "add to calendar" dialog on click
+        eventDateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
 
         //set Location link
         String eventLocationString = event.getLocality();
@@ -182,29 +184,27 @@ public class EventDetailsFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void addToCalendar() {
-        // TODO: choose between TUM Calendar and external calendar app
-        boolean tumCalendar = true;
-        Intent intent;
-        if(tumCalendar){
-            intent = new Intent(context, CreateEventActivity.class);
-            intent.putExtra(Const.EVENT_EDIT, false);
-            intent.putExtra(Const.EVENT_TITLE, event.getTitle());
-            intent.putExtra(Const.EVENT_COMMENT, event.getDescription());
-            intent.putExtra(Const.EVENT_START, DateUtils.getDateTimeString(event.getDate()));
-            intent.putExtra(Const.EVENT_END, DateUtils.getDateTimeString(
-                    new Date(event.getDate().getTime() + eventDuration)));
-        } else{
-            intent = new Intent(Intent.ACTION_INSERT)
-                    .setData(CalendarContract.Events.CONTENT_URI)
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTime())
-                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().getTime() +
-                            eventDuration)
-                    .putExtra(CalendarContract.Events.TITLE, event.getTitle())
-                    .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
-                    .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
-                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);//Indicates that this event is free time and will not conflict with other events.
-        }
+    private void addToTUMCalendar() {
+        Intent intent = new Intent(context, CreateEventActivity.class);
+        intent.putExtra(Const.EVENT_EDIT, false);
+        intent.putExtra(Const.EVENT_TITLE, event.getTitle());
+        intent.putExtra(Const.EVENT_COMMENT, event.getDescription());
+        intent.putExtra(Const.EVENT_START, DateUtils.getDateTimeString(event.getDate()));
+        intent.putExtra(Const.EVENT_END, DateUtils.getDateTimeString(
+                new Date(event.getDate().getTime() + eventDuration)));
+        startActivity(intent);
+    }
+
+    private void addToExternalCalendar() {
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTime())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().getTime() +
+                        eventDuration)
+                .putExtra(CalendarContract.Events.TITLE, event.getTitle())
+                .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);//Indicates that this event is free time and will not conflict with other events.
         startActivity(intent);
     }
 
@@ -219,5 +219,29 @@ public class EventDetailsFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         disposable.clear();
+    }
+
+    private class AddToCalendarDialog extends Dialog {
+
+        private AddToCalendarDialog(Context context) {
+            super(context);
+            this.setContentView(R.layout.dialog_add_to_calendar);
+
+            Button cancelButton = this.findViewById(R.id.add_to_calendar_cancel_button);
+            Button externalCalendarButton = this.findViewById(R.id.add_to_external_calendar_button);
+            Button tumCalendarButton = this.findViewById(R.id.add_to_tum_calendar_button);
+
+            cancelButton.setOnClickListener(view -> AddToCalendarDialog.this.dismiss());
+
+            externalCalendarButton.setOnClickListener(view -> {
+                addToExternalCalendar();
+                AddToCalendarDialog.this.dismiss();
+            });
+
+            tumCalendarButton.setOnClickListener(view -> {
+                addToTUMCalendar();
+                AddToCalendarDialog.this.dismiss();
+            });
+        }
     }
 }
