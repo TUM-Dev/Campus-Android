@@ -21,15 +21,14 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.text.DateFormat;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
 import io.reactivex.disposables.CompositeDisposable;
 
-import static java.text.DateFormat.getDateInstance;
+import static java.text.DateFormat.getDateTimeInstance;
 
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
@@ -124,12 +123,9 @@ public class EventDetailsFragment extends Fragment {
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
-        String timeString = new SimpleDateFormat("hh:mm", Locale.GERMANY).
-                format(event.getDate());
-        //set date format to current locale setting
-        String dateString = getDateInstance().format(event.getDate());
-        String eventDateTimeString = dateString + " " + timeString;
-        eventDateTextView.setText(eventDateTimeString);
+        // set date format to display the full date, but discard the seconds part for time (SHORT)
+        DateFormat dateFormat = getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT);
+        eventDateTextView.setText(dateFormat.format(event.getDate()));
 
         eventDateTextView.setOnClickListener(v -> addToCalendar());
 
