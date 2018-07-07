@@ -234,9 +234,12 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
         }
         event.setDescription(description);
 
+        String eventStart = DateTimeUtils.INSTANCE.getDateTimeString(event.getDtstart());
+        String eventEnd = DateTimeUtils.INSTANCE.getDateTimeString(event.getDtend());
+
         TUMOnlineClient
                 .getInstance(this)
-                .createCalendarEvent(title, description, event.getDtstart(), event.getDtend(), null)
+                .createCalendarEvent(title, description, eventStart, eventEnd, null)
                 .enqueue(new Callback<CreateEventResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<CreateEventResponse> call,
