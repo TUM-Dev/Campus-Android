@@ -166,6 +166,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/opening_hours"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoDrawerLayout"
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
