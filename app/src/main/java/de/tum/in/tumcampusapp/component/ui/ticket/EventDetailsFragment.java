@@ -22,11 +22,14 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.tumui.calendar.CreateEventActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateUtils;
 import io.reactivex.disposables.CompositeDisposable;
 
 import static java.text.DateFormat.getDateInstance;
@@ -45,6 +48,8 @@ public class EventDetailsFragment extends Fragment {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    private long eventDuration = 7200000;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
@@ -59,6 +64,9 @@ public class EventDetailsFragment extends Fragment {
         context = root.getContext();
 
         event = eventsController.getEvents().get(position);
+
+        // TODO: set eventDuration when server API is adjusted
+
         showDetails(root);
 
         return rootView;
@@ -175,14 +183,28 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void addToCalendar() {
-        Intent intent = new Intent(Intent.ACTION_INSERT)
-                .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTime())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().getTime() + 7200000)
-                .putExtra(CalendarContract.Events.TITLE, event.getTitle())
-                .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
-                .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
-                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);//Indicates that this event is free time and will not conflict with other events.
+        // TODO: choose between TUM Calendar and external calendar app
+        boolean tumCalendar = true;
+        Intent intent;
+        if(tumCalendar){
+            intent = new Intent(context, CreateEventActivity.class);
+            intent.putExtra(Const.EVENT_EDIT, false);
+            intent.putExtra(Const.EVENT_TITLE, event.getTitle());
+            intent.putExtra(Const.EVENT_COMMENT, event.getDescription());
+            intent.putExtra(Const.EVENT_START, DateUtils.getDateTimeString(event.getDate()));
+            intent.putExtra(Const.EVENT_END, DateUtils.getDateTimeString(
+                    new Date(event.getDate().getTime() + eventDuration)));
+        } else{
+            intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTime())
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().getTime() +
+                            eventDuration)
+                    .putExtra(CalendarContract.Events.TITLE, event.getTitle())
+                    .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                    .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
+                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);//Indicates that this event is free time and will not conflict with other events.
+        }
         startActivity(intent);
     }
 

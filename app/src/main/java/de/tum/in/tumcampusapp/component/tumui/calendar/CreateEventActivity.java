@@ -67,10 +67,14 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            isEditing = true;
+            // an event with extras can either be editing an existing event
+            // or adding a new event from Tickets & Events
+            isEditing = extras.getBoolean(Const.EVENT_EDIT);
+            if(isEditing){
+                createButton.setText(R.string.event_save_edit_button);
+            }
             titleView.setText(extras.getString(Const.EVENT_TITLE));
             descriptionView.setText(extras.getString(Const.EVENT_COMMENT));
-            createButton.setText(R.string.event_save_edit_button);
         } else {
             titleView.requestFocus();
             showKeyboard();
@@ -106,7 +110,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         start = Calendar.getInstance();
         end = Calendar.getInstance();
 
-        if (isEditing) {
+        if (extras != null) {
             start.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_START)));
             end.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_END)));
         } else {
