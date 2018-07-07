@@ -6,9 +6,7 @@ import android.support.v4.view.ViewPager;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEvent;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import io.reactivex.disposables.CompositeDisposable;
 
