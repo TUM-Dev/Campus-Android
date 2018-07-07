@@ -56,15 +56,12 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
     }
 
     private fun openFacebook() {
-        // Open the facebook app or view in a browser when not installed
-        var facebook: Intent
-        try {
-            //Try to get facebook package to check if fb app is installed
-            getPackageManager().getPackageInfo("com.facebook.katana", 0)
-            facebook = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)))
+        // Open the Facebook app or view page in a browser if Facebook is not installed
+        val facebook = try {
+            packageManager.getPackageInfo("com.facebook.katana", 0)
+            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)))
         } catch (e: PackageManager.NameNotFoundException) {
-            //otherwise just open the normal url
-            facebook = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)))
+            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)))
         }
 
         startActivity(facebook)

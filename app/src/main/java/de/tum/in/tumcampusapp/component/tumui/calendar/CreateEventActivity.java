@@ -269,7 +269,6 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         InputMethodManager inputManager =
                 (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputManager != null) {
-            inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             inputManager.hideSoftInputFromWindow(titleView.getWindowToken(),0);
         }
     }

@@ -147,7 +147,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
             android:parentActivityName=".component.ui.overview.MainActivity"
-            android:theme="@style/AppTheme.SettingsTheme">
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -192,6 +192,7 @@
             android:name=".component.ui.transportation.TransportationDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv"
+            android:theme="@style/AppTheme.NoDrawerLayout"
             android:parentActivityName=".component.ui.transportation.TransportationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -200,11 +201,13 @@
         <activity
             android:name=".component.tumui.lectures.activity.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures_appointments" />
+            android:label="@string/lectures_appointments"
+            android:theme="@style/AppTheme.NoDrawerLayout" />
         <activity
             android:name=".component.tumui.lectures.activity.LecturesDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/lectures_information"
+            android:theme="@style/AppTheme.NoDrawerLayout"
             android:parentActivityName=".component.tumui.lectures.activity.LecturesPersonalActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -305,6 +308,7 @@
             android:name=".component.tumui.roomfinder.RoomFinderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
+            android:theme="@style/AppTheme.NoDrawerLayout"
             android:parentActivityName=".component.tumui.roomfinder.RoomFinderActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -334,6 +338,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/about_tca"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoDrawerLayout"
             android:parentActivityName=".component.other.settings.UserPreferencesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -458,6 +463,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/feedback"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoDrawerLayout"
             android:parentActivityName=".component.tumui.feedback.FeedbackActivity" />
         <activity
             android:name=".component.ui.studycard.CardsActivity"

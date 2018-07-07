@@ -12,7 +12,6 @@
         android:background="@color/color_primary"
         android:elevation="@dimen/material_default_elevation"
         android:theme="@style/TumToolbar"
-        app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/TumToolbarPopUp"/>
 
 </android.support.design.widget.AppBarLayout>
