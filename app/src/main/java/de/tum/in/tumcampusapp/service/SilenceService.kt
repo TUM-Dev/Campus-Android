@@ -14,9 +14,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.SILENCE_SERVICE_JOB_ID
 import de.tum.`in`.tumcampusapp.utils.Utils
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
+import org.joda.time.DateTime
 
 /**
  * Service used to silence the mobile during lectures
@@ -137,16 +135,9 @@ class SilenceService : JobIntentService() {
 
         private const val RINGER_MODE_SILENT = "0"
 
-        private fun getWaitDuration(timeToEventString: String): Long {
-            var timeToEvent = java.lang.Long.MAX_VALUE
-            try {
-                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH)
-                timeToEvent = sdf.parse(timeToEventString).time
-            } catch (e: ParseException) {
-                Utils.log(e)
-            }
-
-            return Math.min(CHECK_INTERVAL.toLong(), timeToEvent - System.currentTimeMillis() + CHECK_DELAY)
+        private fun getWaitDuration(eventDateTime: DateTime): Long {
+            val eventTime = eventDateTime.millis
+            return Math.min(CHECK_INTERVAL.toLong(), eventTime - System.currentTimeMillis() + CHECK_DELAY)
         }
 
         @JvmStatic fun enqueueWork(context: Context, work: Intent) {

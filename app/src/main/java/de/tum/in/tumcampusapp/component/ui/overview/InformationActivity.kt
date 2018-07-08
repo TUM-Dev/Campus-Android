@@ -15,6 +15,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import de.psdev.licensesdialog.LicensesDialog
+import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -96,6 +97,8 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
             this.addDebugRow(debugInfos, "VersionCode", packageInfo.versionCode.toString())
         } catch (ignore: NameNotFoundException) {
         }
+
+        this.addDebugRow(debugInfos, "BuildConfig, Debug = ", BuildConfig.DEBUG.toString())
 
         debugInfos.visibility = View.VISIBLE
     }

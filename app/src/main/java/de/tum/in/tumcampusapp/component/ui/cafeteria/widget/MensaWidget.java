@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
@@ -18,7 +18,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRe
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.MensaWidgetService;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import io.reactivex.Flowable;
 
 /**
@@ -45,7 +45,7 @@ public class MensaWidget extends AppWidgetProvider {
             localRepository.setDb(TcaDb.getInstance(context));
             Flowable<Cafeteria> cafeteria = localRepository.getCafeteria(mensaManager.getBestMatchMensaId(context));
 
-            cafeteria.map(cafeteria1 -> cafeteria1.getName() + " " + DateUtils.getDateTimeString(new Date()))
+            cafeteria.map(cafeteria1 -> cafeteria1.getName() + " " + DateTimeUtils.INSTANCE.getDateTimeString(DateTime.now()))
                      .subscribe(mensaName -> rv.setTextViewText(R.id.mensa_widget_header, mensaName));
 
             // set the header on click to open the mensa activity

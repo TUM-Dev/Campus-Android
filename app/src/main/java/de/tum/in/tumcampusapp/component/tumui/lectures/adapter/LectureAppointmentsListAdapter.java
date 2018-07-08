@@ -7,16 +7,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesAppointmentsActivity;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsRow;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -28,12 +29,13 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
     private final List<LectureAppointmentsRow> appointmentList;
     private final LayoutInflater mInflater;
     // date formats for the day output
-    private final DateFormat endHoursOutput = DateFormat.getTimeInstance();
-    private final DateFormat startDateOutput = DateFormat.getDateTimeInstance();
-    private final DateFormat endDateOutput = DateFormat.getDateTimeInstance();
+    private final DateTimeFormatter endHoursOutput = DateTimeFormat.mediumTime();
+    private final DateTimeFormatter startDateOutput = DateTimeFormat.mediumDateTime();
+    private final DateTimeFormatter endDateOutput = DateTimeFormat.mediumDateTime();
     // parse dates
     // this is the template for the date in the xml file
-    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+    private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
+                                                              .withLocale(Locale.US);
 
     public LectureAppointmentsListAdapter(Context context, List<LectureAppointmentsRow> results) {
         appointmentList = results;
@@ -79,46 +81,39 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
             holder.tvTerminOrt.setText(lvItem.getOrt());
             StringBuilder line2 = new StringBuilder(lvItem.getArt());
             // only show betreff if available
-            if (lvItem.getTermin_betreff() != null) {
+            if (!lvItem.getTermin_betreff()
+                       .isEmpty()) {
                 line2.append(" - ")
                      .append(lvItem.getTermin_betreff());
             }
             holder.tvTerminBetreff.setText(line2.toString());
 
-            Calendar start = Calendar.getInstance();
-            Calendar ende = Calendar.getInstance();
             try {
-                start.setTime(formatter.parse(lvItem.getBeginn_datum_zeitpunkt()));
-                ende.setTime(formatter.parse(lvItem.getEnde_datum_zeitpunkt()));
-
-                // make two calendar instances
-                Calendar cnow = Calendar.getInstance();
-                Calendar cstart = Calendar.getInstance();
-                cstart.setTime(start.getTime());
+                DateTime start = formatter.parseDateTime(lvItem.getBeginn_datum_zeitpunkt());
+                DateTime end = formatter.parseDateTime(lvItem.getEnde_datum_zeitpunkt());
 
                 // output if same day: we only show the date once
                 StringBuilder output = new StringBuilder();
-                if (start.get(Calendar.MONTH) == ende.get(Calendar.MONTH) &&
-                    start.get(Calendar.DATE) == ende.get(Calendar.DATE)) {
-                    output.append(startDateOutput.format(start.getTime()))
+                if (DateTimeUtils.INSTANCE.isSameDay(start, end)) {
+                    output.append(startDateOutput.print(start))
                           .append(" - ")
-                          .append(endHoursOutput.format(ende.getTime()));
+                          .append(endHoursOutput.print(end));
                 } else {
                     // show it normally
-                    output.append(startDateOutput.format(start.getTime()))
+                    output.append(startDateOutput.print(start))
                           .append(" - ")
-                          .append(endDateOutput.format(ende.getTime()));
+                          .append(endDateOutput.print(end));
                 }
 
                 // grey it, if in past
-                if (cstart.before(cnow)) {
+                if (start.isBeforeNow()) {
                     output.insert(0, "<font color=\"#444444\">");
                     output.append("</font>");
                 }
 
                 holder.tvTerminZeit.setText(Utils.fromHtml(output.toString()));
 
-            } catch (ParseException e) {
+            } catch (IllegalArgumentException e) {
                 holder.tvTerminZeit.setText(String.format("%s - %s",
                                                           lvItem.getBeginn_datum_zeitpunkt(), lvItem.getEnde_datum_zeitpunkt()));
             }

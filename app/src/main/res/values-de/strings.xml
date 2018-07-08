@@ -60,7 +60,6 @@
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Kennung</string>
-
     <string name="role">Rolle</string>
     <string name="role_summary">Deine Rolle an der TUM. Entweder Student, Mitarbeiter oder Gast.</string>
     <string name="student">Student</string>
@@ -70,7 +69,6 @@
     <string name="startpage">Startseite</string>
     <string name="wear">Wearable</string>
     <string name="notification">Benachrichtigungen</string>
-
     <string name="extras">Extras</string>
     <string name="open_wizard">Öffne Startup-Wizard</string>
     <string name="open_wizard_detail">Der Startup-Wizard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMonline Dienste einzurichten und das Farbschema der App festzulegen.</string>
@@ -78,7 +76,6 @@
     <string name="clear_cache_detail">Löscht alle Daten der TUM Campus App von deinem Gerät.</string>
     <string name="delete_cache_sure">Alle Daten wirklich löschen?</string>
     <string name="success_clear_cache">Daten erfolgreich gelöscht</string>
-
     <string name="services">Dienste</string>
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
@@ -89,7 +86,6 @@
     <string name="wifi_only">Nur bei WLAN-Verbindung</string>
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
-
     <string name="about_tca">Über die App</string>
     <string name="information">Informationen</string>
     <string name="github_contribute">Mitmachen auf Github</string>
@@ -134,7 +130,6 @@
     <string name="tuition_fees">Rückmeldung</string>
     <string name="common_info">Allgemeine Informationen</string>
     <string name="menues">Mensen</string>
-    <string name="study_plans">Studienpläne</string>
     <string name="person_search">Personensuche</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="opening_hours">Öffnungszeiten</string>
@@ -194,8 +189,6 @@
     <string name="room">Raum</string>
     <string name="add_contact">Zu Kontakten hinzufügen</string>
     <string name="contact_added">Kontakt wurde hinzugefügt!</string>
-
-    <!-- Curricula -->
     <string name="something_wrong">Ein Fehler ist aufgetreten</string>
 
     <!-- Opening hours -->

@@ -16,7 +16,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 public class ChatHistoryAdapter extends BaseAdapter {
     private static final Integer MSG_OUTGOING = 0;
@@ -111,7 +111,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
         }
 
         holder.tvMessage.setText(msg.getText());
-        holder.tvTimestamp.setText(DateUtils.getTimeOrDayISO(msg.getTimestamp(), mContext));
+        holder.tvTimestamp.setText(DateTimeUtils.INSTANCE.formatTimeOrDay(msg.getTimestamp(), mContext));
 
         if (!outgoing) {
             holder.tvUser.setText(msg.getMember()
