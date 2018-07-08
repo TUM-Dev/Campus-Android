@@ -199,8 +199,7 @@ public class EventDetailsFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTime())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().getTime() +
-                        eventDuration)
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().getTime() + eventDuration)
                 .putExtra(CalendarContract.Events.TITLE, event.getTitle())
                 .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())

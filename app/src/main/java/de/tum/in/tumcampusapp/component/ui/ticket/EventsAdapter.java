@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
+
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -108,7 +108,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         holder.localityView.setText(locality);
 
         // Adds date
-        Date date = event.getDate();
+        DateTime date = event.getDate();
         DateFormat sdf = DateFormat.getDateInstance();
         holder.srcDateView.setText(sdf.format(date));
     }
