@@ -11,7 +11,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import io.reactivex.disposables.CompositeDisposable;
 
 
-public class EventDetailsActivity extends BaseActivity{
+public class EventDetailsActivity extends BaseActivity {
 
     public EventDetailsActivity() {
         super(R.layout.activity_kino);

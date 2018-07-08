@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -15,25 +14,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
-import de.tum.in.tumcampusapp.api.tumonline.model.AccessToken;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static java.text.DateFormat.getDateTimeInstance;
 
 public class BuyTicketActivity extends BaseActivity {
 
@@ -113,11 +109,9 @@ public class BuyTicketActivity extends BaseActivity {
         String eventString = event.getTitle();
         String locationString = event.getLocality();
 
-        String dateString = getDateTimeInstance().format(event.getDate());
-
         eventView.append(eventString);
         locationView.append(locationString);
-        dateView.append(dateString);
+        dateView.append(DateTimeUtils.INSTANCE.getDateTimeString(event.getDate()));
     }
 
     private void initializeTicketTypeSpinner() {
