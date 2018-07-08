@@ -11,7 +11,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.BuildConfig;

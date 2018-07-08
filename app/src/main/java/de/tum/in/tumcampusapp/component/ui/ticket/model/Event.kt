@@ -3,9 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import org.jetbrains.annotations.NotNull
-import java.util.*
-import javax.annotation.Nullable
+import org.joda.time.DateTime
 
 /**
  * Event
@@ -24,12 +22,12 @@ data class Event(@PrimaryKey
                 var id: Int = 0,
                  @SerializedName("file")
                 var image: String? = null,
-                var title: String = "",
-                var description: String = "",
-                var locality: String = "",
-                var date: Date = Date(),
-                var link:  String = ""){
+                 var title: String = "",
+                 var description: String = "",
+                 var locality: String = "",
+                 var date: DateTime = DateTime(),
+                 var link: String = "") {
 
-    fun isFutureEvent() = date.after(Date())
+    fun isFutureEvent() = date.isAfter(DateTime())
 
 }
