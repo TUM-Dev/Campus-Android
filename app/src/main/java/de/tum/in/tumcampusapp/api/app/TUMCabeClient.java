@@ -392,20 +392,19 @@ public final class TUMCabeClient {
     }
 
     // Ticket purchase
-    public void purchaseTicketStripe(Context context, int ticketHistory, String token, String customerMail,
+    public void purchaseTicketStripe(Context context, int ticketHistory, String token,
                                        String customerName, Callback<Ticket> cb) throws IOException {
         HashMap<String, Object> argsMap = new HashMap<>();
         argsMap.put("ticket_history", ticketHistory);
         argsMap.put("token", token);
-        argsMap.put("customer_mail", customerMail);
         argsMap.put("customer_name", customerName);
 
         ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, argsMap);
         service.purchaseTicketStripe(chatVerification).enqueue(cb);
     }
 
-    public void retrieveEphemeralKey(Context context, String apiVersion, String customerMail, Callback<HashMap<String, Object>> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new EphimeralKey(customerMail, apiVersion));
+    public void retrieveEphemeralKey(Context context, String apiVersion, Callback<HashMap<String, Object>> cb) throws IOException {
+        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new EphimeralKey(apiVersion));
         service.retrieveEphemeralKey(chatVerification).enqueue(cb);
     }
 

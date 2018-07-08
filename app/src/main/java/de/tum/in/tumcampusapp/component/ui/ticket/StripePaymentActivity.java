@@ -152,7 +152,6 @@ public class StripePaymentActivity extends BaseActivity {
                     .getInstance(StripePaymentActivity.this)
                     .purchaseTicketStripe(StripePaymentActivity.this, ticketHistory,
                             paymentSession.getPaymentSessionData().getSelectedPaymentMethodId(),
-                            getUserMailAddress(),
                             cardholder, new Callback<Ticket>() {
                                 @Override
                                 public void onResponse(Call<Ticket> call, Response<Ticket> response) {
@@ -249,8 +248,6 @@ public class StripePaymentActivity extends BaseActivity {
 
 
     private void initCustomerSession() {
-        String customerMail = getUserMailAddress();
-
         CustomerSession.initCustomerSession(new TicketEphemeralKeyProvider(new TicketEphemeralKeyProvider.ProgressListener() {
             @Override
             public void onStringResponse(String string) {
@@ -258,7 +255,7 @@ public class StripePaymentActivity extends BaseActivity {
                     StripePaymentActivity.showError(StripePaymentActivity.this, string);
                 }
             }
-        }, getApplicationContext(), customerMail));
+        }, getApplicationContext()));
     }
 
 
@@ -294,16 +291,6 @@ public class StripePaymentActivity extends BaseActivity {
 
     private String buildCardString(@NonNull SourceCardData data) {
         return data.getBrand() + ",  " + getString(R.string.creditcard_ending_in) + "  " + data.getLast4();
-    }
-
-
-    private String getUserMailAddress() {
-        String customerMail = Utils.getSetting(StripePaymentActivity.this, Const.LRZ_ID, "");
-        if (customerMail.length() == 0) {
-            StripePaymentActivity.showError(StripePaymentActivity.this, getString(R.string.internal_error));
-            finish();
-        }
-        return customerMail + "@mytum.de";
     }
 
 }
