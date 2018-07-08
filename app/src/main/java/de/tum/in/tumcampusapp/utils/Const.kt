@@ -125,6 +125,7 @@ object Const {
 
     const val CHAT_BROADCAST_NAME = "chat-message-received"
 
+    const val EVENT_EDIT = "pEdit"
     const val EVENT_TITLE = "pTitel"
     const val EVENT_COMMENT = "pAnmerkung"
     const val EVENT_START = "pVon"
