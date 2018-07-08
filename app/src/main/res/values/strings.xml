@@ -621,8 +621,6 @@ Signature: %5$s</string>
     <string name="link">VISIT WEBSITE</string>
 
     <string name="scanner">Scanner</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
     <!-- Payment -->
