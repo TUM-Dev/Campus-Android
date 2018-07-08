@@ -741,9 +741,6 @@
                 android:value="de.tum.in.tumcampusapp.component.ui.ticket.TicketScanActivity" />
         </activity>
         <activity
-            android:name=".component.ui.ticket.TicketScanValidationActivity">
-        </activity>
-        <activity
             android:name=".component.ui.ticket.EventDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/events"

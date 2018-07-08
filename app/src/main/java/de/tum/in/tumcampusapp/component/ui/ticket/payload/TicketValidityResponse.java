@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.ticket.model;
+package de.tum.in.tumcampusapp.component.ui.ticket.payload;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -28,7 +28,7 @@ public class TicketValidityResponse {
     @SerializedName("status")
     public String status;
 
-    public String getFullName() {
+    public String getTicketInfo() {
         return firstName + " " + lastName + "\n" + tumID + "\n" + purchaseDate + "\n" + redeemDate + "\n" + status;
 
     }

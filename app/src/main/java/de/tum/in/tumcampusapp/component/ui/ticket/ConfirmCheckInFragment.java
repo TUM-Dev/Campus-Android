@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketValidityResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityResponse;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,12 +87,12 @@ public class ConfirmCheckInFragment extends BottomSheetDialogFragment {
                         ticketValidityResponse.redeemDate = "Redeem Date: July 2, 2018";
                         ticketValidityResponse.status = "Status: Not yet checked in";
 
-                        if (ticketValidityResponse == null || !ticketValidityResponse.valid) {
+                        if (ticketValidityResponse == null) {
                             closeWithErrorMessage();
                             return;
                         }
 
-                        nameTextView.setText(ticketValidityResponse.getFullName());
+                        nameTextView.setText(ticketValidityResponse.getTicketInfo());
                         nameTextView.setVisibility(View.VISIBLE);
 
                         progressBar.setVisibility(View.GONE);
