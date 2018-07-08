@@ -177,8 +177,8 @@ public class EventDetailsFragment extends Fragment {
     private void addToCalendar() {
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTime())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().getTime() + 7200000)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().plusHours(2))
                 .putExtra(CalendarContract.Events.TITLE, event.getTitle())
                 .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())

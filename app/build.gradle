@@ -72,9 +72,6 @@ android {
         androidTest.assets.srcDirs += files("$projectDir/src/test/java".toString())
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
-    dataBinding {
-        enabled = true
-    }
 }
 
 def androidSupportVersion = '27.1.1'

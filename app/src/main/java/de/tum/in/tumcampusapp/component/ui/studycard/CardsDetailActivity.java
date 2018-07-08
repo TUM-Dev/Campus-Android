@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.studycard;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +15,6 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadin
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
-import de.tum.in.tumcampusapp.databinding.ActivityCardsDetailBinding;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -34,13 +32,13 @@ public class CardsDetailActivity extends ActivityForLoadingInBackground<Void, St
 
         // TODO handle different states (add/view/edit)
         setTitle(this.getResources()
-                     .getString(R.string.title_activity_cards_detail));
+                .getString(R.string.title_activity_cards_detail));
     }
 
     @Override
     public void setUpLayout() {
-        ActivityCardsDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_cards_detail);
-        binding.setCard(card);
+        //ActivityCardsDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_cards_detail);
+        //binding.setCard(card);
     }
 
     @Override
@@ -76,15 +74,15 @@ public class CardsDetailActivity extends ActivityForLoadingInBackground<Void, St
 
     @Override
     protected StudyCard onLoadInBackground(Void... arg) {
-        if (!card.is_valid()) {
+        /* if (!card.is_valid()) {
             return null;
-        }
+        }*/
         try {
             ChatMember chatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
             final ChatVerification v = ChatVerification.Companion.getChatVerification(this.getApplicationContext(), chatMember);
             final Context c = this;
             return TUMCabeClient.getInstance(c)
-                                .addStudyCard(card, v);
+                    .addStudyCard(card, v);
         } catch (IOException e) {
             Utils.log(e);
         } catch (NoPrivateKey e) {

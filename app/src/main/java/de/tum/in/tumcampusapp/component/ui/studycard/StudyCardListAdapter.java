@@ -40,7 +40,7 @@ public class StudyCardListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return this.items.get(position).getId();
+        return 0; //this.items.get(position).getId();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class StudyCardListAdapter extends BaseAdapter {
         }
 
         if (card != null) {
-            viewHolder.title.setText(card.getTitle());
+            // viewHolder.title.setText(card.getTitle());
         }
 
         return view;

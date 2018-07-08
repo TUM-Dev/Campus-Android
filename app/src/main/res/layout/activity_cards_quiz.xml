@@ -3,19 +3,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="card"
-            type="de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard"/>
-
-        <variable
-            name="handler"
-            type="de.tum.in.tumcampusapp.component.ui.studycard.CardsQuizActivity"/>
-    </data>
-
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -77,7 +64,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:paddingTop="8dp"
-                        android:text="@={card.front_text}" />
+                        android:id="@+id/card_front_text"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -87,8 +74,7 @@
                         android:gravity="center"
                         android:paddingTop="8dp"
                         android:text="@string/card_answer"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:visibility="@{safeUnbox(handler.isShowingAnswer) ? View.VISIBLE : View.GONE}" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -96,8 +82,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:paddingTop="8dp"
-                        android:text="@={card.back_text}"
-                        android:visibility="@{safeUnbox(handler.isShowingAnswer) ? View.VISIBLE : View.GONE}" />
+                        android:id="@+id/card_back_text"/>
 
                 </LinearLayout>
 
@@ -107,9 +92,7 @@
                 android:id="@+id/card_quiz_turn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> handler.showAnswer()}"
                 android:text="@string/show_answer"
-                android:visibility="@{safeUnbox(handler.isShowingAnswer) ? View.INVISIBLE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -118,9 +101,7 @@
                 android:id="@+id/card_positive_result"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:onClick="@{() -> handler.setUpNextCard()}"
                 android:tint="@android:color/black"
-                android:visibility="@{safeUnbox(handler.isShowingAnswer) ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/card_negative_result"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -132,9 +113,7 @@
                 android:id="@+id/card_negative_result"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:onClick="@{() -> handler.setUpNextCard()}"
                 android:tint="@android:color/black"
-                android:visibility="@{safeUnbox(handler.isShowingAnswer) ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
