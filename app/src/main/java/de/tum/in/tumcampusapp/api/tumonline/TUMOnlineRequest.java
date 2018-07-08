@@ -215,6 +215,7 @@ public final class TUMOnlineRequest<T> {
                   .compose(handleLifecycle())
                   .subscribeOn(Schedulers.io())
                   .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturnItem(Optional.absent())
                   .subscribe((result) -> {
                       if (result.isPresent()) {
                           Utils.logv("Received result <" + result + '>');

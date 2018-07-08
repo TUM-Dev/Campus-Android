@@ -16,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -38,7 +36,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRe
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -60,7 +58,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
         localRepository.setDb(TcaDb.getInstance(getContext()));
         cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
-        JodaTimeAndroid.init(getContext());
     }
 
     /**
@@ -70,16 +67,16 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      *
      * @param rootView    Parent layout
      * @param cafeteriaId Cafeteria id
-     * @param dateStr     Date in yyyy-mm-dd format
+     * @param date        Date
      * @param big         True to show big lines
      */
     @SuppressLint("ShowToast")
-    public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big, List<CafeteriaMenu> cafeteriaMenus) {
+    public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, DateTime date, boolean big, List<CafeteriaMenu> cafeteriaMenus) {
         // initialize a few often used things
         final Context context = rootView.getContext();
         final Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(context);
         final int padding = (int) context.getResources()
-                                         .getDimension(R.dimen.card_text_padding);
+                .getDimension(R.dimen.card_text_padding);
         List<View> addedViews = new ArrayList<>(32);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TcaDb db = TcaDb.getInstance(context);
@@ -90,7 +87,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             // Show opening hours
             OpenHoursHelper lm = new OpenHoursHelper(context);
             textview = new TextView(context);
-            textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, DateUtils.getDate(dateStr)));
+            textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, date));
             textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
             rootView.addView(textview);
             addedViews.add(textview);
@@ -104,7 +101,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             String typeLong = cafeteriaMenu.getTypeLong();
             // Skip unchecked categories if showing card
             boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
-                                                      "tg".equals(typeShort) || "ae".equals(typeShort));
+                    "tg".equals(typeShort) || "ae".equals(typeShort));
             if (!big && !shouldShow) {
                 continue;
             }
@@ -115,7 +112,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 View view = inflater.inflate(big ? R.layout.list_header_big : R.layout.card_list_header, rootView, false);
                 textview = view.findViewById(R.id.list_header);
                 textview.setText(typeLong.replaceAll("[0-9]", "")
-                                         .trim());
+                        .trim());
                 rootView.addView(view);
                 addedViews.add(view);
             }
@@ -130,10 +127,10 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 TextView priceView = view.findViewById(R.id.line_price);
                 final View favDish = view.findViewById(R.id.favoriteDish);
                 favDish.setTag(menuName + "__" + cafeteriaId);
-                        /*
-                         * saved dish id in the favoriteDishButton tag.
-                         * onButton checked getTag->DishID and mark it as favorite locally (favorite=1)
-                         */
+                /*
+                 * saved dish id in the favoriteDishButton tag.
+                 * onButton checked getTag->DishID and mark it as favorite locally (favorite=1)
+                 */
                 textview.setText(text);
                 priceView.setText(String.format("%s €", rolePrices.get(typeLong)));
                 rootView.addView(view);
@@ -145,7 +142,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
                 favDish.setOnClickListener(view1 -> {
                     String id = view1.getTag()
-                                     .toString();
+                            .toString();
                     String[] data = id.split("__");
                     String dishName = data[0];
                     int mensaId = Integer.parseInt(data[1]);
@@ -153,7 +150,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                     if (!view1.isSelected()) {
                         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
                         String currentDate = DateTime.now()
-                                                     .toString(formatter);
+                                .toString(formatter);
                         favoriteDishDao.insertFavouriteDish(FavoriteDish.Companion.create(mensaId, dishName, currentDate, tag.toString()));
                         view1.setSelected(true);
                     } else {
@@ -258,7 +255,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     private static String prepare(String menu) {
         final String tmp = splitAnnotations(menu);
         return NUMERICAL_ANNOTATIONS_PATTERN.matcher(tmp)
-                                            .replaceAll("");
+                .replaceAll("");
     }
 
     @NonNull
@@ -268,7 +265,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         do {
             len = tmp.length();
             tmp = SPLIT_ANNOTATIONS_PATTERN.matcher(tmp)
-                                           .replaceFirst("($1)(");
+                    .replaceFirst("($1)(");
         } while (tmp.length() > len);
         return tmp;
     }
@@ -278,9 +275,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
         LinearLayout root = rootView.findViewById(R.id.layout);
         int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
-        String date = getArguments().getString(Const.DATE);
+        DateTime date = DateTimeUtils.INSTANCE.getDate(getArguments().getString(Const.DATE));
         cafeteriaViewModel.getCafeteriaMenus(cafeteriaId, date)
-                          .subscribe(menu -> showMenu(root, cafeteriaId, date, true, menu));
+                .subscribe(menu -> showMenu(root, cafeteriaId, date, true, menu));
         return rootView;
     }
 

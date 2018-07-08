@@ -5,6 +5,7 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply from: '../gradle/scripts/findbugs.gradle'
 apply from: '../gradle/scripts/pmd.gradle'
@@ -33,9 +34,11 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 530
-        versionName "1.6.1-dev+beta1"
-        javaCompileOptions.annotationProcessorOptions.arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+        versionCode 542
+        versionName "1.6.1-dev"
+        kapt.arguments {
+            arg("room.schemaLocation", "$projectDir/schemas".toString())
+        }
     }
     lintOptions {
         checkAllWarnings true
@@ -104,8 +107,8 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation 'android.arch.lifecycle:runtime:1.1.1'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
-    annotationProcessor "android.arch.lifecycle:compiler:$roomVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+    kapt "android.arch.lifecycle:compiler:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     // Anko
     implementation "org.jetbrains.anko:anko:$ankoVersion"
@@ -145,6 +148,7 @@ dependencies {
     implementation 'com.github.quivr:android-week-view:2.3.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
 
     // DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'

@@ -13,6 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import org.joda.time.DateTime
 
 /**
  * ViewModel for cafeterias.
@@ -45,13 +46,13 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { it.name }
 
-    fun getCafeteriaMenus(id: Int, date: String): Flowable<List<CafeteriaMenu>> =
+    fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> =
             localRepository.getCafeteriaMenus(id,date)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .defaultIfEmpty(emptyList())
 
-    fun getAllMenuDates():Flowable<List<String>> =
+    fun getAllMenuDates(): Flowable<List<DateTime>> =
             localRepository.getAllMenuDates()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

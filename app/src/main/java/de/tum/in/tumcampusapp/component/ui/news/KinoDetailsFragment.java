@@ -28,7 +28,7 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.component.ui.ticket.ShowTicketActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -134,7 +134,7 @@ public class KinoDetailsFragment extends Fragment {
         View error = headerView.findViewById(R.id.kino_cover_error);
 
         // set text for buttons
-        date.setText(KinoDetailsFragment.formDateString(DateUtils.getDateString(kino.getDate())));
+        date.setText(KinoDetailsFragment.formDateString(DateTimeUtils.INSTANCE.getDateString(kino.getDate())));
         imdb.setText(kino.getRating() + " / 10");
         year.setText(kino.getYear());
         runtime.setText(kino.getRuntime());
