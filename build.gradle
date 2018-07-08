@@ -3,9 +3,9 @@
 buildscript {
     ext.kotlin_version = '1.2.41'
     repositories {
+        google()
         jcenter()
         mavenCentral()
-        google()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url 'https://maven.fabric.io/public' }
     }
@@ -26,8 +26,8 @@ allprojects {
         //options.compilerArgs << "-Werror"
     }
     repositories {
-        jcenter()
         google()
+        jcenter()
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.google.com/' }
     }

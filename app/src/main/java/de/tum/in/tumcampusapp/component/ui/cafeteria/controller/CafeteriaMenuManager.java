@@ -18,7 +18,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.FavoriteFoodAlarmStorage;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.FavoriteDish;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
@@ -43,9 +43,9 @@ public class CafeteriaMenuManager {
      */
     private static CafeteriaMenu getFromJson(JSONObject json) throws JSONException {
         return new CafeteriaMenu(json.getInt("id"), json.getInt("mensa_id"),
-                                 DateUtils.getDate(json.getString("date")),
-                                 json.getString("type_short"), json.getString("type_long"),
-                                 json.getInt("type_nr"), json.getString("name"));
+                DateTimeUtils.INSTANCE.getDate(json.getString("date")),
+                json.getString("type_short"), json.getString("type_long"),
+                json.getInt("type_nr"), json.getString("name"));
     }
 
     /**
@@ -61,9 +61,9 @@ public class CafeteriaMenuManager {
      */
     private static CafeteriaMenu getFromJsonAddendum(JSONObject json) throws JSONException {
         return new CafeteriaMenu(0, json.getInt("mensa_id"),
-                                 DateUtils.getDate(json.getString("date")),
-                                 json.getString("type_short"), json.getString("type_long"),
-                                 10, json.getString("name"));
+                DateTimeUtils.INSTANCE.getDate(json.getString("date")),
+                json.getString("type_short"), json.getString("type_long"),
+                10, json.getString("name"));
     }
 
     private final Context mContext;
@@ -137,7 +137,7 @@ public class CafeteriaMenuManager {
      */
     public void scheduleFoodAlarms(boolean completeReschedule) {
         FavoriteFoodAlarmStorage favoriteFoodAlarmStorage = FavoriteFoodAlarmStorage.getInstance()
-                                                                                    .initialize(mContext);
+                .initialize(mContext);
         if (completeReschedule) {
             favoriteFoodAlarmStorage.cancelOutstandingAlarms();
         }

@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.RoomWarnings
 
 /**
  * New Location
@@ -17,6 +18,7 @@ import android.arch.persistence.room.PrimaryKey
  * @param url       Location URL, e.g. http://stud.ub.uni-muenchen.de/
  */
 @Entity
+@SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class Location(@PrimaryKey
                     var id: Int = -1,
                     var category: String = "",

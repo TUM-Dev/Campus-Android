@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -72,7 +74,7 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
     protected Optional<List<RoomFinderRoom>> onSearchInBackground(String query) {
         try {
             List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this)
-                                                      .fetchRooms(query);
+                    .fetchRooms(userRoomSearchMatching(query));
             return Optional.of(rooms);
         } catch (IOException e) {
             Utils.log(e);
@@ -134,5 +136,30 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
             }
         }
         return roomList;
+    }
+
+    /**
+     * Distinguishes between some room searches, eg. MW 2001 or MI 01.15.069 and takes the
+     * number part so that the search can return (somewhat) meaningful results
+     * (Temporary and non-optimal)
+     *
+     * @return a new query or the original one if nothing was matched
+     */
+    private static String userRoomSearchMatching(String roomSearchQuery) {
+        // Matches the number part if the String is composed of two words, probably wrong:
+
+        Pattern pattern = Pattern.compile("(\\w+(?:\\.\\w+)+)|(\\w+\\d+)");
+        /*  First group captures numbers with dots, like the 01.15.069 part from 'MI 01.15.069'
+        (This is the best search format for MI room numbers)
+        The second group captures numbers and mixed formats with letters, like 'MW2001'
+        Only the first match will be returned  */
+
+        Matcher matcher = pattern.matcher(roomSearchQuery);
+
+        if (matcher.find()) {
+            return matcher.group();
+        } else {
+            return roomSearchQuery;
+        }
     }
 }

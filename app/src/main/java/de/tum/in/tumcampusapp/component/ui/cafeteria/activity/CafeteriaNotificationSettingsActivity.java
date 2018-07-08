@@ -6,8 +6,10 @@ import android.support.v4.util.Pair;
 import android.widget.Button;
 import android.widget.ListView;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
@@ -62,13 +64,13 @@ public class CafeteriaNotificationSettingsActivity extends BaseActivity {
      * Reloads the settingsPrefix into the dailySchedule list.
      */
     public void setupList() {
-        Calendar it = Calendar.getInstance();
-        it.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        for (int i = 0; it.get(Calendar.DAY_OF_WEEK) < Calendar.SATURDAY; i++, it.add(Calendar.DAY_OF_WEEK, 1)) {
+        DateTime day = DateTime.now()
+                .withDayOfWeek(DateTimeConstants.MONDAY);
+        for (int i = 0; day.getDayOfWeek() < DateTimeConstants.SATURDAY; i++, day = day.plusDays(1)) {
             if (i < dailySchedule.size()) {
-                dailySchedule.set(i, cafeteriaNotificationSettings.retrieveHourMinute(it));
+                dailySchedule.set(i, cafeteriaNotificationSettings.retrieveHourMinute(day));
             } else {
-                dailySchedule.add(i, cafeteriaNotificationSettings.retrieveHourMinute(it));
+                dailySchedule.add(i, cafeteriaNotificationSettings.retrieveHourMinute(day));
             }
         }
     }

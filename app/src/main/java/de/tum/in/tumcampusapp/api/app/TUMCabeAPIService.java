@@ -25,16 +25,17 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
-import de.tum.in.tumcampusapp.component.ui.curricula.model.Curriculum;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityRequest;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -59,7 +60,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CAFETERIAS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CARD;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CURRICULA;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_EVENTS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
@@ -121,10 +121,6 @@ public interface TUMCabeAPIService {
 
     @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
     Call<ChatRegistrationId> uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId);
-
-    //Curricula
-    @GET(API_CURRICULA)
-    Call<List<Curriculum>> getAllCurriculas();
 
     @GET(API_NOTIFICATIONS + "{notification}/")
     Call<FcmNotification> getNotification(@Path("notification") int notification);
@@ -250,5 +246,10 @@ public interface TUMCabeAPIService {
     Call<Ticket> purchaseTicketStripe(@Body ChatVerification chatVerification);
 
     @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
+
+    @POST(API_EVENTS + "ticket/validate")
+    Call<TicketValidityResponse> getNameForTicket(@Body TicketValidityRequest request);
+
     Call<HashMap<String, Object>> retrieveEphemeralKey(@Body ChatVerification chatVerification);
+
 }

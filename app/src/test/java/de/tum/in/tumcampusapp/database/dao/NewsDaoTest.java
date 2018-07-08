@@ -43,7 +43,7 @@ public class NewsDaoTest {
         TcaDb.getInstance(RuntimeEnvironment.application).close();
     }
 
-    private News createNewsItem(String source, Date date) {
+    private News createNewsItem(String source, DateTime date) {
         News news = new News(Integer.toString(newsIdx),
                 Integer.toString(newsIdx),
                 "dummy link",
@@ -63,10 +63,10 @@ public class NewsDaoTest {
     @Test
     public void cleanUpOldTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusMonths(3).minusDays(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusMonths(10).toDate()));
-        dao.insert(createNewsItem("123", now.minusYears(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusYears(3).toDate()));
+        dao.insert(createNewsItem("123", now.minusMonths(3).minusDays(1)));
+        dao.insert(createNewsItem("123", now.minusMonths(10)));
+        dao.insert(createNewsItem("123", now.minusYears(1)));
+        dao.insert(createNewsItem("123", now.minusYears(3)));
 
         // before testing, make sure all items are there
         assertThat(dao.getAll(new Integer[]{123}, 123)).hasSize(4);
@@ -81,10 +81,10 @@ public class NewsDaoTest {
     @Test
     public void cleanUpNothingTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusMonths(2).minusDays(1).toDate()));
-        dao.insert(createNewsItem("123", now.toDate()));
-        dao.insert(createNewsItem("123", now.plusDays(1).toDate()));
-        dao.insert(createNewsItem("123", now.plusYears(1).toDate()));
+        dao.insert(createNewsItem("123", now.minusMonths(2).minusDays(1)));
+        dao.insert(createNewsItem("123", now));
+        dao.insert(createNewsItem("123", now.plusDays(1)));
+        dao.insert(createNewsItem("123", now.plusYears(1)));
 
         // before testing, make sure all items are there
         assertThat(dao.getAll(new Integer[]{123}, 123)).hasSize(4);
@@ -99,10 +99,10 @@ public class NewsDaoTest {
     @Test
     public void cleanUpMixedTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusMonths(5).toDate()));
-        dao.insert(createNewsItem("123", now.minusDays(100).toDate()));
-        dao.insert(createNewsItem("123", now.minusMonths(1).toDate()));
-        dao.insert(createNewsItem("123", now.toDate()));
+        dao.insert(createNewsItem("123", now.minusMonths(5)));
+        dao.insert(createNewsItem("123", now.minusDays(100)));
+        dao.insert(createNewsItem("123", now.minusMonths(1)));
+        dao.insert(createNewsItem("123", now));
 
         // before testing, make sure all items are there
         assertThat(dao.getAll(new Integer[]{123}, 123)).hasSize(4);
@@ -117,10 +117,10 @@ public class NewsDaoTest {
     @Test
     public void getAllSingleSourceTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusMonths(5).toDate()));
-        dao.insert(createNewsItem("124", now.minusDays(100).toDate()));
-        dao.insert(createNewsItem("125", now.minusMonths(1).toDate()));
-        dao.insert(createNewsItem("123", now.toDate()));
+        dao.insert(createNewsItem("123", now.minusMonths(5)));
+        dao.insert(createNewsItem("124", now.minusDays(100)));
+        dao.insert(createNewsItem("125", now.minusMonths(1)));
+        dao.insert(createNewsItem("123", now));
 
         assertThat(dao.getAll(new Integer[]{123}, 999)).hasSize(2);
     }
@@ -132,10 +132,10 @@ public class NewsDaoTest {
     @Test
     public void getAllSelectedSourceTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("999", now.minusMonths(5).toDate()));
-        dao.insert(createNewsItem("999", now.minusDays(100).toDate()));
-        dao.insert(createNewsItem("125", now.minusMonths(1).toDate()));
-        dao.insert(createNewsItem("999", now.toDate()));
+        dao.insert(createNewsItem("999", now.minusMonths(5)));
+        dao.insert(createNewsItem("999", now.minusDays(100)));
+        dao.insert(createNewsItem("125", now.minusMonths(1)));
+        dao.insert(createNewsItem("999", now));
 
         assertThat(dao.getAll(new Integer[]{123, 999}, 999)).hasSize(3);
     }
@@ -147,10 +147,10 @@ public class NewsDaoTest {
     @Test
     public void getAllMultiSourceTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusMonths(5).toDate()));
-        dao.insert(createNewsItem("124", now.minusDays(100).toDate()));
-        dao.insert(createNewsItem("125", now.minusMonths(1).toDate()));
-        dao.insert(createNewsItem("123", now.toDate()));
+        dao.insert(createNewsItem("123", now.minusMonths(5)));
+        dao.insert(createNewsItem("124", now.minusDays(100)));
+        dao.insert(createNewsItem("125", now.minusMonths(1)));
+        dao.insert(createNewsItem("123", now));
 
         assertThat(dao.getAll(new Integer[]{123, 124}, 999)).hasSize(3);
     }
@@ -162,10 +162,10 @@ public class NewsDaoTest {
     @Test
     public void getNewerAllTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.plusDays(1).toDate()));
-        dao.insert(createNewsItem("123", now.plusMonths(1).toDate()));
-        dao.insert(createNewsItem("123", now.plusYears(1).toDate()));
-        dao.insert(createNewsItem("123", now.plusHours(100).toDate()));
+        dao.insert(createNewsItem("123", now.plusDays(1)));
+        dao.insert(createNewsItem("123", now.plusMonths(1)));
+        dao.insert(createNewsItem("123", now.plusYears(1)));
+        dao.insert(createNewsItem("123", now.plusHours(100)));
 
         assertThat(dao.getNewer(123)).hasSize(4);
     }
@@ -177,10 +177,10 @@ public class NewsDaoTest {
     @Test
     public void getNewerSomeTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusDays(1).toDate()));
-        dao.insert(createNewsItem("123", now.plusMonths(1).toDate()));
-        dao.insert(createNewsItem("123", now.plusYears(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusHours(1).toDate()));
+        dao.insert(createNewsItem("123", now.minusDays(1)));
+        dao.insert(createNewsItem("123", now.plusMonths(1)));
+        dao.insert(createNewsItem("123", now.plusYears(1)));
+        dao.insert(createNewsItem("123", now.minusHours(1)));
 
         assertThat(dao.getNewer(123)).hasSize(2);
     }
@@ -192,10 +192,10 @@ public class NewsDaoTest {
     @Test
     public void getNewerNoneTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusDays(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusMonths(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusYears(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusHours(1).toDate()));
+        dao.insert(createNewsItem("123", now.minusDays(1)));
+        dao.insert(createNewsItem("123", now.minusMonths(1)));
+        dao.insert(createNewsItem("123", now.minusYears(1)));
+        dao.insert(createNewsItem("123", now.minusHours(1)));
 
         assertThat(dao.getNewer(123)).hasSize(0);
     }
@@ -207,10 +207,10 @@ public class NewsDaoTest {
     @Test
     public void getLastTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusDays(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusMonths(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusYears(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusHours(1).toDate()));
+        dao.insert(createNewsItem("123", now.minusDays(1)));
+        dao.insert(createNewsItem("123", now.minusMonths(1)));
+        dao.insert(createNewsItem("123", now.minusYears(1)));
+        dao.insert(createNewsItem("123", now.minusHours(1)));
 
         News last = dao.getLast();
         assertThat(last.getId()).isEqualTo("3");
@@ -223,10 +223,10 @@ public class NewsDaoTest {
     @Test
     public void getBySourcesAllTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.plusDays(1).toDate()));
-        dao.insert(createNewsItem("124", now.plusMonths(1).toDate()));
-        dao.insert(createNewsItem("125", now.plusYears(1).toDate()));
-        dao.insert(createNewsItem("126", now.plusHours(1).toDate()));
+        dao.insert(createNewsItem("123", now.plusDays(1)));
+        dao.insert(createNewsItem("124", now.plusMonths(1)));
+        dao.insert(createNewsItem("125", now.plusYears(1)));
+        dao.insert(createNewsItem("126", now.plusHours(1)));
 
         assertThat(dao.getBySources(new Integer[]{123, 124, 125, 126})).hasSize(4);
     }
@@ -238,10 +238,10 @@ public class NewsDaoTest {
     @Test
     public void getBySourcesSomeTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.plusDays(1).toDate()));
-        dao.insert(createNewsItem("124", now.plusMonths(1).toDate()));
-        dao.insert(createNewsItem("125", now.plusYears(1).toDate()));
-        dao.insert(createNewsItem("126", now.plusHours(1).toDate()));
+        dao.insert(createNewsItem("123", now.plusDays(1)));
+        dao.insert(createNewsItem("124", now.plusMonths(1)));
+        dao.insert(createNewsItem("125", now.plusYears(1)));
+        dao.insert(createNewsItem("126", now.plusHours(1)));
 
         assertThat(dao.getBySources(new Integer[]{123, 124})).hasSize(2);
     }
@@ -253,10 +253,10 @@ public class NewsDaoTest {
     @Test
     public void getBySourcesNoneTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.plusDays(1).toDate()));
-        dao.insert(createNewsItem("124", now.plusMonths(1).toDate()));
-        dao.insert(createNewsItem("125", now.plusYears(1).toDate()));
-        dao.insert(createNewsItem("126", now.plusHours(1).toDate()));
+        dao.insert(createNewsItem("123", now.plusDays(1)));
+        dao.insert(createNewsItem("124", now.plusMonths(1)));
+        dao.insert(createNewsItem("125", now.plusYears(1)));
+        dao.insert(createNewsItem("126", now.plusHours(1)));
 
         assertThat(dao.getBySources(new Integer[]{127, 128})).hasSize(0);
     }
@@ -268,10 +268,10 @@ public class NewsDaoTest {
     @Test
     public void getBySourcesLatestTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusDays(1).toDate()));
-        dao.insert(createNewsItem("124", now.minusMonths(1).toDate()));
-        dao.insert(createNewsItem("125", now.minusYears(1).toDate()));
-        dao.insert(createNewsItem("126", now.minusHours(1).toDate()));
+        dao.insert(createNewsItem("123", now.minusDays(1)));
+        dao.insert(createNewsItem("124", now.minusMonths(1)));
+        dao.insert(createNewsItem("125", now.minusYears(1)));
+        dao.insert(createNewsItem("126", now.minusHours(1)));
 
         List<News> news = dao.getBySources(new Integer[]{123, 124, 125, 126});
         assertThat(news).hasSize(4);
@@ -284,10 +284,10 @@ public class NewsDaoTest {
     @Test
     public void getBySourcesLatestSomeTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.minusDays(1).toDate()));
-        dao.insert(createNewsItem("123", now.minusMonths(1).toDate()));
-        dao.insert(createNewsItem("124", now.minusYears(1).toDate()));
-        dao.insert(createNewsItem("124", now.minusHours(100).toDate()));
+        dao.insert(createNewsItem("123", now.minusDays(1)));
+        dao.insert(createNewsItem("123", now.minusMonths(1)));
+        dao.insert(createNewsItem("124", now.minusYears(1)));
+        dao.insert(createNewsItem("124", now.minusHours(100)));
 
         List<News> news = dao.getBySourcesLatest(new Integer[]{123, 124, 125, 126});
         assertThat(news).hasSize(2);
@@ -302,10 +302,10 @@ public class NewsDaoTest {
     @Test
     public void getBySourcesLatestNoneTest() {
         DateTime now = DateTime.now();
-        dao.insert(createNewsItem("123", now.plusDays(1).toDate()));
-        dao.insert(createNewsItem("124", now.plusMonths(1).toDate()));
-        dao.insert(createNewsItem("125", now.plusYears(1).toDate()));
-        dao.insert(createNewsItem("126", now.plusHours(30).toDate()));
+        dao.insert(createNewsItem("123", now.plusDays(1)));
+        dao.insert(createNewsItem("124", now.plusMonths(1)));
+        dao.insert(createNewsItem("125", now.plusYears(1)));
+        dao.insert(createNewsItem("126", now.plusHours(30)));
 
         // before testing, make sure all items are there
         assertThat(dao.getBySourcesLatest(new Integer[]{123, 124, 125, 126, 127})).hasSize(0);
@@ -319,10 +319,10 @@ public class NewsDaoTest {
     public void getBySourcesLatestKinoTest() {
         DateTime now = DateTime.now();
         // NOTE: Kino source number is hardcoded 2 (through server's backend)
-        dao.insert(createNewsItem("2", now.plusDays(1).toDate()));
-        dao.insert(createNewsItem("2", now.plusMonths(1).toDate()));
-        dao.insert(createNewsItem("125", now.plusYears(1).toDate()));
-        dao.insert(createNewsItem("126", now.plusHours(1).toDate()));
+        dao.insert(createNewsItem("2", now.plusDays(1)));
+        dao.insert(createNewsItem("2", now.plusMonths(1)));
+        dao.insert(createNewsItem("125", now.plusYears(1)));
+        dao.insert(createNewsItem("126", now.plusHours(1)));
 
         // before testing, make sure all items are there
         assertThat(dao.getBySourcesLatest(new Integer[]{127, 2})).hasSize(1);
@@ -336,10 +336,10 @@ public class NewsDaoTest {
     public void getBySourcesLatestMixedTest() {
         DateTime now = DateTime.now();
         // NOTE: Kino source number is hardcoded 2 (through server's backend)
-        dao.insert(createNewsItem("2", now.plusDays(1).toDate())); //has to be picked
-        dao.insert(createNewsItem("2", now.plusMonths(1).toDate()));
-        dao.insert(createNewsItem("125", now.minusMonths(1).toDate())); //has to be picked
-        dao.insert(createNewsItem("126", now.plusHours(27).toDate()));
+        dao.insert(createNewsItem("2", now.plusDays(1))); //has to be picked
+        dao.insert(createNewsItem("2", now.plusMonths(1)));
+        dao.insert(createNewsItem("125", now.minusMonths(1))); //has to be picked
+        dao.insert(createNewsItem("126", now.plusHours(27)));
 
         // before testing, make sure all items are there
         assertThat(dao.getBySourcesLatest(new Integer[]{125, 126, 2})).hasSize(2);
