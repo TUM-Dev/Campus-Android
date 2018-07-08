@@ -115,7 +115,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void initStartEndDates(Bundle extras) {
-        if (isEditing) { // editing indicates extras are not null
+        if (extras != null) { // editing indicates extras are not null
             start = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_START));
             end = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_END));
         } else {

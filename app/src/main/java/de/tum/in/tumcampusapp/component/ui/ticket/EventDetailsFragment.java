@@ -22,18 +22,12 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CreateEventActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import io.reactivex.disposables.CompositeDisposable;
-
-import static java.text.DateFormat.getDateInstance;
 
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
@@ -133,12 +127,7 @@ public class EventDetailsFragment extends Fragment {
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
-        String timeString = new SimpleDateFormat("hh:mm", Locale.GERMANY).
-                format(event.getDate());
-        //set date format to current locale setting
-        String dateString = getDateInstance().format(event.getDate());
-        String eventDateTimeString = dateString + " " + timeString;
-        eventDateTextView.setText(eventDateTimeString);
+        eventDateTextView.setText(DateTimeUtils.INSTANCE.getDateTimeString(event.getDate()));
 
         // open "add to calendar" dialog on click
         eventDateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
@@ -189,17 +178,18 @@ public class EventDetailsFragment extends Fragment {
         intent.putExtra(Const.EVENT_EDIT, false);
         intent.putExtra(Const.EVENT_TITLE, event.getTitle());
         intent.putExtra(Const.EVENT_COMMENT, event.getDescription());
-        intent.putExtra(Const.EVENT_START, DateUtils.getDateTimeString(event.getDate()));
-        intent.putExtra(Const.EVENT_END, DateUtils.getDateTimeString(
-                new Date(event.getDate().getTime() + eventDuration)));
+        intent.putExtra(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(event.getDate()));
+        intent.putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(
+                event.getDate().plus(eventDuration)));
         startActivity(intent);
     }
 
     private void addToExternalCalendar() {
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTime())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().getTime() + eventDuration)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().
+                        plus(eventDuration).getMillis())
                 .putExtra(CalendarContract.Events.TITLE, event.getTitle())
                 .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
