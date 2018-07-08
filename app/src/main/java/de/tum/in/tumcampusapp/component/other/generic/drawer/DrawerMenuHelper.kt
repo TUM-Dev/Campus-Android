@@ -19,15 +19,13 @@ import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeInfoActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity
-import de.tum.`in`.tumcampusapp.component.ui.curricula.CurriculaActivity
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsActivity
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.TicketScanActivity
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventDetailsActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -95,8 +93,7 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
                 SideNavigationItem(R.string.events_tickets, R.drawable.ic_events, EventsActivity::class.java, false, false),
                 SideNavigationItem(R.string.scanner, R.drawable.ic_events, TicketScanActivity::class.java, false, false),
                 SideNavigationItem(R.string.barrier_free, R.drawable.ic_accessible, BarrierFreeInfoActivity::class.java, false, false),
-                SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity::class.java, false, false),
-                SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity::class.java, false, false)
+                SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity::class.java, false, false)
         )
 
         private val APP = arrayOf(

@@ -6,10 +6,11 @@ import android.arch.persistence.room.PrimaryKey
 import android.content.ContentValues
 import android.content.Context
 import android.provider.CalendarContract
+import android.support.v4.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent
-import de.tum.`in`.tumcampusapp.utils.DateUtils
-import java.text.SimpleDateFormat
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import java.util.*
 import java.util.regex.Pattern
 
@@ -23,8 +24,8 @@ data class CalendarItem(@PrimaryKey
                         var url: String = "",
                         var title: String = "",
                         var description: String = "",
-                        var dtstart: String = "",
-                        var dtend: String = "",
+                        var dtstart: DateTime = DateTime(),
+                        var dtend: DateTime = DateTime(),
                         var location: String = "",
                         @Ignore
                         var blacklisted: Boolean = false) {
@@ -32,34 +33,28 @@ data class CalendarItem(@PrimaryKey
      * Returns the color of the event
      */
     fun getEventColor(context: Context): Int {
-        return if(status.equals("CANCEL")){
-            IntegratedCalendarEvent.getDisplayColorFromColor(context.resources.getColor(R.color.event_canceled))
+        return if (status == "CANCEL") {
+            IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_canceled))
         } else if (title.endsWith("VO") || title.endsWith("VU")) {
-            IntegratedCalendarEvent.getDisplayColorFromColor(context.resources.getColor(R.color.event_lecture))
+            IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_lecture))
         } else if (title.endsWith("UE")) {
-            IntegratedCalendarEvent.getDisplayColorFromColor(context.resources.getColor(R.color.event_exercise))
+            IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_exercise))
         } else {
-            IntegratedCalendarEvent.getDisplayColorFromColor(context.resources.getColor(R.color.event_other))
+            IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_other))
         }
     }
 
     /**
      * Get event start as Calendar object
      */
-    fun getEventStart(): Calendar {
-        val result = Calendar.getInstance()
-        result.time = DateUtils.getDateTime(dtstart)
-        return result
-    }
+    val eventStart
+        get() = dtstart
 
     /**
      * Get event end as Calendar object
      */
-    fun getEventEnd(): Calendar {
-        val result = Calendar.getInstance()
-        result.time = DateUtils.getDateTime(dtend)
-        return result
-    }
+    val eventEnd
+        get() = dtend
 
     /**
      * Formats title to exclude codes
@@ -87,11 +82,9 @@ data class CalendarItem(@PrimaryKey
 
 
     fun getEventDateString(): String {
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
-        val dateFormat = SimpleDateFormat("EEE, dd.MM.yyyy", Locale.GERMANY)
-        val startDate = DateUtils.getDateTime(dtstart)
-        val endDate = DateUtils.getDateTime(dtend)
-        return String.format("%s  %s – %s", dateFormat.format(startDate), timeFormat.format(startDate), timeFormat.format(endDate))
+        val timeFormat = DateTimeFormat.forPattern("HH:mm").withLocale(Locale.US)
+        val dateFormat = DateTimeFormat.forPattern("EEE, dd.MM.yyyy").withLocale(Locale.US)
+        return String.format("%s %s - %s", dateFormat.print(eventStart), timeFormat.print(eventStart), timeFormat.print(eventEnd))
     }
 
 
@@ -103,8 +96,8 @@ data class CalendarItem(@PrimaryKey
 
         // Put the received values into a contentResolver to
         // transmit the to Google Calendar
-        values.put(CalendarContract.Events.DTSTART, DateUtils.getDateTime(dtstart).time)
-        values.put(CalendarContract.Events.DTEND, DateUtils.getDateTime(dtend).time)
+        values.put(CalendarContract.Events.DTSTART, eventStart.millis)
+        values.put(CalendarContract.Events.DTEND, eventStart.millis)
         values.put(CalendarContract.Events.TITLE, title)
         values.put(CalendarContract.Events.DESCRIPTION, description)
         values.put(CalendarContract.Events.EVENT_LOCATION, location)

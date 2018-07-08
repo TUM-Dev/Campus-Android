@@ -46,20 +46,19 @@ public class EduroamCard extends NotificationAwareCard {
 
     @Override
     protected boolean shouldShow(@NonNull SharedPreferences prefs) {
-        //Check if wifi is turned on at all, as we cannot say if it was configured if its off
+        // Check if WiFi is turned on at all, as we cannot say if it was configured if it is off
         WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifiManager != null && !wifiManager.isWifiEnabled()) {
-            return false;
-        }
-
-        return EduroamController.getEduroamConfig(getContext()) == null && eduroamAvailable(wifiManager);
+        return wifiManager != null
+                && wifiManager.isWifiEnabled()
+                && EduroamController.getEduroamConfig(getContext()) == null
+                && eduroamAvailable(wifiManager);
     }
 
-    private boolean eduroamAvailable(WifiManager wifi){
+    private boolean eduroamAvailable(@NonNull WifiManager wifi) {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            for(ScanResult scan: wifi.getScanResults()){
-                if(scan.SSID.equals(Const.EDUROAM_SSID)){
+            for (ScanResult scan : wifi.getScanResults()) {
+                if (scan.SSID.equals(Const.EDUROAM_SSID)) {
                     return true;
                 }
             }

@@ -2,11 +2,12 @@ package de.tum.`in`.tumcampusapp.component.ui.alarm.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import de.tum.`in`.tumcampusapp.utils.DateUtils
+import android.arch.persistence.room.RoomWarnings
+import org.joda.time.DateTime
 import java.io.Serializable
-import java.util.*
 
 @Entity(tableName = "notification")
+@SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class FcmNotification(@PrimaryKey
                            var notification: Int = 0,
                            var type: Int = 0,
@@ -14,7 +15,7 @@ data class FcmNotification(@PrimaryKey
                            var title: String = "",
                            var description: String = "",
                            var signature: String = "",
-                           var created: String = DateUtils.getDateString(Date())) : Serializable {
+                           var created: DateTime = DateTime()) : Serializable {
     companion object {
         private const val serialVersionUID = 8643117662605459731L
     }

@@ -5,6 +5,8 @@ import android.graphics.Color;
 
 import com.alamkanak.weekview.WeekViewEvent;
 
+import org.joda.time.DateTime;
+
 import java.util.Calendar;
 
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
@@ -19,17 +21,16 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private boolean firstOnDay;
 
     public IntegratedCalendarEvent(CalendarItem calendarItem, Context context) {
-        super(Long.parseLong(calendarItem.getNr()),
-              calendarItem.getFormattedTitle(),
-              calendarItem.getEventStart(),
-              calendarItem.getEventEnd());
-
-        this.location = calendarItem.getEventLocation();
-        this.setColor(calendarItem.getEventColor(context));
+        this(calendarItem.getNr(),
+                calendarItem.getFormattedTitle(),
+                calendarItem.getEventStart(),
+                calendarItem.getEventEnd(),
+                calendarItem.getEventLocation(),
+                calendarItem.getEventColor(context));
     }
 
-    public IntegratedCalendarEvent(long id, String title, Calendar startTime, Calendar endTime, String location, int color) {
-        super(id, title, startTime, endTime);
+    public IntegratedCalendarEvent(String id, String title, DateTime startTime, DateTime endTime, String location, int color) {
+        super(id, title, startTime.toGregorianCalendar(), endTime.toGregorianCalendar());
         this.location = location;
         this.setColor(color);
     }

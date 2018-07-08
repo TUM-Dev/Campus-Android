@@ -153,25 +153,6 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-            android:name=".component.ui.curricula.CurriculaActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/study_plans"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.curricula.CurriculaDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/study_plans"
-            android:parentActivityName=".component.ui.curricula.CurriculaActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.curricula.CurriculaActivity" />
-        </activity>
-        <activity
             android:name=".component.ui.openinghour.OpeningHoursDetailActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/opening_hours"
