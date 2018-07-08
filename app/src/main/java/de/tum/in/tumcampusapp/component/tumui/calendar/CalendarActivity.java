@@ -51,8 +51,6 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_FIVE_DAYS;
 import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
@@ -126,29 +124,54 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
     }
 
     private void loadEvents() {
-        showLoadingStart();
+        Call<Events> apiCall = TUMOnlineClient
+                .getInstance(this)
+                .getCalendar(MONTH_BEFORE, MONTH_AFTER);
+
+        fetch(apiCall, events -> {
+            isFetched = true;
+
+            // parsing and saving xml response
+            Completable.fromAction(() -> calendarController.importCalendar(events))
+                    .compose(provider.bindToLifecycle())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> {
+                        showLoadingEnded();
+                        // update the action bar to display the enabled menu options
+                        CalendarActivity.this.invalidateOptionsMenu();
+                        startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
+                    });
+        });
+
+        /*
         TUMOnlineClient
                 .getInstance(this)
                 .getCalendar(MONTH_BEFORE, MONTH_AFTER)
                 .enqueue(new Callback<Events>() {
                     @Override
                     public void onResponse(@NonNull Call<Events> call, @NonNull Response<Events> response) {
-                        Events events = response.body();
-                        if (events != null) {
-                            handleDownloadSuccess(events);
+                        if (response.isSuccessful()) {
+                            onEventsDownloadSuccess(response);
+                        } else {
+                            onDownloadUnsuccessful(response.code());
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<Events> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
+                        onDownloadError(t);
                     }
                 });
+        */
     }
 
-    private void handleDownloadSuccess(Events events) {
+    /*
+    private void onEventsDownloadSuccess(Response<Events> response) {
         showLoadingEnded();
         isFetched = true;
+
+        Events events = response.body();
 
         // parsing and saving xml response
         Completable.fromAction(() -> calendarController.importCalendar(events))
@@ -162,6 +185,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
                     startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
                 });
     }
+    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -439,6 +463,18 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
     }
 
     private void handleDeleteEvent(String eventId) {
+        Call<DeleteEventResponse> apiCall = TUMOnlineClient
+                .getInstance(this)
+                .deleteCalendarEvent(eventId);
+
+        fetch(apiCall, response -> {
+            detailsFragment.dismiss();
+            TcaDb.getInstance(CalendarActivity.this).calendarDao().delete(eventId);
+            refreshWeekView();
+            Utils.showToast(CalendarActivity.this, R.string.delete_event_confirmation);
+        });
+
+        /*
         TUMOnlineClient
                 .getInstance(this)
                 .deleteCalendarEvent(eventId)
@@ -446,17 +482,26 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
                     @Override
                     public void onResponse(@NonNull Call<DeleteEventResponse> call,
                                            @NonNull Response<DeleteEventResponse> response) {
-                        detailsFragment.dismiss();
-                        TcaDb.getInstance(CalendarActivity.this).calendarDao().delete(eventId);
-                        refreshWeekView();
-                        Utils.showToast(CalendarActivity.this, R.string.delete_event_confirmation);
+                        if (response.isSuccessful()) {
+                            onDeleteEventSuccessful(eventId);
+                        } else {
+                            onDownloadUnsuccessful(response.code());
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
+                        onDownloadError(t);
                     }
                 });
+        */
+    }
+
+    private void onDeleteEventSuccessful(String eventId) {
+        detailsFragment.dismiss();
+        TcaDb.getInstance(CalendarActivity.this).calendarDao().delete(eventId);
+        refreshWeekView();
+        Utils.showToast(CalendarActivity.this, R.string.delete_event_confirmation);
     }
 
     @Override

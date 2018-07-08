@@ -16,8 +16,6 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccess
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Activity to show the user's tuition ; based on grades.java / quick solution
@@ -50,9 +48,13 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
     }
 
     private void refreshData() {
-        TUMOnlineClient
+        Call<TuitionList> apiCall = TUMOnlineClient
                 .getInstance(this)
-                .getTuitionFeesStatus()
+                .getTuitionFeesStatus();
+
+        fetch(apiCall, this::displayTuition);
+
+        /*
                 .enqueue(new Callback<TuitionList>() {
                     @Override
                     public void onResponse(@NonNull Call<TuitionList> call,
@@ -65,9 +67,10 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
 
                     @Override
                     public void onFailure(@NonNull Call<TuitionList> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
+                        onDownloadError(t);
                     }
                 });
+        */
     }
 
     private void displayTuition(@NonNull TuitionList tuitionList) {

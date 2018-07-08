@@ -598,4 +598,5 @@ Signature: %5$s</string>
     <string name="discard_changes_question">Discard your changes?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep editing</string>
+    <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
 </resources>

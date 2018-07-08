@@ -103,6 +103,8 @@ public class WizNavStartActivity
         }
     }
 
+    // TODO TILL: Implement retry method
+
     private void requestNewToken(String publicKey) {
         showLoadingStart();
         String tokenName = "TUMCampusApp-" + Build.PRODUCT;

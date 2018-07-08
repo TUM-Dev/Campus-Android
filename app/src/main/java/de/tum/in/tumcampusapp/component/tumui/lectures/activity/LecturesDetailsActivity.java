@@ -17,8 +17,6 @@ import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetails;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * This Activity will show all details found on the TUMOnline web service
@@ -107,9 +105,13 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 
     private void loadLectureDetails(@NonNull String lectureId) {
         showLoadingStart();
-        TUMOnlineClient
+        Call<LectureDetailsResponse> apiCall = TUMOnlineClient
                 .getInstance(this)
-                .getLectureDetails(lectureId)
+                .getLectureDetails(lectureId);
+
+        fetch(apiCall, this::handleDownloadSuccess);
+
+        /*
                 .enqueue(new Callback<LectureDetailsResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<LectureDetailsResponse> call,
@@ -119,14 +121,13 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 
                     @Override
                     public void onFailure(@NonNull Call<LectureDetailsResponse> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
+                        onDownloadError(t);
                     }
                 });
+        */
     }
 
     public void handleDownloadSuccess(LectureDetailsResponse lectureDetailsResponse) {
-        showLoadingEnded();
-
         // we got exactly one row, that's fine
         currentItem = lectureDetailsResponse.getLectureDetails().get(0);
         tvLDetailsName.setText(currentItem.getTitle().toUpperCase(Locale.getDefault()));
@@ -145,8 +146,6 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
         tvLDetailsZiele.setText(currentItem.getTeachingTargets());
         tvLDetailsLiteratur.setText(currentItem.getExaminationAids());
         tvLDetailsTermin.setText(currentItem.getFirstAppointment());
-
-        showLoadingEnded();
     }
 
 }

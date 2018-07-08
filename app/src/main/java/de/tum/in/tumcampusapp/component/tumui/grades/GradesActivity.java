@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.graphics.drawable.Animatable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,8 +45,6 @@ import de.tum.in.tumcampusapp.component.tumui.grades.model.Exam;
 import de.tum.in.tumcampusapp.component.tumui.grades.model.ExamList;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -371,7 +368,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
     }
 
     private void loadGrades() {
-        showLoadingStart();
+        Call<ExamList> apiCall = TUMOnlineClient
+                .getInstance(this)
+                .getGrades();
+
+        fetch(apiCall, this::handleDownloadSuccess);
+
+        /*
         TUMOnlineClient
                 .getInstance(this)
                 .getGrades()
@@ -386,9 +389,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
                     @Override
                     public void onFailure(@NonNull Call<ExamList> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
+                        onDownloadError(t);
                     }
                 });
+        */
     }
 
     @Override
@@ -403,7 +407,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
     public void handleDownloadSuccess(ExamList examList) {
         this.exams = examList.getExams();
 
-        showLoadingEnded();
         initSpinner();
 
         // enabling the Menu options after first fetch

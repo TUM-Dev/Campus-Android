@@ -109,6 +109,26 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements 
     }
 
     private void loadPersonalLectures() {
+        Call<LecturesResponse> apiCall = TUMOnlineClient
+                .getInstance(this)
+                .getPersonalLectures();
+
+        fetch(apiCall, response -> {
+            List<Lecture> lectures = response.getLectures();
+            manager.createLectureRooms(lectures);
+
+            populateCurrentChatMember();
+
+            if (currentChatMember != null) {
+                updateDatabase(currentChatMember);
+            }
+
+            List<ChatRoomAndLastMessage> chatRoomAndLastMessages = manager.getAllByStatus(mCurrentMode);
+            displayChatRoomsAndMessages(chatRoomAndLastMessages);
+            showLoadingEnded();
+        });
+
+        /*
         TUMOnlineClient
                 .getInstance(this)
                 .getPersonalLectures()
@@ -116,20 +136,23 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements 
                     @Override
                     public void onResponse(@NonNull Call<LecturesResponse> call,
                                            @NonNull Response<LecturesResponse> response) {
-                        LecturesResponse lecturesResponse = response.body();
-                        if (lecturesResponse != null) {
-                            handleLecturesDownloadSuccess(lecturesResponse);
+                        if (response.isSuccessful()) {
+                            onLecturesDownloadSuccess(response);
+                        } else {
+                            onDownloadUnsuccessful(response.code());
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<LecturesResponse> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
+                        onDownloadError(t);
                     }
                 });
+        */
     }
 
-    private void handleLecturesDownloadSuccess(LecturesResponse response) {
+    /*
+    private void onLecturesDownloadSuccess(LecturesResponse response) {
         List<Lecture> lectures = response.getLectures();
         manager.createLectureRooms(lectures);
 
@@ -143,6 +166,7 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements 
         displayChatRoomsAndMessages(chatRoomAndLastMessages);
         showLoadingEnded();
     }
+    */
 
     private void displayChatRoomsAndMessages(List<ChatRoomAndLastMessage> results) {
         if (results.isEmpty()) {

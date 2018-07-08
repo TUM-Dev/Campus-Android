@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineResponseListener
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
@@ -20,9 +21,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.ContactsHelper
 import kotlinx.android.synthetic.main.activity_person_details.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 /**
  * Activity to show information about a person at TUM.
@@ -54,10 +52,16 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
     }
 
     private fun loadPersonDetails(personId: String) {
-        showLoadingStart()
-        TUMOnlineClient
+        val call = TUMOnlineClient
                 .getInstance(this)
                 .getPersonDetails(personId)
+
+        fetch(call, object : TUMOnlineResponseListener<Employee> {
+            override fun onDownloadSuccessful(response: Employee) {
+                handleDownloadSuccess(response)
+            }
+        })
+        /*
                 .enqueue(object : Callback<Employee> {
                     override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
                         val employee = response.body() ?: return
@@ -68,13 +72,12 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
                         handleDownloadError(t)
                     }
                 })
+        */
     }
-
     private fun handleDownloadSuccess(employee: Employee) {
         this.employee = employee
         displayResult(employee)
         invalidateOptionsMenu()
-        showLoadingEnded()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

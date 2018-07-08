@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
@@ -30,8 +29,6 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
@@ -191,6 +188,18 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
             return;
         }
 
+        Call<DeleteEventResponse> apiCall = TUMOnlineClient
+                .getInstance(this)
+                .deleteCalendarEvent(eventId);
+
+        fetch(apiCall, response -> {
+            showLoadingEnded();
+            Utils.log("Event successfully deleted (now creating the edited version)");
+            TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventId);
+            createEvent();
+        });
+
+        /*
         TUMOnlineClient
                 .getInstance(this)
                 .deleteCalendarEvent(eventId)
@@ -203,17 +212,20 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
 
                     @Override
                     public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
+                        onDownloadError(t);
                     }
                 });
+        */
     }
 
+    /*
     private void handleDeleteEventSuccess(String eventId) {
         showLoadingEnded();
         Utils.log("Event successfully deleted (now creating the edited version)");
         TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventId);
         createEvent();
     }
+    */
 
     private void createEvent() {
         event = new CalendarItem();
@@ -237,6 +249,18 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
         String eventStart = DateTimeUtils.INSTANCE.getDateTimeString(event.getDtstart());
         String eventEnd = DateTimeUtils.INSTANCE.getDateTimeString(event.getDtend());
 
+        Call<CreateEventResponse> apiCall = TUMOnlineClient
+                .getInstance(this)
+                .createCalendarEvent(title, description, eventStart, eventEnd, null);
+
+        fetch(apiCall, response -> {
+            String nr = response.getEventId();
+            event.setNr(nr);
+            TcaDb.getInstance(getApplicationContext()).calendarDao().insert(event);
+            finish();
+        });
+
+        /*
         TUMOnlineClient
                 .getInstance(this)
                 .createCalendarEvent(title, description, eventStart, eventEnd, null)
@@ -252,11 +276,13 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
 
                     @Override
                     public void onFailure(@NonNull Call<CreateEventResponse> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
+                        onDownloadError(t);
                     }
                 });
+        */
     }
 
+    /*
     private void handleCreateSuccess(@NonNull CreateEventResponse createEventResponse) {
         showLoadingEnded();
         String nr = createEventResponse.getEventId();
@@ -264,6 +290,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
         TcaDb.getInstance(this).calendarDao().insert(event);
         finish();
     }
+    */
 
     @Override
     public void onBackPressed() {

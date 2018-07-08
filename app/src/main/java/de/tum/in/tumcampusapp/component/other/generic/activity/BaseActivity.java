@@ -145,7 +145,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO: Cache image!
+        // TODO: Properly cache image?
+        if (!(this instanceof MainActivity)) {
+            // We only download the image once when the user starts the app.
+            return;
+        }
 
         TUMOnlineClient
                 .getInstance(this)

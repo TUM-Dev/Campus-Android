@@ -16,8 +16,6 @@ import de.tum.in.tumcampusapp.component.tumui.lectures.adapter.LecturesListAdapt
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -76,7 +74,14 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
     }
 
     private void loadPersonalLectures() {
-        showLoadingStart();
+        //showLoadingStart();
+        Call<LecturesResponse> apiCall = TUMOnlineClient
+                .getInstance(this)
+                .getPersonalLectures();
+
+        fetch(apiCall, this::handleDownloadSuccess);
+
+        /*
         TUMOnlineClient
                 .getInstance(this)
                 .getPersonalLectures()
@@ -95,13 +100,20 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
                         handleDownloadError(t);
                     }
                 });
+        */
     }
 
     private void searchLecture(String query) {
-        showLoadingStart();
-        TUMOnlineClient
+        //showLoadingStart();
+
+
+        Call<LecturesResponse> apiCall = TUMOnlineClient
                 .getInstance(this)
-                .searchLectures(query)
+                .searchLectures(query);
+
+        fetch(apiCall, this::handleDownloadSuccess);
+
+        /*
                 .enqueue(new Callback<LecturesResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<LecturesResponse> call,
@@ -117,6 +129,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
                         handleDownloadError(t);
                     }
                 });
+        */
     }
 
     public void handleDownloadSuccess(@NonNull LecturesResponse response) {

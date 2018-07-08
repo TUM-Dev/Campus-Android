@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,8 +14,6 @@ import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointment;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * This activity provides the appointment dates to a given lecture using the
@@ -54,9 +51,13 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
     }
 
     private void loadLectureAppointments(String lectureId) {
-        TUMOnlineClient
+        Call<LectureAppointmentsResponse> apiCall = TUMOnlineClient
                 .getInstance(this)
-                .getLectureAppointments(lectureId)
+                .getLectureAppointments(lectureId);
+
+        fetch(apiCall, this::handleDownloadSuccess);
+
+        /*
                 .enqueue(new Callback<LectureAppointmentsResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<LectureAppointmentsResponse> call,
@@ -69,9 +70,10 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 
                     @Override
                     public void onFailure(@NonNull Call<LectureAppointmentsResponse> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
+                        onDownloadError(t);
                     }
                 });
+        */
     }
 
     public void handleDownloadSuccess(LectureAppointmentsResponse lecturesList) {
@@ -82,6 +84,5 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
         }
 
         lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, appointments));
-        showLoadingEnded();
     }
 }

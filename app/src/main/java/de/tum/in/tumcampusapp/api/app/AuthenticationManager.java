@@ -226,14 +226,14 @@ public class AuthenticationManager {
                 .uploadSecret(token, publicKey)
                 .enqueue(new Callback<TokenConfirmation>() {
                     @Override
-                    public void onResponse(@NonNull Call<TokenConfirmation> call, @NonNull Response<TokenConfirmation> response) {
-                        // TODO
+                    public void onResponse(@NonNull Call<TokenConfirmation> call,
+                                           @NonNull Response<TokenConfirmation> response) {
                         Utils.log("Uploaded public key successfully");
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<TokenConfirmation> call, @NonNull Throwable t) {
-                        // TODO
+                        // TODO: Retry
                         Utils.log(t);
                     }
                 });

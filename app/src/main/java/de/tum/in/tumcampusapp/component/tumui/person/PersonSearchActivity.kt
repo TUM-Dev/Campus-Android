@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineResponseListener
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearchingTumOnline
@@ -14,14 +15,11 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import kotlinx.android.synthetic.main.activity_person_search.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 /**
  * Activity to search for employees.
  */
-class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
+class PersonSearchActivity : ActivityForSearchingTumOnline(
         R.layout.activity_person_search,
         PersonSearchSuggestionProvider.AUTHORITY, 3
 ), PersonSearchResultsItemListener {
@@ -34,7 +32,7 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
             return recents.map { recent -> Person.fromRecent(recent) }
         }
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val layoutManager = LinearLayoutManager(this)
@@ -69,10 +67,19 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
     }
 
     private fun searchPerson(query: String) {
-        showLoadingStart()
-        TUMOnlineClient
+        //showLoadingStart()
+
+        val apiCall = TUMOnlineClient
                 .getInstance(this)
                 .searchPerson(query)
+
+        fetch(apiCall, object : TUMOnlineResponseListener<PersonList> {
+            override fun onDownloadSuccessful(response: PersonList) {
+                handleDownloadSuccess(response)
+            }
+        })
+
+        /*
                 .enqueue(object : Callback<PersonList> {
                     override fun onResponse(call: Call<PersonList>, response: Response<PersonList>) {
                         val personList = response.body() ?: return
@@ -83,6 +90,7 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
                         handleDownloadError(t)
                     }
                 })
+        */
     }
 
     private fun showPersonDetails(person: Person) {
@@ -93,7 +101,6 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
     }
 
     private fun handleDownloadSuccess(response: PersonList) {
-        showLoadingEnded()
         recentsHeader.visibility = View.GONE
 
         if (response.persons.size == 1) {

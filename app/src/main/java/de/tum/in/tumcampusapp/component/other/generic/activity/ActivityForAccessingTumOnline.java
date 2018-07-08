@@ -1,9 +1,11 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineResponseListener;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
@@ -11,6 +13,9 @@ import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedExcepti
 import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.UnknownErrorException;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Generic class which handles all basic tasks to communicate with TUMOnline. It
@@ -35,7 +40,44 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity {
         // Subclasses can override this method
     }
 
-    protected final void handleDownloadError(Throwable throwable) {
+    protected <T> void fetch(Call<T> call, TUMOnlineResponseListener<T> listener) {
+        showLoadingStart();
+        call.enqueue(new Callback<T>() {
+            @Override
+            public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+                showLoadingEnded();
+                T body = response.body();
+                if (response.isSuccessful() && body != null) {
+                    listener.onDownloadSuccessful(body);
+                } else if (body == null) {
+                    onEmptyDownloadResponse();
+                } else {
+                    onDownloadUnsuccessful(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                showLoadingEnded();
+                onDownloadFailure(t);
+            }
+        });
+    }
+
+    protected final void onEmptyDownloadResponse() {
+        // TODO
+    }
+
+    protected final void onDownloadUnsuccessful(int statusCode) {
+        if (statusCode == 503) {
+            // The service is unavailable
+            showError(R.string.error_tum_online_unavailable);
+        } else {
+            showError(R.string.error_unknown);
+        }
+    }
+
+    protected final void onDownloadFailure(@NonNull Throwable throwable) {
         Utils.log(throwable);
         showLoadingEnded();
 
