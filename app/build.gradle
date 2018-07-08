@@ -145,6 +145,7 @@ dependencies {
     implementation 'com.github.quivr:android-week-view:2.3.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
 
     // DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'

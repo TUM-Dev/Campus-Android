@@ -87,7 +87,7 @@ public class EventsController {
         try {
             // TODO: replace by real event ids! -> loop over all found ids
             List ticketTypes = api.getTicketTypes(1);
-            ticketTypeDao.insert(ticketTypes);
+            //ticketTypeDao.insert(ticketTypes);
         } catch (IOException e) {
             Utils.log(e);
         }

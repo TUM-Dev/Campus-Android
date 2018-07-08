@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
@@ -41,12 +40,14 @@ import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.EphimeralKey;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationCancelation;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityRequest;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -406,6 +407,12 @@ public final class TUMCabeClient {
     public void retrieveEphemeralKey(Context context, String apiVersion, String customerMail, Callback<HashMap<String, Object>> cb) throws IOException {
         ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new EphimeralKey(customerMail, apiVersion));
         service.retrieveEphemeralKey(chatVerification).enqueue(cb);
+    }
+
+    public void getTicketValidity(String eventId, String code, Callback<TicketValidityResponse> callback) {
+        TicketValidityRequest request = new TicketValidityRequest(eventId, code);
+        service.getNameForTicket(request)
+                .enqueue(callback);
     }
 
 }

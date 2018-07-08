@@ -620,6 +620,8 @@ Signature: %5$s</string>
     <string name="booked_events">Booked Events</string>
     <string name="link">VISIT WEBSITE</string>
 
+    <string name="scanner">Scanner</string>
+
 
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>
