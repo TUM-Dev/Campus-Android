@@ -124,7 +124,7 @@ public class CafeteriaManager implements ProvidesCard {
                 .flatMap(menuDates -> {
                     cafeteria.setMenuDates(menuDates);
                     return  CafeteriaLocalRepository.INSTANCE.getCafeteriaMenus(
-                            cafeteria.getId(), cafeteria.getNextMenuDateText());
+                            cafeteria.getId(), menuDates.get(0));
                 })
                 .map(menus -> {
                     cafeteria.setMenus(menus);
@@ -145,7 +145,7 @@ public class CafeteriaManager implements ProvidesCard {
                 .flatMap(menuDates -> {
                     cafeteria.setMenuDates(menuDates);
                     return cafeteriaViewModel.getCafeteriaMenus(
-                            cafeteria.getId(), cafeteria.getNextMenuDateText());
+                            cafeteria.getId(), menuDates.get(0));
                 })
                 .map(menus -> {
                     cafeteria.setMenus(menus);

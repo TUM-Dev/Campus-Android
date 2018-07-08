@@ -245,11 +245,10 @@ public interface TUMCabeAPIService {
     @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
     Call<Ticket> purchaseTicketStripe(@Body ChatVerification chatVerification);
 
-    @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
-
     @POST(API_EVENTS + "ticket/validate")
     Call<TicketValidityResponse> getNameForTicket(@Body TicketValidityRequest request);
 
+    @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
     Call<HashMap<String, Object>> retrieveEphemeralKey(@Body ChatVerification chatVerification);
 
 }

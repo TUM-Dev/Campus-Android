@@ -36,7 +36,7 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
         return CafeteriaWithMenus(cafeteriaId).apply {
             name = getCafeteriaNameFromId(id).blockingFirst()
             menuDates = getAllMenuDates().blockingFirst()
-            menus = getCafeteriaMenus(id, nextMenuDateText).blockingFirst()
+            menus = getCafeteriaMenus(id, menuDates.first()).blockingFirst()
         }
     }
 
