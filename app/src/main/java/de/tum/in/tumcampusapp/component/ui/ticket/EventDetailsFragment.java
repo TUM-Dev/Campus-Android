@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,15 +22,12 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.tumui.calendar.CreateEventActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import io.reactivex.disposables.CompositeDisposable;
-
-import static java.text.DateFormat.getDateInstance;
 
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
@@ -45,6 +43,8 @@ public class EventDetailsFragment extends Fragment {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    long eventDuration = 7200000; // TODO: remove this once duration is implemented as part of event
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
@@ -59,6 +59,9 @@ public class EventDetailsFragment extends Fragment {
         context = root.getContext();
 
         event = eventsController.getEvents().get(position);
+
+        // TODO: set eventDuration when server API is adjusted
+
         showDetails(root);
 
         return rootView;
@@ -124,14 +127,10 @@ public class EventDetailsFragment extends Fragment {
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
-        String timeString = new SimpleDateFormat("hh:mm", Locale.GERMANY).
-                format(event.getDate());
-        //set date format to current locale setting
-        String dateString = getDateInstance().format(event.getDate());
-        String eventDateTimeString = dateString + " " + timeString;
-        eventDateTextView.setText(eventDateTimeString);
+        eventDateTextView.setText(DateTimeUtils.INSTANCE.getDateTimeString(event.getDate()));
 
-        eventDateTextView.setOnClickListener(v -> addToCalendar());
+        // open "add to calendar" dialog on click
+        eventDateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
 
         //set Location link
         String eventLocationString = event.getLocality();
@@ -174,11 +173,23 @@ public class EventDetailsFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void addToCalendar() {
+    private void addToTUMCalendar() {
+        Intent intent = new Intent(context, CreateEventActivity.class);
+        intent.putExtra(Const.EVENT_EDIT, false);
+        intent.putExtra(Const.EVENT_TITLE, event.getTitle());
+        intent.putExtra(Const.EVENT_COMMENT, event.getDescription());
+        intent.putExtra(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(event.getDate()));
+        intent.putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(
+                event.getDate().plus(eventDuration)));
+        startActivity(intent);
+    }
+
+    private void addToExternalCalendar() {
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().plusHours(2))
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().
+                        plus(eventDuration).getMillis())
                 .putExtra(CalendarContract.Events.TITLE, event.getTitle())
                 .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
@@ -197,5 +208,29 @@ public class EventDetailsFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         disposable.clear();
+    }
+
+    private class AddToCalendarDialog extends Dialog {
+
+        private AddToCalendarDialog(Context context) {
+            super(context);
+            this.setContentView(R.layout.dialog_add_to_calendar);
+
+            Button cancelButton = this.findViewById(R.id.add_to_calendar_cancel_button);
+            Button externalCalendarButton = this.findViewById(R.id.add_to_external_calendar_button);
+            Button tumCalendarButton = this.findViewById(R.id.add_to_tum_calendar_button);
+
+            cancelButton.setOnClickListener(view -> AddToCalendarDialog.this.dismiss());
+
+            externalCalendarButton.setOnClickListener(view -> {
+                addToExternalCalendar();
+                AddToCalendarDialog.this.dismiss();
+            });
+
+            tumCalendarButton.setOnClickListener(view -> {
+                addToTUMCalendar();
+                AddToCalendarDialog.this.dismiss();
+            });
+        }
     }
 }
