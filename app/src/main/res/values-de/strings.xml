@@ -498,7 +498,7 @@ Signatur: %5$s</string>
     <string name="link">BESUCHE DIE WEBSITE</string>
     <string name="tum_calendar">TUM Kalender</string>
     <string name="external_calendar">Externer Kalender</string>
-    <string name="add_to_calendar_info">Zu welchem Kalendar willst du das Event hinzufügen?</string>
+    <string name="add_to_calendar_info">Zu welchem Kalender willst du das Event hinzufügen?</string>
 
     <!-- Ticket Activity -->
     <string name="your_ticket">Dein Ticket</string>
