@@ -10,14 +10,19 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.news.NewsDao;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_ONE_DAY;
 
@@ -51,15 +56,6 @@ public class EventsController {
         // Load all events since the last sync
         try {
             List<Event> events = api.getEvents();
-
-            // NOTE: the dummy data on the server contains a dummy ticket for event id 2
-            //       thus, we add another event with id 2 for testing purposes
-            // TODO: remove this when dummy data on server is made consistent or real data is used!
-            Event event = events.get(0);
-            events.add(new Event(2,event.getImage(), event.getTitle() + "2",
-                    event.getDescription() + " Not to say extremely nice!",
-                    event.getLocality(), event.getDate(), event.getLink()));
-
             eventDao.insert(events);
         } catch (IOException e) {
             Utils.log(e);
@@ -67,9 +63,22 @@ public class EventsController {
 
         // Load all tickets
         try {
-            // TODO: replace by real user id (dummy ticket with user id 1 for now)
-            List tickets = api.getTickets(1);
-            //ticketDao.insert(tickets);
+            if(Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class) != null) {
+                api.getTickets(context, new Callback<List<Ticket>>() {
+                    @Override
+                    public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
+                        List<Ticket> list = response.body();
+                        if (list == null) list = new ArrayList<Ticket>();
+                        ticketDao.insert(list);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Ticket>> call, Throwable t) {
+                        //TODO: inform user about failure
+                        t.printStackTrace();
+                    }
+                });
+            }
         } catch (IOException e) {
             Utils.log(e);
         }

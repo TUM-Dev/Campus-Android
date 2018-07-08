@@ -3,7 +3,9 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import org.jetbrains.annotations.NotNull
 import java.util.*
+import javax.annotation.Nullable
 
 /**
  * Event
@@ -29,4 +31,5 @@ data class Event(@PrimaryKey
                 var link:  String = ""){
 
     fun isFutureEvent() = date.after(Date())
+
 }

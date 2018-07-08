@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -19,6 +20,9 @@ import java.net.URL;
 import java.util.HashMap;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TicketEphemeralKeyProvider implements EphemeralKeyProvider {
 
@@ -36,20 +40,23 @@ public class TicketEphemeralKeyProvider implements EphemeralKeyProvider {
     @Override
     public void createEphemeralKey(@NonNull @Size(min = 4) String apiVersion,
                                    @NonNull final EphemeralKeyUpdateListener keyUpdateListener) {
-        Thread thread = new Thread() {
-            public void run() {
-                try {
-                    HashMap<String, Object> response = TUMCabeClient.getInstance(mContext).retrieveEphemeralKey("2017-06-05", mCustomerMail);
-                    String id = response.toString();
+        try {
+            TUMCabeClient.getInstance(mContext).retrieveEphemeralKey(mContext, "2017-06-05", mCustomerMail, new Callback<HashMap<String, Object>>() {
+                @Override
+                public void onResponse(Call<HashMap<String, Object>> call, Response<HashMap<String, Object>> response) {
+                    String id = response.body().toString();
                     keyUpdateListener.onKeyUpdate(id);
                     mProgressListener.onStringResponse(id);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
                 }
-            }
-        };
-        thread.start();
+
+                @Override
+                public void onFailure(Call<HashMap<String, Object>> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public interface ProgressListener {

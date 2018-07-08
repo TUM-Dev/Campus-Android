@@ -159,13 +159,29 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
-                    <Button
-                        android:id="@+id/paymentbutton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
-                        android:layout_gravity="center"
-                        android:text="@string/continue_to_payment" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/paymentbutton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="40dp"
+                            android:layout_gravity="center"
+                            android:layout_centerInParent="true"
+                            android:text="@string/continue_to_payment"/>
+
+                        <ProgressBar
+                            android:id="@+id/ticket_reservation_progressbar"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_toRightOf="@+id/paymentbutton"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"/>
+
+                    </RelativeLayout>
+
 
                 </LinearLayout>
             </LinearLayout>

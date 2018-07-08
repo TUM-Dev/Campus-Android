@@ -69,7 +69,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
         // Set image
         String imgUrl = event.getImage();
-        if (imgUrl.isEmpty() || imgUrl.equals("null")) {
+        if (imgUrl == null || imgUrl.isEmpty()) {
             if (event.getLink().endsWith(".png") || event.getLink().endsWith(".jpeg")) {
                 Utils.log("try link as image");
                 // the link points to an image (eventspread)
