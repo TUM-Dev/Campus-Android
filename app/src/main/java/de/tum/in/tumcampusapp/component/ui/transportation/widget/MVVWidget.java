@@ -148,10 +148,6 @@ public class MVVWidget extends AppWidgetProvider {
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mvv_widget);
         rv.setTextViewText(R.id.mvv_widget_station, widgetDepartures.getStation());
 
-        // Set up offline symbol (may be shown one update delayed)
-        rv.setViewVisibility(R.id.mvv_widget_offline,
-                widgetDepartures.isOffline() ? View.VISIBLE : View.INVISIBLE);
-
         // Set up the configuration activity listeners
         Intent configIntent = new Intent(context, MVVWidgetConfigureActivity.class);
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

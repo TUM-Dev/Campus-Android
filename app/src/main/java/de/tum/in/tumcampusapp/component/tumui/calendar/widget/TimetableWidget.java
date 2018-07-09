@@ -76,13 +76,6 @@ public class TimetableWidget extends AppWidgetProvider {
         String weekday = localDate.dayOfWeek().getAsText(Locale.getDefault());
         rv.setTextViewText(R.id.timetable_widget_weekday, weekday);
 
-        /*
-        DateTimeFormatter dayFormat = DateTimeFormat.forPattern("EEEE, dd. MMM")
-                .withLocale(Locale.getDefault());
-        String title = dayFormat.print(DateTime.now());
-        rv.setTextViewText(R.id.timetable_widget_day, title);
-        */
-
         // Set up the configuration activity listeners
         Intent configIntent = new Intent(context, TimetableWidgetConfigureActivity.class);
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
