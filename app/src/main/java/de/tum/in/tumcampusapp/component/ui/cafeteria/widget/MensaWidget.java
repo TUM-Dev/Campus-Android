@@ -9,15 +9,17 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.MensaWidgetService;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 /**
  * Implementation of Mensa Widget functionality.
@@ -35,11 +37,14 @@ public class MensaWidget extends AppWidgetProvider {
             CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
             localRepository.setDb(TcaDb.getInstance(context));
 
-            localRepository
+            Cafeteria cafeteria = localRepository
                     .getCafeteria(mensaManager.getBestMatchMensaId(context))
-                    .subscribe(c -> rv.setTextViewText(R.id.mensa_widget_header, c.getName()));
+                    .blockingFirst();
+            rv.setTextViewText(R.id.mensa_widget_header, cafeteria.getName());
 
-            String date = DateTimeUtils.INSTANCE.getDateString(DateTime.now());
+            // Set the properly formatted date in the subhead
+            LocalDate localDate = DateTime.now().toLocalDate();
+            String date = DateTimeFormat.shortDate().print(localDate);
             rv.setTextViewText(R.id.mensa_widget_subhead, date);
 
             // Set the header on click to open the mensa activity
