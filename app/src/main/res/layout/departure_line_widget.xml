@@ -34,6 +34,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
+        android:textColor="#ff656865"
         android:textSize="16sp"
         tools:text="Klinikum Großhadern" />
 
