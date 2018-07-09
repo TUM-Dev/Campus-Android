@@ -29,6 +29,7 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 public class NextLectureCard extends NotificationAwareCard {
@@ -121,7 +122,7 @@ public class NextLectureCard extends NotificationAwareCard {
         mEvent.setOnClickListener(view -> {
             Intent i = new Intent(getContext(), CalendarActivity.class);
             CalendarItem item1 = lectures.get(mSelected);
-            i.putExtra(CalendarActivity.EVENT_TIME, item1.start.getMillis());
+            i.putExtra(Const.EVENT_TIME, item1.start.getMillis());
             getContext().startActivity(i);
         });
     }

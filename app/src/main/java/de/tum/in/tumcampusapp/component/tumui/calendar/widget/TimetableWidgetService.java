@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar.widget;
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +18,7 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 @SuppressLint("Registered")
@@ -131,9 +131,9 @@ public class TimetableWidgetService extends RemoteViewsService {
             // Setup event location
             rv.setTextViewText(R.id.timetable_widget_event_location, currentItem.getLocation());
 
-            // Setup action to open room finder
+            // Setup action to open calendar
             Intent fillInIntent = new Intent();
-            fillInIntent.putExtra(SearchManager.QUERY, currentItem.getLocation());
+            fillInIntent.putExtra(Const.EVENT_TIME, currentItem.getStartTime().getTimeInMillis());
             rv.setOnClickFillInIntent(R.id.timetable_widget_event, fillInIntent);
 
             return rv;
