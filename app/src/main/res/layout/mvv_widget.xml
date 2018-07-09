@@ -54,7 +54,8 @@
         <ListView
             android:id="@+id/mvv_widget_listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:listSelector="@android:color/transparent" />
 
         <TextView
             android:id="@+id/empty_list_item"

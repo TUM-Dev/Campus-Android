@@ -273,7 +273,10 @@ public class TransportController implements ProvidesCard {
         } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
+        } catch (Exception e) {
+            Utils.log(e);
         }
+
         return result;
     }
 
