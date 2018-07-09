@@ -125,6 +125,7 @@ public class StripePaymentActivity extends BaseActivity {
                 paymentSession.presentPaymentMethodSelection();
             }
         });
+        savedCardsButton.setEnabled(false);
 
         // Insert formated string to remind users about which amount they are going to pay
         TextView priceReminder = findViewById(R.id.payment_info_price_textview);
@@ -284,6 +285,7 @@ public class StripePaymentActivity extends BaseActivity {
             @Override
             public void onPaymentSessionDataChanged(@NonNull PaymentSessionData data) {
                 buyButton.setEnabled(true);
+                savedCardsButton.setEnabled(true);
             }
 
         }, new PaymentSessionConfig.Builder()
