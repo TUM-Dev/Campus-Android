@@ -20,6 +20,6 @@ data class TicketType(@PrimaryKey
                   var description: String = "") {
 
     fun formatedPrice(): String {
-        return DecimalFormat("#.00").format((price / 100).toLong()) + " €"
+        return DecimalFormat("#.00").format(price / 100.0) + " €"
     }
 }

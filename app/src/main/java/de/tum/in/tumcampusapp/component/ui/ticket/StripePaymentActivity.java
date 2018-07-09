@@ -111,6 +111,7 @@ public class StripePaymentActivity extends BaseActivity {
                                          }
                                      }
         );
+        buyButton.setEnabled(false); // disabled until customer- and paymentsession have been loaded
 
         cardholderEditText = findViewById(R.id.cardholder_edit_text);
 
@@ -243,7 +244,6 @@ public class StripePaymentActivity extends BaseActivity {
     private void initStripeSession() {
         PaymentConfiguration.init(Const.STRIPE_API_PUBLISHABLE_KEY);
         initCustomerSession();
-        initPaymentSession();
     }
 
 
@@ -253,6 +253,8 @@ public class StripePaymentActivity extends BaseActivity {
             public void onStringResponse(String string) {
                 if (string.startsWith("Error: ")) {
                     StripePaymentActivity.showError(StripePaymentActivity.this, string);
+                } else {
+                    initPaymentSession();
                 }
             }
         }, getApplicationContext()));
@@ -281,6 +283,7 @@ public class StripePaymentActivity extends BaseActivity {
 
             @Override
             public void onPaymentSessionDataChanged(@NonNull PaymentSessionData data) {
+                buyButton.setEnabled(true);
             }
 
         }, new PaymentSessionConfig.Builder()
