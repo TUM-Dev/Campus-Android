@@ -17,22 +17,22 @@ public interface EventDao {
     /**
      * Removes all old items
      */
-    @Query("DELETE FROM event WHERE date < date('now')")
+    @Query("DELETE FROM event WHERE start < date('now')")
     void cleanUp();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<Event> event);
 
-    @Query("SELECT * FROM event ORDER BY date")
+    @Query("SELECT * FROM event ORDER BY start")
     List<Event> getAll();
 
     @Query("SELECT id FROM event ORDER BY id DESC LIMIT 1")
     int getLatestId();
 
-    @Query("SELECT count(*) FROM event WHERE date < :date")
+    @Query("SELECT count(*) FROM event WHERE start < :date")
     int getPosition(String date);
 
-    @Query("SELECT * FROM event ORDER BY date LIMIT 1 OFFSET :position")
+    @Query("SELECT * FROM event ORDER BY start LIMIT 1 OFFSET :position")
     Event getByPosition(int position);
 
     @Query("SELECT * FROM event where id = :id")

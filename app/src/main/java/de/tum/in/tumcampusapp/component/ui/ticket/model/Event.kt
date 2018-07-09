@@ -13,21 +13,23 @@ import org.joda.time.DateTime
  * @param title   Title
  * @param description Description
  * @param locality Locality
- * @param date    Date
+ * @param start   Date
+ * @param end     Date
  * @param link    Url, e.g. http://www.in.tum.de
  */
 @Entity
 data class Event(@PrimaryKey
-                @SerializedName("event")
-                var id: Int = 0,
+                 @SerializedName("event")
+                 var id: Int = 0,
                  @SerializedName("file")
-                var image: String? = null,
+                 var image: String? = null,
                  var title: String = "",
                  var description: String = "",
                  var locality: String = "",
-                 var date: DateTime = DateTime(),
+                 var start: DateTime = DateTime(),
+                 var end: DateTime? = null,
                  var link: String = "") {
 
-    fun isFutureEvent() = date.isAfter(DateTime())
+    fun isFutureEvent() = start.isAfter(DateTime())
 
 }

@@ -131,6 +131,7 @@ object Const {
     const val EVENT_START = "pVon"
     const val EVENT_END = "pBis"
     const val EVENT_NR = "pTerminNr"
+    const val EVENT_DEFAULT_DURATION = 7200000 // Milliseconds
 
     const val KINO_DATE = "kinoDate"
 
