@@ -12,8 +12,8 @@ import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Locale;
 
@@ -67,10 +67,22 @@ public class TimetableWidget extends AppWidgetProvider {
                                 int appWidgetId) {
         // Instantiate the RemoteViews object for the app widget layout.
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.timetable_widget);
+
+        // Set formatted date in the header
+        LocalDate localDate = DateTime.now().toLocalDate();
+        String date = DateTimeFormat.longDate().print(localDate);
+        rv.setTextViewText(R.id.timetable_widget_date, date);
+
+        // Set weekday in the header
+        String weekday = localDate.dayOfWeek().getAsText(Locale.getDefault());
+        rv.setTextViewText(R.id.timetable_widget_weekday, weekday);
+
+        /*
         DateTimeFormatter dayFormat = DateTimeFormat.forPattern("EEEE, dd. MMM")
                 .withLocale(Locale.getDefault());
         String title = dayFormat.print(DateTime.now());
         rv.setTextViewText(R.id.timetable_widget_day, title);
+        */
 
         // Set up the configuration activity listeners
         Intent configIntent = new Intent(context, TimetableWidgetConfigureActivity.class);
@@ -81,7 +93,7 @@ public class TimetableWidget extends AppWidgetProvider {
         // Set up the calendar activity listeners
         Intent calendarIntent = new Intent(context, CalendarActivity.class);
         PendingIntent pendingCalendarIntent = PendingIntent.getActivity(context, appWidgetId, calendarIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        rv.setOnClickPendingIntent(R.id.timetable_widget_day, pendingCalendarIntent);
+        rv.setOnClickPendingIntent(R.id.timetable_widget_header, pendingCalendarIntent);
 
         // Set up the roomFinder activity listeners
         Intent roomFinderIntent = new Intent(context, RoomFinderActivity.class);

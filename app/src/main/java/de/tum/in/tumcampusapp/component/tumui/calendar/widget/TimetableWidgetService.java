@@ -47,11 +47,11 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-            // get events
+            // Get events
             CalendarController calendarController = new CalendarController(this.applicationContext);
             calendarEvents = calendarController.getNextDaysFromDb(14, this.appWidgetID);
 
-            // set isFirstOnDay flags
+            // Set isFirstOnDay flags
             if (!calendarEvents.isEmpty()) {
                 calendarEvents.get(0)
                               .setIsFirstOnDay(true);
@@ -118,13 +118,14 @@ public class TimetableWidgetService extends RemoteViewsService {
             rv.setTextViewText(R.id.timetable_widget_event_title, currentItem.getName());
 
             // Setup event time
-            DateTimeFormatter timeFormat = DateTimeFormat.mediumTime();
+            DateTimeFormatter formatter = DateTimeFormat.shortTime();
 
-            String startTimeText = timeFormat.print(startTime);
+            String startTimeText = formatter.print(startTime);
             DateTime endTime = new DateTime(currentItem.getEndTime().getTimeInMillis());
-            String endTimeText = timeFormat.print(endTime);
+            String endTimeText = formatter.print(endTime);
 
-            String eventTime = getString(R.string.event_start_end_format_string, startTime, endTime);
+            String eventTime =
+                    getString(R.string.event_start_end_format_string, startTimeText, endTimeText);
             rv.setTextViewText(R.id.timetable_widget_event_time, eventTime);
 
             // Setup event location

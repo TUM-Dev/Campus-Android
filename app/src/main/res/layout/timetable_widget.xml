@@ -15,16 +15,30 @@
         android:orientation="horizontal"
         android:padding="@dimen/material_small_padding">
 
-        <TextView
-            android:id="@+id/timetable_widget_day"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="sans-serif-medium"
-            android:lines="1"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            tools:text="Timetable" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/timetable_widget_weekday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                tools:text="Day" />
+
+            <TextView
+                android:id="@+id/timetable_widget_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                tools:text="Date" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/timetable_widget_setting"
