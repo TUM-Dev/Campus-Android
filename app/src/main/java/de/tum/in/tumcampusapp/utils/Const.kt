@@ -108,9 +108,6 @@ object Const {
     const val WIFI_SCANS_ALLOWED = "WIFI_SCANS_ALLOWED"
     const val WIFI_SCAN_MINIMUM_BATTERY_LEVEL = "WIFI_SCAN_MINIMUM_BATTERY_LEVEL"
 
-    const val DATE_AND_TIME = "yyyy-MM-dd HH:mm:ss"
-    const val DATE_ONLY = "yyyy-MM-dd"
-
     const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
     const val DISCARD_SETTINGS_START = "discard_settings_start"
     const val DISCARD_SETTINGS_PHONE = "discard_settings_phone"
