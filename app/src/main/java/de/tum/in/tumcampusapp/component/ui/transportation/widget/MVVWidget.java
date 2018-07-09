@@ -157,7 +157,7 @@ public class MVVWidget extends AppWidgetProvider {
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        rv.setOnClickPendingIntent(R.id.mvv_widget_header, pendingIntent);
+        rv.setOnClickPendingIntent(R.id.mvv_widget_setting_button, pendingIntent);
 
         // Set up the reload functionality
         Intent reloadIntent = new Intent(context, MVVWidget.class);
@@ -165,10 +165,10 @@ public class MVVWidget extends AppWidgetProvider {
         reloadIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(
                 context, appWidgetId, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        rv.setOnClickPendingIntent(R.id.mvv_widget_reload, pendingReloadIntent);
+        rv.setOnClickPendingIntent(R.id.mvv_widget_reload_button, pendingReloadIntent);
 
         boolean isAutoReload = widgetDepartures.getAutoReload();
-        rv.setViewVisibility(R.id.mvv_widget_reload, isAutoReload ? View.GONE : View.VISIBLE);
+        rv.setViewVisibility(R.id.mvv_widget_reload_button, isAutoReload ? View.GONE : View.VISIBLE);
 
         // Set up the intent that starts the MVVWidgetService, which will
         // provide the departure times for this station
