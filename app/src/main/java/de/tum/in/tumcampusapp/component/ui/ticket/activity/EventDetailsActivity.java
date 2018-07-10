@@ -31,9 +31,6 @@ public class EventDetailsActivity extends BaseActivity {
         // set up ViewPager and adapter
         ViewPager mPager = findViewById(R.id.pager);
 
-        // TODO: extract key to const class
-        int clickedEventId = getIntent().getIntExtra("event_id", 0);
-
         List<Event> events = eventsController.getEvents();
 
         EventDetailsAdapter eventDetailsAdapter = new EventDetailsAdapter(getSupportFragmentManager(),
@@ -42,6 +39,7 @@ public class EventDetailsActivity extends BaseActivity {
         mPager.setAdapter(eventDetailsAdapter);
 
         // Use clickedEventId to show the clicked event in the EventDetailsView
+        int clickedEventId = getIntent().getIntExtra("event_id", -1);
         int startPosition = 0;
         for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);

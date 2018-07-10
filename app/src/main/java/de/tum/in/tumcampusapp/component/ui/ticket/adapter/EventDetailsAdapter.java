@@ -50,7 +50,6 @@ public class EventDetailsAdapter extends FragmentStatePagerAdapter {
         // returns the titles for the pagerStrip
         String title = titles.get(position);
         // TODO: Why is there a substring substring needed? (Copied from KinoAdapter...)
-        return title.substring(title.indexOf(':') + 1)
-                .trim();
+        return titles.get(position).trim();
     }
 }

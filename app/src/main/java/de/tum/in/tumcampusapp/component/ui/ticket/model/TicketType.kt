@@ -10,7 +10,7 @@ import java.text.DecimalFormat
  *
  * @param id      Ticket-ID
  * @param price   Price
- * @param price   Description
+ * @param description   Description
  */
 @Entity
 data class TicketType(@PrimaryKey

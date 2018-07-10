@@ -7,17 +7,19 @@ import com.google.gson.annotations.SerializedName
 /**
  * Ticket
  *
- * @param event  Event
- * @param code   code
- * @param ticketTypeId   Type
+ * @param id  ID of ticket_history in DB
+ * @param event   Event ID
+ * @param code   Ticket Code
+ * @param ticketTypeId  ID of TicketType
+ * @param redeemed
  */
 @Entity
 data class Ticket(@PrimaryKey
                   @SerializedName("ticket_history")
-                  var id: Int,
+                  var id: Int = 0,
                   @SerializedName("event")
-                  var eventId: Int,
+                  var eventId: Int = 0,
                   var code: String = "",
                   @SerializedName("ticket_type")
-                  var ticketTypeId: Int,
+                  var ticketTypeId: Int = 0,
                   var redeemed: Boolean = false)
