@@ -28,20 +28,18 @@ public class TicketEphemeralKeyProvider implements EphemeralKeyProvider {
 
     private @NonNull ProgressListener mProgressListener;
     private Context mContext;
-    private String mCustomerMail;
 
     public TicketEphemeralKeyProvider(@NonNull ProgressListener progressListener,
-                                      Context context, String customerMail) {
+                                      Context context) {
         mProgressListener = progressListener;
         mContext = context;
-        mCustomerMail = customerMail;
     }
 
     @Override
     public void createEphemeralKey(@NonNull @Size(min = 4) String apiVersion,
                                    @NonNull final EphemeralKeyUpdateListener keyUpdateListener) {
         try {
-            TUMCabeClient.getInstance(mContext).retrieveEphemeralKey(mContext, "2017-06-05", mCustomerMail, new Callback<HashMap<String, Object>>() {
+            TUMCabeClient.getInstance(mContext).retrieveEphemeralKey(mContext, apiVersion, new Callback<HashMap<String, Object>>() {
                 @Override
                 public void onResponse(Call<HashMap<String, Object>> call, Response<HashMap<String, Object>> response) {
                     String id = response.body().toString();

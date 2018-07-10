@@ -91,7 +91,7 @@ public class BuyTicketActivity extends BaseActivity {
                 } else {
                     ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
                     AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
-                    builder.setTitle(getString(R.string.not_logged_in_title))
+                    builder.setTitle(getString(R.string.sorry))
                             .setMessage(R.string.not_logged_in_message);
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
@@ -172,15 +172,23 @@ public class BuyTicketActivity extends BaseActivity {
             TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(BuyTicketActivity.this, ticketType.getId(), new Callback<TicketReservationResponse>() {
                 @Override
                 public void onResponse(Call<TicketReservationResponse> call, Response<TicketReservationResponse> response) {
-                    reservationProgressBar.setVisibility(View.INVISIBLE);
-                    paymentButton.setEnabled(true);
+                    if (response.body().getError() != null) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BuyTicketActivity.this);
+                        builder.setTitle(getString(R.string.sorry))
+                                .setMessage(getString(R.string.ticket_contingent_exhausted));
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    } else {
+                        reservationProgressBar.setVisibility(View.INVISIBLE);
+                        paymentButton.setEnabled(true);
 
-                    // Jump to the payment activity
-                    Intent intent = new Intent(getApplicationContext(), StripePaymentActivity.class);
-                    intent.putExtra("ticketPrice", ticketType.formatedPrice());
-                    intent.putExtra("ticketType", ticketType.getId());
-                    intent.putExtra("ticketHistory", response.body().getTicketHistory());
-                    startActivity(intent);
+                        // Jump to the payment activity
+                        Intent intent = new Intent(getApplicationContext(), StripePaymentActivity.class);
+                        intent.putExtra("ticketPrice", ticketType.formatedPrice());
+                        intent.putExtra("ticketType", ticketType.getId());
+                        intent.putExtra("ticketHistory", response.body().getTicketHistory());
+                        startActivity(intent);
+                    }
                 }
 
                 @Override

@@ -42,9 +42,11 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.EphimeralKey;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketPurchaseStripe;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationCancelation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityRequest;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityResponse;
@@ -106,7 +108,7 @@ public final class TUMCabeClient {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
 
         Gson gson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateSerializer())
-                                     .create();
+                .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
         builder.client(Helper.getOkHttpClient(c));
         service = builder.build()
@@ -165,7 +167,7 @@ public final class TUMCabeClient {
 
     public void addUserToChat(ChatRoom chatRoom, ChatMember member, ChatVerification verification, Callback<ChatRoom> cb) {
         service.addUserToChat(chatRoom.getId(), member.getId(), verification)
-               .enqueue(cb);
+                .enqueue(cb);
     }
 
     public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessage) {
@@ -321,12 +323,12 @@ public final class TUMCabeClient {
 
     public void searchChatMember(String query, Callback<List<ChatMember>> callback) {
         service.searchMemberByName(query)
-               .enqueue(callback);
+                .enqueue(callback);
     }
 
     public void getChatMemberByLrzId(String lrzId, Callback<ChatMember> callback) {
         service.getMember(lrzId)
-               .enqueue(callback);
+                .enqueue(callback);
     }
 
     public Observable<List<Cafeteria>> getCafeterias() {
@@ -339,14 +341,14 @@ public final class TUMCabeClient {
 
     public List<News> getNews(String lastNewsId) throws IOException {
         return service.getNews(lastNewsId)
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public List<NewsSources> getNewsSources() throws IOException {
         return service.getNewsSources()
-                      .execute()
-                      .body();
+                .execute()
+                .body();
     }
 
     public Observable<NewsAlert> getNewsAlert() {
@@ -392,20 +394,15 @@ public final class TUMCabeClient {
     }
 
     // Ticket purchase
-    public void purchaseTicketStripe(Context context, int ticketHistory, String token, String customerMail,
-                                       String customerName, Callback<Ticket> cb) throws IOException {
-        HashMap<String, Object> argsMap = new HashMap<>();
-        argsMap.put("ticket_history", ticketHistory);
-        argsMap.put("token", token);
-        argsMap.put("customer_mail", customerMail);
-        argsMap.put("customer_name", customerName);
-
-        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, argsMap);
+    public void purchaseTicketStripe(Context context, int ticketHistory, String token,
+                                     String customerName, Callback<Ticket> cb) throws IOException {
+        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context,
+                new TicketPurchaseStripe(ticketHistory, token, customerName));
         service.purchaseTicketStripe(chatVerification).enqueue(cb);
     }
 
-    public void retrieveEphemeralKey(Context context, String apiVersion, String customerMail, Callback<HashMap<String, Object>> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new EphimeralKey(customerMail, apiVersion));
+    public void retrieveEphemeralKey(Context context, String apiVersion, Callback<HashMap<String, Object>> cb) throws IOException {
+        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new EphimeralKey(apiVersion));
         service.retrieveEphemeralKey(chatVerification).enqueue(cb);
     }
 
@@ -413,6 +410,10 @@ public final class TUMCabeClient {
         TicketValidityRequest request = new TicketValidityRequest(eventId, code);
         service.getNameForTicket(request)
                 .enqueue(callback);
+    }
+
+    public void getTicketStats(int event, Callback<List<TicketStatus>> cb) {
+        service.getTicketStats(event).enqueue(cb);
     }
 
 }

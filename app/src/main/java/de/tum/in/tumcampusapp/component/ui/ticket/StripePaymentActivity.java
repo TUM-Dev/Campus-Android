@@ -82,7 +82,9 @@ public class StripePaymentActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        paymentSession.onDestroy();
+        if (paymentSession != null) {
+            paymentSession.onDestroy();
+        }
         try {
             //TODO: react to cancelation?
             TUMCabeClient.getInstance(getApplicationContext()).cancelTicketReservation(StripePaymentActivity.this, ticketHistory, new Callback<TicketSuccessResponse>() {
@@ -125,6 +127,7 @@ public class StripePaymentActivity extends BaseActivity {
                 paymentSession.presentPaymentMethodSelection();
             }
         });
+        savedCardsButton.setEnabled(false);
 
         // Insert formated string to remind users about which amount they are going to pay
         TextView priceReminder = findViewById(R.id.payment_info_price_textview);
@@ -153,7 +156,6 @@ public class StripePaymentActivity extends BaseActivity {
                     .getInstance(StripePaymentActivity.this)
                     .purchaseTicketStripe(StripePaymentActivity.this, ticketHistory,
                             paymentSession.getPaymentSessionData().getSelectedPaymentMethodId(),
-                            getUserMailAddress(),
                             cardholder, new Callback<Ticket>() {
                                 @Override
                                 public void onResponse(Call<Ticket> call, Response<Ticket> response) {
@@ -249,8 +251,6 @@ public class StripePaymentActivity extends BaseActivity {
 
 
     private void initCustomerSession() {
-        String customerMail = getUserMailAddress();
-
         CustomerSession.initCustomerSession(new TicketEphemeralKeyProvider(new TicketEphemeralKeyProvider.ProgressListener() {
             @Override
             public void onStringResponse(String string) {
@@ -260,7 +260,7 @@ public class StripePaymentActivity extends BaseActivity {
                     initPaymentSession();
                 }
             }
-        }, getApplicationContext(), customerMail));
+        }, getApplicationContext()));
     }
 
 
@@ -287,6 +287,7 @@ public class StripePaymentActivity extends BaseActivity {
             @Override
             public void onPaymentSessionDataChanged(@NonNull PaymentSessionData data) {
                 buyButton.setEnabled(true);
+                savedCardsButton.setEnabled(true);
             }
 
         }, new PaymentSessionConfig.Builder()
@@ -297,16 +298,6 @@ public class StripePaymentActivity extends BaseActivity {
 
     private String buildCardString(@NonNull SourceCardData data) {
         return data.getBrand() + ",  " + getString(R.string.creditcard_ending_in) + "  " + data.getLast4();
-    }
-
-
-    private String getUserMailAddress() {
-        String customerMail = Utils.getSetting(StripePaymentActivity.this, Const.LRZ_ID, "");
-        if (customerMail.length() == 0) {
-            StripePaymentActivity.showError(StripePaymentActivity.this, getString(R.string.internal_error));
-            finish();
-        }
-        return customerMail + "@mytum.de";
     }
 
 }
