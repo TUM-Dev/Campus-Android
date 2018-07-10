@@ -174,7 +174,7 @@ public class EventDetailsFragment extends Fragment {
                 // -> build sum
                 int sum = 0;
                 for (TicketStatus stat : response.body()) {
-                    sum += stat.getContingent() - stat.getSold();
+                    sum += stat.getAvailableTicketCount();
                 }
                 countView.setText(getString(R.string.tickets_left, sum));
             }
