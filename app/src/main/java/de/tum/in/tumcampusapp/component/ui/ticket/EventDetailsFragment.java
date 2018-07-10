@@ -22,12 +22,20 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CreateEventActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import io.reactivex.disposables.CompositeDisposable;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
@@ -139,10 +147,7 @@ public class EventDetailsFragment extends Fragment {
         eventLocationTextView.setOnClickListener(view -> showMap());
 
         //set remaining tickets,following code is just for testing purpose.
-        //TODO:The remaining tickets should get from backend.Like event.getremainningtickets()
-        int remainingTickets = 30;
-        String remainingTicketsString = remainingTickets + " Tickets left!";
-        eventRemainingTicketTextView.setText(remainingTicketsString);
+        setAvailableTicketCount(eventRemainingTicketTextView);
 
         String eventDescriptionString = event.getDescription();
         eventDescriptionTextView.setText(eventDescriptionString);
@@ -158,6 +163,28 @@ public class EventDetailsFragment extends Fragment {
                 .getDimension(R.dimen.padding_kino_end);
         eventLinkTextView.setPadding(padding, padding, paddingRight, paddingEnd);
         rootView.addView(footerView);
+    }
+
+    private void setAvailableTicketCount(TextView countView) {
+        countView.setText(R.string.loading);
+        TUMCabeClient.getInstance(context).getTicketStats(event.getId(), new retrofit2.Callback<List<TicketStatus>>() {
+            @Override
+            public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
+                // stats is array of TicketStats, each containing info about one ticket type associated with the event
+                // -> build sum
+                int sum = 0;
+                for (TicketStatus stat : response.body()) {
+                    sum += stat.getAvailableTicketCount();
+                }
+                countView.setText(getString(R.string.tickets_left, sum));
+            }
+
+            @Override
+            public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
+                t.printStackTrace();
+                countView.setText(R.string.error);
+            }
+        });
     }
 
     private void showTicket() {

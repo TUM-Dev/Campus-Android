@@ -46,6 +46,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketPurchaseStripe;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationCancelation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityRequest;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityResponse;
@@ -409,6 +410,10 @@ public final class TUMCabeClient {
         TicketValidityRequest request = new TicketValidityRequest(eventId, code);
         service.getNameForTicket(request)
                 .enqueue(callback);
+    }
+
+    public void getTicketStats(int event, Callback<List<TicketStatus>> cb) {
+        service.getTicketStats(event).enqueue(cb);
     }
 
 }
