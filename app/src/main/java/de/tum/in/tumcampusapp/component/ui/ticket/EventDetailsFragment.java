@@ -51,8 +51,6 @@ public class EventDetailsFragment extends Fragment {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    long eventDuration = 7200000; // TODO: remove this once duration is implemented as part of event
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
@@ -67,8 +65,6 @@ public class EventDetailsFragment extends Fragment {
         context = root.getContext();
 
         event = eventsController.getEvents().get(position);
-
-        // TODO: set eventDuration when server API is adjusted
 
         showDetails(root);
 
@@ -135,7 +131,7 @@ public class EventDetailsFragment extends Fragment {
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
-        eventDateTextView.setText(DateTimeUtils.INSTANCE.getDateTimeString(event.getDate()));
+        eventDateTextView.setText(DateTimeUtils.INSTANCE.getDateTimeString(event.getStart()));
 
         // open "add to calendar" dialog on click
         eventDateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
@@ -194,29 +190,33 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void buyTicket() {
-        // TODO: message to server to create ticket
         Intent intent = new Intent(context, BuyTicketActivity.class);
         intent.putExtra("eventID", event.getId());
         startActivity(intent);
     }
 
     private void addToTUMCalendar() {
-        Intent intent = new Intent(context, CreateEventActivity.class);
-        intent.putExtra(Const.EVENT_EDIT, false);
-        intent.putExtra(Const.EVENT_TITLE, event.getTitle());
-        intent.putExtra(Const.EVENT_COMMENT, event.getDescription());
-        intent.putExtra(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(event.getDate()));
-        intent.putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(
-                event.getDate().plus(eventDuration)));
+        Intent intent = new Intent(context, CreateEventActivity.class)
+                .putExtra(Const.EVENT_EDIT, false)
+                .putExtra(Const.EVENT_TITLE, event.getTitle())
+                .putExtra(Const.EVENT_COMMENT, event.getDescription())
+                .putExtra(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(event.getStart()))
+                .putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd() != null
+                        ? event.getEnd()
+                        : event.getStart().plus(Event.defaultDuration)));
+        /*if (event.getEnd() != null) {
+            intent.putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd()));
+        }*/
         startActivity(intent);
     }
 
     private void addToExternalCalendar() {
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getMillis())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDate().
-                        plus(eventDuration).getMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStart().getMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEnd() != null
+                        ? event.getEnd().getMillis()
+                        : event.getStart().plus(Event.defaultDuration).getMillis())
                 .putExtra(CalendarContract.Events.TITLE, event.getTitle())
                 .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())

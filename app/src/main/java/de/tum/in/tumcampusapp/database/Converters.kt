@@ -9,10 +9,14 @@ import org.joda.time.DateTime
 
 class Converters {
     @TypeConverter
-    fun isoToDateTime(str: String): DateTime = DateTimeUtils.getDateTime(str)
+    fun isoToDateTime(str: String?): DateTime? {
+        return if (str == null) null else DateTimeUtils.getDateTime(str)
+    }
 
     @TypeConverter
-    fun fromDateTime(date: DateTime): String = DateTimeUtils.getDateTimeString(date)
+    fun fromDateTime(date: DateTime?): String? {
+        return if (date == null) null else DateTimeUtils.getDateTimeString(date)
+    }
 
     @TypeConverter
     fun toJson(location: FcmNotificationLocation): String = Gson().toJson(location);

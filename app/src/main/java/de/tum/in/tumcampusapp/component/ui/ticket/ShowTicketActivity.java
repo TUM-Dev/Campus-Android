@@ -57,11 +57,11 @@ public class ShowTicketActivity extends BaseActivity {
         TicketType ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
 
         String timeString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
-                format(event.getDate());
+                format(event.getStart());
         String[] time = timeString.split(" ");
         //set date format to current locale setting
         java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
-        String dateString = dateFormat.format(event.getDate());
+        String dateString = dateFormat.format(event.getStart());
         //load event details
         String String = event.getTitle();
         String eventLocationString = event.getLocality();
