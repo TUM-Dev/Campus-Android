@@ -41,9 +41,9 @@ public class EventDetailsActivity extends BaseActivity {
 
         // Use clickedEventId to show the clicked event in the EventDetailsView
         int startPosition = 0;
-        for(int i = 0; i < events.size(); i++){
+        for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
-            if (event.getId() == clickedEventId){
+            if (event.getId() == clickedEventId) {
                 startPosition = i;
                 break;
             }

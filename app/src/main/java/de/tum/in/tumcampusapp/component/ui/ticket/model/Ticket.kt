@@ -12,13 +12,12 @@ import com.google.gson.annotations.SerializedName
  * @param ticketTypeId   Type
  */
 @Entity
-data class Ticket(
-        @PrimaryKey
-        @SerializedName("ticket_history")
-        var id: Int,
-        @SerializedName("event")
-        var eventId: Int,
-        var code: String = "",
-        @SerializedName("ticket_type")
-        var ticketTypeId: Int,
-        var redeemed: Boolean = false)
+data class Ticket(@PrimaryKey
+                  @SerializedName("ticket_history")
+                  var id: Int,
+                  @SerializedName("event")
+                  var eventId: Int,
+                  var code: String = "",
+                  @SerializedName("ticket_type")
+                  var ticketTypeId: Int,
+                  var redeemed: Boolean = false)

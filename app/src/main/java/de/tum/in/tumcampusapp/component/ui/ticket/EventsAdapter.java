@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
@@ -38,7 +37,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         public EventViewHolder(View view) {
             super(view);
             cardView = (CardView) view;
-            titleView =  view.findViewById(R.id.events_title);
+            titleView = view.findViewById(R.id.events_title);
             imgView = view.findViewById(R.id.events_img);
             localityView = view.findViewById(R.id.events_src_locality);
             srcDateView = view.findViewById(R.id.events_src_date);
@@ -50,8 +49,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     }
 
     @Override
-    public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        if (mContext==null){
+    public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (mContext == null) {
             mContext = parent.getContext();
         }
         View view = LayoutInflater.from(mContext)
@@ -106,7 +105,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         holder.localityView.setText(locality);
 
         // Adds date
-        holder.srcDateView.setText(DateTimeUtils.INSTANCE.getDateString(event.getStart()));
+        holder.srcDateView.setText(event.getFormattedDate());
     }
 
     @Override

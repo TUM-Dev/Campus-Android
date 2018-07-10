@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 /**
  * Event
@@ -32,6 +33,14 @@ data class Event(@PrimaryKey
 
     companion object {
         const val defaultDuration = 7200000 // Milliseconds
+    }
+
+    fun getFormattedDateTime(): String {
+        return DateTimeFormat.forPattern("HH:mm, dd MMMM yyyy").print(start)
+    }
+
+    fun getFormattedDate(): String {
+        return DateTimeFormat.forPattern("dd MMMM yyyy").print(start)
     }
 
     fun isFutureEvent() = start.isAfter(DateTime())

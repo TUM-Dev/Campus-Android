@@ -11,7 +11,7 @@ public class EventCard extends NewsCard {
 
     private Event event;
 
-    public void setEvent(Event event){
+    public void setEvent(Event event) {
         this.event = event;
     }
 

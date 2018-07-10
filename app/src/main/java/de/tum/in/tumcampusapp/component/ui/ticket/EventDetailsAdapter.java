@@ -12,9 +12,6 @@ import java.util.List;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
 
-/**
- * TODO: combine this with KinoAdapter
- */
 public class EventDetailsAdapter extends FragmentStatePagerAdapter {
 
     private final int count; //number of pages
