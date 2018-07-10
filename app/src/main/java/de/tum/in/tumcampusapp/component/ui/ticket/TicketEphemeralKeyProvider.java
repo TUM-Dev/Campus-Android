@@ -39,7 +39,7 @@ public class TicketEphemeralKeyProvider implements EphemeralKeyProvider {
     public void createEphemeralKey(@NonNull @Size(min = 4) String apiVersion,
                                    @NonNull final EphemeralKeyUpdateListener keyUpdateListener) {
         try {
-            TUMCabeClient.getInstance(mContext).retrieveEphemeralKey(mContext, "2017-06-05", new Callback<HashMap<String, Object>>() {
+            TUMCabeClient.getInstance(mContext).retrieveEphemeralKey(mContext, apiVersion, new Callback<HashMap<String, Object>>() {
                 @Override
                 public void onResponse(Call<HashMap<String, Object>> call, Response<HashMap<String, Object>> response) {
                     String id = response.body().toString();

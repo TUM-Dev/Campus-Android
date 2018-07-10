@@ -82,7 +82,9 @@ public class StripePaymentActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        paymentSession.onDestroy();
+        if (paymentSession != null) {
+            paymentSession.onDestroy();
+        }
         try {
             //TODO: react to cancelation?
             TUMCabeClient.getInstance(getApplicationContext()).cancelTicketReservation(StripePaymentActivity.this, ticketHistory, new Callback<TicketSuccessResponse>() {
