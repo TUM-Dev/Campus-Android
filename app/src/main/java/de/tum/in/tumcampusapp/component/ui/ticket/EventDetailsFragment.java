@@ -169,14 +169,17 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void addToTUMCalendar() {
-        Intent intent = new Intent(context, CreateEventActivity.class);
-        intent.putExtra(Const.EVENT_EDIT, false);
-        intent.putExtra(Const.EVENT_TITLE, event.getTitle());
-        intent.putExtra(Const.EVENT_COMMENT, event.getDescription());
-        intent.putExtra(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(event.getStart()));
-        intent.putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd() != null
-                ? event.getEnd()
-                : event.getStart().plus(Const.EVENT_DEFAULT_DURATION)));
+        Intent intent = new Intent(context, CreateEventActivity.class)
+                .putExtra(Const.EVENT_EDIT, false)
+                .putExtra(Const.EVENT_TITLE, event.getTitle())
+                .putExtra(Const.EVENT_COMMENT, event.getDescription())
+                .putExtra(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(event.getStart()))
+                .putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd() != null
+                        ? event.getEnd()
+                        : event.getStart().plus(Event.defaultDuration)));
+        /*if (event.getEnd() != null) {
+            intent.putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd()));
+        }*/
         startActivity(intent);
     }
 
@@ -185,8 +188,8 @@ public class EventDetailsFragment extends Fragment {
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStart().getMillis())
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEnd() != null
-                        ? event.getEnd()
-                        : event.getStart().plus(Const.EVENT_DEFAULT_DURATION).getMillis())
+                        ? event.getEnd().getMillis()
+                        : event.getStart().plus(Event.defaultDuration).getMillis())
                 .putExtra(CalendarContract.Events.TITLE, event.getTitle())
                 .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())

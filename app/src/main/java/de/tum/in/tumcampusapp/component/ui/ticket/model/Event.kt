@@ -30,6 +30,10 @@ data class Event(@PrimaryKey
                  var end: DateTime? = null,
                  var link: String = "") {
 
+    companion object {
+        const val defaultDuration = 7200000 // Milliseconds
+    }
+
     fun isFutureEvent() = start.isAfter(DateTime())
 
 }
