@@ -9,13 +9,13 @@ import org.joda.time.DateTime
 
 class Converters {
     @TypeConverter
-    fun isoToDateTime(str: String): DateTime? {
-        return if (str.isNotEmpty()) DateTimeUtils.getDateTime(str) else null
+    fun isoToDateTime(str: String?): DateTime? {
+        return if (str == null) null else DateTimeUtils.getDateTime(str)
     }
 
     @TypeConverter
-    fun fromDateTime(date: DateTime?): String {
-        return if (date != null) DateTimeUtils.getDateTimeString(date) else ""
+    fun fromDateTime(date: DateTime?): String? {
+        return if (date == null) null else DateTimeUtils.getDateTimeString(date)
     }
 
     @TypeConverter
