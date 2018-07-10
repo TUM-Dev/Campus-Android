@@ -37,6 +37,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityRequest;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -251,4 +252,6 @@ public interface TUMCabeAPIService {
     @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
     Call<HashMap<String, Object>> retrieveEphemeralKey(@Body ChatVerification chatVerification);
 
+    @GET(API_EVENTS + API_TICKET + "status/{event}")
+    Call<List<TicketStatus>> getTicketStats(@Path("event") int event);
 }
