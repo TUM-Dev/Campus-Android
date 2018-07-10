@@ -23,9 +23,7 @@ import com.squareup.picasso.Picasso;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
-import de.tum.in.tumcampusapp.component.ui.ticket.BuyTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.component.ui.ticket.ShowTicketActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
@@ -41,8 +39,6 @@ public class KinoDetailsFragment extends Fragment {
     private String url; // link to homepage
     private LayoutInflater inflater;
 
-    private boolean isBooked = false;
-
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
@@ -57,8 +53,6 @@ public class KinoDetailsFragment extends Fragment {
         KinoLocalRepository.db = TcaDb.getInstance(context);
         KinoViewModel kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposable);
         context = root.getContext();
-
-        // TODO: set isBooked if the user has already bought a ticket
 
         kinoViewModel.getKinoByPosition(position)
                 .subscribe(kino1 -> {
@@ -128,7 +122,6 @@ public class KinoDetailsFragment extends Fragment {
         Button year = headerView.findViewById(R.id.button_year);
         Button runtime = headerView.findViewById(R.id.button_runtime);
         Button trailer = headerView.findViewById(R.id.button_trailer);
-        Button ticket = headerView.findViewById(R.id.button_ticket);
         ImageView cover = headerView.findViewById(R.id.kino_cover);
         ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
         View error = headerView.findViewById(R.id.kino_cover_error);
@@ -143,15 +136,6 @@ public class KinoDetailsFragment extends Fragment {
         link.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
         year.setOnClickListener(view -> Toast.makeText(context, R.string.year, Toast.LENGTH_SHORT).show());
         trailer.setOnClickListener(view -> showTrailer());
-
-        // Setup "Buy/Show ticket" button according to ticket status for current event
-        if (isBooked) {
-            ticket.setText(this.getString(R.string.show_ticket));
-            ticket.setOnClickListener(view -> showTicket());
-        } else {
-            ticket.setText(this.getString(R.string.buy_ticket));
-            ticket.setOnClickListener(view -> buyTicket());
-        }
 
         // cover
         Picasso.get()
@@ -171,18 +155,6 @@ public class KinoDetailsFragment extends Fragment {
                 });
 
         rootView.addView(headerView);
-    }
-
-    //open ShowTicketActivity activity
-    private void showTicket() {
-        Intent intent = new Intent(context, ShowTicketActivity.class);
-        startActivity(intent);
-    }
-
-    private void buyTicket() {
-        // TODO: message to server to create ticket
-        Intent intent = new Intent(context, BuyTicketActivity.class);
-        startActivity(intent);
     }
 
     public void showTrailer() {

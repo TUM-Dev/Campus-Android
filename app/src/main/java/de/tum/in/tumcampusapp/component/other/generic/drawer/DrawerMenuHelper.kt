@@ -24,7 +24,7 @@ import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsActivity
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsActivity
+import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventsActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.TicketScanActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
 import de.tum.`in`.tumcampusapp.utils.Const

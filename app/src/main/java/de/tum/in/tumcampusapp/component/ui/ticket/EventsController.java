@@ -1,11 +1,14 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.view.ContextThemeWrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
@@ -66,8 +69,14 @@ public class EventsController {
 
                     @Override
                     public void onFailure(Call<List<Ticket>> call, Throwable t) {
-                        //TODO: inform user about failure
                         t.printStackTrace();
+
+                        ContextThemeWrapper ctw = new ContextThemeWrapper(context, R.style.Theme_AppCompat_Light_Dialog_Alert);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
+                        builder.setTitle(context.getString(R.string.error))
+                                .setMessage(context.getString(R.string.update_failure_message));
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
                     }
                 });
             }

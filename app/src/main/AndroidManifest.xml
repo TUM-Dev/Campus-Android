@@ -680,7 +680,7 @@
             </intent-filter>
         </receiver>
         <activity
-            android:name=".component.ui.ticket.ShowTicketActivity"
+            android:name=".component.ui.ticket.activity.ShowTicketActivity"
             android:configChanges="keyboardHidden|screenSize"
             android:label="@string/your_ticket"
             android:launchMode="singleTop"
@@ -690,7 +690,7 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-            android:name=".component.ui.ticket.BuyTicketActivity"
+            android:name=".component.ui.ticket.activity.BuyTicketActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/summary"
             android:launchMode="singleTop"
@@ -700,7 +700,7 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-            android:name=".component.ui.ticket.EventsActivity"
+            android:name=".component.ui.ticket.activity.EventsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/events_tickets"
             android:launchMode="singleTop"
@@ -722,31 +722,31 @@
                 android:value="de.tum.in.tumcampusapp.component.ui.ticket.TicketScanActivity" />
         </activity>
         <activity
-            android:name=".component.ui.ticket.EventDetailsActivity"
+            android:name=".component.ui.ticket.activity.EventDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/events"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.ticket.EventsActivity">
+            android:parentActivityName=".component.ui.ticket.activity.EventsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.ticket.EventsActivity" />
+                android:value=".component.ui.ticket.activity.EventsActivity" />
         </activity>
         <activity
-            android:name=".component.ui.ticket.TicketPaymentSelectActivity"
+            android:name=".component.ui.ticket.activity.TicketPaymentSelectActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/payment_selection"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.ticket.BuyTicketActivity">
+            android:parentActivityName=".component.ui.ticket.activity.BuyTicketActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-            android:name=".component.ui.ticket.StripePaymentActivity"
+            android:name=".component.ui.ticket.activity.StripePaymentActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/enter_card_info_title"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.ticket.TicketPaymentSelectActivity">
+            android:parentActivityName=".component.ui.ticket.activity.TicketPaymentSelectActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
