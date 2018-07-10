@@ -115,7 +115,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:$firebaseVersion"
     implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
-    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
+    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 
     // Helpers
     implementation 'net.danlew:android.joda:2.9.9.2'
