@@ -36,11 +36,15 @@ data class Event(@PrimaryKey
     }
 
     fun getFormattedDateTime(): String {
-        return DateTimeFormat.forPattern("HH:mm, dd MMMM yyyy").print(start)
+        return "${getFormattedDate()}, ${getFormattedTime()}"
     }
 
     fun getFormattedDate(): String {
         return DateTimeFormat.forPattern("dd MMMM yyyy").print(start)
+    }
+
+    fun getFormattedTime(): String {
+        return DateTimeFormat.forPattern("HH:mm").print(start)
     }
 
     fun isFutureEvent() = start.isAfter(DateTime())
