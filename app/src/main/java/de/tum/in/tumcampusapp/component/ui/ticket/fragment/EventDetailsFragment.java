@@ -104,21 +104,25 @@ public class EventDetailsFragment extends Fragment {
         }
 
         // cover
-        Picasso.get()
-                .load(event.getImage())
-                .into(cover, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        progress.setVisibility(View.GONE);
-                        error.setVisibility(View.GONE);
-                    }
+        if (event.getImage() != null) {
+            Picasso.get()
+                    .load(event.getImage())
+                    .into(cover, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            progress.setVisibility(View.GONE);
+                            error.setVisibility(View.GONE);
+                        }
 
-                    @Override
-                    public void onError(Exception e) {
-                        progress.setVisibility(View.GONE);
-                        error.setVisibility(View.VISIBLE);
-                    }
-                });
+                        @Override
+                        public void onError(Exception e) {
+                            progress.setVisibility(View.GONE);
+                            error.setVisibility(View.VISIBLE);
+                        }
+                    });
+        } else {
+            progress.setVisibility(View.GONE);
+        }
         rootView.addView(headerView);
     }
 
@@ -179,7 +183,8 @@ public class EventDetailsFragment extends Fragment {
             @Override
             public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
                 t.printStackTrace();
-                countView.setText(R.string.error);
+                // Connect again
+                setAvailableTicketCount(countView);
             }
         });
     }
