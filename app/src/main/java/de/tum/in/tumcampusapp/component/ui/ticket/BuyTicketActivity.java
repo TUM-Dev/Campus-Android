@@ -54,50 +54,56 @@ public class BuyTicketActivity extends BaseActivity {
         eventId = getIntent().getIntExtra("eventID", 0);
 
         // get ticket type information from API
-        Thread thread = new Thread() {
-            public void run() {
-                ticketTypes = eventsController.getTicketTypesByEventId(eventId);
+        TUMCabeClient.getInstance(getApplicationContext()).getTicketTypes(eventId,
+                new Callback<List<TicketType>>(){
+
+                    @Override
+                    public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
+                        ticketTypes = response.body();
+
+                        // add found ticket types to database
+                        eventsController.addTicketTypes(ticketTypes);
+
+                        setupUi();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<TicketType>> call, Throwable t) {
+                        // if ticketTypes could not be retrieved from server, e.g. due to network problems
+                        Utils.log(t);
+                        Utils.showToast(getApplicationContext(), R.string.no_network_connection);
+                        // go back to event details
+                        Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
+                        intent.putExtra("event_id", eventId);
+                        startActivity(intent);
+                    }
+                });
+    }
+
+    private void setupUi(){
+        initEventTextViews();
+
+        initializeTicketTypeSpinner();
+
+        reservationProgressBar = findViewById(R.id.ticket_reservation_progressbar);
+        reservationProgressBar.setVisibility(View.INVISIBLE);
+
+        paymentButton = findViewById(R.id.paymentbutton);
+        paymentButton.setOnClickListener(v -> {
+            // Check if user is logged in and name and LRZ ID are available (needed to create ChatVerification)
+            if (new AccessTokenManager(BuyTicketActivity.this).hasValidAccessToken() &&
+                    Utils.getSetting(BuyTicketActivity.this, Const.LRZ_ID, "").length() > 0 &&
+                    Utils.getSetting(BuyTicketActivity.this, Const.CHAT_ROOM_DISPLAY_NAME, "").length() > 0) {
+                reserveTicket();
+            } else {
+                ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
+                builder.setTitle(getString(R.string.sorry))
+                        .setMessage(R.string.not_logged_in_message);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
-        };
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // if ticketTypes could not be retrieved from server, e.g. due to network problems
-        if (ticketTypes == null) {
-            Utils.showToast(getApplicationContext(), R.string.no_network_connection);
-            // go back to event details
-            Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
-            intent.putExtra("event_id", eventId);
-            startActivity(intent);
-        } else {
-            initEventTextViews();
-
-            initializeTicketTypeSpinner();
-
-            reservationProgressBar = findViewById(R.id.ticket_reservation_progressbar);
-            reservationProgressBar.setVisibility(View.INVISIBLE);
-
-            paymentButton = findViewById(R.id.paymentbutton);
-            paymentButton.setOnClickListener(v -> {
-                // Check if user is logged in and name and LRZ ID are available (needed to create ChatVerification)
-                if (new AccessTokenManager(BuyTicketActivity.this).hasValidAccessToken() &&
-                        Utils.getSetting(BuyTicketActivity.this, Const.LRZ_ID, "").length() > 0 &&
-                        Utils.getSetting(BuyTicketActivity.this, Const.CHAT_ROOM_DISPLAY_NAME, "").length() > 0) {
-                    reserveTicket();
-                } else {
-                    ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
-                    builder.setTitle(getString(R.string.sorry))
-                            .setMessage(R.string.not_logged_in_message);
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
-            });
-        }
+        });
     }
 
     private void initEventTextViews() {

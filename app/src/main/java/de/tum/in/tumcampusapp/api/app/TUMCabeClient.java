@@ -378,8 +378,8 @@ public final class TUMCabeClient {
         service.getTickets(chatVerification).enqueue(cb);
     }
 
-    public List<TicketType> getTicketTypes(int eventID) throws IOException {
-        return service.getTicketTypes(eventID).execute().body();
+    public void getTicketTypes(int eventID, Callback<List<TicketType>> cb) {
+        service.getTicketTypes(eventID).enqueue(cb);
     }
 
     // Ticket reservation
