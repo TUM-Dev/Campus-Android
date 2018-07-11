@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,11 +31,11 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * Default layouts for user interaction
      */
     private FrameLayout allErrorsLayout;
-    protected RelativeLayout errorLayout;
+    protected LinearLayout errorLayout;
     private FrameLayout progressLayout;
     private RelativeLayout noTokenLayout;
-    protected RelativeLayout noInternetLayout;
-    protected RelativeLayout failedTokenLayout;
+    protected LinearLayout noInternetLayout;
+    protected LinearLayout failedTokenLayout;
     protected SwipeRefreshLayout swipeRefreshLayout;
     private boolean registered;
     private final Handler mLoadingHandler = new Handler();
