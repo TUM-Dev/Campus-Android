@@ -97,7 +97,7 @@ dependencies {
     implementation "com.android.support:design:$androidSupportVersion"
     implementation "com.android.support:preference-v7:$androidSupportVersion"
     implementation "com.android.support:preference-v14:$androidSupportVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.google.guava:guava:23.2-android'
 
     // Android arch components
@@ -115,7 +115,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:$firebaseVersion"
     implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     implementation "com.google.android.gms:play-services-location:$firebaseVersion"
-    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
+    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 
     // Helpers
     implementation 'net.danlew:android.joda:2.9.9.2'
