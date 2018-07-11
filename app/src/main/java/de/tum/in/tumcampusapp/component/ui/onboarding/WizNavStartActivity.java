@@ -166,12 +166,16 @@ public class WizNavStartActivity
 
         // Set access token to null
         Utils.setSetting(this, Const.ACCESS_TOKEN, null);
-        showLoadingEnded();
+        //showLoadingEnded();
+        displayTokenDownloadErrorDialog(messageResId);
+    }
+
+    private void displayTokenDownloadErrorDialog(int messageResId) {
+        hideKeyboard();
         displayErrorDialog(messageResId);
     }
 
     private void displayErrorDialog(int messageResId) {
-        hideKeyboard();
         new AlertDialog.Builder(this)
                 .setMessage(messageResId)
                 .setPositiveButton(R.string.ok, null)

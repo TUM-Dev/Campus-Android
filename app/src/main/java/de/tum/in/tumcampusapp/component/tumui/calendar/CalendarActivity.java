@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
@@ -124,68 +123,21 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
     }
 
     private void loadEvents() {
-        Call<Events> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .getCalendar(MONTH_BEFORE, MONTH_AFTER);
-
+        Call<Events> apiCall = mApiService.getCalendar(MONTH_BEFORE, MONTH_AFTER);
         fetch(apiCall, events -> {
             isFetched = true;
-
-            // parsing and saving xml response
             Completable.fromAction(() -> calendarController.importCalendar(events))
                     .compose(provider.bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(() -> {
-                        showLoadingEnded();
                         // update the action bar to display the enabled menu options
-                        CalendarActivity.this.invalidateOptionsMenu();
-                        startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
+                        this.invalidateOptionsMenu();
+                        startService(new Intent(CalendarActivity.this,
+                                CalendarController.QueryLocationsService.class));
                     });
         });
-
-        /*
-        TUMOnlineClient
-                .getInstance(this)
-                .getCalendar(MONTH_BEFORE, MONTH_AFTER)
-                .enqueue(new Callback<Events>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Events> call, @NonNull Response<Events> response) {
-                        if (response.isSuccessful()) {
-                            onEventsDownloadSuccess(response);
-                        } else {
-                            onDownloadUnsuccessful(response.code());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<Events> call, @NonNull Throwable t) {
-                        onDownloadError(t);
-                    }
-                });
-        */
     }
-
-    /*
-    private void onEventsDownloadSuccess(Response<Events> response) {
-        showLoadingEnded();
-        isFetched = true;
-
-        Events events = response.body();
-
-        // parsing and saving xml response
-        Completable.fromAction(() -> calendarController.importCalendar(events))
-                .compose(provider.bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    showLoadingEnded();
-                    // update the action bar to display the enabled menu options
-                    CalendarActivity.this.invalidateOptionsMenu();
-                    startService(new Intent(CalendarActivity.this, CalendarController.QueryLocationsService.class));
-                });
-    }
-    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -463,45 +415,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
     }
 
     private void handleDeleteEvent(String eventId) {
-        Call<DeleteEventResponse> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .deleteCalendarEvent(eventId);
-
+        Call<DeleteEventResponse> apiCall = mApiService.deleteCalendarEvent(eventId);
         fetch(apiCall, response -> {
             detailsFragment.dismiss();
             TcaDb.getInstance(CalendarActivity.this).calendarDao().delete(eventId);
             refreshWeekView();
             Utils.showToast(CalendarActivity.this, R.string.delete_event_confirmation);
         });
-
-        /*
-        TUMOnlineClient
-                .getInstance(this)
-                .deleteCalendarEvent(eventId)
-                .enqueue(new Callback<DeleteEventResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<DeleteEventResponse> call,
-                                           @NonNull Response<DeleteEventResponse> response) {
-                        if (response.isSuccessful()) {
-                            onDeleteEventSuccessful(eventId);
-                        } else {
-                            onDownloadUnsuccessful(response.code());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
-                        onDownloadError(t);
-                    }
-                });
-        */
-    }
-
-    private void onDeleteEventSuccessful(String eventId) {
-        detailsFragment.dismiss();
-        TcaDb.getInstance(CalendarActivity.this).calendarDao().delete(eventId);
-        refreshWeekView();
-        Utils.showToast(CalendarActivity.this, R.string.delete_event_confirmation);
     }
 
     @Override

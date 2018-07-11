@@ -52,24 +52,10 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
     private TextView tvLDetailsTermin;
     private TextView tvLDetailsZiele;
 
+    private String mLectureId;
+
     public LecturesDetailsActivity() {
         super(R.layout.activity_lecturedetails);
-    }
-
-    @Override
-    public void onClick(View view) {
-        super.onClick(view);
-        if (view.getId() == btnLDetailsTermine.getId()) {
-            // start LectureAppointments
-            Bundle bundle = new Bundle();
-            // LectureAppointments need the name and id of the facing lecture
-            bundle.putString("stp_sp_nr", currentItem.getStp_sp_nr());
-            bundle.putString(Const.TITLE_EXTRA, currentItem.getTitle());
-
-            Intent i = new Intent(this, LecturesAppointmentsActivity.class);
-            i.putExtras(bundle);
-            startActivity(i);
-        }
     }
 
     @Override
@@ -89,19 +75,37 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
         btnLDetailsTermine = findViewById(R.id.btnLDetailsTermine);
         btnLDetailsTermine.setOnClickListener(this);
 
-        Bundle bundle = this.getIntent()
-                            .getExtras();
-
-        String lectureId = getIntent().getStringExtra("stp_sp_nr");
-        if (lectureId == null) {
+        mLectureId = getIntent().getStringExtra("stp_sp_nr");
+        if (mLectureId == null) {
             finish();
             return;
         }
 
-        loadLectureDetails(lectureId);
+        loadLectureDetails(mLectureId);
     }
 
-    // TODO: Pull-to-refresh
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        if (view.getId() == btnLDetailsTermine.getId()) {
+            // start LectureAppointments
+            Bundle bundle = new Bundle();
+            // LectureAppointments need the name and id of the facing lecture
+            bundle.putString("stp_sp_nr", currentItem.getStp_sp_nr());
+            bundle.putString(Const.TITLE_EXTRA, currentItem.getTitle());
+
+            Intent i = new Intent(this, LecturesAppointmentsActivity.class);
+            i.putExtras(bundle);
+            startActivity(i);
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        if (mLectureId != null) {
+            loadLectureDetails(mLectureId);
+        }
+    }
 
     private void loadLectureDetails(@NonNull String lectureId) {
         showLoadingStart();
@@ -110,21 +114,6 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
                 .getLectureDetails(lectureId);
 
         fetch(apiCall, this::handleDownloadSuccess);
-
-        /*
-                .enqueue(new Callback<LectureDetailsResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<LectureDetailsResponse> call,
-                                           @NonNull Response<LectureDetailsResponse> response) {
-
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<LectureDetailsResponse> call, @NonNull Throwable t) {
-                        onDownloadError(t);
-                    }
-                });
-        */
     }
 
     public void handleDownloadSuccess(LectureDetailsResponse lectureDetailsResponse) {

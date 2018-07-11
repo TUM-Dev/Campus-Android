@@ -51,6 +51,9 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
     }
 
     private void loadIdentitySet() {
+
+        // TODO
+
         TUMOnlineClient
                 .getInstance(this)
                 .getIdentity()
@@ -62,6 +65,7 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
                         if (identitySet != null) {
                             handleDownloadSuccess(identitySet);
                         } else {
+                            // TODO
                             displayError(R.string.no_rights_to_access_id);
                         }
                     }
@@ -108,6 +112,7 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
     }
 
     private void displayError(@StringRes int resId) {
+        // TODO
         Utils.showToast(this, resId);
     }
 

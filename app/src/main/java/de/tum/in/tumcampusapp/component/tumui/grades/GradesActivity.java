@@ -373,26 +373,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
                 .getGrades();
 
         fetch(apiCall, this::handleDownloadSuccess);
-
-        /*
-        TUMOnlineClient
-                .getInstance(this)
-                .getGrades()
-                .enqueue(new Callback<ExamList>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ExamList> call, @NonNull Response<ExamList> response) {
-                        ExamList examList = response.body();
-                        if (examList != null) {
-                            handleDownloadSuccess(examList);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ExamList> call, @NonNull Throwable t) {
-                        onDownloadError(t);
-                    }
-                });
-        */
     }
 
     @Override

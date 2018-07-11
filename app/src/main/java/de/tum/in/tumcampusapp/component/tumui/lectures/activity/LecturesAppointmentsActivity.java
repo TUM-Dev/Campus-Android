@@ -56,24 +56,6 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
                 .getLectureAppointments(lectureId);
 
         fetch(apiCall, this::handleDownloadSuccess);
-
-        /*
-                .enqueue(new Callback<LectureAppointmentsResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<LectureAppointmentsResponse> call,
-                                           @NonNull Response<LectureAppointmentsResponse> response) {
-                        LectureAppointmentsResponse appointmentsResponse = response.body();
-                        if (appointmentsResponse != null) {
-                            handleDownloadSuccess(appointmentsResponse);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<LectureAppointmentsResponse> call, @NonNull Throwable t) {
-                        onDownloadError(t);
-                    }
-                });
-        */
     }
 
     public void handleDownloadSuccess(LectureAppointmentsResponse lecturesList) {
@@ -85,4 +67,5 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 
         lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, appointments));
     }
+
 }

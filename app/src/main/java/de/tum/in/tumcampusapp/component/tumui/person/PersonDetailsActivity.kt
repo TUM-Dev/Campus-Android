@@ -61,18 +61,6 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
                 handleDownloadSuccess(response)
             }
         })
-        /*
-                .enqueue(object : Callback<Employee> {
-                    override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
-                        val employee = response.body() ?: return
-                        handleDownloadSuccess(employee)
-                    }
-
-                    override fun onFailure(call: Call<Employee>, t: Throwable) {
-                        handleDownloadError(t)
-                    }
-                })
-        */
     }
     private fun handleDownloadSuccess(employee: Employee) {
         this.employee = employee

@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,13 +29,13 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     /**
      * Default layouts for user interaction
      */
-    private LinearLayout allErrorsLayout;
-    private RelativeLayout errorLayout;
-    private RelativeLayout progressLayout;
+    private FrameLayout allErrorsLayout;
+    protected RelativeLayout errorLayout;
+    private FrameLayout progressLayout;
     private RelativeLayout noTokenLayout;
-    private RelativeLayout noInternetLayout;
-    private RelativeLayout failedTokenLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    protected RelativeLayout noInternetLayout;
+    protected RelativeLayout failedTokenLayout;
+    protected SwipeRefreshLayout swipeRefreshLayout;
     private boolean registered;
     private final Handler mLoadingHandler = new Handler();
 
@@ -122,6 +122,10 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         allErrorsLayout.setVisibility(View.VISIBLE);
     }
 
+    protected void showFailedTokenLayout(int resId) {
+        showFailedTokenLayout(getString(resId));
+    }
+
     /**
      * Shows failed layout
      *
@@ -154,6 +158,8 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         allErrorsLayout.setVisibility(View.VISIBLE);
         noInternetLayout.findViewById(R.id.progressWifi)
                         .setVisibility(View.INVISIBLE);
+
+        // TODO: Remove
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Button but = findViewById(R.id.button_enable_wifi);
         but.setVisibility(wifi.isWifiEnabled() ? View.GONE : View.VISIBLE);
@@ -243,10 +249,9 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.failed_layout || viewId == R.id.error_layout) {
-            onRefresh();
+            onRefresh(); // TODO Till: Or onRetry()?
         } else if (viewId == R.id.no_token_layout) {
             startActivity(new Intent(this, UserPreferencesActivity.class));
-
         }
     }
 

@@ -193,39 +193,11 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
                 .deleteCalendarEvent(eventId);
 
         fetch(apiCall, response -> {
-            showLoadingEnded();
             Utils.log("Event successfully deleted (now creating the edited version)");
             TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventId);
             createEvent();
         });
-
-        /*
-        TUMOnlineClient
-                .getInstance(this)
-                .deleteCalendarEvent(eventId)
-                .enqueue(new Callback<DeleteEventResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<DeleteEventResponse> call,
-                                           @NonNull Response<DeleteEventResponse> response) {
-                        handleDeleteEventSuccess(eventId);
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
-                        onDownloadError(t);
-                    }
-                });
-        */
     }
-
-    /*
-    private void handleDeleteEventSuccess(String eventId) {
-        showLoadingEnded();
-        Utils.log("Event successfully deleted (now creating the edited version)");
-        TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventId);
-        createEvent();
-    }
-    */
 
     private void createEvent() {
         event = new CalendarItem();
@@ -259,38 +231,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
             TcaDb.getInstance(getApplicationContext()).calendarDao().insert(event);
             finish();
         });
-
-        /*
-        TUMOnlineClient
-                .getInstance(this)
-                .createCalendarEvent(title, description, eventStart, eventEnd, null)
-                .enqueue(new Callback<CreateEventResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<CreateEventResponse> call,
-                                           @NonNull Response<CreateEventResponse> response) {
-                        CreateEventResponse createEventResponse = response.body();
-                        if (createEventResponse != null) {
-                            handleCreateSuccess(createEventResponse);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<CreateEventResponse> call, @NonNull Throwable t) {
-                        onDownloadError(t);
-                    }
-                });
-        */
     }
-
-    /*
-    private void handleCreateSuccess(@NonNull CreateEventResponse createEventResponse) {
-        showLoadingEnded();
-        String nr = createEventResponse.getEventId();
-        event.setNr(nr);
-        TcaDb.getInstance(this).calendarDao().insert(event);
-        finish();
-    }
-    */
 
     @Override
     public void onBackPressed() {

@@ -53,24 +53,6 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
                 .getTuitionFeesStatus();
 
         fetch(apiCall, this::displayTuition);
-
-        /*
-                .enqueue(new Callback<TuitionList>() {
-                    @Override
-                    public void onResponse(@NonNull Call<TuitionList> call,
-                                           @NonNull Response<TuitionList> response) {
-                        TuitionList tuitionList = response.body();
-                        if (tuitionList != null) {
-                            displayTuition(tuitionList);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<TuitionList> call, @NonNull Throwable t) {
-                        onDownloadError(t);
-                    }
-                });
-        */
     }
 
     private void displayTuition(@NonNull TuitionList tuitionList) {
