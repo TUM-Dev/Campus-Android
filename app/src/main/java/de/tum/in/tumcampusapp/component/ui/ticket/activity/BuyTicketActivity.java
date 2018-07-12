@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -176,7 +177,14 @@ public class BuyTicketActivity extends BaseActivity {
                     if (response.body().getError() != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(BuyTicketActivity.this);
                         builder.setTitle(getString(R.string.sorry))
-                                .setMessage(getString(R.string.ticket_contingent_exhausted));
+                                .setMessage(getString(R.string.ticket_contingent_exhausted))
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        reservationProgressBar.setVisibility(View.INVISIBLE);
+                                        paymentButton.setEnabled(true);
+                                    }
+                                });
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                     } else {

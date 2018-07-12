@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import org.joda.time.DateTime
 
 /**
  * Ticket
@@ -22,4 +23,4 @@ data class Ticket(@PrimaryKey
                   var code: String = "",
                   @SerializedName("ticket_type")
                   var ticketTypeId: Int = 0,
-                  var redeemed: Boolean = false)
+                  var redemption: DateTime? = null)

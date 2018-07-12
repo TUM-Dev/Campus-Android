@@ -492,7 +492,6 @@ Signatur: %5$s</string>
     <string name="tum_calendar">TUM Kalender</string>
     <string name="external_calendar">Externer Kalender</string>
     <string name="add_to_calendar_info">Zu welchem Kalender willst du das Event hinzufügen?</string>
-    <string name="update_failure_message">Update fehlgeschlagen.</string>
 
     <!-- Ticket Activity -->
     <string name="your_ticket">Dein Ticket</string>

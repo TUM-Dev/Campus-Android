@@ -621,7 +621,6 @@ Signature: %5$s</string>
     <string name="external_calendar">External Calendar</string>
     <string name="add_to_calendar_info">To which calendar do you want to add the event?</string>
     <string name="event_export" translatable="false">Event Export</string>
-    <string name="update_failure_message">Update failed.</string>
 
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>

@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
@@ -121,6 +122,7 @@ public class EventDetailsFragment extends Fragment {
                         }
                     });
         } else {
+            ((RelativeLayout) cover.getParent()).setVisibility(View.GONE);
             progress.setVisibility(View.GONE);
         }
         rootView.addView(headerView);
@@ -136,7 +138,7 @@ public class EventDetailsFragment extends Fragment {
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
-        eventDateTextView.setText(event.getFormattedDateTime());
+        eventDateTextView.setText(Event.Companion.getFormattedDateTime(context, event.getStart()));
 
         // open "add to calendar" dialog on click
         eventDateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
