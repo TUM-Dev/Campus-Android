@@ -326,7 +326,7 @@
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
-    <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter: <a href="https://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a></string>
+    <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter <![CDATA[<a href="https://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a>]]>.</string>
     <string name="no_rights_to_access_id">Identität konnte nicht abgefragt werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Leise</string>
