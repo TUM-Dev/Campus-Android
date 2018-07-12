@@ -8,11 +8,11 @@ import com.google.common.net.UrlEscapers;
 import com.google.gson.JsonSyntaxException;
 
 import org.jetbrains.annotations.NotNull;
-import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,6 +23,9 @@ import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
+import de.tum.in.tumcampusapp.component.ui.transportation.api.MvvClient;
+import de.tum.in.tumcampusapp.component.ui.transportation.api.MvvDeparture;
+import de.tum.in.tumcampusapp.component.ui.transportation.api.MvvDepartureList;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
@@ -226,55 +229,28 @@ public class TransportController implements ProvidesCard {
      * @return List of departures
      */
     public static List<Departure> getDeparturesFromExternal(Context context, String stationID) {
-        List<Departure> result = new ArrayList<>();
         try {
-            String language = LANGUAGE + Locale.getDefault()
-                    .getLanguage();
-            // ISO-8859-1 is needed for mvv
-            String departureQuery = DEPARTURE_QUERY_STATION + UrlEscapers.urlPathSegmentEscaper()
-                    .escape(stationID);
+            MvvDepartureList mvvDepartures = MvvClient.getInstance(context)
+                    .getDepartures(stationID).execute().body();
 
-            String query = DEPARTURE_QUERY_CONST + language + '&' + departureQuery;
-            Utils.logv(query);
-            NetUtils net = new NetUtils(context);
-
-            // Download departures
-            Optional<JSONObject> departures = net.downloadJson(query);
-            if (!departures.isPresent()) {
-                return result;
-            }
-
-            if (departures.get()
-                    .isNull("departureList")) {
-                return result;
-            }
-
-            JSONArray arr = departures.get()
-                    .getJSONArray("departureList");
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject departure = arr.getJSONObject(i);
-                JSONObject servingLine = departure.getJSONObject("servingLine");
-                JSONObject time = departure.getJSONObject("dateTime");
-                DateTime date = new DateTime()
-                        .withDate(time.getInt("year"), time.getInt("month"), time.getInt("day"))
-                        .withTime(time.getInt("hour"), time.getInt("minute"), 0, 0);
+            List<Departure> result = new ArrayList<>(mvvDepartures.getDepartureList().size());
+            for (MvvDeparture departure : mvvDepartures.getDepartureList()) {
                 result.add(new Departure(
-                        servingLine.getString("name"),
-                        servingLine.getString("direction"),
-                        // Limit symbol length to 3, longer symbols are pointless
-                        String.format("%3.3s", servingLine.getString("symbol"))
-                                .trim(),
-                        departure.getInt("countdown"),
-                        date
+                        departure.getServingLine().getName(),
+                        departure.getServingLine().getDirection(),
+                        departure.getServingLine().getSymbol(),
+                        departure.getCountdown(),
+                        departure.getTime()
                 ));
             }
 
             Collections.sort(result, (lhs, rhs) -> Integer.compare(lhs.getCountDown(), rhs.getCountDown()));
-        } catch (JSONException e) {
+        } catch (IOException e) {
+            // TODO
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
         }
-        return result;
+        return Collections.emptyList();
     }
 
     /**
