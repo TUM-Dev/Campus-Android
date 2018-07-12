@@ -7,16 +7,7 @@ import android.support.annotation.Size;
 import com.stripe.android.EphemeralKeyProvider;
 import com.stripe.android.EphemeralKeyUpdateListener;
 
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -26,7 +17,8 @@ import retrofit2.Response;
 
 public class TicketEphemeralKeyProvider implements EphemeralKeyProvider {
 
-    private @NonNull ProgressListener mProgressListener;
+    private @NonNull
+    ProgressListener mProgressListener;
     private Context mContext;
 
     public TicketEphemeralKeyProvider(@NonNull ProgressListener progressListener,

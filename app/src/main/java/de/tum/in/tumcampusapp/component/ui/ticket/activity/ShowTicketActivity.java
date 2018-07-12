@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.ticket;
+package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,11 +17,9 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
@@ -56,22 +54,17 @@ public class ShowTicketActivity extends BaseActivity {
         Event event = eventsController.getEventById(ticket.getEventId());
         TicketType ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
 
-        String timeString = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.GERMANY).
-                format(event.getStart());
-        String[] time = timeString.split(" ");
-        //set date format to current locale setting
-        java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
-        String dateString = dateFormat.format(event.getStart());
         //load event details
         String String = event.getTitle();
         String eventLocationString = event.getLocality();
-        String eventDateTimeString = dateString + " " + time[1];
+        String eventDateTimeString = Event.Companion.getFormattedDateTime(this, event.getStart());
         String eventPriceString = "";
-        if(ticketType != null) {
+        if (ticketType != null) {
             eventPriceString = ticketType.formatedPrice();
         }
         String redemptionStateString = this.getString(R.string.redeemed) + ": " +
-                (ticket.getRedeemed() ?  this.getString(R.string.yes) : this.getString(R.string.no));
+                (ticket.getRedemption() != null ? Event.Companion.getFormattedDateTime(this,
+                        ticket.getRedemption()) : this.getString(R.string.no));
 
         eventTitleTextView.setText(String);
         eventDateTimeTextView.setText(eventDateTimeString);

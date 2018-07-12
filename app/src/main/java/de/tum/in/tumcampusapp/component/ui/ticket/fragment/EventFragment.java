@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.ticket;
+package de.tum.in.tumcampusapp.component.ui.ticket.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
+import de.tum.in.tumcampusapp.component.ui.ticket.adapter.EventsAdapter;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 
 public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
