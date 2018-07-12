@@ -27,6 +27,7 @@ import com.alamkanak.weekview.WeekViewEvent;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -39,7 +40,6 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -52,13 +52,13 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 
 import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_FIVE_DAYS;
-import static de.tum.in.tumcampusapp.utils.Const.CALENDAR_ID_PARAM;
 
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline implements OnClickListener,
-        MonthLoader.MonthChangeListener, WeekView.EventClickListener, LimitPickerDialogListener {
+public class CalendarActivity extends ActivityForAccessingTumOnline
+        implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener,
+        CalendarDetailsFragment.OnEventInteractionListener,LimitPickerDialogListener {
 
     /**
      * The space between the first and the last date
@@ -400,43 +400,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
         });
     }
 
-    /**
-     * option to delete is shown to the user for every event that does not contain a url.
-     * (it is assumed that this is actually an event that was created by the user)
-     * @param eventId
-     */
-    protected void deleteEvent(final String eventId) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.event_delete_title)
-                .setMessage(R.string.delete_event_info)
-                .setPositiveButton(R.string.delete, (dialog, which) -> handleDeleteEvent(eventId))
-                .setNegativeButton(R.string.cancel, null)
-                .show();
-    }
-
-    private void handleDeleteEvent(String eventId) {
-        Call<DeleteEventResponse> apiCall = mApiService.deleteCalendarEvent(eventId);
-        fetch(apiCall, response -> {
-            detailsFragment.dismiss();
-            TcaDb.getInstance(CalendarActivity.this).calendarDao().delete(eventId);
-            refreshWeekView();
-            Utils.showToast(CalendarActivity.this, R.string.delete_event_confirmation);
-        });
+    @Override
+    public void onEventDeleted(@NotNull String eventId) {
+        TcaDb.getInstance(this).calendarDao().delete(eventId);
+        refreshWeekView();
+        Utils.showToast(this, R.string.delete_event_confirmation);
     }
 
     @Override
-    public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
-        detailsFragment = new CalendarDetailsFragment();
-        Bundle bundle = new Bundle();
-        CalendarItem item = calendarController.getCalendarItemByStartAndEndTime(
-                new DateTime(weekViewEvent.getStartTime()),
-                new DateTime(weekViewEvent.getEndTime()));
-        bundle.putString(CALENDAR_ID_PARAM, item.getNr());
-        detailsFragment.setArguments(bundle);
-        detailsFragment.show(getSupportFragmentManager(), null);
-    }
-
-    protected void editEvent(final CalendarItem calendarItem) {
+    public void onEditEvent(@NotNull CalendarItem calendarItem) {
+        // TODO: CalendarItem should implement Parcelable
         Bundle bundle = new Bundle();
         bundle.putString(Const.EVENT_TITLE, calendarItem.getTitle());
         bundle.putString(Const.EVENT_COMMENT, calendarItem.getDescription());
@@ -447,6 +420,15 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
         intent.putExtras(bundle);
         startActivity(intent);
         detailsFragment.dismiss();
+    }
+
+    @Override
+    public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
+        CalendarItem item = calendarController.getCalendarItemByStartAndEndTime(
+                new DateTime(weekViewEvent.getStartTime()),
+                new DateTime(weekViewEvent.getEndTime()));
+        detailsFragment = CalendarDetailsFragment.newInstance(item, this);
+        detailsFragment.show(getSupportFragmentManager(), null);
     }
 
     protected void onResume() {
