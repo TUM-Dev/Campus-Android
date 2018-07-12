@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,11 +148,15 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
                 holder.membersTextView.setVisibility(View.GONE);
             }
 
-            String timeStamp = room.getTimestamp();
+            String timestamp = room.getTimestamp();
             String lastMessageText = "";
-            if (timeStamp != null) {
-                lastMessageText = DateTimeUtils.INSTANCE.formatTimeOrDayFromISO(timeStamp, mContext);
+
+            if (timestamp != null) {
+                // TODO: Switch to DateTime in ChatRoomAndLastMessage
+                DateTime timestampDate = DateTimeUtils.INSTANCE.getDateTime(timestamp);
+                lastMessageText = DateTimeUtils.INSTANCE.formatTimeOrDay(timestampDate, mContext);
             }
+
             if (!lastMessageText.isEmpty()) {
                 holder.lastMessageTextView.setVisibility(View.VISIBLE);
                 holder.lastMessageTextView.setText(lastMessageText);
