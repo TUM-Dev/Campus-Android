@@ -602,4 +602,5 @@ Signature: %5$s</string>
     <string name="keep_editing">Keep editing</string>
     <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
     <string name="retry">Retry</string>
+    <string name="updating_event">Updating event …</string>
 </resources>

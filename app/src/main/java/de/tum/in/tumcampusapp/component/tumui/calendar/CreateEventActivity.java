@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
@@ -19,7 +20,9 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
+import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEventResponse;
@@ -29,6 +32,8 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
@@ -188,15 +193,41 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
             return;
         }
 
-        Call<DeleteEventResponse> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .deleteCalendarEvent(eventId);
+        // Because we don't show a loading screen for the delete request (only for the create
+        // request), we use a Toast to let the user know that something is happening.
+        Utils.showToast(this, R.string.updating_event);
 
-        fetch(apiCall, response -> {
-            Utils.log("Event successfully deleted (now creating the edited version)");
-            TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventId);
-            createEvent();
-        });
+        mApiService
+                .deleteCalendarEvent(eventId)
+                .enqueue(new Callback<DeleteEventResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<DeleteEventResponse> call,
+                                           @NonNull Response<DeleteEventResponse> response) {
+                        Utils.log("Event successfully deleted (now creating the edited version)");
+                        TcaDb.getInstance(CreateEventActivity.this).calendarDao().delete(eventId);
+                        createEvent();
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
+                        Utils.log(t);
+                        displayErrorMessage(t);
+                    }
+                });
+    }
+
+    private void displayErrorMessage(Throwable t) {
+        int messageResId;
+
+        if (t instanceof NoNetworkConnectionException) {
+            messageResId = R.string.error_no_internet_connection;
+        } else if (t instanceof RequestLimitReachedException) {
+            messageResId = R.string.error_request_limit_reached;
+        } else {
+            messageResId = R.string.error_unknown;
+        }
+
+        Utils.showToast(this, messageResId);
     }
 
     private void createEvent() {
@@ -228,7 +259,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
         fetch(apiCall, response -> {
             String nr = response.getEventId();
             event.setNr(nr);
-            TcaDb.getInstance(getApplicationContext()).calendarDao().insert(event);
+            TcaDb.getInstance(CreateEventActivity.this).calendarDao().insert(event);
             finish();
         });
     }
@@ -265,6 +296,8 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
     private boolean handleOnBackPressed() {
         String title = titleView.getText().toString();
         String description = descriptionView.getText().toString();
+
+        // TODO: If the user is in edit more, we check whether any data was changed.
         return title.isEmpty() && description.isEmpty();
     }
 
