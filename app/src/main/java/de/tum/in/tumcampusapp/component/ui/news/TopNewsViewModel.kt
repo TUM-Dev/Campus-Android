@@ -24,7 +24,6 @@ class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
                         .getNewsAlert()
                         .subscribeOn(Schedulers.computation())
                         .observeOn(Schedulers.io())
-                        .doOnError { Utils.log(it) }
                         .subscribe({ newsAlert ->
                             // TODO: Store NewsAlerts in Room, not SharedPreferences!
                             Utils.setSetting(context, Const.NEWS_ALERT_IMAGE, newsAlert.url)
