@@ -79,9 +79,6 @@ android {
 
 def androidSupportVersion = '27.1.1'
 def retrofitVersion = '2.3.0'
-def firebaseVersion = '15.0.0'
-def roomVersion = '1.1.0'
-def ankoVersion='0.10.5'
 
 configurations.all {
     resolutionStrategy {
@@ -101,20 +98,20 @@ dependencies {
     implementation 'com.google.guava:guava:23.2-android'
 
     // Android arch components
-    implementation "android.arch.persistence.room:rxjava2:$roomVersion"
-    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation 'android.arch.persistence.room:rxjava2:1.1.1'
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
     implementation 'android.arch.lifecycle:runtime:1.1.1'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
-    kapt "android.arch.lifecycle:compiler:$roomVersion"
-    kapt "android.arch.persistence.room:compiler:$roomVersion"
+    kapt 'android.arch.lifecycle:compiler:1.1.1'
+    kapt 'android.arch.persistence.room:compiler:1.1.1'
 
     // Anko
-    implementation "org.jetbrains.anko:anko:$ankoVersion"
+    implementation "org.jetbrains.anko:anko:0.10.5"
 
     // Firebase / Play services
-    implementation "com.google.android.gms:play-services-base:$firebaseVersion"
-    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
-    implementation "com.google.android.gms:play-services-location:$firebaseVersion"
+    implementation 'com.google.android.gms:play-services-base:15.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 
     // Helpers
@@ -148,13 +145,13 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     // DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
+    // debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 
     // Used for testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.15.0'
     testImplementation 'org.assertj:assertj-core:3.9.1'
-    testImplementation "android.arch.persistence.room:testing:$roomVersion"
+    testImplementation 'android.arch.persistence.room:testing:1.1.1'
     testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
