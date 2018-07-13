@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.ticket;
+package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -35,10 +35,11 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
+import de.tum.in.tumcampusapp.component.ui.ticket.TicketEphemeralKeyProvider;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.ticket;
+package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -14,6 +14,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
+import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventFragment;
 import de.tum.in.tumcampusapp.utils.Const;
 
 public class EventsActivity extends ActivityForDownloadingExternal {

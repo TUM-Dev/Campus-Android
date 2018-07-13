@@ -48,8 +48,6 @@ import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationCance
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityRequest;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -404,12 +402,6 @@ public final class TUMCabeClient {
     public void retrieveEphemeralKey(Context context, String apiVersion, Callback<HashMap<String, Object>> cb) throws IOException {
         ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new EphimeralKey(apiVersion));
         service.retrieveEphemeralKey(chatVerification).enqueue(cb);
-    }
-
-    public void getTicketValidity(String eventId, String code, Callback<TicketValidityResponse> callback) {
-        TicketValidityRequest request = new TicketValidityRequest(eventId, code);
-        service.getNameForTicket(request)
-                .enqueue(callback);
     }
 
     public void getTicketStats(int event, Callback<List<TicketStatus>> cb) {

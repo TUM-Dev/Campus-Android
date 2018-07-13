@@ -600,7 +600,7 @@ Signature: %5$s</string>
     <!-- Ticket Activity -->
     <string name="your_ticket">Your Ticket</string>
     <string name="show_ticket">Show Ticket</string>
-    <string name="buy_ticket">BUY NOW</string>
+    <string name="buy_ticket">Buy Now</string>
     <string name="purchasedetail_dots">Details of your purchase:</string>
     <string name="continue_to_payment">CONTINUE TO PAYMENT</string>
     <string name="summary">Summary</string>
@@ -621,7 +621,6 @@ Signature: %5$s</string>
     <string name="external_calendar">External Calendar</string>
     <string name="add_to_calendar_info">To which calendar do you want to add the event?</string>
     <string name="event_export" translatable="false">Event Export</string>
-    <string name="scanner">Scanner</string>
 
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>

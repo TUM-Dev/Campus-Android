@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.ticket;
+package de.tum.in.tumcampusapp.component.ui.ticket.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -17,18 +17,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CreateEventActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
+import de.tum.in.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -103,21 +105,26 @@ public class EventDetailsFragment extends Fragment {
         }
 
         // cover
-        Picasso.get()
-                .load(event.getImage())
-                .into(cover, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        progress.setVisibility(View.GONE);
-                        error.setVisibility(View.GONE);
-                    }
+        if (event.getImage() != null) {
+            Picasso.get()
+                    .load(event.getImage())
+                    .into(cover, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            progress.setVisibility(View.GONE);
+                            error.setVisibility(View.GONE);
+                        }
 
-                    @Override
-                    public void onError(Exception e) {
-                        progress.setVisibility(View.GONE);
-                        error.setVisibility(View.VISIBLE);
-                    }
-                });
+                        @Override
+                        public void onError(Exception e) {
+                            progress.setVisibility(View.GONE);
+                            error.setVisibility(View.VISIBLE);
+                        }
+                    });
+        } else {
+            ((RelativeLayout) cover.getParent()).setVisibility(View.GONE);
+            progress.setVisibility(View.GONE);
+        }
         rootView.addView(headerView);
     }
 
@@ -131,7 +138,7 @@ public class EventDetailsFragment extends Fragment {
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
-        eventDateTextView.setText(DateTimeUtils.INSTANCE.getDateTimeString(event.getStart()));
+        eventDateTextView.setText(Event.Companion.getFormattedDateTime(context, event.getStart()));
 
         // open "add to calendar" dialog on click
         eventDateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
@@ -178,7 +185,8 @@ public class EventDetailsFragment extends Fragment {
             @Override
             public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
                 t.printStackTrace();
-                countView.setText(R.string.error);
+                // Connect again
+                setAvailableTicketCount(countView);
             }
         });
     }

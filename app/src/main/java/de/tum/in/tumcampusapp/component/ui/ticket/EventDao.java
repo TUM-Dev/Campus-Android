@@ -8,8 +8,6 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import io.reactivex.Flowable;
 
 @Dao
 public interface EventDao {

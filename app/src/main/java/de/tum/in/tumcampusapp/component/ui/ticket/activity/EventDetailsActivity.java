@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.ticket;
+package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -7,6 +7,8 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.adapter.EventDetailsAdapter;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -29,9 +31,6 @@ public class EventDetailsActivity extends BaseActivity {
         // set up ViewPager and adapter
         ViewPager mPager = findViewById(R.id.pager);
 
-        // TODO: extract key to const class
-        int clickedEventId = getIntent().getIntExtra("event_id", 0);
-
         List<Event> events = eventsController.getEvents();
 
         EventDetailsAdapter eventDetailsAdapter = new EventDetailsAdapter(getSupportFragmentManager(),
@@ -40,10 +39,11 @@ public class EventDetailsActivity extends BaseActivity {
         mPager.setAdapter(eventDetailsAdapter);
 
         // Use clickedEventId to show the clicked event in the EventDetailsView
+        int clickedEventId = getIntent().getIntExtra("event_id", -1);
         int startPosition = 0;
-        for(int i = 0; i < events.size(); i++){
+        for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
-            if (event.getId() == clickedEventId){
+            if (event.getId() == clickedEventId) {
                 startPosition = i;
                 break;
             }

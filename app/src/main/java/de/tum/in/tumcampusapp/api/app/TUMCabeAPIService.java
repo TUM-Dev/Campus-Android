@@ -34,8 +34,6 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityRequest;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketValidityResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import io.reactivex.Flowable;
@@ -245,9 +243,6 @@ public interface TUMCabeAPIService {
     // Ticket purchase
     @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
     Call<Ticket> purchaseTicketStripe(@Body ChatVerification chatVerification);
-
-    @POST(API_EVENTS + "ticket/validate")
-    Call<TicketValidityResponse> getNameForTicket(@Body TicketValidityRequest request);
 
     @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
     Call<HashMap<String, Object>> retrieveEphemeralKey(@Body ChatVerification chatVerification);

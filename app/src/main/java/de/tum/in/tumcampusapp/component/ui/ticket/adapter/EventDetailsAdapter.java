@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.ticket;
+package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,12 +9,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventDetailsFragment;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
 
-/**
- * TODO: combine this with KinoAdapter
- */
 public class EventDetailsAdapter extends FragmentStatePagerAdapter {
 
     private final int count; //number of pages
@@ -50,9 +48,6 @@ public class EventDetailsAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         // returns the titles for the pagerStrip
-        String title = titles.get(position);
-        // TODO: Why is there a substring substring needed? (Copied from KinoAdapter...)
-        return title.substring(title.indexOf(':') + 1)
-                .trim();
+        return titles.get(position).trim();
     }
 }
