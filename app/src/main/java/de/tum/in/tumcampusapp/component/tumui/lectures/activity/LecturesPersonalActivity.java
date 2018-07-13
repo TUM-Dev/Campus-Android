@@ -74,62 +74,19 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
     }
 
     private void loadPersonalLectures() {
-        //showLoadingStart();
         Call<LecturesResponse> apiCall = TUMOnlineClient
                 .getInstance(this)
                 .getPersonalLectures();
 
         fetch(apiCall, this::handleDownloadSuccess);
-
-        /*
-        TUMOnlineClient
-                .getInstance(this)
-                .getPersonalLectures()
-                .enqueue(new Callback<LecturesResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<LecturesResponse> call,
-                                           @NonNull Response<LecturesResponse> response) {
-                        LecturesResponse lecturesResponse = response.body();
-                        if (lecturesResponse != null) {
-                            handleDownloadSuccess(lecturesResponse);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<LecturesResponse> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
-                    }
-                });
-        */
     }
 
     private void searchLecture(String query) {
-        //showLoadingStart();
-
-
         Call<LecturesResponse> apiCall = TUMOnlineClient
                 .getInstance(this)
                 .searchLectures(query);
 
         fetch(apiCall, this::handleDownloadSuccess);
-
-        /*
-                .enqueue(new Callback<LecturesResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<LecturesResponse> call,
-                                           @NonNull Response<LecturesResponse> response) {
-                        LecturesResponse lecturesResponse = response.body();
-                        if (lecturesResponse != null) {
-                            handleDownloadSuccess(lecturesResponse);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<LecturesResponse> call, @NonNull Throwable t) {
-                        handleDownloadError(t);
-                    }
-                });
-        */
     }
 
     public void handleDownloadSuccess(@NonNull LecturesResponse response) {

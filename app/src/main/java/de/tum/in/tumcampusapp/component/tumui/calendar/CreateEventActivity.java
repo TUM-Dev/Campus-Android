@@ -297,7 +297,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
         String title = titleView.getText().toString();
         String description = descriptionView.getText().toString();
 
-        // TODO: If the user is in edit more, we check whether any data was changed.
+        // TODO: If the user is in edit mode, check whether any data was changed.
         return title.isEmpty() && description.isEmpty();
     }
 
