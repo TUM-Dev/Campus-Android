@@ -120,7 +120,7 @@ public class BuyTicketActivity extends BaseActivity {
 
         eventView.append(eventString);
         locationView.append(locationString);
-        dateView.append(DateTimeUtils.INSTANCE.getDateTimeString(event.getStart()));
+        dateView.append(Event.Companion.getFormattedDateTime(getApplicationContext(), event.getStart()));
     }
 
     private void initializeTicketTypeSpinner() {
