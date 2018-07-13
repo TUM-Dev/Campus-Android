@@ -12,7 +12,6 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRep
 import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
@@ -51,35 +50,33 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
             localRepository.removeUnsent(chatMessage)
 
     fun getOlderMessages(roomId: Int, messageId: Long, verification: ChatVerification, callback: DataLoadInterface?): Boolean =
-            compositeDisposable.add(Observable.just(1)
-                    .subscribeOn(Schedulers.computation())
-                    .flatMap { remoteRepository.getMessages(roomId, messageId, verification) }
-                    .observeOn(Schedulers.io())
-                    .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
-                    .subscribe({ t ->
-                        t.forEach { localRepository.replaceMessage(it) }
-                        callback?.onDataLoaded()
-                    })
+            compositeDisposable.add(
+                    remoteRepository
+                            .getMessages(roomId, messageId, verification)
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(Schedulers.io())
+                            .subscribe({ t ->
+                                t.forEach { localRepository.replaceMessage(it) }
+                                callback?.onDataLoaded()
+                            }, { t -> Utils.logwithTag("ChatMessageViewModel", t.message) })
             )
 
     fun getNewMessages(roomId: Int, verification: ChatVerification, callback: DataLoadInterface?): Boolean =
-            compositeDisposable.add(Observable.just(1)
-                    .subscribeOn(Schedulers.computation())
-                    .flatMap { remoteRepository.getNewMessages(roomId, verification) }
-                    .observeOn(Schedulers.io())
-                    .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
-                    .subscribe({ t ->
-                        t.forEach { localRepository.replaceMessage(it) }
-                        callback?.onDataLoaded()
-                    })
+            compositeDisposable.add(
+                    remoteRepository.getNewMessages(roomId, verification)
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(Schedulers.io())
+                            .subscribe({ t ->
+                                t.forEach { localRepository.replaceMessage(it) }
+                                callback?.onDataLoaded()
+                            }, { t -> Utils.logwithTag("ChatMessageViewModel", t.message) })
             )
 
     fun sendMessage(roomId: Int, chatMessage: ChatMessage, context: Context): Boolean =
-            compositeDisposable.add(Observable.just(1)
+            compositeDisposable.add(
+                    remoteRepository.sendMessage(roomId, chatMessage)
                     .subscribeOn(Schedulers.computation())
-                    .flatMap { remoteRepository.sendMessage(roomId, chatMessage) }
                     .observeOn(Schedulers.io())
-                    .doOnError { Utils.logwithTag("ChatMessageViewModel", it.message) }
                     .subscribe({
                         it.sendingStatus = ChatMessage.STATUS_SENT
                         localRepository.replaceMessage(it)
@@ -87,8 +84,8 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
 
                         // Send broadcast to eventually open ChatActivity
                         val extras = Bundle()
-                        extras.putSerializable("FcmChat", FcmChat(it.getRoom(), it.getMember().id, 0))
+                        extras.putSerializable("FcmChat", FcmChat(it.room, it.member.id, 0))
                         LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(Const.CHAT_BROADCAST_NAME).putExtras(extras))
-                    })
+                    }, { t -> Utils.logwithTag("ChatMessageViewModel", t.message) })
             )
 }
