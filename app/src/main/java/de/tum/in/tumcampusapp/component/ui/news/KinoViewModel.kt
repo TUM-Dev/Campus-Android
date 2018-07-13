@@ -55,7 +55,7 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
                         .doAfterNext { localRepository.updateLastSync() }
                         .flatMapIterable { it }
                         .filter { it.isFutureMovie() }
-                        .subscribe({ localRepository.addKino(it) }, { t -> Utils.log(t) })
+                        .subscribe({ localRepository.addKino(it) }, { Utils.log(it) })
         )
     }
 
