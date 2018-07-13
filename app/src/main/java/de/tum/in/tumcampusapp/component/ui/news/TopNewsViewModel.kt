@@ -6,7 +6,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteReposi
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
@@ -39,7 +38,7 @@ class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
                             if (update) {
                                 Utils.setSetting(context, CardManager.SHOW_TOP_NEWS, true)
                             }
-                            Utils.setSetting(context, Const.NEWS_ALERT_SHOW_UNTIL, t.displayUntil)
+                            Utils.setSetting(context, Const.NEWS_ALERT_SHOW_UNTIL, newsAlert.displayUntil)
                         }, { t -> Utils.log(t) })
         )
     }
