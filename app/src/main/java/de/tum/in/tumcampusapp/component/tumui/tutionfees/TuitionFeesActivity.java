@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.component.tumui.tutionfees;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
@@ -37,7 +39,12 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
         amountTextView = findViewById(R.id.soll);
         deadlineTextView = findViewById(R.id.deadline);
         semesterTextView = findViewById(R.id.semester);
-        ((TextView) findViewById(R.id.fees_aid)).setMovementMethod(LinkMovementMethod.getInstance());
+
+        // Set the text in the information box and make the link clickable
+        TextView informationTextView = findViewById(R.id.fees_aid);
+        Spanned information = Html.fromHtml(getString(R.string.tuition_fee_more));
+        informationTextView.setText(information);
+        informationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         refreshData();
     }
