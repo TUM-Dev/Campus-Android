@@ -11,7 +11,6 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetails;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse;
@@ -108,11 +107,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
     }
 
     private void loadLectureDetails(@NonNull String lectureId) {
-        showLoadingStart();
-        Call<LectureDetailsResponse> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .getLectureDetails(lectureId);
-
+        Call<LectureDetailsResponse> apiCall = mApiService.getLectureDetails(lectureId);
         fetch(apiCall, this::handleDownloadSuccess);
     }
 

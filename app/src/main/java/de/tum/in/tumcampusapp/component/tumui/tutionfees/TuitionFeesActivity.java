@@ -13,7 +13,6 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
@@ -55,10 +54,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
     }
 
     private void refreshData() {
-        Call<TuitionList> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .getTuitionFeesStatus();
-
+        Call<TuitionList> apiCall = mApiService.getTuitionFeesStatus();
         fetch(apiCall, this::displayTuition);
     }
 

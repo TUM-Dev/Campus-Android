@@ -21,7 +21,6 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
@@ -252,8 +251,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
         String eventStart = DateTimeUtils.INSTANCE.getDateTimeString(event.getDtstart());
         String eventEnd = DateTimeUtils.INSTANCE.getDateTimeString(event.getDtend());
 
-        Call<CreateEventResponse> apiCall = TUMOnlineClient
-                .getInstance(this)
+        Call<CreateEventResponse> apiCall = mApiService
                 .createCalendarEvent(title, description, eventStart, eventEnd, null);
 
         fetch(apiCall, response -> {

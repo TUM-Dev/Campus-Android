@@ -7,7 +7,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.lectures.adapter.LectureAppointmentsListAdapter;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointment;
@@ -51,10 +50,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
     }
 
     private void loadLectureAppointments(String lectureId) {
-        Call<LectureAppointmentsResponse> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .getLectureAppointments(lectureId);
-
+        Call<LectureAppointmentsResponse> apiCall = mApiService.getLectureAppointments(lectureId);
         fetch(apiCall, this::handleDownloadSuccess);
     }
 

@@ -12,7 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineResponseListener
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
@@ -52,10 +51,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
     }
 
     private fun loadPersonDetails(personId: String) {
-        val call = TUMOnlineClient
-                .getInstance(this)
-                .getPersonDetails(personId)
-
+        val call = mApiService.getPersonDetails(personId)
         fetch(call, object : TUMOnlineResponseListener<Employee> {
             override fun onDownloadSuccessful(response: Employee) {
                 handleDownloadSuccess(response)

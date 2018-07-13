@@ -39,7 +39,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.grades.model.Exam;
 import de.tum.in.tumcampusapp.component.tumui.grades.model.ExamList;
@@ -368,10 +367,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
     }
 
     private void loadGrades() {
-        Call<ExamList> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .getGrades();
-
+        Call<ExamList> apiCall = mApiService.getGrades();
         fetch(apiCall, this::handleDownloadSuccess);
     }
 

@@ -24,7 +24,6 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
@@ -109,10 +108,7 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements 
     }
 
     private void loadPersonalLectures() {
-        Call<LecturesResponse> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .getPersonalLectures();
-
+        Call<LecturesResponse> apiCall = mApiService.getPersonalLectures();
         fetch(apiCall, response -> {
             List<Lecture> lectures = response.getLectures();
             manager.createLectureRooms(lectures);
