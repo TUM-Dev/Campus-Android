@@ -525,7 +525,7 @@ Signatur: %5$s</string>
     <string name="empty_cardholder_message">Kein Karteninhaber angegeben.</string>
     <string name="not_logged_in_message">Du musst eingeloggt sein und den Zugriff auf Namen und TUM-ID erlauben (über TUM-Online Token), um Tickets zu kaufen.</string>
     <string name="ticket_retrieval_error">Fehler bei der Übertragung des Tickets.</string>
-    <string name="reserving_ticket">Dein Ticket wird reserviert, bitte warten...</string>
+    <string name="reserving_ticket">Dein Ticket wird reserviert, bitte warten…</string>
     <string name="tickets_left" formatted="true">%d Tickets übrig!</string>
     <string name="ticket_contingent_exhausted">Für den gewünschten Typ sind alle Tickets bereits ausverkauft.</string>
 
@@ -610,5 +610,4 @@ Signatur: %5$s</string>
     <string name="discard_changes_question">Änderungen verwerfen?</string>
     <string name="discard">Verwerfen</string>
     <string name="keep_editing">Weiter bearbeiten</string>
-    <string name="no_network_connection">Keine Verbindung zum Server möglich</string>
 </resources>

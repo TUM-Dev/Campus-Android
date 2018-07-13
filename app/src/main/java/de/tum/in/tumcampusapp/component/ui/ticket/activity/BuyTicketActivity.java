@@ -70,7 +70,7 @@ public class BuyTicketActivity extends BaseActivity {
 
         // if ticketTypes could not be retrieved from server, e.g. due to network problems
         if (ticketTypes == null) {
-            Utils.showToast(getApplicationContext(), R.string.no_network_connection);
+            Utils.showToast(getApplicationContext(), R.string.no_internet_connection);
             // go back to event details
             Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
             intent.putExtra("event_id", eventId);
