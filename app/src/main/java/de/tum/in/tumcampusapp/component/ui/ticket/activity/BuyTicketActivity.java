@@ -56,11 +56,16 @@ public class BuyTicketActivity extends BaseActivity {
 
         // get ticket type information from API
         TUMCabeClient.getInstance(getApplicationContext()).getTicketTypes(eventId,
-                new Callback<List<TicketType>>(){
+                new Callback<List<TicketType>>() {
 
                     @Override
                     public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
                         ticketTypes = response.body();
+                        // in case no valid response is retrieved from the server initialize
+                        // ticketTypes as empty list
+                        if (ticketTypes == null){
+                            ticketTypes = new ArrayList<>();
+                        }
 
                         // add found ticket types to database (needed in ShowTicketActivity)
                         eventsController.addTicketTypes(ticketTypes);
@@ -72,16 +77,14 @@ public class BuyTicketActivity extends BaseActivity {
                     public void onFailure(Call<List<TicketType>> call, Throwable t) {
                         // if ticketTypes could not be retrieved from server, e.g. due to network problems
                         Utils.log(t);
-                        Utils.showToast(getApplicationContext(), R.string.no_network_connection);
+                        Utils.showToast(getApplicationContext(), R.string.no_internet_connection);
                         // go back to event details
-                        Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
-                        intent.putExtra("event_id", eventId);
-                        startActivity(intent);
+                        finish();
                     }
                 });
     }
 
-    private void setupUi(){
+    private void setupUi() {
         initEventTextViews();
 
         initializeTicketTypeSpinner();
@@ -184,6 +187,7 @@ public class BuyTicketActivity extends BaseActivity {
                 public void onResponse(Call<TicketReservationResponse> call, Response<TicketReservationResponse> response) {
                     // response.body() can be null when the user has already bought a ticket
                     // but has not fetched it from the server yet
+
                     if (response.body() == null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(BuyTicketActivity.this);
                         builder.setTitle(getString(R.string.sorry))
@@ -194,7 +198,7 @@ public class BuyTicketActivity extends BaseActivity {
                                 });
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
-                    }else if(response.body().getError() != null){
+                    } else if (response.body().getError() != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(BuyTicketActivity.this);
                         builder.setTitle(getString(R.string.sorry))
                                 .setMessage(getString(R.string.ticket_contingent_exhausted))

@@ -60,7 +60,9 @@ public class EventsController {
                     @Override
                     public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
                         List<Ticket> list = response.body();
-                        if (list == null) list = new ArrayList<>();
+                        if (list == null) {
+                            list = new ArrayList<>();
+                        }
                         ticketDao.insert(list);
                         loadTicketTypesForTickets(list);
                     }
@@ -85,7 +87,9 @@ public class EventsController {
                         @Override
                         public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
                             List<TicketType> ticketTypes = response.body();
-
+                            if (ticketTypes == null) {
+                                ticketTypes = new ArrayList<>();
+                            }
                             // add found ticket types to database (needed in ShowTicketActivity)
                             addTicketTypes(ticketTypes);
                         }
