@@ -72,11 +72,13 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
             compositeDisposable.add(Observable.just(1)
                     .filter { localRepository.getLastSync() == null || force }
                     .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.io())
                     .doOnNext { localRepository.clear() }
-                    .flatMap { remoteRepository.getAllCafeterias() }.observeOn(Schedulers.io())
+                    .flatMap { remoteRepository.getAllCafeterias() }
                     .doAfterNext { localRepository.updateLastSync() }
-                    .doOnError { Utils.log(it.message) }
-                    .subscribe({ t -> t.forEach { localRepository.addCafeteria(it) } })
+                    .subscribe({ cafeteria ->
+                        cafeteria.forEach { localRepository.addCafeteria(it) }
+                    }, { throwable -> Utils.log(throwable) })
             )
 
     /**
