@@ -34,8 +34,8 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 542
-        versionName "1.6.1-dev"
+        versionCode 544
+        versionName "2.0-dev"
         kapt.arguments {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
