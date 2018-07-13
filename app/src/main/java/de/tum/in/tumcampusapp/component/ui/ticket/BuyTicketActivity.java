@@ -61,7 +61,7 @@ public class BuyTicketActivity extends BaseActivity {
                     public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
                         ticketTypes = response.body();
 
-                        // add found ticket types to database
+                        // add found ticket types to database (needed in ShowTicketActivity)
                         eventsController.addTicketTypes(ticketTypes);
 
                         setupUi();
