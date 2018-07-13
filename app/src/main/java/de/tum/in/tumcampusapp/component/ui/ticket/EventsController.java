@@ -62,6 +62,7 @@ public class EventsController {
                         List<Ticket> list = response.body();
                         if (list == null) list = new ArrayList<>();
                         ticketDao.insert(list);
+                        loadTicketTypesForTickets(list);
                     }
 
                     @Override
@@ -72,6 +73,30 @@ public class EventsController {
             }
         } catch (IOException e) {
             Utils.log(e);
+        }
+    }
+
+    private void loadTicketTypesForTickets(List<Ticket> tickets){
+        // get ticket type information for all tickets
+        for (Ticket ticket : tickets){
+            TUMCabeClient.getInstance(context).getTicketTypes(ticket.getEventId(),
+                    new Callback<List<TicketType>>(){
+
+                        @Override
+                        public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
+                            List<TicketType> ticketTypes = response.body();
+
+                            // add found ticket types to database (needed in ShowTicketActivity)
+                            addTicketTypes(ticketTypes);
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<TicketType>> call, Throwable t) {
+                            // if ticketTypes could not be retrieved from server, e.g. due to network problems
+                            Utils.log(t);
+                        }
+                    });
+
         }
     }
 
