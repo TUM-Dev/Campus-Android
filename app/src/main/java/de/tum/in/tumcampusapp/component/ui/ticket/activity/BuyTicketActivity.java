@@ -208,7 +208,7 @@ public class BuyTicketActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<TicketReservationResponse> call, Throwable t) {
-                    t.printStackTrace();
+                    Utils.log(t);
                     reservationProgressBar.setVisibility(View.INVISIBLE);
                     paymentButton.setEnabled(true);
                     StripePaymentActivity.showError(BuyTicketActivity.this, getString(R.string.purchase_error_message));

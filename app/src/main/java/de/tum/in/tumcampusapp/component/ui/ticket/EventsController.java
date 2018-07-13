@@ -60,7 +60,7 @@ public class EventsController {
                     @Override
                     public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
                         List<Ticket> list = response.body();
-                        if (list == null) list = new ArrayList<Ticket>();
+                        if (list == null) list = new ArrayList<>();
                         ticketDao.insert(list);
                     }
 
