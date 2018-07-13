@@ -1,0 +1,28 @@
+Die TUM Campus App wird von Freiwilligen und Studenten entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und bietet unter anderem folgende Funktionen:
+
+Vorlesungstermine, Neuigkeiten von TUM relevanten Organisationen, Veranstaltungshinweise, Mensa Speiseplan, MVV Abfahrtszeiten, Umgebungspläne und viele weitere Funktionen. 
+
+Die App ist sowohl für Studierende, wie auch Mitarbeiter gedacht.
+
+Entwickler und involvierte Personen:
+https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md
+
+Support: https://www.facebook.com/TUMCampus / app@tum.de
+
+Wichtiger Hinweis:
+Dies ist keine offizielle App der Technischen Universität München. Es erfolgt daher auch kein offizieller Support oder eine Haftung. Die App wird von und für Studierende entwickelt.
+
+Datenschutzerklärung: https://app.tum.de/landing/privacy/
+Chatbedingungen: https://app.tum.de/landing/chatterms/
+
+Berechtigungen und die Gründe:
+- Standort abfragen: Um immer aktuelle Informationen zum aktuellen Standort anzuzeigen, wie z.B. Mensa Menü, MVV Abfahrtszeiten, ....
+- Kontakte ändern: Damit in der Personensuche mit einem Klick die Kontaktdaten eines Komilitonen oder TU Mitarbeiters in die Kontakte eingefügt werden koennen
+- Kalendertermine lesen/ändern: Damit sich die Vorlesungstermine mit dem Google Kalender synchronisieren lassen 
+- SD-Karteninhalte ändern oder löschen: Damit die App Daten zwischenspeichern kann und damit das Laden beschleunigt wird.
+- Konten auf dem Gerät suchen: Wird für die Chatfunktion benötigt, da dafür ein Google Account benötigt wird.
+- Internetzugriff: Um sämtliche Daten abrufen zu können.
+- Ruhezustand deaktivieren: Um auch bei ausgeschaltetem Display Nachrichten empfangen zu können
+
+Lizenz: GNU GPL v3 - http://www.gnu.org/licenses/gpl.html
+Der Quellcode kann hier eingesehen werden: https://github.com/TCA-Team/

@@ -29,13 +29,14 @@ import android.widget.Toast;
 
 import com.google.common.base.Strings;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -263,6 +264,12 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        stopListeningForLocation();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         for (String path : picturePaths) {
@@ -271,41 +278,16 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        stopListeningForLocation();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    location = new LocationManager(this).getLastLocation();
-                    includeLocation.setChecked(true);
-                } else {
-                    includeLocation.setChecked(false);
-                }
-                return;
-            }
-            case PERMISSION_CAMERA: {
-                if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startTakingPicture();
-                }
-                return;
-            }
-            case PERMISSION_FILES: {
-                if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openGallery();
-                }
-                return;
-            }
-            default: // don't do anything
-        }
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Const.FEEDBACK_TOPIC, feedbackTopic);
+        outState.putString(Const.FEEDBACK_MESSAGE, feedbackView.getText()
+                                                               .toString());
+        outState.putStringArrayList(Const.FEEDBACK_PIC_PATHS, picturePaths);
+        outState.putBoolean(Const.FEEDBACK_INCL_EMAIL, includeEmail.isChecked());
+        outState.putBoolean(Const.FEEDBACK_INCL_LOCATION, includeLocation.isChecked());
+        outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText()
+                                                                .toString());
     }
 
     private boolean isValidEmail() {
@@ -335,8 +317,11 @@ public class FeedbackActivity extends BaseActivity {
                             BuildConfig.VERSION_NAME);
     }
 
-    public void onSendClicked(View view){
-        if (feedbackView.getText().toString().trim().isEmpty()) {
+    public void onSendClicked(View view) {
+        if (feedbackView.getText()
+                        .toString()
+                        .trim()
+                        .isEmpty()) {
             if (picturePaths.isEmpty()) {
                 feedbackView.setError(getString(R.string.feedback_empty));
             } else {
@@ -413,19 +398,6 @@ public class FeedbackActivity extends BaseActivity {
         errorDialog = builder.show();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(Const.FEEDBACK_TOPIC, feedbackTopic);
-        outState.putString(Const.FEEDBACK_MESSAGE, feedbackView.getText()
-                                                               .toString());
-        outState.putStringArrayList(Const.FEEDBACK_PIC_PATHS, picturePaths);
-        outState.putBoolean(Const.FEEDBACK_INCL_EMAIL, includeEmail.isChecked());
-        outState.putBoolean(Const.FEEDBACK_INCL_LOCATION, includeLocation.isChecked());
-        outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText()
-                                                                .toString());
-    }
-
     @SuppressLint("NewApi")
     public void addPicture(View view) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -473,6 +445,38 @@ public class FeedbackActivity extends BaseActivity {
             }
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    location = new LocationManager(this).getLastLocation();
+                    includeLocation.setChecked(true);
+                } else {
+                    includeLocation.setChecked(false);
+                }
+                return;
+            }
+            case PERMISSION_CAMERA: {
+                if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startTakingPicture();
+                }
+                return;
+            }
+            case PERMISSION_FILES: {
+                if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openGallery();
+                }
+                return;
+            }
+            default: // don't do anything
+        }
     }
 
     /**
@@ -548,7 +552,9 @@ public class FeedbackActivity extends BaseActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String timeStamp = DateTimeFormat.forPattern("yyyyMMdd_HHmmss")
+                                         .withLocale(Locale.GERMANY)
+                                         .print(DateTime.now());
         String imageFileName = "IMG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(

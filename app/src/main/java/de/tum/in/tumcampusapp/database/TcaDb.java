@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBla
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.tumui.person.FacultyDao;
 import de.tum.in.tumcampusapp.component.tumui.person.model.Faculty;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao;
@@ -67,7 +67,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 10, entities = {
+@Database(version = 11, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -87,7 +87,7 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         Faculty.class,
         StudyRoomGroup.class,
         StudyRoom.class,
-        GCMNotification.class,
+        FcmNotification.class,
         TransportFavorites.class,
         WidgetsTransport.class,
         ChatRoomDbRow.class
@@ -106,7 +106,7 @@ public abstract class TcaDb extends RoomDatabase {
     private static TcaDb instance;
 
     public static synchronized TcaDb getInstance(Context context) {
-        if (instance == null || !instance.isOpen()) {
+        if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                            .allowMainThreadQueries()
                            .addMigrations(migrations)

@@ -17,15 +17,15 @@ import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.GenericNotification;
-import de.tum.in.tumcampusapp.component.ui.alarm.model.GCMNotification;
+import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class Update extends GenericNotification {
 
-    public final GCMUpdate data;
-    private final GCMNotification info;
+    public final FcmUpdate data;
+    private final FcmNotification info;
 
     public Update(String payload, Context context, int notification) {
         super(context, 2, notification, true);
@@ -36,7 +36,7 @@ public class Update extends GenericNotification {
         }
 
         // parse data
-        this.data = new Gson().fromJson(payload, GCMUpdate.class);
+        this.data = new Gson().fromJson(payload, FcmUpdate.class);
 
         //Get data from server
         this.info = getNotificationFromServer();
@@ -46,7 +46,7 @@ public class Update extends GenericNotification {
         //}
     }
 
-    private GCMNotification getNotificationFromServer() {
+    private FcmNotification getNotificationFromServer() {
         try {
             return TUMCabeClient.getInstance(this.context)
                                 .getNotification(this.notification);
@@ -62,7 +62,7 @@ public class Update extends GenericNotification {
             return null;
         }
 
-        // GCMNotification sound
+        // FcmNotification sound
         Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
         Intent alarm = new Intent(this.context, MainActivity.class);
         PendingIntent pending = PendingIntent.getActivity(this.context, 0, alarm, PendingIntent.FLAG_UPDATE_CURRENT);

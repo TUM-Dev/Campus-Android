@@ -43,6 +43,8 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
             return
         }
 
+        WifiScanHandler.getInstance().onScanFinished()
+
         //Check if wifi is turned on at all
         val wifiManager = context.applicationContext
                 .getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -164,7 +166,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
             val setupPendingIntent = PendingIntent.getActivity(context, 0, setupIntent, PendingIntent.FLAG_UPDATE_CURRENT)
             val hidePendingIntent = PendingIntent.getService(context, 0, hideIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-            // Create GCMNotification using NotificationCompat.Builder
+            // Create FcmNotification using NotificationCompat.Builder
             val notification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_EDUROAM)
                     .setSmallIcon(R.drawable.ic_notification_wifi)
                     .setTicker(context.getString(R.string.setup_eduroam))
@@ -177,7 +179,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
                     .setColor(ContextCompat.getColor(context, R.color.color_primary))
                     .build()
 
-            // Create GCMNotification Manager
+            // Create FcmNotification Manager
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(NOTIFICATION_ID, notification)
 

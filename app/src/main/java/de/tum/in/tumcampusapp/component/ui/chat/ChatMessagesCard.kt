@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.RemoteViews
 import com.google.common.collect.Lists
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
@@ -42,36 +41,10 @@ class ChatMessagesCard(context: Context,
         setChatRoom(room.name, room.room, "${room.semesterId}:${room.name}")
     }
 
-    //override val title = mRoomName
-
-    override fun  updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
-        mCard = viewHolder.itemView
-        val card = viewHolder.itemView
-        val cardsViewHolder = viewHolder as CardViewHolder
-        val addedViews = cardsViewHolder.addedViews
-
-        //Set title
-        mTitleView = card.findViewById(R.id.card_title)
-        val titleView = mTitleView
-
-        if(nrUnread > 5){
-            titleView!!.text = context.getString(R.string.card_message_title, mRoomName, nrUnread);
-        } else {
-            titleView!!.text = mRoomName
-        }
-
-        //Remove additional views
-        mLinearLayout = card.findViewById(R.id.card_view)
-        val linearLayout = mLinearLayout
-
-        for (view in addedViews) {
-            linearLayout!!.removeView(view)
-        }
-
-        // Show cafeteria menu
-        mUnread.mapTo(addedViews) {
-            addTextView(context.getString(R.string.card_message_line, it.member.displayName, it.text))
-        }
+    override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
+        super.updateViewHolder(viewHolder)
+        val chatMessagesViewHolder = viewHolder as? ChatMessagesCardViewHolder
+        chatMessagesViewHolder?.bind(mRoomName, mRoomId, mRoomIdString, mUnread)
     }
 
     /**
@@ -108,15 +81,9 @@ class ChatMessagesCard(context: Context,
 
     //override fun shouldShowNotification(prefs: SharedPreferences) = true
 
-    override fun getRemoteViews(context: Context, appWidgetId: Int) =
-            RemoteViews(context.packageName, R.layout.cards_widget_card).apply {
-                setTextViewText(R.id.widgetCardTextView, mRoomName)
-                setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_comment)
-            }
-
     companion object {
         fun inflateViewHolder(parent: ViewGroup) =
                 CardViewHolder(LayoutInflater.from(parent.context)
-                        .inflate(R.layout.card_item, parent, false))
+                        .inflate(R.layout.card_chat_messages, parent, false))
     }
 }

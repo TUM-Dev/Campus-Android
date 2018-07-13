@@ -10,15 +10,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationsProvider;
-import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationsProvider;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
@@ -35,10 +34,6 @@ import io.reactivex.disposables.CompositeDisposable;
  * Cafeteria Manager, handles database stuff, external imports
  */
 public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
-
-    public static final String CAFETERIA_DATE = "cafeteria_date";
-    public static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
-    public static final Pattern PATTERN = Pattern.compile("[0-9]");
 
     private Context mContext;
     private final CafeteriaViewModel cafeteriaViewModel;
@@ -71,7 +66,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         }
 
         CafeteriaMenuCard card = new CafeteriaMenuCard(mContext);
-        card.setCafeteria(cafeteria);
+        card.setCafeteriaWithMenus(cafeteria);
 
         results.add(card.getIfShowOnStart());
         return results;
@@ -117,11 +112,12 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
 
         return createCafeteriaObservableForNonUIThreads(cafeteriaId)
                 .map(cafeteria -> {
-                    String mensaKey = cafeteria.getName() + ' ' + cafeteria.getNextMenuDate();
+                    String mensaKey = cafeteria.getName() + ' ' + cafeteria.getNextMenuDate().toString();
                     Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>(1);
                     selectedMensaMenus.put(mensaKey, cafeteria.getMenus());
                     return selectedMensaMenus;
-                });
+                })
+                .onErrorReturnItem(new HashMap<>());
 
     }
 

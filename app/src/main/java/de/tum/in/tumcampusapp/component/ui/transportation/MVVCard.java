@@ -27,6 +27,7 @@ import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_MVV;
 public class MVVCard extends Card {
 
     private static final String MVV_TIME = "mvv_time";
+
     private StationResult mStation;
     private List<Departure> mDepartures;
 
@@ -35,42 +36,23 @@ public class MVVCard extends Card {
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.card_item, parent, false);
-        return new CardViewHolder(view);
+        View view = LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.card_mvv, parent, false);
+        return new MVVCardViewHolder(view);
+    }
+
+    public String getTitle() {
+        return mStation.getStation();
     }
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        setMCard(viewHolder.itemView);
-        setMLinearLayout(getMCard().findViewById(R.id.card_view));
-        setMTitleView(getMCard().findViewById(R.id.card_title));
-        getMTitleView().setText(mStation.getStation());
-        getMCard().findViewById(R.id.place_holder)
-                  .setVisibility(View.VISIBLE);
 
-        //Remove old DepartureViews
-        for (int i = 0; i < getMLinearLayout().getChildCount(); i++) {
-            if (getMLinearLayout().getChildAt(i) instanceof DepartureView) {
-                getMLinearLayout().removeViewAt(i);
-                i--; // Check the same location again, since the childCount changed
-            }
-        }
-
-        // Fetch transport favorites, can only be updated in the detailed view
-        TransportController transportManager = new TransportController(getContext());
-        for (int i = 0; i < mDepartures.size() && i < 5; i++) {
-            Departure curr = mDepartures.get(i);
-            DepartureView view = new DepartureView(getContext());
-            if (transportManager.isFavorite(curr.getSymbol())) {
-                view.setSymbol(curr.getSymbol(), true);
-            } else {
-                view.setSymbol(curr.getSymbol(), false);
-            }
-            view.setLine(curr.getDirection());
-            view.setTime(curr.getDepartureTime());
-            getMLinearLayout().addView(view);
+        if (viewHolder instanceof MVVCardViewHolder) {
+            MVVCardViewHolder holder = (MVVCardViewHolder) viewHolder;
+            holder.bind(mStation, mDepartures);
         }
     }
 

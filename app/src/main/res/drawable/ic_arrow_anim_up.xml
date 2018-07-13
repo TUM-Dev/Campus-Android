@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+                 xmlns:aapt="http://schemas.android.com/aapt">
+
+    <aapt:attr name ="android:drawable">
+        <vector xmlns:android="http://schemas.android.com/apk/res/android"
+                android:width="24dp"
+                android:height="24dp"
+                android:viewportWidth="24.0"
+                android:viewportHeight="24.0">
+            <path
+                android:name="arrowPath"
+                android:fillColor="#FFFFFF"
+                android:pathData="@string/arrow_down_path"/>
+        </vector>
+    </aapt:attr>
+
+    <target android:name="arrowPath">
+        <aapt:attr name="android:animation" >
+            <set xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="250"
+                    android:interpolator="@android:anim/accelerate_interpolator"
+                    android:propertyName="pathData"
+                    android:valueFrom="@string/arrow_down_path"
+                    android:valueTo="@string/arrow_down_flat_path"
+                    android:valueType="pathType" />
+                <objectAnimator
+                    android:duration="250"
+                    android:interpolator="@android:anim/decelerate_interpolator"
+                    android:propertyName="pathData"
+                    android:valueFrom="@string/arrow_up_flat_path"
+                    android:valueTo="@string/arrow_up_path"
+                    android:valueType="pathType" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

@@ -47,11 +47,11 @@ object Const {
     const val TUMO_EMPLOYEE_ID = "tumoBediensteteNr"
     const val TUMO_DISABLED = "tumo_is_disabled"
 
-    const val GCM_REG_ID = "gcm_registration_id"
-    const val GCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server"
-    const val GCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission"
-    const val GCM_INSTANCE_ID = "gcm_instance_id"
-    const val GCM_TOKEN_ID = "gcm_token_id"
+    const val FCM_REG_ID = "gcm_registration_id"
+    const val FCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server"
+    const val FCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission"
+    const val FCM_INSTANCE_ID = "gcm_instance_id"
+    const val FCM_TOKEN_ID = "gcm_token_id"
     const val APP_LAUNCHES = "app_launches"
     const val SYNC_CALENDAR = "sync_calendar"
     const val PREFERENCE_SCREEN = "preference_screen"
@@ -111,9 +111,6 @@ object Const {
 
     const val WIFI_SCANS_ALLOWED = "WIFI_SCANS_ALLOWED"
     const val WIFI_SCAN_MINIMUM_BATTERY_LEVEL = "WIFI_SCAN_MINIMUM_BATTERY_LEVEL"
-
-    const val DATE_AND_TIME = "yyyy-MM-dd HH:mm:ss"
-    const val DATE_ONLY = "yyyy-MM-dd"
 
     const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
     const val DISCARD_SETTINGS_START = "discard_settings_start"

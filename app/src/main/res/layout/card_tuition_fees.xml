@@ -1,0 +1,32 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StandardCard">
+
+    <LinearLayout
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/material_default_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tuition_fees"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/reregister_info_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Reregister information" />
+
+        <TextView
+            android:id="@+id/outstanding_balance_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Outstanding balance" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

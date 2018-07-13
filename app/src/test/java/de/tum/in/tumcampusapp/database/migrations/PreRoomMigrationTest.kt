@@ -10,6 +10,7 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -18,6 +19,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.util.ReflectionHelpers
 import java.io.File
 
+@Ignore
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class, application = TestApp::class)
 class PreRoomMigrationTest {

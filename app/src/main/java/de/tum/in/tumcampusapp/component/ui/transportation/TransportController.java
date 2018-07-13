@@ -5,10 +5,10 @@ import android.util.SparseArray;
 
 import com.google.common.base.Optional;
 import com.google.common.net.UrlEscapers;
-import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,8 +16,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -108,7 +106,6 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
     private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
     private static SparseArray<WidgetDepartures> widgetDeparturesList;
-    private static final Gson gson = new Gson();
 
     private Context mContext;
     private final TransportDao transportDao;
@@ -116,19 +113,19 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
         stationSearch.append(STATION_SEARCH)
-                     .append('?');
+                .append('?');
         for (String param : STATION_SEARCH_CONST_PARAMS) {
             stationSearch.append(param)
-                         .append('&');
+                    .append('&');
         }
         STATION_SEARCH_CONST = stationSearch.toString();
 
         StringBuilder departureQuery = new StringBuilder(MVV_API_BASE);
         departureQuery.append(DEPARTURE_QUERY)
-                      .append('?');
+                .append('?');
         for (String param : DEPARTURE_QUERY_CONST_PARAMS) {
             departureQuery.append(param)
-                          .append('&');
+                    .append('&');
         }
         DEPARTURE_QUERY_CONST = departureQuery.toString();
     }
@@ -235,10 +232,10 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
         List<Departure> result = new ArrayList<>();
         try {
             String language = LANGUAGE + Locale.getDefault()
-                                               .getLanguage();
+                    .getLanguage();
             // ISO-8859-1 is needed for mvv
             String departureQuery = DEPARTURE_QUERY_STATION + UrlEscapers.urlPathSegmentEscaper()
-                                                                         .escape(stationID);
+                    .escape(stationID);
 
             String query = DEPARTURE_QUERY_CONST + language + '&' + departureQuery;
             Utils.logv(query);
@@ -251,29 +248,31 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
             }
 
             if (departures.get()
-                          .isNull("departureList")) {
+                    .isNull("departureList")) {
                 return result;
             }
 
             JSONArray arr = departures.get()
-                                      .getJSONArray("departureList");
+                    .getJSONArray("departureList");
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
                 JSONObject time = departure.getJSONObject("dateTime");
-                Date date = new GregorianCalendar(time.getInt("year"), time.getInt("month") - 1, time.getInt("day"), time.getInt("hour"), time.getInt("minute")).getTime();
+                DateTime date = new DateTime()
+                        .withDate(time.getInt("year"), time.getInt("month"), time.getInt("day"))
+                        .withTime(time.getInt("hour"), time.getInt("minute"), 0, 0);
                 result.add(new Departure(
                         servingLine.getString("name"),
                         servingLine.getString("direction"),
                         // Limit symbol length to 3, longer symbols are pointless
                         String.format("%3.3s", servingLine.getString("symbol"))
-                              .trim(),
+                                .trim(),
                         departure.getInt("countdown"),
-                        date.getTime()
+                        date
                 ));
             }
 
-            Collections.sort(result, (lhs, rhs) -> lhs.getCountDown() - rhs.getCountDown());
+            Collections.sort(result, (lhs, rhs) -> Integer.compare(lhs.getCountDown(), rhs.getCountDown()));
         } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
@@ -291,10 +290,10 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
         prefix = Utils.escapeUmlauts(prefix);
         try {
             String language = LANGUAGE + Locale.getDefault()
-                                               .getLanguage();
+                    .getLanguage();
             // ISO-8859-1 is needed for mvv
             String stationQuery = STATION_SEARCH_QUERY + UrlEscapers.urlPathSegmentEscaper()
-                                                                    .escape(prefix);
+                    .escape(prefix);
 
             String query = STATION_SEARCH_CONST + language + '&' + stationQuery;
             Utils.log(query);
@@ -308,7 +307,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
 
             List<StationResult> results = new ArrayList<>();
             JSONObject stopfinder = jsonObj.get()
-                                           .getJSONObject("stopFinder");
+                    .getJSONObject("stopFinder");
 
             // Possible values for points: Object, Array or null
             JSONArray pointsArray = stopfinder.optJSONArray(POINTS);
@@ -327,7 +326,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
             }
 
             //Sort by quality
-            Collections.sort(results, (lhs, rhs) -> rhs.getQuality() - lhs.getQuality());
+            Collections.sort(results, (lhs, rhs) -> Integer.compare(rhs.getQuality(), lhs.getQuality()));
 
             return results;
         } catch (JSONException e) {
@@ -339,8 +338,8 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
     private static void addStationResult(Collection<StationResult> results, JSONObject point) throws JSONException {
         String name = point.getString("name");
         String id = point.getJSONObject("ref")
-                         .getString("id");
-        int quality = point.getInt("quality");
+                .getString("id");
+        int quality = (point.has("quality")) ? point.getInt("quality") : 0;
         results.add(new StationResult(name, id, quality));
     }
 

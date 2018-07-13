@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 
@@ -19,7 +20,7 @@ data class CalendarRow(
      * Retrieve related values for calendar item as CalendarItem object
      */
     fun toCalendarItem(): CalendarItem {
-        return CalendarItem(nr, status, url, title, description, dtstart,
-                dtend, location, false)
+        return CalendarItem(nr, status, url, title, description, DateTimeUtils.getDateTime(dtstart),
+                DateTimeUtils.getDateTime(dtend), location, false)
     }
 }

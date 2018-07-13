@@ -1,0 +1,1 @@
+We have added new and improved the existing widgets. We also fixed a security loop in the eduroam configuration wizzard. If you have previously configured eduroam using this app, please delete the profile and do a fresh setup.

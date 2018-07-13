@@ -19,6 +19,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.concurrent.TimeUnit;
 
+import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.utils.Utils;
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
@@ -34,7 +35,7 @@ public final class Helper {
     private static final int HTTP_TIMEOUT = 25000;
     private static OkHttpClient client;
 
-    public static OkHttpClient getOkClient(Context c) {
+    public static OkHttpClient getOkHttpClient(Context c) {
         if (client != null) {
             return client;
         }
@@ -69,6 +70,12 @@ public final class Helper {
 
         //Add the device identifying header
         builder.addInterceptor(Helper.getDeviceInterceptor(c));
+
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(new ChaosMonkeyInterceptor());
+        }
+
+        builder.addInterceptor(new ConnectivityInterceptor(c));
 
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);

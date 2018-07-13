@@ -108,7 +108,7 @@
     <string name="licences_summary">Legal notes to licences</string>
 
     <!-- Startup Wizard -->
-    <string name="token_not_enabled">TUMonline-Access-Token is not enabled</string>
+    <string name="token_not_enabled">Not connected</string>
     <string name="startup_wizard_uppercase">TUMonline wizard</string>
     <string name="welcome_msg">In order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis ID has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
     <string name="button_skip">Skip</string>
@@ -136,9 +136,7 @@
     <string name="tuition_fees">Tuition Fees</string>
     <string name="common_info">General Information</string>
     <string name="menues">Cafeterias</string>
-    <string name="study_plans">Study Plans</string>
     <string name="person_search">Person Search</string>
-    <string name="plans">Plans</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="study_rooms">Study Rooms</string>
     <string name="opening_hours">Opening Hours</string>
@@ -199,8 +197,6 @@
     <string name="room">Room</string>
     <string name="add_contact">Add to contacts</string>
     <string name="contact_added">Contact is successfully added!</string>
-
-    <!-- Curricula -->
     <string name="something_wrong">An unknown error occurred</string>
 
     <!-- Opening hours -->
@@ -222,10 +218,6 @@
     <string name="campus_olympiapark_gyms">Campus Olympiapark hall plan</string>
     <string name="campus_main">Main Campus</string>
     <string name="campus_weihenstephan">Campus Weihenstephan</string>
-    <string name="mvv_fast_train_net">MVV Train-Network</string>
-    <string name="mvv_tram">MVV Tram-Network</string>
-    <string name="mvv_entire_net">MVV Overall-Network</string>
-    <string name="mvv_nightlines">MVV Nightlines</string>
     <string name="campus_garching_adress">Walther-Meißner-Straße 3, 85748 Garching</string>
     <string name="campus_klinikum_adress">Ismaninger Straße 22, 81675 Munich</string>
     <string name="campus_olympiapark_adress">Connollystraße 32, 80809 Munich</string>
@@ -362,7 +354,7 @@
     <string name="room_timetable">Room timetable</string>
     <string name="newspread" translatable="false" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
-    <string name="tuition_fee_more">For information on contributions and exemptions, loans, training assistance and scholarships visit <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a></string>
+    <string name="tuition_fee_more">For information on contributions and exemptions, loans, training assistance and scholarships visit <![CDATA[<a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a>]]>.</string>
     <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMonline token!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
@@ -425,7 +417,6 @@ Signature: %5$s</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
     <string name="www" translatable="false">TU Film</string>
-    <string name="mvv_download">Please press OK to download MVV-Plans otherwise you can\'t use this feature</string>
     <string name="more_info">More Information</string>
     <string name="event_plan">Event plan</string>
     <string name="please_connect_to_internet">Please connect to internet in order to proceed the first app start</string>
@@ -593,10 +584,15 @@ Signature: %5$s</string>
     <string name="join_chat_via_qr_code">let others join via QR-code</string>
 
     <string name="Refresh">Refresh</string>
+
     <string name="create">Create</string>
     <string name="enter_name_placeholder">Enter name …</string>
     <string name="send_feedback_question">Send feedback now?</string>
     <string name="feedback_empty">You haven\'t entered any feedback</string>
     <string name="feedback_img_without_text">Please add a description</string>
     <string name="campus">Campus</string>
+
+    <string name="discard_changes_question">Discard your changes?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
 </resources>

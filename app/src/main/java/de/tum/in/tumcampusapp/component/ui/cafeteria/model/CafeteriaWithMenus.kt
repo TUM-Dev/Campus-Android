@@ -4,33 +4,30 @@ import android.content.Context
 import android.content.Intent
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.DateUtils
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import org.joda.time.Period
 import java.util.*
-
-typealias AndroidDateUtils = android.text.format.DateUtils
 
 data class CafeteriaWithMenus(val id: Int) {
 
     var name: String? = null
     var menus: List<CafeteriaMenu> = ArrayList()
-    var menuDates: List<String> = ArrayList()
+    var menuDates: List<DateTime> = ArrayList()
 
-    val nextMenuDate: String
+    val nextMenuDate: DateTime
         get() {
-            val now = Calendar.getInstance();
-            var nextDateString = menuDates
+            val now = DateTime.now()
+            var nextDate = menuDates
                     .getOrElse(0) {
-                        DateUtils.getDateTimeString(Date())
+                        DateTime.now()
                     }
-            val nextDate = DateUtils.getDate(nextDateString)
 
-            if (nextDate.isToday() && now.hour >= 15 && menuDates.size > 1) {
-                nextDateString = menuDates[1]
+            if (nextDate.isToday() && now.hourOfDay >= 15 && menuDates.size > 1) {
+                nextDate = menuDates[1]
             }
 
-            return nextDateString
+            return nextDate
         }
 
     fun getIntent(context: Context): Intent? =
@@ -38,23 +35,18 @@ data class CafeteriaWithMenus(val id: Int) {
                 putExtra(Const.CAFETERIA_ID, id)
             }
 
+    // We notify the user at 11am
     val notificationTime: Long
-        get() {
-            // We notify the user at 11am
-            val menuDate = DateUtils.getDate(nextMenuDate)
-            return DateTime(menuDate.time)
-                    .withHourOfDay(11)
-                    .withMinuteOfHour(0)
-                    .withSecondOfMinute(0)
-                    .millis
-        }
+        get() = nextMenuDate
+                .withHourOfDay(11)
+                .withMinuteOfHour(0)
+                .withSecondOfMinute(0)
+                .millis
 
+    // Cafeteria is typically opened from 11 to 14 ~= 3 hours
     val notificationDuration: Long
-        // Cafeteria is typically opened from 11 to 14 ~= 3 hours
         get() = Period.hours(3).millis.toLong()
+
 }
 
-fun Date.isToday() = AndroidDateUtils.isToday(this.time)
-
-val Calendar.hour: Int
-    get() = this.get(Calendar.HOUR_OF_DAY)
+fun DateTime.isToday() = LocalDate.now() == LocalDate(this)

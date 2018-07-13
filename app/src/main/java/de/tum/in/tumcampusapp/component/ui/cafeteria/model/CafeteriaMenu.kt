@@ -3,8 +3,9 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.content.Context
-import java.util.*
 import java.util.regex.Pattern
+import android.arch.persistence.room.RoomWarnings
+import org.joda.time.DateTime
 
 /**
  * CafeteriaMenu
@@ -18,10 +19,11 @@ import java.util.regex.Pattern
  * @param name        Menu name
  */
 @Entity
+@SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
                          var id: Int = 0,
                          var cafeteriaId: Int = -1,
-                         var date: Date? = null,
+                         var date: DateTime? = null,
                          var typeShort: String = "",
                          var typeLong: String = "",
                          var typeNr: Int = -1,
