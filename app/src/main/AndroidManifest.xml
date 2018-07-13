@@ -540,6 +540,7 @@
             android:name=".component.ui.transportation.widget.MVVWidgetConfigureActivity"
             android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
             android:taskAffinity="">
