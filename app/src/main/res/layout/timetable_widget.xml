@@ -68,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/timetable_widget_no_lectures"
+            android:textColor="@color/text_dark_gray"
             android:visibility="gone"
             tools:visibility="visible" />
 

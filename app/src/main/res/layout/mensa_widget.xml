@@ -58,6 +58,8 @@
             android:id="@+id/food_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:dividerHeight="1dp"
+            android:divider="@color/list_divider"
             android:listSelector="@android:color/transparent" />
 
         <TextView
