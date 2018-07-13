@@ -14,32 +14,35 @@ import io.reactivex.schedulers.Schedulers
  * ViewModel for TopNews/NewsAlert.
  */
 class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
-                       private val compositeDisposable: CompositeDisposable): ViewModel() {
+                       private val compositeDisposable: CompositeDisposable) : ViewModel() {
 
-        /**
-         * Downloads the NewsAlert and stores it in the sharedPreferences
-         */
-        fun getNewsAlertFromService(context: Context): Boolean =
-                compositeDisposable.add(Observable.just(1)
+    /**
+     * Downloads the NewsAlert and stores it in the sharedPreferences
+     */
+    fun getNewsAlertFromService(context: Context): Boolean {
+        return compositeDisposable.add(
+                remoteRepository
+                        .getNewsAlert()
                         .subscribeOn(Schedulers.computation())
                         .observeOn(Schedulers.io())
-                        .doOnError { Utils.log(it.message) }
-                        .flatMap { remoteRepository.getNewsAlert() }
-                        .subscribe({ t ->
-                            Utils.setSetting(context, Const.NEWS_ALERT_IMAGE, t.url)
-                            Utils.setSetting(context, Const.NEWS_ALERT_LINK, t.link)
+                        .subscribe({ newsAlert ->
+                            // TODO: Store NewsAlerts in Room, not SharedPreferences!
+                            Utils.setSetting(context, Const.NEWS_ALERT_IMAGE, newsAlert.url)
+                            Utils.setSetting(context, Const.NEWS_ALERT_LINK, newsAlert.link)
 
                             val oldShowUntil = Utils.getSetting(context, Const.NEWS_ALERT_SHOW_UNTIL, "")
                             val oldImage = Utils.getSetting(context, Const.NEWS_ALERT_IMAGE, "");
 
                             // there is a NewsAlert update if the image link or the date changed
                             // --> Card should be displayed again
-                            val update = oldShowUntil != t.displayUntil || oldImage != t.url
+                            val update = oldShowUntil != newsAlert.displayUntil || oldImage != newsAlert.url
                             if (update) {
                                 Utils.setSetting(context, CardManager.SHOW_TOP_NEWS, true)
                             }
                             Utils.setSetting(context, Const.NEWS_ALERT_SHOW_UNTIL, t.displayUntil)
-                        })
-                )
+                        }, { t -> Utils.log(t) })
+        )
+    }
+    
 }
 
