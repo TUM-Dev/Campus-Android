@@ -86,7 +86,8 @@ public class CafeteriaManager implements ProvidesCard {
                     Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>(1);
                     selectedMensaMenus.put(mensaKey, cafeteria.getMenus());
                     return selectedMensaMenus;
-                });
+                })
+                .onErrorReturnItem(new HashMap<>());
 
     }
 
