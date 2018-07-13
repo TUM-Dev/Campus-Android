@@ -27,7 +27,6 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -101,7 +100,10 @@ public class BuyTicketActivity extends BaseActivity {
                 ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
                 AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
                 builder.setTitle(getString(R.string.sorry))
-                        .setMessage(R.string.not_logged_in_message);
+                        .setMessage(R.string.not_logged_in_message)
+                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+                            dialogInterface.dismiss();
+                        });
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
@@ -180,16 +182,25 @@ public class BuyTicketActivity extends BaseActivity {
             TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(BuyTicketActivity.this, ticketType.getId(), new Callback<TicketReservationResponse>() {
                 @Override
                 public void onResponse(Call<TicketReservationResponse> call, Response<TicketReservationResponse> response) {
-                    if (response.body().getError() != null) {
+                    // response.body() can be null when the user has already bought a ticket
+                    // but has not fetched it from the server yet
+                    if (response.body() == null) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BuyTicketActivity.this);
+                        builder.setTitle(getString(R.string.sorry))
+                                .setMessage(getString(R.string.ticket_not_fetched))
+                                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                    reservationProgressBar.setVisibility(View.INVISIBLE);
+                                    paymentButton.setEnabled(true);
+                                });
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }else if(response.body().getError() != null){
                         AlertDialog.Builder builder = new AlertDialog.Builder(BuyTicketActivity.this);
                         builder.setTitle(getString(R.string.sorry))
                                 .setMessage(getString(R.string.ticket_contingent_exhausted))
-                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        reservationProgressBar.setVisibility(View.INVISIBLE);
-                                        paymentButton.setEnabled(true);
-                                    }
+                                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                    reservationProgressBar.setVisibility(View.INVISIBLE);
+                                    paymentButton.setEnabled(true);
                                 });
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
