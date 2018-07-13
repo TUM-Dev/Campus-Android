@@ -58,6 +58,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
             }
         })
     }
+    
     private fun handleDownloadSuccess(employee: Employee) {
         this.employee = employee
         displayResult(employee)
