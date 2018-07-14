@@ -24,8 +24,9 @@ public interface EventDao {
     @Query("SELECT * FROM event ORDER BY start")
     List<Event> getAll();
 
-    @Query("SELECT id FROM event ORDER BY id DESC LIMIT 1")
-    int getLatestId();
+    // Get earliest event
+    @Query("SELECT * FROM event ORDER BY start LIMIT 1")
+    Event getNextEvent();
 
     @Query("SELECT count(*) FROM event WHERE start < :date")
     int getPosition(String date);
