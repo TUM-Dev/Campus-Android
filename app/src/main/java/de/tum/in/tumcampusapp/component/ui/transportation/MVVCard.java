@@ -88,18 +88,22 @@ public class MVVCard extends NotificationAwareCard {
 
         String firstContent = "";
         String firstTime = "";
-        for (Departure d : mDepartures) {
+
+        int numberOfDepartures = Math.min(mDepartures.size(), 5);
+
+        for (int i = 0; i < numberOfDepartures; i++) {
+            Departure departure = mDepartures.get(i);
             if (firstTime.isEmpty()) {
-                firstTime = d.getCountDown() + "min";
-                firstContent = d.getServingLine() + " " + d.getDirection();
+                firstTime = departure.getCountDown() + "min";
+                firstContent = departure.getServingLine() + " " + departure.getDirection();
             }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(getContext(), Const.NOTIFICATION_CHANNEL_MVV)
-                            .setContentTitle(d.getCountDown() + "min")
+                            .setContentTitle(departure.getCountDown() + "min")
                             .setSmallIcon(R.drawable.ic_notification)
                             .setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_mvv))
-                            .setContentText(d.getServingLine() + " " + d.getDirection());
+                            .setContentText(departure.getServingLine() + " " + departure.getDirection());
             morePageNotification.addPage(pageNotification.build());
         }
 
