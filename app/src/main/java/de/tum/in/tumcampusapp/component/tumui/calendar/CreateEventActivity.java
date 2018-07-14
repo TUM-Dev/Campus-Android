@@ -78,7 +78,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
             // an event with extras can either be editing an existing event
             // or adding a new event from Tickets & Events
             isEditing = extras.getBoolean(Const.EVENT_EDIT);
-            if(isEditing){
+            if (isEditing) {
                 createButton.setText(R.string.event_save_edit_button);
             }
             titleView.setText(extras.getString(Const.EVENT_TITLE));
