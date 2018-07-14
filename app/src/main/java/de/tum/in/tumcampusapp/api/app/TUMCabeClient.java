@@ -354,16 +354,15 @@ public final class TUMCabeClient {
     }
 
     // TICKET SALE
-    // Getting event information
-    public List<Event> getEvents() throws IOException {
-        List<Event> list = service.getEvents().execute().body();
 
-        return list;
+    // Getting event information
+
+    public List<Event> getEvents() throws IOException {
+        return service.getEvents().execute().body();
     }
 
     public Event getEvent(int eventID) throws IOException {
-        Event event = service.getEvent(eventID).execute().body();
-        return event;
+        return service.getEvent(eventID).execute().body();
     }
 
     public List<Event> searchEvents(String searchTerm) throws IOException {
@@ -371,8 +370,10 @@ public final class TUMCabeClient {
     }
 
     // Getting ticket information
+
     public void getTickets(Context context, Callback<List<Ticket>> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, null);
+        ChatVerification chatVerification = ChatVerification.Companion.
+                createChatVerification(context, null);
         service.getTickets(chatVerification).enqueue(cb);
     }
 
@@ -381,26 +382,35 @@ public final class TUMCabeClient {
     }
 
     // Ticket reservation
-    public void reserveTicket(Context context, int ticketType, Callback<TicketReservationResponse> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new TicketReservation(ticketType));
+
+    public void reserveTicket(Context context, int ticketType,
+                              Callback<TicketReservationResponse> cb) throws IOException {
+        ChatVerification chatVerification = ChatVerification.Companion.
+                createChatVerification(context, new TicketReservation(ticketType));
         service.reserveTicket(chatVerification).enqueue(cb);
     }
 
-    public void cancelTicketReservation(Context context, int ticketHistory, Callback<TicketSuccessResponse> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new TicketReservationCancelation(ticketHistory));
+    public void cancelTicketReservation(Context context, int ticketHistory,
+                                        Callback<TicketSuccessResponse> cb) throws IOException {
+        ChatVerification chatVerification = ChatVerification.Companion.
+                createChatVerification(context, new TicketReservationCancelation(ticketHistory));
         service.cancelTicketReservation(chatVerification).enqueue(cb);
     }
 
     // Ticket purchase
+
     public void purchaseTicketStripe(Context context, int ticketHistory, String token,
                                      String customerName, Callback<Ticket> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context,
-                new TicketPurchaseStripe(ticketHistory, token, customerName));
+        ChatVerification chatVerification = ChatVerification.Companion.
+                createChatVerification(context,
+                        new TicketPurchaseStripe(ticketHistory, token, customerName));
         service.purchaseTicketStripe(chatVerification).enqueue(cb);
     }
 
-    public void retrieveEphemeralKey(Context context, String apiVersion, Callback<HashMap<String, Object>> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, new EphimeralKey(apiVersion));
+    public void retrieveEphemeralKey(Context context, String apiVersion,
+                                     Callback<HashMap<String, Object>> cb) throws IOException {
+        ChatVerification chatVerification = ChatVerification.Companion.
+                createChatVerification(context, new EphimeralKey(apiVersion));
         service.retrieveEphemeralKey(chatVerification).enqueue(cb);
     }
 
