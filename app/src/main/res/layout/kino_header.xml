@@ -82,9 +82,6 @@
             android:drawableStart="@drawable/ic_link"
             android:text="@string/www"/>
 
-        <Button
-            android:id="@+id/button_ticket"
-            style="@style/KinoHeaderButton"/>
     </LinearLayout>
 
 </LinearLayout>

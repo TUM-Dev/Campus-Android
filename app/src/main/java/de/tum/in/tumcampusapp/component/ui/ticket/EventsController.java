@@ -60,27 +60,47 @@ public class EventsController {
                     @Override
                     public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
                         List<Ticket> list = response.body();
-                        if (list == null) list = new ArrayList<Ticket>();
+                        if (list == null) {
+                            list = new ArrayList<>();
+                        }
                         ticketDao.insert(list);
+                        loadTicketTypesForTickets(list);
                     }
 
                     @Override
                     public void onFailure(Call<List<Ticket>> call, Throwable t) {
-                        t.printStackTrace();
+                        Utils.log(t);
                     }
                 });
             }
         } catch (IOException e) {
             Utils.log(e);
         }
+    }
 
-        // Load all ticket types
-        try {
-            for (Event e : getEvents()) {
-                ticketTypeDao.insert(api.getTicketTypes(e.getId()));
-            }
-        } catch (IOException e) {
-            Utils.log(e);
+    private void loadTicketTypesForTickets(List<Ticket> tickets){
+        // get ticket type information for all tickets
+        for (Ticket ticket : tickets){
+            TUMCabeClient.getInstance(context).getTicketTypes(ticket.getEventId(),
+                    new Callback<List<TicketType>>(){
+
+                        @Override
+                        public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
+                            List<TicketType> ticketTypes = response.body();
+                            if (ticketTypes == null) {
+                                ticketTypes = new ArrayList<>();
+                            }
+                            // add found ticket types to database (needed in ShowTicketActivity)
+                            addTicketTypes(ticketTypes);
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<TicketType>> call, Throwable t) {
+                            // if ticketTypes could not be retrieved from server, e.g. due to network problems
+                            Utils.log(t);
+                        }
+                    });
+
         }
     }
 
@@ -123,26 +143,12 @@ public class EventsController {
         return ticketTypeDao.getById(id);
     }
 
-    /**
-     * This is not a database access but a API call
-     * Thus, it needs to be called in a thread
-     *
-     * @param eventId
-     * @return
-     */
-    public List<TicketType> getTicketTypesByEventId(int eventId) {
-        List<TicketType> ticketTypes = null;
-        try {
-            TUMCabeClient api = TUMCabeClient.getInstance(context);
-            ticketTypes = api.getTicketTypes(eventId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ticketTypes;
-    }
-
     public void addTickets(List<Ticket> tickets) {
         ticketDao.insert(tickets);
+    }
+
+    public void addTicketTypes(List<TicketType> ticketTypes) {
+        ticketTypeDao.insert(ticketTypes);
     }
 }
 
