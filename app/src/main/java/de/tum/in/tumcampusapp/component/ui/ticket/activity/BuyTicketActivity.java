@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.AdapterView;
@@ -163,33 +164,33 @@ public class BuyTicketActivity extends BaseActivity {
     }
 
     private void setTicketTypeInformation(String ticketTypeName) {
-        TicketType ticketType = getTicketTypeForName(ticketTypeName);
-
         TextView priceView = findViewById(R.id.ticket_details_price);
-
-        String priceString = ticketType.formatedPrice();
-
+        TicketType ticketType = getTicketTypeForName(ticketTypeName);
+        String priceString = ticketType == null ? getString(R.string.not_valid) : ticketType.formatedPrice();
         priceView.setText(priceString);
     }
 
     private void reserveTicket() {
         TicketType ticketType = getTicketTypeForName((String) ticketTypeSpinner.getSelectedItem());
         if (ticketType == null) {
-            Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
+            Utils.showToast(getApplicationContext(),R.string.internal_error);
             return;
         }
 
         reservationProgressBar.setVisibility(View.VISIBLE);
         paymentButton.setEnabled(false);
         try {
-            TUMCabeClient.getInstance(getApplicationContext()).reserveTicket(BuyTicketActivity.this, ticketType.getId(), new Callback<TicketReservationResponse>() {
+            TUMCabeClient.getInstance(this).reserveTicket(BuyTicketActivity.this,
+                    ticketType.getId(), new Callback<TicketReservationResponse>() {
                 @Override
-                public void onResponse(Call<TicketReservationResponse> call, Response<TicketReservationResponse> response) {
+                public void onResponse(@NonNull Call<TicketReservationResponse> call,
+                                       @NonNull Response<TicketReservationResponse> response) {
                     // response.body() can be null when the user has already bought a ticket
                     // but has not fetched it from the server yet
 
                     if (response.body() == null) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BuyTicketActivity.this);
+                        AlertDialog.Builder builder =
+                                new AlertDialog.Builder(BuyTicketActivity.this);
                         builder.setTitle(getString(R.string.sorry))
                                 .setMessage(getString(R.string.ticket_not_fetched))
                                 .setPositiveButton(R.string.ok, (dialog, which) -> {
@@ -199,7 +200,8 @@ public class BuyTicketActivity extends BaseActivity {
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                     } else if (response.body().getError() != null) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BuyTicketActivity.this);
+                        AlertDialog.Builder builder =
+                                new AlertDialog.Builder(BuyTicketActivity.this);
                         builder.setTitle(getString(R.string.sorry))
                                 .setMessage(getString(R.string.ticket_contingent_exhausted))
                                 .setPositiveButton(R.string.ok, (dialog, which) -> {
@@ -213,7 +215,8 @@ public class BuyTicketActivity extends BaseActivity {
                         paymentButton.setEnabled(true);
 
                         // Jump to the payment activity
-                        Intent intent = new Intent(getApplicationContext(), StripePaymentActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),
+                                StripePaymentActivity.class);
                         intent.putExtra("ticketPrice", ticketType.formatedPrice());
                         intent.putExtra("ticketType", ticketType.getId());
                         intent.putExtra("ticketHistory", response.body().getTicketHistory());
@@ -226,7 +229,8 @@ public class BuyTicketActivity extends BaseActivity {
                     Utils.log(t);
                     reservationProgressBar.setVisibility(View.INVISIBLE);
                     paymentButton.setEnabled(true);
-                    StripePaymentActivity.showError(BuyTicketActivity.this, getString(R.string.purchase_error_message));
+                    StripePaymentActivity.showError(BuyTicketActivity.this,
+                            getString(R.string.purchase_error_message));
                 }
             });
         } catch (IOException exception) {
@@ -235,7 +239,5 @@ public class BuyTicketActivity extends BaseActivity {
             StripePaymentActivity.showError(BuyTicketActivity.this, getString(R.string.internal_error));
         }
     }
-
-
 }
 
