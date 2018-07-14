@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,40 +39,56 @@ public class EventsController {
         ticketTypeDao = TcaDb.getInstance(context).ticketTypeDao();
     }
 
+    public void downloadFromService() {
+        Callback<List<Event>> eventCallback = new Callback<List<Event>>() {
 
-    public void downloadFromService(boolean force) {
-        TUMCabeClient api = TUMCabeClient.getInstance(context);
+            @Override
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                List<Event> events = response.body();
+                if (events == null) {
+                    events = new ArrayList<>();
+                }
+                addEvents(events);
+            }
 
+            @Override
+            public void onFailure(Call<List<Event>> call, Throwable t) {
+                Utils.log(t);
+            }
+        };
+
+        Callback<List<Ticket>> ticketCallback = new Callback<List<Ticket>>() {
+            @Override
+            public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
+                List<Ticket> tickets = response.body();
+                if (tickets == null) {
+                    tickets = new ArrayList<>();
+                }
+                addTickets(tickets);
+                loadTicketTypesForTickets(tickets);
+            }
+
+            @Override
+            public void onFailure(Call<List<Ticket>> call, Throwable t) {
+                Utils.log(t);
+            }
+        };
+
+        getEventsAndTicketsFromServer(eventCallback, ticketCallback);
+    }
+
+    public void getEventsAndTicketsFromServer(Callback<List<Event>> eventCallback,
+                                              Callback<List<Ticket>> ticketCallback){
         // Delete all too old items
         eventDao.cleanUp();
 
-        // Load all events since the last sync
-        try {
-            List<Event> events = api.getEvents();
-            eventDao.insert(events);
-        } catch (IOException e) {
-            Utils.log(e);
-        }
+        // Load all events
+        TUMCabeClient.getInstance(context).getEvents(eventCallback);
 
         // Load all tickets
         try {
             if (Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class) != null) {
-                api.getTickets(context, new Callback<List<Ticket>>() {
-                    @Override
-                    public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
-                        List<Ticket> list = response.body();
-                        if (list == null) {
-                            list = new ArrayList<>();
-                        }
-                        ticketDao.insert(list);
-                        loadTicketTypesForTickets(list);
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Ticket>> call, Throwable t) {
-                        Utils.log(t);
-                    }
-                });
+                TUMCabeClient.getInstance(context).getTickets(context, ticketCallback);
             }
         } catch (IOException e) {
             Utils.log(e);
@@ -105,6 +122,10 @@ public class EventsController {
     }
 
     // Event methods
+
+    public void addEvents(List<Event> events) {
+        eventDao.insert(events);
+    }
 
     public List<Event> getEvents() {
         return eventDao.getAll();
