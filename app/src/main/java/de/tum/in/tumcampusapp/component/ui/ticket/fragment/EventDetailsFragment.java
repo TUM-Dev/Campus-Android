@@ -143,7 +143,7 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         // initialize all TextView
         TextView eventDateTextView = footerView.findViewById(R.id.event_date);
         eventLocationTextView = footerView.findViewById(R.id.event_location);
-        eventRemainingTicketTextView = footerView.findViewById(R.id.event_remainingticket);
+        eventRemainingTicketTextView = footerView.findViewById(R.id.event_remaining_tickets);
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
@@ -178,7 +178,6 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
     }
 
     private void setAvailableTicketCount() {
-        eventRemainingTicketTextView.setText(R.string.loading);
         TUMCabeClient.getInstance(context).getTicketStats(event.getId(), new retrofit2.Callback<List<TicketStatus>>() {
             @Override
             public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
