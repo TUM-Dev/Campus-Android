@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +19,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * This class is responsible for providing ticket and event data to the activities.
+ * For that purpose it handles both server and database accesses.
+ */
 public class EventsController {
 
     private final Context context;
@@ -26,23 +31,17 @@ public class EventsController {
     private final TicketDao ticketDao;
     private final TicketTypeDao ticketTypeDao;
 
-    /**
-     * Constructor, open/create database, create table if necessary
-     *
-     * @param context Context
-     */
     public EventsController(Context context) {
         this.context = context;
-        eventDao = TcaDb.getInstance(context).eventDao();
-        ticketDao = TcaDb.getInstance(context).ticketDao();
-        ticketTypeDao = TcaDb.getInstance(context).ticketTypeDao();
+        TcaDb db = TcaDb.getInstance(context);
+        eventDao = db.eventDao();
+        ticketDao = db.ticketDao();
+        ticketTypeDao = db.ticketTypeDao();
     }
-
 
     public void downloadFromService(boolean force) {
         TUMCabeClient api = TUMCabeClient.getInstance(context);
 
-        // Delete all too old items
         eventDao.removePastEvents();
 
         // Load all events since the last sync
@@ -58,7 +57,7 @@ public class EventsController {
             if (Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class) != null) {
                 api.getTickets(context, new Callback<List<Ticket>>() {
                     @Override
-                    public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
+                    public void onResponse(@NonNull Call<List<Ticket>> call, @NonNull  Response<List<Ticket>> response) {
                         List<Ticket> list = response.body();
                         if (list == null) {
                             list = new ArrayList<>();
@@ -68,7 +67,7 @@ public class EventsController {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Ticket>> call, Throwable t) {
+                    public void onFailure(@NonNull Call<List<Ticket>> call, @NonNull Throwable t) {
                         Utils.log(t);
                     }
                 });
@@ -85,7 +84,7 @@ public class EventsController {
                     new Callback<List<TicketType>>(){
 
                         @Override
-                        public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
+                        public void onResponse(@NonNull Call<List<TicketType>> call, @NonNull Response<List<TicketType>> response) {
                             List<TicketType> ticketTypes = response.body();
                             if (ticketTypes == null) {
                                 ticketTypes = new ArrayList<>();
@@ -95,7 +94,7 @@ public class EventsController {
                         }
 
                         @Override
-                        public void onFailure(Call<List<TicketType>> call, Throwable t) {
+                        public void onFailure(@NonNull Call<List<TicketType>> call, @NonNull Throwable t) {
                             // if ticketTypes could not be retrieved from server, e.g. due to network problems
                             Utils.log(t);
                         }
@@ -110,8 +109,10 @@ public class EventsController {
         return eventDao.getAll();
     }
 
+    /**
+     * @return all events for which a ticket exists
+     */
     public List<Event> getBookedEvents() {
-        // Return all events for which a ticket exists
         List<Ticket> tickets = ticketDao.getAll();
         List<Event> bookedEvents = new ArrayList<>();
         for (Ticket ticket : tickets) {
