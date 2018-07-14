@@ -43,7 +43,7 @@ public class EventsController {
         TUMCabeClient api = TUMCabeClient.getInstance(context);
 
         // Delete all too old items
-        eventDao.cleanUp();
+        eventDao.removePastEvents();
 
         // Load all events since the last sync
         try {
