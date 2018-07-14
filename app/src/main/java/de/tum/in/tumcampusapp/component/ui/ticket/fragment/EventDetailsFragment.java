@@ -212,9 +212,7 @@ public class EventDetailsFragment extends Fragment {
                 .putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd() != null
                         ? event.getEnd()
                         : event.getStart().plus(Event.defaultDuration)));
-        /*if (event.getEnd() != null) {
-            intent.putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd()));
-        }*/
+
         startActivity(intent);
     }
 

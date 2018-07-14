@@ -61,6 +61,8 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private void loadEvents(){
+        // TODO: get events here from server?
+
         List<Event> events;
         if (title.equals(this.getString(R.string.booked_events))) {
             events = eventsController.getBookedEvents();
