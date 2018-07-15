@@ -80,7 +80,6 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements 
                 // show the given tab
                 mCurrentMode = 1 - tab.getPosition();
                 loadPersonalLectures();
-                //startLoading();
             }
 
             @Override
@@ -97,8 +96,6 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements 
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.joined));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.not_joined));
-
-        loadPersonalLectures();
     }
 
     @Override

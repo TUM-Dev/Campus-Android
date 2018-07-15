@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -15,6 +16,7 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccess
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetails;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 
 /**
@@ -31,15 +33,7 @@ import retrofit2.Call;
  */
 public class LecturesDetailsActivity extends ActivityForAccessingTumOnline implements OnClickListener {
 
-    /**
-     * UI elements
-     */
     private Button btnLDetailsTermine;
-
-    /**
-     * the current processing Lecture item (model: LectureDetailsRow)
-     */
-    private LectureDetails currentItem;
     private TextView tvLDetailsDozent;
     private TextView tvLDetailsInhalt;
     private TextView tvLDetailsLiteratur;
@@ -51,6 +45,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
     private TextView tvLDetailsTermin;
     private TextView tvLDetailsZiele;
 
+    private LectureDetails currentItem;
     private String mLectureId;
 
     public LecturesDetailsActivity() {
@@ -87,8 +82,8 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == btnLDetailsTermine.getId()) {
-            // start LectureAppointments
             Bundle bundle = new Bundle();
+
             // LectureAppointments need the name and id of the facing lecture
             bundle.putString("stp_sp_nr", currentItem.getStp_sp_nr());
             bundle.putString(Const.TITLE_EXTRA, currentItem.getTitle());
@@ -101,9 +96,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 
     @Override
     public void onRefresh() {
-        if (mLectureId != null) {
-            loadLectureDetails(mLectureId);
-        }
+        loadLectureDetails(mLectureId);
     }
 
     private void loadLectureDetails(@NonNull String lectureId) {
@@ -111,9 +104,15 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
         fetch(apiCall, this::handleDownloadSuccess);
     }
 
-    public void handleDownloadSuccess(LectureDetailsResponse lectureDetailsResponse) {
-        // we got exactly one row, that's fine
-        currentItem = lectureDetailsResponse.getLectureDetails().get(0);
+    public void handleDownloadSuccess(LectureDetailsResponse response) {
+        List<LectureDetails> lectureDetails = response.getLectureDetails();
+        if (lectureDetails.isEmpty()) {
+            finish();
+            Utils.showToast(this, R.string.error_unknown);
+            return;
+        }
+
+        currentItem = lectureDetails.get(0);
         tvLDetailsName.setText(currentItem.getTitle().toUpperCase(Locale.getDefault()));
 
         StringBuilder strLectureLanguage = new StringBuilder(currentItem.getSemesterName());

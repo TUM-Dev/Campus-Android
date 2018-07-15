@@ -34,7 +34,7 @@ data class Lecture(
     override fun getHeaderId() = semesterId
 
     companion object {
-        val STP_SP_NR = "stp_sp_nr"
+        @JvmField val STP_SP_NR = "stp_sp_nr"
     }
 
 }

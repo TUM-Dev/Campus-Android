@@ -67,8 +67,6 @@ class PersonSearchActivity : ActivityForSearchingTumOnline(
     }
 
     private fun searchPerson(query: String) {
-        //showLoadingStart()
-
         val apiCall = TUMOnlineClient
                 .getInstance(this)
                 .searchPerson(query)
@@ -78,19 +76,6 @@ class PersonSearchActivity : ActivityForSearchingTumOnline(
                 handleDownloadSuccess(response)
             }
         })
-
-        /*
-                .enqueue(object : Callback<PersonList> {
-                    override fun onResponse(call: Call<PersonList>, response: Response<PersonList>) {
-                        val personList = response.body() ?: return
-                        handleDownloadSuccess(personList)
-                    }
-
-                    override fun onFailure(call: Call<PersonList>, t: Throwable) {
-                        handleDownloadError(t)
-                    }
-                })
-        */
     }
 
     private fun showPersonDetails(person: Person) {

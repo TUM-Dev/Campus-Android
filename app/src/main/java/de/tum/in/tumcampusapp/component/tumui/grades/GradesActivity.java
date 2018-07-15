@@ -366,11 +366,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
         toggleChartVisibility();
     }
 
-    private void loadGrades() {
-        Call<ExamList> apiCall = mApiService.getGrades();
-        fetch(apiCall, this::handleDownloadSuccess);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -380,12 +375,17 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
         return true;
     }
 
+    private void loadGrades() {
+        Call<ExamList> apiCall = mApiService.getGrades();
+        fetch(apiCall, this::handleDownloadSuccess);
+    }
+
     public void handleDownloadSuccess(ExamList examList) {
         this.exams = examList.getExams();
 
         initSpinner();
 
-        // enabling the Menu options after first fetch
+        // Enable the menu options after first successful fetch
         isFetched = true;
         if (barMenuItem != null && pieMenuItem != null) {
             barMenuItem.setEnabled(true);
@@ -394,7 +394,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
         showExams(exams);
 
-        // update the action bar to display the enabled menu options
+        // Update the action bar to display the enabled menu options
         invalidateOptionsMenu();
     }
 

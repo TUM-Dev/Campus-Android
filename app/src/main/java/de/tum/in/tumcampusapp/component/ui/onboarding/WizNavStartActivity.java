@@ -69,8 +69,8 @@ public class WizNavStartActivity
     public void onBackPressed() {
         super.onBackPressed();
         // Make sure to delete information that might lead the app to believe the user enabled TUMonline
-        Utils.setSetting(this, Const.LRZ_ID, null);
-        Utils.setSetting(this, Const.ACCESS_TOKEN, null);
+        resetLrzId();
+        resetAccessToken();
     }
 
     /**
@@ -90,6 +90,8 @@ public class WizNavStartActivity
         lrzId = enteredId;
         Utils.setSetting(this, Const.LRZ_ID, lrzId);
 
+        hideKeyboard();
+
         // is access token already set?
         if (accessTokenManager.hasValidAccessToken()) {
             // show Dialog first
@@ -103,8 +105,10 @@ public class WizNavStartActivity
         }
     }
 
-    // TODO TILL: Implement retry method
-
+    /**
+     * Requests a new {@link AccessToken} with the provided public key.
+     * @param publicKey The public key with which to request the {@link AccessToken}
+     */
     private void requestNewToken(String publicKey) {
         showLoadingStart();
         String tokenName = "TUMCampusApp-" + Build.PRODUCT;
@@ -123,11 +127,18 @@ public class WizNavStartActivity
 
                     @Override
                     public void onFailure(@NonNull Call<AccessToken> call, @NonNull Throwable t) {
-                        handleTokenDownloadFailure(t);
+                        Utils.log(t);
+                        resetAccessToken();
+                        displayErrorDialog(t);
                     }
                 });
     }
 
+    /**
+     * Called when the access token was downloaded successfully. This method stores the access
+     * token, uploads the public key to TUMonline and opens the next step in the setup wizard.
+     * @param accessToken The downloaded {@link AccessToken}
+     */
     private void handleTokenDownloadSuccess(AccessToken accessToken) {
         Utils.log("AcquiredAccessToken = " + accessToken.getToken());
 
@@ -145,9 +156,11 @@ public class WizNavStartActivity
         openNextWizardStep();
     }
 
-    private void handleTokenDownloadFailure(Throwable throwable) {
-        Utils.log(throwable);
-
+    /**
+     * Display an obtrusive error dialog because on the provided {@link Throwable}.
+     * @param throwable The {@link Throwable} that occurred
+     */
+    private void displayErrorDialog(Throwable throwable) {
         int messageResId;
 
         if (throwable instanceof InactiveTokenException) {
@@ -164,23 +177,25 @@ public class WizNavStartActivity
             messageResId = R.string.error_access_token_could_not_be_generated;
         }
 
-        // Set access token to null
-        Utils.setSetting(this, Const.ACCESS_TOKEN, null);
-        //showLoadingEnded();
-        displayTokenDownloadErrorDialog(messageResId);
-    }
-
-    private void displayTokenDownloadErrorDialog(int messageResId) {
-        hideKeyboard();
-        displayErrorDialog(messageResId);
-    }
-
-    private void displayErrorDialog(int messageResId) {
         new AlertDialog.Builder(this)
                 .setMessage(messageResId)
                 .setPositiveButton(R.string.ok, null)
                 .setCancelable(true)
                 .show();
+    }
+
+    /**
+     * Resets the LRZ ID (TUM ID) to null.
+     */
+    private void resetLrzId() {
+        Utils.setSetting(this, Const.LRZ_ID, null);
+    }
+
+    /**
+     * Resets the TUMonline access token to null.
+     */
+    private void resetAccessToken() {
+        Utils.setSetting(this, Const.ACCESS_TOKEN, null);
     }
 
     private void hideKeyboard() {
@@ -227,6 +242,9 @@ public class WizNavStartActivity
         }
     }
 
+    /**
+     * Opens the next step in the setup wizard, which is {@link WizNavCheckTokenActivity}.
+     */
     private void openNextWizardStep() {
         startActivity(new Intent(this, WizNavCheckTokenActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);

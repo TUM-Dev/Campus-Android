@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_person_details.*
  */
 class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_person_details) {
 
-    private var personId: String? = null
+    private lateinit var personId: String
     private var employee: Employee? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,9 +45,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
     }
 
     override fun onRefresh() {
-        personId?.let {
-            loadPersonDetails(it)
-        }
+        loadPersonDetails(personId)
     }
 
     private fun loadPersonDetails(personId: String) {

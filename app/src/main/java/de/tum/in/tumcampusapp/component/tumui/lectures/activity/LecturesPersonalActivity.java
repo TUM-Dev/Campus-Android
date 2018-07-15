@@ -28,9 +28,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
 
-    /**
-     * UI elements
-     */
     private StickyListHeadersListView lvMyLecturesList;
 
     public LecturesPersonalActivity() {
@@ -48,7 +45,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
             Lecture item = (Lecture) o;
 
             Intent intent = new Intent(this, LecturesDetailsActivity.class);
-            intent.putExtra(Lecture.Companion.getSTP_SP_NR(), item.getStp_sp_nr());
+            intent.putExtra(Lecture.STP_SP_NR, item.getStp_sp_nr());
 
             startActivity(intent);
         });
@@ -70,7 +67,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
     @Override
     protected void onStartSearch(String query) {
         disableRefresh();
-        searchLecture(query);
+        searchLectures(query);
     }
 
     private void loadPersonalLectures() {
@@ -81,7 +78,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
         fetch(apiCall, this::handleDownloadSuccess);
     }
 
-    private void searchLecture(String query) {
+    private void searchLectures(String query) {
         Call<LecturesResponse> apiCall = TUMOnlineClient
                 .getInstance(this)
                 .searchLectures(query);
@@ -90,7 +87,6 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
     }
 
     public void handleDownloadSuccess(@NonNull LecturesResponse response) {
-        showLoadingEnded();
         if (response.getLectures().isEmpty()) {
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
         } else {

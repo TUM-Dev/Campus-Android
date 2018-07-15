@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import retrofit2.Call;
 
 /**
- * Activity to show the user's tuition ; based on grades.java / quick solution
+ * Activity to show the user's tuition fees status
  */
 public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
 
