@@ -80,13 +80,11 @@ data class CalendarItem(@PrimaryKey
                 .trim { it <= ' ' }
     }
 
-
     fun getEventDateString(): String {
         val timeFormat = DateTimeFormat.forPattern("HH:mm").withLocale(Locale.US)
         val dateFormat = DateTimeFormat.forPattern("EEE, dd.MM.yyyy").withLocale(Locale.US)
         return String.format("%s %s - %s", dateFormat.print(eventStart), timeFormat.print(eventStart), timeFormat.print(eventEnd))
     }
-
 
     /**
      * Prepares ContentValues object with related values plugged
@@ -97,7 +95,7 @@ data class CalendarItem(@PrimaryKey
         // Put the received values into a contentResolver to
         // transmit the to Google Calendar
         values.put(CalendarContract.Events.DTSTART, eventStart.millis)
-        values.put(CalendarContract.Events.DTEND, eventStart.millis)
+        values.put(CalendarContract.Events.DTEND, eventEnd.millis)
         values.put(CalendarContract.Events.TITLE, title)
         values.put(CalendarContract.Events.DESCRIPTION, description)
         values.put(CalendarContract.Events.EVENT_LOCATION, location)

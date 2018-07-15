@@ -98,7 +98,6 @@ public class NewsCard extends Card {
         final String imgURL = mNews.getImage();
         if (!imgURL.trim().isEmpty() && !"null".equals(imgURL)) {
             Utils.log(imgURL);
-
             Handler uiHandler = new Handler(Looper.getMainLooper());
             uiHandler.post(() -> {
                 Picasso.get()

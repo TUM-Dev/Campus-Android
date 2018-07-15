@@ -75,7 +75,7 @@ public class MVVCard extends Card {
         final long prevDate = prefs.getLong(MVV_TIME, 0);
         return prevDate + DateUtils.HOUR_IN_MILLIS < System.currentTimeMillis();
     }
-
+    
     public void setStation(StationResult station) {
         this.mStation = station;
     }
