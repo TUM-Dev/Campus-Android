@@ -102,9 +102,8 @@ public class CalendarController implements ProvidesCard {
         List<CalendarItem> calendarItems = calendarDao.getAllNotCancelled();
         for (CalendarItem calendarItem : calendarItems) {
             ContentValues values = calendarItem.toContentValues();
-
             values.put(CalendarContract.Events.CALENDAR_ID, id);
-            values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
+            values.put(CalendarContract.Events.EVENT_TIMEZONE, c.getString(R.string.calendarTimeZone));
             contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
         }
     }
