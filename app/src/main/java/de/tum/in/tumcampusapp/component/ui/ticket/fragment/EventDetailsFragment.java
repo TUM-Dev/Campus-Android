@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -42,11 +44,15 @@ import retrofit2.Response;
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
  */
-public class EventDetailsFragment extends Fragment {
+public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private Context context;
     private Event event;
+
     private TextView eventLocationTextView;
+    private TextView eventRemainingTicketTextView;
+    private SwipeRefreshLayout mSwipeLayout;
+
     private String url; // link to homepage
     private LayoutInflater inflater;
     private EventsController eventsController;
@@ -56,8 +62,11 @@ public class EventDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
-        View rootView = inflater.inflate(R.layout.fragment_kinodetails_section, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_event_details, container, false);
         LinearLayout root = rootView.findViewById(R.id.layout);
+
+        mSwipeLayout = rootView.findViewById(R.id.swipe_container);
+        mSwipeLayout.setOnRefreshListener(this);
 
         eventsController = new EventsController(this.getContext());
 
@@ -134,7 +143,7 @@ public class EventDetailsFragment extends Fragment {
         // initialize all TextView
         TextView eventDateTextView = footerView.findViewById(R.id.event_date);
         eventLocationTextView = footerView.findViewById(R.id.event_location);
-        TextView eventRemainingTicketTextView = footerView.findViewById(R.id.event_remainingticket);
+        eventRemainingTicketTextView = footerView.findViewById(R.id.event_remaining_tickets);
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
@@ -150,7 +159,7 @@ public class EventDetailsFragment extends Fragment {
         eventLocationTextView.setOnClickListener(view -> showMap());
 
         //set remaining tickets,following code is just for testing purpose.
-        setAvailableTicketCount(eventRemainingTicketTextView);
+        setAvailableTicketCount();
 
         String eventDescriptionString = event.getDescription();
         eventDescriptionTextView.setText(eventDescriptionString);
@@ -168,8 +177,7 @@ public class EventDetailsFragment extends Fragment {
         rootView.addView(footerView);
     }
 
-    private void setAvailableTicketCount(TextView countView) {
-        countView.setText(R.string.loading);
+    private void setAvailableTicketCount() {
         TUMCabeClient.getInstance(context).getTicketStats(event.getId(), new retrofit2.Callback<List<TicketStatus>>() {
             @Override
             public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
@@ -179,14 +187,16 @@ public class EventDetailsFragment extends Fragment {
                 for (TicketStatus stat : response.body()) {
                     sum += stat.getAvailableTicketCount();
                 }
-                countView.setText(getString(R.string.tickets_left, sum));
+                eventRemainingTicketTextView.setText(getString(R.string.tickets_left, sum));
+                mSwipeLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
-                t.printStackTrace();
-                // Connect again
-                setAvailableTicketCount(countView);
+                Utils.log(t);
+                eventRemainingTicketTextView.setText(R.string.not_valid);
+                Utils.showToast(context, R.string.no_internet_connection);
+                mSwipeLayout.setRefreshing(false);
             }
         });
     }
@@ -212,9 +222,7 @@ public class EventDetailsFragment extends Fragment {
                 .putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd() != null
                         ? event.getEnd()
                         : event.getStart().plus(Event.defaultDuration)));
-        /*if (event.getEnd() != null) {
-            intent.putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd()));
-        }*/
+
         startActivity(intent);
     }
 
@@ -243,6 +251,11 @@ public class EventDetailsFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         disposable.clear();
+    }
+
+    @Override
+    public void onRefresh() {
+        setAvailableTicketCount();
     }
 
     private class AddToCalendarDialog extends Dialog {

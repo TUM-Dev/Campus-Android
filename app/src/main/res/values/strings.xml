@@ -604,6 +604,8 @@ Signature: %5$s</string>
     <string name="purchasedetail_dots">Details of your purchase:</string>
     <string name="continue_to_payment">CONTINUE TO PAYMENT</string>
     <string name="summary">Summary</string>
+    <string name="ticket_not_fetched">You may have already bought a ticket for this event.
+        Please try to reload the events overview!</string>
 
     <!-- Event Activity -->
     <string name="show_booked_events">Show booked events</string>
