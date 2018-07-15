@@ -33,7 +33,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     private FrameLayout allErrorsLayout;
     protected LinearLayout errorLayout;
     private FrameLayout progressLayout;
-    private RelativeLayout noTokenLayout;
+    private LinearLayout noTokenLayout;
     protected LinearLayout noInternetLayout;
     protected LinearLayout failedTokenLayout;
     protected SwipeRefreshLayout swipeRefreshLayout;

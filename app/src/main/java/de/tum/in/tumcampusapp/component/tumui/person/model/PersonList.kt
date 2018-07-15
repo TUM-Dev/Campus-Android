@@ -10,3 +10,4 @@ import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "rowset")
 data class PersonList(@Element val persons: List<Person> = mutableListOf())
+

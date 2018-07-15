@@ -145,7 +145,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO: Properly cache image?
         if (!(this instanceof MainActivity)) {
             // We only download the image once when the user starts the app.
             return;
@@ -161,6 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         if (employee != null) {
                             CircleImageView imageView = headerView.findViewById(R.id.profileImageView);
                             imageView.setImageBitmap(employee.getImage());
+                            // TODO: Store the image on the device
                         }
                     }
 
