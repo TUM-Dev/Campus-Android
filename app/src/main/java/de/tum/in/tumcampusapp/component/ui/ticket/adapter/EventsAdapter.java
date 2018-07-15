@@ -59,8 +59,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         return new EventViewHolder(view);
     }
 
-    public static void bindEventView(RecyclerView.ViewHolder newsEventHolder, Event event) {
-        EventViewHolder holder = (EventViewHolder) newsEventHolder;
+    public static void bindEventView(RecyclerView.ViewHolder viewHolderHolder, Event event) {
+        EventViewHolder holder = (EventViewHolder) viewHolderHolder;
 
         holder.imgView.setVisibility(View.VISIBLE);
         holder.titleView.setVisibility(View.VISIBLE);

@@ -24,8 +24,7 @@ public interface EventDao {
     @Query("SELECT * FROM event ORDER BY start")
     List<Event> getAll();
 
-    // Get earliest event
-    @Query("SELECT * FROM event ORDER BY start LIMIT 1")
+    @Query("SELECT * FROM event WHERE start > date('now') ORDER BY start LIMIT 1")
     Event getNextEvent();
 
     @Query("SELECT count(*) FROM event WHERE start < :date")

@@ -59,8 +59,8 @@ public class EventCard extends Card {
 
     @Override
     protected void discard(@NotNull SharedPreferences.Editor editor) {
-        // NOTE: We would need to add a dismissed attribute to the event table.
-        //       Is this necessary? (see NewsController for reference)
+        // TODO: add a dismissed attribute to the event table later
+        //       see NewsCard for reference
         //       Do nothing for now...
     }
 }
