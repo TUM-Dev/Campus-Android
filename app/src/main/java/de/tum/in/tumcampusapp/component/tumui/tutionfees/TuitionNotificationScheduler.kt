@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.tutionfees
 
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.Tuition
-import de.tum.`in`.tumcampusapp.utils.DateUtils
 import de.tum.`in`.tumcampusapp.utils.toJoda
 import org.joda.time.DateTime
 import org.joda.time.Days
@@ -10,7 +9,7 @@ import java.util.*
 object TuitionNotificationScheduler {
 
     fun getNextNotificationTime(tuition: Tuition): Long {
-        val deadline = DateUtils.getDate(tuition.frist).toJoda()
+        val deadline = tuition.dueDate
         val notificationTimes = arrayOf(
                 Days.days(30),
                 Days.days(14),

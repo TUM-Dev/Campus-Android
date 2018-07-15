@@ -8,8 +8,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.DateUtils
-import de.tum.`in`.tumcampusapp.utils.toJoda
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 
 class CalendarNotificationsProvider(context: Context,
                                     private val lectures: List<CalendarItem>) : NotificationsProvider(context) {
@@ -26,26 +25,20 @@ class CalendarNotificationsProvider(context: Context,
 
     override fun getNotifications(): List<AppNotification> {
         val firstItem = lectures.firstOrNull() ?: return emptyList()
-        val firstItemStart = DateUtils.getDateTime(firstItem.dtstart)
-        val firstItemEnd = DateUtils.getDateTime(firstItem.dtend)
-        val time = DateUtils.getFutureTime(firstItemStart, context)
+        val firstItemStart = firstItem.eventStart
+        val firstItemEnd = firstItem.eventEnd
+        val time = DateTimeUtils.formatFutureTime(firstItemStart, context)
 
         // Schedule the notification 15 minutes before the lecture
-        val notificationTime = firstItemStart
-                .toJoda()
-                .minusMinutes(timeBeforeLectures)
-                .millis
+        val notificationTime = firstItemStart.minusMinutes(timeBeforeLectures).millis
 
-        // automatically remove the notification after the lecture finished
-        val notificationEnd = firstItemEnd
-                .toJoda()
-                .millis
+        // Automatically remove the notification after the lecture finished
+        val notificationEnd = firstItemEnd.millis
 
         val notification = getNotificationBuilder()
                 .setContentText("${firstItem.title}\n$time")
                 .setTimeoutAfter(notificationEnd - notificationTime)
                 .build()
-
 
         return ArrayList<AppNotification>().apply {
             add(FutureNotification(AppNotification.CALENDAR_ID, notification, notificationTime))

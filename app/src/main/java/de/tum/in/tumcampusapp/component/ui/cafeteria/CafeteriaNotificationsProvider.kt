@@ -12,7 +12,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.DateUtils
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 
 class CafeteriaNotificationsProvider(
         context: Context,
@@ -89,8 +89,7 @@ class CafeteriaNotificationsProvider(
         }
 
         val title = context.getString(R.string.cafeteria)
-        val date = DateUtils.getDate(cafeteria.nextMenuDate)
-        val text = DateUtils.getDateString(date)
+        val text = DateTimeUtils.getDateString(cafeteria.nextMenuDate)
 
         val pendingIntent = PendingIntent
                 .getActivity(context, 0, intent, 0)

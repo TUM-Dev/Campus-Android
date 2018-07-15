@@ -4,12 +4,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
-import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.Tuition
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.DateUtils
 import java.text.DateFormat
 import java.util.*
 
@@ -28,7 +27,7 @@ class TuitionFeesNotificationsProvider(
             return emptyList()
         }
 
-        val deadline = DateUtils.getDate(tuition.frist)
+        val deadline = tuition.dueDate
         val deadlineText = DateFormat.getDateInstance().format(deadline)
 
         val title = context.getString(R.string.tuition_fees)
