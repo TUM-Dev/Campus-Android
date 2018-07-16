@@ -34,6 +34,7 @@ public class NetUtils {
         client = Helper.getOkHttpClient(context);
     }
 
+    @Deprecated
     public static Optional<JSONObject> downloadJson(Context context, String url) {
         return new NetUtils(context).downloadJson(url);
     }
@@ -64,6 +65,7 @@ public class NetUtils {
         return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
 
+    @Deprecated
     public Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
@@ -88,6 +90,7 @@ public class NetUtils {
      * @return The content string
      * @throws IOException when the http call fails
      */
+    @Deprecated
     public Optional<String> downloadStringHttp(String url) throws IOException {
         Optional<ResponseBody> response = getOkHttpResponse(url);
         if (response.isPresent()) {
@@ -130,6 +133,7 @@ public class NetUtils {
      * @param target Target filename in local file system
      * @throws IOException When the download failed
      */
+    @Deprecated
     public void downloadToFile(String url, String target) throws IOException {
         File f = new File(target);
         if (f.exists()) {
@@ -157,6 +161,7 @@ public class NetUtils {
      * @param url Valid URL
      * @return JSONObject
      */
+    @Deprecated
     public Optional<JSONObject> downloadJson(String url) {
         try {
             Optional<ResponseBody> response = getOkHttpResponse(url);
@@ -179,6 +184,7 @@ public class NetUtils {
      * @param force Load data anyway and fill cache, even if valid cached version exists
      * @return JSONObject
      */
+    @Deprecated
     public Optional<JSONObject> downloadJsonObject(String url, int validity, boolean force) {
         Optional<String> download = downloadStringAndCache(url, validity, force);
         JSONObject result = null;
