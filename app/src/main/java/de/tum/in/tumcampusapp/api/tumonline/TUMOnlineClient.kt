@@ -14,7 +14,9 @@ class TUMOnlineClient {
 
         private var apiService: TUMOnlineAPIService? = null
 
-        @JvmStatic fun getInstance(context: Context): TUMOnlineAPIService {
+        @JvmStatic
+        @Synchronized
+        fun getInstance(context: Context): TUMOnlineAPIService {
             if (apiService == null) {
                 apiService = buildAPIService(context)
             }
