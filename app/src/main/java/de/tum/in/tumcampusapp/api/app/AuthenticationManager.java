@@ -217,6 +217,11 @@ public class AuthenticationManager {
         }
     }
 
+    /**
+     * Uploads the public key to TUMonline. Throws a {@link NoPublicKey} exception if the stored key
+     * is empty.
+     * @throws NoPublicKey Thrown if the stored key is empty.
+     */
     public void uploadPublicKey() throws NoPublicKey {
         final String token = Utils.getSetting(mContext, Const.ACCESS_TOKEN, "");
         final String publicKey = Uri.encode(getPublicKeyString());
@@ -228,13 +233,16 @@ public class AuthenticationManager {
                     @Override
                     public void onResponse(@NonNull Call<TokenConfirmation> call,
                                            @NonNull Response<TokenConfirmation> response) {
-                        Utils.log("Uploaded public key successfully");
+                        TokenConfirmation confirmation = response.body();
+                        if (confirmation != null && confirmation.isConfirmed()) {
+                            Utils.log("Uploaded public key successfully");
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<TokenConfirmation> call, @NonNull Throwable t) {
-                        // TODO: Retry
                         Utils.log(t);
+                        // TODO: We should probably try again
                     }
                 });
     }

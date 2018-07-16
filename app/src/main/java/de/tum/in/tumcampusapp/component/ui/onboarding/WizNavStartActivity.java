@@ -128,6 +128,7 @@ public class WizNavStartActivity
                     @Override
                     public void onFailure(@NonNull Call<AccessToken> call, @NonNull Throwable t) {
                         Utils.log(t);
+                        showLoadingEnded();
                         resetAccessToken();
                         displayErrorDialog(t);
                     }

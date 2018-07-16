@@ -96,6 +96,8 @@ public class CacheManager {
         }
         */
 
+        // TODO: Move this stuff over to DownloadService?
+
         // Sync lectures, details and appointments
         importLecturesFromTUMOnline();
 

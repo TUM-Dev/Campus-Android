@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.api.tumonline
 
 import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
-import de.tum.`in`.tumcampusapp.component.other.departments.model.OrgItemList
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Events
@@ -49,8 +48,10 @@ interface TUMOnlineAPIService {
     @GET("wbservicesbasic.veranstaltungenSuche")
     fun searchLectures(@Query("pSuche") query: String): Call<LecturesResponse>
 
+    /*
     @GET("wbservicesbasic.orgBaum")
     fun getOrgTree(): Call<OrgItemList>
+    */
 
     @GET("wbservicesbasic.personenDetails")
     fun getPersonDetails(@Query("pIdentNr") id: String): Call<Employee>

@@ -145,6 +145,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
 
+        // TODO: Proper caching for user image
+
         if (!(this instanceof MainActivity)) {
             // We only download the image once when the user starts the app.
             return;

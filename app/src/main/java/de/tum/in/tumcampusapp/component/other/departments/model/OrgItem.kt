@@ -9,6 +9,7 @@ import com.tickaroo.tikxml.annotation.Xml
  * Element without child-Element, whose details are then shown.
  */
 @Xml(name = "row")
+@Deprecated("Not used anywhere. Remove.")
 data class OrgItem(
         @PropertyElement(name = "nr")
         var id: String = "",
