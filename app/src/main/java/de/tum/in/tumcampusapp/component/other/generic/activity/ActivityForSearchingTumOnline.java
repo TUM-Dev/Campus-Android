@@ -40,7 +40,7 @@ public abstract class ActivityForSearchingTumOnline extends ActivityForSearching
         super(layoutId, auth, minLen);
     }
 
-    // TODO: Prevent duplicated code with ActivityForAccessingTumOnline
+    // TODO: Remove duplicated code with ActivityForAccessingTumOnline
 
     protected <T> void fetch(Call<T> call, TUMOnlineResponseListener<T> listener) {
         showLoadingStart();
