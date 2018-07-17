@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.RemoteViews
 import com.google.common.collect.Lists
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
@@ -84,15 +83,10 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
 
     override fun shouldShowNotification(prefs: SharedPreferences) = true
 
-    override fun getRemoteViews(context: Context, appWidgetId: Int) =
-            RemoteViews(context.packageName, R.layout.cards_widget_card).apply {
-                setTextViewText(R.id.widgetCardTextView, title)
-                setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_comment)
-            }
-
     companion object {
         fun inflateViewHolder(parent: ViewGroup) =
                 CardViewHolder(LayoutInflater.from(parent.context)
                         .inflate(R.layout.card_chat_messages, parent, false))
     }
+
 }

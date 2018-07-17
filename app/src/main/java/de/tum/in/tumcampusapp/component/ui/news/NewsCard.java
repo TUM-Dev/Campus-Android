@@ -13,7 +13,6 @@ import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
 import com.squareup.picasso.Picasso;
 
@@ -134,25 +133,9 @@ public class NewsCard extends NotificationAwareCard {
     }
 
     @Override
-    public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        final String imgURL = mNews.getImage();
-        if (!imgURL.trim().isEmpty() && !"null".equals(imgURL)) {
-            Utils.log(imgURL);
-            Handler uiHandler = new Handler(Looper.getMainLooper());
-            uiHandler.post(() -> {
-                Picasso.get()
-                        .load(imgURL)
-                        .into(remoteViews, R.id.widgetCardImageView, new int[] {appWidgetId});
-            });
-        }
-        return remoteViews;
-    }
-
-    @Override
     protected void discard(@NonNull SharedPreferences.Editor editor) {
         NewsController newsController = new NewsController(getContext());
         newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
     }
+
 }
