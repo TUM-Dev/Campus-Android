@@ -56,7 +56,7 @@ import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_FIVE_DAYS;
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline
+public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener,
         CalendarDetailsFragment.OnEventInteractionListener,LimitPickerDialogListener {
 
@@ -116,27 +116,35 @@ public class CalendarActivity extends ActivityForAccessingTumOnline
         calendarController = new CalendarController(this);
 
         if (new SyncManager(this).needSync(Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
-            loadEvents();
+            loadEvents(false);
         } else {
             isFetched = true;
         }
     }
 
-    private void loadEvents() {
-        Call<Events> apiCall = mApiService.getCalendar(MONTH_BEFORE, MONTH_AFTER);
-        fetch(apiCall, events -> {
-            isFetched = true;
-            Completable.fromAction(() -> calendarController.importCalendar(events))
-                    .compose(provider.bindToLifecycle())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(() -> {
-                        // update the action bar to display the enabled menu options
-                        this.invalidateOptionsMenu();
-                        startService(new Intent(CalendarActivity.this,
-                                CalendarController.QueryLocationsService.class));
-                    });
-        });
+    @Override
+    public void onRefresh() {
+        loadEvents(true);
+    }
+
+    private void loadEvents(boolean force) {
+        Call<Events> apiCall = apiClient.getCalendar(force);
+        fetch(apiCall);
+    }
+
+    @Override
+    protected void onDownloadSuccessful(@NonNull Events events) {
+        isFetched = true;
+        Completable.fromAction(() -> calendarController.importCalendar(events))
+                .compose(provider.bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    // update the action bar to display the enabled menu options
+                    this.invalidateOptionsMenu();
+                    startService(new Intent(CalendarActivity.this,
+                            CalendarController.QueryLocationsService.class));
+                });
     }
 
     @Override
@@ -225,7 +233,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline
                 showHourLimitFilterDialog();
                 return true;
             case R.id.action_update_calendar:
-                loadEvents();
+                loadEvents(true);
                 refreshWeekView();
                 return true;
             default:

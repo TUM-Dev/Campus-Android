@@ -29,13 +29,13 @@ public class TuitionFeeManager implements ProvidesCard {
 
     @NotNull
     @Override
-    public List<Card> getCards() {
+    public List<Card> getCards(boolean force) {
         List<Card> results = new ArrayList<>();
 
         try {
             Response<TuitionList> response = TUMOnlineClient
                     .getInstance(mContext)
-                    .getTuitionFeesStatus()
+                    .getTuitionFeesStatus(force)
                     .execute();
 
             if (response == null) {

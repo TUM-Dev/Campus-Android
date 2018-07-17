@@ -15,65 +15,89 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface TUMOnlineAPIService {
 
     @GET("wbservicesbasic.kalender")
-    fun getCalendar(@Query("pMonateVor") start: Int,
-                    @Query("pMonateNach") end: Int): Call<Events>
+    fun getCalendar(
+            @Query("pMonateVor") start: Int,
+            @Query("pMonateNach") end: Int,
+            @Header("x-force-refresh") forceRefresh: Boolean
+    ): Call<Events>
 
     @GET("wbservicesbasic.terminCreate")
-    fun createCalendarEvent(@Query("pTitel") title: String,
-                            @Query("pAnmerkung") description: String,
-                            @Query("pVon") start: String,
-                            @Query("pBis") end: String,
-                            @Query("pTerminNr") eventId: String? = null): Call<CreateEventResponse>
+    fun createCalendarEvent(
+            @Query("pTitel") title: String,
+            @Query("pAnmerkung") description: String,
+            @Query("pVon") start: String,
+            @Query("pBis") end: String,
+            @Query("pTerminNr") eventId: String? = null
+    ): Call<CreateEventResponse>
 
     @GET("wbservicesbasic.terminDelete")
-    fun deleteCalendarEvent(@Query("pTerminNr") eventId: String): Call<DeleteEventResponse>
+    fun deleteCalendarEvent(
+            @Query("pTerminNr") eventId: String
+    ): Call<DeleteEventResponse>
 
     @GET("wbservicesbasic.studienbeitragsstatus")
-    fun getTuitionFeesStatus(): Call<TuitionList>
+    fun getTuitionFeesStatus(
+            @Header("x-force-refresh") forceRefresh: Boolean
+    ): Call<TuitionList>
 
     @GET("wbservicesbasic.veranstaltungenEigene")
-    fun getPersonalLectures(): Call<LecturesResponse>
+    fun getPersonalLectures(
+            @Header("x-force-refresh") forceRefresh: Boolean
+    ): Call<LecturesResponse>
 
     @GET("wbservicesbasic.veranstaltungenDetails")
-    fun getLectureDetails(@Query("pLVNr") id: String): Call<LectureDetailsResponse>
+    fun getLectureDetails(
+            @Query("pLVNr") id: String,
+            @Header("x-force-refresh") forceRefresh: Boolean
+    ): Call<LectureDetailsResponse>
 
     @GET("wbservicesbasic.veranstaltungenTermine")
-    fun getLectureAppointments(@Query("pLVNr") id: String): Call<LectureAppointmentsResponse>
+    fun getLectureAppointments(
+            @Query("pLVNr") id: String,
+            @Header("x-force-refresh") forceRefresh: Boolean
+    ): Call<LectureAppointmentsResponse>
 
     @GET("wbservicesbasic.veranstaltungenSuche")
-    fun searchLectures(@Query("pSuche") query: String): Call<LecturesResponse>
-
-    /*
-    @GET("wbservicesbasic.orgBaum")
-    fun getOrgTree(): Call<OrgItemList>
-    */
+    fun searchLectures(
+            @Query("pSuche") query: String
+    ): Call<LecturesResponse>
 
     @GET("wbservicesbasic.personenDetails")
-    fun getPersonDetails(@Query("pIdentNr") id: String): Call<Employee>
+    fun getPersonDetails(
+            @Query("pIdentNr") id: String,
+            @Header("x-force-refresh") forceRefresh: Boolean
+    ): Call<Employee>
 
     @GET("wbservicesbasic.personenSuche")
-    fun searchPerson(@Query("pSuche") query: String): Call<PersonList>
+    fun searchPerson(
+            @Query("pSuche") query: String
+    ): Call<PersonList>
 
     @GET("wbservicesbasic.noten")
-    fun getGrades(): Call<ExamList>
+    fun getGrades(@Header("x-force-refresh") forceRefresh: Boolean): Call<ExamList>
 
     @GET("wbservicesbasic.isTokenConfirmed")
     fun getTokenConfirmation(): Call<TokenConfirmation>
 
     @GET("wbservicesbasic.requestToken")
-    fun requestToken(@Query("pUsername") username: String,
-                     @Query("pTokenName") tokenName: String): Call<AccessToken>
+    fun requestToken(
+            @Query("pUsername") username: String,
+            @Query("pTokenName") tokenName: String
+    ): Call<AccessToken>
 
     @GET("wbservicesbasic.id")
     fun getIdentity(): Call<IdentitySet>
 
     @GET("wbservicesbasic.secretUpload")
-    fun uploadSecret(@Query("pToken") token: String,
-                     @Query("pSecret") secret: String): Call<TokenConfirmation>
+    fun uploadSecret(
+            @Query("pToken") token: String,
+            @Query("pSecret") secret: String
+    ): Call<TokenConfirmation>
 
 }

@@ -29,16 +29,16 @@ class CardsRepository(private val context: Context) {
      * @return The [LiveData] of [Card]s
      */
     fun getCards(): LiveData<List<Card>> {
-        refreshCards()
+        refreshCards(false)
         return cards
     }
 
     /**
      * Refreshes the [LiveData] of [Card]s and updates its value.
      */
-    fun refreshCards() {
+    fun refreshCards(force: Boolean) {
         doAsync {
-            val results = getCardsNow()
+            val results = getCardsNow(force)
             cards.postValue(results)
         }
     }
@@ -48,7 +48,7 @@ class CardsRepository(private val context: Context) {
      *
      * @return The list of [Card]s
      */
-    fun getCardsNow(): List<Card> {
+    fun getCardsNow(force: Boolean): List<Card> {
         val results = ArrayList<Card?>().apply {
             add(NoInternetCard(context).getIfShowOnStart())
             add(TopNewsCard(context).getIfShowOnStart())
@@ -72,7 +72,7 @@ class CardsRepository(private val context: Context) {
         }
 
         providers.forEach { provider ->
-            val cards = provider.getCards()
+            val cards = provider.getCards(force)
             results.addAll(cards)
         }
 

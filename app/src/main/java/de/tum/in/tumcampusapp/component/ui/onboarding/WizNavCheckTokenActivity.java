@@ -11,7 +11,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
-import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
+import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.tumui.person.model.Identity;
 import de.tum.in.tumcampusapp.component.tumui.person.model.IdentitySet;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -20,10 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- *
- */
-public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
+public class WizNavCheckTokenActivity extends ProgressActivity {
 
     public WizNavCheckTokenActivity() {
         super(R.layout.activity_wiznav_checktoken);

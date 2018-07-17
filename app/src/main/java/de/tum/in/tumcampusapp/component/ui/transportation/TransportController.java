@@ -342,7 +342,7 @@ public class TransportController implements ProvidesCard {
 
     @NotNull
     @Override
-    public List<Card> getCards() {
+    public List<Card> getCards(boolean force) {
         List<Card> results = new ArrayList<>();
         if (!NetUtils.isConnected(mContext)) {
             return results;

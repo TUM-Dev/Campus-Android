@@ -37,7 +37,7 @@ import retrofit2.Response;
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
  */
-public class CreateEventActivity extends ActivityForAccessingTumOnline {
+public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEventResponse> {
 
     private DateTime start;
     private DateTime end;
@@ -196,8 +196,8 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
         // request), we use a Toast to let the user know that something is happening.
         Utils.showToast(this, R.string.updating_event);
 
-        mApiService
-                .deleteCalendarEvent(eventId)
+        apiClient
+                .deleteEvent(eventId)
                 .enqueue(new Callback<DeleteEventResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<DeleteEventResponse> call,
@@ -208,7 +208,8 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<DeleteEventResponse> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<DeleteEventResponse> call,
+                                          @NonNull Throwable t) {
                         Utils.log(t);
                         displayErrorMessage(t);
                     }
@@ -234,32 +235,28 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline {
         event.setDtstart(start);
         event.setDtend(end);
 
-        String title = titleView.getText()
-                                .toString();
+        String title = titleView.getText().toString();
         if (title.length() > 255) {
             title = title.substring(0, 255);
         }
         event.setTitle(title);
 
-        String description = descriptionView.getText()
-                                            .toString();
+        String description = descriptionView.getText().toString();
         if (description.length() > 4000) {
             description = description.substring(0, 4000);
         }
         event.setDescription(description);
 
-        String eventStart = DateTimeUtils.INSTANCE.getDateTimeString(event.getDtstart());
-        String eventEnd = DateTimeUtils.INSTANCE.getDateTimeString(event.getDtend());
+        Call<CreateEventResponse> apiCall = apiClient.createEvent(event, null);
+        fetch(apiCall);
+    }
 
-        Call<CreateEventResponse> apiCall = mApiService
-                .createCalendarEvent(title, description, eventStart, eventEnd, null);
-
-        fetch(apiCall, response -> {
-            String nr = response.getEventId();
-            event.setNr(nr);
-            TcaDb.getInstance(CreateEventActivity.this).calendarDao().insert(event);
-            finish();
-        });
+    @Override
+    protected void onDownloadSuccessful(@NonNull CreateEventResponse response) {
+        String nr = response.getEventId();
+        event.setNr(nr);
+        TcaDb.getInstance(CreateEventActivity.this).calendarDao().insert(event);
+        finish();
     }
 
     @Override

@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForSearchingTumOnline;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider;
@@ -19,14 +18,13 @@ import retrofit2.Call;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
- * This activity presents the users' lectures using the TUMOnline web service
- * the results can be filtered by the semester or all shown.
+ * This activity presents the user's lectures. The results can be filtered by the semester.
  * <p>
  * This activity uses the same models as FindLectures.
  * <p>
  * HINT: a TUMOnline access token is needed
  */
-public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
+public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<LecturesResponse> {
 
     private StickyListHeadersListView lvMyLecturesList;
 
@@ -55,13 +53,13 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
 
     @Override
     public void onRefresh() {
-        loadPersonalLectures();
+        loadPersonalLectures(true);
     }
 
     @Override
     protected void onStartSearch() {
         enableRefresh();
-        loadPersonalLectures();
+        loadPersonalLectures(false);
     }
 
     @Override
@@ -70,23 +68,18 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
         searchLectures(query);
     }
 
-    private void loadPersonalLectures() {
-        Call<LecturesResponse> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .getPersonalLectures();
-
-        fetch(apiCall, this::handleDownloadSuccess);
+    private void loadPersonalLectures(boolean force) {
+        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(force);
+        fetch(apiCall);
     }
 
     private void searchLectures(String query) {
-        Call<LecturesResponse> apiCall = TUMOnlineClient
-                .getInstance(this)
-                .searchLectures(query);
-
-        fetch(apiCall, this::handleDownloadSuccess);
+        Call<LecturesResponse> apiCall = apiClient.searchLectures(query);
+        fetch(apiCall);
     }
 
-    public void handleDownloadSuccess(@NonNull LecturesResponse response) {
+    @Override
+    protected void onDownloadSuccessful(@NonNull LecturesResponse response) {
         if (response.getLectures().isEmpty()) {
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
         } else {

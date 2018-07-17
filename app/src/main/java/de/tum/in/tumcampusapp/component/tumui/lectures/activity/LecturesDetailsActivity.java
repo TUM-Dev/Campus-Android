@@ -3,8 +3,6 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,7 +29,7 @@ import retrofit2.Call;
  * <p/>
  * NEEDS: stp_sp_nr set in incoming bundle (lecture id)
  */
-public class LecturesDetailsActivity extends ActivityForAccessingTumOnline implements OnClickListener {
+public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<LectureDetailsResponse> {
 
     private Button btnLDetailsTermine;
     private TextView tvLDetailsDozent;
@@ -66,22 +64,9 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
         tvLDetailsZiele = findViewById(R.id.tvLDetailsZiele);
         tvLDetailsTermin = findViewById(R.id.tvLDetailsTermin);
         tvLDetailsLiteratur = findViewById(R.id.tvLDetailsLiteratur);
+
         btnLDetailsTermine = findViewById(R.id.btnLDetailsTermine);
-        btnLDetailsTermine.setOnClickListener(this);
-
-        mLectureId = getIntent().getStringExtra("stp_sp_nr");
-        if (mLectureId == null) {
-            finish();
-            return;
-        }
-
-        loadLectureDetails(mLectureId);
-    }
-
-    @Override
-    public void onClick(View view) {
-        super.onClick(view);
-        if (view.getId() == btnLDetailsTermine.getId()) {
+        btnLDetailsTermine.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
 
             // LectureAppointments need the name and id of the facing lecture
@@ -91,20 +76,29 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
             Intent i = new Intent(this, LecturesAppointmentsActivity.class);
             i.putExtras(bundle);
             startActivity(i);
+        });
+
+        mLectureId = getIntent().getStringExtra("stp_sp_nr");
+        if (mLectureId == null) {
+            finish();
+            return;
         }
+
+        loadLectureDetails(mLectureId, false);
     }
 
     @Override
     public void onRefresh() {
-        loadLectureDetails(mLectureId);
+        loadLectureDetails(mLectureId, true);
     }
 
-    private void loadLectureDetails(@NonNull String lectureId) {
-        Call<LectureDetailsResponse> apiCall = mApiService.getLectureDetails(lectureId);
-        fetch(apiCall, this::handleDownloadSuccess);
+    private void loadLectureDetails(@NonNull String lectureId, boolean force) {
+        Call<LectureDetailsResponse> apiCall = apiClient.getLectureDetails(lectureId, force);
+        fetch(apiCall);
     }
 
-    public void handleDownloadSuccess(LectureDetailsResponse response) {
+    @Override
+    protected void onDownloadSuccessful(@NonNull LectureDetailsResponse response) {
         List<LectureDetails> lectureDetails = response.getLectureDetails();
         if (lectureDetails.isEmpty()) {
             finish();
@@ -118,10 +112,11 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
         StringBuilder strLectureLanguage = new StringBuilder(currentItem.getSemesterName());
         if (currentItem.getMainLanguage() != null) {
             strLectureLanguage.append(" - ")
-                              .append(currentItem.getMainLanguage());
+                    .append(currentItem.getMainLanguage());
         }
         tvLDetailsSemester.setText(strLectureLanguage);
-        tvLDetailsSWS.setText(String.format("%s - %s SWS", currentItem.getLectureType(), currentItem.getDuration()));
+        tvLDetailsSWS.setText(String.format("%s - %s SWS",
+                currentItem.getLectureType(), currentItem.getDuration()));
         tvLDetailsDozent.setText(currentItem.getLecturers());
         tvLDetailsOrg.setText(currentItem.getChairName());
         tvLDetailsInhalt.setText(currentItem.getLectureContent());

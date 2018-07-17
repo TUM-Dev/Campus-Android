@@ -44,11 +44,14 @@ public class NetUtils {
      *
      * @return true if available
      */
-    public static boolean isConnected(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+    public static boolean isConnected(Context context) {
+        ConnectivityManager connectivityMgr =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityMgr == null) {
+            return false;
+        }
 
+        NetworkInfo netInfo = connectivityMgr.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
@@ -58,11 +61,17 @@ public class NetUtils {
      *
      * @return true if available
      */
-    public static boolean isConnectedWifi(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+    public static boolean isConnectedWifi(Context context) {
+        ConnectivityManager connectivityMgr =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityMgr == null) {
+            return false;
+        }
 
-        return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
+        NetworkInfo netInfo = connectivityMgr.getActiveNetworkInfo();
+        return netInfo != null
+                && netInfo.isConnectedOrConnecting()
+                && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
 
     @Deprecated

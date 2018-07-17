@@ -96,7 +96,7 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
         context?.let { c ->
             TUMOnlineClient
                     .getInstance(c)
-                    .deleteCalendarEvent(eventId)
+                    .deleteEvent(eventId)
                     .enqueue(object : Callback<DeleteEventResponse> {
                         override fun onResponse(call: Call<DeleteEventResponse>,
                                                 response: Response<DeleteEventResponse>) {

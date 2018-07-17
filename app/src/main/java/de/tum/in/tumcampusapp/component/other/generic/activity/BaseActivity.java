@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.component.other.generic.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -13,17 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.other.generic.drawer.DrawerMenuHelper;
-import de.tum.in.tumcampusapp.component.tumui.person.model.Employee;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Takes care of the navigation drawer which might be attached to the activity and also handles up navigation
@@ -141,35 +139,20 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void fetchProfilePicture() {
         String id = Utils.getSetting(this, Const.TUMO_PIDENT_NR, "");
-        if (id.isEmpty()) {
+        String[] parts = id.split("\\*");
+        if (parts.length != 2) {
             return;
         }
 
-        // TODO: Proper caching for user image
+        String group = parts[0];
+        String personId = parts[1];
+        String url = String.format(Locale.getDefault(),
+                Const.TUM_ONLINE_PROFILE_PICTURE_URL_FORMAT_STRING, group, personId);
 
-        if (!(this instanceof MainActivity)) {
-            // We only download the image once when the user starts the app.
-            return;
-        }
+        CircleImageView imageView = headerView.findViewById(R.id.profileImageView);
 
-        TUMOnlineClient
-                .getInstance(this)
-                .getPersonDetails(id)
-                .enqueue(new Callback<Employee>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Employee> call, @NonNull Response<Employee> response) {
-                        Employee employee = response.body();
-                        if (employee != null) {
-                            CircleImageView imageView = headerView.findViewById(R.id.profileImageView);
-                            imageView.setImageBitmap(employee.getImage());
-                            // TODO: Store the image on the device
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<Employee> call, @NonNull Throwable t) {
-                        Utils.log(t);
-                    }
-                });
+        Picasso.get()
+                .load(url)
+                .into(imageView);
     }
 }

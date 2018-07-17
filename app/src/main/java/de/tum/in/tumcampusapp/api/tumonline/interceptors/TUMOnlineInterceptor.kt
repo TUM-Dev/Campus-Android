@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.api.tumonline
+package de.tum.`in`.tumcampusapp.api.tumonline.interceptors
 
 import android.content.Context
 import android.preference.PreferenceManager
@@ -16,9 +16,11 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
     private val accessToken: String?
         get() = loadAccessTokenFromPreferences(context)
 
-    private var tikXml = TikXml.Builder()
+    private val tikXml = TikXml.Builder()
             .exceptionOnUnreadXml(false)
             .build()
+
+    private val cachingHelper = CachingHelper()
 
     @Throws(RequestLimitReachedException::class,
             TokenLimitReachedException::class,
@@ -27,6 +29,7 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
             UnknownErrorException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
+        val url = request.url().toString()
 
         // Check for special requests
         val path = request.url().encodedPath()
@@ -49,13 +52,10 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
                     .build()
         }
 
-        val modifiedRequest = request
-                .newBuilder()
-                .url(modifiedUrl)
-                .build()
+        val modifiedRequest = request.newBuilder().url(modifiedUrl).build()
 
         // Send the request to TUMonline
-        val response = chain.proceed(modifiedRequest)
+        var response = chain.proceed(modifiedRequest)
         val peekBody = response.peekBody(Long.MAX_VALUE)
 
         // The server always returns 200. To detect errors, we attempt to parse the response into
@@ -68,6 +68,12 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
                     Utils.setSetting(context, Const.TUMO_DISABLED, true)
                 }
             }
+        }
+
+        // We did not receive an error, so we can cache the response.
+        val isCacheable = cachingHelper.isCacheable(url)
+        if (response.isSuccessful && isCacheable) {
+            response = cachingHelper.updateCacheControlHeader(url, response)
         }
 
         // Because the request did not return an Error, we can re-enable TUMonline request

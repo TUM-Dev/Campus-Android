@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,9 +23,12 @@ import retrofit2.Call;
  * <p>
  * NEEDS: stp_sp_nr and title set in incoming bundle (lecture id, title)
  */
-public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline {
+public class LecturesAppointmentsActivity
+        extends ActivityForAccessingTumOnline<LectureAppointmentsResponse> {
 
     private ListView lvTermine;
+
+    private String lectureId;
 
     public LecturesAppointmentsActivity() {
         super(R.layout.activity_lecturesappointments);
@@ -40,22 +44,31 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
         TextView tvTermineLectureName = findViewById(R.id.tvTermineLectureName);
         tvTermineLectureName.setText(title);
 
-        String lectureId = getIntent().getStringExtra("stp_sp_nr");
+        lectureId = getIntent().getStringExtra("stp_sp_nr");
         if (lectureId == null) {
             finish();
             return;
         }
 
-        loadLectureAppointments(lectureId);
+        loadLectureAppointments(lectureId, false);
     }
 
-    private void loadLectureAppointments(String lectureId) {
-        Call<LectureAppointmentsResponse> apiCall = mApiService.getLectureAppointments(lectureId);
-        fetch(apiCall, this::handleDownloadSuccess);
+    @Override
+    public void onRefresh() {
+        if (lectureId != null) {
+            loadLectureAppointments(lectureId, true);
+        }
     }
 
-    public void handleDownloadSuccess(LectureAppointmentsResponse lecturesList) {
-        List<LectureAppointment> appointments = lecturesList.getLectureAppointments();
+    private void loadLectureAppointments(@NonNull String lectureId, boolean force) {
+        Call<LectureAppointmentsResponse> apiCall =
+                apiClient.getLectureAppointments(lectureId, force);
+        fetch(apiCall);
+    }
+
+    @Override
+    protected void onDownloadSuccessful(@NonNull LectureAppointmentsResponse response) {
+        List<LectureAppointment> appointments = response.getLectureAppointments();
         if (appointments == null || appointments.isEmpty()) {
             showError(R.string.no_appointments);
             return;

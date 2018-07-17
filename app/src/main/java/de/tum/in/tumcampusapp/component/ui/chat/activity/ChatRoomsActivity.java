@@ -45,7 +45,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements OnItemClickListener {
+public class ChatRoomsActivity
+        extends ActivityForAccessingTumOnline<LecturesResponse> implements OnItemClickListener {
 
     private static final int CAMERA_REQUEST_CODE = 34;
     private static final int JOIN_ROOM_REQUEST_CODE = 22;
@@ -79,7 +80,7 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements 
             public void onTabSelected(TabLayout.Tab tab) {
                 // show the given tab
                 mCurrentMode = 1 - tab.getPosition();
-                loadPersonalLectures();
+                loadPersonalLectures(false);
             }
 
             @Override
@@ -101,24 +102,32 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline implements 
     @Override
     protected void onStart() {
         super.onStart();
-        loadPersonalLectures();
+        loadPersonalLectures(false);
     }
 
-    private void loadPersonalLectures() {
-        Call<LecturesResponse> apiCall = mApiService.getPersonalLectures();
-        fetch(apiCall, response -> {
-            List<Lecture> lectures = response.getLectures();
-            manager.createLectureRooms(lectures);
+    @Override
+    public void onRefresh() {
+        loadPersonalLectures(true);
+    }
 
-            populateCurrentChatMember();
+    private void loadPersonalLectures(boolean force) {
+        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(force);
+        fetch(apiCall);
+    }
 
-            if (currentChatMember != null) {
-                updateDatabase(currentChatMember);
-            }
+    @Override
+    protected void onDownloadSuccessful(@NonNull LecturesResponse response) {
+        List<Lecture> lectures = response.getLectures();
+        manager.createLectureRooms(lectures);
 
-            List<ChatRoomAndLastMessage> chatRoomAndLastMessages = manager.getAllByStatus(mCurrentMode);
-            displayChatRoomsAndMessages(chatRoomAndLastMessages);
-        });
+        populateCurrentChatMember();
+
+        if (currentChatMember != null) {
+            updateDatabase(currentChatMember);
+        }
+
+        List<ChatRoomAndLastMessage> chatRoomAndLastMessages = manager.getAllByStatus(mCurrentMode);
+        displayChatRoomsAndMessages(chatRoomAndLastMessages);
     }
 
     private void displayChatRoomsAndMessages(List<ChatRoomAndLastMessage> results) {

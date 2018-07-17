@@ -4,13 +4,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.support.annotation.Nullable;
 
 import com.google.common.base.Optional;
+
+import org.joda.time.Duration;
 
 import java.io.File;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
+import de.tum.in.tumcampusapp.api.tumonline.xml.XMLConverter;
+import okhttp3.ResponseBody;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -143,12 +148,44 @@ public class CacheManager {
     }
 
     /**
+     * Returns the cached content as an object of the desired class.
+     * @param url The URL of the API call
+     * @return The content of the cache
+     */
+    @Nullable
+    public ResponseBody getResponseBodyFromCache(String url) {
+        String content = getCachedResponseFromCache(url);
+        return (content != null) ? XMLConverter.responseBody(content) : null;
+    }
+
+    /**
+     * Checks if a new sync is needed or if data is up-to-date and returns the cache content
+     * if data is up to date
+     *
+     * @param url Url from which data was cached
+     * @return Data if valid version was found, null if no data is available
+     */
+    public String getCachedResponseFromCache(String url) {
+        String result = null;
+        String query = "SELECT data FROM cache WHERE url LIKE ? AND datetime() < max_age";
+        try (Cursor c = cacheDb.rawQuery(query, new String[]{url})) {
+            if (c.getCount() == 1) {
+                c.moveToFirst();
+                result = c.getString(0);
+            }
+        } catch (SQLiteException e) {
+            Utils.log(e);
+        }
+        return result;
+    }
+
+    /**
      * Checks if a new sync is needed or if data is up-to-date
      *
      * @param url Url from which data was cached
      * @return Data if valid version was found, null if no data is available
      */
-    private boolean shouldRefresh(String url) {
+    public boolean shouldRefresh(String url) {
         boolean result = true;
 
         try (Cursor c = cacheDb.rawQuery("SELECT url FROM cache WHERE url=? AND datetime() < validity", new String[]{url})) {
@@ -171,10 +208,16 @@ public class CacheManager {
         if (validity == VALIDITY_DO_NOT_CACHE) {
             return;
         }
+
         cacheDb.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
                         "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
                         "datetime('now','+" + validity + " seconds'), ?)",
                         new String[]{url, data, String.valueOf(typ)});
+    }
+
+    private void addToCache(String url, String body, Duration cachingDuration) {
+        int validity = (int) cachingDuration.getMillis();
+        addToCache(url, body, validity, CacheManager.CACHE_TYP_DATA);
     }
 
     /**

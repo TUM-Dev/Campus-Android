@@ -5,7 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineResponseListener;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
@@ -24,7 +24,12 @@ import retrofit2.Response;
  * TUMOnline and implements a rich user feedback with error progress and token
  * related layouts. Generic class parameter specifies the type of data returned by TumOnline.
  */
-public abstract class ActivityForSearchingTumOnline extends ActivityForSearching {
+public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching {
+
+    protected final TUMOnlineClient apiClient;
+
+    // TODO: Remove duplicated code with ActivityForAccessingTumOnline
+    // Maybe these methods can go into ProgressActivity? Should they?
 
     /**
      * Standard constructor for ActivityForSearchingTumOnline.
@@ -38,38 +43,57 @@ public abstract class ActivityForSearchingTumOnline extends ActivityForSearching
      */
     public ActivityForSearchingTumOnline(int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);
+        apiClient = TUMOnlineClient.getInstance(this);
     }
 
-    // TODO: Remove duplicated code with ActivityForAccessingTumOnline
+    @Override
+    public void onRefresh() {
+        // Subclasses can override this method
+    }
 
-    protected <T> void fetch(Call<T> call, TUMOnlineResponseListener<T> listener) {
+    /**
+     * Fetches a call from TUMonline and uses the provided listener if the request was successful.
+     *
+     * @param call The {@link Call} to fetch
+     */
+    protected final void fetch(Call<T> call) {
         showLoadingStart();
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
-                showLoadingEnded();
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
-                    listener.onDownloadSuccessful(body);
+                    onDownloadSuccessful(body);
                 } else if (body == null) {
                     onEmptyDownloadResponse();
                 } else {
                     onDownloadUnsuccessful(response.code());
                 }
+                showLoadingEnded();
             }
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-                showLoadingEnded();
                 onDownloadFailure(t);
+                showLoadingEnded();
             }
         });
     }
 
+    protected abstract void onDownloadSuccessful(@NonNull T body);
+
+    /**
+     * Called if the response from the API call is successful, but empty.
+     */
     protected final void onEmptyDownloadResponse() {
-        // TODO
+        showError(R.string.error_empty_response);
     }
 
+    /**
+     * Called when a response is received, but that response is not successful. Displays the
+     * appropriate error message, either in an error layout, or as a dialog or Snackbar.
+     * @param statusCode The HTTP status code of the response
+     */
     protected final void onDownloadUnsuccessful(int statusCode) {
         if (statusCode == 503) {
             // The service is unavailable
@@ -81,65 +105,22 @@ public abstract class ActivityForSearchingTumOnline extends ActivityForSearching
 
     protected final void onDownloadFailure(@NonNull Throwable throwable) {
         Utils.log(throwable);
-        showLoadingEnded();
 
         if (throwable instanceof NoNetworkConnectionException) {
             showNoInternetLayout();
         } else if (throwable instanceof InactiveTokenException) {
-            String message = getString(R.string.error_access_token_inactive);
-            showFailedTokenLayout(message);
+            showFailedTokenLayout(R.string.error_access_token_inactive);
         } else if (throwable instanceof InvalidTokenException) {
-            showNoTokenLayout();
+            showFailedTokenLayout(R.string.error_invalid_access_token);
         } else if (throwable instanceof MissingPermissionException) {
-            String message = getString(R.string.error_no_rights_to_access_function);
-            showFailedTokenLayout(message);
+            showFailedTokenLayout(R.string.error_no_rights_to_access_function);
         } else if (throwable instanceof TokenLimitReachedException) {
-            String message = getString(R.string.error_access_token_limit_reached);
-            showFailedTokenLayout(message);
+            showFailedTokenLayout(R.string.error_access_token_limit_reached);
         } else if (throwable instanceof RequestLimitReachedException) {
-            String message = getString(R.string.error_request_limit_reached);
-            showFailedTokenLayout(message);
+            showFailedTokenLayout(R.string.error_request_limit_reached);
         } else if (throwable instanceof UnknownErrorException) {
             showError(R.string.error_unknown);
         }
     }
-
-    /*
-    // TODO TILL: Refactor like ActivityForAccessingTumOnline (maybe this should be superclass?)
-
-    protected final void handleDownloadUnsuccessful(int statusCode) {
-        if (statusCode == 503) {
-            // The service is unavailable
-            showError(R.string.error_tum_online_unavailable);
-        } else {
-            showError(R.string.error_unknown);
-        }
-    }
-
-    protected final void handleDownloadError(Throwable throwable) {
-        Utils.log(throwable);
-        showLoadingEnded();
-
-        if (throwable instanceof NoNetworkConnectionException) {
-            showNoInternetLayout();
-        } else if (throwable instanceof InactiveTokenException) {
-            String message = getString(R.string.error_access_token_inactive);
-            showFailedTokenLayout(message);
-        } else if (throwable instanceof InvalidTokenException) {
-            showNoTokenLayout();
-        } else if (throwable instanceof MissingPermissionException) {
-            String message = getString(R.string.error_no_rights_to_access_function);
-            showFailedTokenLayout(message);
-        } else if (throwable instanceof TokenLimitReachedException) {
-            String message = getString(R.string.error_access_token_limit_reached);
-            showFailedTokenLayout(message);
-        } else if (throwable instanceof RequestLimitReachedException) {
-            String message = getString(R.string.error_request_limit_reached);
-            showFailedTokenLayout(message);
-        } else if (throwable instanceof UnknownErrorException) {
-            showError(R.string.error_unknown);
-        }
-    }
-    */
 
 }

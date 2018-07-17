@@ -6,8 +6,6 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
-import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineResponseListener
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearchingTumOnline
@@ -19,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_person_search.*
 /**
  * Activity to search for employees.
  */
-class PersonSearchActivity : ActivityForSearchingTumOnline(
+class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
         R.layout.activity_person_search,
         PersonSearchSuggestionProvider.AUTHORITY, 3
 ), PersonSearchResultsItemListener {
@@ -39,6 +37,8 @@ class PersonSearchActivity : ActivityForSearchingTumOnline(
 
         personsRecyclerView.setHasFixedSize(true)
         personsRecyclerView.layoutManager = layoutManager
+
+        disableRefresh()
 
         val adapter = PersonSearchResultsAdapter(recents, this)
         if (adapter.itemCount == 0) {
@@ -67,25 +67,11 @@ class PersonSearchActivity : ActivityForSearchingTumOnline(
     }
 
     private fun searchPerson(query: String) {
-        val apiCall = TUMOnlineClient
-                .getInstance(this)
-                .searchPerson(query)
-
-        fetch(apiCall, object : TUMOnlineResponseListener<PersonList> {
-            override fun onDownloadSuccessful(response: PersonList) {
-                handleDownloadSuccess(response)
-            }
-        })
+        val apiCall = apiClient.searchPerson(query)
+        fetch(apiCall)
     }
 
-    private fun showPersonDetails(person: Person) {
-        val intent = Intent(this, PersonDetailsActivity::class.java).apply {
-            putExtra("personObject", person)
-        }
-        startActivity(intent)
-    }
-
-    private fun handleDownloadSuccess(response: PersonList) {
+    override fun onDownloadSuccessful(response: PersonList) {
         recentsHeader.visibility = View.GONE
 
         if (response.persons.size == 1) {
@@ -94,6 +80,13 @@ class PersonSearchActivity : ActivityForSearchingTumOnline(
             val adapter = personsRecyclerView.adapter as? PersonSearchResultsAdapter
             adapter?.update(response.persons)
         }
+    }
+
+    private fun showPersonDetails(person: Person) {
+        val intent = Intent(this, PersonDetailsActivity::class.java).apply {
+            putExtra("personObject", person)
+        }
+        startActivity(intent)
     }
 
 }

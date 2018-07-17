@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.component.ui.onboarding;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +26,7 @@ import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedExcepti
 import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.UnknownErrorException;
 import de.tum.in.tumcampusapp.api.tumonline.model.AccessToken;
-import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
+import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -38,8 +36,7 @@ import retrofit2.Response;
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
  */
-public class WizNavStartActivity
-        extends ActivityForAccessingTumOnline implements OnClickListener, TextWatcher {
+public class WizNavStartActivity extends ProgressActivity implements TextWatcher {
 
     private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
     private String lrzId;
@@ -97,8 +94,14 @@ public class WizNavStartActivity
             // show Dialog first
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.error_access_token_already_set_generate_new))
-                    .setPositiveButton(getString(R.string.generate_new_token), this)
-                    .setNegativeButton(getString(R.string.cancel), this)
+                    .setPositiveButton(getString(R.string.generate_new_token), (dialog, which) -> {
+                        AuthenticationManager am =
+                                new AuthenticationManager(WizNavStartActivity.this);
+                        am.clearKeys();
+                        am.generatePrivateKey(null);
+                        requestNewToken(lrzId);
+                    })
+                    .setNegativeButton(getString(R.string.cancel), (dialog, which) -> openNextWizardStep())
                     .show();
         } else {
             requestNewToken(lrzId);
@@ -223,24 +226,6 @@ public class WizNavStartActivity
     @Override
     public void afterTextChanged(Editable s) {
         // Pass
-    }
-
-    /**
-     * Handle click in dialog buttons.
-     *
-     * @param dialog Dialog handle
-     * @param which  Button clicked
-     */
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
-            AuthenticationManager am = new AuthenticationManager(this);
-            am.clearKeys();
-            am.generatePrivateKey(null);
-            requestNewToken(lrzId);
-        } else if (which == DialogInterface.BUTTON_NEGATIVE) {
-            openNextWizardStep();
-        }
     }
 
     /**

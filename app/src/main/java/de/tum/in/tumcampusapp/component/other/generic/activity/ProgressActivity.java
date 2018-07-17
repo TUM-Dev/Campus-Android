@@ -200,6 +200,20 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     }
 
     /**
+     * Sets {@link SwipeRefreshLayout}'s state to refreshing if present in the XML layout.
+     */
+    protected void showRefreshStart() {
+        if (registered) {
+            unregisterReceiver(connectivityChangeReceiver);
+            registered = false;
+        }
+
+        if (swipeRefreshLayout != null) {
+            mLoadingHandler.postDelayed(() -> swipeRefreshLayout.setRefreshing(true), 1000);
+        }
+    }
+
+    /**
      * Indicates that the background progress ended by hiding error and progress layout
      * and setting {@link SwipeRefreshLayout}'s state to completed
      */
@@ -240,7 +254,9 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * Override this if you use a {@link SwipeRefreshLayout}
      */
     @Override
-    public abstract void onRefresh();
+    public void onRefresh() {
+        // Subclasses can override this
+    }
 
     /**
      * Handle click on error_layout, failed_layout and no_token_layout
@@ -257,7 +273,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     }
 
     /**
-     * Show wifi settingsPrefix
+     * Show wifi settings
      */
     public void onEnableWifi(View view) {
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);

@@ -21,7 +21,7 @@ import retrofit2.Call;
 /**
  * Activity to show the user's tuition fees status
  */
-public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
+public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionList> {
 
     private TextView amountTextView;
     private TextView deadlineTextView;
@@ -45,26 +45,27 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
         informationTextView.setText(information);
         informationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-        refreshData();
+        refreshData(false);
     }
 
     @Override
     public void onRefresh() {
-        refreshData();
+        refreshData(true);
     }
 
-    private void refreshData() {
-        Call<TuitionList> apiCall = mApiService.getTuitionFeesStatus();
-        fetch(apiCall, this::displayTuition);
+    private void refreshData(boolean force) {
+        Call<TuitionList> apiCall = apiClient.getTuitionFeesStatus(force);
+        fetch(apiCall);
     }
 
-    private void displayTuition(@NonNull TuitionList tuitionList) {
-        Tuition tuition = tuitionList.getTuitions().get(0);
+    @Override
+    protected void onDownloadSuccessful(@NonNull TuitionList response) {
+        Tuition tuition = response.getTuitions().get(0);
 
         String amountText = tuition.getOutstandingBalanceText();
         amountTextView.setText(amountText);
 
-        DateTime deadline = tuitionList.getTuitions().get(0).getDueDate();
+        DateTime deadline = tuition.getDueDate();
         deadlineTextView.setText(DateTimeFormat.longDate().print(deadline));
 
         String semester = tuition.getSemester().toUpperCase(Locale.getDefault());
@@ -81,8 +82,6 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline {
                 amountTextView.setTextColor(getResources().getColor(R.color.black));
             }
         }
-
-        showLoadingEnded();
     }
 
 }

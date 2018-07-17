@@ -12,6 +12,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     val cards: LiveData<List<Card>>
         get() = cardsRepo.getCards()
 
-    fun refreshCards() = cardsRepo.refreshCards()
+    fun refreshCards() = cardsRepo.refreshCards(true)
 
 }

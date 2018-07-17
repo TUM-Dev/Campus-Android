@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.graphics.drawable.Animatable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,7 +50,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * Activity to show the user's grades/exams passed.
  */
-public class GradesActivity extends ActivityForAccessingTumOnline {
+public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
     private static final String SHOW_PIE_CHART = "showPieChart"; // show pie or bar chart after rotation
     private static final String SPINNER_POSITION = "spinnerPosition";
@@ -122,7 +123,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
         swipeRefreshLayout.setColorSchemeResources(R.color.color_primary, R.color.tum_A100, R.color.tum_A200);
 
         isFetched = false;
-        loadGrades();
+        loadGrades(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        loadGrades(true);
     }
 
     private void initPieChart(Map<String, Integer> gradeDistribution) {
@@ -375,13 +381,14 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
         return true;
     }
 
-    private void loadGrades() {
-        Call<ExamList> apiCall = mApiService.getGrades();
-        fetch(apiCall, this::handleDownloadSuccess);
+    private void loadGrades(boolean force) {
+        Call<ExamList> apiCall = apiClient.getGrades(force);
+        fetch(apiCall);
     }
 
-    public void handleDownloadSuccess(ExamList examList) {
-        this.exams = examList.getExams();
+    @Override
+    protected void onDownloadSuccessful(@NonNull ExamList response) {
+        this.exams = response.getExams();
 
         initSpinner();
 

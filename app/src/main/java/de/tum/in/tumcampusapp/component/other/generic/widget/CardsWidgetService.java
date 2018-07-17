@@ -87,7 +87,7 @@ public class CardsWidgetService extends RemoteViewsService {
             final String prefix = CardsWidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId;
             views.clear();
 
-            List<Card> cards = mCardsRepository.getCardsNow();
+            List<Card> cards = mCardsRepository.getCardsNow(true);
 
             for (Card card : cards) {
                 final boolean getsShown = prefs.getBoolean(prefix + card.getCardType(), false);

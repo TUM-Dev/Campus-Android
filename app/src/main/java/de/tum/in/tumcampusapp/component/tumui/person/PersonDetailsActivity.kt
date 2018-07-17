@@ -12,7 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineResponseListener
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
@@ -24,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_person_details.*
 /**
  * Activity to show information about a person at TUM.
  */
-class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_person_details) {
+class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.activity_person_details) {
 
     private lateinit var personId: String
     private var employee: Employee? = null
@@ -45,16 +44,18 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline(R.layout.activity_pe
     }
 
     override fun onRefresh() {
-        loadPersonDetails(personId)
+        loadPersonDetails(personId, true)
     }
 
-    private fun loadPersonDetails(personId: String) {
-        val call = mApiService.getPersonDetails(personId)
-        fetch(call, object : TUMOnlineResponseListener<Employee> {
-            override fun onDownloadSuccessful(response: Employee) {
-                handleDownloadSuccess(response)
-            }
-        })
+    private fun loadPersonDetails(personId: String, force: Boolean = false) {
+        val apiCall = apiClient.getPersonDetails(personId, force)
+        fetch(apiCall)
+    }
+
+    override fun onDownloadSuccessful(response: Employee) {
+        this.employee = response
+        displayResult(response)
+        invalidateOptionsMenu()
     }
     
     private fun handleDownloadSuccess(employee: Employee) {

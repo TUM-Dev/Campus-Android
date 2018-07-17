@@ -251,7 +251,7 @@ public class CalendarController implements ProvidesCard {
 
     @NotNull
     @Override
-    public List<Card> getCards() {
+    public List<Card> getCards(boolean force) {
         List<CalendarItem> nextCalendarItems = getNextCalendarItems();
         List<Card> results = new ArrayList<>();
 
