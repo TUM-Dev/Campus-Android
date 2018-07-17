@@ -2,12 +2,16 @@ package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Context;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
@@ -18,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EventsController {
+public class EventsController implements ProvidesCard{
 
     private final Context context;
 
@@ -149,6 +153,22 @@ public class EventsController {
 
     public void addTicketTypes(List<TicketType> ticketTypes) {
         ticketTypeDao.insert(ticketTypes);
+    }
+
+    @NotNull
+    @Override
+    public List<Card> getCards() {
+        List<Card> results = new ArrayList<>();
+
+        // Only add the next upcoming event for now
+        Event event = eventDao.getNextEvent();
+        if (event != null){
+            EventCard eventCard = new EventCard(context);
+            eventCard.setEvent(event);
+            results.add(eventCard);
+        }
+
+        return results;
     }
 }
 
