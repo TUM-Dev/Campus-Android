@@ -115,8 +115,8 @@ dependencies {
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 
     // Helpers
-    implementation 'net.danlew:android.joda:2.9.9.2'
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'net.danlew:android.joda:2.9.9.4'
     implementation('org.simpleframework:simple-xml:2.7.1') {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'xpp3', module: 'xpp3'
@@ -128,7 +128,7 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
 
     // Transport
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
@@ -150,7 +150,7 @@ dependencies {
     // Used for testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.15.0'
-    testImplementation 'org.assertj:assertj-core:3.9.1'
+    testImplementation 'org.assertj:assertj-core:3.10.0'
     testImplementation 'android.arch.persistence.room:testing:1.1.1'
     testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
