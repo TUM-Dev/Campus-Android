@@ -4,7 +4,7 @@ import android.content.Context
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import de.tum.`in`.tumcampusapp.api.app.Helper
-import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.AddCacheControlInterceptor
+import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter
 import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.TUMOnlineInterceptor
 import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
@@ -23,14 +23,16 @@ import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import okhttp3.Cache
+import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Retrofit
 
 class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
 
     fun getCalendar(force: Boolean = false): Call<Events> {
+        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
         return apiService.getCalendar(
-                Const.CALENDAR_MONTHS_BEFORE, Const.CALENDAR_MONTHS_AFTER, force)
+                Const.CALENDAR_MONTHS_BEFORE, Const.CALENDAR_MONTHS_AFTER, cacheControl)
     }
 
     fun createEvent(calendarItem: CalendarItem, eventId: String?): Call<CreateEventResponse> {
@@ -45,19 +47,23 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     }
 
     fun getTuitionFeesStatus(force: Boolean = false): Call<TuitionList> {
-        return apiService.getTuitionFeesStatus(force)
+        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        return apiService.getTuitionFeesStatus(cacheControl)
     }
 
     fun getPersonalLectures(force: Boolean = false): Call<LecturesResponse> {
-        return apiService.getPersonalLectures(force)
+        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        return apiService.getPersonalLectures(cacheControl)
     }
 
     fun getLectureDetails(id: String, force: Boolean = false): Call<LectureDetailsResponse> {
-        return apiService.getLectureDetails(id, force)
+        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        return apiService.getLectureDetails(id, cacheControl)
     }
 
     fun getLectureAppointments(id: String, force: Boolean = false): Call<LectureAppointmentsResponse> {
-        return apiService.getLectureAppointments(id, force)
+        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        return apiService.getLectureAppointments(id, cacheControl)
     }
 
     fun searchLectures(query: String): Call<LecturesResponse> {
@@ -65,7 +71,8 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     }
 
     fun getPersonDetails(id: String, force: Boolean = false): Call<Employee> {
-        return apiService.getPersonDetails(id, force)
+        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        return apiService.getPersonDetails(id, cacheControl)
     }
 
     fun searchPerson(query: String): Call<PersonList> {
@@ -73,7 +80,8 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     }
 
     fun getGrades(force: Boolean = false): Call<ExamList> {
-        return apiService.getGrades(force)
+        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        return apiService.getGrades(cacheControl)
     }
 
     fun getTokenConfirmation(): Call<TokenConfirmation> = apiService.getTokenConfirmation()
@@ -93,6 +101,9 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
         private const val BASE_URL = "https://campus.tum.de/tumonline/"
         private const val CACHE_SIZE: Long = 10 * 1024 * 1024; // 10 MB
 
+        private const val NO_CACHE = "no-cache"
+        private const val ONLY_IF_CACHED = "only-if-cached"
+
         private var client: TUMOnlineClient? = null
 
         @JvmStatic
@@ -110,13 +121,14 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
 
             val client = Helper.getOkHttpClient(context)
                     .newBuilder()
-                    .addInterceptor(AddCacheControlInterceptor())
-                    .addNetworkInterceptor(TUMOnlineInterceptor(context))
                     .cache(cache)
+                    //.addInterceptor(AddCacheControlInterceptor())
+                    .addNetworkInterceptor(TUMOnlineInterceptor(context))
                     .build()
 
             // TODO: Add TypeConverter for date strings
             val tikXml = TikXml.Builder()
+                    .addTypeConverter(DateTime::class.java, DateTimeConverter())
                     .exceptionOnUnreadXml(false)
                     .build()
             val xmlConverterFactory = TikXmlConverterFactory.create(tikXml)

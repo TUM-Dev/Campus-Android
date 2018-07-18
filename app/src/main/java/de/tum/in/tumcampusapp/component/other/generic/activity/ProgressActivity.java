@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
@@ -37,7 +36,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     protected LinearLayout failedTokenLayout;
     protected SwipeRefreshLayout swipeRefreshLayout;
     private boolean registered;
-    private final Handler mLoadingHandler = new Handler();
+    //private final Handler mLoadingHandler = new Handler();
 
     /**
      * Standard constructor for ProgressActivity.
@@ -211,7 +210,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
             progressLayout.setVisibility(View.VISIBLE);
             allErrorsLayout.setVisibility(View.VISIBLE);
         } else {
-            mLoadingHandler.postDelayed(() -> swipeRefreshLayout.setRefreshing(true), 1000);
+            swipeRefreshLayout.setRefreshing(true);
         }
     }
 
@@ -220,7 +219,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      */
     protected void showRefreshStart() {
 
-        // TODO TILL
+        // TODO TILL: Remove?
 
         if (registered) {
             unregisterReceiver(connectivityChangeReceiver);
@@ -228,7 +227,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         }
 
         if (swipeRefreshLayout != null) {
-            mLoadingHandler.postDelayed(() -> swipeRefreshLayout.setRefreshing(true), 1000);
+            swipeRefreshLayout.setRefreshing(true);
         }
     }
 
@@ -237,7 +236,6 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * and setting {@link SwipeRefreshLayout}'s state to completed
      */
     protected void showLoadingEnded() {
-        mLoadingHandler.removeCallbacksAndMessages(null);
         failedTokenLayout.setVisibility(View.GONE);
         noInternetLayout.setVisibility(View.GONE);
         noTokenLayout.setVisibility(View.GONE);

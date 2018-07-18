@@ -1,7 +1,9 @@
 package de.tum.`in`.tumcampusapp.api.tumonline.interceptors
 
+import okhttp3.CacheControl
 import okhttp3.Response
 import org.joda.time.Duration
+import java.util.concurrent.TimeUnit
 
 class CachingHelper {
 
@@ -15,8 +17,13 @@ class CachingHelper {
                 .firstOrNull()
 
         return if (duration != null) {
+            val maxAge = duration.toStandardDays().days
+            val cacheControl = CacheControl.Builder()
+                    .maxAge(maxAge, TimeUnit.DAYS)
+                    .build()
             response.newBuilder()
-                    .addHeader("Cache-Control", "max-age=${duration.millis}")
+                    .removeHeader("Cache-Control")
+                    .addHeader("Cache-Control", cacheControl.toString())
                     .build()
         } else {
             response

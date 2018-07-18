@@ -11,7 +11,6 @@ import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.UnknownErrorException;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -118,7 +117,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
             showFailedTokenLayout(R.string.error_access_token_limit_reached);
         } else if (throwable instanceof RequestLimitReachedException) {
             showFailedTokenLayout(R.string.error_request_limit_reached);
-        } else if (throwable instanceof UnknownErrorException) {
+        } else {
             showError(R.string.error_unknown);
         }
     }

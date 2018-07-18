@@ -45,9 +45,9 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
-import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 
@@ -63,8 +63,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     /**
      * The space between the first and the last date
      */
-    public static final int MONTH_AFTER = 3;
-    public static final int MONTH_BEFORE = 2;
     public static final String EVENT_TIME = "event_time";
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
@@ -73,15 +71,18 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     private static final int TIME_TO_SYNC_CALENDAR = VALIDITY_FIVE_DAYS;
     private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
     private CalendarController calendarController;
+
     /**
      * Used as a flag, if there are results fetched from internet
      */
-    private boolean isFetched;
+    private boolean isFetched = false;
     private boolean mWeekMode;
     private DateTime mShowDate;
     private WeekView mWeekView;
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;
+
+    private CompositeDisposable mDisposable = new CompositeDisposable();
 
     private CalendarDetailsFragment detailsFragment;
 
@@ -101,6 +102,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         mWeekView.setMonthChangeListener(this);
         mWeekView.setOnEventClickListener(this);
 
+        // The week view adds a horizontal bar below the Toolbar. When refreshing, the refresh
+        // spinner covers it. Therefore, we adjust the spinner's end position.
+        int startOffset = swipeRefreshLayout.getProgressViewStartOffset();
+        int endOffset = swipeRefreshLayout.getProgressViewEndOffset();
+        swipeRefreshLayout.setProgressViewOffset(false, startOffset, endOffset);
+
         // Get time to show e.g. a lectures starting time or 0 for now
         Intent i = getIntent();
         mShowDate = DateTime.now();
@@ -109,17 +116,15 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
             mShowDate = mShowDate.withMillis(time);
         }
 
-        //Get setting from sharedprefs and refresh the view with everything
+        // Get setting from sharedprefs and refresh the view with everything
         this.mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
         this.refreshWeekView();
 
+        disableRefresh();
+
         calendarController = new CalendarController(this);
 
-        if (new SyncManager(this).needSync(Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
-            loadEvents(false);
-        } else {
-            isFetched = true;
-        }
+        loadEvents(false);
     }
 
     @Override
@@ -135,16 +140,19 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     @Override
     protected void onDownloadSuccessful(@NonNull Events events) {
         isFetched = true;
-        Completable.fromAction(() -> calendarController.importCalendar(events))
-                .compose(provider.bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    // update the action bar to display the enabled menu options
-                    this.invalidateOptionsMenu();
-                    startService(new Intent(CalendarActivity.this,
-                            CalendarController.QueryLocationsService.class));
-                });
+        mDisposable.add(
+                Completable
+                        .fromAction(() -> calendarController.importCalendar(events))
+                        .compose(provider.bindToLifecycle())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            // update the action bar to display the enabled menu options
+                            this.invalidateOptionsMenu();
+                            startService(new Intent(CalendarActivity.this,
+                                    CalendarController.QueryLocationsService.class));
+                        })
+        );
     }
 
     @Override
@@ -517,6 +525,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     @Override
     public void onSelected(int min, int max) {
         applyFilterLimitHours(min, max);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDisposable.dispose();
     }
 }
 

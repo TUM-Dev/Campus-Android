@@ -1,8 +1,10 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
@@ -11,8 +13,6 @@ import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.UnknownErrorException;
-import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,11 +21,11 @@ import retrofit2.Response;
 /**
  * This Activity can be extended by concrete Activities that access information from TUMonline. It
  * includes methods for fetching content (both via {@link TUMOnlineClient} and from the local
- * {@link CacheManager}, and implements error and retry handling.
+ * cache, and implements error and retry handling.
  */
 public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity {
 
-    protected final TUMOnlineClient apiClient;
+    protected TUMOnlineClient apiClient;
 
     /**
      * Standard constructor for ActivityForAccessingTumOnline.
@@ -37,6 +37,11 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
      */
     public ActivityForAccessingTumOnline(int layoutId) {
         super(layoutId);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         apiClient = TUMOnlineClient.getInstance(this);
     }
 
@@ -59,6 +64,12 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+                if (BuildConfig.DEBUG) {
+                    String origin = (response.raw().networkResponse() != null) ? "network" : "cache";
+                    Utils.showToastOnUIThread(
+                            ActivityForAccessingTumOnline.this, "Response from " + origin);
+                }
+
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
                     onDownloadSuccessful(body);
@@ -127,7 +138,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
             showFailedTokenLayout(R.string.error_access_token_limit_reached);
         } else if (throwable instanceof RequestLimitReachedException) {
             showError(R.string.error_request_limit_reached);
-        } else if (throwable instanceof UnknownErrorException) {
+        } else {
             showError(R.string.error_unknown);
         }
     }

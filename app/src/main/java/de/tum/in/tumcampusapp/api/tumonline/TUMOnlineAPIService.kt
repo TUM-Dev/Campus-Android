@@ -24,7 +24,7 @@ interface TUMOnlineAPIService {
     fun getCalendar(
             @Query("pMonateVor") start: Int,
             @Query("pMonateNach") end: Int,
-            @Header("x-force-refresh") forceRefresh: Boolean
+            @Header("Cache-Control") cacheControl: String
     ): Call<Events>
 
     @GET("wbservicesbasic.terminCreate")
@@ -43,24 +43,24 @@ interface TUMOnlineAPIService {
 
     @GET("wbservicesbasic.studienbeitragsstatus")
     fun getTuitionFeesStatus(
-            @Header("x-force-refresh") forceRefresh: Boolean
+            @Header("Cache-Control") cacheControl: String
     ): Call<TuitionList>
 
     @GET("wbservicesbasic.veranstaltungenEigene")
     fun getPersonalLectures(
-            @Header("x-force-refresh") forceRefresh: Boolean
+            @Header("Cache-Control") cacheControl: String
     ): Call<LecturesResponse>
 
     @GET("wbservicesbasic.veranstaltungenDetails")
     fun getLectureDetails(
             @Query("pLVNr") id: String,
-            @Header("x-force-refresh") forceRefresh: Boolean
+            @Header("Cache-Control") cacheControl: String
     ): Call<LectureDetailsResponse>
 
     @GET("wbservicesbasic.veranstaltungenTermine")
     fun getLectureAppointments(
             @Query("pLVNr") id: String,
-            @Header("x-force-refresh") forceRefresh: Boolean
+            @Header("Cache-Control") cacheControl: String
     ): Call<LectureAppointmentsResponse>
 
     @GET("wbservicesbasic.veranstaltungenSuche")
@@ -71,7 +71,7 @@ interface TUMOnlineAPIService {
     @GET("wbservicesbasic.personenDetails")
     fun getPersonDetails(
             @Query("pIdentNr") id: String,
-            @Header("x-force-refresh") forceRefresh: Boolean
+            @Header("Cache-Control") cacheControl: String
     ): Call<Employee>
 
     @GET("wbservicesbasic.personenSuche")
@@ -80,7 +80,9 @@ interface TUMOnlineAPIService {
     ): Call<PersonList>
 
     @GET("wbservicesbasic.noten")
-    fun getGrades(@Header("x-force-refresh") forceRefresh: Boolean): Call<ExamList>
+    fun getGrades(
+            @Header("Cache-Control") cacheControl: String
+    ): Call<ExamList>
 
     @GET("wbservicesbasic.isTokenConfirmed")
     fun getTokenConfirmation(): Call<TokenConfirmation>
