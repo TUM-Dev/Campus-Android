@@ -4,7 +4,6 @@ import android.content.Context
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import de.tum.`in`.tumcampusapp.api.app.Helper
-import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter
 import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.TUMOnlineInterceptor
 import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
@@ -23,7 +22,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
-import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Retrofit
 
@@ -124,9 +122,7 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
                     .addNetworkInterceptor(TUMOnlineInterceptor(context))
                     .build()
 
-            // TODO: Add TypeConverter for date strings
             val tikXml = TikXml.Builder()
-                    .addTypeConverter(DateTime::class.java, DateTimeConverter())
                     .exceptionOnUnreadXml(false)
                     .build()
             val xmlConverterFactory = TikXmlConverterFactory.create(tikXml)

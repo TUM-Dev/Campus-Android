@@ -10,7 +10,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyList
  */
 @Xml(name = "row")
 data class Lecture(
-        @PropertyElement(name = "dauer_info") val duration: String = "",  // TODO: TypeConverters
+        @PropertyElement(name = "dauer_info") val duration: String = "",
         @PropertyElement(name = "org_kennung_betreut") val chairTumId: String? = null,
         @PropertyElement(name = "org_name_betreut") val chairName: String? = null,
         @PropertyElement(name = "org_nr_betreut") val chairId: Int? = null,

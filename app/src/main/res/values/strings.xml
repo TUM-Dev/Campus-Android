@@ -608,4 +608,5 @@ Signature: %5$s</string>
     <string name="retry">Retry</string>
     <string name="updating_event">Updating event …</string>
     <string name="open_settings">Open settings</string>
+    <string name="not_available">Not available</string>
 </resources>

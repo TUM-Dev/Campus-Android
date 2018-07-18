@@ -562,4 +562,6 @@ Signatur: %5$s</string>
     <string name="updating_event">Aktualisiere Event …</string>
     <string name="error_tum_online_unavailable">TUMonline ist aktuell nicht verfügbar.</string>
     <string name="retry">Wiederholen</string>
+    <string name="open_settings">Einstellungen öffnen</string>
+    <string name="not_available">Nicht verfügbar</string>
 </resources>

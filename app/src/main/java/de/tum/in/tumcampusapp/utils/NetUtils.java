@@ -22,15 +22,11 @@ import okhttp3.ResponseBody;
 
 public class NetUtils {
     private final Context mContext;
-    //private final CacheManager cacheManager;
     private final OkHttpClient client;
 
     public NetUtils(Context context) {
         //Manager caches all requests
         mContext = context;
-
-        // TODO TILL
-        //cacheManager = new CacheManager(mContext);
 
         //Set our max wait time for each request
         client = Helper.getOkHttpClient(context);
@@ -114,19 +110,8 @@ public class NetUtils {
 
     public Optional<String> downloadStringAndCache(String url, int validity, boolean force) {
         try {
-            // Optional<String> content;
-            /*
-            if (!force) {
-                content = cacheManager.getFromCache(url);
-                if (content.isPresent()) {
-                    return content;
-                }
-            }
-            */
-
             Optional<String> content = downloadStringHttp(url);
             if (content.isPresent()) {
-                //cacheManager.addToCache(url, content.get(), validity, CacheManager.CACHE_TYP_DATA);
                 return content;
             }
             return Optional.absent();
@@ -178,7 +163,6 @@ public class NetUtils {
     public Optional<JSONObject> downloadJson(String url) {
         try {
             Optional<ResponseBody> response = getOkHttpResponse(url);
-            //Optional<String> data = downloadStringHttp(url);
             if (response.isPresent()) {
                 String data = response.get().string();
                 Utils.logv("downloadJson " + data);

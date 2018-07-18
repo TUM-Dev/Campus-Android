@@ -62,16 +62,16 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
     protected void onDownloadSuccessful(@NonNull TuitionList response) {
         Tuition tuition = response.getTuitions().get(0);
 
-        String amountText = tuition.getOutstandingBalanceText();
+        String amountText = tuition.getAmountText(this);
         amountTextView.setText(amountText);
 
-        DateTime deadline = tuition.getDueDate();
+        DateTime deadline = tuition.getDeadline();
         deadlineTextView.setText(DateTimeFormat.longDate().print(deadline));
 
         String semester = tuition.getSemester().toUpperCase(Locale.getDefault());
         semesterTextView.setText(semester);
 
-        if (tuition.getOutstandingBalance() == 0) {
+        if (tuition.isPaid()) {
             amountTextView.setTextColor(getResources().getColor(R.color.sections_green));
         } else {
             // check if the deadline is less than a week from now

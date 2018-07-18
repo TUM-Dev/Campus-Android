@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateConverter
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.utils.compareTo
 import org.joda.time.DateTime
@@ -22,7 +23,7 @@ data class Exam(
         val course: String,
         @PropertyElement(name = "lv_credits")
         val credits: String? = null,
-        @PropertyElement(name = "datum")  // TODO: TypeConverter
+        @PropertyElement(name = "datum", converter = DateConverter::class)
         val date: DateTime? = null,
         @PropertyElement(name = "pruefer_nachname")
         val examiner: String? = null,
@@ -44,7 +45,7 @@ data class Exam(
         if (this.semester == other.semester) {
             return course.compareTo(other.course) * (-1)
         } else {
-            return semester?.compareTo(other.semester) ?: 1  // TODO
+            return semester?.compareTo(other.semester) ?: 1  // TODO TILL
         }
     }
 

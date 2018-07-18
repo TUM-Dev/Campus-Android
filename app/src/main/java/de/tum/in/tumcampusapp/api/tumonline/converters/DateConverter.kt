@@ -4,11 +4,11 @@ import com.tickaroo.tikxml.TypeConverter
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import org.joda.time.DateTime
 
-class DateTimeConverter : TypeConverter<DateTime?> {
+class DateConverter : TypeConverter<DateTime?> {
 
     override fun read(value: String?): DateTime? {
         value?.let {
-            return DateTimeUtils.getDateTime(value)
+            return DateTimeUtils.getDate(value)
         }
 
         return null
@@ -16,7 +16,7 @@ class DateTimeConverter : TypeConverter<DateTime?> {
 
     override fun write(value: DateTime?): String {
         value?.let {
-            return DateTimeUtils.getDateTimeString(value)
+            return DateTimeUtils.getDateString(value)
         }
         return ""
     }
