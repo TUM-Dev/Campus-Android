@@ -5,34 +5,23 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:onClick="onClick">
-
-    <ImageView
-        android:id="@+id/error_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:alpha="0.5"
-        android:src="@drawable/error"/>
+    android:padding="@dimen/material_default_padding">
 
     <TextView
         android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:gravity="center"
         android:text="@string/error_something_wrong"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/retry_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="@string/click_to_try_again"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp"
-        android:id="@+id/error_retry"/>
+        android:layout_marginTop="@dimen/material_default_padding"
+        android:text="@string/retry"
+        android:textColor="@color/color_primary" />
 
 </LinearLayout>

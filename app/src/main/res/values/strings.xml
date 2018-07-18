@@ -39,8 +39,12 @@
 
 
     <!-- TUMonline errors -->
-    <string name="error_accessing_tumonline">Error accessing TUMonline.\nPlease make sure your TUMonline access token has been\nactivated and the corresponding rights are set.\n\n<b>Click here to retry.</b></string>
-    <string name="error_no_access_token_setup">No TUMonline access token was set.\nPlease set your TUMonline access token in the\n <i>Settings</i> screen to access TUMonline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
+    <string name="error_accessing_tumonline_header">Error accessing TUMonline</string>
+    <string name="error_accessing_tumonline_body">Please make sure your TUMonline access token has been activated and the corresponding rights are set.</string>
+
+    <string name="error_no_access_token_setup_header">No TUMonline access token was set</string>
+    <string name="error_no_access_token_setup_body">Please set your TUMonline access token in the <i>Settings</i> to access TUMonline features.</string>
+
     <string name="error_something_wrong">Sorry, something went wrong.</string>
     <string name="click_to_try_again"><b>Click here to retry.</b></string>
     <string name="error_access_token_already_set_generate_new">Your TUMonline access token is already set. If you generate a new token, the old one becomes useless.</string>
@@ -603,4 +607,5 @@ Signature: %5$s</string>
     <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
     <string name="retry">Retry</string>
     <string name="updating_event">Updating event …</string>
+    <string name="open_settings">Open settings</string>
 </resources>
