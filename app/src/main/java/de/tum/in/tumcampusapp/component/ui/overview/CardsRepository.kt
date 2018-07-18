@@ -59,8 +59,7 @@ class CardsRepository(private val context: Context) {
         }
 
         val providers = ArrayList<ProvidesCard>().apply {
-            val tokenManager = AccessTokenManager(context)
-            if (tokenManager.hasValidAccessToken()) {
+            if (AccessTokenManager.hasValidAccessToken(context)) {
                 add(CalendarController(context))
                 add(TuitionFeeManager(context))
                 add(ChatRoomController(context))

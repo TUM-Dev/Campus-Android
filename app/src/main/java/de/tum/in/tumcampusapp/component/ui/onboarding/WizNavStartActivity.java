@@ -38,7 +38,6 @@ import retrofit2.Response;
  */
 public class WizNavStartActivity extends ProgressActivity implements TextWatcher {
 
-    private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
     private String lrzId;
 
     private EditText lrzIdEditText;
@@ -90,7 +89,7 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
         hideKeyboard();
 
         // is access token already set?
-        if (accessTokenManager.hasValidAccessToken()) {
+        if (AccessTokenManager.hasValidAccessToken(this)) {
             // show Dialog first
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.error_access_token_already_set_generate_new))

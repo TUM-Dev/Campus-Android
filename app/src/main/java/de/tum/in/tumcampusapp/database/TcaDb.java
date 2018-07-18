@@ -176,8 +176,9 @@ public abstract class TcaDb extends RoomDatabase {
             c.stopService(new Intent(c, service));
         }
 
-        //Clear our cache table
-        CacheManager.clearCache(c);
+        // Clear our cache table
+        CacheManager cacheManager = new CacheManager(c);
+        cacheManager.clearCache();
 
         //Clear the db?
         //TODO remove this, as we want to keep the data

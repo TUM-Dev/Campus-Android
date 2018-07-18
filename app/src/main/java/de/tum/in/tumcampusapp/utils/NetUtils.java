@@ -22,13 +22,15 @@ import okhttp3.ResponseBody;
 
 public class NetUtils {
     private final Context mContext;
-    private final CacheManager cacheManager;
+    //private final CacheManager cacheManager;
     private final OkHttpClient client;
 
     public NetUtils(Context context) {
         //Manager caches all requests
         mContext = context;
-        cacheManager = new CacheManager(mContext);
+
+        // TODO TILL
+        //cacheManager = new CacheManager(mContext);
 
         //Set our max wait time for each request
         client = Helper.getOkHttpClient(context);
@@ -112,17 +114,19 @@ public class NetUtils {
 
     public Optional<String> downloadStringAndCache(String url, int validity, boolean force) {
         try {
-            Optional<String> content;
+            // Optional<String> content;
+            /*
             if (!force) {
                 content = cacheManager.getFromCache(url);
                 if (content.isPresent()) {
                     return content;
                 }
             }
+            */
 
-            content = downloadStringHttp(url);
+            Optional<String> content = downloadStringHttp(url);
             if (content.isPresent()) {
-                cacheManager.addToCache(url, content.get(), validity, CacheManager.CACHE_TYP_DATA);
+                //cacheManager.addToCache(url, content.get(), validity, CacheManager.CACHE_TYP_DATA);
                 return content;
             }
             return Optional.absent();

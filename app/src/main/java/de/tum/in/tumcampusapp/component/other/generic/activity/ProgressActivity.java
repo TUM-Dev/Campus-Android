@@ -170,7 +170,6 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         noInternetLayout.findViewById(R.id.progressWifi)
                         .setVisibility(View.INVISIBLE);
 
-        // TODO: Remove
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifi == null) {
             return;
@@ -210,23 +209,6 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
             progressLayout.setVisibility(View.VISIBLE);
             allErrorsLayout.setVisibility(View.VISIBLE);
         } else {
-            swipeRefreshLayout.setRefreshing(true);
-        }
-    }
-
-    /**
-     * Sets {@link SwipeRefreshLayout}'s state to refreshing if present in the XML layout.
-     */
-    protected void showRefreshStart() {
-
-        // TODO TILL: Remove?
-
-        if (registered) {
-            unregisterReceiver(connectivityChangeReceiver);
-            registered = false;
-        }
-
-        if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(true);
         }
     }

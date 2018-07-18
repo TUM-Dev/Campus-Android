@@ -20,9 +20,9 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
+import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
-import okhttp3.Cache
 import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -99,7 +99,6 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     companion object {
 
         private const val BASE_URL = "https://campus.tum.de/tumonline/"
-        private const val CACHE_SIZE: Long = 10 * 1024 * 1024; // 10 MB
 
         private const val NO_CACHE = "no-cache"
         private const val ONLY_IF_CACHED = "only-if-cached"
@@ -117,12 +116,11 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
         }
 
         private fun buildAPIClient(context: Context): TUMOnlineClient {
-            val cache = Cache(context.cacheDir, CACHE_SIZE)
+            val cacheManager = CacheManager(context)
 
             val client = Helper.getOkHttpClient(context)
                     .newBuilder()
-                    .cache(cache)
-                    //.addInterceptor(AddCacheControlInterceptor())
+                    .cache(cacheManager.cache)
                     .addNetworkInterceptor(TUMOnlineInterceptor(context))
                     .build()
 

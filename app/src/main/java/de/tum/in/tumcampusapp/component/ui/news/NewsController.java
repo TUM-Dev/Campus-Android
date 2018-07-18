@@ -19,14 +19,12 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
-import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_ONE_DAY;
-
 /**
  * News Manager, handles database stuff, external imports
  */
 public class NewsController implements ProvidesCard {
 
-    private static final int TIME_TO_SYNC = VALIDITY_ONE_DAY;
+    private static final int TIME_TO_SYNC = 86400;
     private final Context context;
     private final NewsDao newsDao;
     private final NewsSourcesDao newsSourcesDao;

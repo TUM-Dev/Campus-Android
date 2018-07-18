@@ -51,8 +51,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 
-import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_FIVE_DAYS;
-
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
@@ -68,7 +66,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     private static final int REQUEST_DELETE = 1;
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
                                                           Manifest.permission.WRITE_CALENDAR};
-    private static final int TIME_TO_SYNC_CALENDAR = VALIDITY_FIVE_DAYS;
+
     private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
     private CalendarController calendarController;
 
