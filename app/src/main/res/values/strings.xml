@@ -354,7 +354,7 @@
     <string name="room_timetable">Room timetable</string>
     <string name="newspread" translatable="false" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
-    <string name="tuition_fee_more">For information on contributions and exemptions, loans, training assistance and scholarships visit <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a></string>
+    <string name="tuition_fee_more">For information on contributions and exemptions, loans, training assistance and scholarships visit <![CDATA[<a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a>]]>.</string>
     <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMonline token!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
@@ -595,4 +595,6 @@ Signature: %5$s</string>
     <string name="discard_changes_question">Discard your changes?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep editing</string>
+    <string name="event_start_end_format_string" translatable="false">%1$s–%2$s</string>
+    <string name="menu_with_long_type_format_string" translatable="false">%1$s (%2$s)</string>
 </resources>

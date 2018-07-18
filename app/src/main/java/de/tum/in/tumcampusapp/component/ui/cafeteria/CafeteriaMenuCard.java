@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
 import org.joda.time.DateTime;
 
@@ -154,11 +153,4 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                                    .build();
     }
 
-    @Override
-    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_cutlery);
-        return remoteViews;
-    }
 }

@@ -1,33 +1,32 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <!-- The toolbar aka SupportActionBar -->
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <include
         layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="fill_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/pager_title_strip"
             style="@style/SectionHeadline"
-            android:text="@string/startup_wizard_uppercase"/>
+            android:text="@string/startup_wizard_uppercase" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -46,28 +45,29 @@
                         style="?android:attr/listSeparatorTextViewStyle"
                         android:layout_height="wrap_content"
                         android:text="@string/step_1"
-                        android:textColor="@color/text_light_gray"/>
+                        android:textColor="@color/text_light_gray" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding_default"
-                        android:text="@string/welcome_msg"/>
+                        android:text="@string/welcome_msg" />
 
                     <EditText
                         android:id="@+id/lrz_id"
-                        android:hint="@string/enter_your_tum_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="@string/enter_your_tum_id"
                         android:inputType="text"
-                        android:padding="@dimen/padding_default"/>
+                        android:padding="@dimen/padding_default"
+                        android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:padding="@dimen/padding_default"
-                        android:text="@string/tumonline_advantages"/>
+                        android:text="@string/tumonline_advantages" />
 
                 </LinearLayout>
 
@@ -79,22 +79,22 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"/>
+            android:background="?android:attr/listDivider" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickNext"
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/material_small_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_small_padding"
-            android:layout_marginBottom="@dimen/material_small_padding"
-            android:layout_gravity="end"
             android:alpha="0.5"
             android:clickable="false"
+            android:onClick="onClickNext"
             android:text="@string/button_next"
             android:textColor="@android:color/white"
-            app:backgroundTint="@color/color_primary"/>
+            app:backgroundTint="@color/color_primary" />
 
     </LinearLayout>
 

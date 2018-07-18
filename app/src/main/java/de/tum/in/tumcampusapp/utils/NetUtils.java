@@ -183,7 +183,7 @@ public class NetUtils {
         if (download.isPresent()) {
             try {
                 result = new JSONObject(download.get());
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 Utils.log(e);
             }
         }

@@ -15,5 +15,5 @@ data class Departure(var servingLine: String = "",
      * @return The calculated countDown in minutes
      */
     val calculatedCountDown: Int
-        get() = Minutes.minutesBetween(departureTime, DateTime.now()).minutes
+        get() = Minutes.minutesBetween(DateTime.now(), departureTime).minutes
 }
