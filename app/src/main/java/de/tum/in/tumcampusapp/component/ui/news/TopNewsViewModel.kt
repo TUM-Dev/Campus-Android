@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
  * ViewModel for TopNews/NewsAlert.
  */
 class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
-                       private val compositeDisposable: CompositeDisposable): ViewModel() {
+                       private val compositeDisposable: CompositeDisposable) : ViewModel() {
 
     /**
      * Downloads the NewsAlert and stores it in the sharedPreferences
@@ -32,7 +32,7 @@ class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
                             val oldShowUntil = Utils.getSetting(context, Const.NEWS_ALERT_SHOW_UNTIL, "")
                             val oldImage = Utils.getSetting(context, Const.NEWS_ALERT_IMAGE, "");
 
-                            // There is a NewsAlert update if the image link or the date changed
+                            // there is a NewsAlert update if the image link or the date changed
                             // --> Card should be displayed again
                             val update = oldShowUntil != newsAlert.displayUntil || oldImage != newsAlert.url
                             if (update) {
@@ -42,5 +42,6 @@ class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
                         }, { t -> Utils.log(t) })
         )
     }
+    
 }
 

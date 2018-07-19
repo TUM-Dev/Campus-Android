@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -117,14 +116,6 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_money);
-        return remoteViews;
-    }
-
-    @Override
     public void discard(Editor editor) {
         String deadline = DateTimeUtils.INSTANCE.getDateString(mTuition.getDeadline());
         String amount = Float.toString(mTuition.getAmount());
@@ -135,4 +126,5 @@ public class TuitionFeesCard extends NotificationAwareCard {
     public void setTuition(Tuition tuition) {
         mTuition = tuition;
     }
+
 }

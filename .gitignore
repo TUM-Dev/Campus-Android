@@ -3,12 +3,11 @@
 .DS_Store
 /build
 *.iml
-/.idea/
-!/.idea/codeStyleSettings.xml
-!/.idea/fileTemplates/
-!/.idea/inspectionProfiles/
-!/.idea/vcs.xml
-!/.idea/vcs.xml
+.idea/*
+!.idea/codeStyleSettings.xml
+!.idea/fileTemplates/
+!.idea/inspectionProfiles/
+!.idea/vcs.xml
 *.apk
 gradlew
 /app/release/

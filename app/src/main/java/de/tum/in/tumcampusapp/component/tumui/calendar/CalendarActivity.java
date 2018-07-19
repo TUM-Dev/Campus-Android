@@ -61,7 +61,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     /**
      * The space between the first and the last date
      */
-    public static final String EVENT_TIME = "event_time";
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
@@ -109,8 +108,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         // Get time to show e.g. a lectures starting time or 0 for now
         Intent i = getIntent();
         mShowDate = DateTime.now();
-        if (i != null && i.hasExtra(EVENT_TIME)) {
-            long time = i.getLongExtra(EVENT_TIME, 0);
+        if (i != null && i.hasExtra(Const.EVENT_TIME)) {
+            long time = i.getLongExtra(Const.EVENT_TIME, 0);
             mShowDate = mShowDate.withMillis(time);
         }
 

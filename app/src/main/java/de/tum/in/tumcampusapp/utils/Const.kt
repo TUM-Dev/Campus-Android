@@ -126,6 +126,8 @@ object Const {
     const val EVENT_END = "pBis"
     const val EVENT_NR = "pTerminNr"
 
+    const val EVENT_TIME = "event_time"
+
     const val KINO_DATE = "kinoDate"
 
     const val CALENDAR_MONTHS_BEFORE = 2

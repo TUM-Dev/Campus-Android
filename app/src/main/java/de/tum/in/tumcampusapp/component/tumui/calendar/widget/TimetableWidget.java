@@ -12,14 +12,13 @@ import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarActivity;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 
 public class TimetableWidget extends AppWidgetProvider {
 
@@ -34,13 +33,17 @@ public class TimetableWidget extends AppWidgetProvider {
         if (alarmIsSet) {
             return;
         }
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
         Intent intent = new Intent(context, TimetableWidget.class);
         intent.setAction(BROADCAST_UPDATE_TIMETABLE_WIDGETS);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-        am.cancel(pi);
-        am.setRepeating(AlarmManager.RTC, UPDATE_ALARM_DELAY, UPDATE_ALARM_DELAY, pi);
-        alarmIsSet = true;
+
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (am != null) {
+            am.cancel(pi);
+            am.setRepeating(AlarmManager.RTC, UPDATE_ALARM_DELAY, UPDATE_ALARM_DELAY, pi);
+            alarmIsSet = true;
+        }
     }
 
     /**
@@ -61,30 +64,37 @@ public class TimetableWidget extends AppWidgetProvider {
      */
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
         // Instantiate the RemoteViews object for the app widget layout.
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.timetable_widget);
-        DateTimeFormatter dayFormat = DateTimeFormat.forPattern("EEEE, dd. MMM")
-                .withLocale(Locale.getDefault());
-        String title = dayFormat.print(DateTime.now());
-        rv.setTextViewText(R.id.timetable_widget_day, title);
+
+        // Set formatted date in the header
+        LocalDate localDate = DateTime.now().toLocalDate();
+        String date = DateTimeFormat.longDate().print(localDate);
+        rv.setTextViewText(R.id.timetable_widget_date, date);
+
+        // Set weekday in the header
+        String weekday = localDate.dayOfWeek().getAsText(Locale.getDefault());
+        rv.setTextViewText(R.id.timetable_widget_weekday, weekday);
 
         // Set up the configuration activity listeners
         Intent configIntent = new Intent(context, TimetableWidgetConfigureActivity.class);
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingConfigIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingConfigIntent = PendingIntent.getActivity(
+                context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.timetable_widget_setting, pendingConfigIntent);
 
         // Set up the calendar activity listeners
         Intent calendarIntent = new Intent(context, CalendarActivity.class);
-        PendingIntent pendingCalendarIntent = PendingIntent.getActivity(context, appWidgetId, calendarIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        rv.setOnClickPendingIntent(R.id.timetable_widget_day, pendingCalendarIntent);
+        PendingIntent pendingCalendarIntent = PendingIntent.getActivity(
+                context, appWidgetId, calendarIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        rv.setOnClickPendingIntent(R.id.timetable_widget_header, pendingCalendarIntent);
 
-        // Set up the roomFinder activity listeners
-        Intent roomFinderIntent = new Intent(context, RoomFinderActivity.class);
-        roomFinderIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent roomFinderPendingIntent = PendingIntent.getActivity(context, appWidgetId, roomFinderIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        rv.setPendingIntentTemplate(R.id.timetable_widget_listview, roomFinderPendingIntent);
+        // Set up the calendar intent used when the user taps an event
+        Intent eventIntent = new Intent(context, CalendarActivity.class);
+        eventIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent eventPendingIntent = PendingIntent.getActivity(
+                context, appWidgetId, eventIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        rv.setPendingIntentTemplate(R.id.timetable_widget_listview, eventPendingIntent);
 
         // Set up the intent that starts the TimetableWidgetService, which will
         // provide the departure times for this station
@@ -107,7 +117,6 @@ public class TimetableWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         updateAppWidgets(context, appWidgetManager, appWidgetIds);
         setAlarm(context);
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
@@ -128,15 +137,16 @@ public class TimetableWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, TimetableWidget.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.cancel(sender);
-        alarmIsSet = false;
-        super.onDisabled(context);
+        if (am != null) {
+            am.cancel(sender);
+            alarmIsSet = false;
+        }
     }
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        if (intent.getAction()
-                  .equals(TimetableWidget.BROADCAST_UPDATE_TIMETABLE_WIDGETS)) {
+        String action = intent.getAction();
+        if (action != null && action.equals(TimetableWidget.BROADCAST_UPDATE_TIMETABLE_WIDGETS)) {
             // There may be multiple widgets active, so update all of them
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName thisWidget = new ComponentName(context, TimetableWidget.class);
@@ -145,4 +155,5 @@ public class TimetableWidget extends AppWidgetProvider {
         }
         super.onReceive(context, intent);
     }
+
 }

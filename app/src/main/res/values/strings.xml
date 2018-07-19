@@ -58,6 +58,7 @@
     <string name="error_request_limit_reached">You reached the request limit for TUMonline. Try again later.</string>
     <string name="error_access_token_limit_reached">Token limit reached. You have delete an access token in TUMonline before you can continue.</string>
     <string name="error_unknown">Unknown error.</string>
+    <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
 
     <!-- Auxiliary -->
     <string name="empty_string" translatable="false" />
@@ -604,9 +605,12 @@ Signature: %5$s</string>
     <string name="discard_changes_question">Discard your changes?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep editing</string>
-    <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
+
     <string name="retry">Retry</string>
     <string name="updating_event">Updating event …</string>
     <string name="open_settings">Open settings</string>
     <string name="not_available">Not available</string>
+
+    <string name="event_start_end_format_string" translatable="false">%1$s–%2$s</string>
+    <string name="menu_with_long_type_format_string" translatable="false">%1$s (%2$s)</string>
 </resources>
