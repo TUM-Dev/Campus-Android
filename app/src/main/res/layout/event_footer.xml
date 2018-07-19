@@ -25,13 +25,15 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/event_remainingticket"
+                android:id="@+id/event_remaining_tickets"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:background="@drawable/textshape_ticket"
+                android:gravity="center"
                 android:textColor="#46525D"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:text= "Not valid"/>
         </LinearLayout>
     </HorizontalScrollView>
 
