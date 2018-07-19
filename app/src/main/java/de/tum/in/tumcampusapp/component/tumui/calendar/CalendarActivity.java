@@ -58,9 +58,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener,
         CalendarDetailsFragment.OnEventInteractionListener,LimitPickerDialogListener {
 
-    /**
-     * The space between the first and the last date
-     */
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
@@ -140,11 +137,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         mDisposable.add(
                 Completable
                         .fromAction(() -> calendarController.importCalendar(events))
-                        .compose(provider.bindToLifecycle())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(() -> {
-                            // update the action bar to display the enabled menu options
+                            // Update the action bar to display the enabled menu options
                             this.invalidateOptionsMenu();
                             startService(new Intent(CalendarActivity.this,
                                     CalendarController.QueryLocationsService.class));
@@ -158,7 +154,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
         menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode);
         menuItemFilterCanceled = menu.findItem(R.id.action_calendar_filter_canceled);
-        //Refresh the icon according to us having day or weekview
+
+        // Refresh the icon according to us having day or week view
         this.refreshWeekView();
 
         // Initiate checkboxes for filter in top menu
@@ -172,7 +169,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         MenuItem menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
         MenuItem menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
 
-        // the Calendar export is not supported for API < 14
         menuItemExportGoogle.setEnabled(isFetched);
         menuItemDeleteCalendar.setEnabled(isFetched);
 
@@ -186,26 +182,27 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
      * Asynchronous task for exporting the calendar to a local Google calendar
      */
     private void exportCalendarToGoogle() {
-        //Check Calendar permission for Android 6.0
+        // Check Calendar permission for Android 6.0
         if (!isPermissionGranted(REQUEST_SYNC)) {
             return;
         }
 
-        showLoadingStart();
-        Completable.fromAction(() -> CalendarController.syncCalendar(this))
-                   .compose(provider.bindToLifecycle())
-                   .subscribeOn(Schedulers.io())
-                   .observeOn(AndroidSchedulers.mainThread())
-                   .subscribe(() -> {
-                       if (!isFinishing()) {
-                           AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                           builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
-                                  .setPositiveButton(CalendarActivity.this.getString(R.string.yes), this)
-                                  .setNegativeButton(CalendarActivity.this.getString(R.string.no), this)
-                                  .show();
-                           showLoadingEnded();
-                       }
-                   });
+        mDisposable.add(
+                Completable.fromAction(() -> CalendarController.syncCalendar(this))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            if (!isFinishing()) {
+                                new AlertDialog.Builder(this)
+                                        .setMessage(getString(R.string.dialog_show_calendar))
+                                        .setNegativeButton(getString(R.string.no), null)
+                                        .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
+                                            displayCalendarOnGoogleCalendar();
+                                        })
+                                        .show();
+                            }
+                        })
+        );
     }
 
     @Override
@@ -286,21 +283,21 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
      * @return If the calendar permission was granted
      */
     private boolean isPermissionGranted(int id) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
             // For example, if the request has been denied previously.
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CALENDAR) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CALENDAR)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
 
                 // Display an AlertDialog with an explanation and a button to trigger the request.
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.permission_calendar_explanation))
-                        .setPositiveButton(R.string.ok, (dialog, id1) -> ActivityCompat
-                                .requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id))
+                        .setPositiveButton(R.string.ok, (dialog, id1) ->
+                                ActivityCompat.requestPermissions(this, PERMISSIONS_CALENDAR, id))
                         .show();
             } else {
                 ActivityCompat.requestPermissions(this, PERMISSIONS_CALENDAR, id);
@@ -368,9 +365,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         DateTime end = new DateTime().withDate(newYear, newMonth, daysInMonth);
 
         List<CalendarItem> calendarItems = calendarController.getFromDbBetweenDates(begin, end);
+        boolean filterCanceled = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
         for (CalendarItem calendarItem : calendarItems) {
-            if (Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true) || !calendarItem.getStatus()
-                                                                                                 .equals("CANCEL")) {
+            if (filterCanceled || !calendarItem.getStatus().equals("CANCEL")) {
                 events.add(new IntegratedCalendarEvent(calendarItem, this));
             }
         }
@@ -397,8 +394,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
                 String weekDay = DateTimeFormat.forPattern(weekDayFormat)
                                                .withLocale(Locale.getDefault())
                                                .print(new DateTime(date.getTimeInMillis()));
-                String dateString = DateUtils.formatDateTime(getApplicationContext(),
-                                                             date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
+                String dateString = DateUtils.formatDateTime(
+                        CalendarActivity.this, date.getTimeInMillis(),
+                        DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
 
                 return weekDay.toUpperCase(Locale.getDefault()) + ' ' + dateString;
             }
@@ -450,7 +448,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
         //Check if we got all Calendar permissions
         for (int result : grantResults) {
             if (result != PackageManager.PERMISSION_GRANTED) {
