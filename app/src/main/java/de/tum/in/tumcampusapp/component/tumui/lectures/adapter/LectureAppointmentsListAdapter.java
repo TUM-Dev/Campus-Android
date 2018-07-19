@@ -12,14 +12,12 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
-import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesAppointmentsActivity;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointment;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
-import retrofit2.http.HEAD;
 
 /**
  * Generates the output of the ListView on the {@link LecturesAppointmentsActivity} activity.
@@ -29,14 +27,11 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
     // list of Appointments to one lecture
     private final List<LectureAppointment> appointmentList;
     private final LayoutInflater mInflater;
+
     // date formats for the day output
     private final DateTimeFormatter endHoursOutput = DateTimeFormat.mediumTime();
     private final DateTimeFormatter startDateOutput = DateTimeFormat.mediumDateTime();
     private final DateTimeFormatter endDateOutput = DateTimeFormat.mediumDateTime();
-    // parse dates
-    // this is the template for the date in the xml file
-    private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
-                                                              .withLocale(Locale.US);
 
     public LectureAppointmentsListAdapter(Context context, List<LectureAppointment> results) {
         appointmentList = results;
@@ -81,15 +76,16 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
         if (lvItem != null) {
             holder.tvTerminOrt.setText(lvItem.getLocation());
             StringBuilder line2 = new StringBuilder(lvItem.getType());
-            // only show betreff if available
-            if (!lvItem.getTitle().isEmpty()) {
-                line2.append(" - ")
-                        .append(lvItem.getTitle());
+
+            String title = lvItem.getTitle();
+
+            if (title != null && !title.isEmpty()) {
+                line2.append(" - ").append(lvItem.getTitle());
             }
             holder.tvTerminBetreff.setText(line2.toString());
 
-            DateTime start = formatter.parseDateTime(lvItem.getStartTime());
-            DateTime end = formatter.parseDateTime(lvItem.getEndTime());
+            DateTime start = lvItem.getStartTime();
+            DateTime end = lvItem.getEndTime();
 
             // output if same day: we only show the date once
             StringBuilder output = new StringBuilder();
