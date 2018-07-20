@@ -57,12 +57,6 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         displayResult(response)
         invalidateOptionsMenu()
     }
-    
-    private fun handleDownloadSuccess(employee: Employee) {
-        this.employee = employee
-        displayResult(employee)
-        invalidateOptionsMenu()
-    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
@@ -108,7 +102,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         pictureImageView.setImageBitmap(image)
         nameTextView.text = employee.getNameWithTitle(this)
 
-        // Setup employee groups
+        // Set up employee groups
         val groups = employee.groups
         if (groups?.isNotEmpty() == true) {
             groupsRecyclerView.setHasFixedSize(true)
@@ -121,8 +115,8 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
 
         // Setup contact items
         val contactItems = arrayListOf<AbstractContactItem>().apply {
-            employee.email?.let { email ->
-                add(EmailContactItem(email))
+            if (employee.email.isNotBlank()) {
+                add(EmailContactItem(employee.email))
             }
 
             employee.businessContact?.homepage?.let { homepage ->
@@ -145,13 +139,13 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         }
 
         employee.businessContact?.additionalInfo?.let { additionalInfo ->
-            contactItems.add(InformationContactItem(additionalInfo))
+            if (additionalInfo.isNotBlank()) {
+                contactItems.add(InformationContactItem(additionalInfo))
+            }
         }
 
-        employee.consultationHours?.let { consultationHours ->
-            if (consultationHours.isNotBlank()) {
-                contactItems.add(OfficeHoursContactItem(consultationHours))
-            }
+        if (employee.consultationHours.isNotBlank()) {
+            contactItems.add(OfficeHoursContactItem(employee.consultationHours))
         }
 
         employee.rooms?.let { rooms ->

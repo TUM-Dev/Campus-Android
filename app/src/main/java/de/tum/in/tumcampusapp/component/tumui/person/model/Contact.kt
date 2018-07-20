@@ -12,17 +12,19 @@ import java.io.Serializable
 @Xml
 data class Contact(
         @PropertyElement(name = "zusatz_info")
-        var additionalInfo: String? = null,
+        var additionalInfo: String = "",
         @PropertyElement(name = "fax")
-        var fax: String? = null,
+        var fax: String = "",
         @PropertyElement(name = "www_homepage")
-        var homepage: String? = null,
+        var homepage: String = "",
         @PropertyElement(name = "mobiltelefon")
-        var mobilephone: String? = null,
+        var mobilephone: String = "",
         @PropertyElement(name = "telefon")
-        var telefon: String? = null) : Serializable {
+        var telefon: String = ""
+) : Serializable {
 
     companion object {
         private const val serialVersionUID = 4413581972047241018L
     }
+
 }

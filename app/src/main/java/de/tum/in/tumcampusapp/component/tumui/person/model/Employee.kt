@@ -29,13 +29,13 @@ data class Employee(@PropertyElement(name = "geschlecht")
                     @Element(name = "dienstlich")
                     val businessContact: Contact? = null,
                     @PropertyElement(name = "sprechstunde")
-                    val consultationHours: String? = null,
+                    val consultationHours: String = "",
                     @PropertyElement
-                    val email: String? = null,
+                    val email: String = "",
                     @Element(name = "gruppen")
                     val groupList: GroupList? = null,
                     @PropertyElement(name = "image_data")
-                    val imageData: String? = null,
+                    val imageData: String = "",
                     @Element(name = "privat")
                     val privateContact: Contact? = null,
                     @Element(name = "raeume")
@@ -43,14 +43,14 @@ data class Employee(@PropertyElement(name = "geschlecht")
                     @Element(name = "telefon_nebenstellen")
                     val telSubstationList: TelSubstationList? = null,
                     @PropertyElement(name = "titel")
-                    val title: String? = null) {
+                    val title: String = "") {
 
     val groups: List<Group>?
         get() = groupList?.groups
 
     val image: Bitmap?
         get() {
-            val imageAsBytes = Base64.decode(imageData?.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
+            val imageAsBytes = Base64.decode(imageData.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
             return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.size)
         }
 
@@ -65,7 +65,7 @@ data class Employee(@PropertyElement(name = "geschlecht")
         val salutation = context.getString(resourceId)
         val salutationWithName = "$salutation $name $surname"
 
-        if (title?.isEmpty() == true) {
+        if (title.isBlank()) {
             return salutationWithName
         } else {
             return "$salutationWithName, $title"
