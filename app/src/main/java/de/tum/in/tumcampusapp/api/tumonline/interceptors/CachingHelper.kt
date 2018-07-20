@@ -7,27 +7,29 @@ import java.util.concurrent.TimeUnit
 
 class CachingHelper {
 
+    @Deprecated("Use getCachingDuration")
     fun isCacheable(url: String) = cachingDurations.keys.any { url.contains(it) }
 
-    fun updateCacheControlHeader(url: String, response: Response): Response {
-        val duration = cachingDurations
+    fun getCachingDuration(url: String): Duration {
+        return cachingDurations
                 .entries
                 .filter { url.contains(it.key) }
                 .map { it.value }
-                .firstOrNull()
+                .getOrElse(0) { Duration.ZERO }
+    }
 
-        return if (duration != null) {
-            val maxAge = duration.toStandardDays().days
-            val cacheControl = CacheControl.Builder()
-                    .maxAge(maxAge, TimeUnit.DAYS)
-                    .build()
-            response.newBuilder()
-                    .removeHeader("Cache-Control")
-                    .addHeader("Cache-Control", cacheControl.toString())
-                    .build()
-        } else {
-            response
-        }
+    fun updateCacheControlHeader(url: String, response: Response): Response {
+        val duration = getCachingDuration(url)
+
+        val maxAge = duration.toStandardDays().days
+        val cacheControl = CacheControl.Builder()
+                .maxAge(maxAge, TimeUnit.DAYS)
+                .build()
+
+        return response.newBuilder()
+                .removeHeader("Cache-Control")
+                .addHeader("Cache-Control", cacheControl.toString())
+                .build()
     }
 
     companion object {

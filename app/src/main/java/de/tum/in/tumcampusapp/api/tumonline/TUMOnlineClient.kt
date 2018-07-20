@@ -4,6 +4,7 @@ import android.content.Context
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import de.tum.`in`.tumcampusapp.api.app.Helper
+import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CacheControlInterceptor
 import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.TUMOnlineInterceptor
 import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
@@ -28,7 +29,7 @@ import retrofit2.Retrofit
 class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
 
     fun getCalendar(force: Boolean = false): Call<Events> {
-        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        val cacheControl = if (force) NO_CACHE else PUBLIC
         return apiService.getCalendar(
                 Const.CALENDAR_MONTHS_BEFORE, Const.CALENDAR_MONTHS_AFTER, cacheControl)
     }
@@ -45,22 +46,22 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     }
 
     fun getTuitionFeesStatus(force: Boolean = false): Call<TuitionList> {
-        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        val cacheControl = if (force) NO_CACHE else PUBLIC
         return apiService.getTuitionFeesStatus(cacheControl)
     }
 
     fun getPersonalLectures(force: Boolean = false): Call<LecturesResponse> {
-        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        val cacheControl = if (force) NO_CACHE else PUBLIC
         return apiService.getPersonalLectures(cacheControl)
     }
 
     fun getLectureDetails(id: String, force: Boolean = false): Call<LectureDetailsResponse> {
-        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        val cacheControl = if (force) NO_CACHE else PUBLIC
         return apiService.getLectureDetails(id, cacheControl)
     }
 
     fun getLectureAppointments(id: String, force: Boolean = false): Call<LectureAppointmentsResponse> {
-        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        val cacheControl = if (force) NO_CACHE else PUBLIC
         return apiService.getLectureAppointments(id, cacheControl)
     }
 
@@ -69,7 +70,7 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     }
 
     fun getPersonDetails(id: String, force: Boolean = false): Call<Employee> {
-        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        val cacheControl = if (force) NO_CACHE else PUBLIC
         return apiService.getPersonDetails(id, cacheControl)
     }
 
@@ -78,7 +79,7 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     }
 
     fun getGrades(force: Boolean = false): Call<ExamList> {
-        val cacheControl = if (force) NO_CACHE else ONLY_IF_CACHED
+        val cacheControl = if (force) NO_CACHE else PUBLIC
         return apiService.getGrades(cacheControl)
     }
 
@@ -99,7 +100,7 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
         private const val BASE_URL = "https://campus.tum.de/tumonline/"
 
         private const val NO_CACHE = "no-cache"
-        private const val ONLY_IF_CACHED = "only-if-cached"
+        private const val PUBLIC = "public"
 
         private var client: TUMOnlineClient? = null
 
@@ -119,7 +120,9 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
             val client = Helper.getOkHttpClient(context)
                     .newBuilder()
                     .cache(cacheManager.cache)
+                    .addInterceptor(CacheControlInterceptor())
                     .addNetworkInterceptor(TUMOnlineInterceptor(context))
+                    //.retryOnConnectionFailure(false)
                     .build()
 
             val tikXml = TikXml.Builder()

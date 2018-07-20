@@ -40,7 +40,10 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
         val isTumOnlineDisabled = Utils.getSettingBool(context, Const.TUMO_DISABLED, false)
 
         if (!isTokenRequest && !isTokenConfirmationCheck && isTumOnlineDisabled) {
-            throw InvalidTokenException()
+            //throw InvalidTokenException()
+            //val exception = InvalidTokenException()
+            //return exception.transformToErrorResponse()
+            // TODO
         }
 
         // Add the access token as a parameter to the URL
@@ -61,13 +64,21 @@ class TUMOnlineInterceptor(private val context: Context) : Interceptor {
         // The server always returns 200. To detect errors, we attempt to parse the response into
         // an Error. If this fails, we know that we got a non-error response from TUMonline.
         val error = tryOrNull { tikXml.read(peekBody.source(), Error::class.java) }
-        error?.let {
+        error?.let { e ->
+            if (e.exception is InvalidTokenException) {
+                // If it is an InvalidTokenException, we disable interaction with TUMonline.
+                Utils.setSetting(context, Const.TUMO_DISABLED, true)
+            }
+
+            return e.toErrorResponse(response)
+            /*
             throw it.exception.also {
                 if (it is InvalidTokenException) {
                     // If it is an InvalidTokenException, we disable interaction with TUMonline.
                     Utils.setSetting(context, Const.TUMO_DISABLED, true)
                 }
             }
+            */
         }
 
         // We did not receive an error, so we can cache the response.

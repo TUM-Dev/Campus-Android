@@ -5,16 +5,17 @@ import okhttp3.Response
 import okhttp3.ResponseBody
 import org.json.JSONObject
 
-class MissingPermissionException : TUMOnlineException() {
-
-    override val message: String?
-        get() = "Token is active but specific permission not given"
+abstract class TokenException(private val errorCode: Int) : TUMOnlineException() {
 
     override fun transformToErrorResponse(response: Response): Response {
-        val responseBody = ResponseBody.create(JSON, JSONObject().toString())
+        val json = JSONObject().apply {
+            put("error_code", errorCode)
+        }
+
+        val responseBody = ResponseBody.create(JSON, json.toString())
         return response
                 .newBuilder()
-                .code(403)
+                .code(498)
                 .body(responseBody)
                 .build()
     }

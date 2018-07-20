@@ -80,7 +80,7 @@ public final class Helper {
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
 
-        builder.addNetworkInterceptor(new TumHttpLoggingInterceptor(message -> Utils.logwithTag(TAG, message)));
+        //builder.addNetworkInterceptor(new TumHttpLoggingInterceptor(message -> Utils.logwithTag(TAG, message)));
 
         //Save it to the static handle and return
         client = builder.build();

@@ -118,10 +118,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         spFilter = findViewById(R.id.spFilter);
         tvAverageGrade = findViewById(R.id.avgGrade);
 
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeResources(R.color.color_primary, R.color.tum_A100, R.color.tum_A200);
-
         isFetched = false;
         loadGrades(false);
     }

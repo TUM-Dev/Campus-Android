@@ -38,7 +38,7 @@ public class TuitionFeeManager implements ProvidesCard {
                     .getTuitionFeesStatus(force)
                     .execute();
 
-            if (response == null) {
+            if (response == null || !response.isSuccessful()) {
                 return results;
             }
 
