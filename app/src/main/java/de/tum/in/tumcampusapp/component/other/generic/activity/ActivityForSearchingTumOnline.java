@@ -74,7 +74,6 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
                 onDownloadFailure(t);
-                showLoadingEnded();
             }
         });
     }
