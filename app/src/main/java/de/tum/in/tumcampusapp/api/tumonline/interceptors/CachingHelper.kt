@@ -7,8 +7,7 @@ import java.util.concurrent.TimeUnit
 
 class CachingHelper {
 
-    @Deprecated("Use getCachingDuration")
-    fun isCacheable(url: String) = cachingDurations.keys.any { url.contains(it) }
+    fun isCacheable(url: String) = getCachingDuration(url) != Duration.ZERO
 
     fun getCachingDuration(url: String): Duration {
         return cachingDurations

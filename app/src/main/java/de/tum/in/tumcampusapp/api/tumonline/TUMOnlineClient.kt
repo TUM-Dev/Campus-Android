@@ -4,8 +4,10 @@ import android.content.Context
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import de.tum.`in`.tumcampusapp.api.app.Helper
-import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CacheControlInterceptor
-import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.TUMOnlineInterceptor
+import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.AddTokenInterceptor
+import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CacheResponseInterceptor
+import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CheckErrorInterceptor
+import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CheckTokenInterceptor
 import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
@@ -120,9 +122,10 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
             val client = Helper.getOkHttpClient(context)
                     .newBuilder()
                     .cache(cacheManager.cache)
-                    .addInterceptor(CacheControlInterceptor())
-                    .addNetworkInterceptor(TUMOnlineInterceptor(context))
-                    //.retryOnConnectionFailure(false)
+                    .addInterceptor(AddTokenInterceptor(context))
+                    .addInterceptor(CheckTokenInterceptor(context))
+                    .addNetworkInterceptor(CacheResponseInterceptor())
+                    .addNetworkInterceptor(CheckErrorInterceptor(context))
                     .build()
 
             val tikXml = TikXml.Builder()

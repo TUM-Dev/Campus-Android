@@ -4,17 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
+import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
 import de.tum.in.tumcampusapp.utils.Utils;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -90,7 +89,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
                 } else if (response.isSuccessful() && body == null) {
                     onEmptyDownloadResponse();
                 } else {
-                    onDownloadUnsuccessful(response);
+                    onDownloadUnsuccessful(response.code());
                 }
                 showLoadingEnded();
             }
@@ -123,39 +122,8 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
      * Called when a response is received, but that response is not successful. Displays the
      * appropriate error message, either in an error layout, or as a dialog or Snackbar.
      */
-    protected final void onDownloadUnsuccessful(Response response) {
-        int statusCode = response.code();
-        int errorCode = 0;
-
-        try {
-            ResponseBody body = response.errorBody();
-            if (body != null) {
-                JSONObject json = new JSONObject(body.string());
-                if (json.has("error_code")) {
-                    errorCode = json.getInt("error_code");
-                }
-            }
-        } catch (JSONException | IOException e) {
-            Utils.log(e);
-        }
-
-        if (statusCode == 498) {
-            // TokenException
-            if (errorCode == 22) {
-                showError(R.string.error_invalid_access_token);
-            } else if (errorCode == 44) {
-                showError(R.string.error_access_token_inactive);
-            }
-        } else if (statusCode == 429) {
-            // LimitReachedException
-            if (errorCode == 123) {
-                showError(R.string.error_access_token_limit_reached);
-            } else if (errorCode == 124) {
-                showError(R.string.error_request_limit_reached);
-            }
-        } else if (statusCode == 403) {
-            showError(R.string.error_no_rights_to_access_function);
-        } else if (statusCode == 503) {
+    protected final void onDownloadUnsuccessful(int statusCode) {
+        if (statusCode == 503) {
             // The service is unavailable
             showError(R.string.error_tum_online_unavailable);
         } else {
@@ -172,11 +140,6 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
 
         if (throwable instanceof NoNetworkConnectionException) {
             showNoInternetLayout();
-        }
-
-        /*
-        if (throwable instanceof NoNetworkConnectionException) {
-            showNoInternetLayout();
         } else if (throwable instanceof InactiveTokenException) {
             showFailedTokenLayout(R.string.error_access_token_inactive);
         } else if (throwable instanceof InvalidTokenException) {
@@ -190,7 +153,6 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
         } else {
             showError(R.string.error_unknown);
         }
-        */
     }
 
     // TODO: Further refactoring of the user interface

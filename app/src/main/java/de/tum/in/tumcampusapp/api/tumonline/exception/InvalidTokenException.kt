@@ -1,6 +1,8 @@
 package de.tum.`in`.tumcampusapp.api.tumonline.exception
 
-class InvalidTokenException : TokenException(22) {
+import java.io.InterruptedIOException
+
+class InvalidTokenException : InterruptedIOException() {
 
     override val message: String?
         get() = "The user’s token is not confirmed or invalid"
