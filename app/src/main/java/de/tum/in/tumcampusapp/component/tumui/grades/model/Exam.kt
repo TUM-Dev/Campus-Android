@@ -41,11 +41,10 @@ data class Exam(
     override fun getHeaderId() = semester
 
     override fun compareTo(other: Exam): Int {
-        return if (this.semester == other.semester) {
-            course.compareTo(other.course) * (-1)
-        } else {
-            semester.compareTo(other.semester)
-        }
+        return compareByDescending<Exam> { it.semester }
+                .thenByDescending { it.date }
+                .thenBy { it.course }
+                .compare(this, other)
     }
 
     fun getGradeColor(context: Context): Int {
