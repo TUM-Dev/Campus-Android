@@ -1,5 +1,5 @@
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
 
     <ImageView
@@ -9,12 +9,12 @@
         android:adjustViewBounds="true"
         android:minHeight="50dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/mvv_entire_net_icon"/>
+        tools:background="@android:color/darker_gray" />
 
     <ProgressBar
         android:id="@+id/top_news_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
 </android.support.v7.widget.CardView>
