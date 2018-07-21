@@ -56,8 +56,11 @@ object AppNotificationsManager {
                 NotificationManager.IMPORTANCE_DEFAULT
         )
 
-        val eduroam = createChannel(context, Const.NOTIFICATION_CHANNEL_CHAT,
-                R.string.eduroam, 0, NotificationManager.IMPORTANCE_DEFAULT)
+        val eduroam = createChannel(
+                context, Const.NOTIFICATION_CHANNEL_EDUROAM,
+                R.string.eduroam, R.string.channel_description_eduroam,
+                NotificationManager.IMPORTANCE_LOW
+        )
 
         val cafeteria = createChannel(
                 context, Const.NOTIFICATION_CHANNEL_CAFETERIA,
