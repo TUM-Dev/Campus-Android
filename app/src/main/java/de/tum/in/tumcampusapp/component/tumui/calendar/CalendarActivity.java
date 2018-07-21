@@ -124,7 +124,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
     @Override
     public void onRefresh() {
-        loadEvents(CacheControl.NO_CACHE);
+        loadEvents(CacheControl.BYPASS_CACHE);
     }
 
     private void loadEvents(CacheControl cacheControl) {
@@ -238,7 +238,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
                 showHourLimitFilterDialog();
                 return true;
             case R.id.action_update_calendar:
-                loadEvents(CacheControl.NO_CACHE);
+                loadEvents(CacheControl.BYPASS_CACHE);
                 refreshWeekView();
                 return true;
             default:

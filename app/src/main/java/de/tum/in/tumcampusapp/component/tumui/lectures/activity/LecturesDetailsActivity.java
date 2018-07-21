@@ -90,7 +90,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
 
     @Override
     public void onRefresh() {
-        loadLectureDetails(mLectureId, CacheControl.NO_CACHE);
+        loadLectureDetails(mLectureId, CacheControl.BYPASS_CACHE);
     }
 
     private void loadLectureDetails(@NonNull String lectureId, CacheControl cacheControl) {

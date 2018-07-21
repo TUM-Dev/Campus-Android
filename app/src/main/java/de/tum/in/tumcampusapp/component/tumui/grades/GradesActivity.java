@@ -125,7 +125,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
     @Override
     public void onRefresh() {
-        loadGrades(CacheControl.NO_CACHE);
+        loadGrades(CacheControl.BYPASS_CACHE);
     }
 
     private void initPieChart(Map<String, Integer> gradeDistribution) {

@@ -54,7 +54,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
 
     @Override
     public void onRefresh() {
-        loadPersonalLectures(CacheControl.NO_CACHE);
+        loadPersonalLectures(CacheControl.BYPASS_CACHE);
     }
 
     @Override

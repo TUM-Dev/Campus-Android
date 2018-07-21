@@ -57,7 +57,7 @@ public class LecturesAppointmentsActivity
     @Override
     public void onRefresh() {
         if (lectureId != null) {
-            loadLectureAppointments(lectureId, CacheControl.NO_CACHE);
+            loadLectureAppointments(lectureId, CacheControl.BYPASS_CACHE);
         }
     }
 

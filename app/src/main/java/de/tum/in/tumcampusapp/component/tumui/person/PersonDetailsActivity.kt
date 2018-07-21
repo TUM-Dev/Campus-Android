@@ -45,7 +45,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
     }
 
     override fun onRefresh() {
-        loadPersonDetails(personId, CacheControl.NO_CACHE)
+        loadPersonDetails(personId, CacheControl.BYPASS_CACHE)
     }
 
     private fun loadPersonDetails(personId: String, cacheControl: CacheControl) {

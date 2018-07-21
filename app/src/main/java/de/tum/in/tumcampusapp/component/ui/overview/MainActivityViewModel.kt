@@ -14,7 +14,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         get() = cardsRepo.getCards()
 
     fun refreshCards() {
-        cardsRepo.refreshCards(CacheControl.NO_CACHE)
+        cardsRepo.refreshCards(CacheControl.BYPASS_CACHE)
     }
 
 }

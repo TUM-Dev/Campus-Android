@@ -51,7 +51,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
 
     @Override
     public void onRefresh() {
-        refreshData(CacheControl.NO_CACHE);
+        refreshData(CacheControl.BYPASS_CACHE);
     }
 
     private void refreshData(CacheControl cacheControl) {

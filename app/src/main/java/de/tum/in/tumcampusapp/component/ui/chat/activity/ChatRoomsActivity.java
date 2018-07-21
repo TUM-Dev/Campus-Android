@@ -110,7 +110,7 @@ public class ChatRoomsActivity
 
     @Override
     public void onRefresh() {
-        loadPersonalLectures(CacheControl.NO_CACHE);
+        loadPersonalLectures(CacheControl.BYPASS_CACHE);
     }
 
     private void loadPersonalLectures(CacheControl cacheControl) {
