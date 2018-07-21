@@ -7,7 +7,6 @@ import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateConverter
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
-import de.tum.`in`.tumcampusapp.utils.compareTo
 import org.joda.time.DateTime
 
 /**
@@ -34,7 +33,7 @@ data class Exam(
         @PropertyElement(name = "studienidentifikator")
         val programID: String,
         @PropertyElement(name = "lv_semester")
-        val semester: String? = null
+        val semester: String = ""
 ) : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun getHeadName() = semester
@@ -42,10 +41,10 @@ data class Exam(
     override fun getHeaderId() = semester
 
     override fun compareTo(other: Exam): Int {
-        if (this.semester == other.semester) {
-            return course.compareTo(other.course) * (-1)
+        return if (this.semester == other.semester) {
+            course.compareTo(other.course) * (-1)
         } else {
-            return semester?.compareTo(other.semester) ?: 1  // TODO TILL
+            semester.compareTo(other.semester)
         }
     }
 
