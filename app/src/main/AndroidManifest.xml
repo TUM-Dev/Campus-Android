@@ -147,7 +147,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
             android:parentActivityName=".component.ui.overview.MainActivity"
-            android:theme="@style/AppTheme.SettingsTheme">
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -166,7 +166,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/opening_hours"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -192,7 +193,8 @@
             android:name=".component.ui.transportation.TransportationDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv"
-            android:parentActivityName=".component.ui.transportation.TransportationActivity">
+            android:parentActivityName=".component.ui.transportation.TransportationActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.component.ui.transportation.TransportationActivity" />
@@ -200,12 +202,14 @@
         <activity
             android:name=".component.tumui.lectures.activity.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures_appointments" />
+            android:label="@string/lectures_appointments"
+            android:theme="@style/AppTheme.NoDrawerLayout" />
         <activity
             android:name=".component.tumui.lectures.activity.LecturesDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/lectures_information"
-            android:parentActivityName=".component.tumui.lectures.activity.LecturesPersonalActivity">
+            android:parentActivityName=".component.tumui.lectures.activity.LecturesPersonalActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity" />
@@ -305,7 +309,8 @@
             android:name=".component.tumui.roomfinder.RoomFinderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
-            android:parentActivityName=".component.tumui.roomfinder.RoomFinderActivity">
+            android:parentActivityName=".component.tumui.roomfinder.RoomFinderActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity" />
@@ -334,7 +339,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/about_tca"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.other.settings.UserPreferencesActivity">
+            android:parentActivityName=".component.other.settings.UserPreferencesActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.other.settings.UserPreferencesActivity" />
@@ -458,7 +464,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/feedback"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.tumui.feedback.FeedbackActivity" />
+            android:parentActivityName=".component.tumui.feedback.FeedbackActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout" />
         <activity
             android:name=".component.ui.studycard.CardsActivity"
             android:label="@string/title_activity_cards"
@@ -493,7 +500,8 @@
         <activity
             android:name=".component.ui.chat.AddChatMemberActivity"
             android:label="Add Participant"
-            android:parentActivityName=".component.ui.chat.activity.ChatActivity">
+            android:parentActivityName=".component.ui.chat.activity.ChatActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.chat.activity.ChatActivity" />
