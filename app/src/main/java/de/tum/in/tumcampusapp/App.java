@@ -17,7 +17,7 @@ public class App extends Application {
         super.onCreate();
 
         setupPicasso();
-        AppNotificationsManager.INSTANCE.setupNotificationChannels(this);
+        AppNotificationsManager.setupNotificationChannels(this);
         JodaTimeAndroid.init(this);
         setupStrictMode();
     }

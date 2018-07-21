@@ -5,17 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
-import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 
 class NewsNotificationsProvider(context: Context,
                                 private val newsItems: List<News>) : NotificationsProvider(context) {
-
-    private val GROUP_KEY_NEWS = "de.tum.in.tumcampus.NEWS"
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
@@ -83,6 +81,10 @@ class NewsNotificationsProvider(context: Context,
         notifications.add(summaryAppNotification)
 
         return notifications
+    }
+
+    companion object {
+        private const val GROUP_KEY_NEWS = "de.tum.in.tumcampus.NEWS"
     }
 
 }

@@ -559,4 +559,10 @@ Signatur: %5$s</string>
     <string name="discard_changes_question">Änderungen verwerfen?</string>
     <string name="discard">Verwerfen</string>
     <string name="keep_editing">Weiter bearbeiten</string>
+    <string name="channel_description_general">Nächste Vorlesung, News, Erinnerung über Studienbeiträge</string>
+    <string name="channel_description_cafeteria">Aktuelles Tagesmenü</string>
+    <string name="channel_description_chat">Neue Chat-Nachrichten</string>
+    <string name="channel_description_mvv">Abfahrten an nahegelegenen Stationen</string>
+    <string name="channel_description_tum_alarmierung">Alarme über Notfälle an der TUM</string>
+    <string name="channel_description_eduroam">Untersützung beim Einrichten von eduroam</string>
 </resources>

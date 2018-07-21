@@ -13,8 +13,6 @@ import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 class CalendarNotificationsProvider(context: Context,
                                     private val lectures: List<CalendarItem>) : NotificationsProvider(context) {
 
-    private val timeBeforeLectures = 15 // minutes
-
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setAutoCancel(true)
@@ -30,7 +28,7 @@ class CalendarNotificationsProvider(context: Context,
         val time = DateTimeUtils.formatFutureTime(firstItemStart, context)
 
         // Schedule the notification 15 minutes before the lecture
-        val notificationTime = firstItemStart.minusMinutes(timeBeforeLectures).millis
+        val notificationTime = firstItemStart.minusMinutes(TIME_BEFORE_LECTURE).millis
 
         // Automatically remove the notification after the lecture finished
         val notificationEnd = firstItemEnd.millis
@@ -43,6 +41,10 @@ class CalendarNotificationsProvider(context: Context,
         return ArrayList<AppNotification>().apply {
             add(FutureNotification(AppNotification.CALENDAR_ID, notification, notificationTime))
         }
+    }
+
+    companion object {
+        private const val TIME_BEFORE_LECTURE = 15 // minutes
     }
 
 }

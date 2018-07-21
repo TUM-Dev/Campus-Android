@@ -18,8 +18,6 @@ class CafeteriaNotificationsProvider(
         context: Context,
         private val cafeteria: CafeteriaWithMenus) : NotificationsProvider(context) {
 
-    private val GROUP_KEY_CAFETERIA = "de.tum.in.tumcampus.CAFETERIA"
-
     private val notificationsStore = CafeteriaNotificationsStore(context)
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
@@ -123,8 +121,6 @@ class CafeteriaNotificationsProvider(
      */
     private class CafeteriaNotificationsStore(private val context: Context) {
 
-        private val KEY_NOTIFICATIONS = "cafeteriaNotifications"
-
         private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         /**
@@ -162,6 +158,11 @@ class CafeteriaNotificationsProvider(
                     .apply()
         }
 
+    }
+
+    companion object {
+        private const val GROUP_KEY_CAFETERIA = "de.tum.in.tumcampus.CAFETERIA"
+        private const val KEY_NOTIFICATIONS = "cafeteriaNotifications"
     }
 
 }
