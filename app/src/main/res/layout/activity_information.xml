@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <!-- The main content view -->
     <android.support.design.widget.CoordinatorLayout
@@ -14,10 +14,9 @@
         android:fitsSystemWindows="true">
 
         <!-- The toolbar aka SupportActionBar -->
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar" />
 
-        <android.support.v4.widget.NestedScrollView
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="fill_vertical"
@@ -34,46 +33,44 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="all"
-                    android:text="@string/app_info_text"/>
+                    android:text="@string/app_info_text" />
 
                 <Button
                     android:id="@+id/button_facebook"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_facebook_white"
                     android:drawableStart="@drawable/ic_facebook_white"
-                    android:text="@string/facebook"/>
+                    android:text="@string/facebook" />
 
                 <Button
                     android:id="@+id/button_github"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_github_white"
                     android:drawableStart="@drawable/ic_github_white"
-                    android:text="@string/github_contribute"/>
+                    android:text="@string/github_contribute" />
 
                 <Button
                     android:id="@+id/button_privacy"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/privacy_policy"/>
+                    android:text="@string/privacy_policy" />
 
                 <Button
                     android:id="@+id/button_chat_terms"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/open_chat_terms"/>
+                    android:text="@string/open_chat_terms" />
 
                 <Button
                     android:id="@+id/button_licenses"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/licences"/>
+                    android:text="@string/licences" />
 
 
                 <TextView
@@ -84,19 +81,21 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:text="@string/add_info"
-                    android:textSize="@dimen/large_text_size"/>
+                    android:textSize="@dimen/large_text_size" />
 
                 <TableLayout
                     android:id="@+id/debugInfos"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>
+
     </android.support.design.widget.CoordinatorLayout>
 
     <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer"/>
+    <include layout="@layout/navigation_drawer" />
+
 </android.support.v4.widget.DrawerLayout>

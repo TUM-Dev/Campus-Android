@@ -1,10 +1,9 @@
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:id="@+id/grades_layout"
@@ -28,7 +27,7 @@
                 <Spinner
                     android:id="@+id/spFilter"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </android.support.v7.widget.Toolbar>
 
@@ -37,24 +36,25 @@
         <include
             layout="@layout/layout_all_errors"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_height="fill_parent" />
 
         <FrameLayout
             android:id="@+id/charts"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:padding="@dimen/padding_default">
+
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pie_chart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/bar_chart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </FrameLayout>
 
         <ImageView
@@ -63,7 +63,7 @@
             android:layout_height="30dp"
             android:background="@color/tum_300"
             android:onClick="hideChartToggle"
-            android:src="@drawable/ic_arrow_anim_down"/>
+            android:src="@drawable/ic_arrow_anim_down" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
@@ -75,7 +75,7 @@
                 android:id="@+id/lstGrades"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -89,18 +89,18 @@
                 android:id="@+id/avgGrade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#757575"
-                android:fontFamily="sans-serif-medium"
                 android:textSize="@dimen/semilarge_text_size"
                 android:visibility="visible"
-                tools:text="Average grade: 1.0"/>
+                tools:text="Average grade: 1.0" />
 
         </FrameLayout>
 
     </LinearLayout>
 
     <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer"/>
+    <include layout="@layout/navigation_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
