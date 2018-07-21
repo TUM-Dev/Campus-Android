@@ -44,11 +44,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         disableRefresh();
         findViewById(R.id.wizard_start_layout).requestFocus();
 
-        lrzIdEditText = findViewById(R.id.lrz_id);
-        lrzIdEditText.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
-        lrzIdEditText.addTextChangedListener(this);
-
         nextButton = findViewById(R.id.next_button);
+
+        lrzIdEditText = findViewById(R.id.lrz_id);
+        lrzIdEditText.addTextChangedListener(this);
+        lrzIdEditText.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
     }
 
     @Override
@@ -152,8 +152,9 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     @Override
     protected void onLoadFinished(Boolean result) {
         if (result) {
-            startActivity(new Intent(this, WizNavCheckTokenActivity.class));
+            Intent intent = new Intent(this, WizNavCheckTokenActivity.class);
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            startActivity(intent);
         } else {
             showLoadingEnded();
         }

@@ -2,11 +2,13 @@ package de.tum.`in`.tumcampusapp.component.ui.chat
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.RemoteViews
 import com.google.common.collect.Lists
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
@@ -56,9 +58,7 @@ class ChatMessagesCard(context: Context,
     private fun setChatRoom(roomName: String, roomId: Int, roomIdString: String) {
         mRoomName = listOf("[A-Z, 0-9(LV\\.Nr)=]+$", "\\([A-Z]+[0-9]+\\)", "\\[[A-Z]+[0-9]+\\]")
                 .map { it.toRegex() }
-                .fold(roomName, { name, regex ->
-                    name.replace(regex, "")
-                })
+                .fold(roomName) { name, regex -> name.replace(regex, "") }
                 .trim()
         chatMessageDao.deleteOldEntries()
         nrUnread = chatMessageDao.getNumberUnread(roomId)
@@ -79,11 +79,10 @@ class ChatMessagesCard(context: Context,
 
     override fun discard(editor: Editor) = chatMessageDao.markAsRead(mRoomId)
 
-    //override fun shouldShowNotification(prefs: SharedPreferences) = true
-
     companion object {
         fun inflateViewHolder(parent: ViewGroup) =
                 CardViewHolder(LayoutInflater.from(parent.context)
                         .inflate(R.layout.card_chat_messages, parent, false))
     }
+
 }

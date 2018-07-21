@@ -5,13 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -27,6 +25,7 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 public class NextLectureCard extends Card {
@@ -117,7 +116,8 @@ public class NextLectureCard extends Card {
         mEvent.setText(String.format("%s%s - %s", dayOfWeek.print(item.start), time.print(item.start), time.print(item.end)));
         mEvent.setOnClickListener(view -> {
             Intent i = new Intent(getContext(), CalendarActivity.class);
-            i.putExtra(CalendarActivity.EVENT_TIME, item.start.getMillis());
+            CalendarItem selectedItem = lectures.get(mSelected);
+            i.putExtra(Const.EVENT_TIME, selectedItem.start.getMillis());
             getContext().startActivity(i);
         });
     }
@@ -169,14 +169,6 @@ public class NextLectureCard extends Card {
         DateTime end;
         String location;
         String locationForSearch;
-    }
-
-    @Override
-    public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, getSelected().title);
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_my_lectures);
-        return remoteViews;
     }
 
 }

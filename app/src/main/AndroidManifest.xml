@@ -281,7 +281,7 @@
             android:parentActivityName=".component.tumui.person.PersonSearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.person.PersonSearchActivity"/>
+                android:value="de.tum.in.tumcampusapp.component.tumui.person.PersonSearchActivity" />
         </activity>
         <activity
             android:name=".component.tumui.roomfinder.RoomFinderActivity"
@@ -540,6 +540,7 @@
             android:name=".component.ui.transportation.widget.MVVWidgetConfigureActivity"
             android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
             android:taskAffinity="">
@@ -551,28 +552,6 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_mvv" />
 
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <!-- receiver for the CardWidget -->
-
-        <receiver android:name=".component.other.generic.widget.CardsWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/cards_widget_info" />
-        </receiver>
-
-        <service
-            android:name=".component.other.generic.widget.CardsWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-
-        <activity android:name=".component.other.generic.widget.CardsWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -600,6 +579,7 @@
             android:name=".component.tumui.calendar.widget.TimetableWidgetConfigureActivity"
             android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
             android:label="@string/timetable_widget_select_lectures"
             android:launchMode="singleTop"
             android:taskAffinity="">
@@ -646,7 +626,7 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.ScanResultsAvailableReceiver$NeverShowAgainService"
-            android:exported="false"/>
+            android:exported="false" />
         <service
             android:name=".component.tumui.calendar.CalendarController$QueryLocationsService"
             android:exported="false" />

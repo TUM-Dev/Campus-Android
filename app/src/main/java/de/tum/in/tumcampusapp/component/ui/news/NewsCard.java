@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
 import com.squareup.picasso.Picasso;
 
@@ -75,12 +74,6 @@ public class NewsCard extends Card {
     }
 
     @Override
-    protected void discard(SharedPreferences.Editor editor) {
-        NewsController newsController = new NewsController(getContext());
-        newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
-    }
-
-    @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         return (mNews.getDismissed() & 1) == 0;
     }
@@ -92,20 +85,9 @@ public class NewsCard extends Card {
     }
 
     @Override
-    public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, mNews.getTitle());
-        final String imgURL = mNews.getImage();
-        if (!imgURL.trim().isEmpty() && !"null".equals(imgURL)) {
-            Utils.log(imgURL);
-            Handler uiHandler = new Handler(Looper.getMainLooper());
-            uiHandler.post(() -> {
-                Picasso.get()
-                        .load(imgURL)
-                        .into(remoteViews, R.id.widgetCardImageView, new int[] {appWidgetId});
-            });
-        }
-        return remoteViews;
+    protected void discard(@NonNull SharedPreferences.Editor editor) {
+        NewsController newsController = new NewsController(getContext());
+        newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
     }
 
 }

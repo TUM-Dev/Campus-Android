@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         // Setup pull to refresh
         mSwipeRefreshLayout = findViewById(R.id.ptr_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setRefreshing(true);
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.color_primary,
                 R.color.tum_A100,

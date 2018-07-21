@@ -9,7 +9,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.widget.MensaRemoteViewFac
 class MensaWidgetService : RemoteViewsService() {
 
     override fun onGetViewFactory(intent: Intent): RemoteViewsService.RemoteViewsFactory {
-        return MensaRemoteViewFactory(this.applicationContext, intent)
+        return MensaRemoteViewFactory(this.applicationContext)
     }
 
 }

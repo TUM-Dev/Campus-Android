@@ -9,7 +9,6 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.RemoteViews
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
@@ -131,10 +130,6 @@ abstract class Card(
 
     override fun compareTo(other: Card): Int {
         return Integer.compare(position, other.position)
-    }
-
-    open fun getRemoteViews(context: Context, appWidgetId: Int): RemoteViews? {
-        return null
     }
 
     /**

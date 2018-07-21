@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -95,15 +94,6 @@ public class TuitionFeesCard extends Card {
         return mTuition.getIntent(getContext());
     }
 
-    @Override
-    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, context.getString(R.string.tuition_fees));
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_money);
-        return remoteViews;
-    }
-
-    @Override
     public void discard(Editor editor) {
         editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
         editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
@@ -112,4 +102,5 @@ public class TuitionFeesCard extends Card {
     public void setTuition(Tuition tuition) {
         mTuition = tuition;
     }
+
 }

@@ -18,11 +18,12 @@ data class Departure(var servingLine: String = "",
      * @return The calculated countDown in minutes
      */
     val calculatedCountDown: Int
-        get() = Minutes.minutesBetween(departureTime, DateTime.now()).minutes
+        get() = Minutes.minutesBetween(DateTime.now(), departureTime).minutes
 
     fun getIntent(context: Context, station: StationResult): Intent? =
             Intent(context, TransportationDetailsActivity::class.java).apply {
                 putExtra(TransportationDetailsActivity.EXTRA_STATION, station.id)
                 putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, station.station)
             }
+
 }
