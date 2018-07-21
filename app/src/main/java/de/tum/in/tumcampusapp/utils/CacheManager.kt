@@ -30,7 +30,7 @@ class CacheManager(private val context: Context) {
         try {
             TUMOnlineClient
                     .getInstance(context)
-                    .getCalendar(CacheControl.NO_CACHE)
+                    .getCalendar(CacheControl.USE_CACHE)
                     .execute()
         } catch (e: IOException) {
             Utils.log(e, "Error while loading calendar in CacheManager")
@@ -40,7 +40,7 @@ class CacheManager(private val context: Context) {
     private fun syncPersonalLectures() {
         TUMOnlineClient
                 .getInstance(context)
-                .getPersonalLectures(CacheControl.NO_CACHE)
+                .getPersonalLectures(CacheControl.USE_CACHE)
                 .enqueue(object : Callback<LecturesResponse> {
                     override fun onResponse(call: Call<LecturesResponse>,
                                             response: Response<LecturesResponse>) {
@@ -58,8 +58,7 @@ class CacheManager(private val context: Context) {
 
     @Synchronized
     fun clearCache() {
-        val cacheDir = context.cacheDir
-        cacheDir.deleteRecursively()
+        cache.delete()
     }
 
 }

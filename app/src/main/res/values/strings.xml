@@ -37,7 +37,6 @@
     <string name="no_map_available">No map available</string>
     <string name="search_rooms">Search rooms</string>
 
-
     <!-- TUMonline errors -->
     <string name="error_accessing_tumonline_header">Error accessing TUMonline</string>
     <string name="error_accessing_tumonline_body">Please make sure your TUMonline access token has been activated and the corresponding rights are set.</string>
