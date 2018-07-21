@@ -134,7 +134,6 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
                         listener: OnEventInteractionListener): CalendarDetailsFragment {
             return CalendarDetailsFragment().apply {
                 this.arguments = Bundle().apply {
-                    // TODO: Replace with CalendarItem once it's Parcelable
                     putString(Const.CALENDAR_ID_PARAM, calendarItem.nr)
                 }
                 this.listener = listener

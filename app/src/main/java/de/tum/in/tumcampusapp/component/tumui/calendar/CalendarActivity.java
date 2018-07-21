@@ -111,8 +111,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         }
 
         // Get setting from sharedprefs and refresh the view with everything
-        this.mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
-        this.refreshWeekView();
+        mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
+        refreshWeekView();
 
         disableRefresh();
 
@@ -141,9 +141,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(() -> {
                             // Update the action bar to display the enabled menu options
-                            this.invalidateOptionsMenu();
-                            startService(new Intent(CalendarActivity.this,
-                                    CalendarController.QueryLocationsService.class));
+                            invalidateOptionsMenu();
+                            Intent intent = new Intent(this,
+                                    CalendarController.QueryLocationsService.class);
+                            startService(intent);
                         })
         );
     }
@@ -152,11 +153,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
+
         menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode);
         menuItemFilterCanceled = menu.findItem(R.id.action_calendar_filter_canceled);
 
         // Refresh the icon according to us having day or week view
-        this.refreshWeekView();
+        refreshWeekView();
 
         // Initiate checkboxes for filter in top menu
         initFilterCheckboxes();
@@ -485,7 +487,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
     protected void applyFilterCanceled(boolean val) {
         Utils.setSetting(this, Const.CALENDAR_FILTER_CANCELED, val);
-        onResume();
+        refreshWeekView();
     }
 
     protected void hourHeightFitScreen() {

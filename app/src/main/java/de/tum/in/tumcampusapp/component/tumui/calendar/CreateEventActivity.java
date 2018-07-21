@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -193,8 +194,8 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         }
 
         // Because we don't show a loading screen for the delete request (only for the create
-        // request), we use a Toast to let the user know that something is happening.
-        Utils.showToast(this, R.string.updating_event);
+        // request), we use a short Toast to let the user know that something is happening.
+        Toast.makeText(this, R.string.updating_event, Toast.LENGTH_SHORT).show();
 
         apiClient
                 .deleteEvent(eventId)
@@ -202,9 +203,13 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
                     @Override
                     public void onResponse(@NonNull Call<DeleteEventResponse> call,
                                            @NonNull Response<DeleteEventResponse> response) {
-                        Utils.log("Event successfully deleted (now creating the edited version)");
-                        TcaDb.getInstance(CreateEventActivity.this).calendarDao().delete(eventId);
-                        createEvent();
+                        if (response.isSuccessful()) {
+                            Utils.log("Event successfully deleted (now creating the edited version)");
+                            TcaDb.getInstance(CreateEventActivity.this).calendarDao().delete(eventId);
+                            createEvent();
+                        } else {
+                            Utils.showToast(CreateEventActivity.this, R.string.error_unknown);
+                        }
                     }
 
                     @Override
@@ -255,7 +260,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     protected void onDownloadSuccessful(@NonNull CreateEventResponse response) {
         String nr = response.getEventId();
         event.setNr(nr);
-        TcaDb.getInstance(CreateEventActivity.this).calendarDao().insert(event);
+        TcaDb.getInstance(this).calendarDao().insert(event);
         finish();
     }
 

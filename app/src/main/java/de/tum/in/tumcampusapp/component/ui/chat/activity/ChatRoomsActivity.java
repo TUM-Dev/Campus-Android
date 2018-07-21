@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
@@ -140,20 +142,23 @@ public class ChatRoomsActivity
     }
 
     private void updateDatabase(@NonNull ChatMember currentChatMember) {
-        try {
-            ChatVerification verification =
-                    ChatVerification.Companion.getChatVerification(this, currentChatMember);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
+            try {
+                ChatVerification verification =
+                        ChatVerification.Companion.getChatVerification(this, currentChatMember);
 
-            List<ChatRoom> rooms = TUMCabeClient
-                    .getInstance(this)
-                    .getMemberRooms(currentChatMember.getId(), verification);
+                List<ChatRoom> rooms = TUMCabeClient
+                        .getInstance(this)
+                        .getMemberRooms(currentChatMember.getId(), verification);
 
-            manager.replaceIntoRooms(rooms);
-        } catch (NoPrivateKey e) {
-            finish();
-        } catch (IOException e) {
-            Utils.log(e);
-        }
+                manager.replaceIntoRooms(rooms);
+            } catch (NoPrivateKey e) {
+                this.runOnUiThread(this::finish);
+            } catch (IOException e) {
+                Utils.log(e);
+            }
+        });
     }
 
     /**
@@ -263,7 +268,7 @@ public class ChatRoomsActivity
             return;
         }
 
-        Callback callback = new Callback<ChatRoom>() {
+        Callback<ChatRoom> callback = new Callback<ChatRoom>() {
             @Override
             public void onResponse(@NonNull Call<ChatRoom> call, @NonNull Response<ChatRoom> response) {
                 if (!response.isSuccessful()) {
