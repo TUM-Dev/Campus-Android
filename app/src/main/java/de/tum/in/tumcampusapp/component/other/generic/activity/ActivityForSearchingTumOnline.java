@@ -81,7 +81,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * Called if the response from the API call is successful, but empty.
      */
     protected final void onEmptyDownloadResponse() {
-        showError(R.string.error_empty_response);
+        showError(R.string.error_no_data_to_show);
     }
 
     /**

@@ -102,7 +102,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     protected void onDownloadSuccessful(@NonNull LectureDetailsResponse response) {
         List<LectureDetails> lectureDetails = response.getLectureDetails();
         if (lectureDetails.isEmpty()) {
-            Utils.showToast(this, R.string.error_empty_response);
+            Utils.showToast(this, R.string.error_no_data_to_show);
             finish();
             return;
         }

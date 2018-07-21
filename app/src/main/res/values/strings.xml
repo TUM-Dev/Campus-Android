@@ -52,8 +52,8 @@
     <string name="error_invalid_access_token">Your TUMonline access token is invalid.</string>
     <string name="error_access_token_could_not_be_generated">Your TUMonline access token could not be generated.</string>
     <string name="error_access_token_inactive">Your TUMonline access token is not enabled. Head to TUMonline to enable it.</string>
-    <string name="error_no_internet_connection">No internet connection</string>
-    <string name="error_empty_response">Empty response</string>
+    <string name="error_no_internet_connection">No Internet connection</string>
+    <string name="error_no_data_to_show">No data to show.</string>
     <string name="error_no_rights_to_access_function">Your TUMonline access token doesn’t have the rights to access this function.</string>
     <string name="error_request_limit_reached">You reached the request limit for TUMonline. Try again later.</string>
     <string name="error_access_token_limit_reached">Token limit reached. You have delete an access token in TUMonline before you can continue.</string>
