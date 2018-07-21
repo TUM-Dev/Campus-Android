@@ -7,16 +7,6 @@
     android:orientation="vertical"
     android:padding="@dimen/material_default_padding">
 
-    <!--
-    <ImageView
-        android:id="@+id/no_token_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:alpha="0.5"
-        android:src="@drawable/exclamation"
-        tools:ignore="UnusedAttribute" />
-    -->
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

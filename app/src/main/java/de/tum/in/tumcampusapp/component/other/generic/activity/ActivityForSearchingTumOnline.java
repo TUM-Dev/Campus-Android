@@ -27,9 +27,6 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
 
     protected final TUMOnlineClient apiClient;
 
-    // TODO: Remove duplicated code with ActivityForAccessingTumOnline
-    // Maybe these methods can go into ProgressActivity? Should they?
-
     /**
      * Standard constructor for ActivityForSearchingTumOnline.
      * The given layout must include a all_error_layout.
@@ -63,7 +60,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
                     onDownloadSuccessful(body);
-                } else if (body == null) {
+                } else if (response.isSuccessful() && body == null) {
                     onEmptyDownloadResponse();
                 } else {
                     onDownloadUnsuccessful(response.code());

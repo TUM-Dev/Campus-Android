@@ -22,7 +22,7 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
         PersonSearchSuggestionProvider.AUTHORITY, 3
 ), PersonSearchResultsItemListener {
 
-    private val recentsDao = TcaDb.getInstance(this).recentsDao()
+    private lateinit var recentsDao: RecentsDao
 
     private val recents: List<Person>
         get() {
@@ -32,6 +32,8 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        recentsDao = TcaDb.getInstance(this).recentsDao()
 
         val layoutManager = LinearLayoutManager(this)
 

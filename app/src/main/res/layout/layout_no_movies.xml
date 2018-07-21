@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:padding="@dimen/material_default_padding"
     android:visibility="gone"
+    tools:ignore="UseCompoundDrawables"
     tools:visibility="visible">
 
     <ImageView

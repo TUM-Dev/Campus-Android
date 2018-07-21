@@ -12,7 +12,6 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import de.tum.in.tumcampusapp.R;
@@ -36,7 +35,6 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     protected LinearLayout failedTokenLayout;
     protected SwipeRefreshLayout swipeRefreshLayout;
     private boolean registered;
-    //private final Handler mLoadingHandler = new Handler();
 
     /**
      * Standard constructor for ProgressActivity.
@@ -117,18 +115,6 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         allErrorsLayout.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Shows custom error layout.
-     * Hides any progress indicator.
-     *
-     * @param customErrorLayout Error layout
-     */
-    protected void showCustomErrorLayout(RelativeLayout customErrorLayout) {
-        showLoadingEnded();
-        customErrorLayout.setVisibility(View.VISIBLE);
-        allErrorsLayout.setVisibility(View.VISIBLE);
-    }
-
     protected void showFailedTokenLayout(int resId) {
         showFailedTokenLayout(getString(resId));
     }
@@ -142,7 +128,6 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         showLoadingEnded();
         failedTokenLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
-        //Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 
     /**

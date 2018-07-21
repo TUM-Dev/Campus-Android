@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
@@ -64,25 +63,6 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
-                if (BuildConfig.DEBUG) {
-                    String origin = "";
-
-                    if (response.raw().networkResponse() != null) {
-                        origin += "network";
-                    }
-
-                    if (response.raw().cacheResponse() != null) {
-                        origin += "cache";
-                    }
-
-                    if (origin.isEmpty()) {
-                        origin = "none";
-                    }
-
-                    Utils.showToastOnUIThread(
-                            ActivityForAccessingTumOnline.this, "Response from " + origin);
-                }
-
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
                     onDownloadSuccessful(body);
@@ -102,13 +82,6 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
     }
 
     protected abstract void onDownloadSuccessful(@NonNull T body);
-
-    // TODO: Exponential Backoff for requests
-    /*
-    protected <T> void onRetry(TUMOnlineRequest<T> request, TUMOnlineResponseListener<T> listener) {
-        fetchFromTumOnline(request, listener);
-    }
-    */
 
     /**
      * Called if the response from the API call is successful, but empty.
@@ -153,35 +126,5 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
             showError(R.string.error_unknown);
         }
     }
-
-    // TODO: Further refactoring of the user interface
-    // We should provide a more sophisticated display of errors. For instance, if there's already
-    // content loaded into the view, do not show a full-screen progress bar. Instead, it should
-    // be an overlay that preserves the data currently being displayed in the view.
-    // A simple approach would be a Toast “Sending data…” and a second Toast “Sent data” once the
-    // API call has successfully completed.
-
-    /**
-     * Displays a Snackbar with the specified message resource ID and a retry action. The retry
-     * action once again enqueues the call with the provided request listener.
-     * @param messageResId The resource ID of the message to be displayed in the Snackbar
-     * @param call The Retrofit call that will be enqueued when retrying the request
-     * @param listener The TUMOnlineRequestListener that will be called if the retry call
-     *                 was successful
-     * @param <T> The response type of the call
-     */
-    /*
-    protected final <T> void displayApiErrorSnackbar(int messageResId, Call<T> call,
-                                                     TUMOnlineResponseListener<T> listener) {
-        // TODO: Use this at some point
-        Snackbar snackbar = Snackbar.make(swipeRefreshLayout, messageResId, Snackbar.LENGTH_LONG);
-
-        if (call != null && listener != null) {
-            snackbar.setAction(R.string.retry, v -> onRetry(call, listener));
-        }
-
-        snackbar.show();
-    }
-    */
 
 }
