@@ -20,7 +20,7 @@ data class Lecture(
         @PropertyElement(name = "sj_name") val semesterYears: String,
         @PropertyElement(name = "stp_lv_art_kurz") val shortLectureType: String,
         @PropertyElement(name = "stp_lv_art_name") val lectureType: String,
-        @PropertyElement(name = "stp_lv_nr") val stp_lv_nr: String,   // TODO: Rename valiables
+        @PropertyElement(name = "stp_lv_nr") val lectureId: String,   // TODO: Rename variables
         @PropertyElement(name = "stp_sp_nr") val stp_sp_nr: String,
         @PropertyElement(name = "stp_sp_sst") val stp_sp_sst: String,
         @PropertyElement(name = "stp_sp_titel") val title: String,

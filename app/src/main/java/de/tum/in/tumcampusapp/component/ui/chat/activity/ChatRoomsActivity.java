@@ -26,6 +26,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
@@ -82,7 +83,7 @@ public class ChatRoomsActivity
             public void onTabSelected(TabLayout.Tab tab) {
                 // show the given tab
                 mCurrentMode = 1 - tab.getPosition();
-                loadPersonalLectures(false);
+                loadPersonalLectures(CacheControl.USE_CACHE);
             }
 
             @Override
@@ -104,16 +105,16 @@ public class ChatRoomsActivity
     @Override
     protected void onStart() {
         super.onStart();
-        loadPersonalLectures(false);
+        loadPersonalLectures(CacheControl.USE_CACHE);
     }
 
     @Override
     public void onRefresh() {
-        loadPersonalLectures(true);
+        loadPersonalLectures(CacheControl.NO_CACHE);
     }
 
-    private void loadPersonalLectures(boolean force) {
-        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(force);
+    private void loadPersonalLectures(CacheControl cacheControl) {
+        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(cacheControl);
         fetch(apiCall);
     }
 

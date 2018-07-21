@@ -13,6 +13,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
@@ -74,7 +75,7 @@ public class ChatRoomController implements ProvidesCard {
 
         // Add lectures that are not yet in DB
         for (Lecture lecture : lectures) {
-            if (!set.contains(lecture.getStp_lv_nr())) {
+            if (!set.contains(lecture.getLectureId())) {
                 chatRoomDao.replaceRoom(ChatRoomDbRow.Companion.fromLecture(lecture));
             }
         }
@@ -140,13 +141,13 @@ public class ChatRoomController implements ProvidesCard {
 
     @NotNull
     @Override
-    public List<Card> getCards(boolean force) {
+    public List<Card> getCards(CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
         try {
             Response<LecturesResponse> response = TUMOnlineClient
                     .getInstance(mContext)
-                    .getPersonalLectures(force)
+                    .getPersonalLectures(cacheControl)
                     .execute();
 
             if (response != null) {

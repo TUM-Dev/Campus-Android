@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetails;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse;
@@ -84,16 +85,16 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
             return;
         }
 
-        loadLectureDetails(mLectureId, false);
+        loadLectureDetails(mLectureId, CacheControl.USE_CACHE);
     }
 
     @Override
     public void onRefresh() {
-        loadLectureDetails(mLectureId, true);
+        loadLectureDetails(mLectureId, CacheControl.NO_CACHE);
     }
 
-    private void loadLectureDetails(@NonNull String lectureId, boolean force) {
-        Call<LectureDetailsResponse> apiCall = apiClient.getLectureDetails(lectureId, force);
+    private void loadLectureDetails(@NonNull String lectureId, CacheControl cacheControl) {
+        Call<LectureDetailsResponse> apiCall = apiClient.getLectureDetails(lectureId, cacheControl);
         fetch(apiCall);
     }
 
@@ -115,7 +116,8 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
                     .append(currentItem.getMainLanguage());
         }
         tvLDetailsSemester.setText(strLectureLanguage);
-        tvLDetailsSWS.setText(String.format("%s - %s SWS",
+
+        tvLDetailsSWS.setText(getString(R.string.lecture_details_format_string,
                 currentItem.getLectureType(), currentItem.getDuration()));
         tvLDetailsDozent.setText(currentItem.getLecturers());
         tvLDetailsOrg.setText(currentItem.getChairName());

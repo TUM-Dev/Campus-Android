@@ -84,9 +84,6 @@ interface TUMOnlineAPIService {
             @Header("Cache-Control") cacheControl: String
     ): Call<ExamList>
 
-    @GET("wbservicesbasic.isTokenConfirmed")
-    fun getTokenConfirmation(): Call<TokenConfirmation>
-
     @GET("wbservicesbasic.requestToken")
     fun requestToken(
             @Query("pUsername") username: String,

@@ -8,6 +8,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.lectures.adapter.LectureAppointmentsListAdapter;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointment;
@@ -50,19 +51,19 @@ public class LecturesAppointmentsActivity
             return;
         }
 
-        loadLectureAppointments(lectureId, false);
+        loadLectureAppointments(lectureId, CacheControl.USE_CACHE);
     }
 
     @Override
     public void onRefresh() {
         if (lectureId != null) {
-            loadLectureAppointments(lectureId, true);
+            loadLectureAppointments(lectureId, CacheControl.NO_CACHE);
         }
     }
 
-    private void loadLectureAppointments(@NonNull String lectureId, boolean force) {
+    private void loadLectureAppointments(@NonNull String lectureId, CacheControl cacheControl) {
         Call<LectureAppointmentsResponse> apiCall =
-                apiClient.getLectureAppointments(lectureId, force);
+                apiClient.getLectureAppointments(lectureId, cacheControl);
         fetch(apiCall);
     }
 

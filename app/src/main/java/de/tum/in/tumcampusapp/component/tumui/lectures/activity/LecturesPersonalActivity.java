@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForSearchingTumOnline;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider;
@@ -53,13 +54,13 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
 
     @Override
     public void onRefresh() {
-        loadPersonalLectures(true);
+        loadPersonalLectures(CacheControl.NO_CACHE);
     }
 
     @Override
     protected void onStartSearch() {
         enableRefresh();
-        loadPersonalLectures(false);
+        loadPersonalLectures(CacheControl.USE_CACHE);
     }
 
     @Override
@@ -68,8 +69,8 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
         searchLectures(query);
     }
 
-    private void loadPersonalLectures(boolean force) {
-        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(force);
+    private void loadPersonalLectures(CacheControl cacheControl) {
+        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(cacheControl);
         fetch(apiCall);
     }
 

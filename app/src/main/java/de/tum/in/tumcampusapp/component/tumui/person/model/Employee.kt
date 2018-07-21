@@ -72,13 +72,4 @@ data class Employee(@PropertyElement(name = "geschlecht")
         }
     }
 
-    override fun toString(): String {
-        return arrayOf(title, name, surname)
-                .filterNotNull()
-                .joinToString(" ")
-    }
-
-    companion object {
-        private val serialVersionUID = -6276330922677632119L
-    }
 }

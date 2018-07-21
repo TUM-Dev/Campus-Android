@@ -91,7 +91,7 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
             StringBuilder output = new StringBuilder();
             if (DateTimeUtils.INSTANCE.isSameDay(start, end)) {
                 output.append(startDateOutput.print(start))
-                        .append(" - ")
+                        .append("–")
                         .append(endHoursOutput.print(end));
             } else {
                 // show it normally

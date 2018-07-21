@@ -93,22 +93,21 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
     }
 
     private fun deleteEvent(eventId: String) {
-        context?.let { c ->
-            TUMOnlineClient
-                    .getInstance(c)
-                    .deleteEvent(eventId)
-                    .enqueue(object : Callback<DeleteEventResponse> {
-                        override fun onResponse(call: Call<DeleteEventResponse>,
-                                                response: Response<DeleteEventResponse>) {
-                            dismiss()
-                            listener.onEventDeleted(eventId)
-                        }
+        val c = context ?: return
+        TUMOnlineClient
+                .getInstance(c)
+                .deleteEvent(eventId)
+                .enqueue(object : Callback<DeleteEventResponse> {
+                    override fun onResponse(call: Call<DeleteEventResponse>,
+                                            response: Response<DeleteEventResponse>) {
+                        dismiss()
+                        listener.onEventDeleted(eventId)
+                    }
 
-                        override fun onFailure(call: Call<DeleteEventResponse>, t: Throwable) {
-                            handleDeleteEventError(t)
-                        }
-                    })
-        }
+                    override fun onFailure(call: Call<DeleteEventResponse>, t: Throwable) {
+                        handleDeleteEventError(t)
+                    }
+                })
     }
 
     private fun handleDeleteEventError(t: Throwable) {

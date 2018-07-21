@@ -9,12 +9,11 @@ class CachingHelper {
 
     fun isCacheable(url: String) = getCachingDuration(url) != Duration.ZERO
 
-    fun getCachingDuration(url: String): Duration {
+    private fun getCachingDuration(url: String): Duration {
         return cachingDurations
-                .entries
-                .filter { url.contains(it.key) }
-                .map { it.value }
-                .getOrElse(0) { Duration.ZERO }
+                .filter { url.contains(it.first) }
+                .map { it.second }
+                .firstOrNull() ?: Duration.ZERO
     }
 
     fun updateCacheControlHeader(url: String, response: Response): Response {
@@ -33,14 +32,14 @@ class CachingHelper {
 
     companion object {
 
-        private val cachingDurations = mapOf(
-                "kalender" to Duration.standardDays(1),
-                "studienbeitragsstatus" to Duration.standardDays(1),
-                "veranstaltungenEigene" to Duration.standardDays(1),
-                "veranstaltungenDetails" to Duration.standardDays(5),
-                "veranstaltungenTermine" to Duration.standardDays(5),
-                "personenDetails" to Duration.standardDays(5),
-                "noten" to Duration.standardDays(1)
+        private val cachingDurations = listOf(
+                Pair("kalender", Duration.standardDays(1)),
+                Pair("studienbeitragsstatus", Duration.standardDays(1)),
+                Pair("veranstaltungenEigene", Duration.standardDays(1)),
+                Pair("veranstaltungenDetails", Duration.standardDays(5)),
+                Pair("veranstaltungenTermine", Duration.standardDays(5)),
+                Pair("personenDetails", Duration.standardDays(5)),
+                Pair("noten", Duration.standardDays(1))
         )
 
     }

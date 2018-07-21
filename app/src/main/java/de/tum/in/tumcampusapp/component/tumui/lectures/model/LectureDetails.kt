@@ -10,7 +10,7 @@ import com.tickaroo.tikxml.annotation.Xml
 @Xml(name = "row")
 data class LectureDetails(
         @PropertyElement(name = "dauer_info") val duration: String? = null,
-        @PropertyElement(name = "ersttermin") val firstAppointment: String? = null, // TODO: TypeConverters
+        @PropertyElement(name = "ersttermin") val firstAppointment: String? = null,
         @PropertyElement(name = "haupt_unterrichtssprache") val mainLanguage: String? = null,
         @PropertyElement(name = "lehrinhalt") val lectureContent: String? = null,
         @PropertyElement(name = "lehrmethode") val teachingMethod: String? = null,
@@ -24,7 +24,7 @@ data class LectureDetails(
         @PropertyElement(name = "sj_name") val semesterYears: String? = null,
         @PropertyElement(name = "stp_lv_art_kurz") val shortLectureType: String? = null,
         @PropertyElement(name = "stp_lv_art_name") val lectureType: String? = null,
-        @PropertyElement(name = "stp_lv_nr") val stp_lv_nr: String,  // TODO: Rename variables
+        @PropertyElement(name = "stp_lv_nr") val lectureId: String,  // TODO: Rename variables
         @PropertyElement(name = "stp_sp_nr") val stp_sp_nr: String,
         @PropertyElement(name = "stp_sp_sst") val stp_sp_sst: String? = null,
         @PropertyElement(name = "stp_sp_titel") val title: String,

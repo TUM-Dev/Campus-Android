@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
@@ -29,7 +30,7 @@ class CacheManager(private val context: Context) {
         try {
             TUMOnlineClient
                     .getInstance(context)
-                    .getCalendar(true)
+                    .getCalendar(CacheControl.NO_CACHE)
                     .execute()
         } catch (e: IOException) {
             Utils.log(e, "Error while loading calendar in CacheManager")
@@ -39,7 +40,7 @@ class CacheManager(private val context: Context) {
     private fun syncPersonalLectures() {
         TUMOnlineClient
                 .getInstance(context)
-                .getPersonalLectures(true)
+                .getPersonalLectures(CacheControl.NO_CACHE)
                 .enqueue(object : Callback<LecturesResponse> {
                     override fun onResponse(call: Call<LecturesResponse>,
                                             response: Response<LecturesResponse>) {

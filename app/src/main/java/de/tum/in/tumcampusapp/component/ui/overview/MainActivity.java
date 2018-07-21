@@ -186,7 +186,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     protected void onResume(){
         super.onResume();
 
-        if(Utils.getSettingBool(this, Const.REFRESH_CARDS, false)){
+        if (Utils.getSettingBool(this, Const.REFRESH_CARDS, false)){
             refreshCards();
             Utils.setSetting(this, Const.REFRESH_CARDS, false);
         }

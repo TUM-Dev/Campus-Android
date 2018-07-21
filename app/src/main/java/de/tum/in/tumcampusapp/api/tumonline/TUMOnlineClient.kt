@@ -30,10 +30,9 @@ import retrofit2.Retrofit
 
 class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
 
-    fun getCalendar(force: Boolean = false): Call<Events> {
-        val cacheControl = if (force) NO_CACHE else PUBLIC
+    fun getCalendar(cacheControl: CacheControl): Call<Events> {
         return apiService.getCalendar(
-                Const.CALENDAR_MONTHS_BEFORE, Const.CALENDAR_MONTHS_AFTER, cacheControl)
+                Const.CALENDAR_MONTHS_BEFORE, Const.CALENDAR_MONTHS_AFTER, cacheControl.header)
     }
 
     fun createEvent(calendarItem: CalendarItem, eventId: String?): Call<CreateEventResponse> {
@@ -47,45 +46,37 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
         return apiService.deleteCalendarEvent(eventId)
     }
 
-    fun getTuitionFeesStatus(force: Boolean = false): Call<TuitionList> {
-        val cacheControl = if (force) NO_CACHE else PUBLIC
-        return apiService.getTuitionFeesStatus(cacheControl)
+    fun getTuitionFeesStatus(cacheControl: CacheControl): Call<TuitionList> {
+        return apiService.getTuitionFeesStatus(cacheControl.header)
     }
 
-    fun getPersonalLectures(force: Boolean = false): Call<LecturesResponse> {
-        val cacheControl = if (force) NO_CACHE else PUBLIC
-        return apiService.getPersonalLectures(cacheControl)
+    fun getPersonalLectures(cacheControl: CacheControl): Call<LecturesResponse> {
+        return apiService.getPersonalLectures(cacheControl.header)
     }
 
-    fun getLectureDetails(id: String, force: Boolean = false): Call<LectureDetailsResponse> {
-        val cacheControl = if (force) NO_CACHE else PUBLIC
-        return apiService.getLectureDetails(id, cacheControl)
+    fun getLectureDetails(id: String, cacheControl: CacheControl): Call<LectureDetailsResponse> {
+        return apiService.getLectureDetails(id, cacheControl.header)
     }
 
-    fun getLectureAppointments(id: String, force: Boolean = false): Call<LectureAppointmentsResponse> {
-        val cacheControl = if (force) NO_CACHE else PUBLIC
-        return apiService.getLectureAppointments(id, cacheControl)
+    fun getLectureAppointments(id: String, cacheControl: CacheControl): Call<LectureAppointmentsResponse> {
+        return apiService.getLectureAppointments(id, cacheControl.header)
     }
 
     fun searchLectures(query: String): Call<LecturesResponse> {
         return apiService.searchLectures(query)
     }
 
-    fun getPersonDetails(id: String, force: Boolean = false): Call<Employee> {
-        val cacheControl = if (force) NO_CACHE else PUBLIC
-        return apiService.getPersonDetails(id, cacheControl)
+    fun getPersonDetails(id: String, cacheControl: CacheControl): Call<Employee> {
+        return apiService.getPersonDetails(id, cacheControl.header)
     }
 
     fun searchPerson(query: String): Call<PersonList> {
         return apiService.searchPerson(query)
     }
 
-    fun getGrades(force: Boolean = false): Call<ExamList> {
-        val cacheControl = if (force) NO_CACHE else PUBLIC
-        return apiService.getGrades(cacheControl)
+    fun getGrades(cacheControl: CacheControl): Call<ExamList> {
+        return apiService.getGrades(cacheControl.header)
     }
-
-    fun getTokenConfirmation(): Call<TokenConfirmation> = apiService.getTokenConfirmation()
 
     fun requestToken(username: String, tokenName: String): Call<AccessToken> {
         return apiService.requestToken(username, tokenName)
@@ -100,9 +91,6 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     companion object {
 
         private const val BASE_URL = "https://campus.tum.de/tumonline/"
-
-        private const val NO_CACHE = "no-cache"
-        private const val PUBLIC = "public"
 
         private var client: TUMOnlineClient? = null
 

@@ -24,8 +24,7 @@ data class ChatRoomDbRow(var room: Int = 0,
     companion object {
         fun fromLecture(lecture: Lecture): ChatRoomDbRow {
             return ChatRoomDbRow(-1, lecture.title, lecture.semesterName,
-                    lecture.semesterId, -1,
-                    lecture.stp_lv_nr.toInt(),
+                    lecture.semesterId, -1, lecture.lectureId.toInt(),
                     lecture.lecturers ?: "", 0, -1)
         }
     }

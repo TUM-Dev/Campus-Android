@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
@@ -40,15 +41,15 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         personId = person.id
         title = person.getFullName()
 
-        loadPersonDetails(person.id)
+        loadPersonDetails(person.id, CacheControl.USE_CACHE)
     }
 
     override fun onRefresh() {
-        loadPersonDetails(personId, true)
+        loadPersonDetails(personId, CacheControl.NO_CACHE)
     }
 
-    private fun loadPersonDetails(personId: String, force: Boolean = false) {
-        val apiCall = apiClient.getPersonDetails(personId, force)
+    private fun loadPersonDetails(personId: String, cacheControl: CacheControl) {
+        val apiCall = apiClient.getPersonDetails(personId, cacheControl)
         fetch(apiCall)
     }
 
@@ -83,8 +84,8 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
 
         AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_add_to_contacts)
-                .setPositiveButton(R.string.add, { _, _ -> addContact(employee) })
-                .setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
+                .setPositiveButton(R.string.add) { _, _ -> addContact(employee) }
+                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
                 .setIcon(R.drawable.ic_action_add_person_blue)
                 .show()
     }

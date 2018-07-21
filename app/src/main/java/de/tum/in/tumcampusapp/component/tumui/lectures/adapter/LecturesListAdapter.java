@@ -58,8 +58,9 @@ public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<Lecture>
         // if we have something to display - set for each lecture element
         if (lvItem != null) {
             holder.tvLectureName.setText(lvItem.getTitle());
-            holder.tvTypeSWSSemester.setText(String.format("%s - %s - %s SWS",
-                    lvItem.getLectureType(), lvItem.getSemesterId(), lvItem.getDuration()));
+            String details = context.getString(R.string.lecture_list_item_details_format_string,
+                    lvItem.getLectureType(), lvItem.getSemesterId(), lvItem.getDuration());
+            holder.tvTypeSWSSemester.setText(details);
             holder.tvDozent.setText(lvItem.getLecturers());
         }
 

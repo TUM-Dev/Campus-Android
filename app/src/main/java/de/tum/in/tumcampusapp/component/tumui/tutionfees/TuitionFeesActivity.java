@@ -13,6 +13,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
@@ -45,16 +46,16 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         informationTextView.setText(information);
         informationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-        refreshData(false);
+        refreshData(CacheControl.USE_CACHE);
     }
 
     @Override
     public void onRefresh() {
-        refreshData(true);
+        refreshData(CacheControl.NO_CACHE);
     }
 
-    private void refreshData(boolean force) {
-        Call<TuitionList> apiCall = apiClient.getTuitionFeesStatus(force);
+    private void refreshData(CacheControl cacheControl) {
+        Call<TuitionList> apiCall = apiClient.getTuitionFeesStatus(cacheControl);
         fetch(apiCall);
     }
 

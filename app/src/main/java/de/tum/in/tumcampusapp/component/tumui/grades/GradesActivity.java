@@ -40,6 +40,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.grades.model.Exam;
 import de.tum.in.tumcampusapp.component.tumui.grades.model.ExamList;
@@ -119,12 +120,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         tvAverageGrade = findViewById(R.id.avgGrade);
 
         isFetched = false;
-        loadGrades(false);
+        loadGrades(CacheControl.USE_CACHE);
     }
 
     @Override
     public void onRefresh() {
-        loadGrades(true);
+        loadGrades(CacheControl.NO_CACHE);
     }
 
     private void initPieChart(Map<String, Integer> gradeDistribution) {
@@ -377,8 +378,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         return true;
     }
 
-    private void loadGrades(boolean force) {
-        Call<ExamList> apiCall = apiClient.getGrades(force);
+    private void loadGrades(CacheControl cacheControl) {
+        Call<ExamList> apiCall = apiClient.getGrades(cacheControl);
         fetch(apiCall);
     }
 

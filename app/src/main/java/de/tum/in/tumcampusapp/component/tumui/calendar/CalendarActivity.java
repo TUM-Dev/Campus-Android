@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
@@ -118,16 +119,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
         calendarController = new CalendarController(this);
 
-        loadEvents(false);
+        loadEvents(CacheControl.USE_CACHE);
     }
 
     @Override
     public void onRefresh() {
-        loadEvents(true);
+        loadEvents(CacheControl.NO_CACHE);
     }
 
-    private void loadEvents(boolean force) {
-        Call<Events> apiCall = apiClient.getCalendar(force);
+    private void loadEvents(CacheControl cacheControl) {
+        Call<Events> apiCall = apiClient.getCalendar(cacheControl);
         fetch(apiCall);
     }
 
@@ -237,7 +238,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
                 showHourLimitFilterDialog();
                 return true;
             case R.id.action_update_calendar:
-                loadEvents(true);
+                loadEvents(CacheControl.NO_CACHE);
                 refreshWeekView();
                 return true;
             default:

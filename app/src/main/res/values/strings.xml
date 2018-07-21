@@ -613,4 +613,6 @@ Signature: %5$s</string>
 
     <string name="event_start_end_format_string" translatable="false">%1$s–%2$s</string>
     <string name="menu_with_long_type_format_string" translatable="false">%1$s (%2$s)</string>
+    <string name="lecture_details_format_string" translatable="false">%1$s - %2$s SWS</string>
+    <string name="lecture_list_item_details_format_string" translatable="false">%1$s - %2$s - %3$s SWS</string>
 </resources>

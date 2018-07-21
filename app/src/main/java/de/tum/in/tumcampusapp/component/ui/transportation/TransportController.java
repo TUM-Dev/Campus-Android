@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.transportation;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
 import com.google.common.base.Optional;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -344,7 +346,7 @@ public class TransportController implements ProvidesCard {
 
     @NotNull
     @Override
-    public List<Card> getCards(boolean force) {
+    public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
         if (!NetUtils.isConnected(mContext)) {
             return results;
