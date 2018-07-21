@@ -1,16 +1,20 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        xmlns:tools="http://schemas.android.com/tools"
-                                        android:id="@+id/drawer_layout"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
     <!-- The main content view -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <!-- The toolbar aka SupportActionBar -->
-        <include layout="@layout/toolbar"/>
-        <include layout="@layout/layout_no_movies"/>
+        <include layout="@layout/toolbar" />
+
+        <include layout="@layout/layout_no_movies" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -20,7 +24,7 @@
             <include
                 layout="@layout/layout_all_errors"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"/>
+                android:layout_height="fill_parent" />
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
@@ -33,12 +37,15 @@
                     android:id="@+id/pager_title_strip"
                     style="@style/SectionHeadline"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
             </android.support.v4.view.ViewPager>
 
         </LinearLayout>
 
     </FrameLayout>
+
     <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer"/>
+    <include layout="@layout/navigation_drawer" />
+
 </android.support.v4.widget.DrawerLayout>
