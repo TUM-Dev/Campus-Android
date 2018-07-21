@@ -32,3 +32,7 @@
 
 # Guava 20.0
 -dontwarn com.google.**
+
+# Guava 23.5
+-dontwarn afu.org.checkerframework.**
+-dontwarn org.checkerframework.** 
