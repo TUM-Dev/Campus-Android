@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Context;
-import android.support.v4.widget.SwipeRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +49,7 @@ public class EventsController implements ProvidesCard{
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 List<Event> events = response.body();
                 if (events == null) {
-                    events = new ArrayList<>();
+                    return;
                 }
                 addEvents(events);
             }
@@ -66,7 +65,7 @@ public class EventsController implements ProvidesCard{
             public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
                 List<Ticket> tickets = response.body();
                 if (tickets == null) {
-                    tickets = new ArrayList<>();
+                    return;
                 }
                 addTickets(tickets);
                 loadTicketTypesForTickets(tickets);
@@ -87,12 +86,12 @@ public class EventsController implements ProvidesCard{
         eventDao.cleanUp();
 
         // Load all events
-        TUMCabeClient.getInstance(context).getEvents(eventCallback);
+        TUMCabeClient.getInstance(context).fetchEvents(eventCallback);
 
         // Load all tickets
         try {
             if (Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class) != null) {
-                TUMCabeClient.getInstance(context).getTickets(context, ticketCallback);
+                TUMCabeClient.getInstance(context).fetchTickets(context, ticketCallback);
             }
         } catch (IOException e) {
             Utils.log(e);
@@ -102,14 +101,14 @@ public class EventsController implements ProvidesCard{
     private void loadTicketTypesForTickets(List<Ticket> tickets){
         // get ticket type information for all tickets
         for (Ticket ticket : tickets){
-            TUMCabeClient.getInstance(context).getTicketTypes(ticket.getEventId(),
+            TUMCabeClient.getInstance(context).fetchTicketTypes(ticket.getEventId(),
                     new Callback<List<TicketType>>(){
 
                         @Override
                         public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
                             List<TicketType> ticketTypes = response.body();
                             if (ticketTypes == null) {
-                                ticketTypes = new ArrayList<>();
+                                return;
                             }
                             // add found ticket types to database (needed in ShowTicketActivity)
                             addTicketTypes(ticketTypes);
