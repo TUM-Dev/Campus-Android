@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Optional;
@@ -21,12 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRow;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarRowSet;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -190,21 +192,20 @@ public class CalendarController implements ProvidesCard {
         return calendarDao.getCalendarItemByStartAndEndTime(startString, endString);
     }
 
-    public void importCalendar(CalendarRowSet myCalendarList) {
-
+    public void importCalendar(Events newEvents) {
         // Cleanup cache before importing
         removeCache();
 
-        // reading xml
-        List<CalendarRow> myCalendar = myCalendarList.getKalendarList();
-        for (CalendarRow row : myCalendar) {
-            // insert into database
+        // Import the new events
+        List<Event> events = newEvents.getEvents();
+        if (events != null) {
             try {
-                replaceIntoDb(row);
+                replaceIntoDb(events);
             } catch (Exception e) {
                 Utils.log(e);
             }
         }
+
         new SyncManager(mContext).replaceIntoDb(Const.SYNC_CALENDAR_IMPORT);
     }
 
@@ -215,18 +216,21 @@ public class CalendarController implements ProvidesCard {
         calendarDao.flush();
     }
 
-    private void replaceIntoDb(CalendarRow row) {
-        if (row.getNr()
-                .isEmpty()) {
-            throw new IllegalArgumentException("Invalid id.");
+    private void replaceIntoDb(List<Event> events) {
+        List<CalendarItem> items = new ArrayList<>();
+        for (Event event : events) {
+            if (event.getId() == null || event.getId().isEmpty()) {
+                throw new IllegalArgumentException("Invalid id.");
+            }
+
+            if (event.getTitle().isEmpty()) {
+                throw new IllegalArgumentException("Invalid lecture title.");
+            }
+
+            items.add(event.toCalendarItem());
         }
 
-        if (row.getTitle()
-                .isEmpty()) {
-            throw new IllegalArgumentException("Invalid lecture Title.");
-        }
-
-        calendarDao.insert(row.toCalendarItem());
+        calendarDao.insert(items.toArray(new CalendarItem[items.size()]));
     }
 
     /**
@@ -251,7 +255,7 @@ public class CalendarController implements ProvidesCard {
 
     @NotNull
     @Override
-    public List<Card> getCards() {
+    public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<CalendarItem> nextCalendarItems = getNextCalendarItems();
         List<Card> results = new ArrayList<>();
 

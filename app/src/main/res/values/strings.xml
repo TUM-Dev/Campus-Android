@@ -15,7 +15,7 @@
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
     <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
-
+    
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
@@ -37,20 +37,30 @@
     <string name="no_map_available">No map available</string>
     <string name="search_rooms">Search rooms</string>
 
-    <!-- Auxiliary -->
-    <string name="empty_string" translatable="false" />
-    <string name="error_fetching_tumonline">Error accessing TUMonline.\nPlease make sure your TUMonline-Access-Token has
-		been\nactivated and the corresponding rights are set.\n\n<b>Click here to retry.</b></string>
-    <string name="error_no_token_setup">No TUMonline-Access-Token was set.\nPlease set your TUMonline-Access-Token in the\n <i>Settings</i> screen to access TUMonline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
+    <!-- TUMonline errors -->
+    <string name="error_accessing_tumonline_header">Error accessing TUMonline</string>
+    <string name="error_accessing_tumonline_body">Please make sure your TUMonline access token has been activated and the corresponding rights are set.</string>
+
+    <string name="error_no_access_token_setup_header">No TUMonline access token was set</string>
+    <string name="error_no_access_token_setup_body">Please set your TUMonline access token in the <i>Settings</i> to access TUMonline features.</string>
+
     <string name="error_something_wrong">Sorry, something went wrong.</string>
     <string name="click_to_try_again"><b>Click here to retry.</b></string>
-    <string name="dialog_new_token">Your TUMonline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
-    <string name="error_lrz_wrong">Your TUM Identification is invalid</string>
-    <string name="access_token_wasnt_generated">TUMonline-Access-Token could not be generated</string>
-    <string name="dialog_access_token_invalid">TUMonline-Access-Token not enabled</string>
-    <string name="dialog_no_rights_function">No rights to access this function</string>
-    <string name="empty_result">The operation delivered a faulty result</string>
-    <string name="no_data_to_show">There is no data to show.</string>
+    <string name="error_access_token_already_set_generate_new">Your TUMonline access token is already set. If you generate a new token, the old one becomes useless.</string>
+    <string name="error_invalid_tum_id">Your TUM ID is invalid</string>
+    <string name="error_invalid_access_token">Your TUMonline access token is invalid.</string>
+    <string name="error_access_token_could_not_be_generated">Your TUMonline access token could not be generated.</string>
+    <string name="error_access_token_inactive">Your TUMonline access token is not enabled. Head to TUMonline to enable it.</string>
+    <string name="error_no_internet_connection">No Internet connection</string>
+    <string name="error_no_data_to_show">No data to show.</string>
+    <string name="error_no_rights_to_access_function">Your TUMonline access token doesn’t have the rights to access this function.</string>
+    <string name="error_request_limit_reached">You reached the request limit for TUMonline. Try again later.</string>
+    <string name="error_access_token_limit_reached">Token limit reached. You have delete an access token in TUMonline before you can continue.</string>
+    <string name="error_unknown">Unknown error.</string>
+    <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
+
+    <!-- Auxiliary -->
+    <string name="empty_string" translatable="false" />
 
     <!-- Exam/Grades -->
     <string name="average_grade">Average grade</string>
@@ -108,7 +118,7 @@
     <string name="licences_summary">Legal notes to licences</string>
 
     <!-- Startup Wizard -->
-    <string name="token_not_enabled">Not connected</string>
+    <string name="not_connected_to_tumonline">Not connected</string>
     <string name="startup_wizard_uppercase">TUMonline wizard</string>
     <string name="welcome_msg">In order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis ID has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
     <string name="button_skip">Skip</string>
@@ -308,8 +318,8 @@
     <string name="director">Director</string>
     <string name="actors">Actors</string>
     <string name="description">Description</string>
-    <string name="no_movies">Currently there are no movies.</string>
 
+    <string name="no_movies">No upcoming movies</string>
     <!-- Eduroam card -->
     <string name="eduroam" translatable="false">Eduroam</string>
     <string name="setup">Setup</string>
@@ -539,7 +549,6 @@ Signature: %5$s</string>
     <string name="edit_event_button">Edit</string>
     <string name="event_canceled">Canceled</string>
 
-    <string name="token_limit_reached">Token limit was reached (max 10). You have delete a Token in TUMonline before you can continue.</string>
     <string name="back">Back</string>
     <string name="tumonline_advantages">After the setup you can:\n\n
                                         &#8226; View your TUMonline calendar\n
@@ -595,6 +604,14 @@ Signature: %5$s</string>
     <string name="discard_changes_question">Discard your changes?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep editing</string>
+
+    <string name="retry">Retry</string>
+    <string name="updating_event">Updating event …</string>
+    <string name="open_settings">Open settings</string>
+    <string name="not_available">Not available</string>
+
     <string name="event_start_end_format_string" translatable="false">%1$s–%2$s</string>
     <string name="menu_with_long_type_format_string" translatable="false">%1$s (%2$s)</string>
+    <string name="lecture_details_format_string" translatable="false">%1$s - %2$s SWS</string>
+    <string name="lecture_list_item_details_format_string" translatable="false">%1$s - %2$s - %3$s SWS</string>
 </resources>

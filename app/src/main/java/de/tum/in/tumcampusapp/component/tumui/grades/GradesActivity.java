@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.graphics.drawable.Animatable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,11 +40,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.grades.model.Exam;
 import de.tum.in.tumcampusapp.component.tumui.grades.model.ExamList;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -62,7 +64,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                                                R.color.grade_5_0, R.color.grade_default};
 
     // exams data and list
-    private List<Exam> examList;
+    private List<Exam> exams;
     private String[] programIds;
 
     private StickyListHeadersListView lvGrades;
@@ -88,7 +90,42 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
 
     public GradesActivity() {
-        super(TUMOnlineConst.Companion.getEXAMS(), R.layout.activity_grades);
+        super(R.layout.activity_grades);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mMediumAnimationDuration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
+
+        // chart
+        barChart = findViewById(R.id.bar_chart);
+        pieChart = findViewById(R.id.pie_chart);
+        chartView = findViewById(R.id.charts);
+
+        showBarChartAfterRotate = savedInstanceState != null
+                && !savedInstanceState.getBoolean(SHOW_PIE_CHART, true);
+        if (showBarChartAfterRotate) {
+            if(barMenuItem != null){
+                barMenuItem.setVisible(false);
+                pieMenuItem.setVisible(true);
+            }
+            barChart.setVisibility(View.VISIBLE);
+            pieChart.setVisibility(View.GONE);
+        }
+
+        lvGrades = findViewById(R.id.lstGrades);
+        spFilter = findViewById(R.id.spFilter);
+        tvAverageGrade = findViewById(R.id.avgGrade);
+
+        isFetched = false;
+        loadGrades(CacheControl.USE_CACHE);
+    }
+
+    @Override
+    public void onRefresh() {
+        loadGrades(CacheControl.BYPASS_CACHE);
     }
 
     private void initPieChart(Map<String, Integer> gradeDistribution) {
@@ -189,8 +226,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         filters.add(getString(R.string.all_programs));
 
         // get all program ids from the results
-        for (int i = 0; i < examList.size(); i++) {
-            String item = examList.get(i)
+        for (int i = 0; i < exams.size(); i++) {
+            String item = exams.get(i)
                                   .getProgramID();
             if (!filters.contains(item)) {
                 filters.add(item);
@@ -220,11 +257,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                 List<Exam> examsToShow;
 
                 if (filter.equals(getString(R.string.all_programs))) {
-                    examsToShow = examList;
+                    examsToShow = exams;
                 } else {
                     // do filtering according to selected program
                     List<Exam> filteredExamList = new ArrayList<>();
-                    for (Exam exam : examList) {
+                    for (Exam exam : exams) {
                         if (exam.getProgramID()
                                 .equals(filter)) {
                             filteredExamList.add(exam);
@@ -246,6 +283,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * @param exams
      */
     private void showExams(List<Exam> exams) {
+        if (exams.isEmpty()) {
+            showError(R.string.no_grades);
+            return;
+        }
+
         lvGrades.setAdapter(new ExamListAdapter(
                 GradesActivity.this, exams));
 
@@ -258,40 +300,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         tvAverageGrade.setText(String.format(getResources().getConfiguration().locale, "%s: %.2f",
                                              getResources().getString(R.string.average_grade),
                                              calculateAverageGrade(exams)));
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mMediumAnimationDuration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
-
-        // chart
-        barChart = findViewById(R.id.bar_chart);
-        pieChart = findViewById(R.id.pie_chart);
-        chartView = findViewById(R.id.charts);
-
-        showBarChartAfterRotate = savedInstanceState != null
-                                          && !savedInstanceState.getBoolean(SHOW_PIE_CHART, true);
-        if (showBarChartAfterRotate) {
-            if(barMenuItem != null){
-                barMenuItem.setVisible(false);
-                pieMenuItem.setVisible(true);
-            }
-            barChart.setVisibility(View.VISIBLE);
-            pieChart.setVisibility(View.GONE);
-        }
-
-        lvGrades = findViewById(R.id.lstGrades);
-        spFilter = findViewById(R.id.spFilter);
-        tvAverageGrade = findViewById(R.id.avgGrade);
-
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeResources(R.color.color_primary, R.color.tum_A100, R.color.tum_A200);
-
-        isFetched = false;
-        requestFetch();
     }
 
     @Override
@@ -362,12 +370,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     }
 
     @Override
-    protected void requestFetch() {
-        super.requestFetch();
-        swipeRefreshLayout.setRefreshing(true);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_activity_grades, menu);
@@ -376,43 +378,28 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         return true;
     }
 
-    /**
-     * Handle the response by de-serializing it into model entities.
-     *
-     * @param rawResponse Raw text response
-     */
+    private void loadGrades(CacheControl cacheControl) {
+        Call<ExamList> apiCall = apiClient.getGrades(cacheControl);
+        fetch(apiCall);
+    }
+
     @Override
-    public void onFetch(ExamList rawResponse) {
-        showLoadingEnded();
+    protected void onDownloadSuccessful(@NonNull ExamList response) {
+        this.exams = response.getExams();
 
-        examList = rawResponse.getExams();
-
-        // initialize the program choice spinner
         initSpinner();
 
-        // enabling the Menu options after first fetch
+        // Enable the menu options after first successful fetch
         isFetched = true;
-        if(barMenuItem != null && pieMenuItem != null){
+        if (barMenuItem != null && pieMenuItem != null) {
             barMenuItem.setEnabled(true);
             pieMenuItem.setEnabled(true);
         }
 
-        showExams(examList);
+        showExams(exams);
 
-        // update the action bar to display the enabled menu options
-        this.invalidateOptionsMenu();
-        swipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onFetchError(String errorReason) {
-        super.onFetchError(errorReason);
-        Utils.log("Noten failed due to: " + errorReason);
-    }
-
-    @Override
-    public void onNoDataToShow() {
-        showError(R.string.no_grades);
+        // Update the action bar to display the enabled menu options
+        invalidateOptionsMenu();
     }
 
     @Override

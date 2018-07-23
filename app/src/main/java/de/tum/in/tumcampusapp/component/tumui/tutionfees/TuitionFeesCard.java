@@ -52,11 +52,11 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        if ("0".equals(mTuition.getSoll())) {
-            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemesterBez()));
+        if ("0".equals(mTuition.getAmount())) {
+            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemester()));
         } else {
-            notificationBuilder.setContentText(mTuition.getSoll() + "€\n" +
-                                               String.format(getContext().getString(R.string.reregister_todo), mTuition.getFrist()));
+            notificationBuilder.setContentText(mTuition.getAmount() + "€\n" +
+                    String.format(getContext().getString(R.string.reregister_todo), mTuition.getDeadline()));
         }
         notificationBuilder.setSmallIcon(R.drawable.ic_notification);
         notificationBuilder.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_money));
@@ -84,21 +84,19 @@ public class TuitionFeesCard extends NotificationAwareCard {
         TextView outstandingBalanceTextView =
                 viewHolder.itemView.findViewById(R.id.outstanding_balance_text_view);
 
-        if (mTuition.getSoll()
-                    .equals("0")) {
+        if (mTuition.isPaid()) {
             String placeholderText = getContext().getString(R.string.reregister_success);
-            String text = String.format(placeholderText, mTuition.getSemesterBez());
+            String text = String.format(placeholderText, mTuition.getSemester());
             reregisterInfoTextView.setText(text);
         } else {
-            DateTime date = DateTimeUtils.INSTANCE.getDate(mTuition.getFrist());
-            String dateText = DateTimeFormat.mediumDate()
-                                            .print(date);
+            DateTime date = mTuition.getDeadline();
+            String dateText = DateTimeFormat.mediumDate().print(date);
 
             String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
             reregisterInfoTextView.setText(text);
 
             String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
-            String balanceText = String.format(textWithPlaceholder, mTuition.getOutstandingBalanceText());
+            String balanceText = String.format(textWithPlaceholder, mTuition.getAmountText(getContext()));
             outstandingBalanceTextView.setText(balanceText);
             outstandingBalanceTextView.setVisibility(View.VISIBLE);
         }
@@ -106,19 +104,23 @@ public class TuitionFeesCard extends NotificationAwareCard {
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
-        String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
-        String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
+        String prevDeadline = prefs.getString(LAST_FEE_FRIST, "");
+        String prevAmount = prefs.getString(LAST_FEE_SOLL, Float.toString(mTuition.getAmount()));
 
         // If app gets started for the first time and fee is already paid don't annoy user
         // by showing him that he has been re-registered successfully
-        return !(prevFrist.isEmpty() && "0".equals(mTuition.getSoll())) &&
-               (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
+        String deadline = DateTimeUtils.INSTANCE.getDateString(mTuition.getDeadline());
+        String amount = Float.toString(mTuition.getAmount());
+        return !(prevDeadline.isEmpty() && mTuition.isPaid()) &&
+               (prevDeadline.compareTo(deadline) < 0 || prevAmount.compareTo(amount) > 0);
     }
 
     @Override
     public void discard(Editor editor) {
-        editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
-        editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
+        String deadline = DateTimeUtils.INSTANCE.getDateString(mTuition.getDeadline());
+        String amount = Float.toString(mTuition.getAmount());
+        editor.putString(LAST_FEE_FRIST, deadline);
+        editor.putString(LAST_FEE_SOLL, amount);
     }
 
     public void setTuition(Tuition tuition) {

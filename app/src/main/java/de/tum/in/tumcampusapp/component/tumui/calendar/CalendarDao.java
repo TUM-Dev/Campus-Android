@@ -55,7 +55,7 @@ public interface CalendarDao {
     void delete(String eventNr);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CalendarItem cal);
+    void insert(CalendarItem... cal);
 
     @Query("SELECT c.* " +
             "FROM calendar c LEFT JOIN room_locations r ON " +

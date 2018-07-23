@@ -130,6 +130,9 @@ object Const {
 
     const val KINO_DATE = "kinoDate"
 
+    const val CALENDAR_MONTHS_BEFORE = 2
+    const val CALENDAR_MONTHS_AFTER = 2
+
     const val PDF_TITLE = "pdfTitle"
     const val PDF_PATH = "pdfPath"
 
@@ -142,6 +145,8 @@ object Const {
     const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
 
     const val TUM_CAMPUS_URL = "http://campus.tum.de"
+
+    const val TUM_ONLINE_PROFILE_PICTURE_URL_FORMAT_STRING = "https://campus.tum.de/tumonline/visitenkarte.showImage?pPersonenGruppe=%s&pPersonenId=%s"
 
     const val CALENDAR_FILTER_CANCELED = "calendar_filter_canceled"
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN = "calendar_filter_hour_limit_min"

@@ -8,8 +8,6 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.Intent;
 
-import de.tum.in.tumcampusapp.api.tumonline.TumLockDao;
-import de.tum.in.tumcampusapp.api.tumonline.model.TumLock;
 import de.tum.in.tumcampusapp.component.other.general.NotificationDao;
 import de.tum.in.tumcampusapp.component.other.general.RecentsDao;
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
@@ -52,6 +50,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorit
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
 import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.database.migrations.Migration11to12;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
@@ -67,12 +66,11 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 11, entities = {
+@Database(version = 12, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
         Sync.class,
-        TumLock.class,
         BuildingToGps.class,
         Kino.class,
         ChatMessage.class,
@@ -100,7 +98,8 @@ public abstract class TcaDb extends RoomDatabase {
             new Migration3to4(),
             new Migration4to5(),
             new Migration5to6(),
-            new Migration6to7()
+            new Migration6to7(),
+            new Migration11to12()
     };
 
     private static TcaDb instance;
@@ -108,10 +107,10 @@ public abstract class TcaDb extends RoomDatabase {
     public static synchronized TcaDb getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
-                           .allowMainThreadQueries()
-                           .addMigrations(migrations)
-                           .fallbackToDestructiveMigration()
-                           .build();
+                    .allowMainThreadQueries()
+                    .addMigrations(migrations)
+                    .fallbackToDestructiveMigration()
+                    .build();
         }
         return instance;
     }
@@ -121,8 +120,6 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract CafeteriaMenuDao cafeteriaMenuDao();
 
     public abstract FavoriteDishDao favoriteDishDao();
-
-    public abstract TumLockDao tumLockDao();
 
     public abstract SyncDao syncDao();
 
@@ -179,8 +176,9 @@ public abstract class TcaDb extends RoomDatabase {
             c.stopService(new Intent(c, service));
         }
 
-        //Clear our cache table
-        CacheManager.clearCache(c);
+        // Clear our cache table
+        CacheManager cacheManager = new CacheManager(c);
+        cacheManager.clearCache();
 
         //Clear the db?
         //TODO remove this, as we want to keep the data
@@ -206,8 +204,6 @@ public abstract class TcaDb extends RoomDatabase {
         tdb.chatMessageDao()
            .removeCache();
         tdb.chatRoomDao()
-           .removeCache();
-        tdb.tumLockDao()
            .removeCache();
         tdb.facultyDao()
            .flush();
