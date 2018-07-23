@@ -19,12 +19,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
-import de.tum.in.tumcampusapp.api.studyrooms.StudyRoomsClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
-import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomsResponse;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -153,26 +152,24 @@ public class StudyRoomsActivity extends ProgressActivity
 
     private void loadStudyRooms() {
         showLoadingStart();
-        StudyRoomsClient
+        TUMCabeClient
                 .getInstance(this)
-                .getAll()
-                .enqueue(new Callback<StudyRoomsResponse>() {
+                .getStudyRoomGroups(new Callback<List<StudyRoomGroup>>() {
                     @Override
-                    public void onResponse(@NonNull Call<StudyRoomsResponse> call,
-                                           @NonNull Response<StudyRoomsResponse> response) {
-                        StudyRoomsResponse studyRoomsResponse = response.body();
-
-                        if (response.isSuccessful() && studyRoomsResponse != null) {
-                            onDownloadSuccessful(studyRoomsResponse);
+                    public void onResponse(@NonNull Call<List<StudyRoomGroup>> call,
+                                           @NonNull Response<List<StudyRoomGroup>> response) {
+                        List<StudyRoomGroup> groups = response.body();
+                        if (response.isSuccessful() && groups != null) {
+                            onDownloadSuccessful(groups);
                         } else {
                             showErrorLayout();
                         }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<StudyRoomsResponse> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<List<StudyRoomGroup>> call,
+                                          @NonNull Throwable t) {
                         Utils.log(t);
-
                         if (t instanceof NoNetworkConnectionException) {
                             showNoInternetLayout();
                         } else {
@@ -182,17 +179,17 @@ public class StudyRoomsActivity extends ProgressActivity
                 });
     }
 
-    private void onDownloadSuccessful(@NonNull StudyRoomsResponse response) {
+    private void onDownloadSuccessful(@NonNull List<StudyRoomGroup> groups) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> {
-            updateDatabase(response);
-            runOnUiThread(() -> displayStudyRooms(response.getGroups()));
+            updateDatabase(groups);
+            runOnUiThread(() -> displayStudyRooms(groups));
         });
     }
 
-    private void updateDatabase(@NonNull StudyRoomsResponse response) {
+    private void updateDatabase(@NonNull List<StudyRoomGroup> groups) {
         StudyRoomGroupManager studyRoomGroupManager = new StudyRoomGroupManager(this);
-        studyRoomGroupManager.updateDatabase(response);
+        studyRoomGroupManager.updateDatabase(groups);
     }
 
     private void displayStudyRooms(@NonNull List<StudyRoomGroup> studyRoomGroups) {

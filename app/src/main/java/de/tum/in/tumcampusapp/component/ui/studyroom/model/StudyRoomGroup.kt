@@ -11,15 +11,15 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "study_room_groups")
 data class StudyRoomGroup(
         @PrimaryKey
-        @SerializedName("nr")
+        @SerializedName("id")
         var id: Int = -1,
         @SerializedName("name")
         var name: String = "",
-        @SerializedName("detail")
+        @SerializedName("details")
         var details: String = "",
         @Ignore
-        @SerializedName("raeume")
-        var roomIds: List<Int> = emptyList()
+        @SerializedName("rooms")
+        var rooms: List<StudyRoom> = emptyList()
 ) : Comparable<StudyRoomGroup> {
 
     override fun toString() = name

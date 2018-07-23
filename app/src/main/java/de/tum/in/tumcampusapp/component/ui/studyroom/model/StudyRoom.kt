@@ -14,18 +14,19 @@ import org.joda.time.DateTime
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class StudyRoom(
         @PrimaryKey
-        @SerializedName("raum_nr")
+        @SerializedName("room_id")
         var id: Int = -1,
-        @SerializedName("raum_code")
+        @SerializedName("room_code")
         var code: String = "",
-        @SerializedName("raum_name")
+        @SerializedName("room_name")
         var name: String = "",
-        @SerializedName("gebaeude_name")
+        @SerializedName("building_name")
         var location: String = "",
         @ColumnInfo(name = "group_id")
+        @SerializedName("group_id")
         var studyRoomGroup: Int = -1,
         @ColumnInfo(name = "occupied_till")
-        @SerializedName("belegung_bis")
+        @SerializedName("occupied_until")
         var occupiedTill: DateTime = DateTime()
 ) : Comparable<StudyRoom> {
 

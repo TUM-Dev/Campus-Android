@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.studyroom
 
 import android.content.Context
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoom
-import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomsResponse
+import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup
 import de.tum.`in`.tumcampusapp.database.TcaDb
 
 /**
@@ -19,24 +19,15 @@ class StudyRoomGroupManager(context: Context) {
         groupsDao = db.studyRoomGroupDao()
     }
 
-    fun updateDatabase(response: StudyRoomsResponse) {
-        roomsDao.removeCache()
+    fun updateDatabase(groups: List<StudyRoomGroup>) {
         groupsDao.removeCache()
+        roomsDao.removeCache()
 
-        val groups = response.groups.toTypedArray()
-        groupsDao.insert(*groups)
-
-        val roomsById = response.rooms.associateBy { it.id }
+        groupsDao.insert(*groups.toTypedArray())
 
         groups.forEach { group ->
-            group.roomIds.forEach { roomId ->
-                val room = roomsById[roomId]
-                room?.let { it.studyRoomGroup = group.id }
-            }
+            roomsDao.insert(*group.rooms.toTypedArray())
         }
-
-        val rooms = roomsById.values.toTypedArray()
-        roomsDao.insert(*rooms)
 
         // TODO: Needed?
         // SyncManager(context).replaceIntoDb(this)

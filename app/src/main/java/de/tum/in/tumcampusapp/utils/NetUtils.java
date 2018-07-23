@@ -10,8 +10,6 @@ import com.google.common.base.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.app.Helper;
@@ -87,7 +85,6 @@ public class NetUtils {
         Response res = client.newCall(builder.build())
                              .execute();
         return Optional.fromNullable(res.body());
-
     }
 
     /**
@@ -118,38 +115,6 @@ public class NetUtils {
         } catch (IOException e) {
             Utils.log(e);
             return Optional.absent();
-        }
-
-    }
-
-    /**
-     * Download a file in the same thread.
-     * If file already exists the method returns immediately
-     * without downloading anything
-     *
-     * @param url    Download location
-     * @param target Target filename in local file system
-     * @throws IOException When the download failed
-     */
-    @Deprecated
-    public void downloadToFile(String url, String target) throws IOException {
-        File f = new File(target);
-        if (f.exists()) {
-            return;
-        }
-
-        File file = new File(target);
-        try (FileOutputStream out = new FileOutputStream(file)) {
-            Optional<ResponseBody> body = getOkHttpResponse(url);
-            if (!body.isPresent()) {
-                file.delete();
-                throw new IOException();
-            }
-            byte[] buffer = body.get()
-                                .bytes();
-
-            out.write(buffer, 0, buffer.length);
-            out.flush();
         }
     }
 

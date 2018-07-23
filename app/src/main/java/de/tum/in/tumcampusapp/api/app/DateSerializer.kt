@@ -27,14 +27,15 @@ class DateSerializer : JsonDeserializer<DateTime> {
 
     override fun deserialize(json: JsonElement?,
                              typeOfT: Type?, context: JsonDeserializationContext?): DateTime {
+        val value = json?.asString ?: return DateTime.now()
+
         dateFormats.forEach {
             try {
-                return it.parseDateTime(json?.asString)
+                return it.parseDateTime(value)
             } catch (ignored: Exception) {
             }
         }
 
-        throw JsonParseException("Unparseable date: \"${json?.asString.orEmpty()}\". " +
-                "Supported formats: ${Arrays.toString(formatStrings)}")
+        throw JsonParseException("Unparseable date: \"${value}\". Supported formats: ${Arrays.toString(formatStrings)}")
     }
 }
