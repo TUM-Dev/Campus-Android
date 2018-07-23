@@ -24,6 +24,7 @@ object NotificationScheduler {
             putExtra(Const.KEY_NOTIFICATION_ID, futureNotification.id)
             putExtra(Const.KEY_NOTIFICATION, futureNotification.notification)
         }
+
         return PendingIntent.getBroadcast(context,
                 futureNotification.id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
     }

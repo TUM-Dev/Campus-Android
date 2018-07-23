@@ -27,11 +27,10 @@ class TuitionFeesNotificationsProvider(
             return emptyList()
         }
 
-        val deadline = tuition.dueDate
-        val deadlineText = DateFormat.getDateInstance().format(deadline)
+        val deadline = DateFormat.getDateInstance().format(tuition.dueDate)
 
         val title = context.getString(R.string.tuition_fees)
-        val text = String.format(context.getString(R.string.reregister_todo), deadlineText)
+        val text = context.getString(R.string.reregister_todo, deadline)
 
         val notificationBuilder = getNotificationBuilder()
                 .setContentTitle(title)

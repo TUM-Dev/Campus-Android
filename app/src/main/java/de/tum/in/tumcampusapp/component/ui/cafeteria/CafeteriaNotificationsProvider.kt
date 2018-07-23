@@ -56,24 +56,21 @@ class CafeteriaNotificationsProvider(
                     val notificationBuilder = getSecondaryNotificationBuilder()
 
                     if (intent != null) {
-                        val pendingIntent = PendingIntent
-                                .getActivity(context, 0, intent, 0)
+                        val pendingIntent = PendingIntent.getActivity(
+                                context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                         notificationBuilder.setContentIntent(pendingIntent)
                     }
 
                     val inboxStyle = NotificationCompat.InboxStyle()
                     val expandedLines = menu.getNotificationLines(context)
-                    expandedLines.forEach { line ->
-                        inboxStyle.addLine(line)
-                    }
+                    expandedLines.forEach { inboxStyle.addLine(it) }
 
                     notificationBuilder
                             .setContentTitle(title)
                             .setContentText(text)
                             .setStyle(inboxStyle)
                             .setTimeoutAfter(cafeteria.notificationDuration)
-
-                    notificationBuilder.build()
+                            .build()
                 }
                 .mapIndexed { index, notification ->
                     val menuId = menus[index].id
@@ -82,15 +79,13 @@ class CafeteriaNotificationsProvider(
                 .toCollection(ArrayList())
 
         val inboxStyle = NotificationCompat.InboxStyle()
-        menus.forEach { menu ->
-            inboxStyle.addLine(menu.notificationTitle)
-        }
+        menus.forEach { inboxStyle.addLine(it.notificationTitle) }
 
         val title = context.getString(R.string.cafeteria)
         val text = DateTimeUtils.getDateString(cafeteria.nextMenuDate)
 
-        val pendingIntent = PendingIntent
-                .getActivity(context, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(
+                context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val summaryNotification = getNotificationBuilder()
                 .setContentTitle(title)
@@ -148,8 +143,7 @@ class CafeteriaNotificationsProvider(
          */
         fun store(notifications: List<AppNotification>) {
             val ids = notifications
-                    .map { it.id }
-                    .map { it.toString() }
+                    .map { it.id.toString() }
                     .toSet()
 
             sharedPrefs

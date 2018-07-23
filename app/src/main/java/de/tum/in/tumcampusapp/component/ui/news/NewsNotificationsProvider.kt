@@ -47,7 +47,8 @@ class NewsNotificationsProvider(context: Context,
 
                     val intent = newsItem.getIntent(context)
                     if (intent != null) {
-                        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+                        val pendingIntent = PendingIntent.getActivity(
+                                context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                         notificationBuilder.setContentIntent(pendingIntent)
                     }
 
@@ -60,12 +61,11 @@ class NewsNotificationsProvider(context: Context,
         val summaryText = "${notifications.size} new items"
 
         val inboxStyle = NotificationCompat.InboxStyle()
-        newsItems.forEach { newsItem ->
-            inboxStyle.addLine(newsItem.title)
-        }
+        newsItems.forEach { inboxStyle.addLine(it.title) }
 
         val intent = Intent(context, NewsActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(
+                context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val summaryNotification = getNotificationBuilder()
                 .setContentTitle(summaryTitle)

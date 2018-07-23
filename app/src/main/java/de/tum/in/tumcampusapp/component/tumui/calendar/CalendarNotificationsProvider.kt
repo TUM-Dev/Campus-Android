@@ -10,8 +10,9 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 
-class CalendarNotificationsProvider(context: Context,
-                                    private val lectures: List<CalendarItem>) : NotificationsProvider(context) {
+class CalendarNotificationsProvider(
+        context: Context,
+        private val lectures: List<CalendarItem>) : NotificationsProvider(context) {
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
@@ -23,19 +24,17 @@ class CalendarNotificationsProvider(context: Context,
 
     override fun getNotifications(): List<AppNotification> {
         val firstItem = lectures.firstOrNull() ?: return emptyList()
-        val firstItemStart = firstItem.eventStart
-        val firstItemEnd = firstItem.eventEnd
-        val time = DateTimeUtils.formatFutureTime(firstItemStart, context)
+        val time = DateTimeUtils.formatFutureTime(firstItem.eventStart, context)
 
         // Schedule the notification 15 minutes before the lecture
-        val notificationTime = firstItemStart.minusMinutes(TIME_BEFORE_LECTURE).millis
+        val notificationTime = firstItem.eventStart.minusMinutes(TIME_BEFORE_LECTURE).millis
 
         // Automatically remove the notification after the lecture finished
-        val notificationEnd = firstItemEnd.millis
+        val lectureDuration = firstItem.eventEnd.millis - firstItem.eventStart.millis
 
         val notification = getNotificationBuilder()
                 .setContentText("${firstItem.title}\n$time")
-                .setTimeoutAfter(notificationEnd - notificationTime)
+                .setTimeoutAfter(notificationTime + lectureDuration)
                 .build()
 
         return ArrayList<AppNotification>().apply {
