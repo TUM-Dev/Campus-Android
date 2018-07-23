@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 
 import org.joda.time.DateTime;
 
-import java.util.regex.Pattern;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
@@ -27,9 +25,6 @@ import de.tum.in.tumcampusapp.utils.Const;
 public class CafeteriaMenuCard extends Card {
 
     private static final String CAFETERIA_DATE = "cafeteria_date";
-
-    private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
-    private static final Pattern PATTERN = Pattern.compile("[0-9]");
 
     private CafeteriaWithMenus mCafeteria;
 

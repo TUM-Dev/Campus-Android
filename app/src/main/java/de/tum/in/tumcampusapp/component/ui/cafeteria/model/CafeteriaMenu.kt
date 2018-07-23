@@ -30,7 +30,7 @@ data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
                          var name: String = "") {
 
     private val formattedName: String
-        get() = COMPILE.matcher(name).replaceAll("").trim()
+        get() = REMOVE_PARENTHESES_PATTERN.matcher(name).replaceAll("").trim()
 
     val menuType: MenuType
         get() {
@@ -45,7 +45,7 @@ data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
 
     val notificationTitle: String
         get() {
-            return PATTERN
+            return REMOVE_DISH_ENUMERATION_PATTERN
                     .matcher(typeLong)
                     .replaceAll("")
                     .trim()
@@ -81,8 +81,8 @@ data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
 
     companion object {
 
-        private val COMPILE: Pattern = Pattern.compile("\\([^\\)]+\\)")
-        private val PATTERN: Pattern = Pattern.compile("[0-9]")
+        private val REMOVE_PARENTHESES_PATTERN: Pattern = Pattern.compile("\\([^\\)]+\\)")
+        private val REMOVE_DISH_ENUMERATION_PATTERN: Pattern = Pattern.compile("[0-9]")
 
     }
 
