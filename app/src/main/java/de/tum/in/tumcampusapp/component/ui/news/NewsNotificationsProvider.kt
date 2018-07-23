@@ -23,6 +23,12 @@ class NewsNotificationsProvider(context: Context,
                 .setColor(notificationColorAccent)
     }
 
+    /**
+     * Returns the [NotificationCompat.Builder] used for secondary notifications (notifications that
+     * are grouped under a summary notification.
+     *
+     * @return The secondary [NotificationCompat.Builder]
+     */
     private fun getSecondaryNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
                 .setAutoCancel(true)
@@ -38,23 +44,7 @@ class NewsNotificationsProvider(context: Context,
                 .newsSourcesDao()
 
         val notifications = newsItems
-                .map { newsItem ->
-                    val newsSource = newsSourcesDao.getNewsSource(newsItem.src.toInt())
-                    val notificationBuilder = getSecondaryNotificationBuilder()
-                            .setContentTitle(newsSource.title)
-                            .setContentText(newsItem.title)
-                            .setTicker(newsItem.title)
-
-                    val intent = newsItem.getIntent(context)
-                    if (intent != null) {
-                        val pendingIntent = PendingIntent.getActivity(
-                                context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                        notificationBuilder.setContentIntent(pendingIntent)
-                    }
-
-                    val notification = notificationBuilder.build()
-                    InstantNotification(newsItem.id.toInt() , notification)
-                }
+                .map { buildSecondaryNotification(it, newsSourcesDao) }
                 .toCollection(ArrayList())
 
         val summaryTitle = context.getString(R.string.news)
@@ -81,6 +71,32 @@ class NewsNotificationsProvider(context: Context,
         notifications.add(summaryAppNotification)
 
         return notifications
+    }
+
+    /**
+     * Returns an [AppNotification] for the provided [News] item.
+     *
+     * @param newsItem The [News] item of the notification
+     * @param newsSourcesDao The [NewsSourcesDao] used to retrieve information about the news source
+     * @return An [AppNotification]
+     */
+    private fun buildSecondaryNotification(newsItem: News,
+                                           newsSourcesDao: NewsSourcesDao): InstantNotification {
+        val newsSource = newsSourcesDao.getNewsSource(newsItem.src.toInt())
+        val notificationBuilder = getSecondaryNotificationBuilder()
+                .setContentTitle(newsSource.title)
+                .setContentText(newsItem.title)
+                .setTicker(newsItem.title)
+
+        val intent = newsItem.getIntent(context)
+        if (intent != null) {
+            val pendingIntent = PendingIntent.getActivity(
+                    context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            notificationBuilder.setContentIntent(pendingIntent)
+        }
+
+        val notification = notificationBuilder.build()
+        return InstantNotification(newsItem.id.toInt() , notification)
     }
 
     companion object {

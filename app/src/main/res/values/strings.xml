@@ -503,7 +503,7 @@ Signature: %5$s</string>
     <string name="show_chart">&#032;Show Chart</string>
 
     <string name="channel_general">General</string>
-    <string name="channel_description_general">Next lecture, news, tuition fees reminders</string>
+    <string name="channel_description_general">Next lecture, news and tuition fees reminders</string>
 
     <string name="channel_cafeteria">Cafeteria</string>
     <string name="channel_description_cafeteria">The day’s menu</string>

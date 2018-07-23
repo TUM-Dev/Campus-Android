@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.notifications.model
 
 import android.app.Notification
+import org.joda.time.DateTime
 
 /**
  * Holds a [Notification] that is scheduled to be displayed later.
@@ -11,4 +12,4 @@ import android.app.Notification
  */
 class FutureNotification(id: Int,
                          notification: Notification,
-                         val time: Long) : AppNotification(id, notification)
+                         val time: DateTime) : AppNotification(id, notification)

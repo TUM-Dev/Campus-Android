@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
@@ -9,10 +10,13 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationsProvider
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import org.joda.time.DateTime
 
 class CafeteriaNotificationsProvider(
         context: Context,
@@ -30,6 +34,12 @@ class CafeteriaNotificationsProvider(
                 .setColor(notificationColorAccent)
     }
 
+    /**
+     * Returns the [NotificationCompat.Builder] used for secondary notifications (notifications that
+     * are grouped under a summary notification.
+     *
+     * @return The secondary [NotificationCompat.Builder]
+     */
     private fun getSecondaryNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
                 .setAutoCancel(true)
@@ -49,33 +59,7 @@ class CafeteriaNotificationsProvider(
         notificationsStore.clearAll()
 
         val notifications = menus
-                .map { menu ->
-                    val title = menu.notificationTitle
-                    val text = menu.getNotificationText(context)
-
-                    val notificationBuilder = getSecondaryNotificationBuilder()
-
-                    if (intent != null) {
-                        val pendingIntent = PendingIntent.getActivity(
-                                context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                        notificationBuilder.setContentIntent(pendingIntent)
-                    }
-
-                    val inboxStyle = NotificationCompat.InboxStyle()
-                    val expandedLines = menu.getNotificationLines(context)
-                    expandedLines.forEach { inboxStyle.addLine(it) }
-
-                    notificationBuilder
-                            .setContentTitle(title)
-                            .setContentText(text)
-                            .setStyle(inboxStyle)
-                            .setTimeoutAfter(cafeteria.notificationDuration)
-                            .build()
-                }
-                .mapIndexed { index, notification ->
-                    val menuId = menus[index].id
-                    FutureNotification(menuId, notification, notificationTime)
-                }
+                .map { menu -> buildSecondaryNotification(menu, notificationTime, intent) }
                 .toCollection(ArrayList())
 
         val inboxStyle = NotificationCompat.InboxStyle()
@@ -106,6 +90,42 @@ class CafeteriaNotificationsProvider(
         notificationsStore.store(notifications)
 
         return notifications
+    }
+
+    /**
+     * Returns an [AppNotification] for the provided [CafeteriaMenu]. Potentially includes an
+     * [Intent] to open the [CafeteriaActivity].
+     *
+     * @param menu The [CafeteriaMenu] for which to build the notification
+     * @param notificationTime The time at which the notification should appear
+     * @param intent The [Intent] of the notification
+     * @return An [AppNotification]
+     */
+    private fun buildSecondaryNotification(
+            menu: CafeteriaMenu, notificationTime: DateTime, intent: Intent?): AppNotification {
+        val title = menu.notificationTitle
+        val text = menu.getNotificationText(context)
+
+        val notificationBuilder = getSecondaryNotificationBuilder()
+
+        if (intent != null) {
+            val pendingIntent = PendingIntent.getActivity(
+                    context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            notificationBuilder.setContentIntent(pendingIntent)
+        }
+
+        val inboxStyle = NotificationCompat.InboxStyle()
+        val expandedLines = menu.getNotificationLines(context)
+        expandedLines.forEach { inboxStyle.addLine(it) }
+
+        val notification = notificationBuilder
+                .setContentTitle(title)
+                .setContentText(text)
+                .setStyle(inboxStyle)
+                .setTimeoutAfter(cafeteria.notificationDuration)
+                .build()
+
+        return FutureNotification(menu.id, notification, notificationTime)
     }
 
     /**

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
@@ -56,7 +57,7 @@ public class TuitionFeeManager implements ProvidesCard, ProvidesNotifications {
     public List<AppNotification> getNotifications() {
         Tuition tuition = loadTuition(CacheControl.USE_CACHE);
         if (tuition == null) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
         NotificationsProvider provider = new TuitionFeesNotificationsProvider(mContext, tuition);

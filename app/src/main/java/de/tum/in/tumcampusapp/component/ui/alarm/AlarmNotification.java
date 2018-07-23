@@ -24,7 +24,6 @@ import java.security.spec.X509EncodedKeySpec;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.other.generic.GenericNotification;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmAlert;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;

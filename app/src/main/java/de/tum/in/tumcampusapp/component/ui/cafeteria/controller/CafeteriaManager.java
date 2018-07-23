@@ -84,7 +84,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
     public List<AppNotification> getNotifications() {
         CafeteriaWithMenus cafeteria = getCafeteriaWithMenus();
         if (cafeteria == null) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
         NotificationsProvider provider = new CafeteriaNotificationsProvider(mContext, cafeteria);

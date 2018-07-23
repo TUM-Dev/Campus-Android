@@ -2,10 +2,10 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import android.content.Context
-import java.util.regex.Pattern
 import android.arch.persistence.room.RoomWarnings
+import android.content.Context
 import org.joda.time.DateTime
+import java.util.regex.Pattern
 
 /**
  * CafeteriaMenu

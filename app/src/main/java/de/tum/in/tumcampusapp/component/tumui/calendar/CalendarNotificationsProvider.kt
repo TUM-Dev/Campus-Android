@@ -27,14 +27,14 @@ class CalendarNotificationsProvider(
         val time = DateTimeUtils.formatFutureTime(firstItem.eventStart, context)
 
         // Schedule the notification 15 minutes before the lecture
-        val notificationTime = firstItem.eventStart.minusMinutes(TIME_BEFORE_LECTURE).millis
+        val notificationTime = firstItem.eventStart.minusMinutes(TIME_BEFORE_LECTURE)
 
         // Automatically remove the notification after the lecture finished
         val lectureDuration = firstItem.eventEnd.millis - firstItem.eventStart.millis
 
         val notification = getNotificationBuilder()
                 .setContentText("${firstItem.title}\n$time")
-                .setTimeoutAfter(notificationTime + lectureDuration)
+                .setTimeoutAfter(notificationTime.millis + lectureDuration)
                 .build()
 
         return ArrayList<AppNotification>().apply {

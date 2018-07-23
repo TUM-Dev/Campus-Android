@@ -380,7 +380,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
     public List<AppNotification> getNotifications() {
         StationResult station = getClosestStation();
         if (station == null) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
         List<Departure> departures = getDeparturesFromExternal(mContext, station.getId());
@@ -389,8 +389,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
     }
 
     private StationResult getClosestStation() {
-        LocationManager locMan = new LocationManager(mContext);
-        return locMan.getStation();
+        return new LocationManager(mContext).getStation();
     }
 
     public static List<StationResult> getRecentStations(List<Recent> recents) {

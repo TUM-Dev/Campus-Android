@@ -35,13 +35,12 @@ data class CafeteriaWithMenus(val id: Int) {
                 putExtra(Const.CAFETERIA_ID, id)
             }
 
-    // We notify the user at 11am
-    val notificationTime: Long
+    // We notify the user when the cafeteria typically opens
+    val notificationTime: DateTime
         get() = nextMenuDate
                 .withHourOfDay(11)
                 .withMinuteOfHour(0)
                 .withSecondOfMinute(0)
-                .millis
 
     // Cafeteria is typically opened from 11 to 14 ~= 3 hours
     val notificationDuration: Long

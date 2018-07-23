@@ -18,7 +18,10 @@ object TuitionNotificationScheduler {
      * @param tuition The [Tuition] with its deadline
      * @return The timestamp of the next reminder in milliseconds
      */
-    fun getNextNotificationTime(tuition: Tuition): Long {
+    fun getNextNotificationTime(tuition: Tuition): DateTime {
+        // As the tuition fees deadline comes closer, we show notifications more often to make
+        // sure that the user does not miss it. We begin a month before the deadline, as this
+        // ensures that the user has enough time to make the transaction.
         val notificationTimes = arrayOf(
                 Days.days(30),
                 Days.days(14),
@@ -30,25 +33,23 @@ object TuitionNotificationScheduler {
                 Days.days(0)
         )
 
-        // The remaining days between the current date and the deadline
         val remainingDays = Days.daysBetween(DateTime.now(), tuition.deadline)
 
-        // Sort possible notification times descending and remove all bigger than the buffer
-        // Then, select the biggest number of days until the deadline
+        // Get the next occurring notification time
         val daysBeforeDeadline = notificationTimes
                 .filter { it <= remainingDays }
                 .sortedDescending()
                 .first()
                 .days
 
-        // Set the time of the notification to 10am
-        val notificationDate = tuition.deadline
+        // Setting the notification time at 10am seems like a good trade-off between making sure
+        // that the notification doesn't get lost in the morning flood of new notifications and
+        // giving the user enough time to make the transaction.
+        return tuition.deadline
                 .minusDays(daysBeforeDeadline)
                 .withHourOfDay(10)
                 .withMinuteOfHour(0)
                 .withSecondOfMinute(0)
-
-        return notificationDate.millis
     }
 
 }

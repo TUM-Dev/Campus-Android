@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
 import java.util.List;
 
@@ -56,13 +56,14 @@ public class MVVCard extends Card {
         }
     }
 
+    @Nullable
     @Override
     public Intent getIntent() {
         if (mDepartures.isEmpty()) {
             return null;
-        } else {
-            return mDepartures.get(0).getIntent(getContext(), mStation);
         }
+
+        return mDepartures.get(0).getIntent(getContext(), mStation);
     }
 
     @Override
