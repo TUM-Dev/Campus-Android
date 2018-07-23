@@ -54,7 +54,7 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 List<Event> events = response.body();
                 if (events == null){
-                    events = new ArrayList<>();
+                    return;
                 }
                 eventsController.addEvents(events);
                 loadEventsFromDatabase();
@@ -74,7 +74,7 @@ public class EventFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
                 List<Ticket> tickets = response.body();
                 if (tickets == null){
-                    tickets = new ArrayList<>();
+                    return;
                 }
                 eventsController.addTickets(tickets);
                 loadEventsFromDatabase();

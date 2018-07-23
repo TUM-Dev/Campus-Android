@@ -139,7 +139,12 @@ public class EventsController implements ProvidesCard{
         List<Ticket> tickets = ticketDao.getAll();
         List<Event> bookedEvents = new ArrayList<>();
         for (Ticket ticket : tickets) {
-            bookedEvents.add(getEventById(ticket.getEventId()));
+            Event event = getEventById(ticket.getEventId());
+            // the event may be null if the corresponding event of a ticket has already been deleted
+            // these event should not be returned
+            if (event != null){
+                bookedEvents.add(event);
+            }
         }
         return bookedEvents;
     }
