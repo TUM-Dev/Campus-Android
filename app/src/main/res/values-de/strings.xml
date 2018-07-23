@@ -34,17 +34,8 @@
     <string name="search_rooms">Suche nach Räumen</string>
 
     <!-- Auxiliary -->
-    <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMonline.\nBitte stelle sicher, dass das TUMonline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
-    <string name="error_no_token_setup">Kein TUMonline-Access-Token gefunden.\nBitte erzeuge ein TUMonline-Access-Token in den\n <i>Einstellungen</i>, um TUMonline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
     <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.</string>
     <string name="click_to_try_again"><b>Klicke hier zum Wiederholen.</b></string>
-    <string name="dialog_new_token">Dein TUMonline-Access-Token ist bereits gesetzt.\n\nKlicke auf <i>Ja</i> um ein neues zu generieren.\nDabei wird dein altes Token unbrauchbar.</string>
-    <string name="error_lrz_wrong">Deine TUM Kennung ist ungültig</string>
-    <string name="access_token_wasnt_generated">TUMonline-Access-Token konnte nicht erzeugt werden</string>
-    <string name="dialog_access_token_invalid">TUMonline-Access-Token nicht aktiviert</string>
-    <string name="dialog_no_rights_function">Keine Rechte für diese Funktion</string>
-    <string name="empty_result">Die Anfrage lieferte ein fehlerhaftes Ergebnis</string>
-    <string name="no_data_to_show">Es sind keine Daten vorhanden.</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Durchschnittsnote</string>
@@ -92,7 +83,7 @@
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
 
     <!-- Startup Wizard -->
-    <string name="token_not_enabled">Nicht angemeldet</string>
+    <string name="not_connected_to_tumonline">Nicht verbunden</string>
     <string name="startup_wizard_uppercase">TUMonline-Wizard</string>
     <string name="welcome_msg">Um den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
     <string name="button_skip">Überspringen</string>
@@ -117,7 +108,7 @@
     <string name="director">Regisseur</string>
     <string name="actors">Schauspieler</string>
     <string name="description">Beschreibung</string>
-    <string name="no_movies">Zur Zeit gibt es keine Filme.</string>
+    <string name="no_movies">Keine Filme in nächster Zeit</string>
 
     <!-- Navigation drawer -->
     <string name="drawer_open">Öffnen</string>
@@ -499,7 +490,6 @@ Signatur: %5$s</string>
     <string name="edit_event_button">Editieren</string>
     <string name="event_canceled">Gelöscht</string>
 
-    <string name="token_limit_reached">Token-Limit erreicht (10 Stück). Du musst ein Token in TUMonline löschen um fortzufahren.</string>
     <string name="back">Zurück</string>
 
     <string name="tumonline_advantages">Nach dem Einrichten von TUMonline kannst du:\n\n
@@ -559,4 +549,24 @@ Signatur: %5$s</string>
     <string name="discard_changes_question">Änderungen verwerfen?</string>
     <string name="discard">Verwerfen</string>
     <string name="keep_editing">Weiter bearbeiten</string>
+    <string name="updating_event">Aktualisiere Event …</string>
+    <string name="error_tum_online_unavailable">TUMonline ist aktuell nicht verfügbar.</string>
+    <string name="retry">Wiederholen</string>
+    <string name="open_settings">Einstellungen öffnen</string>
+    <string name="not_available">Nicht verfügbar</string>
+    <string name="error_accessing_tumonline_header">Fehler beim Zugriff auf TUMonline</string>
+    <string name="error_accessing_tumonline_body">Bitte stelle sicher, dass das TUMonline-Access-Token akzeptiert und die entsprechenden Rechte aktiviert wurden.</string>
+    <string name="error_no_access_token_setup_header">Kein TUMonline-Access-Token gefunden</string>
+    <string name="error_no_access_token_setup_body">Bitte erzeuge ein TUMonline-Access-Token in den Einstellungen, um TUMonline-Funktionen nutzen zu können.</string>
+    <string name="error_access_token_already_set_generate_new">Dein TUMonline-Access-Token ist bereits gesetzt. Wenn du ein neues Token generierst, wird das alte unbrauchbar.</string>
+    <string name="error_invalid_tum_id">Deine TUM-Kennung ist ungültig</string>
+    <string name="error_invalid_access_token">Dein TUMonline-Access-Token ist ungültig.</string>
+    <string name="error_access_token_could_not_be_generated">Dein TUMonline-Access-Token konnte nicht erstellt werden.</string>
+    <string name="error_access_token_inactive">Dein TUMonline-Access-Token ist noch inaktiv. Gehe zu TUMonline, um es zu aktivieren.</string>
+    <string name="error_no_internet_connection">Keine Internetverbindung</string>
+    <string name="error_no_data_to_show">Es sind keine Daten vorhanden.</string>
+    <string name="error_no_rights_to_access_function">Dein TUMonline-Access-Token hat nicht die nötigte Berechtigung, um diese Funktion zu nutzen.</string>
+    <string name="error_request_limit_reached">Du hast das Anfragelimit für TUMonline erreicht. Versuche es später erneut.</string>
+    <string name="error_access_token_limit_reached">Limit an Access-Tokens erreicht. Du musst einen Access-Token in TUMonline löschen, bevor du fortfahren kannst.</string>
+    <string name="error_unknown">Unbekannter Fehler.</string>
 </resources>

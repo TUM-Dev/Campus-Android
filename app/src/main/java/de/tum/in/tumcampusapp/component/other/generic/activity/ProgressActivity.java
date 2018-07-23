@@ -7,14 +7,12 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatButton;
 import android.view.View;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.settings.UserPreferencesActivity;
@@ -29,15 +27,14 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     /**
      * Default layouts for user interaction
      */
-    private LinearLayout allErrorsLayout;
-    private RelativeLayout errorLayout;
-    private RelativeLayout progressLayout;
-    private RelativeLayout noTokenLayout;
-    private RelativeLayout noInternetLayout;
-    private RelativeLayout failedTokenLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private FrameLayout allErrorsLayout;
+    protected LinearLayout errorLayout;
+    private FrameLayout progressLayout;
+    private LinearLayout noTokenLayout;
+    protected LinearLayout noInternetLayout;
+    protected LinearLayout failedTokenLayout;
+    protected SwipeRefreshLayout swipeRefreshLayout;
     private boolean registered;
-    private final Handler mLoadingHandler = new Handler();
 
     /**
      * Standard constructor for ProgressActivity.
@@ -63,6 +60,14 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         noInternetLayout = findViewById(R.id.no_internet_layout);
         failedTokenLayout = findViewById(R.id.failed_layout);
         noTokenLayout = findViewById(R.id.no_token_layout);
+
+        AppCompatButton retryButton = findViewById(R.id.retry_button);
+        if (retryButton != null) {
+            retryButton.setOnClickListener(v -> {
+                showLoadingStart();
+                onRefresh();
+            });
+        }
 
         // If content is refreshable setup the SwipeRefreshLayout
         if (swipeRefreshLayout != null) {
@@ -110,16 +115,8 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         allErrorsLayout.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Shows custom error layout.
-     * Hides any progress indicator.
-     *
-     * @param customErrorLayout Error layout
-     */
-    protected void showCustomErrorLayout(RelativeLayout customErrorLayout) {
-        showLoadingEnded();
-        customErrorLayout.setVisibility(View.VISIBLE);
-        allErrorsLayout.setVisibility(View.VISIBLE);
+    protected void showFailedTokenLayout(int resId) {
+        showFailedTokenLayout(getString(resId));
     }
 
     /**
@@ -131,8 +128,6 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         showLoadingEnded();
         failedTokenLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
-        Toast.makeText(this, error, Toast.LENGTH_LONG)
-             .show();
     }
 
     /**
@@ -140,6 +135,11 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      */
     protected void showNoTokenLayout() {
         showLoadingEnded();
+
+        AppCompatButton settingsButton = findViewById(R.id.open_settings_button);
+        settingsButton.setOnClickListener(v -> startActivity(
+                new Intent(this, UserPreferencesActivity.class)));
+
         noTokenLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
         Utils.log("No token was set");
@@ -154,9 +154,15 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         allErrorsLayout.setVisibility(View.VISIBLE);
         noInternetLayout.findViewById(R.id.progressWifi)
                         .setVisibility(View.INVISIBLE);
+
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        Button but = findViewById(R.id.button_enable_wifi);
-        but.setVisibility(wifi.isWifiEnabled() ? View.GONE : View.VISIBLE);
+        if (wifi == null) {
+            return;
+        }
+
+        AppCompatButton wifiButton = findViewById(R.id.button_enable_wifi);
+        wifiButton.setVisibility(wifi.isWifiEnabled() ? View.GONE : View.VISIBLE);
+
         registerReceiver(connectivityChangeReceiver,
                          new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         registered = true;
@@ -188,7 +194,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
             progressLayout.setVisibility(View.VISIBLE);
             allErrorsLayout.setVisibility(View.VISIBLE);
         } else {
-            mLoadingHandler.postDelayed(() -> swipeRefreshLayout.setRefreshing(true), 1000);
+            swipeRefreshLayout.setRefreshing(true);
         }
     }
 
@@ -197,7 +203,6 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * and setting {@link SwipeRefreshLayout}'s state to completed
      */
     protected void showLoadingEnded() {
-        mLoadingHandler.removeCallbacksAndMessages(null);
         failedTokenLayout.setVisibility(View.GONE);
         noInternetLayout.setVisibility(View.GONE);
         noTokenLayout.setVisibility(View.GONE);
@@ -233,29 +238,19 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * Override this if you use a {@link SwipeRefreshLayout}
      */
     @Override
-    public abstract void onRefresh();
-
-    /**
-     * Handle click on error_layout, failed_layout and no_token_layout
-     *
-     * @param view Handle of layout view
-     */
-    public void onClick(View view) {
-        int viewId = view.getId();
-        if (viewId == R.id.failed_layout || viewId == R.id.error_layout) {
-            onRefresh();
-        } else if (viewId == R.id.no_token_layout) {
-            startActivity(new Intent(this, UserPreferencesActivity.class));
-
-        }
+    public void onRefresh() {
+        // Subclasses can override this
     }
 
     /**
-     * Show wifi settingsPrefix
+     * Show wifi settings
      */
     public void onEnableWifi(View view) {
         WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifi.setWifiEnabled(true);
+        if (wifi != null) {
+            wifi.setWifiEnabled(true);
+        }
+
         noInternetLayout.findViewById(R.id.progressWifi)
                         .setVisibility(View.VISIBLE);
     }

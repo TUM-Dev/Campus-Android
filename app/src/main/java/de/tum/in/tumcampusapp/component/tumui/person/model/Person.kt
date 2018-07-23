@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
+import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
 import java.io.Serializable
 
 /**
@@ -12,14 +12,14 @@ import java.io.Serializable
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
-@Root(name = "row", strict = false)
-data class Person(@field:Element(name = "geschlecht", required = false)
+@Xml(name = "row")
+data class Person(@PropertyElement(name = "geschlecht")
                   var gender: String = "",
-                  @field:Element(name = "obfuscated_id")
+                  @PropertyElement(name = "obfuscated_id")
                   var id: String = "",
-                  @field:Element(name = "vorname")
+                  @PropertyElement(name = "vorname")
                   var name: String = "",
-                  @field:Element(name = "familienname")
+                  @PropertyElement(name = "familienname")
                   var surname: String = "") : Serializable {
 
     fun getFullName() = "$name $surname"

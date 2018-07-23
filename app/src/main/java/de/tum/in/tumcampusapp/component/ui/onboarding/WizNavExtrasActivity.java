@@ -69,7 +69,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
-        if (new AccessTokenManager(this).hasValidAccessToken()) {
+        if (AccessTokenManager.hasValidAccessToken(this)) {
             checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, false));
             checkSilentMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (checkSilentMode.isChecked() &&
@@ -85,7 +85,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Get handles to all UI elements
         groupChatMode = findViewById(R.id.chk_group_chat);
-        if (new AccessTokenManager(this).hasValidAccessToken()) {
+        if (AccessTokenManager.hasValidAccessToken(this)) {
             groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
         } else {
             groupChatMode.setChecked(false);

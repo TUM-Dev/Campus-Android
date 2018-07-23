@@ -1,11 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.other.locations.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
 
-@Root(name = "geo")
-data class Geo(@field:Element(required = false) var latitude: String = "0",
-               @field:Element(required = false) var longitude: String = "0") {
+@Xml(name = "geo")
+data class Geo(@PropertyElement var latitude: String = "0",
+               @PropertyElement var longitude: String = "0") {
 
     constructor(latitude: Double, longitude: Double) : this(
             latitude = java.lang.Double.toString(latitude),

@@ -6,26 +6,23 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineConst
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearchingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import de.tum.`in`.tumcampusapp.utils.Const
 import kotlinx.android.synthetic.main.activity_person_search.*
 
 /**
  * Activity to search for employees.
  */
 class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
-        TUMOnlineConst.PERSON_SEARCH,
         R.layout.activity_person_search,
         PersonSearchSuggestionProvider.AUTHORITY, 3
 ), PersonSearchResultsItemListener {
 
-    private val recentsDao = TcaDb.getInstance(this).recentsDao()
+    private lateinit var recentsDao: RecentsDao
 
     private val recents: List<Person>
         get() {
@@ -33,13 +30,17 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
             return recents.map { recent -> Person.fromRecent(recent) }
         }
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        recentsDao = TcaDb.getInstance(this).recentsDao()
 
         val layoutManager = LinearLayoutManager(this)
 
         personsRecyclerView.setHasFixedSize(true)
         personsRecyclerView.layoutManager = layoutManager
+
+        disableRefresh()
 
         val adapter = PersonSearchResultsAdapter(recents, this)
         if (adapter.itemCount == 0) {
@@ -64,30 +65,15 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
     }
 
     public override fun onStartSearch(query: String) {
-        requestHandler.setParameter(Const.PERSON_SEARCH_TUM_REQUEST_KEY, query)
-        requestFetch()
+        searchPerson(query)
     }
 
-    private fun showPersonDetails(person: Person) {
-        // Store selected person ID in bundle to get in in StaffDetailst
-        val bundle = Bundle().apply {
-            putSerializable("personObject", person)
-        }
-
-        // Show detailed information in new activity
-        val intent = Intent(this, PersonDetailsActivity::class.java).apply {
-            putExtras(bundle)
-        }
-        startActivity(intent)
+    private fun searchPerson(query: String) {
+        val apiCall = apiClient.searchPerson(query)
+        fetch(apiCall)
     }
 
-    /**
-     * Handles the XML response from TUMOnline by de-serializing the information
-     * to model entities.
-     *
-     * @param response The de-serialized data from TUMOnline.
-     */
-    public override fun onLoadFinished(response: PersonList) {
+    override fun onDownloadSuccessful(response: PersonList) {
         recentsHeader.visibility = View.GONE
 
         if (response.persons.size == 1) {
@@ -96,6 +82,13 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
             val adapter = personsRecyclerView.adapter as? PersonSearchResultsAdapter
             adapter?.update(response.persons)
         }
+    }
+
+    private fun showPersonDetails(person: Person) {
+        val intent = Intent(this, PersonDetailsActivity::class.java).apply {
+            putExtra("personObject", person)
+        }
+        startActivity(intent)
     }
 
 }

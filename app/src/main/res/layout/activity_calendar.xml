@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-    
+
     <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,33 +14,40 @@
         <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar" />
 
-        <LinearLayout
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
-            <include
-                layout="@layout/layout_all_errors"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
-
-            <com.alamkanak.weekview.WeekView
-                android:id="@+id/weekView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:columnGap="2dp"
-                app:dayBackgroundColor="#05000000"
-                app:eventTextColor="@android:color/white"
-                app:headerColumnBackground="#ffffffff"
-                app:headerColumnPadding="8dp"
-                app:headerRowPadding="12dp"
-                app:hourHeight="40dp"
-                app:noOfVisibleDays="1"
-                app:textSize="14sp"
-                app:todayBackgroundColor="#1848adff"
-                app:xScrollingSpeed="0.4" />
+                android:orientation="horizontal">
 
-        </LinearLayout>
+                <include
+                    layout="@layout/layout_all_errors"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.alamkanak.weekview.WeekView
+                    android:id="@+id/weekView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:columnGap="2dp"
+                    app:dayBackgroundColor="#05000000"
+                    app:eventTextColor="@android:color/white"
+                    app:headerColumnBackground="#ffffffff"
+                    app:headerColumnPadding="8dp"
+                    app:headerRowPadding="12dp"
+                    app:hourHeight="40dp"
+                    app:noOfVisibleDays="1"
+                    app:textSize="14sp"
+                    app:todayBackgroundColor="#1848adff"
+                    app:xScrollingSpeed="0.4" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

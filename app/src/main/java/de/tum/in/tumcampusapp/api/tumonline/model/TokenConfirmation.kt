@@ -1,10 +1,10 @@
 package de.tum.`in`.tumcampusapp.api.tumonline.model
 
-import org.simpleframework.xml.Root
-import org.simpleframework.xml.Text
+import com.tickaroo.tikxml.annotation.TextContent
+import com.tickaroo.tikxml.annotation.Xml
 
-@Root(name = "confirmed")
-data class TokenConfirmation(@field:Text var confirmed: String = "false") {
+@Xml(name = "confirmed")
+data class TokenConfirmation(@TextContent val confirmed: String) {
     val isConfirmed: Boolean
         get() = "true" == confirmed
 }

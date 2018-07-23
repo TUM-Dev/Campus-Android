@@ -1,15 +1,20 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
-import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
+import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Generic class which handles all basic tasks to communicate with TUMOnline and
@@ -18,17 +23,9 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * TUMOnline and implements a rich user feedback with error progress and token
  * related layouts. Generic class parameter specifies the type of data returned by TumOnline.
  */
-public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching implements TUMOnlineRequestFetchListener<T> {
+public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching {
 
-    /**
-     * The method which should be invoked by the TUmOnline Fetcher
-     */
-    private final TUMOnlineConst<T> method;
-
-    /**
-     * Default layouts for user interaction
-     */
-    protected TUMOnlineRequest<T> requestHandler;
+    protected final TUMOnlineClient apiClient;
 
     /**
      * Standard constructor for ActivityForSearchingTumOnline.
@@ -36,89 +33,89 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * If the Activity should support Pull-To-Refresh it can also contain a
      * {@link SwipeRefreshLayout} named ptr_layout
      *
-     * @param method   A identifier specifying what kind of data should be fetched from TumOnline
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      * @param auth     Authority for search suggestions declared in manifest file
      * @param minLen   Minimum text length that has to be entered by the user before a search quest can be submitted
      */
-    public ActivityForSearchingTumOnline(TUMOnlineConst<T> method, int layoutId, String auth, int minLen) {
+    public ActivityForSearchingTumOnline(int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);
-        this.method = method;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        requestHandler = new TUMOnlineRequest<>(method, this, true);
-    }
-
-    /**
-     * Starts fetching data from TumOnline in background
-     * {@link #onLoadFinished(Object)} gets called if data was fetched successfully.
-     * If an error occurred it is handled by {@link ActivityForSearchingTumOnline}.
-     */
-    protected void requestFetch() {
-        requestFetch(false);
-    }
-
-    /**
-     * Starts fetching data from TumOnline in background
-     * {@link #onLoadFinished(Object)} gets called if data was fetched successfully.
-     * If an error occurred it is handled by {@link ActivityForSearchingTumOnline}.
-     *
-     * @param force force reload
-     */
-    void requestFetch(boolean force) {
-        String accessToken = PreferenceManager.getDefaultSharedPreferences(this)
-                                              .getString(Const.ACCESS_TOKEN, null);
-        if (accessToken == null) {
-            showNoTokenLayout();
-            return;
-        }
-        Utils.logv("TUMOnline token is <" + accessToken + ">");
-        showLoadingStart();
-        requestHandler.setForce(force);
-        requestHandler.fetchInteractive(this, this);
-
-    }
-
-    @Override
-    public final void onFetch(T result) {
-        showLoadingEnded();
-
-        onLoadFinished(result);
-    }
-
-    /**
-     * Gets called when fetching data from TumOnline was successful
-     *
-     * @param result Data from TumOnline
-     */
-    protected abstract void onLoadFinished(T result);
-
-    @Override
-    public void onNoInternetError() {
-        showNoInternetLayout();
-    }
-
-    @Override
-    public void onFetchCancelled() {
-        finish();
-    }
-
-    @Override
-    public void onFetchError(String errorReason) {
-        showFailedTokenLayout(errorReason);
+        apiClient = TUMOnlineClient.getInstance(this);
     }
 
     @Override
     public void onRefresh() {
-        requestFetch(true);
+        // Subclasses can override this method
     }
 
-    @Override
-    public void onNoDataToShow() {
-        showError(R.string.no_data_to_show);
+    /**
+     * Fetches a call from TUMonline and uses the provided listener if the request was successful.
+     *
+     * @param call The {@link Call} to fetch
+     */
+    protected final void fetch(Call<T> call) {
+        showLoadingStart();
+        call.enqueue(new Callback<T>() {
+            @Override
+            public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+                T body = response.body();
+                if (response.isSuccessful() && body != null) {
+                    onDownloadSuccessful(body);
+                } else if (response.isSuccessful() && body == null) {
+                    onEmptyDownloadResponse();
+                } else {
+                    onDownloadUnsuccessful(response.code());
+                }
+                showLoadingEnded();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                onDownloadFailure(t);
+            }
+        });
     }
+
+    protected abstract void onDownloadSuccessful(@NonNull T body);
+
+    /**
+     * Called if the response from the API call is successful, but empty.
+     */
+    protected final void onEmptyDownloadResponse() {
+        showError(R.string.error_no_data_to_show);
+    }
+
+    /**
+     * Called when a response is received, but that response is not successful. Displays the
+     * appropriate error message, either in an error layout, or as a dialog or Snackbar.
+     * @param statusCode The HTTP status code of the response
+     */
+    protected final void onDownloadUnsuccessful(int statusCode) {
+        if (statusCode == 503) {
+            // The service is unavailable
+            showError(R.string.error_tum_online_unavailable);
+        } else {
+            showError(R.string.error_unknown);
+        }
+    }
+
+    protected final void onDownloadFailure(@NonNull Throwable throwable) {
+        Utils.log(throwable);
+
+        if (throwable instanceof NoNetworkConnectionException) {
+            showNoInternetLayout();
+        } else if (throwable instanceof InactiveTokenException) {
+            showFailedTokenLayout(R.string.error_access_token_inactive);
+        } else if (throwable instanceof InvalidTokenException) {
+            showFailedTokenLayout(R.string.error_invalid_access_token);
+        } else if (throwable instanceof MissingPermissionException) {
+            showFailedTokenLayout(R.string.error_no_rights_to_access_function);
+        } else if (throwable instanceof TokenLimitReachedException) {
+            showFailedTokenLayout(R.string.error_access_token_limit_reached);
+        } else if (throwable instanceof RequestLimitReachedException) {
+            showFailedTokenLayout(R.string.error_request_limit_reached);
+        } else {
+            showError(R.string.error_unknown);
+        }
+    }
+
 }

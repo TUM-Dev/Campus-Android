@@ -1,9 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
 
-@Root(name = "row")
-data class ObfuscatedIds(@field:Element(required = false) var studierende: String = "",
-                         @field:Element(required = false) var bedienstete: String = "",
-                         @field:Element(required = false) var extern: String = "")
+@Xml(name = "obfuscated_ids")
+data class ObfuscatedIds(@PropertyElement var studierende: String = "",
+                         @PropertyElement var bedienstete: String = "",
+                         @PropertyElement var extern: String = "")

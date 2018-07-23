@@ -1,37 +1,37 @@
 package de.tum.`in`.tumcampusapp.component.other.departments.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
 
 /**
  * Model for the organisation details
  * Information about the organisation
  */
-@Root(name = "row")
+@Xml(name = "row")
 data class OrgDetailsItem(
-        @field:Element(name = "nr")
+        @PropertyElement(name = "nr")
         var id: String = "",
-        @field:Element(name = "name")
+        @PropertyElement(name = "name")
         var name: String = "",
-        @field:Element(name = "zusatz_info_name", required = false)
+        @PropertyElement(name = "zusatz_info_name")
         var additionalInfoCaption: String = "",
-        @field:Element(name = "zusatz_info", required = false)
+        @PropertyElement(name = "zusatz_info")
         var additionalInfoText: String = "",
-        @field:Element(name = "kennung")
+        @PropertyElement(name = "kennung")
         var code: String = "", // Organisation Code, e.g. "TUZESSB"
-        @field:Element(name = "email_adresse", required = false)
+        @PropertyElement(name = "email_adresse")
         var contactEmail: String = "",
-        @field:Element(name = "fax_nummer", required = false)
+        @PropertyElement(name = "fax_nummer")
         var contactFax: String = "", // Fax Number
-        @field:Element(name = "sekretariat_info", required = false)
+        @PropertyElement(name = "sekretariat_info")
         var contactLocality: String = "", // Town, to which the organisation belongs to
-        @field:Element(name = "www_homepage", required = false)
+        @PropertyElement(name = "www_homepage")
         var contactLocationURL: String = "", // URL to a Google Maps Site containing the
-        @field:Element(name = "ansprechpartner", required = false)
+        @PropertyElement(name = "ansprechpartner")
         var contactName: String = "",
-        @field:Element(name = "adresse_text", required = false)
+        @PropertyElement(name = "adresse_text")
         var contactStreet: String = "", // Street and Street number of the Organisation
-        @field:Element(name = "telefon_nummer", required = false)
+        @PropertyElement(name = "telefon_nummer")
         var contactTelephone: String = "", // Phone Number, usually to the secretary of the organisation
-        @field:Element(name = "bibliothek_info", required = false)
-        private var contactAdditionalInfo: String = "")
+        @PropertyElement(name = "bibliothek_info")
+        var contactAdditionalInfo: String = "")

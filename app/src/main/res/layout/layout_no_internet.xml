@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/no_internet_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:onClick="onClick">
-
-    <TextView
-        android:id="@+id/no_internet_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/no_internet_image"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="@string/no_internet_connection"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/no_internet_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:onClick="onClick"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/no_internet_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:alpha="0.5"
-        app:srcCompat="@drawable/ic_no_wifi"
-        tools:ignore="UnusedAttribute"/>
+        app:srcCompat="@drawable/ic_no_wifi" />
 
-    <Button
-        android:id="@+id/button_enable_wifi"
-        style="@style/FlatButton"
-        android:layout_below="@id/no_internet_text"
-        android:layout_centerHorizontal="true"
-        android:onClick="onEnableWifi"
-        android:text="@string/enable_wifi"/>
-
-    <ProgressBar
-        android:id="@+id/progressWifi"
+    <TextView
+        android:id="@+id/no_internet_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/no_internet_image"
-        android:layout_alignLeft="@id/no_internet_image"
-        android:layout_alignRight="@id/no_internet_image"
-        android:layout_alignStart="@id/no_internet_image"
-        android:layout_below="@id/button_enable_wifi"
-        android:layout_marginTop="5dp"
-        android:visibility="invisible"/>
-</RelativeLayout>
+        android:layout_marginTop="@dimen/material_small_padding"
+        android:gravity="center"
+        android:text="@string/no_internet_connection"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/material_default_padding">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_enable_wifi"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onEnableWifi"
+            android:text="@string/enable_wifi"
+            android:textColor="@color/color_primary" />
+
+        <ProgressBar
+            android:id="@+id/progressWifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
+
+    </FrameLayout>
+
+</LinearLayout>
