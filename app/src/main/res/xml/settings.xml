@@ -122,11 +122,6 @@
                     android:key="card_mvv_start"
                     android:title="@string/startpage"/>
 
-                <android.support.v7.preference.CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="card_mvv_phone"
-                    android:title="@string/notification"/>
-
             </android.support.v7.preference.PreferenceCategory>
 
             <android.support.v7.preference.PreferenceCategory android:title="@string/default_station">

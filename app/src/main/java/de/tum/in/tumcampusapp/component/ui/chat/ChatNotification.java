@@ -52,8 +52,8 @@ public class ChatNotification extends GenericNotification implements ChatMessage
 
     private final ChatMessageDao chatMessageDao;
 
-    public ChatNotification(Bundle extras, Context context, int notfication) {
-        super(context, 1, notfication, true);
+    public ChatNotification(Bundle extras, Context context, int notification) {
+        super(context, 1, notification, true);
         chatMessageDao = TcaDb.getInstance(context)
                               .chatMessageDao();
 
@@ -78,8 +78,8 @@ public class ChatNotification extends GenericNotification implements ChatMessage
         }
     }
 
-    public ChatNotification(String payload, Context context, int notfication) {
-        super(context, 1, notfication, true);
+    public ChatNotification(String payload, Context context, int notification) {
+        super(context, 1, notification, true);
         chatMessageDao = TcaDb.getInstance(context)
                               .chatMessageDao();
 
