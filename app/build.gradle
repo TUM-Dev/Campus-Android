@@ -80,6 +80,7 @@ android {
 
 def androidSupportVersion = '27.1.1'
 def retrofitVersion = '2.3.0'
+def tikXmlVersion='0.8.13'
 
 configurations.all {
     resolutionStrategy {
@@ -116,17 +117,20 @@ dependencies {
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 
     // Helpers
+
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'net.danlew:android.joda:2.9.9.4'
-    implementation('org.simpleframework:simple-xml:2.7.1') {
-        exclude group: 'stax', module: 'stax-api'
-        exclude group: 'xpp3', module: 'xpp3'
-    }
+
+    // XML Parsing
+    implementation "com.tickaroo.tikxml:annotation:$tikXmlVersion"
+    implementation "com.tickaroo.tikxml:core:$tikXmlVersion"
+    kapt "com.tickaroo.tikxml:processor:$tikXmlVersion"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
     implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.1'
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 
     // Transport
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
@@ -134,10 +138,11 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "com.tickaroo.tikxml:retrofit-converter:$tikXmlVersion"
 
     // UI
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
-    implementation 'com.github.chrisbanes:PhotoView:2.1.3'
+    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'

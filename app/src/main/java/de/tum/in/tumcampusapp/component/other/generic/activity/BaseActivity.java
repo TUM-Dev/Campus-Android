@@ -12,14 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.common.base.Optional;
+import com.squareup.picasso.Picasso;
+
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.component.other.generic.drawer.DrawerMenuHelper;
-import de.tum.in.tumcampusapp.component.tumui.person.model.Employee;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -74,7 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             TextView emailText = headerView.findViewById(R.id.emailTextView);
 
             nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
-                                              getString(R.string.token_not_enabled)));
+                                              getString(R.string.not_connected_to_tumonline)));
 
             StringBuffer email = new StringBuffer(Utils.getSetting(this, Const.LRZ_ID, ""));
             if (email.toString().isEmpty()) {
@@ -140,26 +139,20 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void fetchProfilePicture() {
         String id = Utils.getSetting(this, Const.TUMO_PIDENT_NR, "");
-        if (id.isEmpty()) {
+        String[] parts = id.split("\\*");
+        if (parts.length != 2) {
             return;
         }
 
-        final TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getPERSON_DETAILS(), this, true);
-        request.setParameter("pIdentNr", id);
+        String group = parts[0];
+        String personId = parts[1];
+        String url = String.format(Locale.getDefault(),
+                Const.TUM_ONLINE_PROFILE_PICTURE_URL_FORMAT_STRING, group, personId);
 
-        new Thread(() -> {
-            final Optional<Employee> result = request.fetch();
-            if (!result.isPresent()) {
-                return;
-            }
-            runOnUiThread(() -> {
-                CircleImageView picture = headerView.findViewById(R.id.profileImageView);
-                if (result.get()
-                          .getImage() != null) {
-                    picture.setImageBitmap(result.get()
-                                                 .getImage());
-                }
-            });
-        }).start();
+        CircleImageView imageView = headerView.findViewById(R.id.profileImageView);
+
+        Picasso.get()
+                .load(url)
+                .into(imageView);
     }
 }

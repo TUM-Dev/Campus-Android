@@ -14,7 +14,6 @@ import java.util.List;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
@@ -84,7 +83,8 @@ public class StudyRoomGroupManager {
     }
 
     public void downloadFromExternal() throws JSONException {
-        Optional<JSONObject> jsonObject = new NetUtils(mContext).downloadJsonObject(STUDYROOM_URL, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+        Optional<JSONObject> jsonObject =
+                new NetUtils(mContext).downloadJsonObject(STUDYROOM_URL, 0, true);
         if (!jsonObject.isPresent()) {
             return;
         }

@@ -21,8 +21,7 @@ object AppNotificationsManager {
 
     private fun getProviders(context: Context): List<ProvidesNotifications> {
         return ArrayList<ProvidesNotifications>().apply {
-            val tokenManager = AccessTokenManager(context)
-            if (tokenManager.hasValidAccessToken()) {
+            if (AccessTokenManager.hasValidAccessToken(context)) {
                 add(CalendarController(context))
                 add(TuitionFeeManager(context))
             }

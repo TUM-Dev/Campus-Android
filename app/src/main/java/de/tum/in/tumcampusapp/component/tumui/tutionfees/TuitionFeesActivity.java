@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.tumui.tutionfees;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -12,13 +13,14 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
+import retrofit2.Call;
 
 /**
- * Activity to show the user's tuition ; based on grades.java / quick solution
+ * Activity to show the user's tuition fees status
  */
 public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionList> {
 
@@ -27,7 +29,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
     private TextView semesterTextView;
 
     public TuitionFeesActivity() {
-        super(TUMOnlineConst.TUITION_FEE_STATUS, R.layout.activity_tuitionfees);
+        super(R.layout.activity_tuitionfees);
     }
 
     @Override
@@ -44,29 +46,33 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         informationTextView.setText(information);
         informationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-        requestFetch();
+        refreshData(CacheControl.USE_CACHE);
     }
 
-    /**
-     * Handle the response by de-serializing it into model entities.
-     *
-     * @param tuitionList TUMOnline response
-     */
     @Override
-    public void onFetch(TuitionList tuitionList) {
-        Tuition tuition = tuitionList.getTuitions().get(0);
+    public void onRefresh() {
+        refreshData(CacheControl.BYPASS_CACHE);
+    }
 
-        String amountText = tuition.getOutstandingBalanceText();
+    private void refreshData(CacheControl cacheControl) {
+        Call<TuitionList> apiCall = apiClient.getTuitionFeesStatus(cacheControl);
+        fetch(apiCall);
+    }
+
+    @Override
+    protected void onDownloadSuccessful(@NonNull TuitionList response) {
+        Tuition tuition = response.getTuitions().get(0);
+
+        String amountText = tuition.getAmountText(this);
         amountTextView.setText(amountText);
 
-        DateTime deadline = tuitionList.getTuitions().get(0).getDueDate();
+        DateTime deadline = tuition.getDeadline();
         deadlineTextView.setText(DateTimeFormat.longDate().print(deadline));
-        semesterTextView.setText(tuitionList.getTuitions()
-                .get(0)
-                .getSemesterBez()
-                .toUpperCase(Locale.getDefault()));
 
-        if (tuition.getOutstandingBalance() == 0) {
+        String semester = tuition.getSemester().toUpperCase(Locale.getDefault());
+        semesterTextView.setText(semester);
+
+        if (tuition.isPaid()) {
             amountTextView.setTextColor(getResources().getColor(R.color.sections_green));
         } else {
             // check if the deadline is less than a week from now
@@ -77,7 +83,6 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
                 amountTextView.setTextColor(getResources().getColor(R.color.black));
             }
         }
-
-        showLoadingEnded();
     }
+
 }

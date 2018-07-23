@@ -9,7 +9,6 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.Tuition
 import de.tum.`in`.tumcampusapp.utils.Const
-import java.text.DateFormat
 import java.util.*
 
 class TuitionFeesNotificationsProvider(
@@ -23,14 +22,12 @@ class TuitionFeesNotificationsProvider(
     }
 
     override fun getNotifications(): List<AppNotification> {
-        if (tuition.isReregistered) {
+        if (tuition.isPaid) {
             return emptyList()
         }
 
-        val deadline = DateFormat.getDateInstance().format(tuition.dueDate)
-
         val title = context.getString(R.string.tuition_fees)
-        val text = context.getString(R.string.reregister_todo, deadline)
+        val text = context.getString(R.string.reregister_todo, tuition.deadline)
 
         val notificationBuilder = getNotificationBuilder()
                 .setContentTitle(title)

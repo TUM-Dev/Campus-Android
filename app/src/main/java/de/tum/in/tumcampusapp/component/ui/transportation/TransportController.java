@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.transportation;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
 import com.google.common.base.Optional;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
@@ -32,7 +34,6 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.StationResult;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -303,7 +304,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
             NetUtils net = new NetUtils(context);
 
             // Download possible stations
-            Optional<JSONObject> jsonObj = net.downloadJsonObject(query, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+            Optional<JSONObject> jsonObj = net.downloadJsonObject(query, 0, true);
             if (!jsonObj.isPresent()) {
                 return Collections.emptyList();
             }
@@ -348,7 +349,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
 
     @NotNull
     @Override
-    public List<Card> getCards() {
+    public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
         if (!NetUtils.isConnected(mContext)) {
             return results;

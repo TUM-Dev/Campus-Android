@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
@@ -22,14 +24,12 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
-import static de.tum.in.tumcampusapp.utils.CacheManager.VALIDITY_ONE_DAY;
-
 /**
  * News Manager, handles database stuff, external imports
  */
 public class NewsController implements ProvidesCard, ProvidesNotifications {
 
-    private static final int TIME_TO_SYNC = VALIDITY_ONE_DAY;
+    private static final int TIME_TO_SYNC = 86400;
     private final Context context;
     private final NewsDao newsDao;
     private final NewsSourcesDao newsSourcesDao;
@@ -150,7 +150,7 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
 
     @NotNull
     @Override
-    public List<Card> getCards() {
+    public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
         Collection<Integer> sources = getActiveSources(context);
 

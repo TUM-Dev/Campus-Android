@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,46 +41,6 @@ public class TuitionFeesCard extends Card {
         return new CardViewHolder(view);
     }
 
-    @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
-        super.updateViewHolder(viewHolder);
-
-        TextView reregisterInfoTextView =
-                viewHolder.itemView.findViewById(R.id.reregister_info_text_view);
-        TextView outstandingBalanceTextView =
-                viewHolder.itemView.findViewById(R.id.outstanding_balance_text_view);
-
-        if (mTuition.getSoll()
-                .equals("0")) {
-            String placeholderText = getContext().getString(R.string.reregister_success);
-            String text = String.format(placeholderText, mTuition.getSemesterBez());
-            reregisterInfoTextView.setText(text);
-        } else {
-            DateTime date = DateTimeUtils.INSTANCE.getDate(mTuition.getFrist());
-            String dateText = DateTimeFormat.mediumDate()
-                    .print(date);
-
-            String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
-            reregisterInfoTextView.setText(text);
-
-            String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
-            String balanceText = String.format(textWithPlaceholder, mTuition.getOutstandingBalanceText());
-            outstandingBalanceTextView.setText(balanceText);
-            outstandingBalanceTextView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
-        String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
-        String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
-
-        // If app gets started for the first time and fee is already paid don't annoy user
-        // by showing him that he has been re-registered successfully
-        return !(prevFrist.isEmpty() && "0".equals(mTuition.getSoll())) &&
-               (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
-    }
-
     public String getTitle() {
         return getContext().getString(R.string.tuition_fees);
     }
@@ -91,12 +52,54 @@ public class TuitionFeesCard extends Card {
 
     @Override
     public Intent getIntent() {
-        return mTuition.getIntent(getContext());
+        return new Intent(getContext(), TuitionFeesActivity.class);
+    }
+
+    @Override
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+
+        TextView reregisterInfoTextView =
+                viewHolder.itemView.findViewById(R.id.reregister_info_text_view);
+        TextView outstandingBalanceTextView =
+                viewHolder.itemView.findViewById(R.id.outstanding_balance_text_view);
+
+        if (mTuition.isPaid()) {
+            String placeholderText = getContext().getString(R.string.reregister_success);
+            String text = String.format(placeholderText, mTuition.getSemester());
+            reregisterInfoTextView.setText(text);
+        } else {
+            DateTime date = mTuition.getDeadline();
+            String dateText = DateTimeFormat.mediumDate().print(date);
+
+            String text = String.format(getContext().getString(R.string.reregister_todo), dateText);
+            reregisterInfoTextView.setText(text);
+
+            String textWithPlaceholder = getContext().getString(R.string.amount_dots_card);
+            String balanceText = String.format(textWithPlaceholder, mTuition.getAmountText(getContext()));
+            outstandingBalanceTextView.setText(balanceText);
+            outstandingBalanceTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected boolean shouldShow(SharedPreferences prefs) {
+        String prevDeadline = prefs.getString(LAST_FEE_FRIST, "");
+        String prevAmount = prefs.getString(LAST_FEE_SOLL, Float.toString(mTuition.getAmount()));
+
+        // If app gets started for the first time and fee is already paid don't annoy user
+        // by showing him that he has been re-registered successfully
+        String deadline = DateTimeUtils.INSTANCE.getDateString(mTuition.getDeadline());
+        String amount = Float.toString(mTuition.getAmount());
+        return !(prevDeadline.isEmpty() && mTuition.isPaid()) &&
+               (prevDeadline.compareTo(deadline) < 0 || prevAmount.compareTo(amount) > 0);
     }
 
     public void discard(Editor editor) {
-        editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
-        editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
+        String deadline = DateTimeUtils.INSTANCE.getDateString(mTuition.getDeadline());
+        String amount = Float.toString(mTuition.getAmount());
+        editor.putString(LAST_FEE_FRIST, deadline);
+        editor.putString(LAST_FEE_SOLL, amount);
     }
 
     public void setTuition(Tuition tuition) {

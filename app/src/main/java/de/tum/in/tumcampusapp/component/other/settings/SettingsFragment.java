@@ -59,7 +59,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         // Disables silence service if the app is used without TUMOnline access
         SwitchPreferenceCompat silentSwitch =
                 (SwitchPreferenceCompat) findPreference(Const.SILENCE_SERVICE);
-        if (silentSwitch != null && !new AccessTokenManager(mContext).hasValidAccessToken()) {
+        if (silentSwitch != null && !AccessTokenManager.hasValidAccessToken(getContext())) {
             silentSwitch.setEnabled(false);
         }
 
