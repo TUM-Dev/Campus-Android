@@ -3,6 +3,8 @@ package de.tum.in.tumcampusapp.component.ui.studyroom;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -14,23 +16,24 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
-import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
+import de.tum.in.tumcampusapp.api.studyrooms.StudyRoomsClient;
+import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
-import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
-import de.tum.in.tumcampusapp.utils.NetUtils;
+import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomsResponse;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Shows information about reservable study rooms.
  */
-public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Void>
+public class StudyRoomsActivity extends ProgressActivity
         implements AdapterView.OnItemSelectedListener {
 
     private List<StudyRoomGroup> mStudyRoomGroupList;
@@ -46,15 +49,12 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewPager = findViewById(R.id.pager);
+        loadStudyRooms();
     }
 
-    /**
-     * Setup for switching study room locations via action bar
-     */
     @Override
-    protected void onStart() {
-        super.onStart();
-        startLoading();
+    public void onRefresh() {
+        loadStudyRooms();
     }
 
     private void selectCurrentSpinnerItem(Spinner spinner) {
@@ -68,11 +68,6 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         }
     }
 
-    private static void sortStudyRoomsByOccupation(List<StudyRoom> studyRooms) {
-        Collections.sort(studyRooms, (lhs, rhs) -> lhs.getOccupiedTill()
-                                                      .compareTo(rhs.getOccupiedTill()));
-    }
-
     private Spinner getStudyRoomGroupsSpinner() {
         // Adapter for drop-down navigation
         SpinnerAdapter adapterCafeterias =
@@ -82,7 +77,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
 
                     @Override
                     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                        View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar,
+                        View v = inflater.inflate(
+                                R.layout.simple_spinner_dropdown_item_actionbar,
                                                   parent, false);
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
@@ -111,18 +107,6 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         return spinner;
     }
 
-    private boolean hasGotStudyRoomGroups() {
-        return mStudyRoomGroupList != null && !mStudyRoomGroupList.isEmpty();
-    }
-
-    private void showCorrectErrorLayout() {
-        if (NetUtils.isConnected(this)) {
-            showErrorLayout();
-        } else {
-            showNoInternetLayout();
-        }
-    }
-
     /**
      * A new study room group has been selected -> Switch.
      *
@@ -132,8 +116,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        mSelectedStudyRoomGroupId = mStudyRoomGroupList.get(pos)
-                                                       .getId();
+        mSelectedStudyRoomGroupId = mStudyRoomGroupList.get(pos).getId();
 
         if (mSectionsPagerAdapter == null) {
             setupViewPagerAdapter(mSelectedStudyRoomGroupId);
@@ -144,7 +127,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
 
     private void changeViewPagerAdapter(int selectedRoomGroupId) {
         mViewPager.setAdapter(null); //unset the adapter for updating
-        mSectionsPagerAdapter.setStudyRoomGroupId(this, selectedRoomGroupId);
+        mSectionsPagerAdapter.setStudyRoomGroupId(selectedRoomGroupId);
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }
 
@@ -168,32 +151,61 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         startActivity(findStudyRoomIntent);
     }
 
-    @Override
-    protected Void onLoadInBackground(Void... arg) {
-        StudyRoomGroupManager sm = new StudyRoomGroupManager(this);
-        try {
-            sm.downloadFromExternal();
-        } catch (JSONException e) {
-            Utils.log(e);
-            // No error handling here
-        }
-        return null;
+    private void loadStudyRooms() {
+        showLoadingStart();
+        StudyRoomsClient
+                .getInstance(this)
+                .getAll()
+                .enqueue(new Callback<StudyRoomsResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<StudyRoomsResponse> call,
+                                           @NonNull Response<StudyRoomsResponse> response) {
+                        StudyRoomsResponse studyRoomsResponse = response.body();
+
+                        if (response.isSuccessful() && studyRoomsResponse != null) {
+                            onDownloadSuccessful(studyRoomsResponse);
+                        } else {
+                            showErrorLayout();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<StudyRoomsResponse> call, @NonNull Throwable t) {
+                        Utils.log(t);
+
+                        if (t instanceof NoNetworkConnectionException) {
+                            showNoInternetLayout();
+                        } else {
+                            showErrorLayout();
+                        }
+                    }
+                });
     }
 
-    @Override
-    protected void onLoadFinished(Void result) {
+    private void onDownloadSuccessful(@NonNull StudyRoomsResponse response) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
+            updateDatabase(response);
+            runOnUiThread(() -> displayStudyRooms(response.getGroups()));
+        });
+    }
+
+    private void updateDatabase(@NonNull StudyRoomsResponse response) {
         StudyRoomGroupManager studyRoomGroupManager = new StudyRoomGroupManager(this);
-        mStudyRoomGroupList = studyRoomGroupManager.getAllFromDb();
-        for (StudyRoomGroup group : mStudyRoomGroupList) {
-            sortStudyRoomsByOccupation(group.getRooms());
+        studyRoomGroupManager.updateDatabase(response);
+    }
+
+    private void displayStudyRooms(@NonNull List<StudyRoomGroup> studyRoomGroups) {
+        mStudyRoomGroupList = studyRoomGroups;
+
+        if (mStudyRoomGroupList.isEmpty()) {
+            showErrorLayout();
+            return;
         }
 
-        if (hasGotStudyRoomGroups()) {
-            Spinner spinner = getStudyRoomGroupsSpinner();
-            selectCurrentSpinnerItem(spinner);
-        } else {
-            showCorrectErrorLayout();
-        }
+        Spinner spinner = getStudyRoomGroupsSpinner();
+        selectCurrentSpinnerItem(spinner);
         showLoadingEnded();
     }
+
 }
