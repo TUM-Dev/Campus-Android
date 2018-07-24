@@ -16,7 +16,7 @@ object NotificationScheduler {
     fun schedule(context: Context, futureNotification: FutureNotification) {
         val alarmIntent = getAlarmIntent(context, futureNotification)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, futureNotification.time, alarmIntent)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, futureNotification.time.millis, alarmIntent)
     }
 
     private fun getAlarmIntent(context: Context, futureNotification: FutureNotification): PendingIntent {
