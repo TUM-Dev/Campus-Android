@@ -83,22 +83,22 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
 
             holder.headerTextView.setText(room.getName());
 
-            StringBuilder stringBuilder = new StringBuilder(room.getLocation()).append("<br>");
+            StringBuilder stringBuilder = new StringBuilder(room.getBuildingName()).append("<br>");
 
-            if (room.getOccupiedTill().isBeforeNow()) {
+            if (room.getOccupiedUntil().isBeforeNow()) {
                 stringBuilder.append(getString(R.string.free));
             } else {
                 stringBuilder.append(getString(R.string.occupied))
                              .append(" <b>")
                              .append(DateTimeFormat.forPattern("HH:mm")
                                                    .withLocale(Locale.getDefault())
-                                                   .print(room.getOccupiedTill()))
+                                                   .print(room.getOccupiedUntil()))
                              .append("</b>");
             }
 
             holder.detailsTextView.setText(Utils.fromHtml(stringBuilder.toString()));
 
-            int colorResId = room.getOccupiedTill().isBeforeNow()
+            int colorResId = room.getOccupiedUntil().isBeforeNow()
                     ? R.color.study_room_free : R.color.study_room_occupied;
 
             int color = ContextCompat.getColor(holder.itemView.getContext(), colorResId);

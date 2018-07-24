@@ -20,18 +20,22 @@ data class StudyRoom(
         var code: String = "",
         @SerializedName("room_name")
         var name: String = "",
+        @ColumnInfo(name = "building_name")
         @SerializedName("building_name")
-        var location: String = "",
+        var buildingName: String = "",
         @ColumnInfo(name = "group_id")
         @SerializedName("group_id")
         var studyRoomGroup: Int = -1,
-        @ColumnInfo(name = "occupied_till")
+        @ColumnInfo(name = "occupied_until")
         @SerializedName("occupied_until")
-        var occupiedTill: DateTime = DateTime()
+        var occupiedUntil: DateTime = DateTime(),
+        @ColumnInfo(name = "free_until")
+        @SerializedName("free_until")
+        var freeUntil: DateTime = DateTime()
 ) : Comparable<StudyRoom> {
 
     override fun compareTo(other: StudyRoom): Int {
-        return compareValuesBy(this, other, { it.occupiedTill }, { it.name })
+        return compareValuesBy(this, other, { it.occupiedUntil }, { it.name })
     }
 
     override fun toString() = code
