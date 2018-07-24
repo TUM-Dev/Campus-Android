@@ -119,7 +119,7 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadEvents(force: Boolean): Boolean {
-        EventsController(this).downloadFromService(force)
+        EventsController(this).downloadFromService()
         return true
     }
 

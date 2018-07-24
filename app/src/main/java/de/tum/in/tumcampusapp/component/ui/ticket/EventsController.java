@@ -42,40 +42,56 @@ public class EventsController implements ProvidesCard{
         ticketTypeDao = TcaDb.getInstance(context).ticketTypeDao();
     }
 
+    public void downloadFromService() {
+        Callback<List<Event>> eventCallback = new Callback<List<Event>>() {
 
-    public void downloadFromService(boolean force) {
-        TUMCabeClient api = TUMCabeClient.getInstance(context);
+            @Override
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                List<Event> events = response.body();
+                if (events == null) {
+                    return;
+                }
+                addEvents(events);
+            }
 
+            @Override
+            public void onFailure(Call<List<Event>> call, Throwable t) {
+                Utils.log(t);
+            }
+        };
+
+        Callback<List<Ticket>> ticketCallback = new Callback<List<Ticket>>() {
+            @Override
+            public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
+                List<Ticket> tickets = response.body();
+                if (tickets == null) {
+                    return;
+                }
+                addTickets(tickets);
+                loadTicketTypesForTickets(tickets);
+            }
+
+            @Override
+            public void onFailure(Call<List<Ticket>> call, Throwable t) {
+                Utils.log(t);
+            }
+        };
+
+        getEventsAndTicketsFromServer(eventCallback, ticketCallback);
+    }
+
+    public void getEventsAndTicketsFromServer(Callback<List<Event>> eventCallback,
+                                              Callback<List<Ticket>> ticketCallback){
         // Delete all too old items
         eventDao.cleanUp();
 
-        // Load all events since the last sync
-        try {
-            List<Event> events = api.getEvents();
-            eventDao.insert(events);
-        } catch (IOException e) {
-            Utils.log(e);
-        }
+        // Load all events
+        TUMCabeClient.getInstance(context).fetchEvents(eventCallback);
 
         // Load all tickets
         try {
             if (Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class) != null) {
-                api.getTickets(context, new Callback<List<Ticket>>() {
-                    @Override
-                    public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
-                        List<Ticket> list = response.body();
-                        if (list == null) {
-                            list = new ArrayList<>();
-                        }
-                        ticketDao.insert(list);
-                        loadTicketTypesForTickets(list);
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Ticket>> call, Throwable t) {
-                        Utils.log(t);
-                    }
-                });
+                TUMCabeClient.getInstance(context).fetchTickets(context, ticketCallback);
             }
         } catch (IOException e) {
             Utils.log(e);
@@ -85,14 +101,14 @@ public class EventsController implements ProvidesCard{
     private void loadTicketTypesForTickets(List<Ticket> tickets){
         // get ticket type information for all tickets
         for (Ticket ticket : tickets){
-            TUMCabeClient.getInstance(context).getTicketTypes(ticket.getEventId(),
+            TUMCabeClient.getInstance(context).fetchTicketTypes(ticket.getEventId(),
                     new Callback<List<TicketType>>(){
 
                         @Override
                         public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
                             List<TicketType> ticketTypes = response.body();
                             if (ticketTypes == null) {
-                                ticketTypes = new ArrayList<>();
+                                return;
                             }
                             // add found ticket types to database (needed in ShowTicketActivity)
                             addTicketTypes(ticketTypes);
@@ -110,6 +126,10 @@ public class EventsController implements ProvidesCard{
 
     // Event methods
 
+    public void addEvents(List<Event> events) {
+        eventDao.insert(events);
+    }
+
     public List<Event> getEvents() {
         return eventDao.getAll();
     }
@@ -119,7 +139,12 @@ public class EventsController implements ProvidesCard{
         List<Ticket> tickets = ticketDao.getAll();
         List<Event> bookedEvents = new ArrayList<>();
         for (Ticket ticket : tickets) {
-            bookedEvents.add(getEventById(ticket.getEventId()));
+            Event event = getEventById(ticket.getEventId());
+            // the event may be null if the corresponding event of a ticket has already been deleted
+            // these event should not be returned
+            if (event != null){
+                bookedEvents.add(event);
+            }
         }
         return bookedEvents;
     }

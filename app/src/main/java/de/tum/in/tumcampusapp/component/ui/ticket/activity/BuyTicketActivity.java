@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -55,7 +54,7 @@ public class BuyTicketActivity extends BaseActivity {
         eventId = getIntent().getIntExtra("eventID", 0);
 
         // get ticket type information from API
-        TUMCabeClient.getInstance(getApplicationContext()).getTicketTypes(eventId,
+        TUMCabeClient.getInstance(getApplicationContext()).fetchTicketTypes(eventId,
                 new Callback<List<TicketType>>() {
 
                     @Override

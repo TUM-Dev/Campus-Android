@@ -355,10 +355,8 @@ public final class TUMCabeClient {
 
     // TICKET SALE
     // Getting event information
-    public List<Event> getEvents() throws IOException {
-        List<Event> list = service.getEvents().execute().body();
-
-        return list;
+    public void fetchEvents(Callback<List<Event>> cb) {
+        service.getEvents().enqueue(cb);
     }
 
     public Event getEvent(int eventID) throws IOException {
@@ -371,12 +369,12 @@ public final class TUMCabeClient {
     }
 
     // Getting ticket information
-    public void getTickets(Context context, Callback<List<Ticket>> cb) throws IOException {
+    public void fetchTickets(Context context, Callback<List<Ticket>> cb) throws IOException {
         ChatVerification chatVerification = ChatVerification.Companion.createChatVerification(context, null);
         service.getTickets(chatVerification).enqueue(cb);
     }
 
-    public void getTicketTypes(int eventID, Callback<List<TicketType>> cb) {
+    public void fetchTicketTypes(int eventID, Callback<List<TicketType>> cb) {
         service.getTicketTypes(eventID).enqueue(cb);
     }
 
@@ -404,7 +402,7 @@ public final class TUMCabeClient {
         service.retrieveEphemeralKey(chatVerification).enqueue(cb);
     }
 
-    public void getTicketStats(int event, Callback<List<TicketStatus>> cb) {
+    public void fetchTicketStats(int event, Callback<List<TicketStatus>> cb) {
         service.getTicketStats(event).enqueue(cb);
     }
 
