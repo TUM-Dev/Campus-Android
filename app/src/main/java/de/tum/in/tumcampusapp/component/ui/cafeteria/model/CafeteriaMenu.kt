@@ -76,7 +76,7 @@ data class CafeteriaMenu(@PrimaryKey(autoGenerate = true)
     private fun getPriceText(context: Context): String? {
         val rolePrices = CafeteriaPrices.getRolePrices(context)
         val price = rolePrices[typeLong]
-        return if (price != null) "$price €" else null
+        return price?.run { "$this €" }
     }
 
     companion object {
