@@ -28,15 +28,10 @@ class StudyRoomGroupManager(context: Context) {
         groups.forEach { group ->
             roomsDao.insert(*group.rooms.toTypedArray())
         }
-
-        // TODO: Needed?
-        // SyncManager(context).replaceIntoDb(this)
     }
 
-    fun getAllStudyRoomsForGroup(groupId: Int): List<StudyRoom> = roomsDao.getAll(groupId)
-
-    companion object {
-        @JvmField val STUDYROOM_HOST = "https://www.devapp.it.tum.de"
+    fun getAllStudyRoomsForGroup(groupId: Int): List<StudyRoom> {
+        return roomsDao.getAll(groupId).sorted()
     }
 
 }

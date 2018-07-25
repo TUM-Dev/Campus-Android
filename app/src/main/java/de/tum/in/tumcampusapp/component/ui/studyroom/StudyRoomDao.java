@@ -12,7 +12,7 @@ import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
 @Dao
 public interface StudyRoomDao {
 
-    @Query("SELECT id, code, name, location, occupied_till, group_id FROM study_rooms WHERE group_id = :groupId ORDER BY occupied_till ASC")
+    @Query("SELECT * FROM study_rooms WHERE group_id = :groupId")
     List<StudyRoom> getAll(int groupId);
 
     @Query("DELETE FROM study_rooms")

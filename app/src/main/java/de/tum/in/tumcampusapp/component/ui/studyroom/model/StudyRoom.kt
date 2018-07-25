@@ -28,14 +28,24 @@ data class StudyRoom(
         var studyRoomGroup: Int = -1,
         @ColumnInfo(name = "occupied_until")
         @SerializedName("occupied_until")
-        var occupiedUntil: DateTime = DateTime(),
+        var occupiedUntil: DateTime? = null,
         @ColumnInfo(name = "free_until")
         @SerializedName("free_until")
-        var freeUntil: DateTime = DateTime()
+        var freeUntil: DateTime? = null
 ) : Comparable<StudyRoom> {
 
     override fun compareTo(other: StudyRoom): Int {
-        return compareValuesBy(this, other, { it.occupiedUntil }, { it.name })
+        // We use the following sorting order:
+        // 1. Rooms that are currently free and don't have a reservation coming up (freeUntil == null)
+        // 2. Rooms that are currently free but have a reservation coming up (sorted descending by
+        //    the amount of free time remaining)
+        // 3. Rooms that are currently occupied but will be free soon (sorted ascending by the
+        //    amount of occupied time remaining)
+        // 4. The remaining rooms
+        return compareBy<StudyRoom> { it.freeUntil?.millis?.times(-1) }
+                .thenBy { it.occupiedUntil }
+                .thenBy { it.name }
+                .compare(this, other)
     }
 
     override fun toString() = code

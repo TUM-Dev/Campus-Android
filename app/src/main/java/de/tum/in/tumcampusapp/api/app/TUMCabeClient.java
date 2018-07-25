@@ -78,7 +78,7 @@ public final class TUMCabeClient {
     static final String API_KINOS = "kino/";
     static final String API_CARD = "cards/";
     static final String API_NEWS = "news/";
-    static final String API_STUDY_ROOMS = "studyrooms/";
+    static final String API_STUDY_ROOMS = "studyroom/list";
     private static final String API_HOSTNAME = Const.API_HOSTNAME;
     private static final String API_BASEURL = "/Api/";
     private static final String API_CHAT = "chat/";
