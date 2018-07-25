@@ -131,8 +131,9 @@ class TransportController(private val mContext: Context) : ProvidesCard {
          */
         fun getDeparturesFromExternal(context: Context, stationID: String): List<Departure> {
             try {
-                val (departureList) = MvvClient.getInstance(context)
+                val departures = MvvClient.getInstance(context)
                         .getDepartures(stationID).execute().body() ?: return emptyList()
+                val departureList = departures.departureList ?: emptyList()
 
                 return departureList.map { (servingLine, dateTime, countdown) ->
                     Departure(servingLine.name,
