@@ -29,10 +29,10 @@ public class MVVWidgetService extends RemoteViewsService {
         private final Context applicationContext;
         private List<Departure> departures = new ArrayList<>();
         private int appWidgetID;
-        private boolean forceLoadDepartures = false;
+        private boolean forceLoadDepartures;
 
         MVVRemoteViewFactory(Context applicationContext, Intent intent) {
-            this.applicationContext = applicationContext.getApplicationContext();
+            this.applicationContext = applicationContext;
             this.appWidgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
             this.forceLoadDepartures = intent.getBooleanExtra(MVVWidget.MVV_WIDGET_FORCE_RELOAD, true);
         }
@@ -43,10 +43,8 @@ public class MVVWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-            // load the departures for the widget
             TransportController transportManager = new TransportController(applicationContext);
             WidgetDepartures wd = transportManager.getWidget(this.appWidgetID);
-
             this.departures = wd.getDepartures(applicationContext, this.forceLoadDepartures);
         }
 
@@ -69,7 +67,7 @@ public class MVVWidgetService extends RemoteViewsService {
                 return rv;
             }
 
-            // get the departure for this view
+            // Get the departure for this view
             Departure currentItem = this.departures.get(position);
             if (currentItem == null) {
                 return null;
@@ -107,6 +105,7 @@ public class MVVWidgetService extends RemoteViewsService {
         public boolean hasStableIds() {
             return true;
         }
+
     }
 
 }

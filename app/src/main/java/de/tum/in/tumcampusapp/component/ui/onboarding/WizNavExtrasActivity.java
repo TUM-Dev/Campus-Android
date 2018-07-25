@@ -69,7 +69,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
-        if (new AccessTokenManager(this).hasValidAccessToken()) {
+        if (AccessTokenManager.hasValidAccessToken(this)) {
             checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, false));
             checkSilentMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (checkSilentMode.isChecked() &&
@@ -85,7 +85,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Get handles to all UI elements
         groupChatMode = findViewById(R.id.chk_group_chat);
-        if (new AccessTokenManager(this).hasValidAccessToken()) {
+        if (AccessTokenManager.hasValidAccessToken(this)) {
             groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
         } else {
             groupChatMode.setChecked(false);
@@ -178,8 +178,12 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         }
         editor.apply();
 
-        finish();
-        startActivity(new Intent(this, StartupActivity.class));
+        // Start the StartupActivity in a new, empty Task. We finish the current Activity and remove
+        // the current Task, which it is in.
+        Intent intent = new Intent(this, StartupActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finishAndRemoveTask();
     }
 
     /**
@@ -192,16 +196,14 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         startLoading();
     }
 
-    /**
-     * If back key is pressed, open previous activity
-     */
     @Override
     public void onBackPressed() {
+        // Return back to WizNavStartActivity
         finish();
         Intent intent = new Intent(this, WizNavStartActivity.class);
         intent.putExtra(Const.TOKEN_IS_SETUP, tokenSetup);
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-
+        startActivity(intent);
     }
 }

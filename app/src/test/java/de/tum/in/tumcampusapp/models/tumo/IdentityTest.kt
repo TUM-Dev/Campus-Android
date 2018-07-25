@@ -1,13 +1,15 @@
 package de.tum.`in`.tumcampusapp.models.tumo
 
+import com.tickaroo.tikxml.TikXml
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.TestApp
-import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineConst
+import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
+import okio.Okio
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import org.simpleframework.xml.core.Persister
+import java.io.ByteArrayInputStream
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class, application = TestApp::class)
@@ -15,12 +17,21 @@ class IdentityTest {
 
     @Test
     fun testParsingXML() {
-        val res = Persister().read(TUMOnlineConst.IDENTITY.response, XML_RESPONSE)
+        val tikXml = TikXml.Builder()
+                .exceptionOnUnreadXml(false)
+                .build()
+
+        val inputStream = ByteArrayInputStream(XML_RESPONSE.toByteArray())
+        val source = Okio.source(inputStream)
+        val bufferedSource = Okio.buffer(source)
+
+        val res = tikXml.read(bufferedSource, IdentitySet::class.java)
         assert(res.ids.size == 1)
+
         val identity = res.ids[0]
-        assert(identity.familienname == FAMILIENNAME_EXPECTED)
-        assert(identity.vorname == VORNAME_EXPECTED)
-        assert(identity.kennung == KENNUNG_EXPECTED)
+        assert(identity.lastName == FAMILIENNAME_EXPECTED)
+        assert(identity.firstName == VORNAME_EXPECTED)
+        assert(identity.id == KENNUNG_EXPECTED)
         assert(identity.obfuscated_id == OBFUSCATED_ID_EXPECTED)
     }
 

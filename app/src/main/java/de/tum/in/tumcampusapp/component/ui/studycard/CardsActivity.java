@@ -22,7 +22,8 @@ import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.databinding.ActivityCardsBinding;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-public class CardsActivity extends ActivityForLoadingInBackground<Void, List<StudyCard>> implements AdapterView.OnItemClickListener {
+public class CardsActivity extends ActivityForLoadingInBackground<Void, List<StudyCard>>
+        implements AdapterView.OnItemClickListener {
 
     ActivityCardsBinding binding;
     CardActivityState state;

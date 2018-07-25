@@ -45,26 +45,32 @@ public class KinoActivity extends BaseActivity {
         Utils.log("startPos " + startPosition);
 
         View noMovies = findViewById(R.id.no_movies_layout);
+
         // set up ViewPager and adapter
         mPager = findViewById(R.id.pager);
-        kinoViewModel.getAllKinos()
-                .doOnError(throwable -> setContentView(R.layout.layout_error))
-                .subscribe(kinos -> {
-                    if (kinos.isEmpty()) {
-                        noMovies.setVisibility(View.VISIBLE);
-                    } else {
-                        noMovies.setVisibility(View.GONE);
-                        KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
-                        mPager.setAdapter(kinoAdapter);
-                        mPager.setCurrentItem(startPosition);
-                    }
-                });
+
+        disposable.add(
+                kinoViewModel.getAllKinos()
+                        .subscribe(kinos -> {
+                            if (kinos.isEmpty()) {
+                                noMovies.setVisibility(View.VISIBLE);
+                            } else {
+                                noMovies.setVisibility(View.GONE);
+                                KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
+                                mPager.setAdapter(kinoAdapter);
+                                mPager.setCurrentItem(startPosition);
+                            }
+                        }, throwable -> {
+                            Utils.log(throwable);
+                            setContentView(R.layout.layout_error);
+                        } )
+        );
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disposable.clear();
+    protected void onStop() {
+        super.onStop();
+        disposable.dispose();
     }
 
 }

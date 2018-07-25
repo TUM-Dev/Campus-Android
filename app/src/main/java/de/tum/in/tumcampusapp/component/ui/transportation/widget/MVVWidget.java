@@ -25,9 +25,13 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.WidgetDepart
  */
 public class MVVWidget extends AppWidgetProvider {
 
-    private static final String BROADCAST_RELOAD_ALL_ALARM = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL_ALARM";
-    private static final String BROADCAST_RELOAD_ALL = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL";
-    static final String MVV_WIDGET_FORCE_RELOAD = "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD";
+    private static final String BROADCAST_RELOAD_ALL_ALARM =
+            "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL_ALARM";
+    private static final String BROADCAST_RELOAD_ALL =
+            "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL";
+    static final String MVV_WIDGET_FORCE_RELOAD =
+            "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD";
+
     private static Timer timer;
     private static TransportController transportManager;
 
@@ -89,10 +93,13 @@ public class MVVWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, MVVWidget.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.cancel(sender);
-        if (autoReload) {
-            intent.setAction(MVVWidget.BROADCAST_RELOAD_ALL_ALARM);
-            am.setRepeating(AlarmManager.RTC, 5000, UPDATE_ALARM_DELAY, sender);
+        if (am != null) {
+            am.cancel(sender);
+
+            if (autoReload) {
+                intent.setAction(MVVWidget.BROADCAST_RELOAD_ALL_ALARM);
+                am.setRepeating(AlarmManager.RTC, 5000, UPDATE_ALARM_DELAY, sender);
+            }
         }
     }
 
@@ -103,6 +110,7 @@ public class MVVWidget extends AppWidgetProvider {
         if (MVVWidget.timer == null) {
             MVVWidget.timer = new Timer();
         }
+
         for (int i = 1; i <= 3; i++) {
             MVVWidget.timer.schedule(new TimerTask() {
                 @Override
@@ -140,22 +148,23 @@ public class MVVWidget extends AppWidgetProvider {
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mvv_widget);
         rv.setTextViewText(R.id.mvv_widget_station, widgetDepartures.getStation());
 
-        // Set up offline symbol (may be shown one update delayed)
-        rv.setViewVisibility(R.id.mvv_widget_offline, widgetDepartures.isOffline() ? View.VISIBLE : View.INVISIBLE);
-
         // Set up the configuration activity listeners
         Intent configIntent = new Intent(context, MVVWidgetConfigureActivity.class);
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        rv.setOnClickPendingIntent(R.id.mvv_widget_header, pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        rv.setOnClickPendingIntent(R.id.mvv_widget_setting_button, pendingIntent);
 
         // Set up the reload functionality
         Intent reloadIntent = new Intent(context, MVVWidget.class);
         reloadIntent.setAction(MVVWidget.MVV_WIDGET_FORCE_RELOAD);
         reloadIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(context, appWidgetId, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        rv.setOnClickPendingIntent(R.id.mvv_widget_reload, pendingReloadIntent);
-        rv.setViewVisibility(R.id.mvv_widget_reload, widgetDepartures.getAutoReload() ? View.GONE : View.VISIBLE);
+        PendingIntent pendingReloadIntent = PendingIntent.getBroadcast(
+                context, appWidgetId, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        rv.setOnClickPendingIntent(R.id.mvv_widget_reload_button, pendingReloadIntent);
+
+        boolean isAutoReload = widgetDepartures.getAutoReload();
+        rv.setViewVisibility(R.id.mvv_widget_reload_button, isAutoReload ? View.GONE : View.VISIBLE);
 
         // Set up the intent that starts the MVVWidgetService, which will
         // provide the departure times for this station
@@ -201,4 +210,5 @@ public class MVVWidget extends AppWidgetProvider {
         ComponentName thisWidget = new ComponentName(context, MVVWidget.class);
         return appWidgetManager.getAppWidgetIds(thisWidget);
     }
+
 }

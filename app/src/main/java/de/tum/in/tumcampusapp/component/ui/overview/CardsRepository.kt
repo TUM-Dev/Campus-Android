@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
@@ -29,16 +30,16 @@ class CardsRepository(private val context: Context) {
      * @return The [LiveData] of [Card]s
      */
     fun getCards(): LiveData<List<Card>> {
-        refreshCards()
+        refreshCards(CacheControl.USE_CACHE)
         return cards
     }
 
     /**
      * Refreshes the [LiveData] of [Card]s and updates its value.
      */
-    fun refreshCards() {
+    fun refreshCards(cacheControl: CacheControl) {
         doAsync {
-            val results = getCardsNow()
+            val results = getCardsNow(cacheControl)
             cards.postValue(results)
         }
     }
@@ -48,7 +49,7 @@ class CardsRepository(private val context: Context) {
      *
      * @return The list of [Card]s
      */
-    fun getCardsNow(): List<Card> {
+    private fun getCardsNow(cacheControl: CacheControl): List<Card> {
         val results = ArrayList<Card?>().apply {
             add(NoInternetCard(context).getIfShowOnStart())
             add(TopNewsCard(context).getIfShowOnStart())
@@ -59,8 +60,7 @@ class CardsRepository(private val context: Context) {
         }
 
         val providers = ArrayList<ProvidesCard>().apply {
-            val tokenManager = AccessTokenManager(context)
-            if (tokenManager.hasValidAccessToken()) {
+            if (AccessTokenManager.hasValidAccessToken(context)) {
                 add(CalendarController(context))
                 add(TuitionFeeManager(context))
                 add(ChatRoomController(context))
@@ -72,7 +72,7 @@ class CardsRepository(private val context: Context) {
         }
 
         providers.forEach { provider ->
-            val cards = provider.getCards()
+            val cards = provider.getCards(cacheControl)
             results.addAll(cards)
         }
 

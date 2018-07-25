@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.api.tumonline.model
 
-import org.simpleframework.xml.Root
-import org.simpleframework.xml.Text
+import com.tickaroo.tikxml.annotation.TextContent
+import com.tickaroo.tikxml.annotation.Xml
 
-@Root(name = "token")
-data class AccessToken(@field:Text var token: String = "")
+@Xml
+data class AccessToken(@TextContent val token: String)

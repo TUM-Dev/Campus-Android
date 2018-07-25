@@ -6,6 +6,7 @@ import android.support.v4.app.JobIntentService
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import org.jetbrains.anko.doAsync
 
 /**
  * Service used to fill caches in background, for faster/offline access
@@ -23,11 +24,10 @@ class FillCacheService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        Thread {
-            // Fill cache service
-            CacheManager(this@FillCacheService)
-                .fillCache()
-        }.start()
+        doAsync {
+            val cacheManager = CacheManager(this@FillCacheService)
+            cacheManager.fillCache()
+        }
     }
 
     companion object {

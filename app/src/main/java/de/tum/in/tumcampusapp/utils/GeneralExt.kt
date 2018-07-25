@@ -1,8 +1,13 @@
 package de.tum.`in`.tumcampusapp.utils
 
-inline fun <T> tryOrNull(f: () -> T): T? {
+/**
+ * Executes the block and return null in case of an [Exception].
+ *
+ * @param block The block of code to execute
+ */
+inline fun <T> tryOrNull(block: () -> T): T? {
     return try {
-        f()
+        block()
     } catch (_: Exception) {
         null
     }

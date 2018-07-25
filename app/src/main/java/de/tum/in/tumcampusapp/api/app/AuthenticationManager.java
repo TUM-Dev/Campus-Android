@@ -1,6 +1,8 @@
 package de.tum.in.tumcampusapp.api.app;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -19,8 +21,7 @@ import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.service.FcmIdentificationService;
@@ -216,19 +217,34 @@ public class AuthenticationManager {
         }
     }
 
+    /**
+     * Uploads the public key to TUMonline. Throws a {@link NoPublicKey} exception if the stored key
+     * is empty.
+     * @throws NoPublicKey Thrown if the stored key is empty.
+     */
     public void uploadPublicKey() throws NoPublicKey {
-        final String publicKey = this.getPublicKeyString();
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
-                TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.Companion.getSECRET_UPLOAD(), AuthenticationManager.this.mContext, false);
-                requestSavePublicKey.setParameter("pToken", Utils.getSetting(AuthenticationManager.this.mContext, Const.ACCESS_TOKEN, ""));
-                requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
-                requestSavePublicKey.fetch();
-            }
-        };
-        thread.start();
+        final String token = Utils.getSetting(mContext, Const.ACCESS_TOKEN, "");
+        final String publicKey = Uri.encode(getPublicKeyString());
+
+        TUMOnlineClient
+                .getInstance(mContext)
+                .uploadSecret(token, publicKey)
+                .enqueue(new Callback<TokenConfirmation>() {
+                    @Override
+                    public void onResponse(@NonNull Call<TokenConfirmation> call,
+                                           @NonNull Response<TokenConfirmation> response) {
+                        TokenConfirmation confirmation = response.body();
+                        if (confirmation != null && confirmation.isConfirmed()) {
+                            Utils.log("Uploaded public key successfully");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<TokenConfirmation> call, @NonNull Throwable t) {
+                        Utils.log(t);
+                        // TODO: We should probably try again
+                    }
+                });
     }
 
     private void tryToUploadFcmToken() {

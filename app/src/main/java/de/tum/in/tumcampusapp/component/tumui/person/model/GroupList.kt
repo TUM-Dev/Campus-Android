@@ -1,8 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
-import org.simpleframework.xml.ElementList
-import org.simpleframework.xml.Root
-
+import com.tickaroo.tikxml.annotation.Element
+import com.tickaroo.tikxml.annotation.Xml
 import java.io.Serializable
 
 /**
@@ -11,9 +10,8 @@ import java.io.Serializable
  * request.
  */
 
-@Root(name = "gruppen")
-data class GroupList(@field:ElementList(inline = true, required = false)
-                     var groups: List<Group> = mutableListOf()) : Serializable {
+@Xml(name = "gruppen")
+data class GroupList(@Element var groups: List<Group>? = null) : Serializable {
     companion object {
         private const val serialVersionUID = 2713473533623487005L
     }
