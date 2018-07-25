@@ -105,9 +105,6 @@ object Const {
     const val WIFI_SCANS_ALLOWED = "WIFI_SCANS_ALLOWED"
     const val WIFI_SCAN_MINIMUM_BATTERY_LEVEL = "WIFI_SCAN_MINIMUM_BATTERY_LEVEL"
 
-    const val DATE_AND_TIME = "yyyy-MM-dd HH:mm:ss"
-    const val DATE_ONLY = "yyyy-MM-dd"
-
     const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
     const val DISCARD_SETTINGS_START = "discard_settings_start"
     const val DISCARD_SETTINGS_PHONE = "discard_settings_phone"
@@ -126,7 +123,12 @@ object Const {
     const val EVENT_END = "pBis"
     const val EVENT_NR = "pTerminNr"
 
+    const val EVENT_TIME = "event_time"
+
     const val KINO_DATE = "kinoDate"
+
+    const val CALENDAR_MONTHS_BEFORE = 2
+    const val CALENDAR_MONTHS_AFTER = 2
 
     const val PDF_TITLE = "pdfTitle"
     const val PDF_PATH = "pdfPath"
@@ -140,6 +142,8 @@ object Const {
     const val PERSON_SEARCH_TUM_REQUEST_KEY = "pSuche"
 
     const val TUM_CAMPUS_URL = "http://campus.tum.de"
+
+    const val TUM_ONLINE_PROFILE_PICTURE_URL_FORMAT_STRING = "https://campus.tum.de/tumonline/visitenkarte.showImage?pPersonenGruppe=%s&pPersonenId=%s"
 
     const val CALENDAR_FILTER_CANCELED = "calendar_filter_canceled"
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN = "calendar_filter_hour_limit_min"

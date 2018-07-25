@@ -36,13 +36,14 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
 
     public MVVWidgetConfigureActivity() {
         super(R.layout.activity_mvv_widget_configure, MVVStationSuggestionProvider.AUTHORITY, 3);
-        recentsDao = TcaDb.getInstance(this)
-                          .recentsDao();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        recentsDao = TcaDb.getInstance(this)
+                .recentsDao();
 
         // Setup cancel button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

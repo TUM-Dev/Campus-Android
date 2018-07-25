@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
+import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Intent
 import android.graphics.Color
@@ -9,15 +10,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.app.exception.NoNetworkConnectionException
+import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_calendar_details.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class CalendarDetailsFragment : BottomSheetDialogFragment() {
 
+    private lateinit var listener: OnEventInteractionListener
     private lateinit var dao: CalendarDao
     private lateinit var calendarId: String
 
@@ -66,13 +76,47 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
 
         if (calendarItem.url.isEmpty()) {
             buttonsContainer.visibility = View.VISIBLE
-            deleteButton.setOnClickListener {
-                (activity as CalendarActivity).deleteEvent(calendarItem.nr)
-            }
-            editButton.setOnClickListener { (activity as CalendarActivity).editEvent(calendarItem)}
+            deleteButton.setOnClickListener { displayDeleteDialog(calendarItem.nr) }
+            editButton.setOnClickListener { listener.onEditEvent(calendarItem) }
         } else {
             buttonsContainer.visibility = View.GONE
         }
+    }
+
+    private fun displayDeleteDialog(eventId: String) {
+        AlertDialog.Builder(context)
+                .setTitle(R.string.event_delete_title)
+                .setMessage(R.string.delete_event_info)
+                .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+    }
+
+    private fun deleteEvent(eventId: String) {
+        val c = context ?: return
+        TUMOnlineClient
+                .getInstance(c)
+                .deleteEvent(eventId)
+                .enqueue(object : Callback<DeleteEventResponse> {
+                    override fun onResponse(call: Call<DeleteEventResponse>,
+                                            response: Response<DeleteEventResponse>) {
+                        dismiss()
+                        listener.onEventDeleted(eventId)
+                    }
+
+                    override fun onFailure(call: Call<DeleteEventResponse>, t: Throwable) {
+                        handleDeleteEventError(t)
+                    }
+                })
+    }
+
+    private fun handleDeleteEventError(t: Throwable) {
+        val messageResId = when (t) {
+            is NoNetworkConnectionException -> R.string.error_no_internet_connection
+            is RequestLimitReachedException -> R.string.error_request_limit_reached
+            else -> R.string.error_unknown
+        }
+        Utils.showToast(context, messageResId)
     }
 
     private fun onLocationClicked(location: String) {
@@ -80,6 +124,26 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
         findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
         findStudyRoomIntent.setClass(context, RoomFinderActivity::class.java)
         startActivity(findStudyRoomIntent)
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun newInstance(calendarItem: CalendarItem,
+                        listener: OnEventInteractionListener): CalendarDetailsFragment {
+            return CalendarDetailsFragment().apply {
+                this.arguments = Bundle().apply {
+                    putString(Const.CALENDAR_ID_PARAM, calendarItem.nr)
+                }
+                this.listener = listener
+            }
+        }
+
+    }
+
+    interface OnEventInteractionListener {
+        fun onEventDeleted(eventId: String)
+        fun onEditEvent(calendarItem: CalendarItem)
     }
 
 }

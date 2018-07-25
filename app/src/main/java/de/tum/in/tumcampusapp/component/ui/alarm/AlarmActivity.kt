@@ -8,6 +8,7 @@ import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.ui.alarm.model.FcmNotification
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**
@@ -40,6 +41,6 @@ class AlarmActivity : BaseActivity(R.layout.activity_alarmdetails) {
         this.mTitle.text = notification.title
         this.mDescription.loadDataWithBaseURL(null, notification.description, "text/html", "utf-8", null)
         this.mDescription.setBackgroundColor(Color.TRANSPARENT)
-        this.mDate.text = notification.created
+        this.mDate.text = DateTimeUtils.getDateString(notification.created)
     }
 }

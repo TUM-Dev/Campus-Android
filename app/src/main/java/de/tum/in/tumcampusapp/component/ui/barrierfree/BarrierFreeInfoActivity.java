@@ -23,13 +23,13 @@ public class BarrierFreeInfoActivity extends BaseActivity {
             Intent intent;
             switch (position) {
                 case 0:
-                    intent = new Intent(BarrierFreeInfoActivity.this, BarrierFreeContactActivity.class);
+                    intent = new Intent(this, BarrierFreeContactActivity.class);
                     break;
                 case 1:
-                    intent = new Intent(BarrierFreeInfoActivity.this, BarrierFreeFacilitiesActivity.class);
+                    intent = new Intent(this, BarrierFreeFacilitiesActivity.class);
                     break;
                 case 2:
-                    intent = new Intent(BarrierFreeInfoActivity.this, BarrierFreeMoreInfoActivity.class);
+                    intent = new Intent(this, BarrierFreeMoreInfoActivity.class);
                     break;
                 default:
                     intent = new Intent();

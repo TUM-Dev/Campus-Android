@@ -39,7 +39,7 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
     }
 
     fun populateMenu(navigationMenu: Menu) {
-        val hasTUMOAccess = AccessTokenManager(mContext).hasValidAccessToken()
+        val hasTUMOAccess = AccessTokenManager.hasValidAccessToken(mContext)
         val chatEnabled = Utils.getSettingBool(mContext, Const.GROUP_CHAT_ENABLED, false)
 
         val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)

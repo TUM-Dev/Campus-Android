@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
@@ -11,37 +12,49 @@ import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineRequestFetchListener;
+import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
+import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEvent;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEvent;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEventResponse;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
  */
-public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEvent> {
+public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEventResponse> {
 
-    private Calendar start, end;
+    private DateTime start;
+    private DateTime end;
+
     private boolean isEditing;
-    private TextView titleView, descriptionView, startDateView, startTimeView, endDateView, endTimeView;
+    private TextView titleView;
+    private TextView descriptionView;
+    private TextView startDateView;
+    private TextView startTimeView;
+    private TextView endDateView;
+    private TextView endTimeView;
     private AppCompatButton createButton;
     private CalendarItem event;
 
     public CreateEventActivity() {
-        super(TUMOnlineConst.Companion.getCREATE_EVENT(), R.layout.activity_create_event);
+        super(R.layout.activity_create_event);
     }
 
     @Override
@@ -80,7 +93,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         setDateAndTimeListeners();
 
         createButton.setOnClickListener(view -> {
-            if (end.before(start)) {
+            if (end.isBefore(start)) {
                 showErrorDialog(getString(R.string.create_event_time_error));
                 return;
             }
@@ -103,20 +116,18 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void initStartEndDates(Bundle extras) {
-        start = Calendar.getInstance();
-        end = Calendar.getInstance();
-
-        if (isEditing) {
-            start.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_START)));
-            end.setTime(DateUtils.getDateTime(extras.getString(Const.EVENT_END)));
+        if (isEditing) { // editing indicates extras are not null
+            start = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_START));
+            end = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_END));
         } else {
             // initial start: round up to the next full hour
-            start.add(Calendar.HOUR_OF_DAY, 1);
-            start.set(Calendar.MINUTE, 0);
+            start = new DateTime()
+                    .plusHours(1)
+                    .withMinuteOfHour(0);
 
             // initial length: 1 hour
-            end.setTimeInMillis(start.getTimeInMillis());
-            end.add(Calendar.HOUR_OF_DAY, 1);
+            end = new DateTime(start)
+                    .plusHours(1);
         }
 
         updateDateViews();
@@ -124,95 +135,110 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void setDateAndTimeListeners() {
-
         // DATE
         startDateView.setOnClickListener(view -> {
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
-                start.set(year, month, dayOfMonth);
-                if (end.before(start)) {
-                    end.set(year, month, dayOfMonth);
+                start = start.withDate(year, month, dayOfMonth);
+                if (end.isBefore(start)) {
+                    end = end.withDate(year, month, dayOfMonth);
                 }
                 updateDateViews();
-            }, start.get(Calendar.YEAR), start.get(Calendar.MONTH), start.get(Calendar.DAY_OF_MONTH)).show();
+            }, start.getYear(), start.getMonthOfYear(), start.getDayOfMonth()).show();
 
         });
         endDateView.setOnClickListener(view -> {
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
-                end.set(year, month, dayOfMonth);
+                end = end.withDate(year, month, dayOfMonth);
                 updateDateViews();
-            }, start.get(Calendar.YEAR), start.get(Calendar.MONTH), start.get(Calendar.DAY_OF_MONTH)).show();
+            }, start.getYear(), start.getMonthOfYear(), start.getDayOfMonth()).show();
         });
 
         // TIME
         startTimeView.setOnClickListener(view -> {
             new TimePickerDialog(this, (timePicker, hour, minute) -> {
-                long eventLength = end.getTimeInMillis() - start.getTimeInMillis();
-                start.set(Calendar.HOUR_OF_DAY, hour);
-                start.set(Calendar.MINUTE, minute);
-                end.setTimeInMillis(start.getTimeInMillis() + eventLength);
+                long eventLength = end.getMillis() - start.getMillis();
+                start = start.withHourOfDay(hour)
+                             .withMinuteOfHour(minute);
+                end = end.withMillis(start.getMillis() + eventLength);
                 updateTimeViews();
-            }, start.get(Calendar.HOUR_OF_DAY), start.get(Calendar.MINUTE), true).show();
+            }, start.getHourOfDay(), start.getMinuteOfDay(), true).show();
         });
 
         endTimeView.setOnClickListener(view -> {
             new TimePickerDialog(this, (timePicker, hour, minute) -> {
-                end.set(Calendar.HOUR_OF_DAY, hour);
-                end.set(Calendar.MINUTE, minute);
+                end = end.withHourOfDay(hour)
+                         .withMinuteOfHour(minute);
                 updateTimeViews();
-            }, end.get(Calendar.HOUR_OF_DAY), end.get(Calendar.MINUTE), true).show();
+            }, end.getHourOfDay(), end.getMinuteOfDay(), true).show();
         });
     }
 
     private void updateTimeViews() {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.GERMANY);
-        startTimeView.setText(format.format(start.getTime()));
-        endTimeView.setText(format.format(end.getTime()));
+        DateTimeFormatter format = DateTimeFormat.forPattern("HH:mm")
+                                                 .withLocale(Locale.getDefault());
+        startTimeView.setText(format.print(start));
+        endTimeView.setText(format.print(end));
     }
+
     private void updateDateViews() {
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd.MM.yyyy", Locale.GERMANY);
-        startDateView.setText(format.format(start.getTime()));
-        endDateView.setText(format.format(end.getTime()));
+        DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy")
+                                                 .withLocale(Locale.getDefault());
+        startDateView.setText(format.print(start));
+        endDateView.setText(format.print(end));
     }
 
     private void editEvent() {
-        final String eventNr = getIntent().getExtras().getString(Const.EVENT_NR);
-        TUMOnlineRequest<DeleteEvent> request = new TUMOnlineRequest<>(
-                TUMOnlineConst.Companion.getDELETE_EVENT(), this, true);
-        request.setParameter(Const.EVENT_NR, eventNr);
-        request.fetchInteractive(this, new TUMOnlineRequestFetchListener<DeleteEvent>() {
-            @Override
-            public void onNoInternetError() {
-                showErrorDialog(getString(R.string.no_internet_connection));
-            }
+        final String eventId = getIntent().getStringExtra(Const.EVENT_NR);
+        if (eventId == null) {
+            return;
+        }
 
-            @Override
-            public void onFetch(DeleteEvent response) {
-                Utils.log("Event successfully deleted (now creating the edited version)");
-                TcaDb.getInstance(getApplicationContext()).calendarDao().delete(eventNr);
-                createEvent();
-            }
+        // Because we don't show a loading screen for the delete request (only for the create
+        // request), we use a short Toast to let the user know that something is happening.
+        Toast.makeText(this, R.string.updating_event, Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onFetchCancelled() {
-                showErrorDialog(getString(R.string.error_something_wrong));
-            }
+        apiClient
+                .deleteEvent(eventId)
+                .enqueue(new Callback<DeleteEventResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<DeleteEventResponse> call,
+                                           @NonNull Response<DeleteEventResponse> response) {
+                        if (response.isSuccessful()) {
+                            Utils.log("Event successfully deleted (now creating the edited version)");
+                            TcaDb.getInstance(CreateEventActivity.this).calendarDao().delete(eventId);
+                            createEvent();
+                        } else {
+                            Utils.showToast(CreateEventActivity.this, R.string.error_unknown);
+                        }
+                    }
 
-            @Override
-            public void onFetchError(String errorReason) {
-                showErrorDialog(errorReason);
-            }
+                    @Override
+                    public void onFailure(@NonNull Call<DeleteEventResponse> call,
+                                          @NonNull Throwable t) {
+                        Utils.log(t);
+                        displayErrorMessage(t);
+                    }
+                });
+    }
 
-            @Override
-            public void onNoDataToShow() {
-                showErrorDialog(getString(R.string.error_something_wrong));
-            }
-        });
+    private void displayErrorMessage(Throwable t) {
+        int messageResId;
+
+        if (t instanceof NoNetworkConnectionException) {
+            messageResId = R.string.error_no_internet_connection;
+        } else if (t instanceof RequestLimitReachedException) {
+            messageResId = R.string.error_request_limit_reached;
+        } else {
+            messageResId = R.string.error_unknown;
+        }
+
+        Utils.showToast(this, messageResId);
     }
 
     private void createEvent() {
         event = new CalendarItem();
-        event.setDtstart(DateUtils.getDateTimeString(start.getTime()));
-        event.setDtend(DateUtils.getDateTimeString(end.getTime()));
+        event.setDtstart(start);
+        event.setDtend(end);
 
         String title = titleView.getText().toString();
         if (title.length() > 255) {
@@ -226,16 +252,13 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         }
         event.setDescription(description);
 
-        requestHandler.setParameter(Const.EVENT_TITLE, title);
-        requestHandler.setParameter(Const.EVENT_COMMENT, description);
-        requestHandler.setParameter(Const.EVENT_START, event.getDtstart());
-        requestHandler.setParameter(Const.EVENT_END, event.getDtend());
-        requestFetch();
+        Call<CreateEventResponse> apiCall = apiClient.createEvent(event, null);
+        fetch(apiCall);
     }
 
     @Override
-    public void onFetch(CreateEvent response) {
-        String nr = response.getEventNr();
+    protected void onDownloadSuccessful(@NonNull CreateEventResponse response) {
+        String nr = response.getEventId();
         event.setNr(nr);
         TcaDb.getInstance(this).calendarDao().insert(event);
         finish();
@@ -265,7 +288,6 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         InputMethodManager inputManager =
                 (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputManager != null) {
-            inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             inputManager.hideSoftInputFromWindow(titleView.getWindowToken(),0);
         }
     }
@@ -273,6 +295,8 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private boolean handleOnBackPressed() {
         String title = titleView.getText().toString();
         String description = descriptionView.getText().toString();
+
+        // TODO: If the user is in edit mode, check whether any data was changed.
         return title.isEmpty() && description.isEmpty();
     }
 

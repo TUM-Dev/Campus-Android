@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                                        xmlns:tools="http://schemas.android.com/tools"
-                                        android:id="@+id/drawer_layout"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,12 +25,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/relativeLayout"
+                android:background="@drawable/chat_background"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="5.0sp"
+                android:paddingBottom="3dp"
                 android:stackFromBottom="true"
-                android:transcriptMode="normal"
-                android:background="@drawable/chat_background"
-                android:paddingBottom="3dp"/>
+                android:transcriptMode="normal" />
 
             <RelativeLayout
                 android:id="@id/relativeLayout"
@@ -44,16 +45,14 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="3dp"
-                    android:layout_toLeftOf="@+id/btnSend"
                     android:layout_toStartOf="@+id/btnSend"
                     android:hint="@string/send"
                     android:inputType="textCapSentences|textMultiLine"
                     android:maxLines="4"
-                    android:textCursorDrawable="@drawable/cursor_text_field_colorful"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical"
+                    android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
                 <ImageButton
                     android:id="@+id/btnSend"
@@ -61,16 +60,20 @@
                     android:layout_height="match_parent"
                     android:layout_alignBottom="@+id/etMessage"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center_vertical"
                     android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/send"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    app:srcCompat="@drawable/ic_action_send_now"/>
+                    app:srcCompat="@drawable/ic_action_send_now" />
+
             </RelativeLayout>
+
         </RelativeLayout>
+
     </LinearLayout>
-    <include layout="@layout/navigation_drawer"/>
+
+    <include layout="@layout/navigation_drawer" />
+
 </android.support.v4.widget.DrawerLayout>

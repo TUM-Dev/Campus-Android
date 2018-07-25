@@ -14,6 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
+
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -30,7 +33,7 @@ public class DepartureView extends LinearLayout {
     private final TextSwitcher mTimeSwitcher;
     private final Handler mHandler;
     private ValueAnimator mValueAnimator;
-    private long mDepartureTime;
+    private DateTime mDepartureTime;
 
     /**
      * Standard constructor for DepartureView
@@ -130,13 +133,13 @@ public class DepartureView extends LinearLayout {
      *
      * @param departureTime Timestamp in milliseconds, when transport leaves
      */
-    public void setTime(long departureTime) {
+    public void setTime(DateTime departureTime) {
         mDepartureTime = departureTime;
         updateDepartureTime();
     }
 
     private void updateDepartureTime() {
-        long departureOffset = (mDepartureTime - System.currentTimeMillis()) / 1000;
+        int departureOffset = Seconds.secondsBetween(DateTime.now(), mDepartureTime).getSeconds();
         String text = String.format(Locale.getDefault(), "%2d:%02d", departureOffset / 60, departureOffset % 60);
         if (departureOffset > 0) {
             mTimeSwitcher.setCurrentText(text);

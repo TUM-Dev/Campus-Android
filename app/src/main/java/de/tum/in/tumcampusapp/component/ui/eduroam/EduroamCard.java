@@ -95,12 +95,4 @@ public class EduroamCard extends NotificationAwareCard {
         return 5000;
     }
 
-    @Override
-    public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_action_network_wifi);
-        return remoteViews;
-    }
-
 }

@@ -18,10 +18,15 @@
         <item name="colorAccent">@color/color_primary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field</item>
+
+        <!-- Light navigation bar -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.SettingsTheme" parent="AppTheme">
+    <style name="AppTheme.NoDrawerLayout" parent="AppTheme">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:statusBarColor">@color/color_primary_dark</item>
     </style>
 
     <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">

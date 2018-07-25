@@ -1,51 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/material_small_padding">
 
     <LinearLayout
         android:id="@+id/line_symbol_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:layout_gravity="center_vertical">
 
         <TextView
             android:id="@+id/line_symbol"
             android:layout_width="40dp"
-            android:layout_height="20dp"
+            android:layout_height="24dp"
             android:gravity="center"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            tools:text="U6" />
+
     </LinearLayout>
 
     <TextView
         android:id="@+id/line_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="4dp"
-        android:layout_toEndOf="@id/line_symbol_ll"
-        android:layout_toLeftOf="@+id/departure_time"
-        android:layout_toRightOf="@id/line_symbol_ll"
-        android:layout_toStartOf="@id/line_switcher"
+        android:layout_marginStart="@dimen/material_small_padding"
+        android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:textSize="16sp"/>
+        android:textColor="#ff656865"
+        android:textSize="16sp"
+        tools:text="Klinikum Großhadern" />
 
     <TextView
         android:id="@+id/departure_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="10dp"
+        android:layout_marginStart="@dimen/material_tiny_padding"
         android:gravity="end"
         android:minWidth="40dp"
         android:textAlignment="textEnd"
-        android:textColor="@color/sections_green"/>
-</RelativeLayout>
+        android:textColor="@color/sections_green"
+        tools:text="3 min" />
+
+</LinearLayout>

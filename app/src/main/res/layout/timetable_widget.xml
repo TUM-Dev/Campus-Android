@@ -1,62 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/widget_margin"
-                android:theme="@style/AppTheme.WhiteBackground">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/timetable_widget_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_primary"
-        android:elevation="2dp"
-        android:padding="10dp"
-        tools:ignore="UnusedAttribute">
+        android:background="@drawable/widget_header_rounded_corners_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/material_small_padding">
 
-        <TextView
-            android:id="@+id/timetable_widget_day"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/timetable_widget_setting"
-            android:layout_toStartOf="@+id/timetable_widget_setting"
-            android:background="@color/color_primary"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:typeface="sans"/>
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/timetable_widget_weekday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                tools:text="Day" />
+
+            <TextView
+                android:id="@+id/timetable_widget_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                tools:text="Date" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/timetable_widget_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/color_primary"
-            app:srcCompat="@drawable/ic_action_settings"
-            android:typeface="sans"/>
-    </RelativeLayout>
+            android:padding="@dimen/material_tiny_padding"
+            android:src="@drawable/ic_filter_list" />
 
+    </LinearLayout>
 
-    <ListView
-        android:id="@+id/timetable_widget_listview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/timetable_widget_header"
-        android:divider="@null"
-        android:dividerHeight="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/widget_content_rounded_corners_background">
 
-    </ListView>
+        <ListView
+            android:id="@+id/timetable_widget_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp" />
 
-    <TextView
-        android:id="@+id/empty_list_item"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/timetable_widget_header"
-        android:gravity="center"
-        android:text="@string/timetable_widget_no_lectures"
-        android:visibility="gone"/>
+        <TextView
+            android:id="@+id/empty_list_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/timetable_widget_no_lectures"
+            android:textColor="@color/text_dark_gray"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
-</RelativeLayout> 
+    </FrameLayout>
+
+</LinearLayout>

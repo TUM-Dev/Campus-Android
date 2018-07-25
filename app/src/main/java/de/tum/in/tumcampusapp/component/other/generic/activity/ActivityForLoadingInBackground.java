@@ -69,14 +69,15 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
 
         showLoadingStart();
         Observable.fromCallable(() -> Optional.fromNullable(onLoadInBackground(arg)))
-                  .compose(provider.bindToLifecycle())
-                  .subscribeOn(Schedulers.io())
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .subscribe((result) -> {
-                      showLoadingEnded();
-                      onLoadFinished(result.orNull());
-                      isRunning.set(false);
-                  });
+                .compose(provider.bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturnItem(Optional.absent())
+                .subscribe((result) -> {
+                    showLoadingEnded();
+                    onLoadFinished(result.orNull());
+                    isRunning.set(false);
+                });
     }
 
     @Override

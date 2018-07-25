@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
@@ -52,7 +54,7 @@ public class CafeteriaManager implements ProvidesCard {
 
     @NotNull
     @Override
-    public List<Card> getCards() {
+    public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
         // Choose which mensa should be shown
@@ -82,11 +84,12 @@ public class CafeteriaManager implements ProvidesCard {
 
         return createCafeteriaObservableForNonUIThreads(cafeteriaId)
                 .map(cafeteria -> {
-                    String mensaKey = cafeteria.getName() + ' ' + cafeteria.getNextMenuDate();
+                    String mensaKey = cafeteria.getName() + ' ' + cafeteria.getNextMenuDate().toString();
                     Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>(1);
                     selectedMensaMenus.put(mensaKey, cafeteria.getMenus());
                     return selectedMensaMenus;
-                });
+                })
+                .onErrorReturnItem(new HashMap<>());
 
     }
 
@@ -124,7 +127,7 @@ public class CafeteriaManager implements ProvidesCard {
                 .flatMap(menuDates -> {
                     cafeteria.setMenuDates(menuDates);
                     return  CafeteriaLocalRepository.INSTANCE.getCafeteriaMenus(
-                            cafeteria.getId(), cafeteria.getNextMenuDateText());
+                            cafeteria.getId(), cafeteria.getNextMenuDate());
                 })
                 .map(menus -> {
                     cafeteria.setMenus(menus);
@@ -145,7 +148,7 @@ public class CafeteriaManager implements ProvidesCard {
                 .flatMap(menuDates -> {
                     cafeteria.setMenuDates(menuDates);
                     return cafeteriaViewModel.getCafeteriaMenus(
-                            cafeteria.getId(), cafeteria.getNextMenuDateText());
+                            cafeteria.getId(), cafeteria.getNextMenuDate());
                 })
                 .map(menus -> {
                     cafeteria.setMenus(menus);

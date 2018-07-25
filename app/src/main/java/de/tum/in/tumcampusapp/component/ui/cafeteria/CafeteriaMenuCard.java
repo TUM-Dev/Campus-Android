@@ -12,9 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -84,15 +84,15 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
     @Override
     public void discard(Editor editor) {
-        Date date = mCafeteria.getNextMenuDate();
-        editor.putLong(CAFETERIA_DATE, date.getTime());
+        DateTime date = mCafeteria.getNextMenuDate();
+        editor.putLong(CAFETERIA_DATE, date.getMillis());
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         final long prevDate = prefs.getLong(CAFETERIA_DATE, 0);
-        Date date = mCafeteria.getNextMenuDate();
-        return prevDate < date.getTime();
+        DateTime date = mCafeteria.getNextMenuDate();
+        return prevDate < date.getMillis();
     }
 
     @Override
@@ -144,7 +144,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
             }
         }
 
-        notificationBuilder.setWhen(mCafeteria.getNextMenuDate().getTime());
+        notificationBuilder.setWhen(mCafeteria.getNextMenuDate().getMillis());
         notificationBuilder.setContentText(firstContent);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(allContent));
         Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_cafeteria);
@@ -153,11 +153,4 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
                                    .build();
     }
 
-    @Override
-    public RemoteViews getRemoteViews(Context context, int appWidgetId) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_cutlery);
-        return remoteViews;
-    }
 }

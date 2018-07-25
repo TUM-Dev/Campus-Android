@@ -1,26 +1,26 @@
 package de.tum.in.tumcampusapp.component.tumui.tutionfees;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
-import de.tum.in.tumcampusapp.utils.DateUtils;
+import retrofit2.Call;
 
 /**
- * Activity to show the user's tuition ; based on grades.java / quick solution
+ * Activity to show the user's tuition fees status
  */
 public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionList> {
 
@@ -29,7 +29,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
     private TextView semesterTextView;
 
     public TuitionFeesActivity() {
-        super(TUMOnlineConst.TUITION_FEE_STATUS, R.layout.activity_tuitionfees);
+        super(R.layout.activity_tuitionfees);
     }
 
     @Override
@@ -39,47 +39,50 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         amountTextView = findViewById(R.id.soll);
         deadlineTextView = findViewById(R.id.deadline);
         semesterTextView = findViewById(R.id.semester);
-        ((TextView) findViewById(R.id.fees_aid)).setMovementMethod(LinkMovementMethod.getInstance());
 
-        JodaTimeAndroid.init(this);
+        // Set the text in the information box and make the link clickable
+        TextView informationTextView = findViewById(R.id.fees_aid);
+        Spanned information = Html.fromHtml(getString(R.string.tuition_fee_more));
+        informationTextView.setText(information);
+        informationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-        requestFetch();
+        refreshData(CacheControl.USE_CACHE);
     }
 
-    /**
-     * Handle the response by de-serializing it into model entities.
-     *
-     * @param tuitionList TUMOnline response
-     */
     @Override
-    public void onFetch(TuitionList tuitionList) {
-        Tuition tuition = tuitionList.getTuitions().get(0);
+    public void onRefresh() {
+        refreshData(CacheControl.BYPASS_CACHE);
+    }
 
-        String amountText = tuition.getOutstandingBalanceText();
+    private void refreshData(CacheControl cacheControl) {
+        Call<TuitionList> apiCall = apiClient.getTuitionFeesStatus(cacheControl);
+        fetch(apiCall);
+    }
+
+    @Override
+    protected void onDownloadSuccessful(@NonNull TuitionList response) {
+        Tuition tuition = response.getTuitions().get(0);
+
+        String amountText = tuition.getAmountText(this);
         amountTextView.setText(amountText);
 
-        Date deadline = DateUtils.getDate(tuitionList.getTuitions()
-                                                 .get(0)
-                                                 .getFrist());
-        deadlineTextView.setText(DateFormat.getDateInstance()
-                                           .format(deadline));
-        semesterTextView.setText(tuitionList.getTuitions()
-                                            .get(0)
-                                            .getSemesterBez()
-                                            .toUpperCase(Locale.getDefault()));
+        DateTime deadline = tuition.getDeadline();
+        deadlineTextView.setText(DateTimeFormat.longDate().print(deadline));
 
-        if (tuition.getOutstandingBalance() == 0) {
+        String semester = tuition.getSemester().toUpperCase(Locale.getDefault());
+        semesterTextView.setText(semester);
+
+        if (tuition.isPaid()) {
             amountTextView.setTextColor(getResources().getColor(R.color.sections_green));
         } else {
             // check if the deadline is less than a week from now
             DateTime nextWeek = new DateTime().plusWeeks(1);
-            if(nextWeek.isAfter(deadline.getTime())){
+            if (nextWeek.isAfter(deadline)) {
                 amountTextView.setTextColor(getResources().getColor(R.color.error));
             } else {
                 amountTextView.setTextColor(getResources().getColor(R.color.black));
             }
         }
-
-        showLoadingEnded();
     }
+
 }

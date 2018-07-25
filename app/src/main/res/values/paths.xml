@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- pathData values for arrow animation -->
-    <string name="arrow_up_path">M7.41,15.41 l4.59,-4.58 l4.59,4.58 L18,14 l-6,-6 -6,6z</string>
-    <string name="arrow_down_path">M7.41,7.84 l4.59,4.58 l4.59,-4.58 L18,9.25 l-6,6 -6,-6z</string>
-    <string name="arrow_down_flat_path">M6.705,10.448 l5.295,0 l5.295,0 L17.295,12.442 l-5.295,0 -5.295,0z</string>
-    <string name="arrow_up_flat_path">M6.705,12.442 l5.295,0 l5.295,0 L17.295,10.448 l-5.295,0 -5.295,0z</string>
+    <string name="arrow_up_path" translatable="false">M7.41,15.41 l4.59,-4.58 l4.59,4.58 L18,14 l-6,-6 -6,6z</string>
+    <string name="arrow_down_path" translatable="false">M7.41,7.84 l4.59,4.58 l4.59,-4.58 L18,9.25 l-6,6 -6,-6z</string>
+    <string name="arrow_down_flat_path" translatable="false">M6.705,10.448 l5.295,0 l5.295,0 L17.295,12.442 l-5.295,0 -5.295,0z</string>
+    <string name="arrow_up_flat_path" translatable="false">M6.705,12.442 l5.295,0 l5.295,0 L17.295,10.448 l-5.295,0 -5.295,0z</string>
 </resources>

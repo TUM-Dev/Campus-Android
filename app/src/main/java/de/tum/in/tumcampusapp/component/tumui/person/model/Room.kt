@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
 
 import java.io.Serializable
 
@@ -10,10 +10,10 @@ import java.io.Serializable
  * model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
-@Root(name = "raum", strict = false)
-data class Room(@field:Element(name = "ortsbeschreibung")
+@Xml(name = "raum")
+data class Room(@PropertyElement(name = "ortsbeschreibung")
                 var location: String = "",
-                @field:Element(name = "kurz")
+                @PropertyElement(name = "kurz")
                 var number: String = "") : Serializable {
 
     fun getFullLocation() = "$location ($number)"

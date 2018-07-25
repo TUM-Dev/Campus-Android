@@ -19,4 +19,10 @@ data class ChatRoom(var name: String = "") {
         }
         return name
     }
+
+    companion object {
+        @JvmField val MODE_JOINED = 1
+        @JvmField val MODE_UNJOINED = 0
+    }
+
 }

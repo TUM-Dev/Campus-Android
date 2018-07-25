@@ -4,12 +4,11 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
-
 import com.google.common.base.Charsets
+import com.tickaroo.tikxml.annotation.Element
+import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
-
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
 
 /**
  * An employee of the TUM.
@@ -18,33 +17,33 @@ import org.simpleframework.xml.Root
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
-@Root(name = "person", strict = false)
-data class Employee(@field:Element(name = "geschlecht", required = false)
-                    var gender: String = "",
-                    @field:Element(name = "obfuscated_id")
-                    var id: String = "",
-                    @field:Element(name = "vorname")
-                    var name: String = "",
-                    @field:Element(name = "familienname")
-                    var surname: String = "",
-                    @field:Element(name = "dienstlich")
-                    var businessContact: Contact? = null,
-                    @field:Element(name = "sprechstunde", required = false)
-                    var consultationHours: String = "",
-                    @field:Element(required = false)
-                    var email: String = "",
-                    @field:Element(name = "gruppen", required = false)
-                    var groupList: GroupList? = null,
-                    @field:Element(name = "image_data", required = false)
-                    var imageData: String = "",
-                    @field:Element(name = "privat")
-                    var privateContact: Contact? = null,
-                    @field:Element(name = "raeume", required = false)
-                    var roomList: RoomList? = null,
-                    @field:Element(name = "telefon_nebenstellen", required = false)
-                    var telSubstationList: TelSubstationList? = null,
-                    @field:Element(name = "titel", required = false)
-                    var title: String = "") {
+@Xml(name = "person")
+data class Employee(@PropertyElement(name = "geschlecht")
+                    val gender: String? = null,
+                    @PropertyElement(name = "obfuscated_id")
+                    val id: String = "",
+                    @PropertyElement(name = "vorname")
+                    val name: String = "",
+                    @PropertyElement(name = "familienname")
+                    val surname: String = "",
+                    @Element(name = "dienstlich")
+                    val businessContact: Contact? = null,
+                    @PropertyElement(name = "sprechstunde")
+                    val consultationHours: String = "",
+                    @PropertyElement
+                    val email: String = "",
+                    @Element(name = "gruppen")
+                    val groupList: GroupList? = null,
+                    @PropertyElement(name = "image_data")
+                    val imageData: String = "",
+                    @Element(name = "privat")
+                    val privateContact: Contact? = null,
+                    @Element(name = "raeume")
+                    val roomList: RoomList? = null,
+                    @Element(name = "telefon_nebenstellen")
+                    val telSubstationList: TelSubstationList? = null,
+                    @PropertyElement(name = "titel")
+                    val title: String = "") {
 
     val groups: List<Group>?
         get() = groupList?.groups
@@ -66,24 +65,11 @@ data class Employee(@field:Element(name = "geschlecht", required = false)
         val salutation = context.getString(resourceId)
         val salutationWithName = "$salutation $name $surname"
 
-        if (title.isEmpty()) {
+        if (title.isBlank()) {
             return salutationWithName
         } else {
             return "$salutationWithName, $title"
         }
     }
 
-    override fun toString(): String {
-        var infoText = title
-
-        if (title != "") {
-            infoText = title + ' '
-        }
-
-        return infoText + name + ' ' + surname
-    }
-
-    companion object {
-        private val serialVersionUID = -6276330922677632119L
-    }
 }
