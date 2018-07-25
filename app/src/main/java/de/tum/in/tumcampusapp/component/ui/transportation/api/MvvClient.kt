@@ -24,6 +24,7 @@ class MvvClient {
         private fun buildService(context: Context): MvvApiService {
             val gson = GsonBuilder()
                     .registerTypeAdapter(DateTime::class.java, MvvDateSerializer())
+                    .registerTypeAdapter(MvvStationList::class.java, MvvStationListSerializer())
                     .create()
             return Retrofit.Builder()
                     .baseUrl(BASE_URL)

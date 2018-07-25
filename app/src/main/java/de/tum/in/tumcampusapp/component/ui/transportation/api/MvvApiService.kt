@@ -60,11 +60,13 @@ interface MvvApiService {
     @GET("XML_STOPFINDER_REQUEST?outputFormat=JSON" +
             "&stateless=1" +
             "&coordOutputFormat=WGS84" +
-            "&type_dm=stop" +
-            "&itOptionsActive=1" +
-            "&ptOptionsActive=1" +
-            "&mergeDep=1" +
-            "&useAllStops=1" +
-            "&mode=direct")
-    fun getStations(@Query("name_sf") namePrefix: String): Call<List<String>>
+            "&locationServerActive=1" +
+            "&type_sf=stop" +
+            "&anyObjFilter_sf=126" +
+            "&reducedAnyPostcodeObjFilter_sf=64" +
+            "&reducedAnyTooManyObjFilter_sf=2" +
+            "&useHouseNumberList=true" +
+            "&anyMaxSizeHitList=10" // max 10 results
+            )
+    fun getStations(@Query("name_sf") namePrefix: String): Call<MvvStationList>
 }
