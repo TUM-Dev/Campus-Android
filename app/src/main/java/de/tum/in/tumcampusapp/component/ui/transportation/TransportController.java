@@ -43,47 +43,14 @@ import de.tum.in.tumcampusapp.utils.Utils;
 @SuppressWarnings("StringConcatenationMissingWhitespace")
 public class TransportController implements ProvidesCard {
 
-    /*  Documentation for using efa.mvv-muenchen.de
-     *
-     *  use XML_STOPFINDER_REQUEST to find available stops, e.g.: "Gar"
-     *  http://efa.mvv-muenchen.de/mobile/XML_STOPFINDER_REQUEST?outputFormat=JSON&language=de&stateless=1&coordOutputFormat=WGS84&locationServerActive=1&type_sf=any&name_sf=Gar&anyObjFilter_sf=126&reducedAnyPostcodeObjFilter_sf=64&reducedAnyTooManyObjFilter_sf=2&useHouseNumberList=true&anyMaxSizeHitList=500
-     *  probably hint the one that gets best="1"
-     *  then SORT BY QUALITY, since finding 500+ stops is no fun, probably restrict this to around 10
-     *
-     *  Breakdown:
-     *  http://efa.mvv-muenchen.de/mobile/XML_STOPFINDER_REQUEST? // MVV API base
-     *  outputFormat=JSON
-     *  &language=de&stateless=1&coordOutputFormat=WGS84&locationServerActive=1 // Common parameters
-     *  &type_sf=any // Station type. Just keep "any"
-     *  &name_sf=Gar // Search string
-     *  &anyObjFilter_sf=126&reducedAnyPostcodeObjFilter_sf=64&reducedAnyTooManyObjFilter_sf=2&useHouseNumberList=true
-     *  &anyMaxSizeHitList=500 // How many results there are being provided
-     *
-     *  use XSLT_DM_REQUEST for departures from stations
-     *
-     *  Full request: http://efa.mvv-muenchen.de/mobile/XSLT_DM_REQUEST?outputFormat=JSON&language=de&stateless=1&coordOutputFormat=WGS84&type_dm=stop&name_dm=Freising&itOptionsActive=1&ptOptionsActive=1&mergeDep=1&useAllStops=1&mode=direct
-     *
-     *  Breakdown:
-     *  http://efa.mvv-muenchen.de/mobile/XSLT_DM_REQUEST? // MVV API base
-     *  outputFormat=JSON // One could also specify XML
-     *  &language=de // Tests showed this gets ignored by MVV, but set to language nevertheless
-     *  &stateless=1&coordOutputFormat=WGS84 // Common parameters. They are reasonable, so don't change
-     *  &type_dm=stop // Station type.
-     *  &name_dm=Freising // This is the actual query string
-     *  &itOptionsActive=1&ptOptionsActive=1&mergeDep=1&useAllStops=1&mode=direct // No idea what these parameters actually do. Feel free to experiment with them, just don't blame me if anything breaks
-     */
-
     private static final String MVV_API_BASE = "http://efa.mvv-muenchen.de/mobile/"; // No HTTPS support :(
     private static final String OUTPUT_FORMAT = "outputFormat=JSON";
     private static final String STATELESS = "stateless=1";
     private static final String COORD_OUTPUT_FORMAT = "coordOutputFormat=WGS84";
     private static final String LOCATION_SERVER = "locationServerActive=1";
     private static final String STATION_SEARCH_TYPE = "type_sf=stop";
-    private static final String STATION_SEARCH_TYPE_COORD = "type_sf=coord";
     private static final String STATION_SEARCH_COMMON = "anyObjFilter_sf=126&reducedAnyPostcodeObjFilter_sf=64&reducedAnyTooManyObjFilter_sf=2&useHouseNumberList=true";
     private static final String STATION_SEARCH_HITLIST_SIZE = "anyMaxSizeHitList=10"; // 10 <=> what we can display on one page
-    private static final String DEPARTURE_QUERY_TYPE = "type_dm=stop";
-    private static final String DEPARTURE_QUERY_COMMON = "itOptionsActive=1&ptOptionsActive=1&mergeDep=1&useAllStops=1&mode=direct";
 
     private static final String STATION_SEARCH = "XML_STOPFINDER_REQUEST";
     private static final String STATION_SEARCH_CONST;
@@ -93,16 +60,10 @@ public class TransportController implements ProvidesCard {
     };
 
     private static final String DEPARTURE_QUERY = "XSLT_DM_REQUEST";
-    private static final String DEPARTURE_QUERY_CONST;
-    private static final String[] DEPARTURE_QUERY_CONST_PARAMS = {
-            OUTPUT_FORMAT, STATELESS, COORD_OUTPUT_FORMAT, DEPARTURE_QUERY_TYPE,
-            DEPARTURE_QUERY_COMMON
-    };
 
     // Set the following parameters before appending
     private static final String LANGUAGE = "language=";
     private static final String STATION_SEARCH_QUERY = "name_sf=";
-    private static final String DEPARTURE_QUERY_STATION = "name_dm=";
     private static final String POINTS = "points";
     private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
@@ -120,15 +81,6 @@ public class TransportController implements ProvidesCard {
                     .append('&');
         }
         STATION_SEARCH_CONST = stationSearch.toString();
-
-        StringBuilder departureQuery = new StringBuilder(MVV_API_BASE);
-        departureQuery.append(DEPARTURE_QUERY)
-                .append('?');
-        for (String param : DEPARTURE_QUERY_CONST_PARAMS) {
-            departureQuery.append(param)
-                    .append('&');
-        }
-        DEPARTURE_QUERY_CONST = departureQuery.toString();
     }
 
     public TransportController(Context context) {
@@ -233,6 +185,9 @@ public class TransportController implements ProvidesCard {
         try {
             MvvDepartureList mvvDepartures = MvvClient.getInstance(context)
                     .getDepartures(stationID).execute().body();
+            if (mvvDepartures == null) {
+                return Collections.emptyList();
+            }
 
             List<Departure> result = new ArrayList<>(mvvDepartures.getDepartureList().size());
             for (MvvDeparture departure : mvvDepartures.getDepartureList()) {
@@ -241,11 +196,12 @@ public class TransportController implements ProvidesCard {
                         departure.getServingLine().getDirection(),
                         departure.getServingLine().getSymbol(),
                         departure.getCountdown(),
-                        departure.getTime()
+                        departure.getDateTime()
                 ));
             }
 
             Collections.sort(result, (lhs, rhs) -> Integer.compare(lhs.getCountDown(), rhs.getCountDown()));
+            return result;
         } catch (IOException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
@@ -342,7 +298,7 @@ public class TransportController implements ProvidesCard {
         return results;
     }
 
-    public static List<StationResult> getRecentStations(List<Recent> recents) {
+    public static List<StationResult> getRecentStations(Collection<Recent> recents) {
         List<StationResult> stationResults = new ArrayList<>(recents.size());
         for (Recent r : recents) {
             try {
