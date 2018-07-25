@@ -48,7 +48,6 @@ public class RoomFinderDetailsActivity
     private ImageViewTouchFragment mImage;
 
     private boolean mapsLoaded;
-    private NetUtils net;
 
     private RoomFinderRoom room;
     private String mapId = "";
@@ -63,8 +62,6 @@ public class RoomFinderDetailsActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        net = new NetUtils(this);
 
         mImage = ImageViewTouchFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
