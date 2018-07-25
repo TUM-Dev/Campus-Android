@@ -47,7 +47,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Lis
 
         // Initialize stations adapter
         List<Recent> recentStations = recentsDao.getAll(RecentsDao.STATIONS);
-        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportController.getRecentStations(recentStations));
+        adapterStations = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, TransportController.Companion.getRecentStations(recentStations));
 
         if (adapterStations.getCount() == 0) {
             openSearch();
@@ -86,7 +86,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Lis
      */
     @Override
     public Optional<List<StationResult>> onSearchInBackground() {
-        return Optional.of(TransportController.getRecentStations(recentsDao.getAll(RecentsDao.STATIONS)));
+        return Optional.of(TransportController.Companion.getRecentStations(recentsDao.getAll(RecentsDao.STATIONS)));
     }
 
     /**
@@ -98,7 +98,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Lis
     @Override
     public Optional<List<StationResult>> onSearchInBackground(String query) {
         // Get Information
-        List<StationResult> stations = TransportController.getStationsFromExternal(this, query);
+        List<StationResult> stations = TransportController.Companion.getStationsFromExternal(this, query);
 
         return Optional.of(stations);
     }

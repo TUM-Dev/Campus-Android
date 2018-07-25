@@ -105,7 +105,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
 
         // get departures from website
-        List<Departure> departures = TransportController.getDeparturesFromExternal(this, locationID);
+        List<Departure> departures = TransportController.Companion.getDeparturesFromExternal(this, locationID);
         if (departures.isEmpty()) {
             showError(R.string.no_departures_found);
         }

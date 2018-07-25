@@ -3,10 +3,9 @@ package de.tum.`in`.tumcampusapp.component.ui.transportation.api
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.*
 
 interface MvvApiService {
-// TODO: check if language parameter makes any difference
-
     /*  Documentation for using efa.mvv-muenchen.de
      *
      *  use XML_STOPFINDER_REQUEST to find available stops, e.g.: "Gar"
@@ -50,11 +49,11 @@ interface MvvApiService {
             "&mergeDep=1" +
             "&useAllStops=1" +
             "&mode=direct")
-    fun getDepartures(@Query("name_dm") stationId: String): Call<MvvDepartureList>
+    fun getDepartures(@Query("name_dm") stationId: String,
+                      @Query("language") language: String = Locale.getDefault().language): Call<MvvDepartureList>
 
     /**
      * Find stations by station name prefix
-     * TODO: Check if escaping query parameters is necessary
      * @param namePrefix Name prefix
      */
     @GET("XML_STOPFINDER_REQUEST?outputFormat=JSON" +
@@ -65,8 +64,9 @@ interface MvvApiService {
             "&anyObjFilter_sf=126" +
             "&reducedAnyPostcodeObjFilter_sf=64" +
             "&reducedAnyTooManyObjFilter_sf=2" +
-            "&useHouseNumberList=true" +
-            "&anyMaxSizeHitList=10" // max 10 results
-            )
-    fun getStations(@Query("name_sf") namePrefix: String): Call<MvvStationList>
+            "&useHouseNumberList=true")
+    fun getStations(@Query("name_sf") namePrefix: String,
+                    @Query("anyMaxSizeHitList") maxResults: Int = 10,
+                    @Query("language") language: String = Locale.getDefault().language)
+            : Call<MvvStationList>
 }
