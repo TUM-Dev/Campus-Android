@@ -34,10 +34,7 @@ class CacheManager(private val context: Context) {
                 .enqueue(object : Callback<Events> {
                     override fun onResponse(call: Call<Events>, response: Response<Events>) {
                         val events = response.body() ?: return
-
-                        val calendarController = CalendarController(context)
-                        calendarController.importCalendar(events)
-
+                        CalendarController(context).importCalendar(events)
                         CalendarController.QueryLocationsService.loadGeo(context)
                     }
 
