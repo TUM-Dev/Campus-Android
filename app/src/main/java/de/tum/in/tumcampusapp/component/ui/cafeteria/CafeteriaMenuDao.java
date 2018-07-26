@@ -27,10 +27,10 @@ public interface CafeteriaMenuDao {
     Flowable<List<String>> getNextDatesForDish(int cafeteriaId, String dishName);
 
     @Query("SELECT DISTINCT date FROM cafeteriaMenu WHERE date >= date('now','localtime') ORDER BY date")
-    Flowable<List<DateTime>> getAllDates();
+    List<DateTime> getAllDates();
 
     @Query("SELECT id, cafeteriaId, date, typeShort, typeLong, 0 AS typeNr, group_concat(name, '\n') AS name FROM cafeteriaMenu " +
-           "WHERE cafeteriaId = :cafeteriaId AND date = :date " +
-           "GROUP BY typeLong ORDER BY typeShort=\"tg\" DESC, typeShort ASC, typeNr")
-    Flowable<List<CafeteriaMenu>> getTypeNameFromDbCard(int cafeteriaId, DateTime date);
+            "WHERE cafeteriaId = :cafeteriaId AND date = :date " +
+            "GROUP BY typeLong ORDER BY typeShort=\"tg\" DESC, typeShort ASC, typeNr")
+    List<CafeteriaMenu> getTypeNameFromDbCard(int cafeteriaId, DateTime date);
 }
