@@ -23,25 +23,16 @@ class MvvStationListSerializer : JsonDeserializer<MvvStationList> {
 
         // singleton result, i.e. exact match
         if (points is JsonObject) {
-            return MvvStationList(listOf(parseStationResult(points.get("point") as JsonObject)))
+            return MvvStationList(listOf(StationResult.fromJson(points.get("point") as JsonObject)))
         }
 
         if (points is JsonArray) {
             val resultList = points.map {
-                parseStationResult(it as JsonObject)
+                StationResult.fromJson(it as JsonObject)
             }
             return MvvStationList(resultList)
         }
 
         throw JsonParseException("Unknown MvvStationList: $json")
-    }
-
-
-    private fun parseStationResult(json: JsonObject): StationResult {
-        return StationResult(
-                json.get("name").asString,
-                json.getAsJsonObject("ref").get("id").asString,
-                json.get("quality")?.asInt ?: 0
-        )
     }
 }
