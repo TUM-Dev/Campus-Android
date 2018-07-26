@@ -27,7 +27,7 @@ data class Tuition(@PropertyElement(name = "frist", converter = DateConverter::c
                    @PropertyElement(name = "soll", converter = FloatConverter::class)
                    val amount: Float) {
 
-    fun getIntent(context: Context): Intent? = Intent(context, TuitionFeesActivity::class.java)
+    fun getIntent(context: Context): Intent = Intent(context, TuitionFeesActivity::class.java)
 
     val isPaid: Boolean
         get() = amount == 0f

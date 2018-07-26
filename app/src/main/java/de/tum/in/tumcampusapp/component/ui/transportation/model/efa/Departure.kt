@@ -1,8 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa
 
-import android.content.Context
-import android.content.Intent
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationDetailsActivity
 import org.joda.time.DateTime
 import org.joda.time.Minutes
 
@@ -19,11 +16,5 @@ data class Departure(var servingLine: String = "",
      */
     val calculatedCountDown: Int
         get() = Minutes.minutesBetween(DateTime.now(), departureTime).minutes
-
-    fun getIntent(context: Context, station: StationResult): Intent? =
-            Intent(context, TransportationDetailsActivity::class.java).apply {
-                putExtra(TransportationDetailsActivity.EXTRA_STATION, station.id)
-                putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, station.station)
-            }
 
 }

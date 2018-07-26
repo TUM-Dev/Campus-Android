@@ -6,11 +6,6 @@ import android.support.v4.app.JobIntentService
 import android.support.v4.content.LocalBroadcastManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.component.notifications.NotificationPresenter
-import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
-import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotificationsManager
-import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
-import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
@@ -199,6 +194,8 @@ class DownloadService : JobIntentService() {
                 }
             }
 
+            // TODO: Remove
+            /*
             // Get all notifications of enabled notification providers
             val notificationProviders = AppNotificationsManager.getEnabledProviders(service)
             val notifications = notificationProviders.flatMap { it.getNotifications() }
@@ -210,6 +207,7 @@ class DownloadService : JobIntentService() {
             // Schedule future notifications
             val futureNotifications = notifications.mapNotNull { it as? FutureNotification }
             NotificationScheduler.schedule(service, futureNotifications)
+            */
 
             // Update the last run time saved in shared prefs
             if (action == Const.DOWNLOAD_ALL_FROM_EXTERNAL) {
@@ -227,7 +225,8 @@ class DownloadService : JobIntentService() {
                 success = true
             }
 
-            // After done the job, create an broadcast intent and send it. The receivers will be informed that the download service has finished.
+            // After done the job, create an broadcast intent and send it. The receivers will be
+            // informed that the download service has finished.
             Utils.logv("DownloadService was " + (if (success) "" else "not ") + "successful")
             if (success) {
                 service.broadcastDownloadSuccess()

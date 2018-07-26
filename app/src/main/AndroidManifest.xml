@@ -667,7 +667,10 @@
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.NotificationReceiver" />
+
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationReceiver" />
+
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver" />
 
     </application>
 

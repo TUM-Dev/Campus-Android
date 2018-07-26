@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.common.base.Optional;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,6 +13,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
+import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.FavoriteDishDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.FavoriteFoodAlarmStorage;
@@ -112,7 +115,17 @@ public class CafeteriaMenuManager {
             Utils.log(e);
         }
         sync.replaceIntoDb(this);
+
+        // TODO: Schedule cafeteria notifications
+
+        scheduleNotificationAlarms();
         scheduleFoodAlarms(true);
+    }
+
+    private void scheduleNotificationAlarms() {
+        List<DateTime> notificationTimes = menuDao.getAllDates().blockingFirst();
+        NotificationScheduler scheduler = new NotificationScheduler(mContext);
+        scheduler.scheduleAlarms(NotificationType.CAFETERIA, notificationTimes);
     }
 
     public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {

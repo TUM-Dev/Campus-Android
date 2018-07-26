@@ -8,6 +8,8 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.Intent;
 
+import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotification;
+import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotificationsDao;
 import de.tum.in.tumcampusapp.component.other.general.NotificationDao;
 import de.tum.in.tumcampusapp.component.other.general.RecentsDao;
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
@@ -88,7 +90,8 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         FcmNotification.class,
         TransportFavorites.class,
         WidgetsTransport.class,
-        ChatRoomDbRow.class
+        ChatRoomDbRow.class,
+        ScheduledNotification.class
 })
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -157,6 +160,8 @@ public abstract class TcaDb extends RoomDatabase {
 
     public abstract ChatRoomDao chatRoomDao();
 
+    public abstract ScheduledNotificationsDao scheduledNotificationsDao();
+
     /**
      * Drop all tables, so we can do a complete clean start
      * Careful: After executing this method, almost all the managers are in an illegal state, and
@@ -180,8 +185,11 @@ public abstract class TcaDb extends RoomDatabase {
         CacheManager cacheManager = new CacheManager(c);
         cacheManager.clearCache();
 
+        TcaDb.getInstance(c).clearAllTables();
+
         //Clear the db?
         //TODO remove this, as we want to keep the data
+        /*
         TcaDb tdb = TcaDb.getInstance(c);
         tdb.cafeteriaDao()
            .removeCache();
@@ -225,5 +233,6 @@ public abstract class TcaDb extends RoomDatabase {
            .removeCache();
         tdb.wifiMeasurementDao()
            .cleanup();
+        */
     }
 }

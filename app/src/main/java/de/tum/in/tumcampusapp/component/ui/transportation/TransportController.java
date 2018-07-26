@@ -21,11 +21,12 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
+import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
+import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
+import de.tum.in.tumcampusapp.component.notifications.model.FutureNotification;
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
-import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
-import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
@@ -350,21 +351,26 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
     @NotNull
     @Override
     public List<Card> getCards(@NonNull CacheControl cacheControl) {
-        List<Card> results = new ArrayList<>();
         if (!NetUtils.isConnected(mContext)) {
-            return results;
+            return Collections.emptyList();
         }
 
         // Get station for current campus
         StationResult station = getClosestStation();
         if (station == null) {
-            return results;
+            return Collections.emptyList();
         }
 
         List<Departure> departures = getDeparturesFromExternal(mContext, station.getId());
+        if (departures.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         MVVCard card = new MVVCard(mContext);
         card.setStation(station);
         card.setDepartures(departures);
+
+        List<Card> results = new ArrayList<>();
         results.add(card.getIfShowOnStart());
 
         return results;
@@ -375,17 +381,34 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
         return Utils.getSettingBool(mContext, "card_mvv_phone", false);
     }
 
-    @NotNull
-    @Override
-    public List<AppNotification> getNotifications() {
-        StationResult station = getClosestStation();
-        if (station == null) {
-            return Collections.emptyList();
+    public void scheduleNotifications(List<Event> events) {
+        if (events.isEmpty()) {
+            return;
         }
 
-        List<Departure> departures = getDeparturesFromExternal(mContext, station.getId());
-        NotificationsProvider provider = new TransportNotificationsProvider(mContext, departures, station);
-        return provider.getNotifications();
+        // Schedule a notification alarm for every last calendar item of a day
+        List<Event> notificationCandidates = new ArrayList<>();
+        for (int i = 0; i < events.size() - 1; i++) {
+            Event current = events.get(i);
+            Event next = events.get(i + 1);
+
+            if (current.getStartTime() == null || next.getStartTime() == null) {
+                continue;
+            }
+
+            if (current.getStartTime().dayOfYear().get() != next.getStartTime().dayOfYear().get()) {
+                notificationCandidates.add(current);
+            }
+        }
+
+        List<FutureNotification> notifications = new ArrayList<>();
+        for (int i = 0; i < notificationCandidates.size(); i++) {
+            FutureNotification notification = notificationCandidates.get(i).toNotification(mContext);
+            notifications.add(notification);
+        }
+
+        NotificationScheduler scheduler = new NotificationScheduler(mContext);
+        scheduler.schedule(notifications);
     }
 
     private StationResult getClosestStation() {

@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Optional;
@@ -19,19 +20,20 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
+import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
+import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
+import de.tum.in.tumcampusapp.component.notifications.model.FutureNotification;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
-import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
-import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
-import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -196,6 +198,19 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return calendarDao.getCalendarItemByStartAndEndTime(startString, endString);
     }
 
+    public void scheduleNotifications(List<Event> events) {
+        List<FutureNotification> notifications = new ArrayList<>();
+        for (int i = 0; i < events.size(); i++) {
+            FutureNotification notification = events.get(i).toNotification(mContext);
+            if (notification != null) {
+                notifications.add(notification);
+            }
+        }
+
+        NotificationScheduler scheduler = new NotificationScheduler(mContext);
+        scheduler.schedule(notifications);
+    }
+
     public void importCalendar(Events newEvents) {
         // Cleanup cache before importing
         removeCache();
@@ -244,6 +259,22 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return calendarDao.getNextCalendarItems();
     }
 
+    @Nullable
+    public CalendarItem getNextCalendarItem() {
+        List<CalendarItem> items = getNextCalendarItems();
+        if (items.isEmpty()) {
+            return null;
+        }
+
+        Collections.sort(items, (lhs, rhs) -> lhs.getEventStart().compareTo(rhs.getEventStart()));
+        return items.get(0);
+    }
+
+    @Nullable
+    public CalendarItem getNextCalendarItem(String eventId) {
+        return calendarDao.getCalendarItemById(eventId);
+    }
+
     /**
      * Gets the coordinates of the next lecture or the current running lecture,
      * if it started during the last 30 minutes
@@ -275,14 +306,6 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
     @Override
     public boolean hasNotificationsEnabled() {
         return Utils.getSettingBool(mContext, "card_next_phone", false);
-    }
-
-    @NotNull
-    @Override
-    public List<AppNotification> getNotifications() {
-        List<CalendarItem> nextCalendarItems = getNextCalendarItems();
-        NotificationsProvider provider = new CalendarNotificationsProvider(mContext, nextCalendarItems);
-        return provider.getNotifications();
     }
 
     public static class QueryLocationsService extends IntentService {

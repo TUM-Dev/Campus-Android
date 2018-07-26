@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
-import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
@@ -58,6 +59,9 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
             return;
         }
 
+        News latestNews = newsDao.getLast();
+        DateTime latestNewsDate = (latestNews != null) ? latestNews.getDate() : DateTime.now();
+
         // Delete all too old items
         newsDao.cleanUp();
 
@@ -65,25 +69,51 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
 
         // Load all news sources
         try {
-            List sources = api.getNewsSources();
+            List<NewsSources> sources = api.getNewsSources();
             newsSourcesDao.insert(sources);
         } catch (IOException e) {
             Utils.log(e);
             return;
         }
 
-
         // Load all news since the last sync
         try {
-            List news = api.getNews(getLastId());
+            List<News> news = api.getNews(getLastId());
             newsDao.insert(news);
+            showNewsNotification(news, latestNewsDate);
         } catch (IOException e) {
             Utils.log(e);
             return;
         }
 
-        //Finish sync
+        // Finish sync
         sync.replaceIntoDb(this);
+    }
+
+    private void showNewsNotification(List<News> news, DateTime latestNewsDate) {
+        if (!hasNotificationsEnabled()) {
+            return;
+        }
+
+        List<News> newNews = new ArrayList<>();
+        for (int i = 0; i < news.size(); i++) {
+            News newsItem = news.get(i);
+            if (newsItem.getDate().isAfter(latestNewsDate)) {
+                newNews.add(newsItem);
+            }
+        }
+
+        if (newNews.isEmpty()) {
+            return;
+        }
+
+        NewsNotificationProvider provider = new NewsNotificationProvider(context, newNews);
+        AppNotification notification = provider.buildNotification();
+
+        if (notification != null) {
+            NotificationScheduler scheduler = new NotificationScheduler(context);
+            scheduler.schedule(notification);
+        }
     }
 
     /**
@@ -182,13 +212,16 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
         return Utils.getSettingBool(context, "card_news_phone", false);
     }
 
+    /*
     @NotNull
     @Override
     public List<AppNotification> getNotifications() {
         NotificationsProvider provider = new NewsNotificationsProvider(context, getNews());
         return provider.getNotifications();
     }
+    */
 
+    /*
     private List<News> getNews() {
         Collection<Integer> sources = getActiveSources(context);
         if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
@@ -197,5 +230,6 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
             return newsDao.getBySources(sources.toArray(new Integer[sources.size()]));
         }
     }
+    */
 
 }

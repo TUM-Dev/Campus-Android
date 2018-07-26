@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.notifications.model
+package de.tum.`in`.tumcampusapp.component.notifications
 
 import android.annotation.TargetApi
 import android.app.NotificationChannel
@@ -7,18 +7,12 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
-import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
-import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
-import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.utils.Const
 import org.jetbrains.anko.notificationManager
 
-object AppNotificationsManager {
+object NotificationUtils {
 
+    /*
     private fun getProviders(context: Context): List<ProvidesNotifications> {
         return ArrayList<ProvidesNotifications>().apply {
             if (AccessTokenManager.hasValidAccessToken(context)) {
@@ -31,10 +25,13 @@ object AppNotificationsManager {
             add(TransportController(context))
         }
     }
+    */
 
+    /*
     fun getEnabledProviders(context: Context): List<ProvidesNotifications> {
         return getProviders(context).filter { it.hasNotificationsEnabled() }
     }
+    */
 
     @TargetApi(Build.VERSION_CODES.O)
     @JvmStatic

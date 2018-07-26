@@ -5,17 +5,17 @@ import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
+import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
-import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
-import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
+import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.TuitionList;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -52,18 +52,6 @@ public class TuitionFeeManager implements ProvidesCard, ProvidesNotifications {
         return Utils.getSettingBool(mContext, "card_tuition_fee_phone", true);
     }
 
-    @NotNull
-    @Override
-    public List<AppNotification> getNotifications() {
-        Tuition tuition = loadTuition(CacheControl.USE_CACHE);
-        if (tuition == null) {
-            return Collections.emptyList();
-        }
-
-        NotificationsProvider provider = new TuitionFeesNotificationsProvider(mContext, tuition);
-        return provider.getNotifications();
-    }
-
     @Nullable
     public Tuition loadTuition(CacheControl cacheControl) {
         try {
@@ -81,11 +69,24 @@ public class TuitionFeeManager implements ProvidesCard, ProvidesNotifications {
                 return null;
             }
 
+            Tuition tuition = tuitionList.getTuitions().get(0);
+            if (!tuition.isPaid() && hasNotificationsEnabled()) {
+                scheduleNotificationAlarm(tuition);
+            }
+
             return tuitionList.getTuitions().get(0);
         } catch (IOException e) {
             Utils.log(e);
             return null;
         }
+    }
+
+    private void scheduleNotificationAlarm(Tuition tuition) {
+        DateTime notificationTime =
+                TuitionNotificationScheduler.INSTANCE.getNextNotificationTime(tuition);
+
+        NotificationScheduler scheduler = new NotificationScheduler(mContext);
+        scheduler.scheduleAlarm(NotificationType.TUITION_FEES, notificationTime);
     }
 
 }

@@ -5,6 +5,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
+import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 
 /**
  * Subclasses of this class provide a list of [AppNotification]s that they want to display. These
@@ -15,7 +16,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
  *
  * @param context The current [Context]
  */
-abstract class NotificationsProvider(protected val context: Context) {
+abstract class NotificationProvider(protected val context: Context) {
 
     protected val notificationColorAccent = ContextCompat.getColor(context, R.color.color_primary)
 
@@ -32,6 +33,8 @@ abstract class NotificationsProvider(protected val context: Context) {
      *
      * @return List of [AppNotification]s
      */
-    abstract fun getNotifications(): List<AppNotification>
+    //abstract fun getNotification(): AppNotification?
+
+    abstract fun buildNotification(): AppNotification?
 
 }

@@ -59,11 +59,7 @@ public class MVVCard extends Card {
     @Nullable
     @Override
     public Intent getIntent() {
-        if (mDepartures.isEmpty()) {
-            return null;
-        }
-
-        return mDepartures.get(0).getIntent(getContext(), mStation);
+        return mStation.getIntent(getContext());
     }
 
     @Override

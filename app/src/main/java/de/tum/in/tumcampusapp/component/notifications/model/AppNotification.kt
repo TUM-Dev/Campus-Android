@@ -1,6 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.notifications.model
 
 import android.app.Notification
+import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
+import de.tum.`in`.tumcampusapp.component.notifications.persistence.ScheduledNotification
 
 /**
  * Holds a [Notification] that is to be displayed to the user. Its subclasses can be used to
@@ -10,16 +12,14 @@ import android.app.Notification
  * @param id The identifier of the notification
  * @param notification The [Notification] that will be displayed to the user
  */
-abstract class AppNotification(val id: Int, val notification: Notification) {
+abstract class AppNotification(
+        val type: NotificationType,
+        val id: Int,
+        val notification: Notification
+) {
 
-    companion object {
-
-        @JvmField val CAFETERIA_ID = 0
-        @JvmField val CALENDAR_ID = 1
-        @JvmField val NEWS_ID = 2
-        @JvmField val TRANSPORT_ID = 3
-        @JvmField val TUITION_FEES_ID = 4
-
+    fun toScheduledNotification(): ScheduledNotification {
+        return ScheduledNotification(type.id.toLong(), id)
     }
 
 }

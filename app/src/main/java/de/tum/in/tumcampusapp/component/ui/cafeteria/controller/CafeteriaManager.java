@@ -14,12 +14,9 @@ import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
-import de.tum.in.tumcampusapp.component.notifications.NotificationsProvider;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
-import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationsProvider;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
@@ -79,6 +76,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         return Utils.getSettingBool(mContext, "card_cafeteria_phone", true);
     }
 
+    /*
     @NotNull
     @Override
     public List<AppNotification> getNotifications() {
@@ -90,6 +88,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         NotificationsProvider provider = new CafeteriaNotificationsProvider(mContext, cafeteria);
         return provider.getNotifications();
     }
+    */
 
     @Nullable
     private CafeteriaWithMenus getCafeteriaWithMenus() {

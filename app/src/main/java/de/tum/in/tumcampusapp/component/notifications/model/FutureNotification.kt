@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.notifications.model
 
 import android.app.Notification
+import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import org.joda.time.DateTime
 
 /**
@@ -10,6 +11,9 @@ import org.joda.time.DateTime
  * @param notification The [Notification] that will be displayed to the user
  * @param time The timestamp at which the [Notification] should be displayed
  */
-class FutureNotification(id: Int,
-                         notification: Notification,
-                         val time: DateTime) : AppNotification(id, notification)
+class FutureNotification(
+        type: NotificationType,
+        id: Int,
+        notification: Notification,
+        val time: DateTime
+) : AppNotification(type, id, notification)

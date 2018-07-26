@@ -8,7 +8,7 @@ import com.squareup.picasso.Picasso;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import de.tum.in.tumcampusapp.component.notifications.model.AppNotificationsManager;
+import de.tum.in.tumcampusapp.component.notifications.NotificationUtils;
 
 public class App extends Application {
 
@@ -17,7 +17,7 @@ public class App extends Application {
         super.onCreate();
 
         setupPicasso();
-        AppNotificationsManager.setupNotificationChannels(this);
+        NotificationUtils.setupNotificationChannels(this);
         JodaTimeAndroid.init(this);
         setupStrictMode();
     }
