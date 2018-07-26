@@ -5,12 +5,11 @@ import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
@@ -26,7 +25,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -76,20 +74,6 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         return Utils.getSettingBool(mContext, "card_cafeteria_phone", true);
     }
 
-    /*
-    @NotNull
-    @Override
-    public List<AppNotification> getNotifications() {
-        CafeteriaWithMenus cafeteria = getCafeteriaWithMenus();
-        if (cafeteria == null) {
-            return Collections.emptyList();
-        }
-
-        NotificationsProvider provider = new CafeteriaNotificationsProvider(mContext, cafeteria);
-        return provider.getNotifications();
-    }
-    */
-
     @Nullable
     private CafeteriaWithMenus getCafeteriaWithMenus() {
         // Choose which mensa should be shown
@@ -101,88 +85,39 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
     }
 
     /**
-     * returns the menus of the best matching cafeteria
+     * Returns a list of {@link CafeteriaMenu}s of the best-matching cafeteria. If there's no
+     * best-matching cafeteria, it returns an empty list.
      */
-    public Flowable<Map<String, List<CafeteriaMenu>>> getBestMatchMensaInfo(Context context) {
-        // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
+    public List<CafeteriaMenu> getBestMatchCafeteriaMenus() {
+        int cafeteriaId = getBestMatchMensaId(mContext);
         if (cafeteriaId == -1) {
-            Utils.log("could not get a Cafeteria form locationManager!");
-            return Flowable.just(Collections.emptyMap());
+            return Collections.emptyList();
         }
 
-        return createCafeteriaObservableForNonUIThreads(cafeteriaId)
-                .map(cafeteria -> {
-                    String mensaKey = cafeteria.getName() + ' ' + cafeteria.getNextMenuDate().toString();
-                    Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>(1);
-                    selectedMensaMenus.put(mensaKey, cafeteria.getMenus());
-                    return selectedMensaMenus;
-                })
-                .onErrorReturnItem(new HashMap<>());
-
-    }
-
-    public Flowable<String> getBestMatchMensaName(Context context) {
-        // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
-        if (cafeteriaId == -1) {
-            Utils.log("could not get a Cafeteria form locationManager!");
-            return Flowable.just("");
-        }
-        return createCafeteriaObservable(cafeteriaId)
-                .map(s -> s.getName() + ' ' + s.getNextMenuDate());
-
+        return getCafeteriaMenusByCafeteriaId(cafeteriaId);
     }
 
     public int getBestMatchMensaId(Context context) {
         // Choose which mensa should be shown
         int cafeteriaId = new LocationManager(context).getCafeteria();
         if (cafeteriaId == -1) {
-            Utils.log("could not get a Cafeteria form locationManager!");
+            Utils.log("could not get a Cafeteria from locationManager!");
         }
         return cafeteriaId;
     }
 
-    private Flowable<CafeteriaWithMenus> createCafeteriaObservableForNonUIThreads(int cafeteriaId) {
+    private List<CafeteriaMenu> getCafeteriaMenusByCafeteriaId(int cafeteriaId) {
         CafeteriaWithMenus cafeteria = new CafeteriaWithMenus(cafeteriaId);
 
-        return CafeteriaLocalRepository.INSTANCE
-                .getCafeteria(cafeteriaId)
-                .doOnError(throwable -> Utils.log(throwable.getMessage()))
-                .flatMap(cafeteria1 -> {
-                    cafeteria.setName(cafeteria1.getName());
-                    return CafeteriaLocalRepository.INSTANCE.getAllMenuDates();
-                })
-                .flatMap(menuDates -> {
-                    cafeteria.setMenuDates(menuDates);
-                    return  CafeteriaLocalRepository.INSTANCE.getCafeteriaMenus(
-                            cafeteria.getId(), cafeteria.getNextMenuDate());
-                })
-                .map(menus -> {
-                    cafeteria.setMenus(menus);
-                    return cafeteria;
-                });
-    }
+        List<DateTime> menuDates = CafeteriaLocalRepository.INSTANCE.getAllMenuDates();
+        cafeteria.setMenuDates(menuDates);
 
-    private Flowable<CafeteriaWithMenus> createCafeteriaObservable(int cafeteriaId) {
-        CafeteriaWithMenus cafeteria = new CafeteriaWithMenus(cafeteriaId);
+        DateTime nextMenuDate = cafeteria.getNextMenuDate();
+        List<CafeteriaMenu> menus =
+                CafeteriaLocalRepository.INSTANCE.getCafeteriaMenus(cafeteriaId, nextMenuDate);
+        cafeteria.setMenus(menus);
 
-        return cafeteriaViewModel
-                .getCafeteriaNameFromId(cafeteriaId)
-                .doOnError(throwable -> Utils.log(throwable.getMessage()))
-                .flatMap(cafeteriaName -> {
-                    cafeteria.setName(cafeteriaName);
-                    return cafeteriaViewModel.getAllMenuDates();
-                })
-                .flatMap(menuDates -> {
-                    cafeteria.setMenuDates(menuDates);
-                    return cafeteriaViewModel.getCafeteriaMenus(
-                            cafeteria.getId(), cafeteria.getNextMenuDate());
-                })
-                .map(menus -> {
-                    cafeteria.setMenus(menus);
-                    return cafeteria;
-                });
+        return cafeteria.getMenus();
     }
 
 }

@@ -36,23 +36,25 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
         return localRepository.getCafeteriaWithMenus(cafeteriaId)
     }
 
-    fun getCafeteriaNameFromId(id: Int): Flowable<String> =
-            localRepository.getCafeteria(id)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { it.name }
+    private fun getCafeteriaNameFromId(id: Int): String {
+        return localRepository.getCafeteria(id).name
+    }
 
-    fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> =
-            localRepository.getCafeteriaMenus(id,date)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .defaultIfEmpty(emptyList())
+    fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> {
+        return Flowable
+                .fromCallable { localRepository.getCafeteriaMenus(id, date) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .defaultIfEmpty(emptyList())
+    }
 
-    fun getAllMenuDates(): Flowable<List<DateTime>> =
-            localRepository.getAllMenuDates()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .defaultIfEmpty(emptyList())
+    fun getAllMenuDates(): Flowable<List<DateTime>> {
+        return Flowable
+                .fromCallable { localRepository.getAllMenuDates() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .defaultIfEmpty(emptyList())
+    }
 
 
     /**

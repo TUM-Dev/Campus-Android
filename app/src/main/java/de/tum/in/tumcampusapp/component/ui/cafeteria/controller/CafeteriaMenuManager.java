@@ -123,7 +123,7 @@ public class CafeteriaMenuManager {
     }
 
     private void scheduleNotificationAlarms() {
-        List<DateTime> notificationTimes = menuDao.getAllDates().blockingFirst();
+        List<DateTime> notificationTimes = menuDao.getAllDates();
         NotificationScheduler scheduler = new NotificationScheduler(mContext);
         scheduler.scheduleAlarms(NotificationType.CAFETERIA, notificationTimes);
     }
