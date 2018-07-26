@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
@@ -27,8 +28,8 @@ import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -69,7 +70,7 @@ public class CalendarController implements ProvidesCard {
      *
      * @param c Context
      */
-    public static void syncCalendar(Context c) {
+    public static void syncCalendar(Context c) throws SQLiteException {
         // Deleting earlier calendar created by TUM Campus App
         deleteLocalCalendar(c);
         Uri uri = CalendarHelper.addCalendar(c);
@@ -85,23 +86,23 @@ public class CalendarController implements ProvidesCard {
         return CalendarHelper.deleteCalendar(c);
     }
 
-    private static void addEvents(Context c, Uri uri) {
+    private static void addEvents(Context c, Uri uri) throws SQLiteException {
         if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
         // Get ID
         ContentResolver contentResolver = c.getContentResolver();
         String id = "0";
         try (Cursor cursor = contentResolver.query(uri, PROJECTION, null, null, null)) {
-            while (cursor.moveToNext()) {
+            while (cursor != null && cursor.moveToNext()) {
                 id = cursor.getString(0);
             }
         }
 
-        CalendarDao calendarDao = TcaDb.getInstance(c)
-                .calendarDao();
-
+        CalendarDao calendarDao = TcaDb.getInstance(c).calendarDao();
         List<CalendarItem> calendarItems = calendarDao.getAllNotCancelled();
+
         for (CalendarItem calendarItem : calendarItems) {
             ContentValues values = calendarItem.toContentValues();
             values.put(CalendarContract.Events.CALENDAR_ID, id);
@@ -301,9 +302,16 @@ public class CalendarController implements ProvidesCard {
                     && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) ==
                     PackageManager.PERMISSION_GRANTED;
 
-            if (syncCalendar && new SyncManager(c).needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
+            SyncManager syncManager = new SyncManager(c);
+            if (!syncCalendar || !syncManager.needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
+                return;
+            }
+
+            try {
                 syncCalendar(c);
-                new SyncManager(c).replaceIntoDb(Const.SYNC_CALENDAR);
+                syncManager.replaceIntoDb(Const.SYNC_CALENDAR);
+            } catch (SQLiteException e) {
+                Utils.log(e);
             }
         }
 
