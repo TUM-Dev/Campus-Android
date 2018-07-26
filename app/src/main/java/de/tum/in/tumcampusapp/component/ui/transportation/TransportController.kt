@@ -129,6 +129,7 @@ class TransportController(private val mContext: Context) : ProvidesCard {
          * @param stationID Station ID, station name might or might not work
          * @return List of departures
          */
+        @JvmStatic
         fun getDeparturesFromExternal(context: Context, stationID: String): List<Departure> {
             try {
                 val departures = MvvClient.getInstance(context)
@@ -155,6 +156,7 @@ class TransportController(private val mContext: Context) : ProvidesCard {
          * @param prefix Name prefix
          * @return List of StationResult
          */
+        @JvmStatic
         fun getStationsFromExternal(context: Context, prefix: String): List<StationResult> {
             try {
                 val (results) = MvvClient.getInstance(context).getStations(prefix).execute().body()
@@ -167,6 +169,7 @@ class TransportController(private val mContext: Context) : ProvidesCard {
             return emptyList()
         }
 
+        @JvmStatic
         fun getRecentStations(recents: Collection<Recent>): List<StationResult> {
             return recents.mapNotNull {
                 StationResult.fromRecent(it)
