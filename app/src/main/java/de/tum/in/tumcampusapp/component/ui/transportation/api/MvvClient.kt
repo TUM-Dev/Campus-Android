@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MvvClient {
     companion object {
-        private const val BASE_URL = "http://efa.mvv-muenchen.de/mobile/" // No HTTPS support :(
+        private const val BASE_URL = "https://efa.mvv-muenchen.de/mobile/"
         private var service: MvvApiService? = null
 
         @JvmStatic
