@@ -107,17 +107,17 @@ dependencies {
     kapt 'android.arch.lifecycle:compiler:1.1.1'
     kapt 'android.arch.persistence.room:compiler:1.1.1'
 
-    // Anko
-    implementation "org.jetbrains.anko:anko:0.10.5"
 
-    // Firebase / Play services
+    // Play services
     implementation 'com.google.android.gms:play-services-base:15.0.1'
-    implementation 'com.google.firebase:firebase-messaging:17.1.0'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.1.0'
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 
     // Helpers
-
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'net.danlew:android.joda:2.9.9.4'
 
@@ -126,11 +126,14 @@ dependencies {
     implementation "com.tickaroo.tikxml:core:$tikXmlVersion"
     kapt "com.tickaroo.tikxml:processor:$tikXmlVersion"
 
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.anko:anko:0.10.5"
+
+    // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
     implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.1'
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 
     // Transport
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
@@ -139,6 +142,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "com.tickaroo.tikxml:retrofit-converter:$tikXmlVersion"
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 
     // UI
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
