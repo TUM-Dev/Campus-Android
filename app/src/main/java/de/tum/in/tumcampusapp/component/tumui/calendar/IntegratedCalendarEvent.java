@@ -7,8 +7,6 @@ import com.alamkanak.weekview.WeekViewEvent;
 
 import org.joda.time.DateTime;
 
-import java.util.Calendar;
-
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 
 /**
@@ -20,7 +18,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private final String location;
     private boolean firstOnDay;
 
-    public IntegratedCalendarEvent(CalendarItem calendarItem, Context context) {
+    IntegratedCalendarEvent(CalendarItem calendarItem, Context context) {
         this(calendarItem.getNr(),
                 calendarItem.getFormattedTitle(),
                 calendarItem.getEventStart(),

@@ -266,7 +266,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-            mWeekView.setXScrollingSpeed(0.4f);
+            mWeekView.setXScrollingSpeed(0.5f);
         }
 
         // Go to current date or the one given in the intent
@@ -438,9 +438,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
-        CalendarItem item = calendarController.getCalendarItemByStartAndEndTime(
-                new DateTime(weekViewEvent.getStartTime()),
-                new DateTime(weekViewEvent.getEndTime()));
+        String eventId = weekViewEvent.getIdentifier();
+        if (eventId == null) {
+            return;
+        }
+
+        CalendarItem item = calendarController.getCalendarItemById(eventId);
+        if (item == null) {
+            return;
+        }
+
         detailsFragment = CalendarDetailsFragment.newInstance(item, this);
         detailsFragment.show(getSupportFragmentManager(), null);
     }
