@@ -126,7 +126,7 @@ public class BuyTicketActivity extends BaseActivity {
 
         eventView.append(eventString);
         locationView.append(locationString);
-        dateView.append(Event.Companion.getFormattedDateTime(getApplicationContext(), event.getStart()));
+        dateView.append(Event.methods.getFormattedDateTime(getApplicationContext(), event.getStart()));
     }
 
     private void initializeTicketTypeSpinner() {
@@ -166,7 +166,8 @@ public class BuyTicketActivity extends BaseActivity {
     private void setTicketTypeInformation(String ticketTypeName) {
         TextView priceView = findViewById(R.id.ticket_details_price);
         TicketType ticketType = getTicketTypeForName(ticketTypeName);
-        String priceString = ticketType == null ? getString(R.string.not_valid) : ticketType.formatedPrice();
+        String priceString = ticketType == null ? getString(R.string.not_valid) : ticketType.getFormattedPrice();
+
         priceView.setText(priceString);
     }
 
@@ -217,7 +218,7 @@ public class BuyTicketActivity extends BaseActivity {
                         // Jump to the payment activity
                         Intent intent = new Intent(getApplicationContext(),
                                 StripePaymentActivity.class);
-                        intent.putExtra("ticketPrice", ticketType.formatedPrice());
+                        intent.putExtra("ticketPrice", ticketType.getFormattedPrice());
                         intent.putExtra("ticketType", ticketType.getId());
                         intent.putExtra("ticketHistory", response.body().getTicketHistory());
                         startActivity(intent);

@@ -147,7 +147,7 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
-        eventDateTextView.setText(Event.Companion.getFormattedDateTime(context, event.getStart()));
+        eventDateTextView.setText(Event.methods.getFormattedDateTime(context, event.getStart()));
 
         // open "add to calendar" dialog on click
         eventDateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());

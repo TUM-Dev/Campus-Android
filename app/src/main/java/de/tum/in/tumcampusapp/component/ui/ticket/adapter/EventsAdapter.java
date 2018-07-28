@@ -106,7 +106,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         holder.localityView.setText(locality);
 
         // Adds date
-        holder.srcDateView.setText(Event.Companion.getFormattedDate(event.getStart()));
+        holder.srcDateView.setText(Event.methods.getFormattedDate(event.getStart()));
     }
 
     @Override
