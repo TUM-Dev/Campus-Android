@@ -4,13 +4,14 @@ import android.content.Context
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Events
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import okhttp3.Cache
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
 
 class CacheManager(private val context: Context) {
 
@@ -27,14 +28,20 @@ class CacheManager(private val context: Context) {
     }
 
     fun syncCalendar() {
-        try {
-            TUMOnlineClient
-                    .getInstance(context)
-                    .getCalendar(CacheControl.USE_CACHE)
-                    .execute()
-        } catch (e: IOException) {
-            Utils.log(e, "Error while loading calendar in CacheManager")
-        }
+        TUMOnlineClient
+                .getInstance(context)
+                .getCalendar(CacheControl.USE_CACHE)
+                .enqueue(object : Callback<Events> {
+                    override fun onResponse(call: Call<Events>, response: Response<Events>) {
+                        val events = response.body() ?: return
+                        CalendarController(context).importCalendar(events)
+                        CalendarController.QueryLocationsService.loadGeo(context)
+                    }
+
+                    override fun onFailure(call: Call<Events>, t: Throwable) {
+                        Utils.log(t, "Error while loading calendar in CacheManager")
+                    }
+                })
     }
 
     private fun syncPersonalLectures() {
