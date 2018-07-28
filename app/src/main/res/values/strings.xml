@@ -649,7 +649,7 @@ Signature: %5$s</string>
     <string name="tickets_left" formatted="true">%d Tickets left!</string>
     <string name="ticket_contingent_exhausted">All tickets of the requested type are already sold.</string>
 
-    <string name="redeemed">Redeemed</string>
+    <string name="redeemed">Redeemed: %1$s</string>
     <string name="no_network_connection">Currently no connection to server possible</string>
     <string name="choose_ticket_type">Choose your ticket type</string>
 
