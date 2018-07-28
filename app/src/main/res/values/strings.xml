@@ -19,6 +19,7 @@
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
+    <string name="export_to_google_error">An error occurred while exporting your calendar to Google Calendar.</string>
     <string name="calendarTimeZone" translatable="false">Germany/Munich</string>
     <string name="delete_from_google">Delete from Google</string>
     <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>

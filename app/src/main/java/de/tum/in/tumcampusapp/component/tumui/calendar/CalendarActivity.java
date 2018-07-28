@@ -220,6 +220,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
                                         })
                                         .show();
                             }
+                        }, throwable -> {
+                            Utils.log(throwable);
+                            Utils.showToast(this, R.string.export_to_google_error);
                         })
         );
     }
