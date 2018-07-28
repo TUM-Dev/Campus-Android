@@ -186,7 +186,7 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
     }
 
     private void setAvailableTicketCount() {
-        TUMCabeClient.getInstance(context).getTicketStats(event.getId(), new retrofit2.Callback<List<TicketStatus>>() {
+        TUMCabeClient.getInstance(context).fetchTicketStats(event.getId(), new retrofit2.Callback<List<TicketStatus>>() {
             @Override
             public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
                 // stats is array of TicketStats, each containing info about one ticket type associated with the event

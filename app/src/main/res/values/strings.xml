@@ -623,6 +623,7 @@ Signature: %5$s</string>
     <string name="external_calendar">External Calendar</string>
     <string name="add_to_calendar_info">To which calendar do you want to add the event?</string>
     <string name="event_export" translatable="false">Event Export</string>
+    <string name="redeemed">Redeemed: %1$s</string>
 
     <!-- Payment -->
     <string name="creditcard">Credit Card</string>
@@ -645,12 +646,10 @@ Signature: %5$s</string>
     <string name="sorry">Sorry</string>
     <string name="not_logged_in_message">You have to be logged in and provide access to your name and TUM-ID (via TUM-Online token) to purchase tickets.</string>
     <string name="ticket_retrieval_error">Failure while receiving ticket from server.</string>
-    <string name="reserving_ticket">Reserving your ticket, please wait...</string>
+    <string name="reserving_ticket">Reserving your ticket, please wait…</string>
     <string name="tickets_left" formatted="true">%d Tickets left!</string>
     <string name="ticket_contingent_exhausted">All tickets of the requested type are already sold.</string>
 
-    <string name="redeemed">Redeemed: %1$s</string>
-    <string name="no_network_connection">Currently no connection to server possible</string>
     <string name="choose_ticket_type">Choose your ticket type</string>
 
 </resources>

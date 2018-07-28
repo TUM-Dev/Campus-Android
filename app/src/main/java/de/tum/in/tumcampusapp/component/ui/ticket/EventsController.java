@@ -3,12 +3,16 @@ package de.tum.in.tumcampusapp.component.ui.ticket;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
@@ -23,7 +27,7 @@ import retrofit2.Response;
  * This class is responsible for providing ticket and event data to the activities.
  * For that purpose it handles both server and database accesses.
  */
-public class EventsController {
+public class EventsController implements ProvidesCard{
 
     private final Context context;
 
@@ -31,6 +35,11 @@ public class EventsController {
     private final TicketDao ticketDao;
     private final TicketTypeDao ticketTypeDao;
 
+    /**
+     * Constructor, open/create database, create table if necessary
+     *
+     * @param context Context
+     */
     public EventsController(Context context) {
         this.context = context;
         TcaDb db = TcaDb.getInstance(context);
@@ -39,55 +48,73 @@ public class EventsController {
         ticketTypeDao = db.ticketTypeDao();
     }
 
-    public void downloadFromService(boolean force) {
-        TUMCabeClient api = TUMCabeClient.getInstance(context);
+    public void downloadFromService() {
+        Callback<List<Event>> eventCallback = new Callback<List<Event>>() {
 
+            @Override
+            public void onResponse(@NonNull Call<List<Event>> call, Response<List<Event>> response) {
+                List<Event> events = response.body();
+                if (events == null) {
+                    return;
+                }
+                addEvents(events);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Event>> call, @NonNull  Throwable t) {
+                Utils.log(t);
+            }
+        };
+
+        Callback<List<Ticket>> ticketCallback = new Callback<List<Ticket>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Ticket>> call, Response<List<Ticket>> response) {
+                List<Ticket> tickets = response.body();
+                if (tickets == null) {
+                    return;
+                }
+                addTickets(tickets);
+                loadTicketTypesForTickets(tickets);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Ticket>> call, @NonNull Throwable t) {
+                Utils.log(t);
+            }
+        };
+
+        getEventsAndTicketsFromServer(eventCallback, ticketCallback);
+    }
+
+    public void getEventsAndTicketsFromServer(Callback<List<Event>> eventCallback,
+                                              Callback<List<Ticket>> ticketCallback){
+        // Delete all too old items
         eventDao.removePastEvents();
 
-        // Load all events since the last sync
-        try {
-            List<Event> events = api.getEvents();
-            eventDao.insert(events);
-        } catch (IOException e) {
-            Utils.log(e);
-        }
+        // Load all events
+        TUMCabeClient.getInstance(context).fetchEvents(eventCallback);
 
         // Load all tickets
         try {
             if (Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class) != null) {
-                api.getTickets(context, new Callback<List<Ticket>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<List<Ticket>> call, @NonNull  Response<List<Ticket>> response) {
-                        List<Ticket> list = response.body();
-                        if (list == null) {
-                            list = new ArrayList<>();
-                        }
-                        ticketDao.insert(list);
-                        loadTicketTypesForTickets(list);
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<List<Ticket>> call, @NonNull Throwable t) {
-                        Utils.log(t);
-                    }
-                });
+                TUMCabeClient.getInstance(context).fetchTickets(context, ticketCallback);
             }
         } catch (IOException e) {
             Utils.log(e);
         }
     }
 
-    private void loadTicketTypesForTickets(List<Ticket> tickets){
+    private void loadTicketTypesForTickets(Iterable<Ticket> tickets){
         // get ticket type information for all tickets
         for (Ticket ticket : tickets){
-            TUMCabeClient.getInstance(context).getTicketTypes(ticket.getEventId(),
+            TUMCabeClient.getInstance(context).fetchTicketTypes(ticket.getEventId(),
                     new Callback<List<TicketType>>(){
 
                         @Override
                         public void onResponse(@NonNull Call<List<TicketType>> call, @NonNull Response<List<TicketType>> response) {
                             List<TicketType> ticketTypes = response.body();
                             if (ticketTypes == null) {
-                                ticketTypes = new ArrayList<>();
+                                return;
                             }
                             // add found ticket types to database (needed in ShowTicketActivity)
                             addTicketTypes(ticketTypes);
@@ -105,6 +132,10 @@ public class EventsController {
 
     // Event methods
 
+    public void addEvents(List<Event> events) {
+        eventDao.insert(events);
+    }
+
     public List<Event> getEvents() {
         return eventDao.getAll();
     }
@@ -116,7 +147,12 @@ public class EventsController {
         List<Ticket> tickets = ticketDao.getAll();
         List<Event> bookedEvents = new ArrayList<>();
         for (Ticket ticket : tickets) {
-            bookedEvents.add(getEventById(ticket.getEventId()));
+            Event event = getEventById(ticket.getEventId());
+            // the event may be null if the corresponding event of a ticket has already been deleted
+            // these event should not be returned
+            if (event != null){
+                bookedEvents.add(event);
+            }
         }
         return bookedEvents;
     }
@@ -150,6 +186,22 @@ public class EventsController {
 
     public void addTicketTypes(List<TicketType> ticketTypes) {
         ticketTypeDao.insert(ticketTypes);
+    }
+
+    @NotNull
+    @Override
+    public List<Card> getCards() {
+        List<Card> results = new ArrayList<>();
+
+        // Only add the next upcoming event for now
+        Event event = eventDao.getNextEvent();
+        if (event != null){
+            EventCard eventCard = new EventCard(context);
+            eventCard.setEvent(event);
+            results.add(eventCard);
+        }
+
+        return results;
     }
 }
 

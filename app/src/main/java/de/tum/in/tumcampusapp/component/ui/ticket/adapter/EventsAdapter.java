@@ -28,14 +28,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     private final List<Event> mEventList;
     private Context mContext;
 
-    static class EventViewHolder extends CardViewHolder {
+    public static class EventViewHolder extends CardViewHolder {
         CardView cardView;
         ImageView imgView;
         TextView titleView;
         TextView localityView;
         TextView srcDateView;
 
-        EventViewHolder(View view) {
+        public EventViewHolder(View view) {
             super(view);
             cardView = (CardView) view;
             titleView = view.findViewById(R.id.events_title);
@@ -49,8 +49,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         mEventList = events;
     }
 
+    @NonNull
     @Override
-    public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (mContext == null) {
             mContext = parent.getContext();
         }
@@ -59,8 +60,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         return new EventViewHolder(view);
     }
 
-    public static void bindNewsView(RecyclerView.ViewHolder newsViewHolder, Event event, Context context) {
-        EventViewHolder holder = (EventViewHolder) newsViewHolder;
+    public static void bindEventView(RecyclerView.ViewHolder viewHolderHolder, Event event) {
+        EventViewHolder holder = (EventViewHolder) viewHolderHolder;
 
         holder.imgView.setVisibility(View.VISIBLE);
         holder.titleView.setVisibility(View.VISIBLE);
@@ -116,7 +117,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         eventCard.setEvent(event);
         holder.setCurrentCard(eventCard);
 
-        bindNewsView(holder, event, mContext);
+        bindEventView(holder, event);
     }
 
     @Override
