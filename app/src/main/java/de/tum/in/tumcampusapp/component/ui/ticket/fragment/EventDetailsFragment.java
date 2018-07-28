@@ -93,7 +93,6 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         createEventFooter(rootView);
     }
 
-
     private void createEventHeader(LinearLayout rootView) {
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.event_header, rootView, false);
 
@@ -103,7 +102,6 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
         View error = headerView.findViewById(R.id.kino_cover_error);
 
-        // onClickListeners
         // Setup "Buy/Show ticket" button according to ticket status for current event
         if (eventsController.isEventBooked(event)) {
             ticket.setText(this.getString(R.string.show_ticket));
@@ -136,7 +134,6 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         }
         rootView.addView(headerView);
     }
-
 
     private void createEventFooter(LinearLayout rootView) {
         View footerView = inflater.inflate(R.layout.event_footer, rootView, false);
@@ -248,9 +245,9 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        disposable.clear();
+    public void onStop() {
+        super.onStop();
+        disposable.dispose();
     }
 
     @Override

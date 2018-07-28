@@ -35,7 +35,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         TextView localityView;
         TextView srcDateView;
 
-        public EventViewHolder(View view) {
+        EventViewHolder(View view) {
             super(view);
             cardView = (CardView) view;
             titleView = view.findViewById(R.id.events_title);
@@ -101,11 +101,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
                 .replaceAll("");
         holder.titleView.setText(title);
 
-        //Adds localityView
         String locality = event.getLocality();
         holder.localityView.setText(locality);
 
-        // Adds date
         holder.srcDateView.setText(Event.methods.getFormattedDate(event.getStart()));
     }
 
