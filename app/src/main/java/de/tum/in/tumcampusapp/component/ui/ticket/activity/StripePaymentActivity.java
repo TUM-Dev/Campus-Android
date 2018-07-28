@@ -54,8 +54,9 @@ public class StripePaymentActivity extends BaseActivity {
     private EditText cardholderEditText;
 
     private PaymentSession paymentSession;
-    private Boolean setSource = false;
-    private int ticketHistory;
+    private Boolean setSource = false; // Indicates whether the source has already been loaded from Stripe Server
+    private int ticketHistory; // Ticket ID, since the ticket was reserved in the prior activity and
+                               // we need the ID to init the purchase
     private String price = ""; // ticket price is only used to display in textView -> String
 
     public StripePaymentActivity() {
