@@ -64,18 +64,15 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         this.inflater = inflater;
         View rootView = inflater.inflate(R.layout.fragment_event_details, container, false);
         LinearLayout root = rootView.findViewById(R.id.layout);
+        context = root.getContext();
 
         mSwipeLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeLayout.setOnRefreshListener(this);
 
         eventsController = new EventsController(this.getContext());
 
-        // position in database
-        int position = getArguments().getInt(Const.POSITION);
-
-        context = root.getContext();
-
-        event = eventsController.getEvents().get(position);
+        int eventId = getArguments().getInt("eventID");
+        event = eventsController.getEventById(eventId);
 
         showDetails(root);
 
