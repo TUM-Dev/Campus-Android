@@ -202,9 +202,11 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         gradesListView.adapter = ExamListAdapter(this@GradesActivity, exams)
 
         // Update charts
-        val gradeDistribution = calculateGradeDistribution(exams)
-        initPieChart(gradeDistribution)
-        initBarChart(gradeDistribution)
+        chartsContainer.visibility = View.VISIBLE
+        calculateGradeDistribution(exams).apply {
+            initPieChart(this)
+            initBarChart(this)
+        }
 
         val averageGrade = calculateAverageGrade(exams)
         averageGradeTextView.text = String.format("%s: %.2f", getString(R.string.average_grade), averageGrade)

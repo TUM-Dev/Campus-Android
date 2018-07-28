@@ -43,7 +43,8 @@
             android:id="@+id/chartsContainer"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:padding="@dimen/padding_default">
+            android:padding="@dimen/padding_default"
+            android:visibility="gone">
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChartView"
@@ -56,6 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
+
         </FrameLayout>
 
         <ImageView
