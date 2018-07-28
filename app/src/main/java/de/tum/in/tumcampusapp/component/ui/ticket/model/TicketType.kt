@@ -18,8 +18,6 @@ data class TicketType(@PrimaryKey
                       var id: Int = 0,
                       var price: Int = 0,
                       var description: String = "") {
-
-    fun formatedPrice(): String {
-        return DecimalFormat("#.00").format(price / 100.0) + " €"
-    }
+    val formattedPrice: String
+        get() = DecimalFormat("#.00").format(price / 100.0) + " €"
 }

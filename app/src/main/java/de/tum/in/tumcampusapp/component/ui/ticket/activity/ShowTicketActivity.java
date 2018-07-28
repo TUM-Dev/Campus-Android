@@ -57,13 +57,13 @@ public class ShowTicketActivity extends BaseActivity {
         //load event details
         String String = event.getTitle();
         String eventLocationString = event.getLocality();
-        String eventDateTimeString = Event.Companion.getFormattedDateTime(this, event.getStart());
+        String eventDateTimeString = Event.methods.getFormattedDateTime(this, event.getStart());
         String eventPriceString = "";
         if (ticketType != null) {
-            eventPriceString = ticketType.formatedPrice();
+            eventPriceString = ticketType.getFormattedPrice();
         }
         String redemptionStateString = this.getString(R.string.redeemed) + ": " +
-                (ticket.getRedemption() != null ? Event.Companion.getFormattedDateTime(this,
+                (ticket.getRedemption() != null ? Event.methods.getFormattedDateTime(this,
                         ticket.getRedemption()) : this.getString(R.string.no));
 
         eventTitleTextView.setText(String);
