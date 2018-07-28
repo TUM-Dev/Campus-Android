@@ -37,7 +37,7 @@ data class ChatVerification(var signature: String = "",
         }
 
         @Throws(NoPrivateKey::class)
-        fun getChatVerification(c: Context, member: ChatMember, data: Any?): ChatVerification {
+        private fun getChatVerification(c: Context, member: ChatMember, data: Any?): ChatVerification {
             val ret = this.getChatVerification(c, member)
             ret.data = data
             return ret
@@ -46,18 +46,13 @@ data class ChatVerification(var signature: String = "",
         @Throws(IOException::class)
         fun createChatVerification(context: Context, data: Any?): ChatVerification {
             val currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember::class.java)
-            if(currentChatMember == null) {
-                throw IOException("Failed to retrieve chat member!")
-            }
-            var chatVerification: ChatVerification? = null
-            try {
-                chatVerification = ChatVerification.getChatVerification(context, currentChatMember!!, data)
-            } catch (noPrivateKey: NoPrivateKey) {
-                noPrivateKey.printStackTrace()
+                    ?: throw IOException("Failed to retrieve chat member!")
+
+            return try { ChatVerification.getChatVerification(context, currentChatMember, data) }
+            catch (noPrivateKey: NoPrivateKey) {
+                Utils.log(noPrivateKey)
                 throw IOException()
             }
-
-            return chatVerification
         }
     }
 }
