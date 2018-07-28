@@ -440,9 +440,9 @@ Signatur: %5$s</string>
     <string name="feedback_send_success">Feedback erfolgreich versandt!</string>
 
     <string name="grades_without_weight">Noten sind ungewichtet</string>
-    <string name="show_list">&#032;Liste anzeigen</string>
-    <string name="show_chart">&#032;Diagramm anzeigen</string>
-    <string name="study_program">Studiengang %s</string>
+    <string name="show_list">Liste anzeigen</string>
+    <string name="show_chart">Diagramm anzeigen</string>
+    <string name="study_program_format_string">Studiengang %s</string>
     <string name="summer_semester">Sommersemester %d</string>
     <string name="winter_semester">Wintersemester %d/%d</string>
 
