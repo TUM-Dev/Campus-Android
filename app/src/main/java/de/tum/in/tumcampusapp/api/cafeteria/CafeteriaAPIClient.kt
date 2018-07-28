@@ -21,7 +21,7 @@ class CafeteriaAPIClient(private val apiService: CafeteriaAPIService) {
 
     companion object {
 
-        private const val BASE_URL = "https://www.devapp.it.tum.de/mensaapp/exportDB.php?mensa_id=all"
+        private const val BASE_URL = "https://www.devapp.it.tum.de/mensaapp/"
 
         private var apiClient: CafeteriaAPIClient? = null
 
@@ -36,6 +36,8 @@ class CafeteriaAPIClient(private val apiService: CafeteriaAPIService) {
         }
 
         private fun buildAPIClient(context: Context): CafeteriaAPIClient {
+            // We cache the cafeteria menu for one day. We use Interceptors to add the appropriate
+            // cache-control headers to the response.
             val cacheManager = CacheManager(context)
 
             val client = Helper.getOkHttpClient(context)
