@@ -59,6 +59,20 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    /**
+     * Best practice for fragment creation, see e.g.
+     * https://stackoverflow.com/questions/9245408/best-practice-for-instantiating-a-new-android-fragment
+     */
+    public static Fragment newInstance(int eventId) {
+        Fragment fragment = new EventDetailsFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("eventID", eventId);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;

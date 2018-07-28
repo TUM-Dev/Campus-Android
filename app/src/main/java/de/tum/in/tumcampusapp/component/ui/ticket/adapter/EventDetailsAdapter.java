@@ -26,13 +26,7 @@ public class EventDetailsAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = new EventDetailsFragment();
-
-        Bundle args = new Bundle();
-        args.putInt("eventID", events.get(position).getId());
-        fragment.setArguments(args);
-
-        return fragment;
+        return EventDetailsFragment.newInstance(events.get(position).getId());
     }
 
     @Override
