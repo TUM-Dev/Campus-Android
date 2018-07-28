@@ -230,15 +230,22 @@ public class BuyTicketActivity extends BaseActivity {
                     Utils.log(t);
                     reservationProgressBar.setVisibility(View.INVISIBLE);
                     paymentButton.setEnabled(true);
-                    StripePaymentActivity.showError(BuyTicketActivity.this,
-                            getString(R.string.purchase_error_message));
+                    BuyTicketActivity.this.showError(getString(R.string.purchase_error_message));
                 }
             });
         } catch (IOException exception) {
             reservationProgressBar.setVisibility(View.INVISIBLE);
             paymentButton.setEnabled(true);
-            StripePaymentActivity.showError(BuyTicketActivity.this, getString(R.string.internal_error));
+            BuyTicketActivity.this.showError(getString(R.string.internal_error));
         }
+    }
+
+    private void showError(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.error))
+                .setMessage(message);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
 

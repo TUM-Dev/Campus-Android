@@ -521,7 +521,7 @@ Signatur: %5$s</string>
     <string name="card_data_invalid">Ungültige Zahlungsdaten.</string>
     <string name="customersession_init_failed">Fehler beim Laden der gespeicherten Kreditkarten.</string>
     <string name="cardholer">Karteninhaber:</string>
-    <string name="payment_info_price_reminder">{0} zahlen mit:</string>
+    <string name="payment_info_price_reminder" formatted="true">%s zahlen mit:</string>
     <string name="internal_error">Interner Fehler!</string>
     <string name="creditcard_ending_in">endet mit</string>
     <string name="empty_cardholder_message">Kein Karteninhaber angegeben.</string>
