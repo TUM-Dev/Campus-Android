@@ -16,7 +16,7 @@ public interface CafeteriaDao {
     Flowable<List<Cafeteria>> getAll();
 
     @Query("SELECT * FROM cafeteria WHERE id = :id")
-    Flowable<Cafeteria> getById(int id);
+    Cafeteria getById(int id);
 
     @Query("DELETE FROM cafeteria")
     void removeCache();
