@@ -41,14 +41,6 @@ public class EventsActivity extends ActivityForDownloadingExternal {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                switch (tab.getPosition()) {
-                    case 0:
-                        Log.e("TAG", "TAB1");
-                        break;
-                    case 1:
-                        Log.e("TAG", "TAB2");
-                        break;
-                }
             }
 
             @Override
