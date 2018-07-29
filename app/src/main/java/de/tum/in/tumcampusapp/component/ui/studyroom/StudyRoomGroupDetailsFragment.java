@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
@@ -85,7 +86,10 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
 
             StringBuilder stringBuilder = new StringBuilder(room.getBuildingName()).append("<br>");
 
-            if (room.getOccupiedUntil().isBeforeNow()) {
+            DateTime occupiedUntil = room.getOccupiedUntil();
+            boolean isFree = occupiedUntil == null || occupiedUntil.isBeforeNow();
+
+            if (isFree) {
                 stringBuilder.append(getString(R.string.free));
             } else {
                 stringBuilder.append(getString(R.string.occupied))
@@ -98,9 +102,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
 
             holder.detailsTextView.setText(Utils.fromHtml(stringBuilder.toString()));
 
-            int colorResId = room.getOccupiedUntil().isBeforeNow()
-                    ? R.color.study_room_free : R.color.study_room_occupied;
-
+            int colorResId = isFree ? R.color.study_room_free : R.color.study_room_occupied;
             int color = ContextCompat.getColor(holder.itemView.getContext(), colorResId);
             holder.cardView.setCardBackgroundColor(color);
         }

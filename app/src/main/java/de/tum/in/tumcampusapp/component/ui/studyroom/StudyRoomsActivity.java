@@ -159,8 +159,10 @@ public class StudyRoomsActivity extends ProgressActivity
                     public void onResponse(@NonNull Call<List<StudyRoomGroup>> call,
                                            @NonNull Response<List<StudyRoomGroup>> response) {
                         List<StudyRoomGroup> groups = response.body();
-                        if (response.isSuccessful() && groups != null) {
+                        if (response.isSuccessful() && groups != null && !groups.isEmpty()) {
                             onDownloadSuccessful(groups);
+                        } else if (response.isSuccessful()) {
+                            showError(R.string.error_no_data_to_show);
                         } else {
                             showErrorLayout();
                         }
