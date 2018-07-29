@@ -569,4 +569,5 @@ Signatur: %5$s</string>
     <string name="error_request_limit_reached">Du hast das Anfragelimit für TUMonline erreicht. Versuche es später erneut.</string>
     <string name="error_access_token_limit_reached">Limit an Access-Tokens erreicht. Du musst einen Access-Token in TUMonline löschen, bevor du fortfahren kannst.</string>
     <string name="error_unknown">Unbekannter Fehler.</string>
+    <string name="export_to_google_error">Ein Fehler ist während des Kalender-Exports zu Google Kalender aufgetreten.</string>
 </resources>

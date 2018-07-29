@@ -21,17 +21,18 @@ object CafeteriaLocalRepository {
 
     // Menu methods //
 
-    fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> =
-            db.cafeteriaMenuDao().getTypeNameFromDbCard(id, date)
+    fun getCafeteriaMenus(id: Int, date: DateTime): List<CafeteriaMenu> {
+        return db.cafeteriaMenuDao().getTypeNameFromDbCard(id, date)
+    }
 
-    fun getAllMenuDates(): Flowable<List<DateTime>> = db.cafeteriaMenuDao().allDates
+    fun getAllMenuDates(): List<DateTime> = db.cafeteriaMenuDao().allDates
 
 
     // Canteen methods //
 
     fun getAllCafeterias(): Flowable<List<Cafeteria>> = db.cafeteriaDao().all
 
-    fun getCafeteria(id: Int): Flowable<Cafeteria> = db.cafeteriaDao().getById(id)
+    fun getCafeteria(id: Int): Cafeteria = db.cafeteriaDao().getById(id)
 
     fun addCafeteria(cafeteria: Cafeteria) = executor.execute { db.cafeteriaDao().insert(cafeteria) }
 
