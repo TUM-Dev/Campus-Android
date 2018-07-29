@@ -25,13 +25,13 @@ import java.util.*
 /**
  * Activity to show the user's grades/exams passed.
  */
+class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity_grades) {
 
     // exams data and list
     private var exams: List<Exam>? = null
     private var programIds: List<String>? = null
 
     private var spinnerPosition = 0
-class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity_grades) {
 
     private var isFetched = false
 
