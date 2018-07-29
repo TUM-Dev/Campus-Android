@@ -9,6 +9,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import com.google.common.base.Optional;
 import com.google.common.primitives.Ints;
@@ -48,7 +49,8 @@ public class MVVSymbolView extends Drawable {
         int backgroundColor = 0;
         int num;
 
-        switch (line.charAt(0)) {
+        char symbol = !line.isEmpty() ? line.charAt(0) : 'X';
+        switch (symbol) {
             case 'S':
                 num = Optional.fromNullable(
                         Ints.tryParse(line.substring(1)))
@@ -124,7 +126,7 @@ public class MVVSymbolView extends Drawable {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         final int width = canvas.getWidth();
         final int height = canvas.getHeight();
         mRect.top = 0;
