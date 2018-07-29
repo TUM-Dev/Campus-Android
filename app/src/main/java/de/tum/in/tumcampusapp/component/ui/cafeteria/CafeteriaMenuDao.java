@@ -19,7 +19,7 @@ public interface CafeteriaMenuDao {
     void removeCache();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CafeteriaMenu cafeteriaMenu);
+    void insert(CafeteriaMenu... cafeteriaMenu);
 
     @Query("SELECT strftime('%d-%m-%Y', date) FROM cafeteriaMenu " +
            "WHERE date > date('now','localtime') AND cafeteriaId=:cafeteriaId AND name=:dishName " +
