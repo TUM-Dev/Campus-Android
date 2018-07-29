@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -159,12 +158,15 @@ public class StudyRoomsActivity extends ProgressActivity
                     public void onResponse(@NonNull Call<List<StudyRoomGroup>> call,
                                            @NonNull Response<List<StudyRoomGroup>> response) {
                         List<StudyRoomGroup> groups = response.body();
-                        if (response.isSuccessful() && groups != null && !groups.isEmpty()) {
-                            onDownloadSuccessful(groups);
-                        } else if (response.isSuccessful()) {
-                            showError(R.string.error_no_data_to_show);
-                        } else {
+                        if (!response.isSuccessful() || groups == null) {
                             showErrorLayout();
+                            return;
+                        }
+
+                        if (!groups.isEmpty()) {
+                            onDownloadSuccessful(groups);
+                        } else {
+                            showError(R.string.error_no_data_to_show);
                         }
                     }
 
@@ -182,7 +184,7 @@ public class StudyRoomsActivity extends ProgressActivity
     }
 
     private void onDownloadSuccessful(@NonNull List<StudyRoomGroup> groups) {
-        Handler handler = new Handler(Looper.getMainLooper());
+        Handler handler = new Handler();
         handler.post(() -> {
             updateDatabase(groups);
             runOnUiThread(() -> displayStudyRooms(groups));
