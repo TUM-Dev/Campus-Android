@@ -269,7 +269,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-            mWeekView.setXScrollingSpeed(0.5f);
+            mWeekView.setXScrollingSpeed(0.4f);
         }
 
         // Go to current date or the one given in the intent
