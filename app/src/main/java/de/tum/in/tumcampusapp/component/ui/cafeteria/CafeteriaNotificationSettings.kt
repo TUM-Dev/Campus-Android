@@ -128,8 +128,8 @@ class CafeteriaNotificationSettings(context: Context) {
         fun retrieveTimeForDay(day: DateTime) = retrieveTimeForDay(day.dayOfWeek)
 
         private fun retrieveTimeForDay(dayOfWeek: Int): LocalTime? {
-            val hour = sharedPrefs.getInt(PREFIX + dayOfWeek + HOUR_SUFFIX, -1)
-            val minute = sharedPrefs.getInt(PREFIX + dayOfWeek + MINUTE_SUFFIX, -1)
+            val hour = sharedPrefs.getInt(PREFIX + dayOfWeek + HOUR_SUFFIX, NO_VALUE_SET)
+            val minute = sharedPrefs.getInt(PREFIX + dayOfWeek + MINUTE_SUFFIX, NO_VALUE_SET)
 
             if (hour == -1 || minute == -1) {
                 return null
