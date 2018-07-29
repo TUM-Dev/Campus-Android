@@ -6,7 +6,6 @@ import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
@@ -28,9 +27,7 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
     @Override
     public void onCreate() {
         CafeteriaManager mensaManager = new CafeteriaManager(mApplicationContext);
-        Map<String, List<CafeteriaMenu>> menus = mensaManager.getBestMatchMensaInfo(mApplicationContext)
-                                                             .blockingFirst();
-        mMenus = menus.get(menus.keySet().iterator().next());
+        mMenus = mensaManager.getBestMatchCafeteriaMenus();
     }
 
     @Override
@@ -51,9 +48,6 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
     @Override
     public RemoteViews getViewAt(int position) {
         CafeteriaMenu currentItem = mMenus.get(position);
-        if (currentItem == null) {
-            return null;
-        }
 
         RemoteViews rv = new RemoteViews(mApplicationContext.getPackageName(), R.layout.mensa_widget_item);
 

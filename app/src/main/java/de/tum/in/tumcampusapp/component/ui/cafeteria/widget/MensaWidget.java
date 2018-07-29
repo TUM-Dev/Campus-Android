@@ -37,9 +37,8 @@ public class MensaWidget extends AppWidgetProvider {
             CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
             localRepository.setDb(TcaDb.getInstance(context));
 
-            Cafeteria cafeteria = localRepository
-                    .getCafeteria(mensaManager.getBestMatchMensaId(context))
-                    .blockingFirst();
+            int cafeteriaId = mensaManager.getBestMatchMensaId(context);
+            Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
             rv.setTextViewText(R.id.mensa_widget_header, cafeteria.getName());
 
             // Set the properly formatted date in the subhead

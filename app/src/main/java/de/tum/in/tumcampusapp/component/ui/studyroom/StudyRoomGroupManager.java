@@ -84,7 +84,7 @@ public class StudyRoomGroupManager {
 
     public void downloadFromExternal() throws JSONException {
         Optional<JSONObject> jsonObject =
-                new NetUtils(mContext).downloadJsonObject(STUDYROOM_URL, 0, true);
+                new NetUtils(mContext).downloadJsonObject(STUDYROOM_URL);
         if (!jsonObject.isPresent()) {
             return;
         }
