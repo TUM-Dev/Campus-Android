@@ -28,6 +28,7 @@ import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
+import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -63,6 +64,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAIL
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_COORDINATES;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SEARCH;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_WIFI_HEATMAP;
 
 public interface TUMCabeAPIService {
@@ -204,4 +206,7 @@ public interface TUMCabeAPIService {
 
     @GET(API_NEWS + "alert")
     Observable<NewsAlert> getNewsAlert();
+
+    @GET(API_STUDY_ROOMS)
+    Call<List<StudyRoomGroup>> getStudyRoomGroups();
 }
