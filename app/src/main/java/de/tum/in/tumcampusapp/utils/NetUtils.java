@@ -71,7 +71,7 @@ public class NetUtils {
     }
 
     @Deprecated
-    public Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
+    private Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
         if (!isOnline || Strings.isNullOrEmpty(url) || url.equals("null")) {
@@ -95,7 +95,7 @@ public class NetUtils {
      * @throws IOException when the http call fails
      */
     @Deprecated
-    public Optional<String> downloadStringHttp(String url) throws IOException {
+    private Optional<String> downloadStringHttp(String url) throws IOException {
         Optional<ResponseBody> response = getOkHttpResponse(url);
         if (response.isPresent()) {
             ResponseBody b = response.get();
@@ -105,7 +105,7 @@ public class NetUtils {
         return Optional.absent();
     }
 
-    public Optional<String> downloadStringAndCache(String url, int validity, boolean force) {
+    private Optional<String> downloadStringAndCache(String url) {
         try {
             Optional<String> content = downloadStringHttp(url);
             if (content.isPresent()) {
@@ -125,7 +125,7 @@ public class NetUtils {
      * @return JSONObject
      */
     @Deprecated
-    public Optional<JSONObject> downloadJson(String url) {
+    private Optional<JSONObject> downloadJson(String url) {
         try {
             Optional<ResponseBody> response = getOkHttpResponse(url);
             if (response.isPresent()) {
@@ -143,12 +143,11 @@ public class NetUtils {
      * Download a JSON stream from a URL or load it from cache
      *
      * @param url   Valid URL
-     * @param force Load data anyway and fill cache, even if valid cached version exists
      * @return JSONObject
      */
     @Deprecated
-    public Optional<JSONObject> downloadJsonObject(String url, int validity, boolean force) {
-        Optional<String> download = downloadStringAndCache(url, validity, force);
+    public Optional<JSONObject> downloadJsonObject(String url) {
+        Optional<String> download = downloadStringAndCache(url);
         JSONObject result = null;
         if (download.isPresent()) {
             try {
