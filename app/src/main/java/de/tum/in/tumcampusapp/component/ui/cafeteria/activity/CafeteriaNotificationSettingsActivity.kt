@@ -20,13 +20,13 @@ class CafeteriaNotificationSettingsActivity : BaseActivity(R.layout.activity_caf
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val notificationSettings = CafeteriaNotificationSettings.getInstance(this)
-        val dailySchedule = buildDailySchedule(notificationSettings)
-
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         notificationSettingsRecyclerView.layoutManager = layoutManager
         notificationSettingsRecyclerView.setHasFixedSize(true)
+
+        val notificationSettings = CafeteriaNotificationSettings.getInstance(this)
+        val dailySchedule = buildDailySchedule(notificationSettings)
 
         val adapter = CafeteriaNotificationSettingsAdapter(this, dailySchedule)
         notificationSettingsRecyclerView.adapter = adapter
@@ -41,14 +41,14 @@ class CafeteriaNotificationSettingsActivity : BaseActivity(R.layout.activity_caf
      * Reloads the settings into the dailySchedule list.
      */
     private fun buildDailySchedule(
-            settings: CafeteriaNotificationSettings): ArrayList<CafeteriaNotificationTime> {
+            settings: CafeteriaNotificationSettings): List<CafeteriaNotificationTime> {
         return (DateTimeConstants.MONDAY until DateTimeConstants.SATURDAY)
                 .map {
                     val day = DateTime.now().withDayOfWeek(it)
                     val time = settings.retrieveLocalTime(day)
                     CafeteriaNotificationTime(day, time)
                 }
-                .toCollection(ArrayList())
+                .toList()
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.*
 
 class CafeteriaNotificationSettingsAdapter(
         private val context: Context,
-        private val dailySchedule: ArrayList<CafeteriaNotificationTime>
+        private val dailySchedule: List<CafeteriaNotificationTime>
 ) : RecyclerView.Adapter<CafeteriaNotificationSettingsAdapter.ViewHolder>(), OnNotificationTimeChangedListener {
 
     private val settings = CafeteriaNotificationSettings.getInstance(context)
@@ -56,9 +56,9 @@ class CafeteriaNotificationSettingsAdapter(
     }
 
     private fun updateNotificationTime(position: Int, newTime: LocalTime?) {
-        val time = dailySchedule[position]
-        val newItem = CafeteriaNotificationTime(time.weekday, newTime)
-        dailySchedule[position] = newItem
+        dailySchedule[position].apply {
+            time = newTime
+        }
         notifyItemChanged(position)
     }
 

@@ -4,58 +4,66 @@ import android.content.Context
 import android.preference.PreferenceManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
 import org.joda.time.LocalTime
 
+/**
+ * This class encapsulates the user's settings for cafeteria notifications. It allows retrieval and
+ * manipulation of notification times. It also reschedules alarms if notifications times are changed.
+ *
+ * @param context A [Context]
+ */
 class CafeteriaNotificationSettings(context: Context) {
 
     private val cafeteriaMenuManager = CafeteriaMenuManager(context)
     private val persistentStore = CafeteriaNotificationSettingsStore(context)
 
-    init {
-        val didChangeSettings = workWeek
-                .map { writeDayToSettings(it, defaultNotificationTime, false) }
-                .toBooleanArray()
-                .any { it }
-
-        if (didChangeSettings) {
-            cafeteriaMenuManager.scheduleFoodAlarms(true)
-        }
-    }
-
-    private fun writeDayToSettings(day: DateTime, newTime: LocalTime?, overwrite: Boolean): Boolean {
-        val storedTime = persistentStore.retrieveTimeForDay(day)
-        storedTime?.let {
-            return if (overwrite && it != newTime) {
-                persistentStore.storeTimeForDay(day, newTime)
-                true
-            } else {
-                false
-            }
-        }
-
-        persistentStore.storeTimeForDay(day, newTime)
-        return true
-    }
-
+    /**
+     * Returns the [LocalTime] of cafeteria notifications on a particular weekday, or null if the
+     * user disabled notifications on this weekday.
+     *
+     * @param weekday The [DateTime] representing the weekday
+     * @return The [LocalTime] of the notification or null
+     */
     fun retrieveLocalTime(weekday: DateTime): LocalTime? {
         return persistentStore.retrieveTimeForDay(weekday)
     }
 
+    /**
+     * Returns the [LocalTime] of cafeteria notifications on a particular weekday. If the user
+     * disabled notifications on this weekday, this method returns the default notification time.
+     *
+     * @param weekday The [DateTime] representing the weekday
+     * @return The [LocalTime] of the notification or the default notification time
+     */
     fun retrieveLocalTimeOrDefault(weekday: DateTime): LocalTime {
-        return persistentStore.retrieveTimeForDay(weekday) ?: defaultNotificationTime
+        return retrieveLocalTime(weekday) ?: defaultNotificationTime
     }
 
-    private fun updateLocalTimeOfDay(time: CafeteriaNotificationTime): Boolean {
-        val currentlyStored = persistentStore.retrieveTimeForDay(time.weekday)
-        if (currentlyStored == time.time) {
+    /**
+     * Stores the provided [CafeteriaNotificationTime].
+     *
+     * @param notificationTime The [CafeteriaNotificationTime] to store
+     * @return Boolean whether the data in [CafeteriaNotificationSettingsStore] was updated
+     */
+    private fun updateLocalTimeOfDay(notificationTime: CafeteriaNotificationTime): Boolean {
+        val currentlyStored = persistentStore.retrieveTimeForDay(notificationTime.weekday)
+
+        if (notificationTime.time == currentlyStored) {
             return false
         }
 
-        return writeDayToSettings(time.weekday, time.time, true)
+        persistentStore.storeNotificationTime(notificationTime)
+        return true
     }
 
-    fun saveEntireSchedule(times: ArrayList<CafeteriaNotificationTime>): Boolean {
+    /**
+     * Stores all [CafeteriaNotificationTime]s in the [CafeteriaNotificationSettingsStore] and
+     * returns whether any time was actually changed.
+     *
+     * @param times The list of [CafeteriaNotificationTime]s
+     * @return Boolean whether any time was actually changed
+     */
+    fun saveEntireSchedule(times: List<CafeteriaNotificationTime>): Boolean {
         if (times.size != 5) {
             return false
         }
@@ -82,11 +90,6 @@ class CafeteriaNotificationSettings(context: Context) {
 
         private var INSTANCE: CafeteriaNotificationSettings? = null
 
-        private val workWeek: List<DateTime> by lazy {
-            (DateTimeConstants.MONDAY until DateTimeConstants.SATURDAY)
-                    .map { DateTime.now().withDayOfWeek(it) }
-        }
-
         private val defaultNotificationTime: LocalTime by lazy {
             LocalTime.now()
                     .withHourOfDay(9)
@@ -107,12 +110,17 @@ class CafeteriaNotificationSettings(context: Context) {
 
     }
 
+    /**
+     * This class is responsible for storing and retrieving [CafeteriaNotificationTime]s.
+     *
+     * @param context A [Context]
+     */
     private class CafeteriaNotificationSettingsStore(context: Context) {
 
         private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-        fun storeTimeForDay(day: DateTime, time: LocalTime?) {
-            storeTimeForDay(day.dayOfWeek, time)
+        fun storeNotificationTime(notificationTime: CafeteriaNotificationTime) {
+            storeTimeForDay(notificationTime.weekday.dayOfWeek, notificationTime.time)
         }
 
         private fun storeTimeForDay(dayOfWeek: Int, time: LocalTime?) {
@@ -128,10 +136,13 @@ class CafeteriaNotificationSettings(context: Context) {
         fun retrieveTimeForDay(day: DateTime) = retrieveTimeForDay(day.dayOfWeek)
 
         private fun retrieveTimeForDay(dayOfWeek: Int): LocalTime? {
+            // The initial version of the app stored the hour and the minute value of the
+            // notification time separately. To not break things, we continue to do so, but expose
+            // the information as a LocalTime.
             val hour = sharedPrefs.getInt(PREFIX + dayOfWeek + HOUR_SUFFIX, NO_VALUE_SET)
             val minute = sharedPrefs.getInt(PREFIX + dayOfWeek + MINUTE_SUFFIX, NO_VALUE_SET)
 
-            if (hour == -1 || minute == -1) {
+            if (hour == NO_VALUE_SET || minute == NO_VALUE_SET) {
                 return null
             }
 
