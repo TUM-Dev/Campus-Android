@@ -22,11 +22,11 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/color_primary"
                 android:elevation="12dp"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark"
-                tools:ignore="UnusedAttribute">
+                android:theme="@style/TumToolbar"
+                app:popupTheme="@style/TumToolbarPopUp">
 
                 <Spinner
-                    android:id="@+id/spFilter"
+                    android:id="@+id/filterSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -41,23 +41,23 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="0px"
+            android:layout_height="0dp"
             android:layout_weight="1">
 
             <FrameLayout
-                android:id="@+id/charts"
+                android:id="@+id/chartsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/padding_default">
 
                 <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pie_chart"
+                    android:id="@+id/pieChartView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="visible" />
 
                 <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/bar_chart"
+                    android:id="@+id/barChartView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone" />
@@ -65,13 +65,13 @@
             </FrameLayout>
 
             <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefreshLayout"
+                android:id="@+id/ptr_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone">
 
                 <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-                    android:id="@+id/lstGrades"
+                    android:id="@+id/gradesListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="vertical" />
@@ -86,37 +86,45 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/avgGrade"
-                android:layout_width="0px"
+                android:id="@+id/averageGradeTextView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/material_small_padding"
                 android:layout_weight="1"
-                android:padding="10dp"
                 android:textSize="@dimen/semilarge_text_size"
-                android:visibility="visible" />
+                android:visibility="visible"
+                tools:text="1.0" />
 
-            <Button
-                android:id="@+id/button_show_list"
-                style="@style/FlatButton"
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/showListButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/material_tiny_padding"
+                android:drawablePadding="@dimen/material_small_padding"
                 android:drawableStart="@drawable/ic_list_bulleted"
                 android:gravity="center"
-                android:onClick="showList"
-                android:text="@string/show_list" />
+                android:onClick="toggleInLandscape"
+                android:text="@string/show_list"
+                android:textColor="@android:color/white"
+                app:backgroundTint="@color/color_primary" />
 
-            <Button
-                android:id="@+id/button_show_chart"
-                style="@style/FlatButton"
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/showChartButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/material_tiny_padding"
+                android:drawablePadding="@dimen/material_small_padding"
                 android:drawableStart="@drawable/ic_pie_chart"
                 android:gravity="center"
-                android:onClick="showChart"
+                android:onClick="toggleInLandscape"
                 android:text="@string/show_chart"
-                android:visibility="gone" />
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                app:backgroundTint="@color/color_primary" />
+
         </LinearLayout>
 
         <ImageView
@@ -124,7 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="@color/tum_300"
-            android:onClick="hideChartToggle"
+            android:onClick="toggleChart"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_arrow_up" />
 

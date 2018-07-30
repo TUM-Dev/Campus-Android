@@ -497,11 +497,11 @@ Signature: %5$s</string>
         <item>@string/tca</item>
     </string-array>
     <string name="grades_without_weight">Grades without weights</string>
-    <string name="study_program">Program %s</string>
+    <string name="study_program_format_string">Program %s</string>
     <string name="summer_semester">Summer term %d</string>
     <string name="winter_semester">Winter term %d/%d</string>
-    <string name="show_list">&#032;Show List</string>
-    <string name="show_chart">&#032;Show Chart</string>
+    <string name="show_list">Show List</string>
+    <string name="show_chart">Show Chart</string>
 
     <string name="channel_general">General</string>
     <string name="channel_cafeteria">Cafeteria</string>
