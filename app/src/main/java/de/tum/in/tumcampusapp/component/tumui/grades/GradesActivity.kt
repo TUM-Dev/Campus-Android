@@ -252,9 +252,8 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     fun toggleInLandscape(view: View) {
         val showChart = chartsContainer.visibility == View.GONE
 
-        //swipeRefreshLayout.visibility = if (showChart) View.GONE else View.VISIBLE
-        showListButton.visibility = if (showChart) View.VISIBLE else View.GONE
-        showChartButton.visibility = if (showChart) View.GONE else View.VISIBLE
+        showListButton?.visibility = if (showChart) View.VISIBLE else View.GONE
+        showChartButton?.visibility = if (showChart) View.GONE else View.VISIBLE
 
         if (chartsContainer.visibility == View.GONE) {
             crossFadeViews(swipeRefreshLayout, chartsContainer)
