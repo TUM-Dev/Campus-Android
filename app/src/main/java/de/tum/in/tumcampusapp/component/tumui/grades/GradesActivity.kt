@@ -27,15 +27,9 @@ import java.util.*
  */
 class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity_grades) {
 
-    // exams data and list
-    private var exams: List<Exam>? = null
-    private var programIds: List<String>? = null
-
     private var spinnerPosition = 0
-
     private var isFetched = false
 
-    // everything for the charts
     private var barMenuItem: MenuItem? = null
     private var pieMenuItem: MenuItem? = null
 
@@ -72,7 +66,31 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         loadGrades(CacheControl.BYPASS_CACHE)
     }
 
-    private fun initPieChart(gradeDistribution: ArrayMap<String, Int>) {
+    private fun loadGrades(cacheControl: CacheControl) {
+        val apiCall = apiClient.getGrades(cacheControl)
+        fetch(apiCall)
+    }
+
+    override fun onDownloadSuccessful(response: ExamList) {
+        initSpinner(response.exams)
+        showExams(response.exams)
+
+        // Enable the menu options after first successful fetch
+        isFetched = true
+
+        barMenuItem?.isEnabled = true
+        pieMenuItem?.isEnabled = true
+
+        // Update the action bar to display the enabled menu options
+        invalidateOptionsMenu()
+    }
+
+    /**
+     * Displays the pie chart and its data set with the provided grade distribution.
+     *
+     * @param gradeDistribution An [ArrayMap] mapping grades to number of occurrences
+     */
+    private fun displayPieChart(gradeDistribution: ArrayMap<String, Int>) {
         val entries = grades.map { grade ->
             val count = gradeDistribution[grade] ?: 0
             PieEntry(count.toFloat(), grade)
@@ -92,7 +110,12 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         }
     }
 
-    private fun initBarChart(gradeDistribution: ArrayMap<String, Int>) {
+    /**
+     * Displays the bar chart and its data set with the provided grade distribution.
+     *
+     * @param gradeDistribution An [ArrayMap] mapping grades to number of occurrence
+     */
+    private fun displayBarChart(gradeDistribution: ArrayMap<String, Int>) {
         val entries = grades.mapIndexed { index, grade ->
             val value = gradeDistribution[grade] ?: 0
             BarEntry(index.toFloat(), value.toFloat())
@@ -117,9 +140,9 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     }
 
     /**
-     * Calculates the average grade of the given exams
+     * Calculates the average grade of the provided exams.
      *
-     * @param exams List of exams
+     * @param exams List of [Exam] objects
      * @return Average grade
      */
     private fun calculateAverageGrade(exams: List<Exam>): Double {
@@ -133,10 +156,10 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     }
 
     /**
-     * Calculates grade distribution
+     * Calculates the grade distribution.
      *
-     * @param exams List of exams
-     * @return HashMap with grade to grade count mapping
+     * @param exams List of [Exam] objects
+     * @return An [ArrayMap] mapping grades to number of occurrence
      */
     private fun calculateGradeDistribution(exams: List<Exam>): ArrayMap<String, Int> {
         val gradeDistribution = ArrayMap<String, Int>()
@@ -148,18 +171,22 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     }
 
     /**
-     * Initialize the spinner for choosing between the study programs.
+     * Initialize the spinner for choosing between the study programs. It determines all study
+     * programs by iterating through the provided exams.
+     *
+     * @param exams List of [Exam] objects
      */
     private fun initSpinner(exams: List<Exam>) {
         // Set Spinner data
-        val filters = arrayListOf<String>(getString(R.string.all_programs))
+        val filters = mutableListOf<String>(getString(R.string.all_programs))
 
         // Get all program IDs from the results
-        programIds = exams
+        val programIds = exams
                 .map { it.programID }
                 .distinct()
                 .map { getString(R.string.study_program_format_string, it) }
-                .apply { filters.addAll(this) }
+
+        filters.addAll(programIds)
 
         // Init the spinner
         val spinnerArrayAdapter = ArrayAdapter(
@@ -190,8 +217,10 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     }
 
     /**
-     * updates/inits all components to show the given exams
-     * @param exams
+     * Displays all exams in the list view and chart view. If there are no exams, it displays a
+     * placeholder instead.
+     *
+     * @param exams List of [Exam] object
      */
     private fun showExams(exams: List<Exam>) {
         if (exams.isEmpty()) {
@@ -204,8 +233,8 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         // Update charts
         chartsContainer.visibility = View.VISIBLE
         calculateGradeDistribution(exams).apply {
-            initPieChart(this)
-            initBarChart(this)
+            displayPieChart(this)
+            displayBarChart(this)
         }
 
         val averageGrade = calculateAverageGrade(exams)
@@ -266,27 +295,6 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         toggleChartVisibility()
     }
 
-    private fun loadGrades(cacheControl: CacheControl) {
-        val apiCall = apiClient.getGrades(cacheControl)
-        fetch(apiCall)
-    }
-
-    override fun onDownloadSuccessful(response: ExamList) {
-        exams = response.exams.apply {
-            initSpinner(this)
-            showExams(this)
-        }
-
-        // Enable the menu options after first successful fetch
-        isFetched = true
-
-        barMenuItem?.isEnabled = true
-        pieMenuItem?.isEnabled = true
-
-        // Update the action bar to display the enabled menu options
-        invalidateOptionsMenu()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_activity_grades, menu)
@@ -297,35 +305,27 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.bar_chart_menu -> showBarChart().run { true }
-            R.id.pie_chart_menu -> showPieChart().run { true }
+            R.id.bar_chart_menu,
+            R.id.pie_chart_menu -> toggleChart().run { true }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun showBarChart() {
-        barMenuItem?.isVisible = false
-        pieMenuItem?.isVisible = true
+    private fun toggleChart() {
+        val showBarChart = barChartView.visibility == View.GONE
+
+        barMenuItem?.isVisible = !showBarChart
+        pieMenuItem?.isVisible = showBarChart
 
         if (chartsContainer.visibility == View.VISIBLE) {
-            crossFadeViews(pieChartView, barChartView)
-        } else {
-            // switch layouts even though they are not visible
-            // --> when they are visible again the right chart will be displayed
-            pieChartView.visibility = View.GONE
-            barChartView.visibility = View.VISIBLE
-        }
-    }
-
-    private fun showPieChart() {
-        barMenuItem?.isVisible = true
-        pieMenuItem?.isVisible = false
-
-        if (chartsContainer.visibility == View.VISIBLE) {
+            val fadeOut = if (showBarChart) barChartView else pieChartView
+            val fadeInt = if (showBarChart) barChartView else pieChartView
             crossFadeViews(barChartView, pieChartView)
         } else {
-            pieChartView.visibility = View.VISIBLE
-            barChartView.visibility = View.GONE
+            // Switch layouts even though they are not visible
+            // --> when they are visible again the right chart will be displayed
+            barChartView.visibility = if (showBarChart) View.VISIBLE else View.GONE
+            pieChartView.visibility = if (!showBarChart) View.VISIBLE else View.GONE
         }
     }
 
