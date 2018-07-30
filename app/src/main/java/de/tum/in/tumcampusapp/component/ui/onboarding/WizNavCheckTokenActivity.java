@@ -51,7 +51,7 @@ public class WizNavCheckTokenActivity extends ProgressActivity {
     }
 
     private void loadIdentitySet() {
-        mToast = Toast.makeText(this, "Checking if token is enabled …", Toast.LENGTH_LONG);
+        mToast = Toast.makeText(this, R.string.checking_if_token_enabled, Toast.LENGTH_LONG);
         mToast.show();
 
         TUMOnlineClient
