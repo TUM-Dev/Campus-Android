@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="@color/tum_300"
-            android:onClick="hideChartToggle"
+            android:onClick="toggleChart"
             android:src="@drawable/ic_arrow_anim_down" />
 
         <android.support.v4.widget.SwipeRefreshLayout

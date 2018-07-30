@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import com.github.mikephil.charting.data.*
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
@@ -47,7 +48,8 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         super.onCreate(savedInstanceState)
 
         savedInstanceState?.let { state ->
-            showBarChartAfterRotate = !state.getBoolean(KEY_SHOW_PIE_CHART, true)
+            showBarChartAfterRotate = !state.getBoolean(KEY_SHOW_BAR_CHART, true)
+            spinnerPosition = state.getInt(KEY_SPINNER_POSITION, 0)
         }
 
         if (showBarChartAfterRotate) {
@@ -75,13 +77,10 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         initSpinner(response.exams)
         showExams(response.exams)
 
-        // Enable the menu options after first successful fetch
-        isFetched = true
-
         barMenuItem?.isEnabled = true
         pieMenuItem?.isEnabled = true
 
-        // Update the action bar to display the enabled menu options
+        isFetched = true
         invalidateOptionsMenu()
     }
 
@@ -177,18 +176,14 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
      * @param exams List of [Exam] objects
      */
     private fun initSpinner(exams: List<Exam>) {
-        // Set Spinner data
-        val filters = mutableListOf<String>(getString(R.string.all_programs))
-
-        // Get all program IDs from the results
         val programIds = exams
                 .map { it.programID }
                 .distinct()
                 .map { getString(R.string.study_program_format_string, it) }
 
+        val filters = mutableListOf<String>(getString(R.string.all_programs))
         filters.addAll(programIds)
 
-        // Init the spinner
         val spinnerArrayAdapter = ArrayAdapter(
                 this, R.layout.simple_spinner_item_actionbar, filters)
 
@@ -198,7 +193,6 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
             visibility = View.VISIBLE
         }
 
-        // Handle if program choice is changed
         filterSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val filter = filters[position]
@@ -230,8 +224,13 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
 
         gradesListView.adapter = ExamListAdapter(this@GradesActivity, exams)
 
-        // Update charts
-        chartsContainer.visibility = View.VISIBLE
+        if (!isFetched) {
+            // We hide the charts container in the beginning. Then, when we load data for the first
+            // time, we make it visible. We don't do this on subsequent refreshes, as the user might
+            // have decided to collapse the charts container and we don't want to revert that.
+            chartsContainer.visibility = View.VISIBLE
+        }
+
         calculateGradeDistribution(exams).apply {
             displayPieChart(this)
             displayBarChart(this)
@@ -243,14 +242,33 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
 
     public override fun onSaveInstanceState(instanceState: Bundle) {
         super.onSaveInstanceState(instanceState)
-        instanceState.putBoolean(KEY_SHOW_PIE_CHART, barMenuItem?.isVisible ?: false)
+        instanceState.putBoolean(KEY_SHOW_BAR_CHART, barMenuItem?.isVisible ?: false)
         instanceState.putInt(KEY_SPINNER_POSITION, spinnerPosition)
     }
 
     /**
-     * animated due to android:animateLayoutChanges="true" in xml file
+     * Toggles between list view and chart view in landscape mode.
      */
-    private fun toggleChartVisibility() {
+    fun toggleInLandscape(view: View) {
+        val showChart = chartsContainer.visibility == View.GONE
+
+        //swipeRefreshLayout.visibility = if (showChart) View.GONE else View.VISIBLE
+        showListButton.visibility = if (showChart) View.VISIBLE else View.GONE
+        showChartButton.visibility = if (showChart) View.GONE else View.VISIBLE
+
+        if (chartsContainer.visibility == View.GONE) {
+            crossFadeViews(swipeRefreshLayout, chartsContainer)
+        } else {
+            crossFadeViews(chartsContainer, swipeRefreshLayout)
+        }
+    }
+
+    /**
+     * Collapses or expands the chart above the list view. Only available in portrait mode. The
+     * transition is animated via android:animateLayoutChanges in the layout file.
+     */
+    fun toggleChart(view: View) {
+        //toggleChartVisibility()
         val transition = LayoutTransition()
 
         val showCharts = chartsContainer.visibility == View.GONE
@@ -265,34 +283,10 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         }
 
         // Animate arrow
-        chartVisibilityToggle.setImageResource(arrow)
-        (chartVisibilityToggle.drawable as Animatable).start()
-    }
-
-    private fun toggleChartVisibilityLand() {
-        if (chartsContainer.visibility == View.GONE) {
-            // Show charts and hide list
-            crossFadeViews(swipeRefreshLayout, chartsContainer)
-        } else {
-            // Hide charts and show list
-            crossFadeViews(chartsContainer, swipeRefreshLayout)
+        (view as ImageView).apply {
+            setImageResource(arrow)
+            (drawable as Animatable).start()
         }
-    }
-
-    // for landscape
-    fun toggleInLandscape(view: View) {
-        val showChart = chartsContainer.visibility == View.GONE
-
-        swipeRefreshLayout.visibility = if (showChart) View.GONE else View.VISIBLE
-        showListButton.visibility = if (showChart) View.VISIBLE else View.GONE
-        showChartButton.visibility = if (showChart) View.GONE else View.VISIBLE
-
-        toggleChartVisibilityLand()
-    }
-
-    // for portrait
-    fun hideChartToggle(view: View) {
-        toggleChartVisibility()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -311,6 +305,9 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         }
     }
 
+    /**
+     * Toggles between the pie chart and the bar chart.
+     */
     private fun toggleChart() {
         val showBarChart = barChartView.visibility == View.GONE
 
@@ -318,21 +315,22 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         pieMenuItem?.isVisible = showBarChart
 
         if (chartsContainer.visibility == View.VISIBLE) {
-            val fadeOut = if (showBarChart) barChartView else pieChartView
-            val fadeInt = if (showBarChart) barChartView else pieChartView
-            crossFadeViews(barChartView, pieChartView)
+            val fadeOut = if (showBarChart) pieChartView else barChartView
+            val fadeIn = if (showBarChart) barChartView else pieChartView
+            crossFadeViews(fadeOut, fadeIn)
         } else {
-            // Switch layouts even though they are not visible
-            // --> when they are visible again the right chart will be displayed
+            // Switch layouts even though they are not visible. Once they are visible again,
+            // the right chart will be displayed
             barChartView.visibility = if (showBarChart) View.VISIBLE else View.GONE
             pieChartView.visibility = if (!showBarChart) View.VISIBLE else View.GONE
         }
     }
 
     /**
-     * switching out two layouts by fading one in and the other one out (at the same time)
-     * @param fadeOut
-     * @param fadeIn
+     * Cross-fades two views.
+     *
+     * @param fadeOut The [View] that will fade out
+     * @param fadeIn The [View] that will fade in
      */
     private fun crossFadeViews(fadeOut: View, fadeIn: View) {
         // Set the content view to 0% opacity but visible, so that it is visible
@@ -361,7 +359,6 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        // enable Menu Items after fetching grades
         barMenuItem = menu.findItem(R.id.bar_chart_menu).apply {
             isEnabled = isFetched
         }
@@ -379,7 +376,7 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     }
 
     companion object {
-        private const val KEY_SHOW_PIE_CHART = "showPieChart" // show pie or bar chart after rotation
+        private const val KEY_SHOW_BAR_CHART = "showPieChart"
         private const val KEY_SPINNER_POSITION = "spinnerPosition"
 
         private val GRADE_COLORS = intArrayOf(

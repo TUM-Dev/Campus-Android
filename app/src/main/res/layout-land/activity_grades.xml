@@ -132,7 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="@color/tum_300"
-            android:onClick="hideChartToggle"
+            android:onClick="toggleChart"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_arrow_up" />
 
