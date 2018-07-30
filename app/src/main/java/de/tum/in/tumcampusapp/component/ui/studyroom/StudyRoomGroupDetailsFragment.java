@@ -1,9 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.studyroom;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(Const.STUDY_ROOM_GROUP_ID)) {
+        if (getArguments() != null && getArguments().containsKey(Const.STUDY_ROOM_GROUP_ID)) {
             mStudyRoomGroupId = getArguments().getInt(Const.STUDY_ROOM_GROUP_ID);
         }
     }
@@ -42,12 +43,15 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
-        StudyRoomGroupManager manager = new StudyRoomGroupManager(getActivity());
+        StudyRoomGroupManager manager = new StudyRoomGroupManager(getContext());
+
+        List<StudyRoom> studyRooms = manager.getAllStudyRoomsForGroup(mStudyRoomGroupId);
+        StudyRoomAdapter adapter = new StudyRoomAdapter(studyRooms);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new StudyRoomAdapter(manager.getAllStudyRoomsForGroup(mStudyRoomGroupId)));
+        recyclerView.setAdapter(adapter);
 
         int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
         recyclerView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
@@ -55,7 +59,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
         return rootView;
     }
 
-    private class StudyRoomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class StudyRoomAdapter extends RecyclerView.Adapter<StudyRoomViewHolder> {
 
         private List<StudyRoom> studyRooms;
 
@@ -65,53 +69,42 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
 
         @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public StudyRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                                       .inflate(R.layout.two_line_list_item, parent, false);
-            return new RecyclerView.ViewHolder(view) {
-            };
+            return new StudyRoomViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull StudyRoomViewHolder holder, int position) {
             StudyRoom room = studyRooms.get(position);
-            CardView cardView = holder.itemView.findViewById(R.id.card_view);
 
-            TextView headerTextView = holder.itemView.findViewById(R.id.headerTextView);
-            TextView detailsTextView = holder.itemView.findViewById(R.id.detailsTextView);
+            holder.openRoomFinderButton.setText(R.string.go_to_room);
+            holder.openRoomFinderButton.setTag(room.getCode());
 
-            AppCompatButton openLinkButton = holder.itemView.findViewById(R.id.openLinkButton);
-            openLinkButton.setText(R.string.go_to_room);
-            openLinkButton.setTag(room.getCode());
+            holder.headerTextView.setText(room.getName());
 
-            headerTextView.setText(room.getName());
+            StringBuilder stringBuilder = new StringBuilder(room.getBuildingName()).append("<br>");
 
-            StringBuilder stringBuilder = new StringBuilder(room.getLocation()).append("<br>");
+            DateTime occupiedUntil = room.getOccupiedUntil();
+            boolean isFree = occupiedUntil == null || occupiedUntil.isBeforeNow();
 
-            if (room.getOccupiedTill()
-                    .isBeforeNow()) {
+            if (isFree) {
                 stringBuilder.append(getString(R.string.free));
             } else {
                 stringBuilder.append(getString(R.string.occupied))
                              .append(" <b>")
                              .append(DateTimeFormat.forPattern("HH:mm")
                                                    .withLocale(Locale.getDefault())
-                                                   .print(room.getOccupiedTill()))
+                                                   .print(room.getOccupiedUntil()))
                              .append("</b>");
             }
 
-            detailsTextView.setText(Utils.fromHtml(stringBuilder.toString()));
+            holder.detailsTextView.setText(Utils.fromHtml(stringBuilder.toString()));
 
-            int color;
-            if (detailsTextView.getText()
-                               .toString()
-                               .contains(getString(R.string.free))) {
-                color = Color.rgb(200, 230, 201);
-            } else {
-                color = Color.rgb(255, 205, 210);
-            }
-
-            cardView.setCardBackgroundColor(color);
+            int colorResId = isFree ? R.color.study_room_free : R.color.study_room_occupied;
+            int color = ContextCompat.getColor(holder.itemView.getContext(), colorResId);
+            holder.cardView.setCardBackgroundColor(color);
         }
 
         @Override
@@ -120,4 +113,22 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
         }
 
     }
+
+    private static class StudyRoomViewHolder extends RecyclerView.ViewHolder {
+
+        CardView cardView;
+        TextView headerTextView;
+        TextView detailsTextView;
+        AppCompatButton openRoomFinderButton;
+
+        StudyRoomViewHolder(View itemView) {
+            super(itemView);
+            cardView = itemView.findViewById(R.id.card_view);
+            headerTextView = itemView.findViewById(R.id.headerTextView);
+            detailsTextView = itemView.findViewById(R.id.detailsTextView);
+            openRoomFinderButton = itemView.findViewById(R.id.openLinkButton);
+        }
+
+    }
+
 }

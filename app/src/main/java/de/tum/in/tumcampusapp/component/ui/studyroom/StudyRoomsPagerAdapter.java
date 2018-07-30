@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.studyroom;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +15,7 @@ public class StudyRoomsPagerAdapter extends FragmentStatePagerAdapter {
 
     private int mCurrentStudyRoomGroupId;
 
-    public StudyRoomsPagerAdapter(FragmentManager fm) {
+    StudyRoomsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -40,7 +39,7 @@ public class StudyRoomsPagerAdapter extends FragmentStatePagerAdapter {
         return 1;
     }
 
-    public void setStudyRoomGroupId(Activity mainActivity, int mSelectedStudyRoomGroupId) {
-        mCurrentStudyRoomGroupId = mSelectedStudyRoomGroupId;
+    public void setStudyRoomGroupId(int selectedGroupId) {
+        mCurrentStudyRoomGroupId = selectedGroupId;
     }
 }
