@@ -62,7 +62,7 @@ class WidgetDepartures(station: String = "",
             if (departures.isEmpty()) {
                 this.isOffline = true
             } else {
-                this.departures = departures
+                this.departures = departures.toMutableList()
                 this.lastLoad = System.currentTimeMillis()
                 this.isOffline = false
             }
