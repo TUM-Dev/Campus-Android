@@ -41,8 +41,9 @@ import de.tum.in.tumcampusapp.utils.Utils;
 /**
  * Transport Manager, handles querying data from mvv and card creation
  */
+@Deprecated
 @SuppressWarnings("StringConcatenationMissingWhitespace")
-public class TransportController implements ProvidesCard, ProvidesNotifications {
+public class TransportController2 implements ProvidesCard, ProvidesNotifications {
 
     /*  Documentation for using efa.mvv-muenchen.de
      *
@@ -132,13 +133,13 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
         DEPARTURE_QUERY_CONST = departureQuery.toString();
     }
 
-    public TransportController(Context context) {
+    public TransportController2(Context context) {
         mContext = context;
         TcaDb tcaDb = TcaDb.getInstance(context);
         transportDao = tcaDb.transportDao();
 
-        if (TransportController.widgetDeparturesList == null) {
-            TransportController.widgetDeparturesList = new SparseArray<>();
+        if (TransportController2.widgetDeparturesList == null) {
+            TransportController2.widgetDeparturesList = new SparseArray<>();
         }
 
     }
@@ -184,7 +185,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
         widgetsTransport.setLocation(widgetDepartures.getUseLocation());
         widgetsTransport.setReload(widgetDepartures.getAutoReload());
         transportDao.replaceWidget(widgetsTransport);
-        TransportController.widgetDeparturesList.put(appWidgetId, widgetDepartures);
+        TransportController2.widgetDeparturesList.put(appWidgetId, widgetDepartures);
     }
 
     /**
@@ -194,7 +195,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
      */
     public void deleteWidget(int widgetId) {
         transportDao.deleteWidget(widgetId);
-        TransportController.widgetDeparturesList.remove(widgetId);
+        TransportController2.widgetDeparturesList.remove(widgetId);
     }
 
     /**
@@ -208,8 +209,8 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
      * @return The WidgetDepartures Object
      */
     public WidgetDepartures getWidget(int widgetId) {
-        if (TransportController.widgetDeparturesList.indexOfKey(widgetId) >= 0) {
-            return TransportController.widgetDeparturesList.get(widgetId);
+        if (TransportController2.widgetDeparturesList.indexOfKey(widgetId) >= 0) {
+            return TransportController2.widgetDeparturesList.get(widgetId);
         }
         WidgetDepartures widgetDepartures;
         WidgetsTransport widgetsTransports = transportDao.getAllWithId(widgetId);
@@ -220,7 +221,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
             widgetDepartures.setUseLocation(widgetsTransports.getLocation());
             widgetDepartures.setAutoReload(widgetsTransports.getReload());
         }
-        TransportController.widgetDeparturesList.put(widgetId, widgetDepartures);
+        TransportController2.widgetDeparturesList.put(widgetId, widgetDepartures);
         return widgetDepartures;
     }
 
@@ -244,7 +245,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
             NetUtils net = new NetUtils(context);
 
             // Download departures
-            Optional<JSONObject> departures = net.downloadJson(query);
+            Optional<JSONObject> departures = Optional.absent(); // net.downloadJson(query);
             if (!departures.isPresent()) {
                 return result;
             }
@@ -305,7 +306,7 @@ public class TransportController implements ProvidesCard, ProvidesNotifications 
             NetUtils net = new NetUtils(context);
 
             // Download possible stations
-            Optional<JSONObject> jsonObj = net.downloadJsonObject(query, 0, true);
+            Optional<JSONObject> jsonObj = Optional.absent(); // net.downloadJsonObject(query, 0, true);
             if (!jsonObj.isPresent()) {
                 return Collections.emptyList();
             }

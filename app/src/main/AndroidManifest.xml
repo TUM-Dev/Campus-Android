@@ -359,7 +359,8 @@
             android:name=".component.ui.onboarding.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -368,7 +369,8 @@
             android:name=".component.ui.onboarding.WizNavCheckTokenActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:parentActivityName=".component.ui.onboarding.WizNavStartActivity">
+            android:parentActivityName=".component.ui.onboarding.WizNavStartActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.onboarding.WizNavStartActivity" />
@@ -378,6 +380,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:parentActivityName=".component.ui.onboarding.WizNavCheckTokenActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

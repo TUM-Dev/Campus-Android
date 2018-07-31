@@ -41,7 +41,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
@@ -193,10 +192,9 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return lectures;
     }
 
-    public CalendarItem getCalendarItemByStartAndEndTime(DateTime start, DateTime end) {
-        String startString = DateTimeUtils.INSTANCE.getDateTimeString(start);
-        String endString = DateTimeUtils.INSTANCE.getDateTimeString(end);
-        return calendarDao.getCalendarItemByStartAndEndTime(startString, endString);
+    @Nullable
+    public CalendarItem getCalendarItemById(String id) {
+        return calendarDao.getCalendarItemById(id);
     }
 
     public void scheduleNotifications(List<Event> events) {

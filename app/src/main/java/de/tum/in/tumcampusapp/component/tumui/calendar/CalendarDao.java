@@ -70,10 +70,6 @@ public interface CalendarDao {
             "ORDER BY dtend, dtstart LIMIT 4")
     List<CalendarItem> getNextCalendarItems();
 
-    // TODO: migrate dtstart and dtend to be proper dates
-    @Query("SELECT * FROM calendar WHERE dtstart LIKE '%' || :start AND dtend LIKE '%' || :end ")
-    CalendarItem getCalendarItemByStartAndEndTime(String start, String end);
-
     @Query("SELECT * FROM calendar WHERE nr=:id")
     CalendarItem getCalendarItemById(String id);
 }

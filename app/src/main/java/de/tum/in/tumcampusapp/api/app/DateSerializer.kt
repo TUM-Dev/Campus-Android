@@ -12,7 +12,7 @@ import java.util.*
 /**
  * Serializer for Gson
  *
- * Allows additional dateformats to be serialized.
+ * Allows additional date formats to be serialized.
  */
 class DateSerializer : JsonDeserializer<DateTime> {
     private val formatStrings = arrayOf(
@@ -20,11 +20,13 @@ class DateSerializer : JsonDeserializer<DateTime> {
             "yyyy-MM-dd HH:mm:ss",
             "yyyy-MM-dd'T'HH:mm:ss'Z'"
     )
+
     private val dateFormats = formatStrings.map {
         DateTimeFormat.forPattern(it).withLocale(Locale.GERMAN)
     }
 
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): DateTime {
+    override fun deserialize(json: JsonElement?,
+                             typeOfT: Type?, context: JsonDeserializationContext?): DateTime {
         dateFormats.forEach {
             try {
                 return it.parseDateTime(json?.asString)
