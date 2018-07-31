@@ -75,19 +75,18 @@ class MVVWidgetConfigureActivity :
 
         if (adapterStations.count == 0) {
             openSearch()
-        } else {
-            listViewResults.adapter = adapterStations
-            listViewResults.requestFocus()
+            return
         }
+        listViewResults.adapter = adapterStations
     }
 
     /**
      * Click on station in list
      */
     override fun onItemClick(av: AdapterView<*>, v: View, position: Int, id: Long) {
-        val (station, id1) = av.adapter.getItem(position) as StationResult
+        val (station, stationId) = av.adapter.getItem(position) as StationResult
         widgetDepartures.station = station
-        widgetDepartures.stationId = id1
+        widgetDepartures.stationId = stationId
         saveAndReturn()
     }
 
@@ -95,7 +94,6 @@ class MVVWidgetConfigureActivity :
         val recents = recentsDao.getAll(RecentsDao.STATIONS)
         if (recents == null) {
             listViewResults.adapter = NoResultsAdapter(this)
-            listViewResults.requestFocus()
             return
         }
 
@@ -109,6 +107,7 @@ class MVVWidgetConfigureActivity :
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayStations) {
                     // Something went wrong
+                    Utils.showToast(this, R.string.something_wrong)
                     Utils.log(it)
                     onStartSearch()
                 })
@@ -118,9 +117,7 @@ class MVVWidgetConfigureActivity :
         showLoadingEnded()
 
         if (stations.isEmpty()) {
-            // So show no results found
             listViewResults.adapter = NoResultsAdapter(this)
-            listViewResults.requestFocus()
             return
         }
 
@@ -129,7 +126,6 @@ class MVVWidgetConfigureActivity :
 
         adapterStations.notifyDataSetChanged()
         listViewResults.adapter = adapterStations
-        listViewResults.requestFocus()
     }
 
     /**
@@ -176,9 +172,7 @@ class MVVWidgetConfigureActivity :
      */
     private fun cancelAndReturn() {
         val resultValue = Intent()
-        if (!widgetDepartures.station
-                        .isEmpty() && !widgetDepartures.stationId
-                        .isEmpty()) {
+        if (!(widgetDepartures.station.isEmpty() || widgetDepartures.stationId.isEmpty())) {
             saveAndReturn()
         } else {
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)

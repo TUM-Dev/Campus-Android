@@ -51,7 +51,6 @@ class TransportationActivity :
         }
 
         listViewResults.adapter = adapterStations
-        listViewResults.requestFocus()
 
     }
 
@@ -79,7 +78,6 @@ class TransportationActivity :
         val recents = recentsDao.getAll(RecentsDao.STATIONS)
         if (recents == null) {
             listViewResults.adapter = NoResultsAdapter(this)
-            listViewResults.requestFocus()
             return
         }
 
@@ -93,6 +91,7 @@ class TransportationActivity :
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayStations) {
                     // Something went wrong
+                    Utils.showToast(this, R.string.something_wrong)
                     Utils.log(it)
                     onStartSearch()
                 })
@@ -102,15 +101,13 @@ class TransportationActivity :
         showLoadingEnded()
 
         if (stations.isEmpty()) {
-            // So show no results found
             listViewResults.adapter = NoResultsAdapter(this)
-            listViewResults.requestFocus()
             return
         }
 
-        // mQuery is not null if it was a real search
+        // query is not null if it was a real search
         // If there is exactly one station, open results directly
-        if (stations.size == 1 && mQuery != null) {
+        if (stations.size == 1 && query != null) {
             transitionToDetailsActivity(stations[0])
             return
         }
@@ -120,7 +117,6 @@ class TransportationActivity :
 
         adapterStations.notifyDataSetChanged()
         listViewResults.adapter = adapterStations
-        listViewResults.requestFocus()
     }
 
     override fun onStop() {

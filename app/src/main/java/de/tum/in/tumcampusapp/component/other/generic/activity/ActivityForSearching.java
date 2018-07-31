@@ -23,21 +23,21 @@ public abstract class ActivityForSearching extends ProgressActivity {
     /**
      * Search authority and minimum query length
      */
-    private final String mAuthority;
-    private final int mMinLength;
+    private final String authority;
+    private final int minLength;
     /**
      * Last search query
      */
-    protected String mQuery;
+    protected String query;
     /**
      * SearchView handle
      */
-    private SearchView mSearchView;
-    private MenuItem mSearchItem;
+    private SearchView searchView;
+    private MenuItem searchItem;
     /**
      * @see ActivityForSearching#openSearch()
      */
-    private boolean mOpenSearch;
+    private boolean openSearch;
 
     /**
      * Initializes an activity for searching.
@@ -51,8 +51,8 @@ public abstract class ActivityForSearching extends ProgressActivity {
      */
     public ActivityForSearching(int layoutId, String auth, int minLen) {
         super(layoutId);
-        mAuthority = auth;
-        mMinLength = minLen;
+        authority = auth;
+        minLength = minLen;
     }
 
     /**
@@ -74,21 +74,21 @@ public abstract class ActivityForSearching extends ProgressActivity {
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
         // Get SearchView
-        mSearchItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) mSearchItem.getActionView();
+        searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
 
         // Set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
-        mSearchView.setSearchableInfo(info);
+        searchView.setSearchableInfo(info);
 
         // If activity gets called via Intent with a search query set SearchView accordingly
-        if (mQuery != null) {
-            mSearchView.setQuery(mQuery, false);
+        if (query != null) {
+            searchView.setQuery(query, false);
         }
 
         // Ensures that SearchView is updated if suggestion has been clicked
-        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int i) {
                 return false;
@@ -97,26 +97,26 @@ public abstract class ActivityForSearching extends ProgressActivity {
             @Override
             public boolean onSuggestionClick(int position) {
                 String suggestion = getSuggestion(position);
-                mSearchView.setQuery(suggestion, true);
+                searchView.setQuery(suggestion, true);
                 return true;
             }
 
             private String getSuggestion(int position) {
-                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter()
+                Cursor cursor = (Cursor) searchView.getSuggestionsAdapter()
                                                     .getItem(position);
                 return cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
             }
         });
 
         // Handle search cancellation
-        mSearchView.setOnCloseListener(() -> {
-            mSearchItem.collapseActionView();
-            mQuery = null;
+        searchView.setOnCloseListener(() -> {
+            searchItem.collapseActionView();
+            query = null;
             onStartSearch();
             return false;
         });
 
-        mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
@@ -124,7 +124,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                mQuery = null;
+                query = null;
                 onStartSearch();
                 return true;
             }
@@ -134,9 +134,9 @@ public abstract class ActivityForSearching extends ProgressActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mOpenSearch) {
-            mSearchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-            mSearchItem.expandActionView();
+        if (openSearch) {
+            searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            searchItem.expandActionView();
             return true;
         }
         return super.onPrepareOptionsMenu(menu);
@@ -161,9 +161,9 @@ public abstract class ActivityForSearching extends ProgressActivity {
      * @param query Query to search for
      */
     protected void requestSearch(String query) {
-        mQuery = query;
-        if (query.length() < mMinLength) {
-            final String text = String.format(getString(R.string.min_search_len), mMinLength);
+        this.query = query;
+        if (query.length() < minLength) {
+            final String text = String.format(getString(R.string.min_search_len), minLength);
             Utils.showToast(this, text);
             return;
         }
@@ -174,7 +174,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
         }*/
 
         // Add query to recents
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, mAuthority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, authority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
         suggestions.saveRecentQuery(query, null);
 
         // Tell activity to start searching
@@ -188,11 +188,11 @@ public abstract class ActivityForSearching extends ProgressActivity {
      * {@link ActivityForSearching#onResume()}} method.
      */
     protected void openSearch() {
-        mOpenSearch = true;
+        openSearch = true;
     }
 
     @Override
     public void onRefresh() {
-        requestSearch(mQuery);
+        requestSearch(query);
     }
 }

@@ -69,7 +69,6 @@ class TransportationDetailsActivity : ProgressActivity(R.layout.activity_transpo
                     .setTitle(R.string.transport_action_usage)
                     .setMessage(R.string.transport_help_text)
                     .setPositiveButton(android.R.string.ok, null)
-                    .create()
                     .show()
             return true
         }
@@ -83,12 +82,6 @@ class TransportationDetailsActivity : ProgressActivity(R.layout.activity_transpo
 
         // save clicked station into db
         recentsDao.insert(Recent(jsonStationResult, RecentsDao.STATIONS))
-
-        // Check for internet connectivity
-        if (!NetUtils.isConnected(this)) {
-            showNoInternetLayout()
-            return
-        }
 
         disposable.add(TransportController.getDeparturesFromExternal(this, locationID)
                 .subscribeOn(Schedulers.io())
@@ -112,7 +105,7 @@ class TransportationDetailsActivity : ProgressActivity(R.layout.activity_transpo
             return
         }
         mViewResults.removeAllViews()
-        for ((_, direction, symbol1, _, departureTime) in results) {
+        for ((_, direction, lineSymbol, _, departureTime) in results) {
             val view = DepartureView(this, true)
 
             view.setOnClickListener { v ->
@@ -135,10 +128,10 @@ class TransportationDetailsActivity : ProgressActivity(R.layout.activity_transpo
                 }
             }
 
-            if (transportManager.isFavorite(symbol1)) {
-                view.setSymbol(symbol1, true)
+            if (transportManager.isFavorite(lineSymbol)) {
+                view.setSymbol(lineSymbol, true)
             } else {
-                view.setSymbol(symbol1, false)
+                view.setSymbol(lineSymbol, false)
             }
 
             view.setLine(direction)
