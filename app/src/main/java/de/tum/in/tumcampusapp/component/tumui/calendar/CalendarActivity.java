@@ -441,9 +441,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
-        CalendarItem item = calendarController.getCalendarItemByStartAndEndTime(
-                new DateTime(weekViewEvent.getStartTime()),
-                new DateTime(weekViewEvent.getEndTime()));
+        String eventId = weekViewEvent.getIdentifier();
+        if (eventId == null) {
+            return;
+        }
+
+        CalendarItem item = calendarController.getCalendarItemById(eventId);
+        if (item == null) {
+            return;
+        }
+
         detailsFragment = CalendarDetailsFragment.newInstance(item, this);
         detailsFragment.show(getSupportFragmentManager(), null);
     }

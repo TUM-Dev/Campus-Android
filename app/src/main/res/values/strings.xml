@@ -615,4 +615,5 @@ Signature: %5$s</string>
     <string name="menu_with_long_type_format_string" translatable="false">%1$s (%2$s)</string>
     <string name="lecture_details_format_string" translatable="false">%1$s - %2$s SWS</string>
     <string name="lecture_list_item_details_format_string" translatable="false">%1$s - %2$s - %3$s SWS</string>
+    <string name="checking_if_token_enabled">Checking if token is enabled …</string>
 </resources>
