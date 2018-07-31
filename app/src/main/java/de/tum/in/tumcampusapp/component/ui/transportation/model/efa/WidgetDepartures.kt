@@ -62,7 +62,7 @@ class WidgetDepartures(station: String = "",
             if (departures.isEmpty()) {
                 this.isOffline = true
             } else {
-                this.departures = departures
+                this.departures = departures.toMutableList()
                 this.lastLoad = System.currentTimeMillis()
                 this.isOffline = false
             }
@@ -72,7 +72,7 @@ class WidgetDepartures(station: String = "",
         val iterator = this.departures.iterator()
         while (iterator.hasNext()) {
             val departure = iterator.next()
-            if (departure.calculatedCountDown < 0) {
+            if (departure.departureTime.isBeforeNow) {
                 iterator.remove()
             }
         }

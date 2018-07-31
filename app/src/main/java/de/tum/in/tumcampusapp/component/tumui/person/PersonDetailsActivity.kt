@@ -12,7 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineConst
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
@@ -22,26 +22,41 @@ import de.tum.`in`.tumcampusapp.utils.ContactsHelper
 import kotlinx.android.synthetic.main.activity_person_details.*
 
 /**
- * Activity to show information about an person at TUM.
+ * Activity to show information about a person at TUM.
  */
-class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_person_details) {
+class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.activity_person_details) {
 
+    private lateinit var personId: String
     private var employee: Employee? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val bundle = intent.extras
-        if (bundle == null) {
+        val person = intent.extras.getSerializable("personObject") as? Person
+        if (person == null) {
             finish()
             return
         }
 
-        val person = bundle.getSerializable("personObject") as Person
-
+        personId = person.id
         title = person.getFullName()
-        requestHandler.setParameter("pIdentNr", person.id)
-        super.requestFetch()
+
+        loadPersonDetails(person.id, CacheControl.USE_CACHE)
+    }
+
+    override fun onRefresh() {
+        loadPersonDetails(personId, CacheControl.BYPASS_CACHE)
+    }
+
+    private fun loadPersonDetails(personId: String, cacheControl: CacheControl) {
+        val apiCall = apiClient.getPersonDetails(personId, cacheControl)
+        fetch(apiCall)
+    }
+
+    override fun onDownloadSuccessful(response: Employee) {
+        this.employee = response
+        displayResult(response)
+        invalidateOptionsMenu()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -69,17 +84,10 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
 
         AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_add_to_contacts)
-                .setPositiveButton(R.string.add, { _, _ -> addContact(employee) })
-                .setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
+                .setPositiveButton(R.string.add) { _, _ -> addContact(employee) }
+                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
                 .setIcon(R.drawable.ic_action_add_person_blue)
                 .show()
-    }
-
-    override fun onFetch(response: Employee) {
-        employee = response
-        displayResult(response)
-        invalidateOptionsMenu()
-        showLoadingEnded()
     }
 
     /**
@@ -95,7 +103,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
         pictureImageView.setImageBitmap(image)
         nameTextView.text = employee.getNameWithTitle(this)
 
-        // Setup employee groups
+        // Set up employee groups
         val groups = employee.groups
         if (groups?.isNotEmpty() == true) {
             groupsRecyclerView.setHasFixedSize(true)
@@ -108,10 +116,13 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
 
         // Setup contact items
         val contactItems = arrayListOf<AbstractContactItem>().apply {
-            add(EmailContactItem(employee.email))
-            employee.businessContact?.let { contact ->
-                if (contact.homepage.isNotBlank()) {
-                    add(HomepageContactItem(contact.homepage))
+            if (employee.email.isNotBlank()) {
+                add(EmailContactItem(employee.email))
+            }
+
+            employee.businessContact?.homepage?.let { homepage ->
+                if (homepage.isNotBlank()) {
+                    add(HomepageContactItem(homepage))
                 }
             }
         }
@@ -122,13 +133,15 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(TUMOnlineC
             }
         }
 
-        employee.businessContact?.let { contact ->
-            if (contact.mobilephone.isNotBlank()) {
-                contactItems.add(MobilePhoneContactItem(contact.mobilephone))
+        employee.businessContact?.mobilephone?.let { mobilephone ->
+            if (mobilephone.isNotBlank()) {
+                contactItems.add(MobilePhoneContactItem(mobilephone))
             }
+        }
 
-            if (contact.additionalInfo.isNotBlank()) {
-                contactItems.add(InformationContactItem(contact.additionalInfo))
+        employee.businessContact?.additionalInfo?.let { additionalInfo ->
+            if (additionalInfo.isNotBlank()) {
+                contactItems.add(InformationContactItem(additionalInfo))
             }
         }
 

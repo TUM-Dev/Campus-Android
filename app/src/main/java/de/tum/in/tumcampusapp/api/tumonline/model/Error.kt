@@ -1,7 +1,30 @@
 package de.tum.`in`.tumcampusapp.api.tumonline.model
 
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.*
+import java.io.InterruptedIOException
 
-@Root(name = "error", strict = false)
-data class Error(@field:Element(name = "message", required = false) var message: String = "")
+@Xml(name = "error")
+data class Error(@PropertyElement var message: String = "") {
+
+    val exception: InterruptedIOException
+        get() = errorMessageToException
+                .filter { message.contains(it.first) }
+                .map { it.second }
+                .firstOrNull() ?: UnknownErrorException()
+
+    companion object {
+
+        private val errorMessageToException = listOf(
+                Pair("Keine Rechte für Funktion", MissingPermissionException()),
+                Pair("Token ist ungültig!", InvalidTokenException()),
+                Pair("ungültiges Benutzertoken", InvalidTokenException()),
+                Pair("Token ist nicht bestätigt!", InactiveTokenException()),
+                Pair("Request-Rate überschritten", RequestLimitReachedException()),
+                Pair("Token-Limit", TokenLimitReachedException())
+        )
+
+    }
+
+}

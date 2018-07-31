@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
-import org.simpleframework.xml.ElementList
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Element
+import com.tickaroo.tikxml.annotation.Xml
 
 import java.io.Serializable
 
@@ -10,9 +10,8 @@ import java.io.Serializable
  * based on the TUMOnline web service response format for a corresponding
  * request.
  */
-@Root(name = "telefon_nebenstellen")
-data class TelSubstationList(@field:ElementList(inline = true, required = false)
-                             var substations: List<TelSubstation> = mutableListOf()) : Serializable {
+@Xml(name = "telefon_nebenstellen")
+data class TelSubstationList(@Element var substations: List<TelSubstation>? = null) : Serializable {
     companion object {
         private const val serialVersionUID = -3790189526859194869L
     }

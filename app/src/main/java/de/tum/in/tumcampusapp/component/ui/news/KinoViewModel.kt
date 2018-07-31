@@ -53,10 +53,9 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext { localRepository.clear() }
                         .doAfterNext { localRepository.updateLastSync() }
-                        .doOnError { Utils.log(it) }
                         .flatMapIterable { it }
                         .filter { it.isFutureMovie() }
-                        .subscribe { localRepository.addKino(it) }
+                        .subscribe({ localRepository.addKino(it) }, { Utils.log(it) })
         )
     }
 

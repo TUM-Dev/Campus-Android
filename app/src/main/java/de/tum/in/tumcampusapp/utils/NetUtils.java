@@ -10,8 +10,6 @@ import com.google.common.base.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.app.Helper;
@@ -22,18 +20,17 @@ import okhttp3.ResponseBody;
 
 public class NetUtils {
     private final Context mContext;
-    private final CacheManager cacheManager;
     private final OkHttpClient client;
 
     public NetUtils(Context context) {
         //Manager caches all requests
         mContext = context;
-        cacheManager = new CacheManager(mContext);
 
         //Set our max wait time for each request
         client = Helper.getOkHttpClient(context);
     }
 
+    @Deprecated
     public static Optional<JSONObject> downloadJson(Context context, String url) {
         return new NetUtils(context).downloadJson(url);
     }
@@ -43,11 +40,14 @@ public class NetUtils {
      *
      * @return true if available
      */
-    public static boolean isConnected(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+    public static boolean isConnected(Context context) {
+        ConnectivityManager connectivityMgr =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityMgr == null) {
+            return false;
+        }
 
+        NetworkInfo netInfo = connectivityMgr.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
@@ -57,13 +57,20 @@ public class NetUtils {
      *
      * @return true if available
      */
-    public static boolean isConnectedWifi(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+    public static boolean isConnectedWifi(Context context) {
+        ConnectivityManager connectivityMgr =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityMgr == null) {
+            return false;
+        }
 
-        return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
+        NetworkInfo netInfo = connectivityMgr.getActiveNetworkInfo();
+        return netInfo != null
+                && netInfo.isConnectedOrConnecting()
+                && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
 
+    @Deprecated
     private Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
@@ -78,7 +85,6 @@ public class NetUtils {
         Response res = client.newCall(builder.build())
                              .execute();
         return Optional.fromNullable(res.body());
-
     }
 
     /**
@@ -88,7 +94,8 @@ public class NetUtils {
      * @return The content string
      * @throws IOException when the http call fails
      */
-    public Optional<String> downloadStringHttp(String url) throws IOException {
+    @Deprecated
+    private Optional<String> downloadStringHttp(String url) throws IOException {
         Optional<ResponseBody> response = getOkHttpResponse(url);
         if (response.isPresent()) {
             ResponseBody b = response.get();
@@ -98,56 +105,16 @@ public class NetUtils {
         return Optional.absent();
     }
 
-    public Optional<String> downloadStringAndCache(String url, int validity, boolean force) {
+    private Optional<String> downloadStringAndCache(String url) {
         try {
-            Optional<String> content;
-            if (!force) {
-                content = cacheManager.getFromCache(url);
-                if (content.isPresent()) {
-                    return content;
-                }
-            }
-
-            content = downloadStringHttp(url);
+            Optional<String> content = downloadStringHttp(url);
             if (content.isPresent()) {
-                cacheManager.addToCache(url, content.get(), validity, CacheManager.CACHE_TYP_DATA);
                 return content;
             }
             return Optional.absent();
         } catch (IOException e) {
             Utils.log(e);
             return Optional.absent();
-        }
-
-    }
-
-    /**
-     * Download a file in the same thread.
-     * If file already exists the method returns immediately
-     * without downloading anything
-     *
-     * @param url    Download location
-     * @param target Target filename in local file system
-     * @throws IOException When the download failed
-     */
-    public void downloadToFile(String url, String target) throws IOException {
-        File f = new File(target);
-        if (f.exists()) {
-            return;
-        }
-
-        File file = new File(target);
-        try (FileOutputStream out = new FileOutputStream(file)) {
-            Optional<ResponseBody> body = getOkHttpResponse(url);
-            if (!body.isPresent()) {
-                file.delete();
-                throw new IOException();
-            }
-            byte[] buffer = body.get()
-                                .bytes();
-
-            out.write(buffer, 0, buffer.length);
-            out.flush();
         }
     }
 
@@ -157,12 +124,14 @@ public class NetUtils {
      * @param url Valid URL
      * @return JSONObject
      */
-    public Optional<JSONObject> downloadJson(String url) {
+    @Deprecated
+    private Optional<JSONObject> downloadJson(String url) {
         try {
-            Optional<String> data = downloadStringHttp(url);
-            if (data.isPresent()) {
+            Optional<ResponseBody> response = getOkHttpResponse(url);
+            if (response.isPresent()) {
+                String data = response.get().string();
                 Utils.logv("downloadJson " + data);
-                return Optional.of(new JSONObject(data.get()));
+                return Optional.of(new JSONObject(data));
             }
         } catch (IOException | JSONException e) {
             Utils.log(e);
@@ -174,16 +143,16 @@ public class NetUtils {
      * Download a JSON stream from a URL or load it from cache
      *
      * @param url   Valid URL
-     * @param force Load data anyway and fill cache, even if valid cached version exists
      * @return JSONObject
      */
-    public Optional<JSONObject> downloadJsonObject(String url, int validity, boolean force) {
-        Optional<String> download = downloadStringAndCache(url, validity, force);
+    @Deprecated
+    public Optional<JSONObject> downloadJsonObject(String url) {
+        Optional<String> download = downloadStringAndCache(url);
         JSONObject result = null;
         if (download.isPresent()) {
             try {
                 result = new JSONObject(download.get());
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 Utils.log(e);
             }
         }

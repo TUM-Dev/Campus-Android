@@ -8,14 +8,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -31,6 +29,7 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 public class NextLectureCard extends NotificationAwareCard {
@@ -123,7 +122,7 @@ public class NextLectureCard extends NotificationAwareCard {
         mEvent.setOnClickListener(view -> {
             Intent i = new Intent(getContext(), CalendarActivity.class);
             CalendarItem item1 = lectures.get(mSelected);
-            i.putExtra(CalendarActivity.EVENT_TIME, item1.start.getMillis());
+            i.putExtra(Const.EVENT_TIME, item1.start.getMillis());
             getContext().startActivity(i);
         });
     }
@@ -188,11 +187,4 @@ public class NextLectureCard extends NotificationAwareCard {
         String locationForSearch;
     }
 
-    @Override
-    public RemoteViews getRemoteViews(@NonNull Context context, int appWidgetId) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_my_lectures);
-        return remoteViews;
-    }
 }

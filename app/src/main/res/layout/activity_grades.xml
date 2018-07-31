@@ -1,13 +1,13 @@
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
-        android:id="@+id/grades_layout"
+        android:id="@+id/gradesLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -22,13 +22,13 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/color_primary"
                 android:elevation="12dp"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark"
-                tools:ignore="UnusedAttribute">
+                android:theme="@style/TumToolbar"
+                app:popupTheme="@style/TumToolbarPopUp">
 
                 <Spinner
-                    android:id="@+id/spFilter"
+                    android:id="@+id/filterSpinner"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </android.support.v7.widget.Toolbar>
 
@@ -37,24 +37,27 @@
         <include
             layout="@layout/layout_all_errors"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_height="fill_parent" />
 
         <FrameLayout
-            android:id="@+id/charts"
+            android:id="@+id/chartsContainer"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:padding="@dimen/padding_default">
+            android:padding="@dimen/padding_default"
+            android:visibility="gone">
+
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pie_chart"
+                android:id="@+id/pieChartView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/bar_chart"
+                android:id="@+id/barChartView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
         </FrameLayout>
 
         <ImageView
@@ -62,20 +65,20 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="@color/tum_300"
-            android:onClick="hideChartToggle"
-            android:src="@drawable/ic_arrow_anim_down"/>
+            android:onClick="toggleChart"
+            android:src="@drawable/ic_arrow_anim_down" />
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
+            android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1">
 
             <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-                android:id="@+id/lstGrades"
+                android:id="@+id/gradesListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -86,21 +89,21 @@
             android:padding="@dimen/material_default_padding">
 
             <TextView
-                android:id="@+id/avgGrade"
+                android:id="@+id/averageGradeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#757575"
-                android:fontFamily="sans-serif-medium"
                 android:textSize="@dimen/semilarge_text_size"
                 android:visibility="visible"
-                tools:text="Average grade: 1.0"/>
+                tools:text="Average grade: 1.0" />
 
         </FrameLayout>
 
     </LinearLayout>
 
     <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer"/>
+    <include layout="@layout/navigation_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

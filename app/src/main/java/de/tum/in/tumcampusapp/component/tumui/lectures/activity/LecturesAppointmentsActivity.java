@@ -1,17 +1,20 @@
 package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Locale;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.lectures.adapter.LectureAppointmentsListAdapter;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsRowSet;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointment;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsResponse;
 import de.tum.in.tumcampusapp.utils.Const;
+import retrofit2.Call;
 
 /**
  * This activity provides the appointment dates to a given lecture using the
@@ -21,49 +24,58 @@ import de.tum.in.tumcampusapp.utils.Const;
  * <p>
  * NEEDS: stp_sp_nr and title set in incoming bundle (lecture id, title)
  */
-public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline<LectureAppointmentsRowSet> {
+public class LecturesAppointmentsActivity
+        extends ActivityForAccessingTumOnline<LectureAppointmentsResponse> {
 
-    /**
-     * UI elements
-     */
     private ListView lvTermine;
 
+    private String lectureId;
+
     public LecturesAppointmentsActivity() {
-        super(TUMOnlineConst.Companion.getLECTURES_APPOINTMENTS(), R.layout.activity_lecturesappointments);
+        super(R.layout.activity_lecturesappointments);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // set UI Elements
         lvTermine = findViewById(R.id.lvTerminList);
+
+        String title = getIntent().getStringExtra(Const.TITLE_EXTRA).toUpperCase();
         TextView tvTermineLectureName = findViewById(R.id.tvTermineLectureName);
+        tvTermineLectureName.setText(title);
 
-        Bundle bundle = this.getIntent()
-                            .getExtras();
-        // set Lecture Name (depends on bundle data)
-        tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA)
-                                           .toUpperCase(Locale.getDefault()));
-        requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
+        lectureId = getIntent().getStringExtra("stp_sp_nr");
+        if (lectureId == null) {
+            finish();
+            return;
+        }
 
-        super.requestFetch();
-
+        loadLectureAppointments(lectureId, CacheControl.USE_CACHE);
     }
 
-    /**
-     * process data got from TUMOnline request and show the list view
-     */
     @Override
-    public void onFetch(LectureAppointmentsRowSet lecturesList) {
-        // may happen if there are no appointments for the lecture
-        if (lecturesList.getLehrveranstaltungenTermine() == null) {
+    public void onRefresh() {
+        if (lectureId != null) {
+            loadLectureAppointments(lectureId, CacheControl.BYPASS_CACHE);
+        }
+    }
+
+    private void loadLectureAppointments(@NonNull String lectureId, CacheControl cacheControl) {
+        Call<LectureAppointmentsResponse> apiCall =
+                apiClient.getLectureAppointments(lectureId, cacheControl);
+        fetch(apiCall);
+    }
+
+    @Override
+    protected void onDownloadSuccessful(@NonNull LectureAppointmentsResponse response) {
+        List<LectureAppointment> appointments = response.getLectureAppointments();
+        if (appointments == null || appointments.isEmpty()) {
             showError(R.string.no_appointments);
             return;
         }
 
-        // set data to the ListView object nothing to click (yet)
-        lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, lecturesList.getLehrveranstaltungenTermine()));
-        showLoadingEnded();
+        lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, appointments));
     }
+
 }

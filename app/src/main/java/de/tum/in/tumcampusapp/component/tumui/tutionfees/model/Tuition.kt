@@ -1,10 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model
 
-import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import android.content.Context
+import com.tickaroo.tikxml.annotation.PropertyElement
+import com.tickaroo.tikxml.annotation.Xml
+import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateConverter
+import de.tum.`in`.tumcampusapp.api.tumonline.converters.FloatConverter
 import org.joda.time.DateTime
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.Root
-import java.text.NumberFormat
 import java.text.ParseException
 import java.util.*
 
@@ -15,35 +17,24 @@ import java.util.*
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
-@Root(name = "row", strict = false)
-data class Tuition(@field:Element(name = "frist")
-                   var frist: String = "",
-                   @field:Element(name = "semester_bezeichnung")
-                   var semesterBez: String = "",
-                   @field:Element(name = "soll")
-                   var soll: String = "") {
+@Xml(name = "row")
+data class Tuition(@PropertyElement(name = "frist", converter = DateConverter::class)
+                   val deadline: DateTime,
+                   @PropertyElement(name = "semester_bezeichnung")
+                   val semester: String,
+                   @PropertyElement(name = "soll", converter = FloatConverter::class)
+                   val amount: Float) {
 
-    val outstandingBalance: Float
-        get() {
-            return try {
-                NumberFormat.getInstance(Locale.GERMAN)
-                        .parse(soll)
-                        .toFloat()
-            } catch (e: ParseException) {
-                0f
-            }
+    val isPaid: Boolean
+        get() = amount == 0f
+
+    fun getAmountText(context: Context): String {
+        return try {
+            val amountText = String.format(Locale.getDefault(), "%.2f", amount)
+            return "$amountText €"
+        } catch (e: ParseException) {
+            context.getString(R.string.not_available)
         }
+    }
 
-    val outstandingBalanceText: String
-        get() {
-            return try {
-                val amountText = String.format(Locale.getDefault(), "%.2f", outstandingBalance)
-                return "$amountText €"
-            } catch (e: ParseException) {
-                soll
-            }
-        }
-
-    val dueDate: DateTime
-        get() = DateTimeUtils.getDate(frist)
 }

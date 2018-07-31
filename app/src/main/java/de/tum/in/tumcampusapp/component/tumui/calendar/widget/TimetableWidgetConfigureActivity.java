@@ -21,7 +21,6 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_timetable_widget_configure);
 
         // Setup toolbar and save button
@@ -77,4 +76,5 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
         setResult(RESULT_OK, resultValue);
         finish();
     }
+
 }

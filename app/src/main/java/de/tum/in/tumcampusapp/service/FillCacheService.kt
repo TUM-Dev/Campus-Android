@@ -23,11 +23,8 @@ class FillCacheService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        Thread {
-            // Fill cache service
-            CacheManager(this@FillCacheService)
-                .fillCache()
-        }.start()
+        val cacheManager = CacheManager(this@FillCacheService)
+        cacheManager.fillCache()
     }
 
     companion object {

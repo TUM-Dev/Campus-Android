@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model
 
-import org.simpleframework.xml.ElementList
-import org.simpleframework.xml.Root
+import com.tickaroo.tikxml.annotation.Element
+import com.tickaroo.tikxml.annotation.Xml
 
 /**
  * Wrapper class holding a list of tuitions ; based on ExamList
@@ -10,5 +10,5 @@ import org.simpleframework.xml.Root
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
-@Root(name = "rowset")
-data class TuitionList(@field:ElementList(inline = true) var tuitions: List<Tuition> = mutableListOf())
+@Xml(name = "rowset")
+data class TuitionList(@Element val tuitions: List<Tuition> = mutableListOf())

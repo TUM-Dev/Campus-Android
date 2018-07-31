@@ -34,29 +34,31 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
 
     fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
         return CafeteriaWithMenus(cafeteriaId).apply {
-            name = getCafeteriaNameFromId(id).blockingFirst()
+            name = getCafeteriaNameFromId(id)
             menuDates = getAllMenuDates().blockingFirst()
             menus = getCafeteriaMenus(id, nextMenuDate).blockingFirst()
         }
     }
 
-    fun getCafeteriaNameFromId(id: Int): Flowable<String> =
-            localRepository.getCafeteria(id)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { it.name }
+    private fun getCafeteriaNameFromId(id: Int): String {
+        return localRepository.getCafeteria(id).name
+    }
 
-    fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> =
-            localRepository.getCafeteriaMenus(id,date)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .defaultIfEmpty(emptyList())
+    fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> {
+        return Flowable
+                .fromCallable { localRepository.getCafeteriaMenus(id, date) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .defaultIfEmpty(emptyList())
+    }
 
-    fun getAllMenuDates(): Flowable<List<DateTime>> =
-            localRepository.getAllMenuDates()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .defaultIfEmpty(emptyList())
+    fun getAllMenuDates(): Flowable<List<DateTime>> {
+        return Flowable
+                .fromCallable { localRepository.getAllMenuDates() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .defaultIfEmpty(emptyList())
+    }
 
 
     /**
@@ -72,11 +74,13 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
             compositeDisposable.add(Observable.just(1)
                     .filter { localRepository.getLastSync() == null || force }
                     .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.io())
                     .doOnNext { localRepository.clear() }
-                    .flatMap { remoteRepository.getAllCafeterias() }.observeOn(Schedulers.io())
+                    .flatMap { remoteRepository.getAllCafeterias() }
                     .doAfterNext { localRepository.updateLastSync() }
-                    .doOnError { Utils.log(it.message) }
-                    .subscribe({ t -> t.forEach { localRepository.addCafeteria(it) } })
+                    .subscribe({ cafeteria ->
+                        cafeteria.forEach { localRepository.addCafeteria(it) }
+                    }, { throwable -> Utils.log(throwable) })
             )
 
     /**

@@ -9,7 +9,6 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location.Companion.fromCSVRow
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel
@@ -102,8 +101,7 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
-        CafeteriaMenuManager(this)
-                .downloadFromExternal(this, force)
+        CafeteriaMenuManager(this).downloadMenus(force)
         cafeteriaViewModel.getCafeteriasFromService(force)
         return true
     }
@@ -193,7 +191,9 @@ class DownloadService : JobIntentService() {
                         success = service.downloadAll(force)
                         val isSetup = Utils.getSettingBool(service, Const.EVERYTHING_SETUP, false)
                         if (!isSetup) {
-                            CacheManager(service).syncCalendar()
+                            val cacheManager = CacheManager(service)
+                            cacheManager.syncCalendar()
+
                             if (success) {
                                 Utils.setSetting(service, Const.EVERYTHING_SETUP, true)
                             }

@@ -34,6 +34,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
+import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import io.reactivex.Flowable;
@@ -72,6 +73,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_COORD
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SEARCH;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_WIFI_HEATMAP;
 
 public interface TUMCabeAPIService {
@@ -214,6 +216,9 @@ public interface TUMCabeAPIService {
     @GET(API_NEWS + "alert")
     Observable<NewsAlert> getNewsAlert();
 
+    @GET(API_STUDY_ROOMS)
+    Call<List<StudyRoomGroup>> getStudyRoomGroups();
+
     // TICKET SALE
 
     // Getting Event information
@@ -253,4 +258,5 @@ public interface TUMCabeAPIService {
 
     @GET(API_EVENTS + API_TICKET + "status/{event}")
     Call<List<TicketStatus>> getTicketStats(@Path("event") int event);
+
 }

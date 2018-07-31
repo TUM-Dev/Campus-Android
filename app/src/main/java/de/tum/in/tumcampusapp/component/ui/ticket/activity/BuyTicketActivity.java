@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ public class BuyTicketActivity extends BaseActivity {
         paymentButton = findViewById(R.id.paymentbutton);
         paymentButton.setOnClickListener(v -> {
             // Check if user is logged in and name and LRZ ID are available (needed to create ChatVerification)
-            if (new AccessTokenManager(BuyTicketActivity.this).hasValidAccessToken() &&
+            if (AccessTokenManager.hasValidAccessToken(this) &&
                     Utils.getSetting(BuyTicketActivity.this, Const.LRZ_ID, "").length() > 0 &&
                     Utils.getSetting(BuyTicketActivity.this, Const.CHAT_ROOM_DISPLAY_NAME, "").length() > 0) {
                 reserveTicket();

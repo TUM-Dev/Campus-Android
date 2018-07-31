@@ -48,6 +48,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationCance
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
+import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -90,7 +91,7 @@ public final class TUMCabeClient {
     static final String API_NEWS = "news/";
     static final String API_EVENTS = "event/";
     static final String API_TICKET = "ticket/";
-
+    static final String API_STUDY_ROOMS = "studyroom/list";
     private static final String API_HOSTNAME = Const.API_HOSTNAME;
     private static final String API_BASEURL = "/Api/";
     private static final String API_CHAT = "chat/";
@@ -104,8 +105,8 @@ public final class TUMCabeClient {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
-
-        Gson gson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateSerializer())
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(DateTime.class, new DateSerializer())
                 .create();
         builder.addConverterFactory(GsonConverterFactory.create(gson));
         builder.client(Helper.getOkHttpClient(c));
@@ -351,6 +352,10 @@ public final class TUMCabeClient {
 
     public Observable<NewsAlert> getNewsAlert() {
         return service.getNewsAlert();
+    }
+
+    public void getStudyRoomGroups(Callback<List<StudyRoomGroup>> callback) {
+        service.getStudyRoomGroups().enqueue(callback);
     }
 
     // TICKET SALE

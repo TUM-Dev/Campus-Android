@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "formatVersion": 1,
   "database": {
@@ -174,50 +175,6 @@
         "primaryKey": {
           "columnNames": [
             "id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "TumLock",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`url` TEXT NOT NULL, `error` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `lockedFor` INTEGER NOT NULL, `active` INTEGER NOT NULL, PRIMARY KEY(`url`))",
-        "fields": [
-          {
-            "fieldPath": "url",
-            "columnName": "url",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "error",
-            "columnName": "error",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "timestamp",
-            "columnName": "timestamp",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lockedFor",
-            "columnName": "lockedFor",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "active",
-            "columnName": "active",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "url"
           ],
           "autoGenerate": false
         },

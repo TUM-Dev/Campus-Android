@@ -1,57 +1,78 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/widget_margin"
-                android:theme="@style/AppTheme.WhiteBackground">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/mensa_widget_header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_primary"
-        android:elevation="2dp"
-        android:padding="10dp"
-        tools:ignore="UnusedAttribute">
+        android:background="@drawable/widget_header_rounded_corners_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/material_small_padding">
 
-        <TextView
-            android:id="@+id/mensa_widget_header"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/mensa_widget_icon"
-            android:layout_toStartOf="@+id/mensa_widget_icon"
-            android:background="@color/color_primary"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:typeface="sans"/>
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/mensa_widget_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                tools:text="Mensa" />
+
+            <TextView
+                android:id="@+id/mensa_widget_subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                tools:text="Date" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/mensa_widget_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/color_primary"
-            app:srcCompat="@drawable/ic_cutlery"
-            android:tint="@android:color/white"/>
-    </RelativeLayout>
+            android:src="@drawable/ic_cutlery"
+            android:tint="@android:color/white" />
 
+    </LinearLayout>
 
-    <ListView
-        android:id="@+id/food_item"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mensa_widget_header_container"/>
-
-    <TextView
-        android:id="@+id/empty_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/food_item"
-        android:gravity="center"
-        android:textColor="#ff656865"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
-</RelativeLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/widget_content_rounded_corners_background">
+
+        <ListView
+            android:id="@+id/food_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="1dp"
+            android:divider="@color/list_divider"
+            android:listSelector="@android:color/transparent" />
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/text_dark_gray"
+            android:textSize="20sp"
+            tools:text="Empty view"
+            tools:visibility="visible" />
+
+    </FrameLayout>
+
+</LinearLayout>

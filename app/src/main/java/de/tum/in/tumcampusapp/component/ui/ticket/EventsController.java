@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
@@ -27,7 +28,7 @@ import retrofit2.Response;
  * This class is responsible for providing ticket and event data to the activities.
  * For that purpose it handles both server and database accesses.
  */
-public class EventsController implements ProvidesCard{
+public class EventsController implements ProvidesCard {
 
     private final Context context;
 
@@ -190,12 +191,12 @@ public class EventsController implements ProvidesCard{
 
     @NotNull
     @Override
-    public List<Card> getCards() {
+    public List<Card> getCards(@NonNull @NotNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
         // Only add the next upcoming event for now
         Event event = eventDao.getNextEvent();
-        if (event != null){
+        if (event != null) {
             EventCard eventCard = new EventCard(context);
             eventCard.setEvent(event);
             results.add(eventCard);
@@ -203,5 +204,6 @@ public class EventsController implements ProvidesCard{
 
         return results;
     }
+
 }
 
