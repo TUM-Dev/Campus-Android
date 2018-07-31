@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Optional;
@@ -36,7 +37,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
@@ -187,10 +187,9 @@ public class CalendarController implements ProvidesCard {
         return lectures;
     }
 
-    public CalendarItem getCalendarItemByStartAndEndTime(DateTime start, DateTime end) {
-        String startString = DateTimeUtils.INSTANCE.getDateTimeString(start);
-        String endString = DateTimeUtils.INSTANCE.getDateTimeString(end);
-        return calendarDao.getCalendarItemByStartAndEndTime(startString, endString);
+    @Nullable
+    public CalendarItem getCalendarItemById(String id) {
+        return calendarDao.getCalendarItemById(id);
     }
 
     public void importCalendar(Events newEvents) {
