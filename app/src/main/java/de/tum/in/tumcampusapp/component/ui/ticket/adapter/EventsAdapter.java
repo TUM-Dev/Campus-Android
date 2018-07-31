@@ -49,8 +49,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         mEventList = events;
     }
 
+    @NonNull
     @Override
-    public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (mContext == null) {
             mContext = parent.getContext();
         }
@@ -101,12 +102,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
                 .replaceAll("");
         holder.titleView.setText(title);
 
-        //Adds localityView
         String locality = event.getLocality();
         holder.localityView.setText(locality);
 
-        // Adds date
-        holder.srcDateView.setText(Event.Companion.getFormattedDate(event.getStart()));
+        holder.srcDateView.setText(Event.methods.getFormattedDate(event.getStart()));
     }
 
     @Override

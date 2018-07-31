@@ -7,9 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -19,7 +19,6 @@ import de.tum.in.tumcampusapp.utils.Const;
 
 public class EventsActivity extends ActivityForDownloadingExternal {
 
-    private TabLayout eventTab;
     private ViewPager viewPager;
 
     public EventsActivity() {
@@ -34,21 +33,13 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         setupViewPager(viewPager);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        eventTab = findViewById(R.id.event_tab);
+        TabLayout eventTab = findViewById(R.id.event_tab);
         eventTab.setupWithViewPager(viewPager);//setting tab over viewpager
 
         eventTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                switch (tab.getPosition()) {
-                    case 0:
-                        Log.e("TAG", "TAB1");
-                        break;
-                    case 1:
-                        Log.e("TAG", "TAB2");
-                        break;
-                }
             }
 
             @Override
@@ -63,38 +54,37 @@ public class EventsActivity extends ActivityForDownloadingExternal {
 
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new EventFragment(this.getString(R.string.all_events)), this.getString(R.string.all_events));
-        adapter.addFrag(new EventFragment(this.getString(R.string.booked_events)), this.getString(R.string.booked_events));
+        EventsViewPagerAdapter adapter = new EventsViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
+    /**
+     * This class manages two tabs.
+     * One of them shows all available events, the other one all booked events.
+     */
+    class EventsViewPagerAdapter extends FragmentPagerAdapter {
+        EventsViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
+        private final List<String> titles =
+                Collections.unmodifiableList(Arrays.
+                        asList(getString(R.string.all_events),
+                                getString(R.string.booked_events)));
+
         @Override
         public Fragment getItem(int position) {
-            return mFragmentList.get(position);
+            return new EventFragment(titles.get(position));
         }
 
         @Override
         public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+            return titles.get(position);
         }
     }
 }

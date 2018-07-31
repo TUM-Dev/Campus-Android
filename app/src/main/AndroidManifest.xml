@@ -720,21 +720,11 @@
                 android:value=".component.ui.ticket.activity.EventsActivity" />
         </activity>
         <activity
-            android:name=".component.ui.ticket.activity.TicketPaymentSelectActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/payment_selection"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.ticket.activity.BuyTicketActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
             android:name=".component.ui.ticket.activity.StripePaymentActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/enter_card_info_title"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.ticket.activity.TicketPaymentSelectActivity">
+            android:parentActivityName=".component.ui.ticket.activity.BuyTicketActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />

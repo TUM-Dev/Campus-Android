@@ -11,14 +11,14 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TicketEphemeralKeyProvider implements EphemeralKeyProvider {
 
-    private @NonNull
-    ProgressListener mProgressListener;
+    private ProgressListener mProgressListener;
     private Context mContext;
 
     public TicketEphemeralKeyProvider(@NonNull ProgressListener progressListener,
@@ -31,21 +31,27 @@ public class TicketEphemeralKeyProvider implements EphemeralKeyProvider {
     public void createEphemeralKey(@NonNull @Size(min = 4) String apiVersion,
                                    @NonNull final EphemeralKeyUpdateListener keyUpdateListener) {
         try {
-            TUMCabeClient.getInstance(mContext).retrieveEphemeralKey(mContext, apiVersion, new Callback<HashMap<String, Object>>() {
+            TUMCabeClient.getInstance(mContext).retrieveEphemeralKey(mContext, apiVersion,
+                    new Callback<HashMap<String, Object>>() {
                 @Override
-                public void onResponse(Call<HashMap<String, Object>> call, Response<HashMap<String, Object>> response) {
-                    String id = response.body().toString();
-                    keyUpdateListener.onKeyUpdate(id);
-                    mProgressListener.onStringResponse(id);
+                public void onResponse(@NonNull Call<HashMap<String, Object>> call,
+                                       @NonNull Response<HashMap<String, Object>> response) {
+                    HashMap<String, Object> responseBody = response.body();
+                    if (responseBody != null) {
+                        String id = responseBody.toString();
+                        keyUpdateListener.onKeyUpdate(id);
+                        mProgressListener.onStringResponse(id);
+                    }
                 }
 
                 @Override
-                public void onFailure(Call<HashMap<String, Object>> call, Throwable t) {
-                    t.printStackTrace();
+                public void onFailure(@NonNull Call<HashMap<String, Object>> call,
+                                      @NonNull Throwable t) {
+                    Utils.log(t);
                 }
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            Utils.log(e);
         }
     }
 

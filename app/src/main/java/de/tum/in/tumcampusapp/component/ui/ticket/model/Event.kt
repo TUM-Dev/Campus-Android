@@ -32,7 +32,7 @@ data class Event(@PrimaryKey
                  var end: DateTime? = null,
                  var link: String = "") {
 
-    companion object {
+    companion object methods {
         const val defaultDuration = 7200000 // Milliseconds
 
         fun getFormattedDateTime(context: Context, dateTime: DateTime): String {
@@ -44,11 +44,9 @@ data class Event(@PrimaryKey
         }
 
         fun getFormattedTime(context: Context, dateTime: DateTime): String {
-            var pattern = if (android.text.format.DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
+            val pattern = if (android.text.format.DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
             return DateTimeFormat.forPattern(pattern).print(dateTime)
         }
     }
-
-    fun isFutureEvent() = start.isAfter(DateTime())
 
 }

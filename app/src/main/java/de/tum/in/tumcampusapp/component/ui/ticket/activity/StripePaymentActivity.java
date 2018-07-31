@@ -40,28 +40,28 @@ import de.tum.in.tumcampusapp.component.ui.ticket.TicketEphemeralKeyProvider;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StripePaymentActivity extends BaseActivity {
 
-    ProgressDialog progressDialog;
-    Button savedCardsButton;
-    AppCompatButton buyButton;
-    ProgressBar progressBar;
-    EditText cardholderEditText;
+    private ProgressDialog progressDialog;
+    private Button savedCardsButton;
+    private AppCompatButton buyButton;
+    private ProgressBar progressBar;
+    private EditText cardholderEditText;
 
-    PaymentSession paymentSession;
-    Boolean setSource = false;
-    int ticketHistory;
-    String price = ""; // ticket price is only used to display in textView -> String
-
+    private PaymentSession paymentSession;
+    private Boolean setSource = false; // Indicates whether the source has already been loaded from Stripe Server
+    private int ticketHistory; // Ticket ID, since the ticket was reserved in the prior activity and
+                               // we need the ID to init the purchase
+    private String price = ""; // ticket price is only used to display in textView -> String
 
     public StripePaymentActivity() {
         super(R.layout.activity_payment_stripe);
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,51 +70,20 @@ public class StripePaymentActivity extends BaseActivity {
         price = getIntent().getStringExtra("ticketPrice");
         ticketHistory = getIntent().getIntExtra("ticketHistory", -1);
 
-        if (ticketHistory < 0 || price.length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.internal_error, Toast.LENGTH_LONG).show();
+        if (ticketHistory < 0 || price.isEmpty()) {
+            Utils.showToast(getApplicationContext(), R.string.internal_error);
             finish();
+            return;
         }
 
         initSubviews();
         initStripeSession();
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (paymentSession != null) {
-            paymentSession.onDestroy();
-        }
-        try {
-            //TODO: react to cancelation?
-            TUMCabeClient.getInstance(getApplicationContext()).cancelTicketReservation(StripePaymentActivity.this, ticketHistory, new Callback<TicketSuccessResponse>() {
-                @Override
-                public void onResponse(Call<TicketSuccessResponse> call, Response<TicketSuccessResponse> response) {
-                    System.out.println("Cancalation Success!");
-                }
-
-                @Override
-                public void onFailure(Call<TicketSuccessResponse> call, Throwable t) {
-                    System.out.println("Cancalation Error!");
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     private void initSubviews() {
         buyButton = findViewById(R.id.complete_purchase_button);
-        buyButton.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             requestTicket();
-                                         }
-                                     }
-        );
-        buyButton.setEnabled(false); // disabled until customer- and paymentsession have been loaded
+        buyButton.setOnClickListener(v -> requestTicket());
+        buyButton.setEnabled(false); // disabled until customer- and payment session have been loaded
 
         cardholderEditText = findViewById(R.id.cardholder_edit_text);
 
@@ -122,44 +91,36 @@ public class StripePaymentActivity extends BaseActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         savedCardsButton = findViewById(R.id.saved_cards_button);
-        savedCardsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                paymentSession.presentPaymentMethodSelection();
-            }
-        });
+        savedCardsButton.setOnClickListener(view -> paymentSession.presentPaymentMethodSelection());
         savedCardsButton.setEnabled(false);
 
-        // Insert formated string to remind users about which amount they are going to pay
+        // Insert formatted string to remind users about which amount they are going to pay
         TextView priceReminder = findViewById(R.id.payment_info_price_textview);
-        MessageFormat fmt = new MessageFormat(getString(R.string.payment_info_price_reminder));
-        Object[] args = {price};
-        priceReminder.setText(fmt.format(args));
+        priceReminder.setText(getString(R.string.payment_info_price_reminder, price));
     }
-
 
     private void requestTicket() {
         String cardholder = cardholderEditText.getText().toString();
-        if (cardholder.length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.empty_cardholder_message, Toast.LENGTH_SHORT).show();
+        if (cardholder.isEmpty()) {
+            Utils.showToast(getApplicationContext(), R.string.empty_cardholder_message);
             return;
         }
 
         if (!setSource) {
             // No payment source selected yet
-            Toast.makeText(getApplicationContext(), R.string.card_data_invalid, Toast.LENGTH_LONG).show();
+            Utils.showToast(getApplicationContext(), R.string.card_data_invalid);
             return;
         }
 
         setPurchaseRequestLoading();
         try {
             TUMCabeClient
-                    .getInstance(StripePaymentActivity.this)
-                    .purchaseTicketStripe(StripePaymentActivity.this, ticketHistory,
+                    .getInstance(this)
+                    .purchaseTicketStripe(this, ticketHistory,
                             paymentSession.getPaymentSessionData().getSelectedPaymentMethodId(),
                             cardholder, new Callback<Ticket>() {
                                 @Override
-                                public void onResponse(Call<Ticket> call, Response<Ticket> response) {
+                                public void onResponse(@NonNull Call<Ticket> call, @NonNull Response<Ticket> response) {
                                     EventsController ec = new EventsController(StripePaymentActivity.this);
                                     List<Ticket> ticketList = new ArrayList<>();
                                     ticketList.add(response.body());
@@ -168,64 +129,52 @@ public class StripePaymentActivity extends BaseActivity {
                                 }
 
                                 @Override
-                                public void onFailure(Call<Ticket> call, Throwable t) {
-                                    t.printStackTrace();
+                                public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
+                                    Utils.log(t);
                                     finishLoadingPurchaseRequestError(getString(R.string.ticket_retrieval_error));
                                     finish();
                                 }
                             });
         } catch (IOException exception) {
-            exception.printStackTrace();
+            Utils.log(exception);
             finishLoadingPurchaseRequestError(getString(R.string.purchase_error_message));
-            return;
         }
     }
 
-
     private void setPurchaseRequestLoading() {
-        progressDialog = ProgressDialog.show(StripePaymentActivity.this, "", getString(R.string.purchase_progress_message), true);
+        progressDialog = ProgressDialog.show(this, null,
+                getString(R.string.purchase_progress_message), true);
     }
-
 
     private void finishLoadingPurchaseRequestSuccess(Ticket ticket) {
         progressDialog.dismiss();
 
         // Show success message to user
-        ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
-        AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.purchase_success_title))
                 .setMessage(getString(R.string.purchase_success_message))
-                .setPositiveButton(getString(R.string.purchase_success_continue), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(StripePaymentActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        intent = new Intent(StripePaymentActivity.this, ShowTicketActivity.class);
-                        intent.putExtra("eventID", ticket.getEventId());
-                        startActivity(intent);
-                    }
+                .setPositiveButton(getString(R.string.purchase_success_continue), (dialogInterface, i) -> {
+                    Intent intent = new Intent(this, ShowTicketActivity.class);
+                    intent.putExtra("eventID", ticket.getEventId());
+                    startActivity(intent);
                 })
                 .setCancelable(false);
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
-
     private void finishLoadingPurchaseRequestError(String error) {
         progressDialog.dismiss();
-        StripePaymentActivity.showError(this, error);
+        showError(error);
     }
 
-
-    public static void showError(Context context, String message) {
-        ContextThemeWrapper ctw = new ContextThemeWrapper(context, R.style.Theme_AppCompat_Light_Dialog_Alert);
-        AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
-        builder.setTitle(context.getString(R.string.error))
+    private void showError(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.error))
                 .setMessage(message);
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
 
     /* On return of the credit card selection */
     @Override
@@ -244,26 +193,20 @@ public class StripePaymentActivity extends BaseActivity {
         }
     }
 
-
     private void initStripeSession() {
         PaymentConfiguration.init(Const.STRIPE_API_PUBLISHABLE_KEY);
         initCustomerSession();
     }
 
-
     private void initCustomerSession() {
-        CustomerSession.initCustomerSession(new TicketEphemeralKeyProvider(new TicketEphemeralKeyProvider.ProgressListener() {
-            @Override
-            public void onStringResponse(String string) {
-                if (string.startsWith("Error: ")) {
-                    StripePaymentActivity.showError(StripePaymentActivity.this, string);
-                } else {
-                    initPaymentSession();
-                }
+        CustomerSession.initCustomerSession(new TicketEphemeralKeyProvider(string -> {
+            if (string.startsWith("Error: ")) {
+                StripePaymentActivity.this.showError(string);
+            } else {
+                initPaymentSession();
             }
-        }, getApplicationContext()));
+        }, this));
     }
-
 
     private void initPaymentSession() {
         paymentSession = new PaymentSession(this);
@@ -281,8 +224,8 @@ public class StripePaymentActivity extends BaseActivity {
 
             @Override
             public void onError(int errorCode, @Nullable String errorMessage) {
-                System.out.println("Error: " + errorMessage);
-                StripePaymentActivity.showError(StripePaymentActivity.this, getString(R.string.customersession_init_failed));
+                Utils.log("Error: " + errorMessage);
+                StripePaymentActivity.this.showError(getString(R.string.customersession_init_failed));
             }
 
             @Override
@@ -299,6 +242,32 @@ public class StripePaymentActivity extends BaseActivity {
 
     private String buildCardString(@NonNull SourceCardData data) {
         return data.getBrand() + ",  " + getString(R.string.creditcard_ending_in) + "  " + data.getLast4();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (paymentSession != null) {
+            paymentSession.onDestroy();
+        }
+        try {
+            TUMCabeClient.getInstance(getApplicationContext())
+                    .cancelTicketReservation(StripePaymentActivity.this,
+                            ticketHistory, new Callback<TicketSuccessResponse>() {
+                                @Override
+                                public void onResponse(@NonNull Call<TicketSuccessResponse> call,
+                                                       @NonNull Response<TicketSuccessResponse> response) {
+                                    System.out.println("Cancalation Success!");
+                                }
+
+                                @Override
+                                public void onFailure(@NonNull Call<TicketSuccessResponse> call, @NonNull Throwable t) {
+                                    System.err.println("Cancalation Error!");
+                                }
+                            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

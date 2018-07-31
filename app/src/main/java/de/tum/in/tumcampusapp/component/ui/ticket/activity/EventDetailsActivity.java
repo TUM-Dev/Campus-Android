@@ -20,21 +20,20 @@ public class EventDetailsActivity extends BaseActivity {
     }
 
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private EventsController eventsController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        eventsController = new EventsController(this);
+        EventsController eventsController = new EventsController(this);
 
         // set up ViewPager and adapter
         ViewPager mPager = findViewById(R.id.pager);
 
         List<Event> events = eventsController.getEvents();
 
-        EventDetailsAdapter eventDetailsAdapter = new EventDetailsAdapter(getSupportFragmentManager(),
-                events);
+        EventDetailsAdapter eventDetailsAdapter =
+                new EventDetailsAdapter(getSupportFragmentManager(), events);
 
         mPager.setAdapter(eventDetailsAdapter);
 
@@ -53,8 +52,8 @@ public class EventDetailsActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disposable.clear();
+    protected void onStop() {
+        super.onStop();
+        disposable.dispose();
     }
 }

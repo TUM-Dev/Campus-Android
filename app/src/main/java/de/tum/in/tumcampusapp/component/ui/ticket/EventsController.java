@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +23,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * This class is responsible for providing ticket and event data to the activities.
+ * For that purpose it handles both server and database accesses.
+ */
 public class EventsController implements ProvidesCard{
 
     private final Context context;
@@ -37,16 +42,17 @@ public class EventsController implements ProvidesCard{
      */
     public EventsController(Context context) {
         this.context = context;
-        eventDao = TcaDb.getInstance(context).eventDao();
-        ticketDao = TcaDb.getInstance(context).ticketDao();
-        ticketTypeDao = TcaDb.getInstance(context).ticketTypeDao();
+        TcaDb db = TcaDb.getInstance(context);
+        eventDao = db.eventDao();
+        ticketDao = db.ticketDao();
+        ticketTypeDao = db.ticketTypeDao();
     }
 
     public void downloadFromService() {
         Callback<List<Event>> eventCallback = new Callback<List<Event>>() {
 
             @Override
-            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+            public void onResponse(@NonNull Call<List<Event>> call, Response<List<Event>> response) {
                 List<Event> events = response.body();
                 if (events == null) {
                     return;
@@ -55,14 +61,14 @@ public class EventsController implements ProvidesCard{
             }
 
             @Override
-            public void onFailure(Call<List<Event>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Event>> call, @NonNull  Throwable t) {
                 Utils.log(t);
             }
         };
 
         Callback<List<Ticket>> ticketCallback = new Callback<List<Ticket>>() {
             @Override
-            public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
+            public void onResponse(@NonNull Call<List<Ticket>> call, Response<List<Ticket>> response) {
                 List<Ticket> tickets = response.body();
                 if (tickets == null) {
                     return;
@@ -72,7 +78,7 @@ public class EventsController implements ProvidesCard{
             }
 
             @Override
-            public void onFailure(Call<List<Ticket>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Ticket>> call, @NonNull Throwable t) {
                 Utils.log(t);
             }
         };
@@ -83,7 +89,7 @@ public class EventsController implements ProvidesCard{
     public void getEventsAndTicketsFromServer(Callback<List<Event>> eventCallback,
                                               Callback<List<Ticket>> ticketCallback){
         // Delete all too old items
-        eventDao.cleanUp();
+        eventDao.removePastEvents();
 
         // Load all events
         TUMCabeClient.getInstance(context).fetchEvents(eventCallback);
@@ -98,14 +104,14 @@ public class EventsController implements ProvidesCard{
         }
     }
 
-    private void loadTicketTypesForTickets(List<Ticket> tickets){
+    private void loadTicketTypesForTickets(Iterable<Ticket> tickets){
         // get ticket type information for all tickets
         for (Ticket ticket : tickets){
             TUMCabeClient.getInstance(context).fetchTicketTypes(ticket.getEventId(),
                     new Callback<List<TicketType>>(){
 
                         @Override
-                        public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
+                        public void onResponse(@NonNull Call<List<TicketType>> call, @NonNull Response<List<TicketType>> response) {
                             List<TicketType> ticketTypes = response.body();
                             if (ticketTypes == null) {
                                 return;
@@ -115,7 +121,7 @@ public class EventsController implements ProvidesCard{
                         }
 
                         @Override
-                        public void onFailure(Call<List<TicketType>> call, Throwable t) {
+                        public void onFailure(@NonNull Call<List<TicketType>> call, @NonNull Throwable t) {
                             // if ticketTypes could not be retrieved from server, e.g. due to network problems
                             Utils.log(t);
                         }
@@ -134,8 +140,10 @@ public class EventsController implements ProvidesCard{
         return eventDao.getAll();
     }
 
+    /**
+     * @return all events for which a ticket exists
+     */
     public List<Event> getBookedEvents() {
-        // Return all events for which a ticket exists
         List<Ticket> tickets = ticketDao.getAll();
         List<Event> bookedEvents = new ArrayList<>();
         for (Ticket ticket : tickets) {

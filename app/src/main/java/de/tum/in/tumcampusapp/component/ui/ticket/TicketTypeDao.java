@@ -13,7 +13,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 public interface TicketTypeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<TicketType> ticketType);
+    void insert(List<TicketType> ticketTypes);
 
     @Query("SELECT * FROM tickettype")
     List<TicketType> getAll();

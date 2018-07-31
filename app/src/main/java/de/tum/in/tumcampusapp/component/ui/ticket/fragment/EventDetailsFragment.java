@@ -59,23 +59,34 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    /**
+     * Best practice for fragment creation, see e.g.
+     * https://stackoverflow.com/questions/9245408/best-practice-for-instantiating-a-new-android-fragment
+     */
+    public static Fragment newInstance(int eventId) {
+        Fragment fragment = new EventDetailsFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("eventID", eventId);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
         View rootView = inflater.inflate(R.layout.fragment_event_details, container, false);
         LinearLayout root = rootView.findViewById(R.id.layout);
+        context = root.getContext();
 
         mSwipeLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeLayout.setOnRefreshListener(this);
 
         eventsController = new EventsController(this.getContext());
 
-        // position in database
-        int position = getArguments().getInt(Const.POSITION);
-
-        context = root.getContext();
-
-        event = eventsController.getEvents().get(position);
+        int eventId = getArguments().getInt("eventID");
+        event = eventsController.getEventById(eventId);
 
         showDetails(root);
 
@@ -93,7 +104,6 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         createEventFooter(rootView);
     }
 
-
     private void createEventHeader(LinearLayout rootView) {
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.event_header, rootView, false);
 
@@ -103,7 +113,6 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
         View error = headerView.findViewById(R.id.kino_cover_error);
 
-        // onClickListeners
         // Setup "Buy/Show ticket" button according to ticket status for current event
         if (eventsController.isEventBooked(event)) {
             ticket.setText(this.getString(R.string.show_ticket));
@@ -137,7 +146,6 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         rootView.addView(headerView);
     }
 
-
     private void createEventFooter(LinearLayout rootView) {
         View footerView = inflater.inflate(R.layout.event_footer, rootView, false);
         // initialize all TextView
@@ -147,7 +155,7 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
         TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
 
-        eventDateTextView.setText(Event.Companion.getFormattedDateTime(context, event.getStart()));
+        eventDateTextView.setText(Event.methods.getFormattedDateTime(context, event.getStart()));
 
         // open "add to calendar" dialog on click
         eventDateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
@@ -248,9 +256,9 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        disposable.clear();
+    public void onStop() {
+        super.onStop();
+        disposable.dispose();
     }
 
     @Override
