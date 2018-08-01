@@ -1,12 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventDetailsFragment;
@@ -14,14 +11,11 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 
 public class EventDetailsAdapter extends FragmentStatePagerAdapter {
 
-    private final List<Event> events = new ArrayList<>();
+    private List<Event> events;
 
-    public EventDetailsAdapter(FragmentManager fragmentManager, Collection<Event> events) {
+    public EventDetailsAdapter(FragmentManager fragmentManager, List<Event> events) {
         super(fragmentManager);
-
-        this.events.addAll(events);
-
-        this.notifyDataSetChanged();
+        this.events = events;
     }
 
     @Override
@@ -38,4 +32,5 @@ public class EventDetailsAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         return events.get(position).getTitle().trim();
     }
+
 }

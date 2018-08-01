@@ -1,9 +1,15 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 
+import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
+import android.text.format.DateFormat
 import com.google.gson.annotations.SerializedName
+import de.tum.`in`.tumcampusapp.utils.readDateTime
+import de.tum.`in`.tumcampusapp.utils.writeDateTime
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -19,34 +25,68 @@ import org.joda.time.format.DateTimeFormat
  * @param end     Date
  * @param link    Url, e.g. http://www.in.tum.de
  */
-@Entity
-data class Event(@PrimaryKey
-                 @SerializedName("event")
-                 var id: Int = 0,
-                 @SerializedName("file")
-                 var image: String? = null,
-                 var title: String = "",
-                 var description: String = "",
-                 var locality: String = "",
-                 var start: DateTime = DateTime(),
-                 var end: DateTime? = null,
-                 var link: String = "") {
+@Entity(tableName = "events")
+data class Event(
+        @PrimaryKey
+        @SerializedName("event")
+        var id: Int = 0,
+        @SerializedName("file")
+        @ColumnInfo(name = "image_url")
+        var imageUrl: String? = null,
+        var title: String = "",
+        var description: String = "",
+        var locality: String = "",
+        @ColumnInfo(name = "start_time")
+        var startTime: DateTime = DateTime(),
+        @ColumnInfo(name = "end_time")
+        var endTime: DateTime? = null,
+        @ColumnInfo(name = "event_url")
+        var eventUrl: String = ""
+) : Parcelable {
 
-    companion object methods {
+    constructor(parcel: Parcel) : this(
+            parcel.readInt(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            DateTime(parcel.readLong()),
+            parcel.readDateTime(),
+            parcel.readString()) {
+    }
+
+    fun getFormattedStartDateTime(context: Context): String {
+        val date = DateTimeFormat.mediumDateTime().print(startTime)
+        val pattern = if (DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
+        val time = DateTimeFormat.forPattern(pattern).print(startTime)
+        return "$date, $time"
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeString(imageUrl)
+        parcel.writeString(title)
+        parcel.writeString(description)
+        parcel.writeString(locality)
+        parcel.writeLong(startTime.millis)
+        parcel.writeDateTime(endTime)
+        parcel.writeString(eventUrl)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+
         const val defaultDuration = 7200000 // Milliseconds
 
-        fun getFormattedDateTime(context: Context, dateTime: DateTime): String {
-            return "${getFormattedDate(dateTime)} ${getFormattedTime(context, dateTime)}"
+        @JvmField var CREATOR = object : Parcelable.Creator<Event> {
+            override fun createFromParcel(parcel: Parcel) = Event(parcel)
+
+            override fun newArray(size: Int) = arrayOfNulls<Event?>(size)
         }
 
-        fun getFormattedDate(dateTime: DateTime): String {
-            return DateTimeFormat.shortDate().print(dateTime)
-        }
-
-        fun getFormattedTime(context: Context, dateTime: DateTime): String {
-            val pattern = if (android.text.format.DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
-            return DateTimeFormat.forPattern(pattern).print(dateTime)
-        }
     }
 
 }

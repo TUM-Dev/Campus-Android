@@ -38,17 +38,16 @@ import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
+import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.EphimeralKey;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketPurchaseStripe;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationCancelation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
-import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -387,10 +386,9 @@ public final class TUMCabeClient {
 
     // Ticket reservation
 
-    public void reserveTicket(Context context, int ticketType,
-                              Callback<TicketReservationResponse> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.
-                createChatVerification(context, new TicketReservation(ticketType));
+    public void reserveTicket(Context context,
+                              ChatVerification chatVerification,
+                              Callback<TicketReservationResponse> cb) {
         service.reserveTicket(chatVerification).enqueue(cb);
     }
 

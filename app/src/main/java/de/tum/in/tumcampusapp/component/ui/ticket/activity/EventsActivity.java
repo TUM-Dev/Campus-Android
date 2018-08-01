@@ -6,15 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
-import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventFragment;
+import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventsFragment;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.EventType;
 import de.tum.in.tumcampusapp.utils.Const;
 
 public class EventsActivity extends ActivityForDownloadingExternal {
@@ -31,10 +30,9 @@ public class EventsActivity extends ActivityForDownloadingExternal {
 
         viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
+
         TabLayout eventTab = findViewById(R.id.event_tab);
-        eventTab.setupWithViewPager(viewPager);//setting tab over viewpager
+        eventTab.setupWithViewPager(viewPager);
 
         eventTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -52,7 +50,6 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         });
     }
 
-
     private void setupViewPager(ViewPager viewPager) {
         EventsViewPagerAdapter adapter = new EventsViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -63,29 +60,32 @@ public class EventsActivity extends ActivityForDownloadingExternal {
      * One of them shows all available events, the other one all booked events.
      */
     class EventsViewPagerAdapter extends FragmentPagerAdapter {
+
         EventsViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
-        private final List<String> titles =
-                Collections.unmodifiableList(Arrays.
-                        asList(getString(R.string.all_events),
-                                getString(R.string.booked_events)));
+        private final List<String> titles = Arrays.asList(
+                getString(R.string.all_events),
+                getString(R.string.booked_events)
+        );
 
         @Override
         public Fragment getItem(int position) {
-            return new EventFragment(titles.get(position));
+            EventType type = (position == 0) ? EventType.ALL : EventType.BOOKED;
+            return EventsFragment.newInstance(type);
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return titles.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             return titles.get(position);
         }
+
     }
 }
 

@@ -15,12 +15,12 @@ public interface TicketDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<Ticket> ticket);
 
-    @Query("SELECT * FROM ticket")
+    @Query("SELECT * FROM tickets")
     List<Ticket> getAll();
 
-    @Query("SELECT * FROM ticket where eventId = :eventId")
+    @Query("SELECT * FROM tickets where event_id = :eventId")
     Ticket getByEventId(int eventId);
 
-    @Query("DELETE FROM ticket")
+    @Query("DELETE FROM tickets")
     void flush();
 }

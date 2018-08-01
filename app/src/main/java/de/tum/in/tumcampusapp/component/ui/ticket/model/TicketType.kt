@@ -12,12 +12,16 @@ import java.text.DecimalFormat
  * @param price   Price
  * @param description   Description
  */
-@Entity
-data class TicketType(@PrimaryKey
-                      @SerializedName("ticket_type")
-                      var id: Int = 0,
-                      var price: Int = 0,
-                      var description: String = "") {
+@Entity(tableName = "ticket_types")
+data class TicketType(
+        @PrimaryKey
+        @SerializedName("ticket_type")
+        var id: Int = 0,
+        var price: Int = 0,
+        var description: String = ""
+) {
+
     val formattedPrice: String
         get() = DecimalFormat("#.00").format(price / 100.0) + " €"
+
 }

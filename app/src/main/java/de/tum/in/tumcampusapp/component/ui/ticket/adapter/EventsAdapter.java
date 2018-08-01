@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -20,108 +19,83 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
 
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
-    private final List<Event> mEventList;
+
     private Context mContext;
+    private final List<Event> mEvents;
 
-    public static class EventViewHolder extends CardViewHolder {
-        CardView cardView;
-        ImageView imgView;
-        TextView titleView;
-        TextView localityView;
-        TextView srcDateView;
-
-        public EventViewHolder(View view) {
-            super(view);
-            cardView = (CardView) view;
-            titleView = view.findViewById(R.id.events_title);
-            imgView = view.findViewById(R.id.events_img);
-            localityView = view.findViewById(R.id.events_src_locality);
-            srcDateView = view.findViewById(R.id.events_src_date);
-        }
-    }
-
-    public EventsAdapter(List<Event> events) {
-        mEventList = events;
+    public EventsAdapter(Context context, List<Event> events) {
+        mContext = context;
+        mEvents = events;
     }
 
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (mContext == null) {
-            mContext = parent.getContext();
-        }
-        View view = LayoutInflater.from(mContext)
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_events_item, parent, false);
         return new EventViewHolder(view);
     }
 
-    public static void bindEventView(RecyclerView.ViewHolder viewHolderHolder, Event event) {
-        EventViewHolder holder = (EventViewHolder) viewHolderHolder;
-
-        holder.imgView.setVisibility(View.VISIBLE);
-        holder.titleView.setVisibility(View.VISIBLE);
-
-        // Set image
-        String imgUrl = event.getImage();
-        if (imgUrl == null || imgUrl.isEmpty()) {
-            if (event.getLink().endsWith(".png") || event.getLink().endsWith(".jpeg")) {
-                Utils.log("try link as image");
-                // the link points to an image (eventspread)
-                Picasso.get()
-                        .load(event.getLink())
-                        .placeholder(R.drawable.chat_background)
-                        .into(holder.imgView, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                holder.titleView.setVisibility(View.GONE); // titleView is included in eventspread slide
-                                holder.imgView.setOnClickListener(null); // link doesn't lead to more infos
-                            }
-
-                            @Override
-                            public void onError(Exception e) {
-                                holder.imgView.setVisibility(View.GONE); // we can't display the image after all
-                            }
-                        });
-            } else {
-                holder.imgView.setVisibility(View.GONE);
-            }
-        } else {
-            Picasso.get()
-                    .load(imgUrl)
-                    .placeholder(R.drawable.chat_background)
-                    .into(holder.imgView);
-        }
-
-        String title = event.getTitle();
-        title = COMPILE.matcher(title)
-                .replaceAll("");
-        holder.titleView.setText(title);
-
-        String locality = event.getLocality();
-        holder.localityView.setText(locality);
-
-        holder.srcDateView.setText(Event.methods.getFormattedDate(event.getStart()));
-    }
-
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        Event event = mEventList.get(position);
+        Event event = mEvents.get(position);
 
         EventCard eventCard = new EventCard(mContext);
-
         eventCard.setEvent(event);
         holder.setCurrentCard(eventCard);
 
-        bindEventView(holder, event);
+        holder.bind(event);
     }
 
     @Override
     public int getItemCount() {
-        return mEventList.size();
+        return mEvents.size();
     }
+
+    public static class EventViewHolder extends CardViewHolder {
+
+        CardView cardView;
+        ImageView imageView;
+        TextView titleTextView;
+        TextView localityTextView;
+        TextView dateTextView;
+
+        public EventViewHolder(View view) {
+            super(view);
+            cardView = (CardView) view;
+            titleTextView = view.findViewById(R.id.events_title);
+            imageView = view.findViewById(R.id.events_img);
+            localityTextView = view.findViewById(R.id.events_src_locality);
+            dateTextView = view.findViewById(R.id.events_src_date);
+        }
+
+        public void bind(Event event) {
+            String imageUrl = event.getImageUrl();
+            boolean showImage = imageUrl != null && !imageUrl.isEmpty();
+            imageView.setVisibility(showImage ? View.VISIBLE: View.GONE);
+
+            if (showImage) {
+                Picasso.get()
+                        .load(imageUrl)
+                        .placeholder(R.drawable.chat_background)
+                        .into(imageView);
+            }
+
+            String title = event.getTitle();
+            title = COMPILE.matcher(title).replaceAll("");
+            titleTextView.setText(title);
+
+            String locality = event.getLocality();
+            localityTextView.setText(locality);
+
+            String startTime = event.getFormattedStartDateTime(itemView.getContext());
+            dateTextView.setText(startTime);
+        }
+
+    }
+
 }

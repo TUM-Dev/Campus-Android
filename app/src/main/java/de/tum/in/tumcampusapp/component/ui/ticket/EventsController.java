@@ -88,7 +88,7 @@ public class EventsController implements ProvidesCard {
     }
 
     public void getEventsAndTicketsFromServer(Callback<List<Event>> eventCallback,
-                                              Callback<List<Ticket>> ticketCallback){
+                                              Callback<List<Ticket>> ticketCallback) {
         // Delete all too old items
         eventDao.removePastEvents();
 

@@ -1,27 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical">
+
+                <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <FrameLayout
+                        android:id="@+id/image_container"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="H,16:9"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/image_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/kino_cover_description"
+                            android:scaleType="centerCrop"
+                            android:src="@color/news_source_placeholder" />
+
+                        <ProgressBar
+                            android:id="@+id/image_progress_bar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                    </FrameLayout>
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/ticket_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:textColor="@color/white"
+                        app:backgroundTint="@color/color_primary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/image_container"
+                        tools:text="Buy ticket" />
+
+                </android.support.constraint.ConstraintLayout>
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/material_default_padding">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_small_padding"
+                        android:layout_marginTop="0dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Date"
+                        android:textColor="@color/color_primary" />
+
+                    <TextView
+                        android:id="@+id/date_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        tools:text="Date" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_small_padding"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Remaining tickets"
+                        android:textColor="@color/color_primary" />
+
+                    <TextView
+                        android:id="@+id/remaining_tickets_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        tools:text="Remaining" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_small_padding"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Location"
+                        android:textColor="@color/color_primary" />
+
+                    <TextView
+                        android:id="@+id/location_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        tools:text="Location" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:background="@color/list_divider" />
+
+                    <TextView
+                        android:id="@+id/description_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        tools:text="Description" />
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/link_button"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/visit_website"
+                        android:textColor="@color/color_primary" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
 </FrameLayout>
 
 

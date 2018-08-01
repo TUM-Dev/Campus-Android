@@ -3,26 +3,25 @@ package de.tum.in.tumcampusapp.component.ui.ticket.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -38,31 +37,24 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Response;
 
 /**
  * Fragment for EventDetails. Manages content that gets shown on the pagerView
  */
-public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private Context context;
+    private int eventId;
     private Event event;
 
-    private TextView eventLocationTextView;
-    private TextView eventRemainingTicketTextView;
+    private TextView remainingTicketsTextView;
     private SwipeRefreshLayout mSwipeLayout;
 
-    private String url; // link to homepage
-    private LayoutInflater inflater;
     private EventsController eventsController;
+    private final Disposable disposable = new CompositeDisposable();
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
-    /**
-     * Best practice for fragment creation, see e.g.
-     * https://stackoverflow.com/questions/9245408/best-practice-for-instantiating-a-new-android-fragment
-     */
     public static Fragment newInstance(int eventId) {
         Fragment fragment = new EventDetailsFragment();
 
@@ -74,196 +66,190 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.inflater = inflater;
-        View rootView = inflater.inflate(R.layout.fragment_event_details, container, false);
-        LinearLayout root = rootView.findViewById(R.id.layout);
-        context = root.getContext();
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
-        mSwipeLayout = rootView.findViewById(R.id.swipe_container);
+        if (getArguments() != null) {
+            eventId = getArguments().getInt("eventID", -1);
+
+            if (eventId != -1) {
+                eventsController = new EventsController(getContext());
+                event = eventsController.getEventById(eventId);
+            }
+        }
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = LayoutInflater.from(container.getContext())
+            .inflate(R.layout.fragment_event_details, container, false);
+
+        mSwipeLayout = view.findViewById(R.id.swipe_container);
         mSwipeLayout.setOnRefreshListener(this);
 
-        eventsController = new EventsController(this.getContext());
+        showEventDetails(view);
+        return view;
+    }
 
-        int eventId = getArguments().getInt("eventID");
-        event = eventsController.getEventById(eventId);
-
-        showDetails(root);
-
-        return rootView;
+    @Override
+    public void onRefresh() {
+        loadAvailableTicketCount();
     }
 
     /**
      * creates the content of the fragment
      *
-     * @param rootView view on which the content gets drawn
+     * @param view view on which the content gets drawn
      */
-    private void showDetails(LinearLayout rootView) {
-        url = event.getLink();
-        createEventHeader(rootView);
-        createEventFooter(rootView);
-    }
+    private void showEventDetails(View view) {
+        ImageView coverImageView = view.findViewById(R.id.image_view);
+        ProgressBar progressBar = view.findViewById(R.id.image_progress_bar);
 
-    private void createEventHeader(LinearLayout rootView) {
-        LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.event_header, rootView, false);
+        Context context = view.getContext();
 
-        // initialize all buttons
-        Button ticket = headerView.findViewById(R.id.button_ticket);
-        ImageView cover = headerView.findViewById(R.id.kino_cover);
-        ProgressBar progress = headerView.findViewById(R.id.kino_cover_progress);
-        View error = headerView.findViewById(R.id.kino_cover_error);
-
-        // Setup "Buy/Show ticket" button according to ticket status for current event
-        if (eventsController.isEventBooked(event)) {
-            ticket.setText(this.getString(R.string.show_ticket));
-            ticket.setOnClickListener(view -> showTicket());
-        } else {
-            ticket.setText(this.getString(R.string.buy_ticket));
-            ticket.setOnClickListener(view -> buyTicket());
-        }
-
-        // cover
-        if (event.getImage() != null) {
+        if (event.getImageUrl() != null) {
             Picasso.get()
-                    .load(event.getImage())
-                    .into(cover, new Callback() {
+                    .load(event.getImageUrl())
+                    .placeholder(R.color.news_source_placeholder)
+                    .into(coverImageView, new Callback() {
                         @Override
                         public void onSuccess() {
-                            progress.setVisibility(View.GONE);
-                            error.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
                         }
 
                         @Override
                         public void onError(Exception e) {
-                            progress.setVisibility(View.GONE);
-                            error.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
         } else {
-            ((RelativeLayout) cover.getParent()).setVisibility(View.GONE);
-            progress.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         }
-        rootView.addView(headerView);
-    }
 
-    private void createEventFooter(LinearLayout rootView) {
-        View footerView = inflater.inflate(R.layout.event_footer, rootView, false);
-        // initialize all TextView
-        TextView eventDateTextView = footerView.findViewById(R.id.event_date);
-        eventLocationTextView = footerView.findViewById(R.id.event_location);
-        eventRemainingTicketTextView = footerView.findViewById(R.id.event_remaining_tickets);
-        TextView eventDescriptionTextView = footerView.findViewById(R.id.event_description);
-        TextView eventLinkTextView = footerView.findViewById(R.id.event_link);
+        AppCompatButton ticketButton = view.findViewById(R.id.ticket_button);
+        if (eventsController.isEventBooked(event)) {
+            ticketButton.setText(getString(R.string.show_ticket));
+            ticketButton.setOnClickListener(v -> showTicket());
+        } else {
+            ticketButton.setText(getString(R.string.buy_ticket));
+            ticketButton.setOnClickListener(v -> buyTicket());
+        }
 
-        eventDateTextView.setText(Event.methods.getFormattedDateTime(context, event.getStart()));
+        remainingTicketsTextView = view.findViewById(R.id.remaining_tickets_text_view);
 
-        // open "add to calendar" dialog on click
-        eventDateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
+        TextView dateTextView = view.findViewById(R.id.date_text_view);
+        dateTextView.setText(event.getFormattedStartDateTime(context));
+        dateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
 
-        //set Location link
-        String eventLocationString = event.getLocality();
-        eventLocationTextView.setText(eventLocationString);
-        eventLocationTextView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-        eventLocationTextView.setOnClickListener(view -> showMap());
+        // set Location link
+        TextView locationTextView = view.findViewById(R.id.location_text_view);
+        locationTextView.setText(event.getLocality());
+        locationTextView.setOnClickListener(this::showMap);
 
-        //set remaining tickets,following code is just for testing purpose.
-        setAvailableTicketCount();
+        TextView descriptionTextView = view.findViewById(R.id.description_text_view);
+        descriptionTextView.setText(event.getDescription());
 
-        String eventDescriptionString = event.getDescription();
-        eventDescriptionTextView.setText(eventDescriptionString);
-
-        eventLinkTextView.setText(this.getString(R.string.link));
-        eventLinkTextView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-        eventLinkTextView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
-        int padding = (int) context.getResources()
-                .getDimension(R.dimen.padding_kino);
-        int paddingRight = (int) context.getResources()
-                .getDimension(R.dimen.padding_kino_right);
-        int paddingEnd = (int) context.getResources()
-                .getDimension(R.dimen.padding_kino_end);
-        eventLinkTextView.setPadding(padding, padding, paddingRight, paddingEnd);
-        rootView.addView(footerView);
-    }
-
-    private void setAvailableTicketCount() {
-        TUMCabeClient.getInstance(context).fetchTicketStats(event.getId(), new retrofit2.Callback<List<TicketStatus>>() {
-            @Override
-            public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
-                // stats is array of TicketStats, each containing info about one ticket type associated with the event
-                // -> build sum
-                int sum = 0;
-                for (TicketStatus stat : response.body()) {
-                    sum += stat.getAvailableTicketCount();
-                }
-                eventRemainingTicketTextView.setText(getString(R.string.tickets_left, sum));
-                mSwipeLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
-                Utils.log(t);
-                eventRemainingTicketTextView.setText(R.string.not_valid);
-                Utils.showToast(context, R.string.no_internet_connection);
-                mSwipeLayout.setRefreshing(false);
-            }
+        AppCompatButton linkButton = view.findViewById(R.id.link_button);
+        linkButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getEventUrl()));
+            startActivity(intent);
         });
+
+        loadAvailableTicketCount();
+    }
+
+    private void loadAvailableTicketCount() {
+        TUMCabeClient
+                .getInstance(getContext())
+                .fetchTicketStats(eventId, new retrofit2.Callback<List<TicketStatus>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<TicketStatus>> call,
+                                           @NonNull Response<List<TicketStatus>> response) {
+                        // Statuses is array of TicketStats, each containing info about one ticket
+                        // type associated with the event.
+                        List<TicketStatus> statuses = response.body();
+                        if (statuses != null) {
+                            int sum = 0;
+                            for (TicketStatus status : statuses) {
+                                sum += status.getAvailableTicketCount();
+                            }
+
+                            String text = String.format("%d", sum);
+                            remainingTicketsTextView.setText(text);
+                        } else {
+                            remainingTicketsTextView.setText(R.string.unknown);
+                        }
+
+                        mSwipeLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<TicketStatus>> call,
+                                          @NonNull Throwable t) {
+                        Utils.log(t);
+                        remainingTicketsTextView.setText(R.string.unknown);
+                        mSwipeLayout.setRefreshing(false);
+                    }
+                });
     }
 
     private void showTicket() {
-        Intent intent = new Intent(context, ShowTicketActivity.class);
+        Intent intent = new Intent(getContext(), ShowTicketActivity.class);
         intent.putExtra("eventID", event.getId());
         startActivity(intent);
     }
 
     private void buyTicket() {
-        Intent intent = new Intent(context, BuyTicketActivity.class);
+        Intent intent = new Intent(getContext(), BuyTicketActivity.class);
         intent.putExtra("eventID", event.getId());
         startActivity(intent);
     }
 
     private void addToTUMCalendar() {
-        Intent intent = new Intent(context, CreateEventActivity.class)
+        DateTime eventEndDateTime = event.getEndTime() != null
+                ? event.getEndTime() : event.getStartTime().plus(Event.defaultDuration);
+
+        String eventEnd = DateTimeUtils.INSTANCE.getDateTimeString(eventEndDateTime);
+
+        Intent intent = new Intent(getContext(), CreateEventActivity.class)
                 .putExtra(Const.EVENT_EDIT, false)
                 .putExtra(Const.EVENT_TITLE, event.getTitle())
                 .putExtra(Const.EVENT_COMMENT, event.getDescription())
-                .putExtra(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(event.getStart()))
-                .putExtra(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(event.getEnd() != null
-                        ? event.getEnd()
-                        : event.getStart().plus(Event.defaultDuration)));
+                .putExtra(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(event.getStartTime()))
+                .putExtra(Const.EVENT_END, eventEnd);
 
         startActivity(intent);
     }
 
     private void addToExternalCalendar() {
+        DateTime eventEndDateTime = event.getEndTime() != null
+                ? event.getEndTime() : event.getStartTime().plus(Event.defaultDuration);
+
+        String eventEnd = DateTimeUtils.INSTANCE.getDateTimeString(eventEndDateTime);
+
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStart().getMillis())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEnd() != null
-                        ? event.getEnd().getMillis()
-                        : event.getStart().plus(Event.defaultDuration).getMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStartTime().getMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, eventEnd)
                 .putExtra(CalendarContract.Events.TITLE, event.getTitle())
                 .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocality())
-                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);//Indicates that this event is free time and will not conflict with other events.
+                //Indicates that this event is free time and will not conflict with other events
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
         startActivity(intent);
     }
 
-    private void showMap() {
-        eventLocationTextView.setTextColor(Color.RED);
-        String map = "http://maps.google.co.in/maps?q=" + eventLocationTextView.getText();
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
-        startActivity(mapIntent);
+    private void showMap(View view) {
+        TextView textView = (TextView) view;
+        String url = "http://maps.google.co.in/maps?q=" + textView.getText();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         disposable.dispose();
-    }
-
-    @Override
-    public void onRefresh() {
-        setAvailableTicketCount();
     }
 
     private class AddToCalendarDialog extends Dialog {
@@ -288,5 +274,7 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
                 AddToCalendarDialog.this.dismiss();
             });
         }
+
     }
+
 }

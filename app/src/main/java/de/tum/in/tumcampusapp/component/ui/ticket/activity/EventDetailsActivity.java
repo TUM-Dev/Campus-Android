@@ -11,6 +11,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.adapter.EventDetailsAdapter;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 
 public class EventDetailsActivity extends BaseActivity {
@@ -19,25 +20,25 @@ public class EventDetailsActivity extends BaseActivity {
         super(R.layout.activity_kino);
     }
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
+    private final Disposable disposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         EventsController eventsController = new EventsController(this);
-
-        // set up ViewPager and adapter
-        ViewPager mPager = findViewById(R.id.pager);
-
         List<Event> events = eventsController.getEvents();
 
         EventDetailsAdapter eventDetailsAdapter =
                 new EventDetailsAdapter(getSupportFragmentManager(), events);
 
+        ViewPager mPager = findViewById(R.id.pager);
         mPager.setAdapter(eventDetailsAdapter);
 
-        // Use clickedEventId to show the clicked event in the EventDetailsView
+        Event event = getIntent().getParcelableExtra("event");
+        int startIndex = events.indexOf(event);
+
+        /*
         int clickedEventId = getIntent().getIntExtra("event_id", -1);
         int startPosition = 0;
         for (int i = 0; i < events.size(); i++) {
@@ -47,8 +48,9 @@ public class EventDetailsActivity extends BaseActivity {
                 break;
             }
         }
+        */
 
-        mPager.setCurrentItem(startPosition);
+        mPager.setCurrentItem(startIndex);
     }
 
     @Override
@@ -56,4 +58,5 @@ public class EventDetailsActivity extends BaseActivity {
         super.onStop();
         disposable.dispose();
     }
+
 }

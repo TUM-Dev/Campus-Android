@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.component.ui.ticket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +23,6 @@ public class EventCard extends Card {
 
     private Event event;
 
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
     public EventCard(Context context) {
         super(CardManager.CARD_EVENT, context, "card_event", false);
     }
@@ -33,27 +30,27 @@ public class EventCard extends Card {
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View card = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.card_events_item, parent, false);
-
-        EventsAdapter.EventViewHolder holder = new EventsAdapter.EventViewHolder(card);
-
-        return holder;
+        return new EventsAdapter.EventViewHolder(card);
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
 
         if (viewHolder instanceof EventsAdapter.EventViewHolder) {
             EventsAdapter.EventViewHolder holder = (EventsAdapter.EventViewHolder) viewHolder;
-            EventsAdapter.bindEventView(holder, event);
+            holder.bind(event);
         }
     }
 
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 
     @Override
     public Intent getIntent() {
         Intent intent = new Intent(getContext(), EventDetailsActivity.class);
-        intent.putExtra("event_id", event.getId());
+        intent.putExtra("event", event);
         return intent;
     }
 
@@ -63,4 +60,5 @@ public class EventCard extends Card {
         //       see NewsCard for reference
         //       Do nothing for now...
     }
+
 }

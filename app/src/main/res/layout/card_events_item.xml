@@ -1,8 +1,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/StandardCard"
-    app:cardUseCompatPadding="true">
+    style="@style/StandardCard">
 
     <LinearLayout
         android:id="@+id/card_view"
@@ -30,11 +29,10 @@
                 android:id="@+id/events_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:fontFamily="sans-serif-medium"
                 android:text="@string/info_title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/black"
-                android:textSize="26sp"
-                android:typeface="sans"
                 tools:text="Title" />
 
             <TextView
@@ -42,19 +40,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/material_default_padding"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp"
-                tools:text="date" />
+                tools:text="Date" />
 
             <TextView
                 android:id="@+id/events_src_locality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/material_default_padding"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp"
-                tools:text="locality" />
+                tools:text="Locality" />
+
         </LinearLayout>
 
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

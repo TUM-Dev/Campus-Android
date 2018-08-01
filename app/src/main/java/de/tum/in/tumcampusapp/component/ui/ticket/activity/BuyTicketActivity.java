@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,9 +20,11 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -49,65 +50,61 @@ public class BuyTicketActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        eventsController = new EventsController(this);
 
+        eventsController = new EventsController(this);
         eventId = getIntent().getIntExtra("eventID", 0);
 
-        // get ticket type information from API
-        TUMCabeClient.getInstance(getApplicationContext()).fetchTicketTypes(eventId,
-                new Callback<List<TicketType>>() {
-
+        // Get ticket type information from API
+        TUMCabeClient
+                .getInstance(this)
+                .fetchTicketTypes(eventId, new Callback<List<TicketType>>() {
                     @Override
-                    public void onResponse(Call<List<TicketType>> call, Response<List<TicketType>> response) {
-                        ticketTypes = response.body();
-                        // in case no valid response is retrieved from the server initialize
-                        // ticketTypes as empty list
-                        if (ticketTypes == null){
-                            ticketTypes = new ArrayList<>();
+                    public void onResponse(@NonNull Call<List<TicketType>> call,
+                                           @NonNull Response<List<TicketType>> response) {
+                        List<TicketType> results = response.body();
+                        if (results != null) {
+                            handleTicketTypesDownloadSuccess(results);
                         }
-
-                        // add found ticket types to database (needed in ShowTicketActivity)
-                        eventsController.addTicketTypes(ticketTypes);
-
-                        setupUi();
                     }
 
                     @Override
-                    public void onFailure(Call<List<TicketType>> call, Throwable t) {
-                        // if ticketTypes could not be retrieved from server, e.g. due to network problems
+                    public void onFailure(@NonNull Call<List<TicketType>> call, @NonNull Throwable t) {
                         Utils.log(t);
-                        Utils.showToast(getApplicationContext(), R.string.no_internet_connection);
-                        // go back to event details
+                        Utils.showToast(BuyTicketActivity.this, R.string.error_something_wrong);
                         finish();
                     }
                 });
     }
 
+    private void handleTicketTypesDownloadSuccess(@NonNull List<TicketType> ticketTypes) {
+        this.ticketTypes = ticketTypes;
+        eventsController.addTicketTypes(ticketTypes);
+        setupUi();
+    }
+
     private void setupUi() {
         initEventTextViews();
+        initTicketTypeSpinner();
 
-        initializeTicketTypeSpinner();
-
-        reservationProgressBar = findViewById(R.id.ticket_reservation_progressbar);
+        reservationProgressBar = findViewById(R.id.paymentProgressBar);
         reservationProgressBar.setVisibility(View.INVISIBLE);
 
-        paymentButton = findViewById(R.id.paymentbutton);
+        paymentButton = findViewById(R.id.paymentButton);
         paymentButton.setOnClickListener(v -> {
-            // Check if user is logged in and name and LRZ ID are available (needed to create ChatVerification)
-            if (AccessTokenManager.hasValidAccessToken(this) &&
-                    Utils.getSetting(BuyTicketActivity.this, Const.LRZ_ID, "").length() > 0 &&
-                    Utils.getSetting(BuyTicketActivity.this, Const.CHAT_ROOM_DISPLAY_NAME, "").length() > 0) {
+            String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
+            String chatRoomName = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, "");
+            boolean isLoggedIn = AccessTokenManager.hasValidAccessToken(this);
+
+            // Check if user is logged in and name and LRZ ID are available
+            if (isLoggedIn && !lrzId.isEmpty() && !chatRoomName.isEmpty()) {
                 reserveTicket();
             } else {
-                ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
-                AlertDialog.Builder builder = new AlertDialog.Builder(ctw);
-                builder.setTitle(getString(R.string.sorry))
-                        .setMessage(R.string.not_logged_in_message)
-                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-                            dialogInterface.dismiss();
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                //ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
+                new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.sorry))
+                        .setMessage(R.string.not_logged_in_message) // TODO
+                        .setPositiveButton(R.string.ok, null)
+                        .show();
             }
         });
     }
@@ -119,15 +116,14 @@ public class BuyTicketActivity extends BaseActivity {
 
         Event event = eventsController.getEventById(eventId);
 
-        String eventString = event.getTitle();
-        String locationString = event.getLocality();
+        eventView.setText(event.getTitle());
+        locationView.setText(event.getLocality());
 
-        eventView.append(eventString);
-        locationView.append(locationString);
-        dateView.append(Event.methods.getFormattedDateTime(getApplicationContext(), event.getStart()));
+        String formattedStartTime = event.getFormattedStartDateTime(this);
+        dateView.setText(formattedStartTime);
     }
 
-    private void initializeTicketTypeSpinner() {
+    private void initTicketTypeSpinner() {
         ticketTypeSpinner = findViewById(R.id.ticket_type_spinner);
         ticketTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -147,8 +143,9 @@ public class BuyTicketActivity extends BaseActivity {
             ticketTypeNames.add(ticketType.getDescription());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, ticketTypeNames);
+        ArrayAdapter adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, ticketTypeNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ticketTypeSpinner.setAdapter(adapter);
     }
 
@@ -172,78 +169,88 @@ public class BuyTicketActivity extends BaseActivity {
     private void reserveTicket() {
         TicketType ticketType = getTicketTypeForName((String) ticketTypeSpinner.getSelectedItem());
         if (ticketType == null) {
-            Utils.showToast(getApplicationContext(),R.string.internal_error);
+            Utils.showToast(this, R.string.internal_error);
             return;
         }
 
         reservationProgressBar.setVisibility(View.VISIBLE);
         paymentButton.setEnabled(false);
+
+        int ticketTypeId = ticketType.getId();
+        TicketReservation reservation = new TicketReservation(ticketTypeId);
+
+        ChatVerification verification;
+
         try {
-            TUMCabeClient.getInstance(this).reserveTicket(BuyTicketActivity.this,
-                    ticketType.getId(), new Callback<TicketReservationResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<TicketReservationResponse> call,
-                                       @NonNull Response<TicketReservationResponse> response) {
-                    // response.body() can be null when the user has already bought a ticket
-                    // but has not fetched it from the server yet
+            verification = ChatVerification.Companion
+                    .createChatVerification(this, reservation);
+        } catch (IOException e) {
+            handleTicketReservationFailure(R.string.internal_error);
+            return;
+        }
 
-                    if (response.body() == null) {
-                        AlertDialog.Builder builder =
-                                new AlertDialog.Builder(BuyTicketActivity.this);
-                        builder.setTitle(getString(R.string.sorry))
-                                .setMessage(getString(R.string.ticket_not_fetched))
-                                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                    reservationProgressBar.setVisibility(View.INVISIBLE);
-                                    paymentButton.setEnabled(true);
-                                });
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                    } else if (response.body().getError() != null) {
-                        AlertDialog.Builder builder =
-                                new AlertDialog.Builder(BuyTicketActivity.this);
-                        builder.setTitle(getString(R.string.sorry))
-                                .setMessage(getString(R.string.ticket_contingent_exhausted))
-                                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                    reservationProgressBar.setVisibility(View.INVISIBLE);
-                                    paymentButton.setEnabled(true);
-                                });
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                    } else {
-                        reservationProgressBar.setVisibility(View.INVISIBLE);
-                        paymentButton.setEnabled(true);
+        TUMCabeClient
+                .getInstance(this)
+                .reserveTicket(this, verification, new Callback<TicketReservationResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<TicketReservationResponse> call,
+                                           @NonNull Response<TicketReservationResponse> response) {
+                        // ResponseBody can be null if the user has already bought a ticket
+                        // but has not fetched it from the server yet
 
-                        // Jump to the payment activity
-                        Intent intent = new Intent(getApplicationContext(),
-                                StripePaymentActivity.class);
-                        intent.putExtra("ticketPrice", ticketType.getFormattedPrice());
-                        intent.putExtra("ticketType", ticketType.getId());
-                        intent.putExtra("ticketHistory", response.body().getTicketHistory());
-                        startActivity(intent);
+                        TicketReservationResponse reservationResponse = response.body();
+                        if (response.isSuccessful() && reservationResponse != null) {
+                            handleTicketReservationSuccess(ticketType, reservationResponse);
+                        } else {
+                            handleTicketNotFetched();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<TicketReservationResponse> call, Throwable t) {
-                    Utils.log(t);
+                    @Override
+                    public void onFailure(@NonNull Call<TicketReservationResponse> call,
+                                          @NonNull Throwable t) {
+                        Utils.log(t);
+                        handleTicketReservationFailure(R.string.purchase_error_message);
+                    }
+                });
+    }
+
+    private void handleTicketReservationSuccess(TicketType ticketType,
+                                                TicketReservationResponse response) {
+        reservationProgressBar.setVisibility(View.INVISIBLE);
+        paymentButton.setEnabled(true);
+
+        // Jump to the payment activity
+        Intent intent = new Intent(this, StripePaymentActivity.class);
+        intent.putExtra("ticketPrice", ticketType.getFormattedPrice());
+        intent.putExtra("ticketType", ticketType.getId());
+        intent.putExtra("ticketHistory", response.getTicketHistory());
+        startActivity(intent);
+    }
+
+    private void handleTicketNotFetched() {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.sorry))
+                .setMessage(getString(R.string.ticket_not_fetched))
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
                     reservationProgressBar.setVisibility(View.INVISIBLE);
                     paymentButton.setEnabled(true);
-                    BuyTicketActivity.this.showError(getString(R.string.purchase_error_message));
-                }
-            });
-        } catch (IOException exception) {
-            reservationProgressBar.setVisibility(View.INVISIBLE);
-            paymentButton.setEnabled(true);
-            BuyTicketActivity.this.showError(getString(R.string.internal_error));
-        }
+                })
+                .show();
     }
 
-    private void showError(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.error))
-                .setMessage(message);
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    private void handleTicketReservationFailure(int messageResId) {
+        reservationProgressBar.setVisibility(View.INVISIBLE);
+        paymentButton.setEnabled(true);
+        showError(messageResId);
     }
+
+    private void showError(int messageResId) {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.error))
+                .setMessage(messageResId)
+                .show();
+    }
+
 }
 

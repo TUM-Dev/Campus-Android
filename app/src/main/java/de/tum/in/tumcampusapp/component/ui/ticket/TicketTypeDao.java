@@ -15,12 +15,12 @@ public interface TicketTypeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<TicketType> ticketTypes);
 
-    @Query("SELECT * FROM tickettype")
+    @Query("SELECT * FROM ticket_types")
     List<TicketType> getAll();
 
-    @Query("SELECT * FROM tickettype WHERE id = :id")
+    @Query("SELECT * FROM ticket_types WHERE id = :id")
     TicketType getById(int id);
 
-    @Query("DELETE FROM tickettype")
+    @Query("DELETE FROM ticket_types")
     void flush();
 }
