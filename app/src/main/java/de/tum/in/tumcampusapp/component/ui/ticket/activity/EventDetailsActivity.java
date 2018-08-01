@@ -32,25 +32,13 @@ public class EventDetailsActivity extends BaseActivity {
         EventDetailsAdapter eventDetailsAdapter =
                 new EventDetailsAdapter(getSupportFragmentManager(), events);
 
-        ViewPager mPager = findViewById(R.id.pager);
-        mPager.setAdapter(eventDetailsAdapter);
+        ViewPager viewPager = findViewById(R.id.pager);
+        viewPager.setAdapter(eventDetailsAdapter);
 
         Event event = getIntent().getParcelableExtra("event");
         int startIndex = events.indexOf(event);
 
-        /*
-        int clickedEventId = getIntent().getIntExtra("event_id", -1);
-        int startPosition = 0;
-        for (int i = 0; i < events.size(); i++) {
-            Event event = events.get(i);
-            if (event.getId() == clickedEventId) {
-                startPosition = i;
-                break;
-            }
-        }
-        */
-
-        mPager.setCurrentItem(startIndex);
+        viewPager.setCurrentItem(startIndex);
     }
 
     @Override

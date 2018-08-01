@@ -648,7 +648,7 @@ Signature: %5$s</string>
     <string name="purchase_error_message">Failure during server call.</string>
     <string name="card_data_invalid">The card data is invalid.</string>
     <string name="customersession_init_failed">Failed to load saved credit cards.</string>
-    <string name="cardholder">Cardholder:</string>
+    <string name="cardholder">Cardholder</string>
     <string name="buy_format_string">Buy\n%s</string>
     <string name="internal_error">Internal Failure</string>
     <string name="creditcard_ending_in">ending in</string>

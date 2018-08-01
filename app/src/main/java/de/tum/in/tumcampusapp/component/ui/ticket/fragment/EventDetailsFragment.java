@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -141,7 +142,6 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         dateTextView.setText(event.getFormattedStartDateTime(context));
         dateTextView.setOnClickListener(v -> new AddToCalendarDialog(context).show());
 
-        // set Location link
         TextView locationTextView = view.findViewById(R.id.location_text_view);
         locationTextView.setText(event.getLocality());
         locationTextView.setOnClickListener(this::showMap);
@@ -150,10 +150,15 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         descriptionTextView.setText(event.getDescription());
 
         AppCompatButton linkButton = view.findViewById(R.id.link_button);
-        linkButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getEventUrl()));
-            startActivity(intent);
-        });
+        if (event.getEventUrl().isEmpty()) {
+            linkButton.setVisibility(View.GONE);
+        } else {
+            linkButton.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getEventUrl()));
+                startActivity(intent);
+            });
+
+        }
 
         loadAvailableTicketCount();
     }
@@ -174,7 +179,7 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
                                 sum += status.getAvailableTicketCount();
                             }
 
-                            String text = String.format("%d", sum);
+                            String text = String.format(Locale.getDefault(), "%d", sum);
                             remainingTicketsTextView.setText(text);
                         } else {
                             remainingTicketsTextView.setText(R.string.unknown);

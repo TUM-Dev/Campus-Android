@@ -56,7 +56,7 @@ data class Event(
     }
 
     fun getFormattedStartDateTime(context: Context): String {
-        val date = DateTimeFormat.mediumDateTime().print(startTime)
+        val date = DateTimeFormat.mediumDate().print(startTime)
         val pattern = if (DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
         val time = DateTimeFormat.forPattern(pattern).print(startTime)
         return "$date, $time"

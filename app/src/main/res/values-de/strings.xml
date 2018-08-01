@@ -510,7 +510,7 @@ Signatur: %5$s</string>
     <string name="purchase_error_message">Fehler bei Server Anfrage.</string>
     <string name="card_data_invalid">Ungültige Zahlungsdaten.</string>
     <string name="customersession_init_failed">Fehler beim Laden der gespeicherten Kreditkarten.</string>
-    <string name="cardholder">Karteninhaber:</string>
+    <string name="cardholder">Karteninhaber</string>
     <string name="buy_format_string">Bezahlen\n%s</string>
     <string name="internal_error">Interner Fehler!</string>
     <string name="creditcard_ending_in">endet mit</string>
