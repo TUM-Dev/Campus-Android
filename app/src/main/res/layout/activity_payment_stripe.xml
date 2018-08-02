@@ -3,7 +3,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="false">
+    android:fillViewport="false"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,8 +37,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/material_default_padding"
                     android:hint="@string/cardholder"
-                    android:inputType="textPersonName"
-                    android:singleLine="true" />
+                    android:inputType="textPersonName|textCapWords"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/saved_cards_button"

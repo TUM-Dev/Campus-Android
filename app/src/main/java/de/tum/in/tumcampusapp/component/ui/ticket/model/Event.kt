@@ -36,8 +36,10 @@ data class Event(
         var title: String = "",
         var description: String = "",
         var locality: String = "",
+        @SerializedName("start")
         @ColumnInfo(name = "start_time")
         var startTime: DateTime = DateTime(),
+        @SerializedName("end")
         @ColumnInfo(name = "end_time")
         var endTime: DateTime? = null,
         @ColumnInfo(name = "event_url")
@@ -56,7 +58,7 @@ data class Event(
     }
 
     fun getFormattedStartDateTime(context: Context): String {
-        val date = DateTimeFormat.mediumDate().print(startTime)
+        val date = DateTimeFormat.longDate().print(startTime)
         val pattern = if (DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
         val time = DateTimeFormat.forPattern(pattern).print(startTime)
         return "$date, $time"

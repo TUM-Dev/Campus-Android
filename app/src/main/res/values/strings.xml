@@ -15,7 +15,7 @@
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
     <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
-    
+
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
@@ -675,5 +675,7 @@ Signature: %5$s</string>
     <string name="no_events_found">No events found</string>
     <string name="no_bookings_found">No bookings found</string>
     <string name="unknown">Unknown</string>
+    <string name="ticket">Ticket</string>
+    <string name="payment_confirmation">Payment confirmation</string>
 
 </resources>

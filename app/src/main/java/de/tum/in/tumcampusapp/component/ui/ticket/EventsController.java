@@ -58,7 +58,7 @@ public class EventsController implements ProvidesCard {
                 if (events == null) {
                     return;
                 }
-                addEvents(events);
+                replaceEvents(events);
             }
 
             @Override
@@ -74,7 +74,7 @@ public class EventsController implements ProvidesCard {
                 if (tickets == null) {
                     return;
                 }
-                addTickets(tickets);
+                replaceTickets(tickets);
                 loadTicketTypesForTickets(tickets);
             }
 
@@ -133,7 +133,8 @@ public class EventsController implements ProvidesCard {
 
     // Event methods
 
-    public void addEvents(List<Event> events) {
+    public void replaceEvents(List<Event> events) {
+        eventDao.removeAll();
         eventDao.insert(events);
     }
 
@@ -181,7 +182,8 @@ public class EventsController implements ProvidesCard {
         return ticketTypeDao.getById(id);
     }
 
-    public void addTickets(List<Ticket> tickets) {
+    public void replaceTickets(List<Ticket> tickets) {
+        ticketDao.flush();
         ticketDao.insert(tickets);
     }
 

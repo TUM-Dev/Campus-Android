@@ -624,4 +624,5 @@ Signatur: %5$s</string>
     <string name="checking_if_token_enabled">Überprüfung, ob Token aktiviert ist …</string>
     <string name="no_events_found">Keine Events gefunden</string>
     <string name="no_bookings_found">Keine Buchungen gefunden</string>
+    <string name="ticket">Ticket</string>
 </resources>

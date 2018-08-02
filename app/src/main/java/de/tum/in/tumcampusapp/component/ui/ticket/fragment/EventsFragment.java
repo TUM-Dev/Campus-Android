@@ -47,8 +47,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 return;
             }
 
-            mEventsController.addEvents(events);
-            //loadEventsFromDatabase(); // TODO
+            mEventsController.replaceEvents(events);
             if (mEventType == EventType.ALL) {
                 showEvents(events);
             }
@@ -71,11 +70,8 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             if (tickets == null) {
                 return;
             }
-            mEventsController.addTickets(tickets);
-            // TODO
-            //loadEventsFromDatabase();
-            //showEvents(events);
 
+            mEventsController.replaceTickets(tickets);
             if (mEventType == EventType.BOOKED) {
                 List<Event> bookedEvents = mEventsController.getBookedEvents();
                 showEvents(bookedEvents);
@@ -136,6 +132,16 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 List<Event> events = loadEventsFromDatabase(mEventType);
                 showEvents(events);
             }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
         }
     }
 

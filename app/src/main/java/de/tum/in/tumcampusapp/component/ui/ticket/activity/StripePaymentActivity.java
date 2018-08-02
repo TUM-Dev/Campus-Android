@@ -120,7 +120,7 @@ public class StripePaymentActivity extends BaseActivity {
                                             StripePaymentActivity.this);
                                     List<Ticket> ticketList = new ArrayList<>();
                                     ticketList.add(response.body());
-                                    ec.addTickets(ticketList);
+                                    ec.replaceTickets(ticketList);
                                     finishLoadingPurchaseRequestSuccess(response.body());
                                 }
 
@@ -128,7 +128,6 @@ public class StripePaymentActivity extends BaseActivity {
                                 public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
                                     Utils.log(t);
                                     finishLoadingPurchaseRequestError(getString(R.string.ticket_retrieval_error));
-                                    finish();
                                 }
                             });
         } catch (IOException exception) {
@@ -145,18 +144,9 @@ public class StripePaymentActivity extends BaseActivity {
     private void finishLoadingPurchaseRequestSuccess(Ticket ticket) {
         progressDialog.dismiss();
 
-        // Show success message to user
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.purchase_success_title))
-                .setMessage(getString(R.string.purchase_success_message))
-                .setPositiveButton(getString(R.string.purchase_success_continue), (dialogInterface, i) -> {
-                    Intent intent = new Intent(this, ShowTicketActivity.class);
-                    intent.putExtra("eventID", ticket.getEventId());
-                    startActivity(intent);
-                })
-                .setCancelable(false);
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        Intent intent = new Intent(this, PaymentConfirmationActivity.class);
+        intent.putExtra("eventID", ticket.getEventId());
+        startActivity(intent);
     }
 
     private void finishLoadingPurchaseRequestError(String error) {
@@ -168,6 +158,7 @@ public class StripePaymentActivity extends BaseActivity {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(message)
+                .setPositiveButton(R.string.ok, null)
                 .show();
     }
 

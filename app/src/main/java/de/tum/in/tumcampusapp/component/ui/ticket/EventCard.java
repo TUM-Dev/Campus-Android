@@ -22,9 +22,11 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 public class EventCard extends Card {
 
     private Event event;
+    private EventsController controller;
 
     public EventCard(Context context) {
         super(CardManager.CARD_EVENT, context, "card_event", false);
+        controller = new EventsController(context);
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -39,7 +41,8 @@ public class EventCard extends Card {
 
         if (viewHolder instanceof EventsAdapter.EventViewHolder) {
             EventsAdapter.EventViewHolder holder = (EventsAdapter.EventViewHolder) viewHolder;
-            holder.bind(event);
+            boolean hasTicket = controller.isEventBooked(event);
+            holder.bind(event, hasTicket);
         }
     }
 

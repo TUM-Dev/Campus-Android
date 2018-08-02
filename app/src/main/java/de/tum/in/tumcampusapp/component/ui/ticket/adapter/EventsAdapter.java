@@ -1,7 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +20,8 @@ import java.util.regex.Pattern;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
+import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
@@ -26,10 +30,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     private Context mContext;
     private final List<Event> mEvents;
+    private EventsController mEventsController;
 
     public EventsAdapter(Context context, List<Event> events) {
         mContext = context;
         mEvents = events;
+        mEventsController = new EventsController(context);
     }
 
     @NonNull
@@ -48,7 +54,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         eventCard.setEvent(event);
         holder.setCurrentCard(eventCard);
 
-        holder.bind(event);
+        boolean hasTicket = mEventsController.isEventBooked(event);
+        holder.bind(event, hasTicket);
     }
 
     @Override
@@ -63,6 +70,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         TextView titleTextView;
         TextView localityTextView;
         TextView dateTextView;
+        AppCompatButton ticketButton;
 
         public EventViewHolder(View view) {
             super(view);
@@ -71,9 +79,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             imageView = view.findViewById(R.id.events_img);
             localityTextView = view.findViewById(R.id.events_src_locality);
             dateTextView = view.findViewById(R.id.events_src_date);
+            ticketButton = view.findViewById(R.id.ticket_button);
         }
 
-        public void bind(Event event) {
+        public void bind(Event event, boolean hasTicket) {
             String imageUrl = event.getImageUrl();
             boolean showImage = imageUrl != null && !imageUrl.isEmpty();
             imageView.setVisibility(showImage ? View.VISIBLE: View.GONE);
@@ -94,6 +103,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
             String startTime = event.getFormattedStartDateTime(itemView.getContext());
             dateTextView.setText(startTime);
+
+            if (!hasTicket) {
+                ticketButton.setVisibility(View.GONE);
+                return;
+            }
+
+            ticketButton.setVisibility(View.VISIBLE);
+            ticketButton.setOnClickListener(v -> {
+                Context context = itemView.getContext();
+                Intent intent = new Intent(context, ShowTicketActivity.class);
+                intent.putExtra("eventID", event.getId());
+                context.startActivity(intent);
+            });
         }
 
     }

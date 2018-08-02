@@ -510,7 +510,6 @@
                 android:value=".component.ui.chat.activity.ChatActivity" />
         </activity>
 
-
         <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".component.ui.cafeteria.widget.MensaWidget"
@@ -670,6 +669,7 @@
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".component.ui.ticket.activity.ShowTicketActivity"
             android:configChanges="keyboardHidden|screenSize"
@@ -719,7 +719,17 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
-
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.activity.PaymentConfirmationActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/payment_confirmation"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.ticket.activity.StripePaymentActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.ticket.activity.StripePaymentActivity" />
         </activity>
     </application>
 
