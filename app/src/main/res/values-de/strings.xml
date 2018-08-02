@@ -500,9 +500,9 @@ Signatur: %5$s</string>
     <!-- Payment -->
     <string name="creditcard">Kreditkarte</string>
     <string name="complete_purchase">Jetzt kaufen</string>
-    <string name="select_payment_method">Wähle eine Zahlungsmethode</string>
+    <string name="select_payment_method">Zahlungsmethode auswählen</string>
     <string name="enter_card_info_title">Zahlungsinformationen</string>
-    <string name="enter_card_info_description">Bitte gib deine Zahlungsinformationen an, um den Kauf abzuschließen:</string>
+    <string name="enter_card_info_description">Gib deine Zahlungsinformationen an, um den Kauf abzuschließen:</string>
     <string name="purchase_progress_message">Ticket wird angefragt, bitte warten…</string>
     <string name="purchase_success_title">Kauf abgeschlossen</string>
     <string name="purchase_success_message">Du kannst dein Ticket nun im Ticketbereich einsehen.</string>

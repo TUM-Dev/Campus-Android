@@ -640,7 +640,7 @@ Signature: %5$s</string>
     <string name="complete_purchase">Buy now</string>
     <string name="select_payment_method">Select a payment method</string>
     <string name="enter_card_info_title">Payment Information</string>
-    <string name="enter_card_info_description">Please enter your payment information to conclude the purchase:</string>
+    <string name="enter_card_info_description">Enter your payment information to conclude the purchase:</string>
     <string name="purchase_progress_message">Requesting Ticket, please wait…</string>
     <string name="purchase_success_title">Purchase successful</string>
     <string name="purchase_success_message">You can access your ticket in the ticket section.</string>
@@ -677,5 +677,6 @@ Signature: %5$s</string>
     <string name="unknown">Unknown</string>
     <string name="ticket">Ticket</string>
     <string name="payment_confirmation">Payment confirmation</string>
+    <string name="credit_card_format_string">**** **** **** %s</string>
 
 </resources>
