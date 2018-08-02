@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
+
     <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,40 +13,29 @@
 
         <include layout="@layout/toolbar" />
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center_vertical">
+            android:layout_margin="@dimen/material_default_padding"
+            android:drawablePadding="@dimen/material_default_padding"
+            android:drawableStart="@drawable/ic_action_info_black"
+            android:text="@string/favorite_dish_info"
+            android:textColor="#000000" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_action_info_black" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/favorite_dish_info"
-                android:textColor="#000000" />
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/activity_notification_settings_listview"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notificationSettingsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/notification_settings_save"
-            android:layout_width="200dp"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/notificationSettingsSaveButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:background="@color/tum_100"
+            android:layout_margin="@dimen/material_default_padding"
             android:text="@string/save"
-            android:textColor="#FFFFFF" />
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/color_primary" />
 
     </LinearLayout>
 
