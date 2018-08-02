@@ -197,7 +197,6 @@ public class BuyTicketActivity extends BaseActivity {
                                            @NonNull Response<TicketReservationResponse> response) {
                         // ResponseBody can be null if the user has already bought a ticket
                         // but has not fetched it from the server yet
-
                         TicketReservationResponse reservationResponse = response.body();
                         if (response.isSuccessful() && reservationResponse != null) {
                             handleTicketReservationSuccess(ticketType, reservationResponse);
