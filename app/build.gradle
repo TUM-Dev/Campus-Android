@@ -97,7 +97,7 @@ dependencies {
     implementation "com.android.support:preference-v7:$androidSupportVersion"
     implementation "com.android.support:preference-v14:$androidSupportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation 'com.google.guava:guava:25.1-android'
+    implementation 'com.google.guava:guava:26.0-android'
 
     // Android arch components
     implementation 'android.arch.persistence.room:rxjava2:1.1.1'
