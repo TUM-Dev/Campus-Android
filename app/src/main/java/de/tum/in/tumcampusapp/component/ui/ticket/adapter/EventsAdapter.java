@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,6 +25,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
 
@@ -66,6 +69,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     public static class EventViewHolder extends CardViewHolder {
 
         CardView cardView;
+        ProgressBar progressBar;
         ImageView imageView;
         TextView titleTextView;
         TextView localityTextView;
@@ -75,8 +79,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         public EventViewHolder(View view) {
             super(view);
             cardView = (CardView) view;
-            titleTextView = view.findViewById(R.id.events_title);
+            progressBar = view.findViewById(R.id.poster_progress_bar);
             imageView = view.findViewById(R.id.events_img);
+            titleTextView = view.findViewById(R.id.events_title);
             localityTextView = view.findViewById(R.id.events_src_locality);
             dateTextView = view.findViewById(R.id.events_src_date);
             ticketButton = view.findViewById(R.id.ticket_button);
@@ -85,13 +90,26 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         public void bind(Event event, boolean hasTicket) {
             String imageUrl = event.getImageUrl();
             boolean showImage = imageUrl != null && !imageUrl.isEmpty();
-            imageView.setVisibility(showImage ? View.VISIBLE: View.GONE);
 
             if (showImage) {
                 Picasso.get()
                         .load(imageUrl)
-                        .placeholder(R.drawable.chat_background)
-                        .into(imageView);
+                        .error(R.drawable.chat_background)
+                        .into(imageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Utils.log(e);
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+            } else {
+                progressBar.setVisibility(View.GONE);
+                imageView.setImageResource(R.drawable.chat_bg_small_light);
             }
 
             String title = event.getTitle();

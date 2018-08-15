@@ -40,18 +40,10 @@ import retrofit2.Response;
 
 public class StripePaymentActivity extends BaseActivity {
 
-    private AppCompatButton buyButton;
-
-    private ViewSwitcher selectMethodSwitcher;
-
-    //private TextView selectMethodButton;
-    //private LinearLayout selectedMethodLayout;
-    //private TextView selectedMethodTextView;
-    //private TextView selectedMethodCardTypeTextView;
-
-    private ViewSwitcher completePurchaseSwitcher;
-
     private EditText cardholderEditText;
+    private ViewSwitcher selectMethodSwitcher;
+    private ViewSwitcher completePurchaseSwitcher;
+    private AppCompatButton buyButton;
 
     private PaymentSession paymentSession;
     private Boolean setSource = false; // Indicates whether the source has already been loaded from Stripe Server
@@ -197,7 +189,7 @@ public class StripePaymentActivity extends BaseActivity {
         String selectedSource = data.getStringExtra(PaymentMethodsActivity.EXTRA_SELECTED_PAYMENT);
         Source source = Source.fromString(selectedSource);
 
-        // Note: it isn't possible for a null or non-card source to be returned.
+        // Note: It isn't possible for a null or non-card source to be returned.
         if (source != null && Source.CARD.equals(source.getType())) {
             SourceCardData cardData = (SourceCardData) source.getSourceTypeModel();
 
