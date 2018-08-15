@@ -164,6 +164,18 @@
         <item name="cardCornerRadius">@dimen/material_corner_radius</item>
     </style>
 
+    <style name="CardTitle">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:layout_marginBottom">@dimen/material_small_padding</item>
+        <item name="android:textColor">@color/textDarkPrimary</item>
+    </style>
+
+    <style name="CardBody">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textColor">@color/textDarkSecondary</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

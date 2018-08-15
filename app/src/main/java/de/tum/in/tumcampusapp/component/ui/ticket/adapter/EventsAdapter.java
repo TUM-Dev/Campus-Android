@@ -94,7 +94,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             if (showImage) {
                 Picasso.get()
                         .load(imageUrl)
-                        .error(R.drawable.chat_background)
                         .into(imageView, new Callback() {
                             @Override
                             public void onSuccess() {
@@ -109,7 +108,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
                         });
             } else {
                 progressBar.setVisibility(View.GONE);
-                imageView.setImageResource(R.drawable.chat_bg_small_light);
             }
 
             String title = event.getTitle();

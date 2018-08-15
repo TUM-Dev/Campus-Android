@@ -12,12 +12,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
+            android:background="@color/news_source_placeholder"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@android:color/darker_gray" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
             android:id="@+id/poster_progress_bar"
@@ -32,15 +32,14 @@
 
         <TextView
             android:id="@+id/events_title"
+            style="@style/CardTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_default_padding"
-            android:fontFamily="sans-serif-medium"
             android:text="@string/info_title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@id/events_src_date"
             app:layout_constraintEnd_toStartOf="@id/ticket_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/events_img"
@@ -48,12 +47,13 @@
 
         <TextView
             android:id="@+id/events_src_date"
+            style="@style/CardBody"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginStart="@dimen/material_default_padding"
             android:drawablePadding="@dimen/material_default_padding"
-            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/events_src_locality"
             app:layout_constraintEnd_toStartOf="@id/ticket_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/events_title"
@@ -61,13 +61,13 @@
 
         <TextView
             android:id="@+id/events_src_locality"
+            style="@style/CardBody"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/material_default_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginStart="@dimen/material_default_padding"
             android:drawablePadding="@dimen/material_default_padding"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/ticket_button"
             app:layout_constraintStart_toStartOf="parent"
