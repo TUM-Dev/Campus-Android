@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
-import android.view.View;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.stripe.android.CustomerSession;
 import com.stripe.android.PaymentConfiguration;
@@ -43,12 +42,15 @@ public class StripePaymentActivity extends BaseActivity {
 
     private AppCompatButton buyButton;
 
-    private TextView selectMethodButton;
-    private LinearLayout selectedMethodLayout;
-    private TextView selectedMethodTextView;
-    private TextView selectedMethodCardTypeTextView;
+    private ViewSwitcher selectMethodSwitcher;
 
-    private ProgressBar progressBar;
+    //private TextView selectMethodButton;
+    //private LinearLayout selectedMethodLayout;
+    //private TextView selectedMethodTextView;
+    //private TextView selectedMethodCardTypeTextView;
+
+    private ViewSwitcher completePurchaseSwitcher;
+
     private EditText cardholderEditText;
 
     private PaymentSession paymentSession;
@@ -69,7 +71,7 @@ public class StripePaymentActivity extends BaseActivity {
         ticketHistory = getIntent().getIntExtra("ticketHistory", -1);
 
         if (ticketHistory < 0 || price.isEmpty()) {
-            Utils.showToast(getApplicationContext(), R.string.internal_error);
+            Utils.showToast(this, R.string.internal_error);
             finish();
             return;
         }
@@ -80,43 +82,50 @@ public class StripePaymentActivity extends BaseActivity {
 
     private void initSubviews() {
         cardholderEditText = findViewById(R.id.cardholder_edit_text);
+        cardholderEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-        progressBar = findViewById(R.id.stripe_purchase_progress);
-        progressBar.setVisibility(View.INVISIBLE);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateBuyButton();
+            }
 
-        selectMethodButton = findViewById(R.id.select_payment_method_button);
-        selectMethodButton.setOnClickListener(view -> paymentSession.presentPaymentMethodSelection());
-        selectMethodButton.setEnabled(false);
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
+        selectMethodSwitcher = findViewById(R.id.select_payment_method_switcher);
+        selectMethodSwitcher.setOnClickListener(v -> paymentSession.presentPaymentMethodSelection());
+
+        // TODO: Init later
+        /*
         selectedMethodLayout = findViewById(R.id.selected_payment_method_container);
         selectedMethodTextView = findViewById(R.id.selected_payment_method_text_view);
         selectedMethodCardTypeTextView = findViewById(R.id.selected_payment_method_type_text_view);
+        */
 
-        ImageButton changeMethodButton = findViewById(R.id.change_payment_method_button);
-        changeMethodButton.setOnClickListener(v -> paymentSession.presentPaymentMethodSelection());
+        completePurchaseSwitcher = findViewById(R.id.complete_purchase_switcher);
 
         String buyButtonString = getString(R.string.buy_format_string, price);
         buyButton = findViewById(R.id.complete_purchase_button);
         buyButton.setText(buyButtonString);
-
         buyButton.setOnClickListener(v -> requestTicket());
-        buyButton.setEnabled(false); // disabled until customer and payment session have been loaded
+    }
+
+    private void updateBuyButton() {
+        boolean hasCardholder = !cardholderEditText.getText().toString().isEmpty();
+        boolean enabled = hasCardholder && setSource;
+        float alpha = enabled ? 1.0f : 0.5f;
+        buyButton.setEnabled(enabled);
+        buyButton.setAlpha(alpha);
     }
 
     private void requestTicket() {
         String cardholder = cardholderEditText.getText().toString();
-        if (cardholder.isEmpty()) {
-            Utils.showToast(this, R.string.empty_cardholder_message);
-            return;
-        }
-
-        if (!setSource) {
-            // No payment source selected yet
-            Utils.showToast(this, R.string.card_data_invalid);
-            return;
-        }
-
-        setPurchaseRequestLoading(true);
+        setPurchaseRequestLoading();
 
         try {
             String paymentMethodId =
@@ -149,13 +158,14 @@ public class StripePaymentActivity extends BaseActivity {
         }
     }
 
-    private void setPurchaseRequestLoading(boolean showLoading) {
-        progressBar.setVisibility(showLoading ? View.VISIBLE : View.GONE);
-        buyButton.setVisibility(showLoading ? View.GONE : View.VISIBLE);
+    private void setPurchaseRequestLoading() {
+        completePurchaseSwitcher.showNext();
+        //progressBar.setVisibility(showLoading ? View.VISIBLE : View.GONE);
+        //buyButton.setVisibility(showLoading ? View.GONE : View.VISIBLE);
     }
 
     private void finishLoadingPurchaseRequestSuccess(Ticket ticket) {
-        setPurchaseRequestLoading(false);
+        setPurchaseRequestLoading();
 
         Intent intent = new Intent(this, PaymentConfirmationActivity.class);
         intent.putExtra("eventID", ticket.getEventId());
@@ -163,7 +173,7 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
     private void finishLoadingPurchaseRequestError(String error) {
-        setPurchaseRequestLoading(false);
+        setPurchaseRequestLoading();
         showError(error);
     }
 
@@ -179,19 +189,29 @@ public class StripePaymentActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Data might be null if user tapped Back button from Credit Card selection
-        if (data != null) {
-            String selectedSource = data.getStringExtra(PaymentMethodsActivity.EXTRA_SELECTED_PAYMENT);
-            Source source = Source.fromString(selectedSource);
-            // Note: it isn't possible for a null or non-card source to be returned.
-            if (source != null && Source.CARD.equals(source.getType())) {
-                SourceCardData cardData = (SourceCardData) source.getSourceTypeModel();
-                selectMethodButton.setVisibility(View.GONE);
-                selectedMethodLayout.setVisibility(View.VISIBLE);
-                selectedMethodTextView.setText(buildCardString(cardData));
-                selectedMethodCardTypeTextView.setText(cardData.getBrand());
-                setSource = true;
-            }
+        if (data == null) {
+            // Data might be null if user tapped Back button from Credit Card selection
+            return;
+        }
+
+        String selectedSource = data.getStringExtra(PaymentMethodsActivity.EXTRA_SELECTED_PAYMENT);
+        Source source = Source.fromString(selectedSource);
+
+        // Note: it isn't possible for a null or non-card source to be returned.
+        if (source != null && Source.CARD.equals(source.getType())) {
+            SourceCardData cardData = (SourceCardData) source.getSourceTypeModel();
+
+            //LinearLayout selectedMethodLayout = findViewById(R.id.selected_payment_method_container);
+            TextView methodTextView = findViewById(R.id.selected_payment_method_text_view);
+            TextView cardBrandTextView = findViewById(R.id.selected_payment_method_type_text_view);
+
+            methodTextView.setText(buildCardString(cardData));
+            cardBrandTextView.setText(cardData.getBrand());
+
+            selectMethodSwitcher.showNext();
+
+            setSource = true;
+            updateBuyButton();
         }
     }
 
@@ -203,7 +223,8 @@ public class StripePaymentActivity extends BaseActivity {
     private void initCustomerSession() {
         CustomerSession.initCustomerSession(new TicketEphemeralKeyProvider(string -> {
             if (string.startsWith("Error: ")) {
-                StripePaymentActivity.this.showError(string);
+                showError(string);
+                finish();
             } else {
                 initPaymentSession();
             }
@@ -211,35 +232,42 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
     private void initPaymentSession() {
+        PaymentSessionConfig config = new PaymentSessionConfig.Builder()
+                .setShippingMethodsRequired(false)
+                .setShippingInfoRequired(false)
+                .build();
+
         paymentSession = new PaymentSession(this);
         paymentSession.init(new PaymentSession.PaymentSessionListener() {
 
             @Override
             public void onCommunicatingStateChanged(boolean isCommunicating) {
                 // Show network activity to user
+                // TODO
+                /*
                 if (isCommunicating) {
                     progressBar.setVisibility(View.VISIBLE);
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);
                 }
+                */
             }
 
             @Override
             public void onError(int errorCode, @Nullable String errorMessage) {
                 Utils.log("Error: " + errorMessage);
-                StripePaymentActivity.this.showError(getString(R.string.customersession_init_failed));
+                showError(getString(R.string.customersession_init_failed));
             }
 
             @Override
             public void onPaymentSessionDataChanged(@NonNull PaymentSessionData data) {
                 buyButton.setEnabled(true);
-                selectMethodButton.setEnabled(true);
+                // TODO: updateBuyButton();
+                selectMethodSwitcher.setEnabled(true);
+                //selectMethodButton.setEnabled(true);
             }
 
-        }, new PaymentSessionConfig.Builder()
-                .setShippingMethodsRequired(false)
-                .setShippingInfoRequired(false)
-                .build());
+        }, config);
     }
 
     private String buildCardString(@NonNull SourceCardData data) {
@@ -253,6 +281,8 @@ public class StripePaymentActivity extends BaseActivity {
         if (paymentSession != null) {
             paymentSession.onDestroy();
         }
+
+        // TODO
 
         try {
             TUMCabeClient
