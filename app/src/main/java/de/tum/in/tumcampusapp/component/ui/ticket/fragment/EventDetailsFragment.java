@@ -111,7 +111,6 @@ public class EventDetailsFragment extends Fragment implements SwipeRefreshLayout
         if (event.getImageUrl() != null) {
             Picasso.get()
                     .load(event.getImageUrl())
-                    .placeholder(R.color.news_source_placeholder)
                     .into(coverImageView, new Callback() {
                         @Override
                         public void onSuccess() {

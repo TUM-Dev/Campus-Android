@@ -1,156 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipe_container"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:clipToPadding="false">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/kino_cover_description"
+                android:scaleType="centerCrop"
+                android:src="@color/news_source_placeholder"
+                app:layout_constraintDimensionRatio="H,16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/image_progress_bar"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/image_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/ticket_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/color_primary"
+                app:layout_constraintBottom_toTopOf="@id/date_header_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/image_view"
+                tools:text="Buy ticket" />
 
-                    <FrameLayout
-                        android:id="@+id/image_container"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,16:9"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:id="@+id/date_header_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_tiny_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:fontFamily="sans-serif-medium"
+                android:text="Date"
+                android:textColor="@color/color_primary"
+                app:layout_constraintBottom_toTopOf="@id/date_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ticket_button" />
 
-                        <ImageView
-                            android:id="@+id/image_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:contentDescription="@string/kino_cover_description"
-                            android:scaleType="centerCrop"
-                            android:src="@color/news_source_placeholder" />
+            <TextView
+                android:id="@+id/date_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintBottom_toTopOf="@id/remaining_tickets_header_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/date_header_text_view"
+                tools:text="Date" />
 
-                        <ProgressBar
-                            android:id="@+id/image_progress_bar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+            <TextView
+                android:id="@+id/remaining_tickets_header_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_tiny_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:fontFamily="sans-serif-medium"
+                android:text="Remaining tickets"
+                android:textColor="@color/color_primary"
+                app:layout_constraintBottom_toTopOf="@id/remaining_tickets_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/date_text_view" />
 
-                    </FrameLayout>
+            <TextView
+                android:id="@+id/remaining_tickets_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintBottom_toTopOf="@id/location_header_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/remaining_tickets_header_text_view"
+                tools:text="Remaining" />
 
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/ticket_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/material_default_padding"
-                        android:textColor="@color/white"
-                        app:backgroundTint="@color/color_primary"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/image_container"
-                        tools:text="Buy ticket" />
+            <TextView
+                android:id="@+id/location_header_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_tiny_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:fontFamily="sans-serif-medium"
+                android:text="Location"
+                android:textColor="@color/color_primary"
+                app:layout_constraintBottom_toTopOf="@id/location_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/remaining_tickets_text_view" />
 
-                </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/location_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintBottom_toTopOf="@id/divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location_header_text_view"
+                tools:text="Location" />
 
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/material_default_padding">
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:background="@color/list_divider"
+                app:layout_constraintBottom_toTopOf="@id/description_text_view"
+                app:layout_constraintTop_toBottomOf="@id/location_text_view" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/material_small_padding"
-                        android:layout_marginTop="0dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Date"
-                        android:textColor="@color/color_primary" />
+            <TextView
+                android:id="@+id/description_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintBottom_toTopOf="@id/link_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                tools:text="Description" />
 
-                    <TextView
-                        android:id="@+id/date_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        tools:text="Date" />
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/link_button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:text="@string/visit_website"
+                android:textColor="@color/color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description_text_view" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/material_small_padding"
-                        android:layout_marginTop="@dimen/material_default_padding"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Remaining tickets"
-                        android:textColor="@color/color_primary" />
+        </android.support.constraint.ConstraintLayout>
 
-                    <TextView
-                        android:id="@+id/remaining_tickets_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        tools:text="Remaining" />
+    </ScrollView>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/material_small_padding"
-                        android:layout_marginTop="@dimen/material_default_padding"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Location"
-                        android:textColor="@color/color_primary" />
-
-                    <TextView
-                        android:id="@+id/location_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        tools:text="Location" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="@dimen/material_default_padding"
-                        android:layout_marginTop="@dimen/material_default_padding"
-                        android:background="@color/list_divider" />
-
-                    <TextView
-                        android:id="@+id/description_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/material_default_padding"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        tools:text="Description" />
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/link_button"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/visit_website"
-                        android:textColor="@color/color_primary" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </ScrollView>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-</FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
 
 
 
