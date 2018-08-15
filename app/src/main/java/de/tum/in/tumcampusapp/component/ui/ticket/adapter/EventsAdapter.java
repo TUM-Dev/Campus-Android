@@ -108,6 +108,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
                         });
             } else {
                 progressBar.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
             }
 
             String title = event.getTitle();

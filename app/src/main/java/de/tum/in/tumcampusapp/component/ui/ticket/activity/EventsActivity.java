@@ -73,7 +73,7 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         @Override
         public Fragment getItem(int position) {
             EventType type = (position == 0) ? EventType.ALL : EventType.BOOKED;
-            return EventsFragment.newInstance(type);
+            return EventsFragment.Companion.newInstance(type);
         }
 
         @Override

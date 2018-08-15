@@ -44,7 +44,7 @@ data class Event(
         var endTime: DateTime? = null,
         @ColumnInfo(name = "event_url")
         var eventUrl: String = ""
-) : Parcelable {
+) : Parcelable, Comparable<Event> {
 
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
@@ -62,6 +62,10 @@ data class Event(
         val pattern = if (DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
         val time = DateTimeFormat.forPattern(pattern).print(startTime)
         return "$date, $time"
+    }
+
+    override fun compareTo(other: Event): Int {
+        return startTime.compareTo(other.startTime)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
