@@ -20,7 +20,7 @@ public class EventDetailsAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return EventDetailsFragment.newInstance(events.get(position).getId());
+        return EventDetailsFragment.Companion.newInstance(events.get(position).getId());
     }
 
     @Override

@@ -40,7 +40,7 @@
             android:layout_marginTop="@dimen/material_default_padding"
             android:text="@string/info_title"
             app:layout_constraintBottom_toTopOf="@id/events_src_date"
-            app:layout_constraintEnd_toStartOf="@id/ticket_button"
+            app:layout_constraintEnd_toStartOf="@id/ticketButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/events_img"
             tools:text="Title" />
@@ -54,7 +54,7 @@
             android:layout_marginStart="@dimen/material_default_padding"
             android:drawablePadding="@dimen/material_default_padding"
             app:layout_constraintBottom_toTopOf="@id/events_src_locality"
-            app:layout_constraintEnd_toStartOf="@id/ticket_button"
+            app:layout_constraintEnd_toStartOf="@id/ticketButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/events_title"
             tools:text="Date" />
@@ -69,13 +69,13 @@
             android:layout_marginStart="@dimen/material_default_padding"
             android:drawablePadding="@dimen/material_default_padding"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ticket_button"
+            app:layout_constraintEnd_toStartOf="@id/ticketButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/events_src_date"
             tools:text="Locality" />
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/ticket_button"
+            android:id="@+id/ticketButton"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

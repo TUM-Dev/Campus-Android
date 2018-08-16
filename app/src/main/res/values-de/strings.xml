@@ -478,7 +478,7 @@ Signatur: %5$s</string>
     <string name="all_events">Alle Events</string>
     <string name="booked_events">Buchungen</string>
     <string name="redeemed_format_string">Eingelöst: %1$s</string>
-    <string name="visit_website">BESUCHE DIE WEBSITE</string>
+    <string name="visit_website">Webseite besuchen</string>
     <string name="tum_calendar">TUM Kalender</string>
     <string name="external_calendar">Externer Kalender</string>
     <string name="add_to_calendar_info">Zu welchem Kalender willst du das Event hinzufügen?</string>

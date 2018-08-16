@@ -628,7 +628,7 @@ Signature: %5$s</string>
     <string name="add_eventcalendar">Add In Calendar</string>
     <string name="all_events">All Events</string>
     <string name="booked_events">Booked Events</string>
-    <string name="visit_website">VISIT WEBSITE</string>
+    <string name="visit_website">Visit Website</string>
     <string name="tum_calendar">TUM Calendar</string>
     <string name="external_calendar">External Calendar</string>
     <string name="add_to_calendar_info">To which calendar do you want to add the event?</string>
@@ -678,5 +678,6 @@ Signature: %5$s</string>
     <string name="ticket">Ticket</string>
     <string name="payment_confirmation">Payment confirmation</string>
     <string name="credit_card_format_string">**** **** **** %s</string>
+    <string name="remaining_tickets">Remaining tickets</string>
 
 </resources>

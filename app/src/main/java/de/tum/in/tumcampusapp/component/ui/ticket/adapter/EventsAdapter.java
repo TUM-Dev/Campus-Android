@@ -84,7 +84,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             titleTextView = view.findViewById(R.id.events_title);
             localityTextView = view.findViewById(R.id.events_src_locality);
             dateTextView = view.findViewById(R.id.events_src_date);
-            ticketButton = view.findViewById(R.id.ticket_button);
+            ticketButton = view.findViewById(R.id.ticketButton);
         }
 
         public void bind(Event event, boolean hasTicket) {
