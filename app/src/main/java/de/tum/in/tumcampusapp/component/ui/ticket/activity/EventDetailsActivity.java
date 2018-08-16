@@ -15,7 +15,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 public class EventDetailsActivity extends BaseActivity {
 
     public EventDetailsActivity() {
-        super(R.layout.activity_event);
+        super(R.layout.activity_event_details);
     }
 
     @Override
