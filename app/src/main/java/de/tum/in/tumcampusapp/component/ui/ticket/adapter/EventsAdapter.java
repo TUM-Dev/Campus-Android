@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
@@ -130,7 +131,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             ticketButton.setOnClickListener(v -> {
                 Context context = itemView.getContext();
                 Intent intent = new Intent(context, ShowTicketActivity.class);
-                intent.putExtra("eventID", event.getId());
+                intent.putExtra(Const.KEY_EVENT_ID, event.getId());
                 context.startActivity(intent);
             });
         }

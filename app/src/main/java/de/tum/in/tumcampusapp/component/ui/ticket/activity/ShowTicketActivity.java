@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class ShowTicketActivity extends BaseActivity {
@@ -67,7 +68,7 @@ public class ShowTicketActivity extends BaseActivity {
 
     private void loadTicketData() {
         EventsController eventsController = new EventsController(this);
-        int eventId = getIntent().getIntExtra("eventID", 0);
+        int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
         ticket = eventsController.getTicketByEventId(eventId);
         event = eventsController.getEventById(ticket.getEventId());

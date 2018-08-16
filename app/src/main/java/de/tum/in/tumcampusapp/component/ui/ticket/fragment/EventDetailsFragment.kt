@@ -21,6 +21,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.into
@@ -215,12 +216,10 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
 
-        private const val KEY_EVENT_ID = "eventId"
-
         fun newInstance(eventId: Int): Fragment {
             return EventDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(KEY_EVENT_ID, eventId)
+                    putInt(Const.KEY_EVENT_ID, eventId)
                 }
             }
         }

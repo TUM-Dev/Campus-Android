@@ -52,7 +52,7 @@ public class BuyTicketActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         eventsController = new EventsController(this);
-        eventId = getIntent().getIntExtra("eventID", 0);
+        eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
         // Get ticket type information from API
         TUMCabeClient

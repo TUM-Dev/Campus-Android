@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
+import de.tum.`in`.tumcampusapp.utils.Const
 import kotlinx.android.synthetic.main.activity_payment_confirmation.*
 
 class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confirmation) {
@@ -11,7 +12,7 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val eventId = intent.getIntExtra("eventID", -1)
+        val eventId = intent.getIntExtra(Const.KEY_EVENT_ID, -1)
         if (eventId == -1) {
             finish()
             return
@@ -19,7 +20,7 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
 
         showTicketButton.setOnClickListener {
             val intent = Intent(this, ShowTicketActivity::class.java)
-            intent.putExtra("eventID", eventId)
+            intent.putExtra(Const.KEY_EVENT_ID, eventId)
             startActivity(intent);
         }
 

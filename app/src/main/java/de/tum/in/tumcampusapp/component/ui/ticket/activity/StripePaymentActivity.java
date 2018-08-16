@@ -152,15 +152,13 @@ public class StripePaymentActivity extends BaseActivity {
 
     private void setPurchaseRequestLoading() {
         completePurchaseSwitcher.showNext();
-        //progressBar.setVisibility(showLoading ? View.VISIBLE : View.GONE);
-        //buyButton.setVisibility(showLoading ? View.GONE : View.VISIBLE);
     }
 
     private void finishLoadingPurchaseRequestSuccess(Ticket ticket) {
         setPurchaseRequestLoading();
 
         Intent intent = new Intent(this, PaymentConfirmationActivity.class);
-        intent.putExtra("eventID", ticket.getEventId());
+        intent.putExtra(Const.KEY_EVENT_ID, ticket.getEventId());
         startActivity(intent);
     }
 
