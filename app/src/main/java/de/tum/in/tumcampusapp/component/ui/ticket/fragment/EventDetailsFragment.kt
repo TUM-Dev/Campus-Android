@@ -75,16 +75,15 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun showEventDetails(event: Event) {
         val url = event.imageUrl
-        if (url == null) {
+        if (url != null) {
+            Picasso.get()
+                    .load(url)
+                    .into(posterView) {
+                        posterProgressBar.visibility = View.GONE
+                    }
+        } else {
             posterProgressBar.visibility = View.GONE
-            return
         }
-
-        Picasso.get()
-                .load(url)
-                .into(posterView) {
-                    posterProgressBar.visibility = View.GONE
-                }
 
         if (eventsController.isEventBooked(event)) {
             ticketButton.text = getString(R.string.show_ticket)
@@ -105,7 +104,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         descriptionTextView.text = event.description
 
         linkButton.setOnClickListener { openEventLink(event) }
-        linkButton.visibility = if (url.isNotBlank()) View.VISIBLE else View.GONE
+        linkButton.visibility = if (event.eventUrl.isNotBlank()) View.VISIBLE else View.GONE
     }
 
     private fun openEventLink(event: Event) {
