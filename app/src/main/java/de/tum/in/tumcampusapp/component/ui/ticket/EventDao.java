@@ -12,12 +12,6 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 @Dao
 public interface EventDao {
 
-    @Query("DELETE FROM events WHERE start_time < date('now')")
-    void removePastEvents();
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<Event> events);
-
     @Query("SELECT * FROM events ORDER BY start_time")
     List<Event> getAll();
 
@@ -26,6 +20,15 @@ public interface EventDao {
 
     @Query("SELECT * FROM events where id = :id")
     Event getEventById(int id);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(List<Event> events);
+
+    @Query("UPDATE events SET dismissed = 1 WHERE id = :eventId")
+    void setDismissed(int eventId);
+
+    @Query("DELETE FROM events WHERE start_time < date('now')")
+    void removePastEvents();
 
     @Query("DELETE FROM events")
     void removeAll();

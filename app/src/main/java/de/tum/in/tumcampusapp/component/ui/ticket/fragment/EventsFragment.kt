@@ -29,7 +29,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
             val events = response.body() ?: return
 
-            eventsController.replaceEvents(events)
+            eventsController.storeEvents(events)
             if (eventType === EventType.ALL) {
                 showEvents(events)
             }
@@ -91,7 +91,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         eventsController = EventsController(context)
 
         arguments?.let { args ->
-            val eventType = args.getSerializable(KEY_EVENT_TYPE) as EventType
+            eventType = args.getSerializable(KEY_EVENT_TYPE) as EventType
             val events = loadEventsFromDatabase(eventType)
             showEvents(events)
         }

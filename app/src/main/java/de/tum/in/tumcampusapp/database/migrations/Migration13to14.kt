@@ -16,6 +16,7 @@ class Migration13to14 : Migration(13, 14) {
                         "start_time TEXT NOT NULL, " +
                         "end_time TEXT, " +
                         "event_url TEXT NOT NULL, " +
+                        "dismissed INTEGER NOT NULL, " +
                         "PRIMARY KEY(id))"
         )
 

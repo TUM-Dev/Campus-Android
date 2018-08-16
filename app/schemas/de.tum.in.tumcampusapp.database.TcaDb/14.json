@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 14,
-    "identityHash": "12d5972f5e6a449aece12fe8e6b64e8d",
+    "identityHash": "68f4f9483095f396a4f4d41a285d3f0a",
     "entities": [
       {
         "tableName": "Cafeteria",
@@ -312,7 +312,7 @@
       },
       {
         "tableName": "events",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `image_url` TEXT, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `locality` TEXT NOT NULL, `start_time` TEXT NOT NULL, `end_time` TEXT, `event_url` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `image_url` TEXT, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `locality` TEXT NOT NULL, `start_time` TEXT NOT NULL, `end_time` TEXT, `event_url` TEXT NOT NULL, `dismissed` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -360,6 +360,12 @@
             "fieldPath": "eventUrl",
             "columnName": "event_url",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dismissed",
+            "columnName": "dismissed",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -1196,7 +1202,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"12d5972f5e6a449aece12fe8e6b64e8d\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"68f4f9483095f396a4f4d41a285d3f0a\")"
     ]
   }
 }

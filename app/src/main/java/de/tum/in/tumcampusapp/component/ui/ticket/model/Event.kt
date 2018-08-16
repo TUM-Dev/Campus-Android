@@ -43,7 +43,9 @@ data class Event(
         @ColumnInfo(name = "end_time")
         var endTime: DateTime? = null,
         @ColumnInfo(name = "event_url")
-        var eventUrl: String = ""
+        var eventUrl: String = "",
+        @ColumnInfo(name = "dismissed")
+        var dismissed: Int = 0
 ) : Parcelable, Comparable<Event> {
 
     constructor(parcel: Parcel) : this(
@@ -54,8 +56,8 @@ data class Event(
             parcel.readString(),
             DateTime(parcel.readLong()),
             parcel.readDateTime(),
-            parcel.readString()) {
-    }
+            parcel.readString(),
+            parcel.readInt())
 
     fun getFormattedStartDateTime(context: Context): String {
         val date = DateTimeFormat.longDate().print(startTime)
@@ -77,6 +79,7 @@ data class Event(
         parcel.writeLong(startTime.millis)
         parcel.writeDateTime(endTime)
         parcel.writeString(eventUrl)
+        parcel.writeInt(dismissed)
     }
 
     override fun describeContents(): Int {
