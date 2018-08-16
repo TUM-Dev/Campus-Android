@@ -209,7 +209,7 @@ public class BuyTicketActivity extends BaseActivity {
                     public void onFailure(@NonNull Call<TicketReservationResponse> call,
                                           @NonNull Throwable t) {
                         Utils.log(t);
-                        handleTicketReservationFailure(R.string.purchase_error_message);
+                        handleTicketReservationFailure(R.string.error_something_wrong);
                     }
                 });
     }
@@ -241,14 +241,7 @@ public class BuyTicketActivity extends BaseActivity {
     private void handleTicketReservationFailure(int messageResId) {
         reservationProgressBar.setVisibility(View.INVISIBLE);
         paymentButton.setEnabled(true);
-        showError(messageResId);
-    }
-
-    private void showError(int messageResId) {
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.error))
-                .setMessage(messageResId)
-                .show();
+        Utils.showToast(this, messageResId);
     }
 
 }

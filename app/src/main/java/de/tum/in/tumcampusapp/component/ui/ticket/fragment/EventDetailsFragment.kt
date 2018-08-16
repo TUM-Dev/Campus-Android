@@ -56,7 +56,14 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = LayoutInflater.from(container?.context)
                 .inflate(R.layout.fragment_event_details, container, false)
+
         view.swipeRefreshLayout.setOnRefreshListener(this)
+        view.swipeRefreshLayout.setColorSchemeResources(
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200
+        )
+
         return view
     }
 
@@ -79,8 +86,9 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if (url != null) {
             Picasso.get()
                     .load(url)
+                    .noPlaceholder()
                     .into(posterView) {
-                        posterProgressBar.visibility = View.GONE
+                        posterProgressBar?.visibility = View.GONE
                     }
         } else {
             posterProgressBar.visibility = View.GONE
@@ -96,11 +104,11 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         context?.let {
             dateTextView.text = event.getFormattedStartDateTime(it)
-            dateTextView.setOnClickListener { displayAddToCalendarDialog() }
+            dateContainer.setOnClickListener { displayAddToCalendarDialog() }
         }
 
         locationTextView.text = event.locality
-        locationTextView.setOnClickListener { openMaps(event) }
+        locationContainer.setOnClickListener { openMaps(event) }
 
         descriptionTextView.text = event.description
 
@@ -200,10 +208,14 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         )
 
         AlertDialog.Builder(context)
-                .setTitle(R.string.event_export)
-                .setMessage(R.string.add_to_calendar_info)
-                .setItems(calendars) { _, which -> handleCalendarExportSelection(which) }
+                .setTitle(R.string.add_to_calendar_info)
+                //.setItems(calendars) { _, which -> handleCalendarExportSelection(which) }
+                .setSingleChoiceItems(calendars, 0, null)
                 .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.add) { _, which ->
+                    handleCalendarExportSelection(which)
+                }
+                .setCancelable(true)
                 .show()
     }
 

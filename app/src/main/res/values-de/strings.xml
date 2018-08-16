@@ -481,7 +481,7 @@ Signatur: %5$s</string>
     <string name="visit_website">Webseite besuchen</string>
     <string name="tum_calendar">TUM Kalender</string>
     <string name="external_calendar">Externer Kalender</string>
-    <string name="add_to_calendar_info">Zu welchem Kalender willst du das Event hinzufügen?</string>
+    <string name="add_to_calendar_info">Event zu Kalender hinzufügen</string>
     <string name="ticket_not_fetched">Du hast möglicherweise schon ein Ticket für dieses Event gekauft. Versuche, deine Tickets erneut zu laden, indem du die Eventübersicht aktualisierst!</string>
 
     <!-- Ticket Activity -->

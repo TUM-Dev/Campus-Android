@@ -12,7 +12,7 @@
             android:id="@+id/eventsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/recycler_view_background"/>
+            android:background="@color/default_window_background"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

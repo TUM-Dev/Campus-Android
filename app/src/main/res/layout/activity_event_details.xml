@@ -25,6 +25,7 @@
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/default_window_background"
                 android:transitionName="@string/transition_card" />
 
         </LinearLayout>

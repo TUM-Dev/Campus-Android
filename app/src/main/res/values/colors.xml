@@ -24,7 +24,7 @@
     <color name="github">#24292E</color>
     <color name="email">#757575</color>
 
-    <color name="news_source_placeholder">#E2E2E2</color>
+    <color name="placeholder">#E2E2E2</color>
     <color name="list_divider">#EEEEEE</color>
 
     <color name="study_room_free">#C8E6C9</color>
@@ -36,7 +36,7 @@
     <color name="text_dark_primary">#DE000000</color> <!--DE for 87% opacity-->
     <color name="text_dark_secondary">#8A000000</color> <!--8A for 54% opacity-->
 
-    <color name="recycler_view_background">#FAFAFA</color>
+    <color name="default_window_background">#FAFAFA</color>
 
     <!-- official TUM accent colors (style guide) -->
     <color name="tum_orange">#E37222</color>

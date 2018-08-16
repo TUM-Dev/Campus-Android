@@ -80,6 +80,11 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             eventsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
 
             eventsRefreshLayout.setOnRefreshListener(this@EventsFragment)
+            eventsRefreshLayout.setColorSchemeResources(
+                    R.color.color_primary,
+                    R.color.tum_A100,
+                    R.color.tum_A200
+            )
         }
     }
 

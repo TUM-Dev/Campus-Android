@@ -166,7 +166,7 @@
 
     <style name="CardTitle">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:layout_marginBottom">@dimen/material_small_padding</item>
         <item name="android:textColor">@color/text_dark_primary</item>
     </style>

@@ -92,13 +92,6 @@ public class StripePaymentActivity extends BaseActivity {
         selectMethodSwitcher = findViewById(R.id.select_payment_method_switcher);
         selectMethodSwitcher.setOnClickListener(v -> paymentSession.presentPaymentMethodSelection());
 
-        // TODO: Init later
-        /*
-        selectedMethodLayout = findViewById(R.id.selected_payment_method_container);
-        selectedMethodTextView = findViewById(R.id.selected_payment_method_text_view);
-        selectedMethodCardTypeTextView = findViewById(R.id.selected_payment_method_type_text_view);
-        */
-
         completePurchaseSwitcher = findViewById(R.id.complete_purchase_switcher);
 
         String buyButtonString = getString(R.string.buy_format_string, price);

@@ -31,6 +31,9 @@ public class EventDetailsActivity extends BaseActivity {
         ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(eventDetailsAdapter);
 
+        int margin = getResources().getDimensionPixelOffset(R.dimen.material_default_padding);
+        viewPager.setPageMargin(margin);
+
         Event event = getIntent().getParcelableExtra("event");
         int startIndex = events.indexOf(event);
 

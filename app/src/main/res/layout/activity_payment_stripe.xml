@@ -51,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
                     android:layout_marginTop="@dimen/material_default_padding"
-                    android:background="@color/news_source_placeholder" />
+                    android:background="@color/placeholder" />
 
                 <ViewSwitcher
                     android:id="@+id/select_payment_method_switcher"
@@ -127,7 +127,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
                     android:layout_marginBottom="@dimen/material_default_padding"
-                    android:background="@color/news_source_placeholder" />
+                    android:background="@color/placeholder" />
 
                 <ViewSwitcher
                     android:id="@+id/complete_purchase_switcher"
