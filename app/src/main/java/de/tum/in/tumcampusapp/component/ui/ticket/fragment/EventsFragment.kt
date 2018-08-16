@@ -15,7 +15,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.events_fragment.*
+import kotlinx.android.synthetic.main.fragment_events.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -66,7 +66,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.events_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_events, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,9 +85,6 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        // Create the events controller here as the context is only created when the
-        // fragment is attached to an activity
         eventsController = EventsController(context)
 
         arguments?.let { args ->
@@ -103,10 +100,9 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun loadEventsFromDatabase(type: EventType): List<Event> {
-        return if (type === EventType.ALL) {
-            eventsController.events
-        } else {
-            eventsController.bookedEvents
+        return when (type) {
+            EventType.ALL -> eventsController.events
+            EventType.BOOKED -> eventsController.bookedEvents
         }
     }
 
@@ -118,7 +114,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if (events.isNotEmpty()) {
             val adapter = EventsAdapter(context, events.sorted())
             eventsRecyclerView.adapter = adapter
-            adapter.notifyDataSetChanged()
+            adapter.notifyDataSetChanged() // TODO: DiffUtils
         } else {
             placeholderTextView.setText(eventType.placeholderResId)
         }
