@@ -73,7 +73,16 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
     private void initSubviews() {
+        String cardholder = Utils.getSetting(this, Const.KEY_CARD_HOLDER, "");
+
         cardholderEditText = findViewById(R.id.cardholder_edit_text);
+        cardholderEditText.setText(cardholder);
+        cardholderEditText.setSelection(cardholder.length());
+
+        if (cardholder.isEmpty()) {
+            cardholderEditText.requestFocus();
+        }
+
         cardholderEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -81,6 +90,8 @@ public class StripePaymentActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String input = s.toString().trim();
+                Utils.setSetting(StripePaymentActivity.this, Const.KEY_CARD_HOLDER, input);
                 updateBuyButton();
             }
 

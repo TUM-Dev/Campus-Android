@@ -161,4 +161,5 @@ object Const {
 
     const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_OJHHpeotVOpaRO4veynROu18"
     const val KEY_EVENT_ID = "eventId"
+    const val KEY_CARD_HOLDER = "cardholder"
 }
