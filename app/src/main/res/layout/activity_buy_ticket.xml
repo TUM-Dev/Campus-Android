@@ -42,7 +42,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
                         android:text="@string/choose_ticket_type"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/text_dark_secondary" />
 
                     <Spinner
                         android:id="@+id/ticket_type_spinner"
@@ -73,7 +74,8 @@
                             android:layout_weight="0.3"
                             android:fontFamily="sans-serif-medium"
                             android:text="@string/event"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/text_dark_secondary" />
 
                         <TextView
                             android:id="@+id/ticket_details_event"
@@ -81,6 +83,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/text_dark_primary"
                             tools:text="Details" />
 
                     </LinearLayout>
@@ -98,7 +101,8 @@
                             android:layout_weight="0.3"
                             android:fontFamily="sans-serif-medium"
                             android:text="@string/location"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/text_dark_secondary" />
 
                         <TextView
                             android:id="@+id/ticket_details_location"
@@ -106,6 +110,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/text_dark_primary"
                             tools:text="Location" />
 
                     </LinearLayout>
@@ -123,7 +128,8 @@
                             android:layout_weight="0.3"
                             android:fontFamily="sans-serif-medium"
                             android:text="@string/date"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/text_dark_secondary" />
 
                         <TextView
                             android:id="@+id/ticket_details_date"
@@ -131,6 +137,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/text_dark_primary"
                             tools:text="Date" />
 
                     </LinearLayout>
@@ -148,7 +155,8 @@
                             android:layout_weight="0.3"
                             android:fontFamily="sans-serif-medium"
                             android:text="@string/price"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/text_dark_secondary" />
 
                         <TextView
                             android:id="@+id/ticket_details_price"
@@ -156,6 +164,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/text_dark_primary"
                             tools:text="123" />
 
                     </LinearLayout>
@@ -164,8 +173,8 @@
                         android:id="@+id/paymentButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/material_default_padding"
                         android:layout_gravity="center"
+                        android:layout_margin="@dimen/material_default_padding"
                         android:text="@string/continue_to_payment"
                         android:textColor="@android:color/white"
                         app:backgroundTint="@color/color_primary" />

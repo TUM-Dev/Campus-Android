@@ -33,6 +33,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_dark_secondary"
                         android:layout_marginStart="@dimen/material_default_padding"
                         android:layout_marginEnd="@dimen/material_default_padding"
                         android:text="@string/enter_card_info_description"
@@ -88,6 +89,7 @@
                                 android:layout_height="@dimen/icon_default"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginEnd="@dimen/material_default_padding"
+                                android:alpha="0.54"
                                 android:src="@drawable/ic_credit_card_black_24dp" />
 
                             <LinearLayout
@@ -100,6 +102,7 @@
                                     android:id="@+id/selected_payment_method_text_view"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:textColor="@color/text_dark_secondary"
                                     android:fontFamily="sans-serif-medium"
                                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                                     tools:text="**** **** **** 1234" />
@@ -108,6 +111,7 @@
                                     android:id="@+id/selected_payment_method_brand_text_view"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:textColor="@color/text_dark_secondary"
                                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                                     tools:text="Visa" />
 
