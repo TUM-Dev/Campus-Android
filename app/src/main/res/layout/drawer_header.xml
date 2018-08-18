@@ -40,9 +40,16 @@
         tools:text="E-mail" />
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/material_default_padding"
         android:background="@color/placeholder" />
+
+    <include
+        layout="@layout/rainbow_bar"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginTop="@dimen/material_default_padding" />
 
 </LinearLayout>

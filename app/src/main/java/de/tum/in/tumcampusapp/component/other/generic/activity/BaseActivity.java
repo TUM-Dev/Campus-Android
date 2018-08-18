@@ -92,14 +92,19 @@ public abstract class BaseActivity extends AppCompatActivity {
             // Set the NavigationDrawer's click listener
             mDrawerList.setNavigationItemSelectedListener(helper);
 
+            View divider = headerView.findViewById(R.id.divider);
+            View rainbowBar = headerView.findViewById(R.id.rainbow_bar);
+
             // TODO
-            /*
             if (Utils.getSettingBool(this, Const.RAINBOW_MODE, false)) {
-                headerView.setBackgroundResource(R.drawable.drawer_header_rainbow);
+                //headerView.setBackgroundResource(R.drawable.drawer_header_rainbow);
+                divider.setVisibility(View.VISIBLE);
+                rainbowBar.setVisibility(View.GONE);
             } else {
-                headerView.setBackgroundResource(R.drawable.wear_tuition_fee);
+                //headerView.setBackgroundResource(R.drawable.wear_tuition_fee);
+                divider.setVisibility(View.GONE);
+                rainbowBar.setVisibility(View.VISIBLE);
             }
-            */
         }
     }
 
