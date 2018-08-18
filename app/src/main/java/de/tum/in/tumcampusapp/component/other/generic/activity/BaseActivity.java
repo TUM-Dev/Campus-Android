@@ -95,7 +95,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             View divider = headerView.findViewById(R.id.divider);
             View rainbowBar = headerView.findViewById(R.id.rainbow_bar);
 
-            // TODO
             if (Utils.getSettingBool(this, Const.RAINBOW_MODE, false)) {
                 divider.setVisibility(View.GONE);
                 rainbowBar.setVisibility(View.VISIBLE);
