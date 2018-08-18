@@ -3,9 +3,8 @@
     <shortcut
         android:shortcutId="mensa"
         android:enabled="true"
-        android:icon="@drawable/ic_cutlery"
+        android:icon="@drawable/ic_cafeteria_shortcut"
         android:shortcutShortLabel="@string/cafeteria"
-        android:shortcutLongLabel="@string/card_cafeteria_summary"
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
@@ -15,9 +14,8 @@
     <shortcut
         android:shortcutId="studyrooms"
         android:enabled="true"
-        android:icon="@drawable/ic_group_work"
+        android:icon="@drawable/ic_study_rooms_shortcut"
         android:shortcutShortLabel="@string/study_rooms"
-        android:shortcutLongLabel="@string/study_rooms"
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
@@ -27,9 +25,8 @@
     <shortcut
         android:shortcutId="calendar"
         android:enabled="true"
-        android:icon="@drawable/ic_calendar"
+        android:icon="@drawable/ic_calendar_shortcut"
         android:shortcutShortLabel="@string/schedule"
-        android:shortcutLongLabel="@string/schedule"
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"

@@ -134,13 +134,16 @@ class FavoriteDishAlarmScheduler : BroadcastReceiver() {
      */
     private fun loadTriggerHourAndMinute(context: Context, dateString: String): DateTime {
         var scheduledAt = DateTimeUtils.getDate(dateString)
-        val hourMinute = CafeteriaNotificationSettings(context).retrieveHourMinute(scheduledAt)
-        hourMinute.first?.let { hour ->
-            if (hour != -1) {
-                scheduledAt = scheduledAt.withHourOfDay(hour)
-            }
+
+        val time = CafeteriaNotificationSettings(context).retrieveLocalTime(scheduledAt)
+        time?.let {
+            scheduledAt = scheduledAt
+                    .withHourOfDay(it.hourOfDay)
+                    .withMinuteOfHour(it.minuteOfHour)
+                    .withMinuteOfHour(0)
+                    .withMillisOfSecond(0)
         }
-        hourMinute.second?.let { minute -> scheduledAt = scheduledAt.withMinuteOfHour(minute)}
+
         return scheduledAt
     }
 
