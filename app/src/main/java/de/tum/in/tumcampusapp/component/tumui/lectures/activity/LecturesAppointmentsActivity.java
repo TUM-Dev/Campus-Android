@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,9 +40,13 @@ public class LecturesAppointmentsActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         lvTermine = findViewById(R.id.lvTerminList);
 
-        String title = getIntent().getStringExtra(Const.TITLE_EXTRA).toUpperCase();
+        String title = getIntent().getStringExtra(Const.TITLE_EXTRA);
         TextView tvTermineLectureName = findViewById(R.id.tvTermineLectureName);
         tvTermineLectureName.setText(title);
 
@@ -71,7 +76,7 @@ public class LecturesAppointmentsActivity
     protected void onDownloadSuccessful(@NonNull LectureAppointmentsResponse response) {
         List<LectureAppointment> appointments = response.getLectureAppointments();
         if (appointments == null || appointments.isEmpty()) {
-            showError(R.string.no_appointments);
+            showError(R.string.no_appointments); // TODO Why is this not shown?
             return;
         }
 

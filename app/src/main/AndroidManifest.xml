@@ -203,7 +203,12 @@
             android:name=".component.tumui.lectures.activity.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/lectures_appointments"
-            android:theme="@style/AppTheme.NoDrawerLayout" />
+            android:parentActivityName=".component.tumui.lectures.activity.LecturesDetailsActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesDetailsActivity" />
+        </activity>
         <activity
             android:name=".component.tumui.lectures.activity.LecturesDetailsActivity"
             android:configChanges="orientation|screenSize"
