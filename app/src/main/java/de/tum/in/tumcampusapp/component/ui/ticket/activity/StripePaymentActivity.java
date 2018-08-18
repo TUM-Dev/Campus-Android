@@ -34,7 +34,6 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.TicketEphemeralKeyProvider;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -46,13 +45,15 @@ public class StripePaymentActivity extends BaseActivity {
     private FrameLayout loadingLayout;
     private EditText cardholderEditText;
     private ViewSwitcher selectMethodSwitcher;
-    private AppCompatButton buyButton;
+    private AppCompatButton purchaseButton;
 
     private PaymentSession paymentSession;
-    private Boolean setSource = false; // Indicates whether the source has already been loaded from Stripe Server
+    private Boolean didSelectPaymentMethod;
+
     private int ticketHistory; // Ticket ID, since the ticket was reserved in the prior activity and
                                // we need the ID to init the purchase
-    private String price = ""; // ticket price is only used to display in textView -> String
+
+    private String ticketPrice;
 
     public StripePaymentActivity() {
         super(R.layout.activity_payment_stripe);
@@ -62,20 +63,20 @@ public class StripePaymentActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        price = getIntent().getStringExtra("ticketPrice");
-        ticketHistory = getIntent().getIntExtra("ticketHistory", -1);
+        ticketPrice = getIntent().getStringExtra(Const.KEY_TICKET_PRICE);
+        ticketHistory = getIntent().getIntExtra(Const.KEY_TICKET_HISTORY, -1);
 
-        if (ticketHistory < 0 || price.isEmpty()) {
-            Utils.showToast(this, R.string.internal_error);
+        if (ticketHistory < 0 || ticketPrice == null) {
+            Utils.showToast(this, R.string.error_something_wrong);
             finish();
             return;
         }
 
-        initSubviews();
+        initViews();
         initStripeSession();
     }
 
-    private void initSubviews() {
+    private void initViews() {
         loadingLayout = findViewById(R.id.loading_layout);
 
         String cardholder = Utils.getSetting(this, Const.KEY_CARD_HOLDER, "");
@@ -84,6 +85,8 @@ public class StripePaymentActivity extends BaseActivity {
         cardholderEditText.setSelection(cardholder.length());
 
         if (cardholder.isEmpty()) {
+            // We only request focus if the user has not entered their name. Otherwise, we assume
+            // that the user will perform the payment method selection next.
             cardholderEditText.requestFocus();
         }
 
@@ -107,25 +110,24 @@ public class StripePaymentActivity extends BaseActivity {
         selectMethodSwitcher = findViewById(R.id.select_payment_method_switcher);
         selectMethodSwitcher.setOnClickListener(v -> paymentSession.presentPaymentMethodSelection());
 
-        //completePurchaseSwitcher = findViewById(R.id.complete_purchase_switcher);
-
-        String buyButtonString = getString(R.string.buy_format_string, price);
-        buyButton = findViewById(R.id.complete_purchase_button);
-        buyButton.setText(buyButtonString);
-        buyButton.setOnClickListener(v -> requestTicket());
+        String purchaseButtonString = getString(R.string.buy_format_string, ticketPrice);
+        purchaseButton = findViewById(R.id.complete_purchase_button);
+        purchaseButton.setText(purchaseButtonString);
+        purchaseButton.setOnClickListener(v -> purchaseTicket());
     }
 
     private void updateBuyButton() {
         boolean hasCardholder = !cardholderEditText.getText().toString().isEmpty();
-        boolean enabled = hasCardholder && setSource;
+        boolean enabled = hasCardholder && didSelectPaymentMethod;
         float alpha = enabled ? 1.0f : 0.5f;
-        buyButton.setEnabled(enabled);
-        buyButton.setAlpha(alpha);
+
+        purchaseButton.setEnabled(enabled);
+        purchaseButton.setAlpha(alpha);
     }
 
-    private void requestTicket() {
+    private void purchaseTicket() {
         String cardholder = cardholderEditText.getText().toString();
-        setPurchaseRequestLoading();
+        showLoading(true);
 
         try {
             String paymentMethodId =
@@ -138,42 +140,48 @@ public class StripePaymentActivity extends BaseActivity {
                                 @Override
                                 public void onResponse(@NonNull Call<Ticket> call,
                                                        @NonNull Response<Ticket> response) {
-                                    EventsController ec = new EventsController(
-                                            StripePaymentActivity.this);
-                                    List<Ticket> ticketList = new ArrayList<>();
-                                    ticketList.add(response.body());
-                                    ec.replaceTickets(ticketList);
-                                    finishLoadingPurchaseRequestSuccess(response.body());
+                                    Ticket ticket = response.body();
+                                    if (ticket != null) {
+                                        handleTicketPurchaseSuccess(ticket);
+                                    }
                                 }
 
                                 @Override
                                 public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
                                     Utils.log(t);
-                                    finishLoadingPurchaseRequestError(getString(R.string.ticket_retrieval_error));
+                                    handleTicketPurchaseFailure();
                                 }
                             });
         } catch (IOException e) {
             Utils.log(e);
-            finishLoadingPurchaseRequestError(getString(R.string.purchase_error_message));
+            handleTicketPurchaseFailure();
         }
     }
 
-    private void setPurchaseRequestLoading() {
-        loadingLayout.setVisibility(View.VISIBLE);
-        TransitionManager.beginDelayedTransition(loadingLayout);
+    private void handleTicketPurchaseSuccess(@NonNull Ticket ticket) {
+        List<Ticket> tickets = new ArrayList<>();
+        tickets.add(ticket);
+
+        EventsController controller = new EventsController(this);
+        controller.replaceTickets(tickets);
+
+        openPaymentConfirmation(ticket);
     }
 
-    private void finishLoadingPurchaseRequestSuccess(Ticket ticket) {
-        setPurchaseRequestLoading();
-
+    private void openPaymentConfirmation(Ticket ticket) {
         Intent intent = new Intent(this, PaymentConfirmationActivity.class);
         intent.putExtra(Const.KEY_EVENT_ID, ticket.getEventId());
         startActivity(intent);
     }
 
-    private void finishLoadingPurchaseRequestError(String error) {
-        setPurchaseRequestLoading();
-        showError(error);
+    private void handleTicketPurchaseFailure() {
+        showLoading(false);
+        showError(getString(R.string.error_something_wrong));
+    }
+
+    private void showLoading(boolean isLoading) {
+        loadingLayout.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        TransitionManager.beginDelayedTransition(loadingLayout);
     }
 
     private void showError(String message) {
@@ -184,12 +192,11 @@ public class StripePaymentActivity extends BaseActivity {
                 .show();
     }
 
-    /* On return of the credit card selection */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data == null) {
-            // Data might be null if user tapped Back button from Credit Card selection
+            // Data might be null if user tapped the back button from credit card selection
             return;
         }
 
@@ -200,16 +207,15 @@ public class StripePaymentActivity extends BaseActivity {
         if (source != null && Source.CARD.equals(source.getType())) {
             SourceCardData cardData = (SourceCardData) source.getSourceTypeModel();
 
-            //LinearLayout selectedMethodLayout = findViewById(R.id.selected_payment_method_container);
             TextView methodTextView = findViewById(R.id.selected_payment_method_text_view);
-            TextView cardBrandTextView = findViewById(R.id.selected_payment_method_type_text_view);
+            TextView cardBrandTextView = findViewById(R.id.selected_payment_method_brand_text_view);
 
             methodTextView.setText(buildCardString(cardData));
             cardBrandTextView.setText(cardData.getBrand());
 
             selectMethodSwitcher.showNext();
 
-            setSource = true;
+            didSelectPaymentMethod = true;
             updateBuyButton();
         }
     }
@@ -255,10 +261,8 @@ public class StripePaymentActivity extends BaseActivity {
 
             @Override
             public void onPaymentSessionDataChanged(@NonNull PaymentSessionData data) {
-                buyButton.setEnabled(true);
-                // TODO: updateBuyButton();
+                purchaseButton.setEnabled(true);
                 selectMethodSwitcher.setEnabled(true);
-                //selectMethodButton.setEnabled(true);
             }
 
         }, config);
@@ -274,29 +278,6 @@ public class StripePaymentActivity extends BaseActivity {
 
         if (paymentSession != null) {
             paymentSession.onDestroy();
-        }
-
-        // TODO
-
-        try {
-            TUMCabeClient
-                    .getInstance(this)
-                    .cancelTicketReservation(this, ticketHistory,
-                            new Callback<TicketSuccessResponse>() {
-                                @Override
-                                public void onResponse(@NonNull Call<TicketSuccessResponse> call,
-                                                       @NonNull Response<TicketSuccessResponse> response) {
-                                    Utils.log("Cancellation Success!");
-                                }
-
-                                @Override
-                                public void onFailure(@NonNull Call<TicketSuccessResponse> call,
-                                                      @NonNull Throwable t) {
-                                    Utils.log("Cancellation Error!");
-                                }
-                            });
-        } catch (IOException e) {
-            Utils.log(e);
         }
     }
 

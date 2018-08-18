@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CreateEventActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
@@ -152,6 +153,21 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun buyTicket(event: Event) {
+        val lrzId = Utils.getSetting(context, Const.LRZ_ID, "")
+        val chatRoomName = Utils.getSetting(context, Const.CHAT_ROOM_DISPLAY_NAME, "")
+        val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)
+
+        if (!isLoggedIn || lrzId.isEmpty() || chatRoomName.isEmpty()) {
+            context?.let {
+                AlertDialog.Builder(it)
+                        .setTitle(R.string.error)
+                        .setMessage(R.string.not_logged_in_error)
+                        .setPositiveButton(R.string.ok) { _, _ -> activity?.finish() }
+                        .show()
+            }
+            return
+        }
+
         val intent = Intent(context, BuyTicketActivity::class.java).apply {
             putExtra(KEY_EVENT_ID, event.id)
         }
@@ -209,7 +225,6 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         AlertDialog.Builder(context)
                 .setTitle(R.string.add_to_calendar_info)
-                //.setItems(calendars) { _, which -> handleCalendarExportSelection(which) }
                 .setSingleChoiceItems(calendars, 0, null)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.add) { _, which ->

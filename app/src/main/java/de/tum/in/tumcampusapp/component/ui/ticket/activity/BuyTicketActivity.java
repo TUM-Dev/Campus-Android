@@ -19,7 +19,6 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
@@ -91,23 +90,7 @@ public class BuyTicketActivity extends BaseActivity {
         loadingLayout.setVisibility(View.GONE);
 
         paymentButton = findViewById(R.id.paymentButton);
-        paymentButton.setOnClickListener(v -> {
-            String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-            String chatRoomName = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, "");
-            boolean isLoggedIn = AccessTokenManager.hasValidAccessToken(this);
-
-            // Check if user is logged in and name and LRZ ID are available
-            if (isLoggedIn && !lrzId.isEmpty() && !chatRoomName.isEmpty()) {
-                reserveTicket();
-            } else {
-                //ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
-                new AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.sorry))
-                        .setMessage(R.string.not_logged_in_message) // TODO
-                        .setPositiveButton(R.string.ok, null)
-                        .show();
-            }
-        });
+        paymentButton.setOnClickListener(v -> reserveTicket());
     }
 
     private void initEventTextViews() {
@@ -223,17 +206,15 @@ public class BuyTicketActivity extends BaseActivity {
 
         paymentButton.setEnabled(true);
 
-        // Jump to the payment activity
         Intent intent = new Intent(this, StripePaymentActivity.class);
-        intent.putExtra("ticketPrice", ticketType.getFormattedPrice());
-        intent.putExtra("ticketType", ticketType.getId());
-        intent.putExtra("ticketHistory", response.getTicketHistory());
+        intent.putExtra(Const.KEY_TICKET_PRICE, ticketType.getFormattedPrice());
+        intent.putExtra(Const.KEY_TICKET_HISTORY, response.getTicketHistory());
         startActivity(intent);
     }
 
     private void handleTicketNotFetched() {
         new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.sorry))
+                .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.ticket_not_fetched))
                 .setPositiveButton(R.string.ok, (dialog, which) -> {
                     loadingLayout.setVisibility(View.GONE);

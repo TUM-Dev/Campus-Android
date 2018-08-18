@@ -614,8 +614,7 @@ Signature: %5$s</string>
     <string name="purchase_details">Details</string>
     <string name="continue_to_payment">Continue to payment</string>
     <string name="summary">Summary</string>
-    <string name="ticket_not_fetched">You may have already bought a ticket for this event.
-        Please try to reload the events overview!</string>
+    <string name="ticket_not_fetched">You may have already bought a ticket for this event. Try to reload the events overview.</string>
 
     <!-- Event Activity -->
     <string name="show_booked_events">Show booked events</string>
@@ -653,8 +652,7 @@ Signature: %5$s</string>
     <string name="internal_error">Internal Failure</string>
     <string name="creditcard_ending_in">ending in</string>
     <string name="empty_cardholder_message">No cardholder specified.</string>
-    <string name="sorry">Sorry</string>
-    <string name="not_logged_in_message">You have to be logged in and provide access to your name and TUM-ID (via TUM-Online token) to purchase tickets.</string>
+    <string name="not_logged_in_error">To purchase tickets, you must be logged in and allow access to your name and TUM ID in the TUMonline access token.</string>
     <string name="ticket_retrieval_error">Failure while receiving ticket from server.</string>
     <string name="reserving_ticket">Reserving your ticket, please wait…</string>
     <string name="remaining_tickets_format_string" formatted="true">%d tickets remaining</string>
@@ -677,7 +675,7 @@ Signature: %5$s</string>
     <string name="unknown">Unknown</string>
     <string name="ticket">Ticket</string>
     <string name="payment_confirmation">Payment confirmation</string>
-    <string name="credit_card_format_string">**** **** **** %s</string>
+    <string name="credit_card_format_string" translatable="false">**** **** **** %s</string>
     <string name="remaining_tickets">Remaining tickets</string>
     <string name="thanks_for_your_purchase">Thanks for your purchase</string>
     <string name="the_ticket_has_been_saved_for_you_in_the_app">The ticket has been saved for you in the app.</string>

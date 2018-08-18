@@ -482,7 +482,7 @@ Signatur: %5$s</string>
     <string name="tum_calendar">TUM Kalender</string>
     <string name="external_calendar">Externer Kalender</string>
     <string name="add_to_calendar_info">Event zu Kalender hinzufügen</string>
-    <string name="ticket_not_fetched">Du hast möglicherweise schon ein Ticket für dieses Event gekauft. Versuche, deine Tickets erneut zu laden, indem du die Eventübersicht aktualisierst!</string>
+    <string name="ticket_not_fetched">Du hast möglicherweise schon ein Ticket für dieses Event gekauft. Versuche, deine Tickets erneut zu laden, indem du die Eventübersicht aktualisierst.</string>
 
     <!-- Ticket Activity -->
     <string name="your_ticket">Dein Ticket</string>
@@ -515,7 +515,7 @@ Signatur: %5$s</string>
     <string name="internal_error">Interner Fehler!</string>
     <string name="creditcard_ending_in">endet mit</string>
     <string name="empty_cardholder_message">Kein Karteninhaber angegeben.</string>
-    <string name="not_logged_in_message">Du musst eingeloggt sein und den Zugriff auf Namen und TUM-ID erlauben (über TUM-Online Token), um Tickets zu kaufen.</string>
+    <string name="not_logged_in_error">Du musst eingeloggt sein und in TUMonline den Zugriff auf Name und TUM-ID erlauben, um Tickets zu kaufen.</string>
     <string name="ticket_retrieval_error">Fehler bei der Übertragung des Tickets.</string>
     <string name="reserving_ticket">Dein Ticket wird reserviert, bitte warten…</string>
     <string name="remaining_tickets_format_string" formatted="true">Noch %d Tickets verfügbar</string>
@@ -625,4 +625,8 @@ Signatur: %5$s</string>
     <string name="no_events_found">Keine Events gefunden</string>
     <string name="no_bookings_found">Keine Buchungen gefunden</string>
     <string name="ticket">Ticket</string>
+    <string name="thanks_for_your_purchase">Danke für deinen Einkauf</string>
+    <string name="the_ticket_has_been_saved_for_you_in_the_app">Das Ticket wurde für dich in der App gespeichert.</string>
+    <string name="remaining_tickets">Verbleibende Tickets</string>
+    <string name="payment_confirmation">Zahlungsbestätigung</string>
 </resources>
