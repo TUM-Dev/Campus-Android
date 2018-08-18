@@ -8,7 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.TransitionManager;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -40,9 +43,9 @@ import retrofit2.Response;
 
 public class StripePaymentActivity extends BaseActivity {
 
+    private FrameLayout loadingLayout;
     private EditText cardholderEditText;
     private ViewSwitcher selectMethodSwitcher;
-    private ViewSwitcher completePurchaseSwitcher;
     private AppCompatButton buyButton;
 
     private PaymentSession paymentSession;
@@ -73,8 +76,9 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
     private void initSubviews() {
-        String cardholder = Utils.getSetting(this, Const.KEY_CARD_HOLDER, "");
+        loadingLayout = findViewById(R.id.loading_layout);
 
+        String cardholder = Utils.getSetting(this, Const.KEY_CARD_HOLDER, "");
         cardholderEditText = findViewById(R.id.cardholder_edit_text);
         cardholderEditText.setText(cardholder);
         cardholderEditText.setSelection(cardholder.length());
@@ -103,7 +107,7 @@ public class StripePaymentActivity extends BaseActivity {
         selectMethodSwitcher = findViewById(R.id.select_payment_method_switcher);
         selectMethodSwitcher.setOnClickListener(v -> paymentSession.presentPaymentMethodSelection());
 
-        completePurchaseSwitcher = findViewById(R.id.complete_purchase_switcher);
+        //completePurchaseSwitcher = findViewById(R.id.complete_purchase_switcher);
 
         String buyButtonString = getString(R.string.buy_format_string, price);
         buyButton = findViewById(R.id.complete_purchase_button);
@@ -148,14 +152,15 @@ public class StripePaymentActivity extends BaseActivity {
                                     finishLoadingPurchaseRequestError(getString(R.string.ticket_retrieval_error));
                                 }
                             });
-        } catch (IOException exception) {
-            Utils.log(exception);
+        } catch (IOException e) {
+            Utils.log(e);
             finishLoadingPurchaseRequestError(getString(R.string.purchase_error_message));
         }
     }
 
     private void setPurchaseRequestLoading() {
-        completePurchaseSwitcher.showNext();
+        loadingLayout.setVisibility(View.VISIBLE);
+        TransitionManager.beginDelayedTransition(loadingLayout);
     }
 
     private void finishLoadingPurchaseRequestSuccess(Ticket ticket) {
@@ -221,6 +226,8 @@ public class StripePaymentActivity extends BaseActivity {
                 finish();
             } else {
                 initPaymentSession();
+                loadingLayout.setVisibility(View.GONE);
+                TransitionManager.beginDelayedTransition(loadingLayout);
             }
         }, this));
     }
@@ -236,15 +243,8 @@ public class StripePaymentActivity extends BaseActivity {
 
             @Override
             public void onCommunicatingStateChanged(boolean isCommunicating) {
-                // Show network activity to user
-                // TODO
-                /*
-                if (isCommunicating) {
-                    progressBar.setVisibility(View.VISIBLE);
-                } else {
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-                */
+                loadingLayout.setVisibility(isCommunicating ? View.VISIBLE : View.GONE);
+                TransitionManager.beginDelayedTransition(loadingLayout);
             }
 
             @Override

@@ -11,156 +11,157 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar" />
 
-        <ScrollView
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <!-- The main content view -->
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:focusableInTouchMode="true"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/material_default_padding"
-                android:paddingTop="@dimen/material_default_padding">
+                android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/material_default_padding"
-                    android:layout_marginStart="@dimen/material_default_padding"
-                    android:text="@string/enter_card_info_description"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                <EditText
-                    android:id="@+id/cardholder_edit_text"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/material_default_padding"
-                    android:layout_marginStart="@dimen/material_default_padding"
-                    android:layout_marginTop="@dimen/material_default_padding"
-                    android:hint="@string/cardholder"
-                    android:inputType="textPersonName|textCapWords"
-                    android:singleLine="true"
-                    android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginTop="@dimen/material_default_padding"
-                    android:background="@color/placeholder" />
-
-                <ViewSwitcher
-                    android:id="@+id/select_payment_method_switcher"
-                    android:layout_width="match_parent"
-                    android:layout_height="?android:listPreferredItemHeight"
-                    android:background="?android:selectableItemBackground">
+                    android:focusableInTouchMode="true"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/material_default_padding"
+                    android:paddingBottom="@dimen/material_default_padding">
 
                     <TextView
-                        android:id="@+id/select_payment_method_button"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/material_default_padding"
                         android:layout_marginStart="@dimen/material_default_padding"
-                        android:gravity="start"
-                        android:text="@string/select_payment_method"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/color_primary" />
+                        android:layout_marginEnd="@dimen/material_default_padding"
+                        android:text="@string/enter_card_info_description"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    <LinearLayout
-                        android:id="@+id/selected_payment_method_container"
+                    <EditText
+                        android:id="@+id/cardholder_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingEnd="@dimen/material_default_padding"
-                        android:paddingStart="@dimen/material_default_padding">
+                        android:layout_marginStart="@dimen/material_default_padding"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:layout_marginEnd="@dimen/material_default_padding"
+                        android:hint="@string/cardholder"
+                        android:inputType="textPersonName|textCapWords"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
-                        <ImageView
-                            android:layout_width="@dimen/icon_default"
-                            android:layout_height="@dimen/icon_default"
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/divider_height"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:background="@color/placeholder" />
+
+                    <ViewSwitcher
+                        android:id="@+id/select_payment_method_switcher"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:listPreferredItemHeight"
+                        android:background="?android:selectableItemBackground">
+
+                        <TextView
+                            android:id="@+id/select_payment_method_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/material_default_padding"
                             android:layout_marginEnd="@dimen/material_default_padding"
-                            android:src="@drawable/ic_credit_card_black_24dp" />
+                            android:gravity="start"
+                            android:text="@string/select_payment_method"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/color_primary" />
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:id="@+id/selected_payment_method_container"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:layout_gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/material_default_padding"
+                            android:paddingEnd="@dimen/material_default_padding">
 
-                            <TextView
-                                android:id="@+id/selected_payment_method_text_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                tools:text="**** **** **** 1234" />
+                            <ImageView
+                                android:layout_width="@dimen/icon_default"
+                                android:layout_height="@dimen/icon_default"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginEnd="@dimen/material_default_padding"
+                                android:src="@drawable/ic_credit_card_black_24dp" />
 
-                            <TextView
-                                android:id="@+id/selected_payment_method_type_text_view"
-                                android:layout_width="match_parent"
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                                tools:text="Visa" />
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/selected_payment_method_text_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                    tools:text="**** **** **** 1234" />
+
+                                <TextView
+                                    android:id="@+id/selected_payment_method_type_text_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    tools:text="Visa" />
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/change_payment_method_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_action_edit"
+                                android:tint="@color/sections_gray" />
 
                         </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/change_payment_method_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_action_edit"
-                            android:tint="@color/sections_gray" />
+                    </ViewSwitcher>
 
-                    </LinearLayout>
-
-                </ViewSwitcher>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginBottom="@dimen/material_default_padding"
-                    android:background="@color/placeholder" />
-
-                <ViewSwitcher
-                    android:id="@+id/complete_purchase_switcher"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/material_default_padding"
-                    android:layout_marginStart="@dimen/material_default_padding"
-                    android:layout_marginTop="@dimen/material_large_padding">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/divider_height"
+                        android:background="@color/placeholder" />
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/complete_purchase_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_margin="@dimen/material_large_padding"
                         android:alpha="0.5"
                         android:enabled="false"
                         android:text="@string/complete_purchase"
                         android:textColor="@android:color/white"
                         app:backgroundTint="@color/color_primary" />
 
-                    <ProgressBar
-                        android:id="@+id/stripe_purchase_progress"
-                        android:layout_width="@dimen/icon_default"
-                        android:layout_height="@dimen/icon_default"
-                        android:layout_gravity="center"
-                        android:indeterminate="true" />
+                </LinearLayout>
 
-                </ViewSwitcher>
+            </ScrollView>
 
-            </LinearLayout>
+            <FrameLayout
+                android:id="@+id/loading_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/semitransparent_dark_background">
 
-        </ScrollView>
+                <ProgressBar
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:indeterminate="true" />
+
+            </FrameLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 

@@ -4,11 +4,12 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -38,7 +39,7 @@ public class BuyTicketActivity extends BaseActivity {
     private int eventId;
 
     private Spinner ticketTypeSpinner;
-    private ProgressBar reservationProgressBar;
+    private FrameLayout loadingLayout;
     private Button paymentButton;
 
     private List<TicketType> ticketTypes;
@@ -86,8 +87,8 @@ public class BuyTicketActivity extends BaseActivity {
         initEventTextViews();
         initTicketTypeSpinner();
 
-        reservationProgressBar = findViewById(R.id.paymentProgressBar);
-        reservationProgressBar.setVisibility(View.INVISIBLE);
+        loadingLayout = findViewById(R.id.loading_layout);
+        loadingLayout.setVisibility(View.GONE);
 
         paymentButton = findViewById(R.id.paymentButton);
         paymentButton.setOnClickListener(v -> {
@@ -173,7 +174,8 @@ public class BuyTicketActivity extends BaseActivity {
             return;
         }
 
-        reservationProgressBar.setVisibility(View.VISIBLE);
+        loadingLayout.setVisibility(View.VISIBLE);
+        TransitionManager.beginDelayedTransition(loadingLayout);
         paymentButton.setEnabled(false);
 
         int ticketTypeId = ticketType.getId();
@@ -216,7 +218,9 @@ public class BuyTicketActivity extends BaseActivity {
 
     private void handleTicketReservationSuccess(TicketType ticketType,
                                                 TicketReservationResponse response) {
-        reservationProgressBar.setVisibility(View.INVISIBLE);
+        loadingLayout.setVisibility(View.GONE);
+        TransitionManager.beginDelayedTransition(loadingLayout);
+
         paymentButton.setEnabled(true);
 
         // Jump to the payment activity
@@ -232,14 +236,17 @@ public class BuyTicketActivity extends BaseActivity {
                 .setTitle(getString(R.string.sorry))
                 .setMessage(getString(R.string.ticket_not_fetched))
                 .setPositiveButton(R.string.ok, (dialog, which) -> {
-                    reservationProgressBar.setVisibility(View.INVISIBLE);
+                    loadingLayout.setVisibility(View.GONE);
+                    TransitionManager.beginDelayedTransition(loadingLayout);
                     paymentButton.setEnabled(true);
                 })
                 .show();
     }
 
     private void handleTicketReservationFailure(int messageResId) {
-        reservationProgressBar.setVisibility(View.INVISIBLE);
+        loadingLayout.setVisibility(View.GONE);
+        TransitionManager.beginDelayedTransition(loadingLayout);
+
         paymentButton.setEnabled(true);
         Utils.showToast(this, messageResId);
     }

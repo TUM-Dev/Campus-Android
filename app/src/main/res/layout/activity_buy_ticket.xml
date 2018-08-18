@@ -7,13 +7,11 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar" />
 
         <include
@@ -21,166 +19,176 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <ScrollView
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/material_default_padding">
-
-                <TextView
-                    android:id="@+id/ticket_details_choose_type_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="@string/choose_ticket_type"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                <Spinner
-                    android:id="@+id/ticket_type_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:prompt="@string/events" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/material_default_padding"
-                    android:layout_marginTop="@dimen/material_large_padding"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="@string/purchase_details"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/color_primary" />
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/material_default_padding"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/ticket_details_event_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/event"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <TextView
-                        android:id="@+id/ticket_details_event"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        tools:text="Details" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/material_default_padding"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/ticket_details_location_title"
-                        android:layout_width="0pt"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/location"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <TextView
-                        android:id="@+id/ticket_details_location"
-                        android:layout_width="0pt"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        tools:text="Location" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/material_default_padding"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/ticket_details_date_title"
-                        android:layout_width="0pt"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/date"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <TextView
-                        android:id="@+id/ticket_details_date"
-                        android:layout_width="0pt"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        tools:text="Date" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/material_default_padding"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/ticket_details_price_title"
-                        android:layout_width="0pt"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/price"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <TextView
-                        android:id="@+id/ticket_details_price"
-                        android:layout_width="0pt"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        tools:text="123" />
-
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:orientation="vertical"
                     android:padding="@dimen/material_default_padding">
+
+                    <TextView
+                        android:id="@+id/ticket_details_choose_type_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/choose_ticket_type"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <Spinner
+                        android:id="@+id/ticket_type_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:prompt="@string/events" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/material_large_padding"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/purchase_details"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/color_primary" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ticket_details_event_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/event"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        <TextView
+                            android:id="@+id/ticket_details_event"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            tools:text="Details" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ticket_details_location_title"
+                            android:layout_width="0pt"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/location"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        <TextView
+                            android:id="@+id/ticket_details_location"
+                            android:layout_width="0pt"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            tools:text="Location" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ticket_details_date_title"
+                            android:layout_width="0pt"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/date"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        <TextView
+                            android:id="@+id/ticket_details_date"
+                            android:layout_width="0pt"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            tools:text="Date" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ticket_details_price_title"
+                            android:layout_width="0pt"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/price"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        <TextView
+                            android:id="@+id/ticket_details_price"
+                            android:layout_width="0pt"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            tools:text="123" />
+
+                    </LinearLayout>
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/paymentButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/material_default_padding"
                         android:layout_gravity="center"
                         android:text="@string/continue_to_payment"
                         android:textColor="@android:color/white"
                         app:backgroundTint="@color/color_primary" />
 
-                    <ProgressBar
-                        android:id="@+id/paymentProgressBar"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center" />
+                </LinearLayout>
 
-                </FrameLayout>
+            </ScrollView>
 
-            </LinearLayout>
+            <FrameLayout
+                android:id="@+id/loading_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/semitransparent_dark_background">
 
-        </ScrollView>
+                <ProgressBar
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:indeterminate="true" />
+
+            </FrameLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 
