@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/material_small_padding"
-    android:paddingEnd="@dimen/material_default_padding"
     android:paddingStart="@dimen/material_default_padding"
-    android:paddingTop="@dimen/material_small_padding">
+    android:paddingTop="@dimen/material_small_padding"
+    android:paddingEnd="@dimen/material_default_padding"
+    android:paddingBottom="@dimen/material_small_padding">
 
     <LinearLayout
-        android:layout_width="0px"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
@@ -23,19 +23,19 @@
             android:textColor="@color/text_light_blue"
             android:textSize="@dimen/large_text_size"
             android:textStyle="bold"
-            tools:text="Course name"/>
+            tools:text="Course name" />
 
         <TextView
             android:id="@+id/examDateTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Exam date"/>
+            tools:text="Exam date" />
 
         <TextView
             android:id="@+id/additionalInfoTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Examiner"/>
+            tools:text="Examiner" />
 
     </LinearLayout>
 
@@ -49,6 +49,6 @@
         android:textColor="#FFFFFF"
         android:textSize="22sp"
         android:textStyle="bold"
-        tools:text="1,0"/>
+        tools:text="1,0" />
 
 </LinearLayout>

@@ -105,6 +105,8 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
             setDrawEntryLabels(false)
             legend.isWordWrapEnabled = true
             description = null
+
+            setTouchEnabled(false)
             invalidate()
         }
     }
@@ -134,6 +136,7 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
             }
 
             description = null
+            setTouchEnabled(false)
             invalidate()
         }
     }
@@ -267,7 +270,6 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
      * transition is animated via android:animateLayoutChanges in the layout file.
      */
     fun toggleChart(view: View) {
-        //toggleChartVisibility()
         val transition = LayoutTransition()
 
         val showCharts = chartsContainer.visibility == View.GONE

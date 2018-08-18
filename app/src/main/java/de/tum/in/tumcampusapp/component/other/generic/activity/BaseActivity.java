@@ -97,13 +97,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             // TODO
             if (Utils.getSettingBool(this, Const.RAINBOW_MODE, false)) {
-                //headerView.setBackgroundResource(R.drawable.drawer_header_rainbow);
-                divider.setVisibility(View.VISIBLE);
-                rainbowBar.setVisibility(View.GONE);
-            } else {
-                //headerView.setBackgroundResource(R.drawable.wear_tuition_fee);
                 divider.setVisibility(View.GONE);
                 rainbowBar.setVisibility(View.VISIBLE);
+            } else {
+                divider.setVisibility(View.VISIBLE);
+                rainbowBar.setVisibility(View.GONE);
             }
         }
     }

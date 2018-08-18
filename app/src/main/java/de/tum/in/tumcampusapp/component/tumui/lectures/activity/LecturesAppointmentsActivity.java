@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
