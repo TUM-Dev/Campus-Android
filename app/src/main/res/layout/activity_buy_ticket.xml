@@ -36,20 +36,18 @@
                     android:orientation="vertical"
                     android:padding="@dimen/material_default_padding">
 
-                    <TextView
-                        android:id="@+id/ticket_details_choose_type_view"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/choose_ticket_type"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/text_dark_secondary" />
+                        android:background="@drawable/spinner_background">
 
-                    <Spinner
-                        android:id="@+id/ticket_type_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:prompt="@string/events" />
+                        <Spinner
+                            android:id="@+id/ticket_type_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:prompt="@string/events" />
+
+                    </FrameLayout>
 
                     <TextView
                         android:layout_width="wrap_content"

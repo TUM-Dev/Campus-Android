@@ -26,6 +26,7 @@
 
     <color name="placeholder">#E2E2E2</color>
     <color name="list_divider">#EEEEEE</color>
+    <color name="spinner_background">#F2F2F2</color>
 
     <color name="study_room_free">#C8E6C9</color>
     <color name="study_room_occupied">#FFCDD2</color>
