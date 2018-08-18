@@ -4,11 +4,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:autoLink">none</item>
-        <item name="android:background">@color/color_primary_dark</item>
         <item name="android:gravity">center</item>
-        <item name="android:padding">4dp</item>
         <item name="android:scrollHorizontally">false</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/color_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingTop">@dimen/material_tiny_padding</item>
+        <item name="android:paddingBottom">@dimen/material_tiny_padding</item>
         <item name="android:textSize">@dimen/section_text_size</item>
     </style>
 
@@ -30,7 +31,9 @@
     </style>
 
     <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/color_primary</item>
+        <item name="android:textColorSecondary">@color/color_primary</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
     </style>
 
     <style name="TumToolbarPopUp" parent="ThemeOverlay.AppCompat.Light">
@@ -70,10 +73,12 @@
 
     <!-- Style for Stripe's payment method activity -->
     <style name="StripeDefaultTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_primary</item>
-        <item name="titleTextColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/color_primary</item>
+        <item name="android:textColorSecondary">@color/color_primary</item>
+        <item name="titleTextColor">@color/color_primary</item>
     </style>
 
     <style name="CalendarDateTimeItem">

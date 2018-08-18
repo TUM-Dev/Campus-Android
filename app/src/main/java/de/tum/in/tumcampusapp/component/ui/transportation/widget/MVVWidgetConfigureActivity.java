@@ -25,7 +25,9 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.StationResul
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
-public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground<List<StationResult>> implements AdapterView.OnItemClickListener {
+public class MVVWidgetConfigureActivity
+        extends ActivityForSearchingInBackground<List<StationResult>>
+        implements AdapterView.OnItemClickListener {
 
     private int appWidgetId;
     private ListView listViewResults;

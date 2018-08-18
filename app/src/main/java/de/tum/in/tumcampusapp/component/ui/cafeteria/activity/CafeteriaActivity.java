@@ -138,6 +138,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         Spinner spinner = findViewById(R.id.spinnerToolbar);
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
+
         Location currLocation = new LocationManager(this).getCurrentOrNextLocation();
         Flowable<List<Cafeteria>> cafeterias = cafeteriaViewModel.getAllCafeterias(currLocation);
         mDisposable.add(

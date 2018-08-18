@@ -553,7 +553,8 @@
             android:excludeFromRecents="true"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
-            android:taskAffinity="">
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -592,7 +593,8 @@
             android:excludeFromRecents="true"
             android:label="@string/timetable_widget_select_lectures"
             android:launchMode="singleTop"
-            android:taskAffinity="">
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
