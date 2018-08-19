@@ -26,6 +26,7 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -61,10 +62,16 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         super.onCreate(savedInstanceState);
         // Get id from intent if specified
         final Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null && intent.getExtras()
-                                                                  .containsKey(Const.CAFETERIA_ID)) {
+        if (intent != null && intent.getExtras() != null
+                && intent.getExtras().containsKey(Const.CAFETERIA_ID)) {
             mCafeteriaId = intent.getExtras()
                                  .getInt(Const.CAFETERIA_ID);
+        } else {
+            // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
+            int cafeteriaId = new CafeteriaManager(this).getBestMatchMensaId();
+            if (cafeteriaId == -1) {
+                mCafeteriaId = cafeteriaId;
+            }
         }
 
         mViewPager = findViewById(R.id.pager);
@@ -74,10 +81,13 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
          *by default it's 1.
          */
         mViewPager.setOffscreenPageLimit(50);
+
         CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
         remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+
         CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
         localRepository.setDb(TcaDb.getInstance(this));
+
         cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
     }
 

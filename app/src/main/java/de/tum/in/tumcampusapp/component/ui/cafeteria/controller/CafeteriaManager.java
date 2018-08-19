@@ -56,7 +56,7 @@ public class CafeteriaManager implements ProvidesCard {
         List<Card> results = new ArrayList<>();
 
         // Choose which mensa should be shown
-        int cafeteriaId = getBestMatchMensaId(mContext);
+        int cafeteriaId = getBestMatchMensaId();
         if (cafeteriaId == -1) {
             return results;
         }
@@ -74,7 +74,7 @@ public class CafeteriaManager implements ProvidesCard {
      * best-matching cafeteria, it returns an empty list.
      */
     public List<CafeteriaMenu> getBestMatchCafeteriaMenus() {
-        int cafeteriaId = getBestMatchMensaId(mContext);
+        int cafeteriaId = getBestMatchMensaId();
         if (cafeteriaId == -1) {
             return Collections.emptyList();
         }
@@ -82,9 +82,9 @@ public class CafeteriaManager implements ProvidesCard {
         return getCafeteriaMenusByCafeteriaId(cafeteriaId);
     }
 
-    public int getBestMatchMensaId(Context context) {
+    public int getBestMatchMensaId() {
         // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
+        int cafeteriaId = new LocationManager(mContext).getCafeteria();
         if (cafeteriaId == -1) {
             Utils.log("could not get a Cafeteria from locationManager!");
         }
