@@ -167,6 +167,7 @@
         <item name="android:transitionName">@string/transition_card</item>
         <item name="cardBackgroundColor">#FFFFFF</item>
         <item name="cardCornerRadius">@dimen/material_corner_radius</item>
+        <item name="android:background">?android:selectableItemBackground</item>
     </style>
 
     <style name="CardTitle">

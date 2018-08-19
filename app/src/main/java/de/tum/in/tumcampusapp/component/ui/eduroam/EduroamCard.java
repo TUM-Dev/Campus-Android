@@ -12,11 +12,11 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
@@ -41,7 +41,11 @@ public class EduroamCard extends NotificationAwareCard {
 
     @Override
     public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
-        // NOOP
+        AppCompatButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SetupEduroamActivity.class);
+            getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -55,14 +59,21 @@ public class EduroamCard extends NotificationAwareCard {
     }
 
     private boolean eduroamAvailable(@NonNull WifiManager wifi) {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        int fineLocationPermission = ContextCompat.checkSelfPermission(
+                getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+        int coarseLocationPermission = ContextCompat.checkSelfPermission(
+                getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if (fineLocationPermission == PackageManager.PERMISSION_GRANTED
+                || coarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
             for (ScanResult scan : wifi.getScanResults()) {
                 if (scan.SSID.equals(Const.EDUROAM_SSID)) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -87,7 +98,7 @@ public class EduroamCard extends NotificationAwareCard {
 
     @Override
     public Intent getIntent() {
-        return new Intent(getContext(), SetupEduroamActivity.class);
+        return null;
     }
 
     @Override

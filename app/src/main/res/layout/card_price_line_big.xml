@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,35 +9,37 @@
 
     <TextView
         android:id="@+id/line_name"
+        style="@style/CardTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="0dp"
         android:layout_weight="70"
         android:ellipsize="none"
         android:maxLines="5"
         android:scrollHorizontally="false"
-        android:textSize="16sp"
-        tools:text="Line name"/>
+        tools:text="Line name" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="2"/>
+        android:layout_weight="2" />
 
     <TextView
         android:id="@+id/line_price"
+        style="@style/CardBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="15"
         android:minWidth="50dp"
         android:textColor="@color/sections_green"
-        android:textSize="16sp"
-        tools:text="Price"/>
+        tools:text="Price" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="3"/>
+        android:layout_weight="3" />
 
     <ImageView
         android:id="@+id/favoriteDish"
@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="9"
-        android:src="@drawable/star_toggle"/>
+        android:padding="@dimen/material_tiny_padding"
+        android:src="@drawable/star_toggle" />
 
 </LinearLayout>

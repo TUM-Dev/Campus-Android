@@ -330,7 +330,7 @@
     <string name="password">Password</string>
     <string name="not_ask_again">Don’t ask again</string>
     <string name="eduroam_setup_question">Do you want to connect to eduroam now?</string>
-    <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
+    <string name="eduroam_setup">Set up eduroam</string>
     <string name="card_eduroam_summary">Allows you to easily set up eduroam Wi-Fi connection</string>
     <string name="pin_lock">PIN-Lock</string>
     <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.</string>
@@ -440,7 +440,7 @@ Signature: %5$s</string>
     <string name="AT">at</string>
     <string name="startup_motto">By students - For students</string>
     <string name="fix_eduroam">Fix eduroam</string>
-    <string name="eduroam_fix">Click to fix it now!</string>
+    <string name="eduroam_fix">Fix it now</string>
     <string name="eduroam_insecure_configuration">We have detected an insecure eduroam wifi configuration. You are subject to leaking information about you and your account.</string>
     <string name="wifi_dns_name_not_set">DNS Name is not set</string>
     <string name="wifi_identity_zone">You have configured eduroam without specifying the home institution (e.g. @eduroam.mwn.de) in your username. This means that eduroam won\'t work when you\'re not on the TUM campus.</string>

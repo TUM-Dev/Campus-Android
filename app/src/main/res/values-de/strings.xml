@@ -277,7 +277,7 @@
     <string name="password">Passwort</string>
     <string name="not_ask_again">Nicht mehr fragen</string>
     <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
-    <string name="eduroam_setup_question_desc">Hier klicken, um eduroam einzurichten</string>
+    <string name="eduroam_setup">eduroam einrichten</string>
     <string name="card_eduroam_summary">Hilft dir, eduroam einzurichten</string>
     <string name="pin_lock">PIN-Sperre</string>
     <string name="pin_lock_desc">Für die Einrichtung des WLAN-Zugangs wird eine PIN-Sperre benötigt.
@@ -382,7 +382,7 @@ Signatur: %5$s</string>
     <string name="MINUTES">minuten</string>
     <string name="AT">um</string>
     <string name="startup_motto">Von Studierenden - Für Studierende</string>
-    <string name="eduroam_fix">Jetzt reparieren!</string>
+    <string name="eduroam_fix">Jetzt reparieren</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">eduroam reparieren</string>
     <string name="wifi_identity_zone">Du hast eduroam ohne Angabe der Heimateinrichtung (z.B. \“@eduroam.mwn.de\”) im Benutzernamen konfiguriert. Dadurch wird eduroam abseits der TUM nicht funktionieren.</string>

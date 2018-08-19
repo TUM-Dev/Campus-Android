@@ -26,7 +26,9 @@ class ChatMessagesCardViewHolder(itemView: View) : CardViewHolder(itemView) {
                             context.getString(R.string.card_message_line, memberName, message.text)
                         }
                         .map { messageText ->
-                            TextView(context).apply { text = messageText }
+                            TextView(context, null, R.style.CardBody).apply {
+                                text = messageText
+                            }
                         }
                         .forEach { textView ->
                             contentContainerLayout.addView(textView)

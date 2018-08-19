@@ -23,19 +23,17 @@
 
             <TextView
                 android:id="@+id/news_title"
+                style="@style/CardTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/info_title"
-                android:textSize="20sp"
                 tools:text="Title" />
 
             <TextView
                 android:id="@+id/news_src_date"
+                style="@style/CardBody"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                android:textSize="16sp"
                 tools:text="Source Date" />
 
             <View
@@ -45,12 +43,12 @@
 
             <TextView
                 android:id="@+id/news_src_title"
+                style="@style/CardBody"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:drawableStart="@drawable/ic_comment"
-                android:drawablePadding="@dimen/material_default_padding"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:drawablePadding="@dimen/material_small_padding"
                 tools:text="Source Title" />
 
         </LinearLayout>

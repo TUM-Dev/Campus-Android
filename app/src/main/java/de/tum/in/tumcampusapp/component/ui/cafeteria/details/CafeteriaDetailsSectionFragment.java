@@ -71,14 +71,17 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * @param big         True to show big lines
      */
     @SuppressLint("ShowToast")
-    public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, DateTime date, boolean big, List<CafeteriaMenu> cafeteriaMenus) {
+    public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, DateTime date,
+                                      boolean big, List<CafeteriaMenu> cafeteriaMenus) {
         // initialize a few often used things
         final Context context = rootView.getContext();
         final Map<String, String> rolePrices = CafeteriaPrices.INSTANCE.getRolePrices(context);
         final int padding = (int) context.getResources()
-                .getDimension(R.dimen.card_text_padding);
+                .getDimension(R.dimen.material_default_padding);
+
         List<View> addedViews = new ArrayList<>(32);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         TcaDb db = TcaDb.getInstance(context);
         final FavoriteDishDao favoriteDishDao = db.favoriteDishDao();
 
@@ -86,7 +89,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         if (!big) {
             // Show opening hours
             OpenHoursHelper lm = new OpenHoursHelper(context);
-            textview = new TextView(context);
+            textview = new TextView(context, null, R.style.CardBody);
             textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, date));
             textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
             rootView.addView(textview);
@@ -99,6 +102,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         for (CafeteriaMenu cafeteriaMenu : cafeteriaMenus) {
             String typeShort = cafeteriaMenu.getTypeShort();
             String typeLong = cafeteriaMenu.getTypeLong();
+
             // Skip unchecked categories if showing card
             boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
                     "tg".equals(typeShort) || "ae".equals(typeShort));
@@ -109,7 +113,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             // Add header if we start with a new category
             if (!typeShort.equals(curShort)) {
                 curShort = typeShort;
-                View view = inflater.inflate(big ? R.layout.list_header_big : R.layout.card_list_header, rootView, false);
+                View view = inflater.inflate(R.layout.card_list_header, rootView, false);
                 textview = view.findViewById(R.id.list_header);
                 textview.setText(typeLong.replaceAll("[0-9]", "")
                         .trim());
@@ -122,7 +126,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             final SpannableString text = menuToSpan(context, big ? menuName : prepare(menuName));
             if (rolePrices.containsKey(typeLong)) {
                 // If price is available
-                View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line, rootView, false);
+                View view = inflater.inflate(big ? R.layout.card_price_line_big : R.layout.card_price_line, rootView, false);
                 textview = view.findViewById(R.id.line_name);
                 TextView priceView = view.findViewById(R.id.line_price);
                 final View favDish = view.findViewById(R.id.favoriteDish);
