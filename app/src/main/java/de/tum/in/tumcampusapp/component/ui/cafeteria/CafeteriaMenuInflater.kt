@@ -84,7 +84,7 @@ class CafeteriaMenuInflater(
 
         favoriteDish.isSelected = isFavorite
         favoriteDish.setOnClickListener { view ->
-            if (view.isSelected) {
+            if (!view.isSelected) {
                 val formatter = DateTimeFormat.forPattern("dd-MM-yyyy")
                 val date = formatter.print(DateTime.now())
                 dao.insertFavouriteDish(

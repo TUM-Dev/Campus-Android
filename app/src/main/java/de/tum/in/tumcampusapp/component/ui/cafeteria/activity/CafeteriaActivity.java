@@ -149,6 +149,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 return v;
             }
         };
+
         Spinner spinner = findViewById(R.id.spinnerToolbar);
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);

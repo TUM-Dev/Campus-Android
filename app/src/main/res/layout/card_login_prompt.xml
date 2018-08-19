@@ -4,7 +4,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/card_selector"
         android:orientation="vertical"
         android:paddingStart="@dimen/material_small_padding"
         android:paddingTop="@dimen/material_default_padding"

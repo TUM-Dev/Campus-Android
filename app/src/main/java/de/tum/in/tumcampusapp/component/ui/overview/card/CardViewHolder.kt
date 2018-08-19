@@ -27,11 +27,14 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 
     override fun onClick(v: View) {
         val intent = currentCard?.getIntent() ?: return
+        activity.startActivity(intent)
+        /*
         val transitionName = activity.getString(R.string.transition_card)
 
         val options = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(activity, v, transitionName)
         ContextCompat.startActivity(activity, intent, options.toBundle())
+        */
     }
 
     override fun onLongClick(v: View): Boolean {

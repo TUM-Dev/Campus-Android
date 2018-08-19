@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -283,8 +284,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         @Override
         public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
-            if (!cardViewHolder.getCurrentCard()
-                               .isDismissible()) {
+            if (!cardViewHolder.getCurrentCard().isDismissible()) {
                 return 0;
             }
             return super.getSwipeDirs(recyclerView, viewHolder);
@@ -309,6 +309,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             mAdapter.remove(lastPos);
 
             final View coordinatorLayoutView = findViewById(R.id.coordinator);
+            final int color = ContextCompat.getColor(getBaseContext(), android.R.color.white);
 
             Snackbar.make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo, v -> {
@@ -316,6 +317,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                         mCardsView.getLayoutManager()
                                   .smoothScrollToPosition(mCardsView, null, lastPos);
                     })
+                    .setActionTextColor(color)
                     .addCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event) {

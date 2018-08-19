@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toStartOf="@id/line_price"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr" />
+        tools:text="Lorem ipsum dolor sit" />
 
     <TextView
         android:id="@+id/line_price"
@@ -38,10 +38,13 @@
 
     <ImageView
         android:id="@+id/favoriteDish"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="@dimen/material_default_padding"
-        android:padding="@dimen/material_tiny_padding"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/material_small_padding"
         android:src="@drawable/star_toggle"
         app:layout_constraintBottom_toBottomOf="@id/line_name"
         app:layout_constraintEnd_toEndOf="parent"

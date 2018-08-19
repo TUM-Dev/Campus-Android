@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="?android:attr/spinnerDropDownItemStyle"
     android:layout_width="match_parent"
@@ -9,7 +8,8 @@
     android:foreground="?android:selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:paddingStart="@dimen/material_default_padding"
+    android:paddingEnd="@dimen/material_default_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,18 +23,21 @@
             android:layout_weight="1"
             android:ellipsize="marquee"
             android:singleLine="true"
+            android:textColor="@color/text_dark_secondary"
             android:textSize="16sp"
-            tools:text="Text 1"/>
+            tools:text="Text 1" />
 
         <TextView
             android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_small_padding"
             android:ellipsize="marquee"
             android:gravity="end"
             android:singleLine="true"
+            android:textColor="@color/text_dark_secondary"
             android:textSize="14sp"
-            tools:text="Distance"/>
+            tools:text="Distance" />
 
     </LinearLayout>
 
@@ -44,8 +47,8 @@
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:singleLine="true"
+        android:textColor="@color/text_dark_secondary"
         android:textSize="12sp"
-        tools:text="Text 2"
-        tools:visibility="gone"/>
+        tools:text="Text 2" />
 
 </LinearLayout>

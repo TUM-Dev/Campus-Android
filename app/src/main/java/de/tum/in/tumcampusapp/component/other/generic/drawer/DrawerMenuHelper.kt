@@ -1,9 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.drawer
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import de.tum.`in`.tumcampusapp.R
@@ -29,31 +30,38 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivi
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 
-class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout: DrawerLayout) : NavigationView.OnNavigationItemSelectedListener {
+class DrawerMenuHelper(
+        private val activity: Activity,
+        private val drawerLayout: DrawerLayout
+) : NavigationView.OnNavigationItemSelectedListener {
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        mDrawerLayout.closeDrawers()
-        val intent = menuItem.intent
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-        mContext.startActivity(intent)
+        drawerLayout.closeDrawer(Gravity.START)
+
+        val intent = menuItem.intent.apply {
+            addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        }
+        activity.startActivity(intent)
+        activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+
         return true
     }
 
     fun populateMenu(navigationMenu: Menu) {
-        val hasTUMOAccess = AccessTokenManager.hasValidAccessToken(mContext)
-        val chatEnabled = Utils.getSettingBool(mContext, Const.GROUP_CHAT_ENABLED, false)
+        val hasTUMOAccess = AccessTokenManager.hasValidAccessToken(activity)
+        val chatEnabled = Utils.getSettingBool(activity, Const.GROUP_CHAT_ENABLED, false)
 
         val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
         if (hasTUMOAccess) {
             for (item in MY_TUM) {
                 if (!(item.needsChatAccess && !chatEnabled)) {
                     myTumMenu.add(item.titleRes)
-                            .setIcon(item.iconRes).intent = Intent(mContext, item.activity)
+                            .setIcon(item.iconRes).intent = Intent(activity, item.activity)
                 }
             }
         } else {
             myTumMenu.add(R.string.tumonline_login)
-                    .setIcon(R.drawable.ic_link).intent = Intent(mContext, WizNavStartActivity::class.java)
+                    .setIcon(R.drawable.ic_link).intent = Intent(activity, WizNavStartActivity::class.java)
         }
 
         // General information which mostly can be used without a TUMonline token
@@ -61,14 +69,14 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
         for (item in COMMON_TUM) {
             if (!(item.needsTUMOAccess && !hasTUMOAccess)) {
                 commonTumMenu.add(item.titleRes)
-                        .setIcon(item.iconRes).intent = Intent(mContext, item.activity)
+                        .setIcon(item.iconRes).intent = Intent(activity, item.activity)
             }
         }
 
         // App related menu entries
         for (item in APP) {
             navigationMenu.add(item.titleRes)
-                    .setIcon(item.iconRes).intent = Intent(mContext, item.activity)
+                    .setIcon(item.iconRes).intent = Intent(activity, item.activity)
         }
     }
 

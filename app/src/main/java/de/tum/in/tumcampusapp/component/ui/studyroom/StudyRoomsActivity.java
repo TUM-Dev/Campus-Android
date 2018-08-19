@@ -75,24 +75,15 @@ public class StudyRoomsActivity extends ProgressActivity
 
                     @Override
                     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                        View v = inflater.inflate(
-                                R.layout.simple_spinner_dropdown_item_actionbar,
-                                                  parent, false);
+                        View v = inflater.inflate(R.layout.simple_spinner_item_actionbar,
+                                parent, false);
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
                         TextView nameTextView = v.findViewById(android.R.id.text1);
-                        TextView detailsTextView = v.findViewById(android.R.id.text2);
 
                         if (studyRoomGroup != null) {
                             String name = studyRoomGroup.getName();
-                            String details = studyRoomGroup.getDetails();
-
                             nameTextView.setText(name);
-                            detailsTextView.setText(details);
-
-                            if (details.isEmpty()) {
-                                detailsTextView.setVisibility(View.GONE);
-                            }
                         }
 
                         return v;
