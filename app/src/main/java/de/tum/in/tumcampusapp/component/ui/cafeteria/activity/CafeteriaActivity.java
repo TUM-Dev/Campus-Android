@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -35,8 +37,6 @@ import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
-
-import static de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment.menuToSpan;
 
 /**
  * Lists all dishes at selected cafeteria
@@ -92,11 +92,14 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_ingredients) {
             // Build a alert dialog containing the mapping of ingredients to the numbers
-            new AlertDialog.Builder(this).setTitle(R.string.action_ingredients)
-                                         .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
-                                         .setPositiveButton(android.R.string.ok, null)
-                                         .create()
-                                         .show();
+            String ingredients = getString(R.string.cafeteria_ingredients);
+            SpannableString title = CafeteriaMenuInflater.menuToSpan(this, ingredients);
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.action_ingredients)
+                    .setMessage(title)
+                    .setPositiveButton(R.string.ok, null)
+                    .create()
+                    .show();
             return true;
         }
         if (item.getItemId() == R.id.action_settings) {
@@ -114,8 +117,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         super.onStart();
 
         // Adapter for drop-down navigation
-        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
-            final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(
+                this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
+            final LayoutInflater inflater = LayoutInflater.from(getContext());
 
             @Override
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {

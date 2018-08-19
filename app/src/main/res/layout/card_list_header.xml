@@ -2,10 +2,10 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_header"
-    style="@style/CardTitle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/material_small_padding"
-    android:layout_marginBottom="@dimen/material_tiny_padding"
+    android:fontFamily="sans-serif-medium"
     android:textColor="@color/color_primary"
+    android:textSize="16sp"
     tools:text="Header" />
