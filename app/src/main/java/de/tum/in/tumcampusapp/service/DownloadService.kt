@@ -139,8 +139,7 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
-        CafeteriaMenuManager(this)
-                .downloadFromExternal(this, force)
+        CafeteriaMenuManager(this).downloadMenus(force)
         cafeteriaViewModel.getCafeteriasFromService(force)
         return true
     }

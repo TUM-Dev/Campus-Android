@@ -19,6 +19,7 @@
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
+    <string name="export_to_google_error">An error occurred while exporting your calendar to Google Calendar.</string>
     <string name="calendarTimeZone" translatable="false">Germany/Munich</string>
     <string name="delete_from_google">Delete from Google</string>
     <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>
@@ -274,7 +275,7 @@
     <string name="cafeteria_notification_settings">Cafeteria Notification Settings</string>
 
     <!-- Cafeteria Notification Settings -->
-    <string name="invalid_notification_time">Invalid time. Please pick a time ranging from:</string>
+    <string name="invalid_notification_time_format_string">Invalid time. Pick a time ranging from %d to %d.</string>
 
     <!-- Information -->
     <string name="version">Version: %1$s</string>
@@ -497,11 +498,11 @@ Signature: %5$s</string>
         <item>@string/tca</item>
     </string-array>
     <string name="grades_without_weight">Grades without weights</string>
-    <string name="study_program">Program %s</string>
+    <string name="study_program_format_string">Program %s</string>
     <string name="summer_semester">Summer term %d</string>
     <string name="winter_semester">Winter term %d/%d</string>
-    <string name="show_list">&#032;Show List</string>
-    <string name="show_chart">&#032;Show Chart</string>
+    <string name="show_list">Show List</string>
+    <string name="show_chart">Show Chart</string>
 
     <string name="channel_general">General</string>
     <string name="channel_cafeteria">Cafeteria</string>
@@ -615,4 +616,5 @@ Signature: %5$s</string>
     <string name="menu_with_long_type_format_string" translatable="false">%1$s (%2$s)</string>
     <string name="lecture_details_format_string" translatable="false">%1$s - %2$s SWS</string>
     <string name="lecture_list_item_details_format_string" translatable="false">%1$s - %2$s - %3$s SWS</string>
+    <string name="checking_if_token_enabled">Checking if token is enabled …</string>
 </resources>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.view.View;
+import android.widget.Toast;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
@@ -21,6 +22,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class WizNavCheckTokenActivity extends ProgressActivity {
+
+    private Toast mToast;
 
     public WizNavCheckTokenActivity() {
         super(R.layout.activity_wiznav_checktoken);
@@ -48,7 +51,8 @@ public class WizNavCheckTokenActivity extends ProgressActivity {
     }
 
     private void loadIdentitySet() {
-        Utils.showToast(this, "Checking if token is enabled …");
+        mToast = Toast.makeText(this, R.string.checking_if_token_enabled, Toast.LENGTH_LONG);
+        mToast.show();
 
         TUMOnlineClient
                 .getInstance(this)
@@ -57,6 +61,7 @@ public class WizNavCheckTokenActivity extends ProgressActivity {
                     @Override
                     public void onResponse(@NonNull Call<IdentitySet> call,
                                            @NonNull Response<IdentitySet> response) {
+                        mToast.cancel();
                         IdentitySet identitySet = response.body();
                         if (identitySet != null) {
                             handleDownloadSuccess(identitySet);

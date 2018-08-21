@@ -39,7 +39,8 @@ class CachingHelper {
                 Pair("veranstaltungenDetails", Duration.standardDays(5)),
                 Pair("veranstaltungenTermine", Duration.standardDays(5)),
                 Pair("personenDetails", Duration.standardDays(5)),
-                Pair("noten", Duration.standardDays(1))
+                Pair("noten", Duration.standardDays(1)),
+                Pair("mensaapp", Duration.standardDays(1))
         )
 
     }

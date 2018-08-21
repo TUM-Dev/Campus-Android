@@ -19,6 +19,6 @@ public interface StudyRoomGroupDao {
     void removeCache();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(StudyRoomGroup studyRoomGroup);
+    void insert(StudyRoomGroup... studyRoomGroup);
 
 }

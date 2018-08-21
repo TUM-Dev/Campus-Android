@@ -167,10 +167,10 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         return true;
     }
 
-    public void downloadNewsAlert(){
+    public void downloadNewsAlert() {
         Intent downloadService = new Intent();
         downloadService.putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL);
-        DownloadService.enqueueWork(getBaseContext(), downloadService);
+        DownloadService.enqueueWork(this, downloadService);
     }
 
     @Override
@@ -183,7 +183,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
 
         if (Utils.getSettingBool(this, Const.REFRESH_CARDS, false)){
