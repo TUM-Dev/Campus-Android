@@ -90,6 +90,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             return null;
         }
 
+        TUMCabeClient tumCabeClient = TUMCabeClient.getInstance(this);
+
         // by now we should have generated rsa key and uploaded it to our server and tumonline
 
         // Get the users lrzId and initialise chat member
@@ -103,8 +105,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         ChatMember member;
         try {
             // After the user has entered their display name, send a request to the server to create the new member
-            member = TUMCabeClient.getInstance(this)
-                                  .createMember(currentChatMember);
+            member = tumCabeClient.createMember(currentChatMember);
         } catch (IOException e) {
             Utils.log(e);
             Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
@@ -117,24 +118,25 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             return null;
         }
 
-        TUMCabeStatus status = TUMCabeClient.getInstance(this).verifyKey().blockingSingle();
-        if (!status.getStatus().equals("verified")){
-            Utils.log("verification status: " + status.getStatus());
+        TUMCabeStatus status = tumCabeClient.verifyKey();
+        if (status == null || !status.getStatus().equals(UploadStatus.VERIFIED)) {
             Utils.showToastOnUIThread(this, getString(R.string.error_pk_verification));
             return null;
         }
 
         // Try to restore already joined chat rooms from server
         try {
-            List<ChatRoom> rooms = TUMCabeClient.getInstance(this)
-                                                .getMemberRooms(member.getId(), ChatVerification.Companion.getChatVerification(this, member));
+            List<ChatRoom> rooms = tumCabeClient.getMemberRooms(
+                    member.getId(), ChatVerification.getChatVerification(this, member)
+            );
             new ChatRoomController(this).replaceIntoRooms(rooms);
 
             // upload obfuscated ids now that we have a member
             UploadStatus uploadStatus = TUMCabeClient.getInstance(this)
-                    .getUploadStatus(Utils.getSetting(this, Const.LRZ_ID, ""))
-                    .blockingFirst();
-            new AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
+                    .getUploadStatus(Utils.getSetting(this, Const.LRZ_ID, ""));
+            if (uploadStatus != null) {
+                new AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
+            }
 
             return member;
         } catch (IOException | NoPrivateKey e) {

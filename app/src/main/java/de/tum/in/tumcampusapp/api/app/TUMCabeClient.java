@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.api.app;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -220,8 +221,14 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public Observable<TUMCabeStatus> verifyKey(){
-        return service.verifyKey();
+    @Nullable
+    public TUMCabeStatus verifyKey() {
+        try {
+            return service.verifyKey().execute().body();
+        } catch (IOException e) {
+            Utils.log(e);
+            return null;
+        }
     }
 
     public void deviceUploadGcmToken(DeviceUploadFcmToken verification, Callback<TUMCabeStatus> cb) {
@@ -229,8 +236,14 @@ public final class TUMCabeClient {
                .enqueue(cb);
     }
 
-    public Observable<UploadStatus> getUploadStatus(String lrzId){
-        return service.getUploadStatus(lrzId);
+    @Nullable
+    public UploadStatus getUploadStatus(String lrzId) {
+        try {
+            return service.getUploadStatus(lrzId).execute().body();
+        } catch (IOException e) {
+            Utils.log(e);
+            return null;
+        }
     }
 
     public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) {

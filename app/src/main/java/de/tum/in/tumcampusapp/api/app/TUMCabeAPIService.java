@@ -136,13 +136,13 @@ public interface TUMCabeAPIService {
     Call<TUMCabeStatus> deviceRegister(@Body DeviceRegister verification);
 
     @GET(API_DEVICE + "verifyKey/")
-    Observable<TUMCabeStatus> verifyKey();
+    Call<TUMCabeStatus> verifyKey();
 
     @POST(API_DEVICE + "addGcmToken/")
     Call<TUMCabeStatus> deviceUploadGcmToken(@Body DeviceUploadFcmToken verification);
 
     @GET(API_DEVICE + "uploaded/{lrzId}")
-    Observable<UploadStatus> getUploadStatus(@Path("lrzId")String lrzId);
+    Call<UploadStatus> getUploadStatus(@Path("lrzId") String lrzId);
 
     //WifiHeatmap
     @POST(API_WIFI_HEATMAP + "create_measurements/")

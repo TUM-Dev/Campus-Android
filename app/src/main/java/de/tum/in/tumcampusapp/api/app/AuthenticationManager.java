@@ -265,7 +265,7 @@ public class AuthenticationManager {
      */
     public void uploadObfuscatedIds(UploadStatus uploadStatus) {
         String lrzId = Utils.getSetting(mContext, Const.LRZ_ID, "");
-        if(lrzId.isEmpty()){
+        if (lrzId.isEmpty()) {
             Utils.log("Can't upload obfuscated ids: no lrz id");
             return;
         }

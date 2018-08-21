@@ -7,9 +7,7 @@ import android.support.v4.content.LocalBroadcastManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.api.app.model.DeviceUploadFcmToken
-import de.tum.`in`.tumcampusapp.api.app.model.DeviceVerification
-import de.tum.`in`.tumcampusapp.api.app.model.ObfuscatedIdsUpload
+import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
@@ -21,7 +19,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavCheckTokenActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -29,7 +26,6 @@ import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import io.reactivex.disposables.CompositeDisposable
-import retrofit2.Callback
 import java.io.IOException
 
 /**
@@ -43,6 +39,8 @@ class DownloadService : JobIntentService() {
     private lateinit var kinoViewModel: KinoViewModel
     private lateinit var topNewsViewModel: TopNewsViewModel
 
+    private lateinit var tumCabeClient: TUMCabeClient
+    private lateinit var database: TcaDb
     private val disposable = CompositeDisposable()
 
     override fun onCreate() {
@@ -52,19 +50,22 @@ class DownloadService : JobIntentService() {
 
         SyncManager(this) // Starts a new sync in constructor; should be moved to explicit method call
 
+        tumCabeClient = TUMCabeClient.getInstance(this)
+        database = TcaDb.getInstance(this)
+
         val remoteRepository = CafeteriaRemoteRepository
-        remoteRepository.tumCabeClient = TUMCabeClient.getInstance(this)
+        remoteRepository.tumCabeClient = tumCabeClient
 
         val localRepository = CafeteriaLocalRepository
-        localRepository.db = TcaDb.getInstance(this)
+        localRepository.db = database
         cafeteriaViewModel = CafeteriaViewModel(localRepository, remoteRepository, disposable)
 
         // Init sync table
-        KinoLocalRepository.db = TcaDb.getInstance(this)
-        KinoRemoteRepository.tumCabeClient = TUMCabeClient.getInstance(this)
+        KinoLocalRepository.db = database
+        KinoRemoteRepository.tumCabeClient = tumCabeClient
         kinoViewModel = KinoViewModel(KinoLocalRepository, KinoRemoteRepository, disposable)
 
-        TopNewsRemoteRepository.tumCabeClient = TUMCabeClient.getInstance(this)
+        TopNewsRemoteRepository.tumCabeClient = tumCabeClient
         topNewsViewModel = TopNewsViewModel(TopNewsRemoteRepository, disposable)
     }
 
@@ -110,15 +111,12 @@ class DownloadService : JobIntentService() {
     */
     private fun uploadMissingIds() {
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-        val server = TUMCabeClient.getInstance(this)
 
-        val uploadStatus = TUMCabeClient.getInstance(this)
-                .getUploadStatus(lrzId)
-                .blockingSingle()
+        val uploadStatus = tumCabeClient.getUploadStatus(lrzId) ?: return
         Utils.log("upload missing ids: " + uploadStatus.toString())
 
         // upload FCM Token if not uploaded or invalid
-        if (!uploadStatus.fcmToken.equals("uploaded")){
+        if (uploadStatus.fcmToken != UploadStatus.UPLOADED) {
             Utils.log("upload fcm token")
             AuthenticationManager(this).tryToUploadFcmToken()
         }
@@ -128,10 +126,10 @@ class DownloadService : JobIntentService() {
         }
 
         // ask server to verify our key
-        if (uploadStatus.publicKey.equals("uploaded")) { // uploaded but not verified
+        if (uploadStatus.publicKey == UploadStatus.UPLOADED) { // uploaded but not verified
             Utils.log("ask server to verify key")
-            val keyStatus = server.verifyKey().blockingFirst()
-            if (!keyStatus.status.equals("verified")){
+            val keyStatus = tumCabeClient.verifyKey()
+            if (keyStatus?.status != UploadStatus.VERIFIED) {
                 return // we can only upload obfuscated ids if we are verified
             }
         }
@@ -164,9 +162,7 @@ class DownloadService : JobIntentService() {
      */
     @Throws(IOException::class)
     private fun importLocationsDefaults() {
-        val dao = TcaDb
-                .getInstance(this)
-                .locationDao()
+        val dao = database.locationDao()
 
         if (dao.isEmpty) {
             Utils.readCsv(assets.open(CSV_LOCATIONS))

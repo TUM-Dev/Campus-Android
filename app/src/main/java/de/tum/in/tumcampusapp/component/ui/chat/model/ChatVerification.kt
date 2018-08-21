@@ -13,6 +13,8 @@ data class ChatVerification(var signature: String = "",
                             var member: Int = 0,
                             var data: Any? = null) {
     companion object {
+
+        @JvmStatic
         @Throws(NoPrivateKey::class)
         fun getChatVerification(c: Context, member: ChatMember): ChatVerification {
             //Create some data
@@ -32,5 +34,6 @@ data class ChatVerification(var signature: String = "",
                     data = null
             )
         }
+
     }
 }
