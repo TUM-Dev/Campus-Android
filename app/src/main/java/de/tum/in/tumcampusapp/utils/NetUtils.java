@@ -10,8 +10,6 @@ import com.google.common.base.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.app.Helper;
@@ -87,7 +85,6 @@ public class NetUtils {
         Response res = client.newCall(builder.build())
                              .execute();
         return Optional.fromNullable(res.body());
-
     }
 
     /**
@@ -119,7 +116,6 @@ public class NetUtils {
             Utils.log(e);
             return Optional.absent();
         }
-
     }
 
     /**

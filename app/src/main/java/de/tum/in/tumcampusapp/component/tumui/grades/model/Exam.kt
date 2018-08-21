@@ -7,7 +7,10 @@ import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateConverter
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
+import de.tum.`in`.tumcampusapp.utils.tryOrNull
 import org.joda.time.DateTime
+import java.text.NumberFormat
+import java.util.*
 
 /**
  * Exam passed by the user.
@@ -46,6 +49,15 @@ data class Exam(
                 .thenBy { it.course }
                 .compare(this, other)
     }
+
+    private val gradeValue: Double?
+        get() = tryOrNull { NumberFormat.getInstance(Locale.GERMAN).parse(grade).toDouble() }
+
+    val isPassed: Boolean
+        get() {
+            val value = gradeValue ?: 5.0
+            return value <= 4.0
+        }
 
     fun getGradeColor(context: Context): Int {
         // While using getOrDefault() compiles, it results in a NoSuchMethodError on devices with
