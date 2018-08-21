@@ -13,4 +13,4 @@ data class ObfuscatedIdsUpload(
         @SerializedName("student_id") var studentId: String = "",
         @SerializedName("employee_id") var employeeId: String = "",
         @SerializedName("external_id") var externalId: String = "",
-        var verification: DeviceVerification)
+        var verification: TUMCabeVerification)

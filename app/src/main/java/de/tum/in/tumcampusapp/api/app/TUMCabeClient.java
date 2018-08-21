@@ -17,6 +17,7 @@ import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
@@ -35,7 +36,6 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
@@ -111,13 +111,13 @@ public final class TUMCabeClient {
         return instance;
     }
 
-    public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
+    public void createRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
         verification.setData(chatRoom);
         service.createRoom(verification)
                .enqueue(cb);
     }
 
-    public ChatRoom createRoom(ChatRoom chatRoom, ChatVerification verification) throws IOException {
+    public ChatRoom createRoom(ChatRoom chatRoom, TUMCabeVerification verification) throws IOException {
         verification.setData(chatRoom);
         return service.createRoom(verification)
                       .execute()
@@ -142,19 +142,19 @@ public final class TUMCabeClient {
                       .body();
     }
 
-    public StudyCard addStudyCard(StudyCard card, ChatVerification verification) throws IOException {
+    public StudyCard addStudyCard(StudyCard card, TUMCabeVerification verification) throws IOException {
         verification.setData(card);
         return service.addStudyCard(verification)
                       .execute()
                       .body();
     }
 
-    public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
+    public void leaveChatRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
         service.leaveChatRoom(chatRoom.getId(), verification)
                .enqueue(cb);
     }
 
-    public void addUserToChat(ChatRoom chatRoom, ChatMember member, ChatVerification verification, Callback<ChatRoom> cb) {
+    public void addUserToChat(ChatRoom chatRoom, ChatMember member, TUMCabeVerification verification, Callback<ChatRoom> cb) {
         service.addUserToChat(chatRoom.getId(), member.getId(), verification)
                .enqueue(cb);
     }
@@ -168,15 +168,15 @@ public final class TUMCabeClient {
         return service.updateMessage(roomId, chatMessage.getId(), chatMessage);
     }
 
-    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body ChatVerification verification) {
+    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body TUMCabeVerification verification) {
         return service.getMessages(roomId, messageId, verification);
     }
 
-    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body ChatVerification verification) {
+    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body TUMCabeVerification verification) {
         return service.getNewMessages(roomId, verification);
     }
 
-    public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) throws IOException {
+    public List<ChatRoom> getMemberRooms(int memberId, TUMCabeVerification verification) throws IOException {
         return service.getMemberRooms(memberId, verification)
                       .execute()
                       .body();

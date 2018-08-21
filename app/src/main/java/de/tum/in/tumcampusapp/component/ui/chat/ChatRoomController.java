@@ -13,6 +13,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
@@ -21,7 +22,6 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
@@ -94,10 +94,12 @@ public class ChatRoomController implements ProvidesCard {
         Utils.log("reset join status of all rooms");
 
         /* TODO(jacqueline8711): load the last messages when joining the chat (here or somewhere else?)
-        ChatVerification verification;
+        TUMCabeVerification verification;
         try {
             ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
-            verification = ChatVerification.Companion.getChatVerification(context, currentChatMember);
+            if (currentChatMember != null) {
+                verification = TUMCabeVerification.create(context, currentChatMember);
+            }
         } catch (NoPrivateKey noPrivateKey) {
             return; //In this case we simply cannot do anything
         }
@@ -169,8 +171,7 @@ public class ChatRoomController implements ProvidesCard {
                     // Join chat room
                     try {
                         ChatRoom currentChatRoom = new ChatRoom(roomId);
-                        ChatVerification verification =
-                                ChatVerification.Companion.getChatVerification(mContext, currentChatMember);
+                        TUMCabeVerification verification = TUMCabeVerification.create(mContext, currentChatMember);
 
                         currentChatRoom = client.createRoom(currentChatRoom, verification);
                         if (currentChatRoom != null) {

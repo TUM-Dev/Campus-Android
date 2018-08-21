@@ -20,10 +20,10 @@ import java.util.UUID;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
-import de.tum.in.tumcampusapp.api.app.model.DeviceVerification;
 import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
@@ -274,7 +274,8 @@ public class AuthenticationManager {
         try {
             upload = new ObfuscatedIdsUpload(
                     "", "", "",
-                    DeviceVerification.Companion.getDeviceVerification(mContext));
+                    TUMCabeVerification.create(mContext, null)
+            );
         } catch (NoPrivateKey noPrivateKey) {
             Utils.log(noPrivateKey, "Can't upload obfuscated ids: no private key");
             return;

@@ -18,12 +18,12 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -127,7 +127,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // Try to restore already joined chat rooms from server
         try {
             List<ChatRoom> rooms = tumCabeClient.getMemberRooms(
-                    member.getId(), ChatVerification.getChatVerification(this, member)
+                    member.getId(), TUMCabeVerification.create(this, member)
             );
             new ChatRoomController(this).replaceIntoRooms(rooms);
 
