@@ -13,10 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
+import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -72,6 +76,12 @@ public class TuitionFeesCard extends NotificationAwareCard {
     @Override
     public Intent getIntent() {
         return new Intent(getContext(), TuitionFeesActivity.class);
+    }
+
+    @Nullable
+    @Override
+    public NavigationDestination getNavigationDestination() {
+        return new SystemActivity(TuitionFeesActivity.class, null);
     }
 
     @Override

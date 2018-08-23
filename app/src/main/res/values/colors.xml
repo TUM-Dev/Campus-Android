@@ -27,6 +27,10 @@
     <color name="placeholder">#E2E2E2</color>
     <color name="list_divider">#EEEEEE</color>
 
+    <color name="navigation_drawer_item_background">#EDEDED</color>
+    <color name="navigation_drawer_icon_tint">#757575</color>
+    <color name="navigation_drawer_item_text">#222222</color>
+
     <color name="study_room_free">#C8E6C9</color>
     <color name="study_room_occupied">#FFCDD2</color>
 

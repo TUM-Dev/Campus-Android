@@ -164,4 +164,6 @@ object Const {
     const val KEY_CARD_HOLDER = "cardholder"
     const val KEY_TICKET_PRICE = "ticketPrice"
     const val KEY_TICKET_HISTORY = "ticketHistory"
+
+    const val SHOW_DRAWER = "showDrawer"
 }

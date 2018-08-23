@@ -7,17 +7,21 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
+import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
@@ -69,6 +73,15 @@ public class MVVCard extends NotificationAwareCard {
         i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationResult.getStation());
         i.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, mStationResult.getId());
         return i;
+    }
+
+    @Nullable
+    @Override
+    public NavigationDestination getNavigationDestination() {
+        Bundle bundle = new Bundle();
+        bundle.putString(TransportationDetailsActivity.EXTRA_STATION_ID, mStationResult.getId());
+        bundle.putString(TransportationDetailsActivity.EXTRA_STATION_ID, mStationResult.getStation());
+        return new SystemActivity(TransportationDetailsActivity.class, bundle);
     }
 
     @Override

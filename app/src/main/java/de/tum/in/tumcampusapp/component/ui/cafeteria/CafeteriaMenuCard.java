@@ -7,18 +7,22 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
+import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
@@ -80,6 +84,14 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         Intent i = new Intent(getContext(), CafeteriaActivity.class);
         i.putExtra(Const.CAFETERIA_ID, mCafeteria.getId());
         return i;
+    }
+
+    @Nullable
+    @Override
+    public NavigationDestination getNavigationDestination() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(Const.CAFETERIA_ID, mCafeteria.getId());
+        return new SystemActivity(CafeteriaActivity.class, bundle);
     }
 
     @Override

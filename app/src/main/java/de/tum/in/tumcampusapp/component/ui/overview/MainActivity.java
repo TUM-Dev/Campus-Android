@@ -5,19 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import java.util.List;
@@ -37,11 +34,6 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
 public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
-
-    /**
-     * Navigation Drawer
-     */
-    private ActionBarDrawerToggle mDrawerToggle;
 
     private boolean mIsConnectivityChangeReceiverRegistered;
 
@@ -109,39 +101,10 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         downloadNewsAlert();
 
-        // Set the list's click listener
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
-
-            /**
-             * Called when a drawer has settled in a completely closed state.
-             */
-            @Override
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                MainActivity.this.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /**
-             * Called when a drawer has settled in a completely open state.
-             */
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                MainActivity.this.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
-        // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
-
         mViewModel = ViewModelProviders
                 .of(this)
                 .get(MainActivityViewModel.class);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         mViewModel.getCards().observe(this, cards -> {
             if (cards != null) {
                 onNewCardsAvailable(cards);
@@ -162,9 +125,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        this.getMenuInflater()
-            .inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -191,43 +152,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             refreshCards();
             Utils.setSetting(this, Const.REFRESH_CARDS, false);
         }
-    }
-
-    /**
-     * Sync the toggle state after onRestoreInstanceState has occurred.
-     *
-     * @param savedInstanceState Saved instance state bundle
-     */
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    /**
-     * Let the drawer toggle handle configuration changes
-     *
-     * @param newConfig The new configuration
-     */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    /**
-     * Handle expansion of navigation drawer
-     *
-     * @param item Clicked menu item
-     * @return True if handled
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     /**

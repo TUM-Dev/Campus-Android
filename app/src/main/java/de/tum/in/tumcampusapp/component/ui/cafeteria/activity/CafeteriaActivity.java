@@ -133,7 +133,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
             @Override
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar, parent, false);
+                View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar_two_line, parent, false);
                 Cafeteria c = getItem(position);
 
                 TextView name = v.findViewById(android.R.id.text1); // Set name

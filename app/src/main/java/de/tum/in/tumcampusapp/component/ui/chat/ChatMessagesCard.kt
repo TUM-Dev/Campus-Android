@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import com.google.common.collect.Lists
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
+import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
@@ -58,9 +60,9 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
     private fun setChatRoom(roomName: String, roomId: Int, roomIdString: String) {
         mRoomName = listOf("[A-Z, 0-9(LV\\.Nr)=]+$", "\\([A-Z]+[0-9]+\\)", "\\[[A-Z]+[0-9]+\\]")
                 .map { it.toRegex() }
-                .fold(roomName, { name, regex ->
+                .fold(roomName) { name, regex ->
                     name.replace(regex, "")
-                })
+                }
                 .trim()
         chatMessageDao.deleteOldEntries()
         nrUnread = chatMessageDao.getNumberUnread(roomId)
@@ -76,6 +78,14 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
         putExtras(Bundle())
     }
 
+    override fun getNavigationDestination(): NavigationDestination? {
+        val bundle = Bundle().apply {
+            val chatRoom = ChatRoom(mRoomIdString).apply { id = mRoomId }
+            val value = Gson().toJson(chatRoom)
+            putString(Const.CURRENT_CHAT_ROOM, value)
+        }
+        return SystemActivity(ChatActivity::class.java, bundle)
+    }
 
     override fun getId() = mRoomId
 

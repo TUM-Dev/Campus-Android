@@ -679,5 +679,7 @@ Signature: %5$s</string>
     <string name="remaining_tickets">Remaining tickets</string>
     <string name="thanks_for_your_purchase">Thanks for your purchase</string>
     <string name="the_ticket_has_been_saved_for_you_in_the_app">The ticket has been saved for you in the app.</string>
+    <string name="home">Home</string>
+    <string name="about">About</string>
 
 </resources>

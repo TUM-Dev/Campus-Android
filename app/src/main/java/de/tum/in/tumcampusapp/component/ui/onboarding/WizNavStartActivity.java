@@ -58,7 +58,9 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
 
         lrzIdEditText = findViewById(R.id.lrz_id);
         lrzIdEditText.addTextChangedListener(this);
-        lrzIdEditText.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
+
+        String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
+        lrzIdEditText.setText(lrzId);
     }
 
     @Override

@@ -121,7 +121,7 @@
         <activity
             android:name=".component.ui.overview.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
+            android:label="@string/home"
             android:launchMode="singleTop" />
         <activity
             android:name=".component.ui.news.NewsActivity"

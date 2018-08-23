@@ -9,9 +9,8 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.RemoteViews
 import android.widget.TextView
-import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -26,7 +25,8 @@ abstract class Card(
         val cardType: Int,
         protected var context: Context,
         val settingsPrefix: String = "",
-        showNotificationDefault: Boolean = false) : Comparable<Card> {
+        showNotificationDefault: Boolean = false
+) : Comparable<Card> {
 
     // UI Elements
     protected var mCard: View? = null
@@ -58,6 +58,10 @@ abstract class Card(
      * @return Should return the intent that should be launched if the card or the notification gets clicked, null if nothing should happen
      */
     open fun getIntent(): Intent? {
+        return null
+    }
+
+    open fun getNavigationDestination(): NavigationDestination? {
         return null
     }
 

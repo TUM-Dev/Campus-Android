@@ -8,8 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -21,6 +19,8 @@ import org.joda.time.DateTime;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
+import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
@@ -119,6 +119,20 @@ public class NewsCard extends NotificationAwareCard {
 
         // Opens url in browser
         return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public NavigationDestination getNavigationDestination() {
+        String url = mNews.getLink();
+        if (url.isEmpty()) {
+            Utils.showToast(getContext(), R.string.no_link_existing);
+            return null;
+        }
+
+        // Open url in browser
+        Intent data = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        return new SystemIntent(data);
     }
 
     @Override

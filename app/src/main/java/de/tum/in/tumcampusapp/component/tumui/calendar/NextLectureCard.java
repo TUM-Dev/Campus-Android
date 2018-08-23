@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
@@ -110,6 +109,13 @@ public class NextLectureCard extends NotificationAwareCard {
         } else {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(v -> {
+                /*
+                Bundle bundle = new Bundle();
+                bundle.putString(SearchManager.QUERY, item.locationForSearch);
+                NavigationDestination destination =
+                        new SystemActivity(RoomFinderActivity.class, bundle);
+                NavigationManager.INSTANCE.open(getContext(), destination);
+                */
                 Intent i = new Intent(getContext(), RoomFinderActivity.class);
                 i.putExtra(SearchManager.QUERY, item.locationForSearch);
                 getContext().startActivity(i);
@@ -128,7 +134,7 @@ public class NextLectureCard extends NotificationAwareCard {
     }
 
     @Override
-    protected void discard(Editor editor) {
+    protected void discard(SharedPreferences.Editor editor) {
         CalendarItem item = lectures.get(lectures.size() - 1);
         editor.putLong(NEXT_LECTURE_DATE, item.start.getMillis());
     }

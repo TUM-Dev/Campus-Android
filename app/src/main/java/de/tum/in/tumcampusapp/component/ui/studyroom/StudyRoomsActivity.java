@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -68,15 +67,16 @@ public class StudyRoomsActivity extends ProgressActivity
 
     private Spinner getStudyRoomGroupsSpinner() {
         // Adapter for drop-down navigation
-        SpinnerAdapter adapterCafeterias =
+        ArrayAdapter adapterCafeterias =
                 new ArrayAdapter<StudyRoomGroup>(this, R.layout.simple_spinner_item_actionbar,
                                                  android.R.id.text1, mStudyRoomGroupList) {
                     final LayoutInflater inflater = LayoutInflater.from(getContext());
 
                     @Override
                     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                        View v = inflater.inflate(R.layout.simple_spinner_item_actionbar,
+                        View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar,
                                 parent, false);
+
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
                         TextView nameTextView = v.findViewById(android.R.id.text1);
@@ -89,6 +89,8 @@ public class StudyRoomsActivity extends ProgressActivity
                         return v;
                     }
                 };
+
+        adapterCafeterias.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_actionbar);
 
         Spinner spinner = findViewById(R.id.spinnerToolbar);
         spinner.setAdapter(adapterCafeterias);
