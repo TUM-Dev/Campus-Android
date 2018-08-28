@@ -36,12 +36,6 @@ public class CardsDetailActivity extends ActivityForLoadingInBackground<Void, St
     }
 
     @Override
-    public void setUpLayout() {
-        //ActivityCardsDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_cards_detail);
-        //binding.setCard(card);
-    }
-
-    @Override
     public void setUpToolbar() {
         super.setUpToolbar();
         if (getSupportActionBar() != null) {

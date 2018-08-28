@@ -35,20 +35,6 @@ public class CardsActivity extends ActivityForLoadingInBackground<Void, List<Stu
     }
 
     @Override
-    public void setUpLayout() {
-        /*binding = DataBindingUtil.setContentView(this, R.layout.activity_cards);
-        binding.setState(this.state);
-        binding.cardList.setOnItemClickListener(this);
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(binding.fab.getContext(), CardsQuizActivity.class);
-                startActivity(intent);
-            }
-        });*/
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         startLoading();

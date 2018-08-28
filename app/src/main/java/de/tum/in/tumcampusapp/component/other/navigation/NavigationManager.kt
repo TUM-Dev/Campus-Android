@@ -51,16 +51,11 @@ object NavigationManager {
     // TODO: Documentation
 
     fun open(current: Activity, menuItem: MenuItem) {
-        /*
-        val intent = menuItem.intent.apply {
-            putExtra(Const.SHOW_DRAWER, true)
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        }
-        */
         current.startActivity(menuItem.intent)
 
         if (menuItem.intent.getBooleanExtra(Const.SHOW_DRAWER, false)) {
-            current.overridePendingTransition(R.anim.fadein, R.anim.fadeout)
+            //current.overridePendingTransition(R.anim.fadein, R.anim.fadeout)
+            current.overridePendingTransition(0, 0)
         }
     }
 

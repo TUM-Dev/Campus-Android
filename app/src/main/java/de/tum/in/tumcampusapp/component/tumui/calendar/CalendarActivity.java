@@ -99,9 +99,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
         // The week view adds a horizontal bar below the Toolbar. When refreshing, the refresh
         // spinner covers it. Therefore, we adjust the spinner's end position.
-        int startOffset = swipeRefreshLayout.getProgressViewStartOffset();
-        int endOffset = swipeRefreshLayout.getProgressViewEndOffset();
-        swipeRefreshLayout.setProgressViewOffset(false, startOffset, endOffset);
+        int startOffset = getSwipeRefreshLayout().getProgressViewStartOffset();
+        int endOffset = getSwipeRefreshLayout().getProgressViewEndOffset();
+        getSwipeRefreshLayout().setProgressViewOffset(false, startOffset, endOffset);
 
         // Get time to show e.g. a lectures starting time or 0 for now
         Intent i = getIntent();

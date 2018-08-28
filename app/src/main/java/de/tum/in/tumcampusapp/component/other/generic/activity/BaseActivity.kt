@@ -27,30 +27,45 @@ import java.util.*
  */
 abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
 
+    private val toolbar: Toolbar by lazy { findViewById<Toolbar>(R.id.main_toolbar) }
+
+    private val drawerLayout: DrawerLayout? by lazy {
+        findViewById<DrawerLayout>(R.id.drawer_layout)
+    }
+
+    private val drawerList: NavigationView? by lazy {
+        findViewById<NavigationView>(R.id.left_drawer)
+    }
+
     private var drawerToggle: ActionBarDrawerToggle? = null
-    protected var drawerLayout: DrawerLayout? = null
-    protected var drawerList: NavigationView? = null
+
+    private val shouldShowDrawer: Boolean
+        get() {
+            val askedToShowDrawer = intent.getBooleanExtra(Const.SHOW_DRAWER, false)
+            return drawerLayout != null && (askedToShowDrawer || this is MainActivity)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(layoutId)
 
-        setUpLayout()
         setUpToolbar()
         setUpDrawer()
     }
 
-    open fun setUpLayout() {
-        setContentView(layoutId)
-    }
+    open fun setUpToolbar() {
+        setSupportActionBar(toolbar)
 
-    fun openDrawer() {
-        drawerLayout?.openDrawer(Gravity.START)
+        supportActionBar?.let {
+            val parent = NavUtils.getParentActivityName(this)
+            if (parent != null || this is MainActivity) {
+                it.setDisplayHomeAsUpEnabled(true)
+                it.setHomeButtonEnabled(true)
+            }
+        }
     }
 
     private fun setUpDrawer() {
-        drawerLayout = findViewById(R.id.drawer_layout)
-        drawerList = findViewById(R.id.left_drawer)
-
         drawerToggle = object : ActionBarDrawerToggle(
                 this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerClosed(drawerView: View) {
@@ -64,38 +79,50 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
             }
         }
 
-        val showDrawer = shouldShowDrawer()
-
         supportActionBar?.let {
-            val mode = if (showDrawer) {
+            val mode = if (shouldShowDrawer) {
                 DrawerLayout.LOCK_MODE_UNLOCKED
             } else {
                 DrawerLayout.LOCK_MODE_LOCKED_CLOSED
             }
 
             drawerLayout?.setDrawerLockMode(mode)
-            drawerToggle?.isDrawerIndicatorEnabled = showDrawer
+            drawerToggle?.isDrawerIndicatorEnabled = shouldShowDrawer
         }
 
-        if (showDrawer) {
-            val headerView = drawerList?.inflateHeaderView(R.layout.drawer_header)
+        if (!shouldShowDrawer) {
+            return
+        }
+
+        drawerList?.let {
+            val headerView = it.inflateHeaderView(R.layout.drawer_header)
             headerView?.let { setupDrawerHeader(it) }
 
-            drawerList?.let {
-                val helper = DrawerMenuHelper(this)
-                helper.populateMenu(it)
+            val helper = DrawerMenuHelper(this)
+            helper.populateMenu(it)
 
-                it.setNavigationItemSelectedListener { item ->
-                    drawerLayout?.closeDrawer(Gravity.START)
-                    NavigationManager.open(this, item)
-                    true
-                }
-            }
+            it.setNavigationItemSelectedListener { item ->
+                drawerLayout?.addDrawerListener(object : DrawerLayout.DrawerListener {
+                    override fun onDrawerStateChanged(newState: Int) = Unit
 
-            drawerToggle?.let {
-                it.syncState()
-                drawerLayout?.addDrawerListener(it)
+                    override fun onDrawerSlide(drawerView: View, slideOffset: Float) = Unit
+
+                    override fun onDrawerOpened(drawerView: View) = Unit
+
+                    override fun onDrawerClosed(drawerView: View) {
+                        NavigationManager.open(this@BaseActivity, item)
+                    }
+                })
+
+                drawerLayout?.closeDrawer(Gravity.START)
+                //NavigationManager.open(this, item)
+                true
             }
+        }
+
+        drawerToggle?.let {
+            it.syncState()
+            drawerLayout?.addDrawerListener(it)
         }
     }
 
@@ -128,22 +155,13 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
         }
     }
 
-    open fun setUpToolbar() {
-        val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
-        setSupportActionBar(toolbar)
-
-        supportActionBar?.let {
-            val parent = NavUtils.getParentActivityName(this)
-            if (parent != null || this is MainActivity) {
-                it.setDisplayHomeAsUpEnabled(true)
-                it.setHomeButtonEnabled(true)
-            }
-        }
+    fun openDrawer() {
+        drawerLayout?.openDrawer(Gravity.START)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val handled = drawerToggle?.onOptionsItemSelected(item) ?: false
-        if (shouldShowDrawer() && handled) {
+        if (shouldShowDrawer && handled) {
             return true
         }
 
@@ -157,21 +175,16 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        if (shouldShowDrawer()) {
+        if (shouldShowDrawer) {
             drawerToggle?.syncState()
         }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (shouldShowDrawer()) {
+        if (shouldShowDrawer) {
             drawerToggle?.onConfigurationChanged(newConfig)
         }
-    }
-
-    private fun shouldShowDrawer(): Boolean {
-        val askedToShowDrawer = intent.getBooleanExtra(Const.SHOW_DRAWER, false)
-        return drawerLayout != null && (askedToShowDrawer || this is MainActivity)
     }
 
     private fun fetchProfilePicture(headerView: View) {
@@ -196,4 +209,5 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
 }

@@ -258,10 +258,12 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         showListButton?.visibility = if (showChart) View.VISIBLE else View.GONE
         showChartButton?.visibility = if (showChart) View.GONE else View.VISIBLE
 
+        val refreshLayout = swipeRefreshLayout ?: return
+
         if (chartsContainer.visibility == View.GONE) {
-            crossFadeViews(swipeRefreshLayout, chartsContainer)
+            crossFadeViews(refreshLayout, chartsContainer)
         } else {
-            crossFadeViews(chartsContainer, swipeRefreshLayout)
+            crossFadeViews(chartsContainer, refreshLayout)
         }
     }
 

@@ -3,9 +3,12 @@ package de.tum.`in`.tumcampusapp.utils
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.AppCompatButton
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.RequestCreator
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.SideNavigationItem
@@ -55,4 +58,31 @@ fun Menu.add(context: Context, item: SideNavigationItem, options: Bundle = Bundl
                 setIcon(item.iconRes)
                 intent = Intent(context, item.activity).apply { putExtras(options) }
             }
+}
+
+fun TextView.setTextOrHide(resId: Int?) {
+    resId?.let {
+        text = context.getString(it)
+        return
+    }
+
+    visibility = View.GONE
+}
+
+fun AppCompatButton.setTextOrHide(resId: Int?) {
+    resId?.let {
+        text = context.getString(it)
+        return
+    }
+
+    visibility = View.GONE
+}
+
+fun ImageView.setImageResourceOrHide(resId: Int?) {
+    resId?.let {
+        setImageResource(it)
+        return
+    }
+
+    visibility = View.GONE
 }
