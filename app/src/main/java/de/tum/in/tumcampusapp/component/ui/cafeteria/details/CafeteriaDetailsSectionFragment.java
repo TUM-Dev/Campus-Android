@@ -52,13 +52,19 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                                 boolean isBigLayout, List<CafeteriaMenu> cafeteriaMenus) {
         final Context context = rootView.getContext();
 
-        TextView textview;
         if (!isBigLayout) {
             // Show opening hours
             OpenHoursHelper lm = new OpenHoursHelper(context);
+
+            TextView textview;
             textview = new TextView(context, null, R.style.CardBody);
             textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, date));
             textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
+
+            int bottomPadding = context.getResources()
+                    .getDimensionPixelOffset(R.dimen.material_default_padding);
+            textview.setPadding(0, 0, 0, bottomPadding);
+
             rootView.addView(textview);
         }
 

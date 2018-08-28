@@ -55,7 +55,7 @@ class CafeteriaMenuInflater(
 
         val menuView = inflater.inflate(R.layout.card_price_line, rootView, false)
 
-        if (isBigLayout) {
+        if (!isBigLayout) {
             menu.name = prepare(menu.name)
         }
 
