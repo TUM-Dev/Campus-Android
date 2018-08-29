@@ -9,11 +9,9 @@ sealed class ErrorViewState(
         val buttonTextResId: Int = R.string.retry
 )
 
-class CustomViewState(messageResId: Int) : ErrorViewState(messageResId = messageResId)
-
-class NoMoviesViewState : ErrorViewState(
-        iconResId = R.drawable.no_movies,
-        messageResId = R.string.no_internet_connection
+class EmptyViewState(iconResId: Int? = null, messageResId: Int) : ErrorViewState(
+        iconResId = iconResId,
+        messageResId = messageResId
 )
 
 class NoInternetViewState : ErrorViewState(
@@ -21,14 +19,10 @@ class NoInternetViewState : ErrorViewState(
         messageResId = R.string.no_internet_connection
 )
 
-class NoTokenViewState : ErrorViewState(
-        headerResId = R.string.error_no_access_token_setup_header,
-        messageResId = R.string.error_no_access_token_setup_body,
-        buttonTextResId = R.string.open_settings
-)
-
 class FailedTokenViewState(messageResId: Int) : ErrorViewState(
         headerResId = R.string.error_accessing_tumonline_header,
         messageResId = messageResId
 )
+
+class UnknownErrorViewState(messageResId: Int) : ErrorViewState(messageResId = messageResId)
 

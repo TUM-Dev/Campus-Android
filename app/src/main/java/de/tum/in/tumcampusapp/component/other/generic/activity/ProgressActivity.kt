@@ -15,7 +15,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.*
-import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
@@ -87,7 +86,7 @@ abstract class ProgressActivity(
      */
     protected fun showError(messageResId: Int) {
         runOnUiThread {
-            showError(CustomViewState(messageResId))
+            showError(UnknownErrorViewState(messageResId))
         }
     }
 
@@ -97,18 +96,6 @@ abstract class ProgressActivity(
         }
     }
 
-    /**
-     * Shows failed layout
-     */
-    protected fun showNoTokenLayout() {
-        runOnUiThread {
-            showError(NoTokenViewState())
-        }
-    }
-
-    /**
-     * Shows failed layout
-     */
     protected fun showNoInternetLayout() {
         runOnUiThread {
             showError(NoInternetViewState())
@@ -117,6 +104,12 @@ abstract class ProgressActivity(
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(connectivityChangeReceiver, filter)
         registered = true
+    }
+
+    protected fun showEmptyResponseLayout(messageResId: Int, iconResId: Int? = null) {
+        runOnUiThread {
+            showError(EmptyViewState(iconResId, messageResId))
+        }
     }
 
     protected fun showErrorLayout() {
@@ -131,14 +124,9 @@ abstract class ProgressActivity(
         errorIconImageView.setImageResourceOrHide(viewState.iconResId)
         errorHeaderTextView.setTextOrHide(viewState.headerResId)
         errorMessageTextView.setTextOrHide(viewState.messageResId)
-        errorButton.setTextOrHide(viewState.buttonTextResId)
 
-        errorButton.setOnClickListener {
-            when (viewState) {
-                is NoTokenViewState -> openSettings()
-                else -> retryRequest()
-            }
-        }
+        errorButton.setTextOrHide(viewState.buttonTextResId)
+        errorButton.setOnClickListener { retryRequest() }
 
         errorLayout.visibility = View.VISIBLE
     }
@@ -160,13 +148,6 @@ abstract class ProgressActivity(
 
         errorLayout.visibility = View.GONE
         progressLayout.visibility = View.VISIBLE
-
-        /*
-        noInternetLayout.visibility = View.GONE
-        noTokenLayout.visibility = View.GONE
-        progressLayout.visibility = View.VISIBLE
-        allErrorsLayout.visibility = View.VISIBLE
-        */
     }
 
     /**
@@ -177,14 +158,6 @@ abstract class ProgressActivity(
         progressLayout.visibility = View.GONE
         errorLayout.visibility = View.GONE
         swipeRefreshLayout?.isRefreshing = false
-
-        /*
-        failedTokenLayout.visibility = View.GONE
-        noInternetLayout.visibility = View.GONE
-        noTokenLayout.visibility = View.GONE
-
-        allErrorsLayout.visibility = View.GONE
-        */
     }
 
     /**
@@ -208,11 +181,6 @@ abstract class ProgressActivity(
      */
     override fun onRefresh() {
         // Free ad space
-    }
-
-    private fun openSettings() {
-        val intent = Intent(this, UserPreferencesActivity::class.java)
-        startActivity(intent)
     }
 
     private fun retryRequest() {
