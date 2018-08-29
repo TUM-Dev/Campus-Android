@@ -65,8 +65,8 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
                 }
 
                 if (action.equals(Const.ERROR)) {
-                    String message = intent.getStringExtra(Const.MESSAGE);
-                    showError(message);
+                    int messageResId = intent.getIntExtra(Const.MESSAGE, 0);
+                    showError(messageResId);
                 }
             }
         }

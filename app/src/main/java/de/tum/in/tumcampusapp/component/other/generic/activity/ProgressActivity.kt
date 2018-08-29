@@ -100,7 +100,7 @@ abstract class ProgressActivity(
     /**
      * Shows failed layout
      */
-    protected open fun showNoTokenLayout() {
+    protected fun showNoTokenLayout() {
         runOnUiThread {
             showError(NoTokenViewState())
         }
@@ -109,7 +109,7 @@ abstract class ProgressActivity(
     /**
      * Shows failed layout
      */
-    protected open fun showNoInternetLayout() {
+    protected fun showNoInternetLayout() {
         runOnUiThread {
             showError(NoInternetViewState())
         }
@@ -117,15 +117,6 @@ abstract class ProgressActivity(
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(connectivityChangeReceiver, filter)
         registered = true
-    }
-
-    // TODO
-    protected fun showError(message: String) {
-        runOnUiThread {
-            showLoadingEnded()
-            errorMessageTextView.text = message
-            errorLayout.visibility = View.VISIBLE
-        }
     }
 
     protected fun showErrorLayout() {

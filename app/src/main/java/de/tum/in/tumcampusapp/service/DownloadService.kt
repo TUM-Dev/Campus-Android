@@ -73,14 +73,14 @@ class DownloadService : JobIntentService() {
         sendServiceBroadcast(Const.COMPLETED, null)
     }
 
-    private fun broadcastDownloadError(message: String) {
-        sendServiceBroadcast(Const.ERROR, message)
+    private fun broadcastDownloadError(messageResId: Int) {
+        sendServiceBroadcast(Const.ERROR, messageResId)
     }
 
-    private fun sendServiceBroadcast(action: String, message: String?) {
+    private fun sendServiceBroadcast(action: String, messageResId: Int?) {
         val intent = Intent(BROADCAST_NAME).apply {
             putExtra(Const.ACTION_EXTRA, action)
-            putExtra(Const.MESSAGE, message)
+            putExtra(Const.MESSAGE, messageResId)
         }
         broadcastManager.sendBroadcast(intent)
     }
@@ -227,7 +227,7 @@ class DownloadService : JobIntentService() {
             if (success) {
                 service.broadcastDownloadSuccess()
             } else {
-                service.broadcastDownloadError(service.getString(R.string.exception_unknown))
+                service.broadcastDownloadError(R.string.exception_unknown)
             }
 
             // Do all other import stuff that is not relevant for creating the viewing the start page
