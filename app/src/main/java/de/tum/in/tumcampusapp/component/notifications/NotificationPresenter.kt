@@ -11,9 +11,6 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.NotificationStore
  */
 object NotificationPresenter {
 
-    // TODO: Do we need global IDs for these too?
-    // No, they will be replaced with new notification
-
     fun show(context: Context, notification: InstantNotification) {
         val persistentStore = NotificationStore.getInstance(context)
         val globalId = persistentStore.save(notification)

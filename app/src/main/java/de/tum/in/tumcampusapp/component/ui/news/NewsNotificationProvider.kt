@@ -12,8 +12,10 @@ import de.tum.`in`.tumcampusapp.component.notifications.persistence.Notification
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.utils.Const
 
-class NewsNotificationProvider(context: Context,
-                               private val newsItems: List<News>) : NotificationProvider(context) {
+class NewsNotificationProvider(
+        context: Context,
+        private val newsItems: List<News>
+) : NotificationProvider(context) {
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
@@ -25,7 +27,7 @@ class NewsNotificationProvider(context: Context,
 
     override fun buildNotification(): AppNotification? {
         val summaryTitle = context.getString(R.string.news)
-        val summaryText = "${newsItems.size} new items" // TODO
+        val summaryText = context.getString(R.string.new_items_format_string, newsItems.size)
 
         val inboxStyle = NotificationCompat.InboxStyle()
         newsItems.forEach { inboxStyle.addLine(it.title) }

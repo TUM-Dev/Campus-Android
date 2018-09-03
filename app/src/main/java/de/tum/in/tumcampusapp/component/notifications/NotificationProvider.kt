@@ -29,12 +29,11 @@ abstract class NotificationProvider(protected val context: Context) {
     protected abstract fun getNotificationBuilder(): NotificationCompat.Builder
 
     /**
-     * Returns the list of [AppNotification]s that this provider wants to display.
+     * Returns an [AppNotification] that this provider wants to display, or null if no notification
+     * should be displayed.
      *
-     * @return List of [AppNotification]s
+     * @return An [AppNotification] or null
      */
-    //abstract fun getNotification(): AppNotification?
-
     abstract fun buildNotification(): AppNotification?
 
 }

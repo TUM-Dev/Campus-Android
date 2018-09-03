@@ -13,11 +13,7 @@ import org.jetbrains.anko.doAsync
 
 class NotificationAlarmReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        if (context == null || intent == null) {
-            return
-        }
-
+    override fun onReceive(context: Context, intent: Intent) {
         val typeId = intent.getLongExtra(Const.KEY_NOTIFICATION_TYPE_ID, 0)
         val type = NotificationType.fromId(typeId)
 
@@ -29,9 +25,10 @@ class NotificationAlarmReceiver : BroadcastReceiver() {
         }
 
         doAsync {
-            val notification = notificationProvider.buildNotification() ?: return@doAsync
-            val scheduler = NotificationScheduler(context)
-            scheduler.schedule(notification)
+            val notification = notificationProvider.buildNotification()
+            notification?.let {
+                NotificationScheduler(context).schedule(it)
+            }
         }
     }
 
