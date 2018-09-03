@@ -9,6 +9,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Events
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import okhttp3.Cache
+import org.jetbrains.anko.doAsync
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,13 +36,19 @@ class CacheManager(private val context: Context) {
                     override fun onResponse(call: Call<Events>, response: Response<Events>) {
                         val events = response.body() ?: return
                         CalendarController(context).importCalendar(events)
-                        CalendarController.QueryLocationsService.loadGeo(context)
+                        loadRoomLocations()
                     }
 
                     override fun onFailure(call: Call<Events>, t: Throwable) {
                         Utils.log(t, "Error while loading calendar in CacheManager")
                     }
                 })
+    }
+
+    private fun loadRoomLocations() {
+        doAsync {
+            CalendarController.QueryLocationsService.loadGeo(context)
+        }
     }
 
     private fun syncPersonalLectures() {
