@@ -115,7 +115,7 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
-    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
     // Helpers
     implementation 'com.google.code.gson:gson:2.8.5'
