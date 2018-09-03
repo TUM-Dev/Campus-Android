@@ -9,12 +9,16 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import org.joda.time.DateTime
 
 class CafeteriaNotificationProvider(context: Context) : NotificationProvider(context) {
+
+    private val cafeteriaMenuManager = CafeteriaMenuManager(context)
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
@@ -36,12 +40,21 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
         val menus = cafeteria.menus.filter { it.menuType != MenuType.SIDE_DISH }
         val intent = cafeteria.getIntent(context)
 
-        // TODO: Test InboxStyle
         val inboxStyle = NotificationCompat.InboxStyle()
         menus.forEach { inboxStyle.addLine(it.notificationTitle) }
 
         val title = context.getString(R.string.cafeteria)
-        val text = DateTimeUtils.getDateString(cafeteria.nextMenuDate)
+
+        val favoriteDishes = cafeteriaMenuManager.getFavoriteDishesServed(cafeteriaId, DateTime.now())
+
+        // If any of the user's favorite dishes are served, we include them in the notification
+        // text. Otherwise, we simply put the day's date.
+        val text = if (favoriteDishes.isNotEmpty()) {
+            val dishes = favoriteDishes.joinToString(", ") { it.name }
+            context.getString(R.string.including_format_string, dishes)
+        } else {
+            DateTimeUtils.getDateString(cafeteria.nextMenuDate)
+        }
 
         val pendingIntent = PendingIntent.getActivity(
                 context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
