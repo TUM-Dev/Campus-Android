@@ -212,24 +212,4 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
         return Utils.getSettingBool(context, "card_news_phone", false);
     }
 
-    /*
-    @NotNull
-    @Override
-    public List<AppNotification> getNotifications() {
-        NotificationsProvider provider = new NewsNotificationsProvider(context, getNews());
-        return provider.getNotifications();
-    }
-    */
-
-    /*
-    private List<News> getNews() {
-        Collection<Integer> sources = getActiveSources(context);
-        if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
-            return newsDao.getBySourcesLatest(sources.toArray(new Integer[sources.size()]));
-        } else {
-            return newsDao.getBySources(sources.toArray(new Integer[sources.size()]));
-        }
-    }
-    */
-
 }

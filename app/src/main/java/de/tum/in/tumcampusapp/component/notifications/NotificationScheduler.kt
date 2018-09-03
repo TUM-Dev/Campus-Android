@@ -110,13 +110,12 @@ class NotificationScheduler(private val context: Context) {
      */
     fun scheduleAlarm(type: NotificationType, time: DateTime) {
         val alarmIntent = getAlarmIntent(type)
-
-        // If the same alarm has already been scheduled, we cancel it. If it has not been canceled,
-        // these calls have no effect.
-        alarmIntent.cancel()
-        context.alarmManager.cancel(alarmIntent)
-
         val alarmManager = context.alarmManager
+
+        // If the same alarm has already been scheduled, we cancel it.
+        alarmIntent.cancel()
+        alarmManager.cancel(alarmIntent)
+
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time.millis, alarmIntent)
     }
 

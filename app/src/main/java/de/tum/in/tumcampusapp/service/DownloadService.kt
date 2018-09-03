@@ -193,21 +193,6 @@ class DownloadService : JobIntentService() {
                 }
             }
 
-            // TODO: Remove
-            /*
-            // Get all notifications of enabled notification providers
-            val notificationProviders = AppNotificationsManager.getEnabledProviders(service)
-            val notifications = notificationProviders.flatMap { it.getNotifications() }
-
-            // Show instant notifications immediately
-            val instantNotifications = notifications.mapNotNull { it as? InstantNotification }
-            NotificationPresenter.show(service, instantNotifications)
-
-            // Schedule future notifications
-            val futureNotifications = notifications.mapNotNull { it as? FutureNotification }
-            NotificationScheduler.schedule(service, futureNotifications)
-            */
-
             // Update the last run time saved in shared prefs
             if (action == Const.DOWNLOAD_ALL_FROM_EXTERNAL) {
                 try {
