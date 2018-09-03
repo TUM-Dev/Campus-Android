@@ -2,15 +2,12 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import de.tum.in.tumcampusapp.api.cafeteria.CafeteriaAPIClient;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
@@ -110,37 +107,16 @@ public class CafeteriaMenuManager {
     }
 
     /**
-     * This method returns all the mensas serving favorite dishes at a given day and their unique
-     * dishes
+     * Returns all the favorite dishes that a particular mensa serves on the specified date.
      *
-     * @param date DateTime with ISO-Date (yyyy-mm-dd)
+     * @param mensaId The Cafeteria for which to return the favorite dishes served
+     * @param date The date for which to return the favorite dishes served
      * @return the favourite dishes at the given date
      */
-    public ArrayMap<Integer, HashSet<CafeteriaMenu>> getFavoritesServedAtDate(DateTime date) {
-        ArrayMap<Integer, HashSet<CafeteriaMenu>> results = new ArrayMap<>();
+    public List<CafeteriaMenu> getFavoriteDishesServed(int mensaId, DateTime date) {
+        List<CafeteriaMenu> results = new ArrayList<>();
         String dateString = DateTimeUtils.INSTANCE.getDateString(date);
-        List<CafeteriaMenu> upcomingServings = favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString);
 
-        for (CafeteriaMenu upcomingServing : upcomingServings) {
-            int mensaId = upcomingServing.getCafeteriaId();
-            HashSet<CafeteriaMenu> servedAtCafeteria;
-
-            if (results.containsKey(mensaId)) {
-                servedAtCafeteria = results.get(mensaId);
-            } else {
-                servedAtCafeteria = new HashSet<>();
-                results.put(mensaId, servedAtCafeteria);
-            }
-
-            servedAtCafeteria.add(upcomingServing);
-        }
-
-        return results;
-    }
-
-    public Set<CafeteriaMenu> getFavoriteDishesServed(int mensaId, DateTime date) {
-        Set<CafeteriaMenu> results = new HashSet<>();
-        String dateString = DateTimeUtils.INSTANCE.getDateString(date);
         List<CafeteriaMenu> upcomingServings = favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString);
 
         for (CafeteriaMenu upcomingServing : upcomingServings) {
