@@ -1,11 +1,14 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.activity
 
 import android.content.Intent
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import kotlinx.android.synthetic.main.activity_payment_confirmation.*
+import java.util.*
+import kotlin.concurrent.schedule
 
 class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confirmation) {
 
@@ -30,6 +33,15 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
             }
             startActivity(intent)
             finish()
+        }
+
+        runCheckmarkAnimation()
+    }
+
+    private fun runCheckmarkAnimation() {
+        Timer().schedule(200) {
+            val animatedCheckmark = imageView.drawable as? Animatable
+            animatedCheckmark?.start()
         }
     }
 

@@ -48,7 +48,7 @@ public class StripePaymentActivity extends BaseActivity {
     private AppCompatButton purchaseButton;
 
     private PaymentSession paymentSession;
-    private Boolean didSelectPaymentMethod;
+    private boolean didSelectPaymentMethod;
 
     private int ticketHistory; // Ticket ID, since the ticket was reserved in the prior activity and
                                // we need the ID to init the purchase
@@ -159,6 +159,8 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
     private void handleTicketPurchaseSuccess(@NonNull Ticket ticket) {
+        showLoading(false);
+
         List<Ticket> tickets = new ArrayList<>();
         tickets.add(ticket);
 

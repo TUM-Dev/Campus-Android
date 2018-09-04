@@ -20,13 +20,12 @@
             android:id="@+id/imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/ic_check_circle_black_24dp"
-            android:tint="@color/sections_green"
             app:layout_constraintBottom_toTopOf="@+id/headerTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="packed"
+            app:srcCompat="@drawable/animated_checkmark" />
 
         <TextView
             android:id="@+id/headerTextView"

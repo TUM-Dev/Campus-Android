@@ -18,152 +18,158 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <ScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:text="@string/enter_card_info_description"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/text_dark_secondary" />
+
+                <EditText
+                    android:id="@+id/cardholder_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusableInTouchMode="true"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/material_default_padding"
-                    android:paddingBottom="@dimen/material_default_padding">
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:autofillHints="name"
+                    android:hint="@string/cardholder"
+                    android:inputType="textPersonName|textCapWords"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@drawable/cursor_text_field_colorful"
+                    tools:targetApi="o" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:background="@color/placeholder" />
+
+                <ViewSwitcher
+                    android:id="@+id/select_payment_method_switcher"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:listPreferredItemHeight"
+                    android:background="?android:selectableItemBackground">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_dark_secondary"
-                        android:layout_marginStart="@dimen/material_default_padding"
-                        android:layout_marginEnd="@dimen/material_default_padding"
-                        android:text="@string/enter_card_info_description"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <EditText
-                        android:id="@+id/cardholder_edit_text"
+                        android:id="@+id/select_payment_method_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/material_default_padding"
-                        android:layout_marginTop="@dimen/material_default_padding"
                         android:layout_marginEnd="@dimen/material_default_padding"
-                        android:hint="@string/cardholder"
-                        android:inputType="textPersonName|textCapWords"
-                        android:singleLine="true"
-                        android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+                        android:gravity="start"
+                        android:text="@string/select_payment_method"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/color_primary" />
 
-                    <View
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/selected_payment_method_container"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/divider_height"
-                        android:layout_marginTop="@dimen/material_default_padding"
-                        android:background="@color/placeholder" />
+                        android:layout_height="wrap_content">
 
-                    <ViewSwitcher
-                        android:id="@+id/select_payment_method_switcher"
-                        android:layout_width="match_parent"
-                        android:layout_height="?android:listPreferredItemHeight"
-                        android:background="?android:selectableItemBackground">
-
-                        <TextView
-                            android:id="@+id/select_payment_method_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                        <ImageView
+                            android:id="@+id/credit_card_icon"
+                            android:layout_width="@dimen/icon_default"
+                            android:layout_height="@dimen/icon_default"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/material_default_padding"
+                            android:layout_marginTop="@dimen/material_default_padding"
                             android:layout_marginEnd="@dimen/material_default_padding"
-                            android:gravity="start"
-                            android:text="@string/select_payment_method"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/color_primary" />
+                            android:layout_marginBottom="@dimen/material_default_padding"
+                            android:alpha="0.54"
+                            android:src="@drawable/ic_credit_card_black_24dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/selected_payment_method_text_view"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <LinearLayout
-                            android:id="@+id/selected_payment_method_container"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/selected_payment_method_text_view"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/material_default_padding"
+                            android:layout_marginEnd="@dimen/material_default_padding"
+                            android:fontFamily="sans-serif-medium"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/text_dark_secondary"
+                            app:layout_constraintBottom_toTopOf="@id/selected_payment_method_brand_text_view"
+                            app:layout_constraintEnd_toStartOf="@id/change_payment_method_button"
+                            app:layout_constraintStart_toEndOf="@id/credit_card_icon"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="**** **** **** 1234" />
+
+                        <TextView
+                            android:id="@+id/selected_payment_method_brand_text_view"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/material_default_padding"
+                            android:layout_marginBottom="@dimen/material_default_padding"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/text_dark_secondary"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/change_payment_method_button"
+                            app:layout_constraintStart_toStartOf="@id/selected_payment_method_text_view"
+                            app:layout_constraintTop_toBottomOf="@id/selected_payment_method_text_view"
+                            tools:text="Visa" />
+
+                        <ImageView
+                            android:id="@+id/change_payment_method_button"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="@dimen/material_default_padding"
-                            android:paddingEnd="@dimen/material_default_padding">
+                            android:layout_marginEnd="@dimen/material_default_padding"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_action_edit"
+                            android:tint="@color/sections_gray"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                            <ImageView
-                                android:layout_width="@dimen/icon_default"
-                                android:layout_height="@dimen/icon_default"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginEnd="@dimen/material_default_padding"
-                                android:alpha="0.54"
-                                android:src="@drawable/ic_credit_card_black_24dp" />
+                    </android.support.constraint.ConstraintLayout>
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                </ViewSwitcher>
 
-                                <TextView
-                                    android:id="@+id/selected_payment_method_text_view"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/text_dark_secondary"
-                                    android:fontFamily="sans-serif-medium"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                    tools:text="**** **** **** 1234" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:background="@color/placeholder" />
 
-                                <TextView
-                                    android:id="@+id/selected_payment_method_brand_text_view"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/text_dark_secondary"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                                    tools:text="Visa" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-                            </LinearLayout>
-
-                            <ImageView
-                                android:id="@+id/change_payment_method_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:scaleType="centerInside"
-                                android:src="@drawable/ic_action_edit"
-                                android:tint="@color/sections_gray" />
-
-                        </LinearLayout>
-
-                    </ViewSwitcher>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/divider_height"
-                        android:background="@color/placeholder" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:padding="@dimen/material_default_padding">
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/complete_purchase_button"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/material_large_padding"
                         android:alpha="0.5"
                         android:enabled="false"
                         android:text="@string/complete_purchase"
                         android:textColor="@android:color/white"
                         app:backgroundTint="@color/color_primary" />
 
-                </LinearLayout>
+                </FrameLayout>
 
-            </ScrollView>
+            </LinearLayout>
 
-            <FrameLayout
-                android:id="@+id/loading_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/semitransparent_dark_background">
-
-                <ProgressBar
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center"
-                    android:indeterminate="true" />
-
-            </FrameLayout>
+            <include layout="@layout/loading_overlay" />
 
         </FrameLayout>
 
