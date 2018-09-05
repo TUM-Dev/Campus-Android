@@ -14,7 +14,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 public interface TicketDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<Ticket> ticket);
+    void insert(Ticket... ticket);
 
     @Query("SELECT * FROM tickets")
     LiveData<List<Ticket>> getAll();

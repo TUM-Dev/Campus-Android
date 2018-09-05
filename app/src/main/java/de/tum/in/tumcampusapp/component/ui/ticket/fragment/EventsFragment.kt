@@ -46,7 +46,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val ticketsCallback = object : Callback<List<Ticket>> {
         override fun onResponse(call: Call<List<Ticket>>, response: Response<List<Ticket>>) {
             val tickets = response.body() ?: return
-            eventsController.insert(tickets)
+            eventsController.insert(*tickets.toTypedArray())
             eventsRefreshLayout.isRefreshing = false
         }
 

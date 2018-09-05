@@ -56,6 +56,7 @@ import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -378,6 +379,12 @@ public final class TUMCabeClient {
         ChatVerification chatVerification = ChatVerification.Companion.
                 createChatVerification(context, null);
         service.getTickets(chatVerification).enqueue(cb);
+    }
+
+    public Call<Ticket> fetchTicket(Context context, int ticketID) throws IOException {
+        ChatVerification chatVerification = ChatVerification.Companion.
+                createChatVerification(context, null);
+        return service.getTicket(ticketID, chatVerification);
     }
 
     public void fetchTicketTypes(int eventID, Callback<List<TicketType>> cb) {

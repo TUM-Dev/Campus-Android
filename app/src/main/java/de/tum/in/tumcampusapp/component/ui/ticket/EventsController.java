@@ -76,7 +76,7 @@ public class EventsController implements ProvidesCard {
                 if (tickets == null) {
                     return;
                 }
-                insert(tickets);
+                insert(tickets.toArray(new Ticket[0]));
                 loadTicketTypesForTickets(tickets);
             }
 
@@ -191,7 +191,7 @@ public class EventsController implements ProvidesCard {
         return ticketTypeDao.getById(id);
     }
 
-    public void insert(List<Ticket> tickets) {
+    public void insert(Ticket... tickets) {
         ticketDao.insert(tickets);
     }
 

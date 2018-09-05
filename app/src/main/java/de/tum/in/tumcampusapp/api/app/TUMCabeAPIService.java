@@ -237,6 +237,9 @@ public interface TUMCabeAPIService {
     @POST(API_EVENTS + API_TICKET + "my")
     Call<List<Ticket>> getTickets(@Body ChatVerification chatVerification);
 
+    @POST(API_EVENTS + API_TICKET + "{ticketID}")
+    Call<Ticket> getTicket(@Path("ticketID") int ticketID, @Body ChatVerification chatVerification);
+
     @GET(API_EVENTS + API_TICKET + "type/{eventID}")
     Call<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
 
