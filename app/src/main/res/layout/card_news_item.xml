@@ -34,7 +34,7 @@
 
             <TextView
                 android:id="@+id/news_src_date"
-                style="@style/CardBody"
+                style="@style/CardDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_default_padding"
@@ -42,7 +42,7 @@
 
             <TextView
                 android:id="@+id/news_src_title"
-                style="@style/CardBody"
+                style="@style/CardSource"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
