@@ -86,7 +86,7 @@ class FcmIdentificationService(val context: Context? = null) : FirebaseInstanceI
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-    private fun sendTokenToBackend(token: String?) {
+     fun sendTokenToBackend(token: String?) {
         //Check if all parameters are present
         if (token == null || token.isEmpty()) {
             Utils.logv("Parameter missing for sending reg id")

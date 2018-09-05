@@ -19,10 +19,10 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.Helper;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -198,10 +198,10 @@ public class AddChatMemberActivity extends BaseActivity {
     }
 
     private void joinRoom(ChatMember member) {
-        ChatVerification verification;
+        TUMCabeVerification verification;
         try {
             ChatMember currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-            verification = ChatVerification.Companion.getChatVerification(this, currentChatMember);
+            verification = TUMCabeVerification.create(this, currentChatMember);
         } catch (NoPrivateKey noPrivateKey) {
             Utils.showToast(getBaseContext(), R.string.error);
             return;
