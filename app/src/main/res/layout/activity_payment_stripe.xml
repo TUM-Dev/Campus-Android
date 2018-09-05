@@ -21,6 +21,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipChildren="false"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical">
 
@@ -147,23 +148,16 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <FrameLayout
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/complete_purchase_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clipChildren="false"
-                    android:padding="@dimen/material_default_padding">
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/complete_purchase_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.5"
-                        android:enabled="false"
-                        android:text="@string/complete_purchase"
-                        android:textColor="@android:color/white"
-                        app:backgroundTint="@color/color_primary" />
-
-                </FrameLayout>
+                    android:layout_margin="@dimen/material_default_padding"
+                    android:alpha="0.5"
+                    android:enabled="false"
+                    android:text="@string/complete_purchase"
+                    android:textColor="@android:color/white"
+                    app:backgroundTint="@color/color_primary" />
 
             </LinearLayout>
 
