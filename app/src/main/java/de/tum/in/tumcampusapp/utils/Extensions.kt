@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.utils
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.AppCompatButton
 import android.view.Menu
 import android.view.MenuItem
@@ -85,4 +86,20 @@ fun ImageView.setImageResourceOrHide(resId: Int?) {
     }
 
     visibility = View.GONE
+}
+
+fun DrawerLayout.closeDrawers(callback: () -> Unit) {
+    addDrawerListener(object : DrawerLayout.DrawerListener {
+        override fun onDrawerStateChanged(newState: Int) = Unit
+
+        override fun onDrawerSlide(drawerView: View, slideOffset: Float) = Unit
+
+        override fun onDrawerClosed(drawerView: View) {
+            callback()
+            removeDrawerListener(this)
+        }
+
+        override fun onDrawerOpened(drawerView: View) = Unit
+    })
+    closeDrawers()
 }

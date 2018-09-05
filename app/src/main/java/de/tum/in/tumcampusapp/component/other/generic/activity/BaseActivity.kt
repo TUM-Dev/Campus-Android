@@ -20,6 +20,7 @@ import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.closeDrawers
 import java.util.*
 
 /**
@@ -102,19 +103,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
             helper.populateMenu(it)
 
             it.setNavigationItemSelectedListener { item ->
-                drawerLayout?.addDrawerListener(object : DrawerLayout.DrawerListener {
-                    override fun onDrawerStateChanged(newState: Int) = Unit
-
-                    override fun onDrawerSlide(drawerView: View, slideOffset: Float) = Unit
-
-                    override fun onDrawerOpened(drawerView: View) = Unit
-
-                    override fun onDrawerClosed(drawerView: View) {
-                        NavigationManager.open(this@BaseActivity, item)
-                    }
-                })
-
-                drawerLayout?.closeDrawer(Gravity.START)
+                drawerLayout?.closeDrawers { NavigationManager.open(this, item) }
                 true
             }
         }

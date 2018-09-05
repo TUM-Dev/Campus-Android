@@ -55,7 +55,6 @@ object NavigationManager {
 
         if (menuItem.intent.getBooleanExtra(Const.SHOW_DRAWER, false)) {
             current.overridePendingTransition(R.anim.fadein, R.anim.fadeout)
-            //current.overridePendingTransition(0, 0)
         }
     }
 
