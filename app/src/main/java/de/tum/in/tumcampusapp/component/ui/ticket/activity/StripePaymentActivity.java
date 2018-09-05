@@ -168,7 +168,7 @@ public class StripePaymentActivity extends BaseActivity {
         tickets.add(ticket);
 
         EventsController controller = new EventsController(this);
-        controller.replaceTickets(tickets);
+        controller.insert(tickets);
 
         openPaymentConfirmation(ticket);
     }

@@ -48,7 +48,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         override fun onResponse(call: Call<List<Ticket>>, response: Response<List<Ticket>>) {
             val tickets = response.body() ?: return
 
-            eventsController.replaceTickets(tickets)
+            eventsController.insert(tickets)
             if (eventType === EventType.BOOKED) {
                 val bookedEvents = eventsController.bookedEvents
                 showEvents(bookedEvents)
