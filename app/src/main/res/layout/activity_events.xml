@@ -15,8 +15,8 @@
         <!-- The toolbar aka SupportActionBar -->
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            app:elevation="@dimen/material_default_elevation"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/material_default_elevation">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/main_toolbar"
@@ -24,7 +24,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/color_primary"
                 android:theme="@style/TumToolbar"
-                app:popupTheme="@style/TumToolbarPopUp"/>
+                app:popupTheme="@style/TumToolbarPopUp" />
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/event_tab"
