@@ -71,12 +71,12 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
                 this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
-                this@BaseActivity.invalidateOptionsMenu()
+                //this@BaseActivity.invalidateOptionsMenu()
             }
 
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
-                this@BaseActivity.invalidateOptionsMenu()
+                //this@BaseActivity.invalidateOptionsMenu()
             }
         }
 
