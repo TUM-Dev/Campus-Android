@@ -2,14 +2,17 @@ package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.transition.TransitionManager;
 import android.view.View;
+import android.view.autofill.AutofillManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -234,10 +237,27 @@ public class StripePaymentActivity extends BaseActivity {
                 finish();
             } else {
                 initPaymentSession();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    requestAutofillIfEmptyCardholder();
+                }
+
                 loadingLayout.setVisibility(View.GONE);
                 TransitionManager.beginDelayedTransition(loadingLayout);
             }
         }, this));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void requestAutofillIfEmptyCardholder() {
+        if (cardholderEditText.getText().toString().isEmpty()) {
+            cardholderEditText.setAutofillHints(View.AUTOFILL_HINT_NAME);
+
+            AutofillManager autofillManager = getSystemService(AutofillManager.class);
+            if (autofillManager != null && autofillManager.isEnabled()) {
+                autofillManager.requestAutofill(cardholderEditText);
+            }
+        }
     }
 
     private void initPaymentSession() {

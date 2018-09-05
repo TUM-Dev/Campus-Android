@@ -41,12 +41,10 @@
                     android:layout_marginStart="@dimen/material_default_padding"
                     android:layout_marginTop="@dimen/material_default_padding"
                     android:layout_marginEnd="@dimen/material_default_padding"
-                    android:autofillHints="name"
                     android:hint="@string/cardholder"
                     android:inputType="textPersonName|textCapWords"
                     android:singleLine="true"
-                    android:textCursorDrawable="@drawable/cursor_text_field_colorful"
-                    tools:targetApi="o" />
+                    android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
                 <View
                     android:layout_width="match_parent"
