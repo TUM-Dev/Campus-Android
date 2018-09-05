@@ -1,8 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.fragment
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +12,7 @@ import android.view.ViewGroup
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
@@ -75,6 +78,8 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         with(view) {
             eventsRecyclerView.setHasFixedSize(true)
             eventsRecyclerView.layoutManager = LinearLayoutManager(context)
+            eventsRecyclerView.itemAnimator = DefaultItemAnimator()
+            eventsRecyclerView.adapter = EventsAdapter(context)
 
             val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
             eventsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
@@ -90,26 +95,38 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        eventType = arguments?.getSerializable(KEY_EVENT_TYPE) as EventType
         eventsController = EventsController(context)
 
+        val factory = EventsViewModel.Factory(requireActivity().application, eventType)
+        val viewModel = ViewModelProviders.of(this, factory).get(EventsViewModel::class.java)
+
+        viewModel.events.observe(this) { showEvents(it) }
+
+        /*
         arguments?.let { args ->
             eventType = args.getSerializable(KEY_EVENT_TYPE) as EventType
             val events = loadEventsFromDatabase(eventType)
             showEvents(events)
         }
+        */
     }
 
+    /*
     override fun onStart() {
         super.onStart()
         eventsRecyclerView.adapter?.notifyDataSetChanged()
     }
+    */
 
+    /*
     private fun loadEventsFromDatabase(type: EventType): List<Event> {
         return when (type) {
             EventType.ALL -> eventsController.events
             EventType.BOOKED -> eventsController.bookedEvents
         }
     }
+    */
 
     private fun showEvents(events: List<Event>) {
         val isEmpty = events.isEmpty()
@@ -117,9 +134,8 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         placeholderTextView.visibility = if (isEmpty) View.VISIBLE else View.GONE
 
         if (events.isNotEmpty()) {
-            val adapter = EventsAdapter(context, events.sorted())
-            eventsRecyclerView.adapter = adapter
-            adapter.notifyDataSetChanged() // TODO: DiffUtils
+            val adapter = eventsRecyclerView.adapter as EventsAdapter
+            adapter.update(events)
         } else {
             placeholderTextView.setText(eventType.placeholderResId)
         }
