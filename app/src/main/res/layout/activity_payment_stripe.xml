@@ -155,9 +155,11 @@
                     android:layout_margin="@dimen/material_default_padding"
                     android:alpha="0.5"
                     android:enabled="false"
-                    android:text="@string/complete_purchase"
+                    android:padding="@dimen/two_line_button_padding"
                     android:textColor="@android:color/white"
-                    app:backgroundTint="@color/color_primary" />
+                    android:textSize="16sp"
+                    app:backgroundTint="@color/color_primary"
+                    tools:text="@string/buy_ticket" />
 
             </LinearLayout>
 
