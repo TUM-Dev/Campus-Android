@@ -96,7 +96,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
 
         drawerList?.let {
             val headerView = it.inflateHeaderView(R.layout.drawer_header)
-            headerView?.let { setupDrawerHeader(it) }
+            headerView?.let { view -> setupDrawerHeader(view) }
 
             val helper = DrawerMenuHelper(this)
             helper.populateMenu(it)
@@ -115,7 +115,6 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
                 })
 
                 drawerLayout?.closeDrawer(Gravity.START)
-                //NavigationManager.open(this, item)
                 true
             }
         }

@@ -54,8 +54,8 @@ object NavigationManager {
         current.startActivity(menuItem.intent)
 
         if (menuItem.intent.getBooleanExtra(Const.SHOW_DRAWER, false)) {
-            //current.overridePendingTransition(R.anim.fadein, R.anim.fadeout)
-            current.overridePendingTransition(0, 0)
+            current.overridePendingTransition(R.anim.fadein, R.anim.fadeout)
+            //current.overridePendingTransition(0, 0)
         }
     }
 
@@ -94,7 +94,9 @@ object NavigationManager {
         }
 
         val isNavigationItem = current::class.java in topLevelActivities
-        if (isNavigationItem) {
+        val showDrawer = current.intent.extras.getBoolean(Const.SHOW_DRAWER)
+
+        if (isNavigationItem && showDrawer) {
             openNavigationDrawer(current)
             return
         }
@@ -119,6 +121,7 @@ object NavigationManager {
     fun onBackPressed(current: Activity): Boolean {
         val isTopLevel = current::class.java in topLevelActivities
         val parentName = current.parentActivityIntent.component.className
+
         if (isTopLevel && parentName == MainActivity::class.java.name) {
             val intent = Intent(current, MainActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
