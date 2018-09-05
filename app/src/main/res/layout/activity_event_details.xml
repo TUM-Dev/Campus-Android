@@ -21,12 +21,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@color/default_window_background"
-                android:transitionName="@string/transition_card" />
+                android:transitionName="@string/transition_card"
+                android:layout_weight="1" />
 
         </LinearLayout>
 

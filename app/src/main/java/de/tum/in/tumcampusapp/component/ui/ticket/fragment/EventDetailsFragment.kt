@@ -48,8 +48,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         eventsController = EventsController(context)
 
         arguments?.let { args ->
-            val eventId = args.getInt(KEY_EVENT_ID)
-            event = eventsController.getEventById(eventId)
+            event = args.getParcelable(Const.KEY_EVENT)
         }
     }
 
@@ -105,7 +104,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         context?.let {
             dateTextView.text = event.getFormattedStartDateTime(it)
-            dateContainer.setOnClickListener { displayAddToCalendarDialog() }
+            dateContainer.setOnClickListener { _ -> displayAddToCalendarDialog() }
         }
 
         locationTextView.text = event.locality
@@ -243,10 +242,11 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
 
-        fun newInstance(eventId: Int): Fragment {
+        @JvmStatic
+        fun newInstance(event: Event): EventDetailsFragment {
             return EventDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(Const.KEY_EVENT_ID, eventId)
+                    putParcelable(Const.KEY_EVENT, event)
                 }
             }
         }

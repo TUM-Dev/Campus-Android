@@ -1,5 +1,8 @@
 package de.tum.`in`.tumcampusapp.utils
 
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.widget.ImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.RequestCreator
@@ -25,6 +28,14 @@ fun RequestCreator.into(target: ImageView, completion: () -> Unit) {
 
         override fun onError(e: java.lang.Exception?) {
             completion()
+        }
+    })
+}
+
+fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, callback: (T) -> Unit) {
+    observe(owner, Observer<T> { value ->
+        value?.let {
+            callback(it)
         }
     })
 }

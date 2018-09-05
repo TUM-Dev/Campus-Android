@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -141,34 +143,38 @@ public class EventsController implements ProvidesCard {
         eventDao.setDismissed(id);
     }
 
-    public List<Event> getEvents() {
+    public LiveData<List<Event>> getEvents() {
         return eventDao.getAll();
     }
 
     /**
      * @return all events for which a ticket exists
      */
-    public List<Event> getBookedEvents() {
-        List<Ticket> tickets = ticketDao.getAll();
-        List<Event> bookedEvents = new ArrayList<>();
-        for (Ticket ticket : tickets) {
-            Event event = getEventById(ticket.getEventId());
-            // the event may be null if the corresponding event of a ticket has already been deleted
-            // these event should not be returned
-            if (event != null){
-                bookedEvents.add(event);
+    public MediatorLiveData<List<Event>> getBookedEvents() {
+        LiveData<List<Ticket>> tickets = ticketDao.getAll();
+        MediatorLiveData<List<Event>> events = new MediatorLiveData<>();
+
+        events.addSource(tickets, newTickets -> {
+            List<Event> bookedEvents = new ArrayList<>();
+
+            for (Ticket ticket : newTickets) {
+                Event event = getEventById(ticket.getEventId());
+                // the event may be null if the corresponding event of a ticket has already been deleted
+                // these event should not be returned
+                if (event != null) {
+                    bookedEvents.add(event);
+                }
             }
-        }
-        return bookedEvents;
+
+            events.setValue(bookedEvents);
+        });
+
+        return events;
     }
 
     public boolean isEventBooked(Event event) {
-        for (Event bookedEvent : getBookedEvents()) {
-            if (bookedEvent.getId() == event.getId()) {
-                return true;
-            }
-        }
-        return false;
+        Ticket ticket = ticketDao.getByEventId(event.getId());
+        return ticket != null;
     }
 
     public Event getEventById(int id) {

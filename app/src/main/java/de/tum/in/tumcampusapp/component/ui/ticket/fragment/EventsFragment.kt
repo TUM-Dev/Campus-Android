@@ -18,6 +18,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.observeNonNull
 import kotlinx.android.synthetic.main.fragment_events.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,12 +32,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val eventsCallback = object : Callback<List<Event>> {
         override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
             val events = response.body() ?: return
-
             eventsController.storeEvents(events)
-            if (eventType === EventType.ALL) {
-                showEvents(events)
-            }
-
             eventsRefreshLayout.isRefreshing = false
         }
 
@@ -50,13 +46,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val ticketsCallback = object : Callback<List<Ticket>> {
         override fun onResponse(call: Call<List<Ticket>>, response: Response<List<Ticket>>) {
             val tickets = response.body() ?: return
-
             eventsController.insert(tickets)
-            if (eventType === EventType.BOOKED) {
-                val bookedEvents = eventsController.bookedEvents
-                showEvents(bookedEvents)
-            }
-
             eventsRefreshLayout.isRefreshing = false
         }
 
@@ -101,32 +91,8 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val factory = EventsViewModel.Factory(requireActivity().application, eventType)
         val viewModel = ViewModelProviders.of(this, factory).get(EventsViewModel::class.java)
 
-        viewModel.events.observe(this) { showEvents(it) }
-
-        /*
-        arguments?.let { args ->
-            eventType = args.getSerializable(KEY_EVENT_TYPE) as EventType
-            val events = loadEventsFromDatabase(eventType)
-            showEvents(events)
-        }
-        */
+        viewModel.events.observeNonNull(this) { showEvents(it) }
     }
-
-    /*
-    override fun onStart() {
-        super.onStart()
-        eventsRecyclerView.adapter?.notifyDataSetChanged()
-    }
-    */
-
-    /*
-    private fun loadEventsFromDatabase(type: EventType): List<Event> {
-        return when (type) {
-            EventType.ALL -> eventsController.events
-            EventType.BOOKED -> eventsController.bookedEvents
-        }
-    }
-    */
 
     private fun showEvents(events: List<Event>) {
         val isEmpty = events.isEmpty()
