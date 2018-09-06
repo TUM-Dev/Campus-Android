@@ -86,33 +86,33 @@ class DrawerMenuHelper(private val activity: Activity) {
 
     companion object {
 
-        private val HOME = SideNavigationItem(R.string.home, R.drawable.ic_home, MainActivity::class.java)
+        private val HOME = SideNavigationItem(R.string.home, R.drawable.ic_outline_home_24px, MainActivity::class.java)
         private val LOGIN = SideNavigationItem(R.string.tumonline_login, R.drawable.ic_link, WizNavStartActivity::class.java)
 
         private val MY_TUM = arrayOf(
-                SideNavigationItem(R.string.schedule, R.drawable.ic_calendar, CalendarActivity::class.java, true),
-                SideNavigationItem(R.string.my_lectures, R.drawable.ic_my_lectures, LecturesPersonalActivity::class.java, true),
-                SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, ChatRoomsActivity::class.java, true, true),
-                SideNavigationItem(R.string.my_grades, R.drawable.ic_my_grades, GradesActivity::class.java, true),
+                SideNavigationItem(R.string.schedule, R.drawable.ic_outline_event_24px, CalendarActivity::class.java, true),
+                SideNavigationItem(R.string.my_lectures, R.drawable.ic_outline_school_24px, LecturesPersonalActivity::class.java, true),
+                SideNavigationItem(R.string.chat_rooms, R.drawable.ic_outline_chat_bubble_outline_24px, ChatRoomsActivity::class.java, true, true),
+                SideNavigationItem(R.string.my_grades, R.drawable.ic_outline_insert_chart_outlined_24px, GradesActivity::class.java, true),
                 SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesActivity::class.java, true)
         )
 
         private val COMMON_TUM = arrayOf(
                 SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, CafeteriaActivity::class.java),
-                SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work, StudyRoomsActivity::class.java),
-                SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, RoomFinderActivity::class.java),
-                SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity::class.java),
-                SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonSearchActivity::class.java, true),
+                SideNavigationItem(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsActivity::class.java),
+                SideNavigationItem(R.string.roomfinder, R.drawable.ic_outline_location_on_24px, RoomFinderActivity::class.java),
+                SideNavigationItem(R.string.mvv, R.drawable.ic_outline_train_24px, TransportationActivity::class.java),
+                SideNavigationItem(R.string.person_search, R.drawable.ic_outline_people_outline_24px, PersonSearchActivity::class.java, true),
                 SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity::class.java),
-                SideNavigationItem(R.string.events_tickets, R.drawable.ic_events, EventsActivity::class.java),
-                SideNavigationItem(R.string.barrier_free, R.drawable.ic_accessible, BarrierFreeInfoActivity::class.java),
-                SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity::class.java)
+                SideNavigationItem(R.string.events_tickets, R.drawable.ic_outline_event_seat_24px, EventsActivity::class.java),
+                SideNavigationItem(R.string.barrier_free, R.drawable.ic_outline_accessible_24px, BarrierFreeInfoActivity::class.java),
+                SideNavigationItem(R.string.opening_hours, R.drawable.ic_outline_access_time_24px, OpeningHoursListActivity::class.java)
         )
 
         private val ABOUT = arrayOf(
-                SideNavigationItem(R.string.show_feedback, R.drawable.ic_feedback, FeedbackActivity::class.java),
+                SideNavigationItem(R.string.show_feedback, R.drawable.ic_outline_feedback_24px, FeedbackActivity::class.java),
                 SideNavigationItem(R.string.about_tca, R.drawable.ic_action_info_black, InformationActivity::class.java),
-                SideNavigationItem(R.string.settings, R.drawable.ic_action_settings, UserPreferencesActivity::class.java)
+                SideNavigationItem(R.string.settings, R.drawable.ic_outline_settings_24px, UserPreferencesActivity::class.java)
         )
 
     }

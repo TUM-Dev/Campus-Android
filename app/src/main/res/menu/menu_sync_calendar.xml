@@ -10,7 +10,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_switch_view_mode"
-        android:icon="@drawable/ic_action_week_view"
+        android:icon="@drawable/ic_outline_view_column_24px"
         android:title="@string/view_mode"
         app:iconTint="@color/color_primary"
         app:showAsAction="ifRoom" />

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_settings"
-        android:icon="@drawable/ic_notifications"
+        android:icon="@drawable/ic_outline_notifications_24px"
         android:title="@string/action_ingredients"
         app:iconTint="@color/color_primary"
         app:showAsAction="ifRoom" />
