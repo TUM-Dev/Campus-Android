@@ -48,6 +48,9 @@
     <style name="AppThemeStartup" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimaryDark">@android:color/white</item>
         <item name="android:windowBackground">@android:color/white</item>
+
+        <!-- Light system UI -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="AppThemeFullscreen" parent="Theme.AppCompat.Light.NoActionBar">
