@@ -115,18 +115,22 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
     }
 
     private fun setupDrawerHeader(headerView: View) {
-        val nameText = headerView.findViewById<TextView>(R.id.nameTextView)
-        val emailText = headerView.findViewById<TextView>(R.id.emailTextView)
+        val nameTextView = headerView.findViewById<TextView>(R.id.nameTextView)
+        val emailTextView = headerView.findViewById<TextView>(R.id.emailTextView)
 
-        nameText.text = Utils.getSetting(this,
-                Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.not_connected_to_tumonline))
+        val name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, "")
+        if (name.isNotEmpty()) {
+            nameTextView.text
+        } else {
+            nameTextView.visibility = View.INVISIBLE
+        }
 
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
         val email = if (lrzId.isNotEmpty()) "$lrzId@mytum.de" else ""
         if (email.isNotEmpty()) {
-            emailText.text = email
+            emailTextView.text = email
         } else {
-            emailText.visibility = View.GONE
+            emailTextView.visibility = View.GONE
         }
 
         fetchProfilePicture(headerView)
