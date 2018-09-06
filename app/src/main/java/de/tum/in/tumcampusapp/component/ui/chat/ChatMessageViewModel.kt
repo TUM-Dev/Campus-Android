@@ -6,8 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
+import de.tum.`in`.tumcampusapp.api.app.model.TUMCabeVerification
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
-import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatVerification
 import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -49,7 +49,7 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
     fun removeUnsent(chatMessage: ChatMessage) =
             localRepository.removeUnsent(chatMessage)
 
-    fun getOlderMessages(roomId: Int, messageId: Long, verification: ChatVerification, callback: DataLoadInterface?): Boolean =
+    fun getOlderMessages(roomId: Int, messageId: Long, verification: TUMCabeVerification, callback: DataLoadInterface?): Boolean =
             compositeDisposable.add(
                     remoteRepository
                             .getMessages(roomId, messageId, verification)
@@ -61,7 +61,7 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                             }, { t -> Utils.logwithTag("ChatMessageViewModel", t.message) })
             )
 
-    fun getNewMessages(roomId: Int, verification: ChatVerification, callback: DataLoadInterface?): Boolean =
+    fun getNewMessages(roomId: Int, verification: TUMCabeVerification, callback: DataLoadInterface?): Boolean =
             compositeDisposable.add(
                     remoteRepository.getNewMessages(roomId, verification)
                             .subscribeOn(Schedulers.computation())

@@ -20,13 +20,13 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.GenericNotification;
 import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
@@ -119,15 +119,14 @@ public class ChatNotification extends GenericNotification implements ChatMessage
         ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, new CompositeDisposable());
 
         if (messageId == -1) {
-            chatMessageViewModel.getNewMessages(chatRoom.getId(),
-                                                ChatVerification.Companion.getChatVerification(context, member),
-                                                this);
+            chatMessageViewModel.getNewMessages(
+                    chatRoom.getId(), TUMCabeVerification.create(context, member), this
+            );
         } else {
             // edit
-            chatMessageViewModel.getOlderMessages(chatRoom.getId(),
-                                                  messageId,
-                                                  ChatVerification.Companion.getChatVerification(context, member),
-                                                  null);
+            chatMessageViewModel.getOlderMessages(
+                    chatRoom.getId(), messageId, TUMCabeVerification.create(context, member), null
+            );
         }
     }
 
