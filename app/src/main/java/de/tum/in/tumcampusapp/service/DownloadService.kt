@@ -112,7 +112,7 @@ class DownloadService : JobIntentService() {
      * asks to verify private key, uploads fcm token and obfuscated ids (if missing)
     */
     private fun uploadMissingIds() {
-        val lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
+        val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
 
         val uploadStatus = tumCabeClient.getUploadStatus(lrzId) ?: return
         Utils.log("upload missing ids: " + uploadStatus.toString())
