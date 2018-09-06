@@ -27,7 +27,7 @@
         android:layout_marginEnd="@dimen/material_default_padding"
         android:fontFamily="sans-serif-medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/text_dark_secondary"
+        android:textColor="@color/text_dark_primary"
         tools:text="Name" />
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_marginEnd="@dimen/material_default_padding"
         android:alpha="0.87"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/text_dark_secondary"
+        android:textColor="@color/text_dark_primary"
         tools:text="E-mail" />
 
     <View
