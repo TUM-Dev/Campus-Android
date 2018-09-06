@@ -45,7 +45,7 @@
                     android:layout_marginEnd="@dimen/material_default_padding"
                     android:layout_marginBottom="@dimen/material_default_padding"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/purchase_details"
+                    android:text="@string/ticket_type"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/color_primary"
                     app:layout_constraintBottom_toTopOf="@id/ticket_type_spinner_container"
