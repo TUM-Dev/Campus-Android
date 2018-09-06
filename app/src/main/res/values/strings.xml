@@ -316,7 +316,7 @@
     <string name="imdb_rating">IMDb-Rating</string>
     <string name="year">Year of release</string>
     <string name="runtime">Runtime</string>
-    <string name="genre">Genre</string>
+    <string name="genres">Genres</string>
     <string name="director">Director</string>
     <string name="actors">Actors</string>
     <string name="description">Description</string>
@@ -683,5 +683,6 @@ Signature: %5$s</string>
     <string name="about">About</string>
     <string name="due_on_format_string">Due on %s</string>
     <string name="student_financial_aid">Student Financial Aid</string>
+    <string name="released">Released</string>
 
 </resources>

@@ -104,7 +104,7 @@
     <string name="imdb_rating">IMDb-Wertung</string>
     <string name="year">Erscheinungsjahr</string>
     <string name="runtime">Laufzeit</string>
-    <string name="genre">Genre</string>
+    <string name="genres">Genres</string>
     <string name="director">Regisseur</string>
     <string name="actors">Schauspieler</string>
     <string name="description">Beschreibung</string>
@@ -632,4 +632,5 @@ Signatur: %5$s</string>
     <string name="due_on_format_string">Fällig am %s</string>
     <string name="home">Übersicht</string>
     <string name="student_financial_aid">Studienfinanzierung</string>
+    <string name="released">Veröffentlicht</string>
 </resources>
