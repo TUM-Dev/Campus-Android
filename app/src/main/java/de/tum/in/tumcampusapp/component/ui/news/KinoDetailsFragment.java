@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.AppCompatButton;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,6 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     private void showMovieDetails(Kino kino) {
-        //this.kino = kino;
         loadPoster(kino);
 
         TextView dateTextView = rootView.findViewById(R.id.dateTextView);
@@ -90,7 +90,7 @@ public class KinoDetailsFragment extends Fragment {
         ratingTextView.setText(kino.getRating());
 
         TextView descriptionTextView = rootView.findViewById(R.id.descriptionTextView);
-        descriptionTextView.setText(kino.getDescription().trim());
+        descriptionTextView.setText(kino.getFormattedDescription());
 
         TextView genresTextView = rootView.findViewById(R.id.genresTextView);
         genresTextView.setText(kino.getGenre());
@@ -112,9 +112,10 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     private void loadPoster(Kino kino) {
-        ImageView posterView = rootView.findViewById(R.id.kino_cover);
-        posterView.setOnClickListener(v -> showTrailer(kino));
+        AppCompatButton trailerButton = rootView.findViewById(R.id.trailerButton);
+        trailerButton.setOnClickListener(v -> showTrailer(kino));
 
+        ImageView posterView = rootView.findViewById(R.id.kino_cover);
         ProgressBar progressBar = rootView.findViewById(R.id.kino_cover_progress);
 
         Picasso.get()
@@ -140,18 +141,36 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     private void loadColorPalette(Bitmap bitmap) {
-        TextView dateTextView = rootView.findViewById(R.id.dateTextView);
-        TextView runtimeTextView = rootView.findViewById(R.id.runtimeTextView);
-        TextView ratingTextView = rootView.findViewById(R.id.ratingTextView);
-
         Palette.from(bitmap).generate(palette -> {
             Palette.Swatch swatch = palette.getVibrantSwatch();
             int colorPrimary = ContextCompat.getColor(requireContext(), R.color.color_primary);
             int color = (swatch != null) ? swatch.getRgb() : colorPrimary;
 
+            TextView dateTextView = rootView.findViewById(R.id.dateTextView);
+            TextView runtimeTextView = rootView.findViewById(R.id.runtimeTextView);
+            TextView ratingTextView = rootView.findViewById(R.id.ratingTextView);
+
             setCompoundDrawablesTint(dateTextView, color);
             setCompoundDrawablesTint(runtimeTextView, color);
             setCompoundDrawablesTint(ratingTextView, color);
+
+            AppCompatButton trailerButton = rootView.findViewById(R.id.trailerButton);
+            AppCompatButton moreInfoButton = rootView.findViewById(R.id.moreInfoButton);
+
+            trailerButton.setTextColor(color);
+            moreInfoButton.setTextColor(color);
+
+            TextView genresHeaderTextView = rootView.findViewById(R.id.genresHeaderTextView);
+            TextView releaseYearHeaderTextView = rootView.findViewById(R.id.releaseYearHeaderTextView);
+            TextView actorsHeaderTextView = rootView.findViewById(R.id.actorsHeaderTextView);
+            TextView directorHeaderTextView = rootView.findViewById(R.id.directorHeaderTextView);
+
+            genresHeaderTextView.setTextColor(color);
+            releaseYearHeaderTextView.setTextColor(color);
+            actorsHeaderTextView.setTextColor(color);
+            directorHeaderTextView.setTextColor(color);
+
+            TransitionManager.beginDelayedTransition((ViewGroup) rootView);
         });
     }
 

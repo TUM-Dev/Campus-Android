@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/material_default_padding"
-            android:text="@string/trailer"
+            android:text="@string/watch_trailer"
             android:textColor="@color/color_primary" />
 
         <LinearLayout
@@ -118,6 +118,7 @@
             android:background="@color/list_divider" />
 
         <TextView
+            android:id="@+id/genresHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_default_padding"
@@ -139,6 +140,7 @@
             tools:text="Genres" />
 
         <TextView
+            android:id="@+id/releaseYearHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_default_padding"
@@ -159,6 +161,7 @@
             tools:text="2018" />
 
         <TextView
+            android:id="@+id/actorsHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_default_padding"
@@ -180,6 +183,7 @@
             tools:text="Actors" />
 
         <TextView
+            android:id="@+id/directorHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_default_padding"

@@ -51,6 +51,14 @@ data class Kino(@PrimaryKey
             return formatter.print(date)
         }
 
+    val formattedDescription: String
+        get() {
+            return description
+                    .replace("\n", "")
+                    .replace("\r", "\r\n")
+                    .removeSuffix("\r\n")
+        }
+
     val trailerSearchUrl: String
         get() {
             val actualTitle = title.split(": ")[1]
