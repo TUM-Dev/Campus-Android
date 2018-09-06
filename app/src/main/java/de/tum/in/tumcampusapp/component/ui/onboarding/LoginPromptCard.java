@@ -12,6 +12,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -45,11 +46,8 @@ public class LoginPromptCard extends Card {
     @Override
     protected boolean shouldShow(@NonNull SharedPreferences sharedPrefs) {
         // show on top as long as user hasn't swiped it away and isn't connected to TUMonline
-        return true;
-        /*
         return Utils.getSettingBool(this.getContext(), CardManager.SHOW_LOGIN, true)
                && Utils.getSetting(getContext(), Const.LRZ_ID, "").isEmpty();
-        */
     }
 
     @Override
