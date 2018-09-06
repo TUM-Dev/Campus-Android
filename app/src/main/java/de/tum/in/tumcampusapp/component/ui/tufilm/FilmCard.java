@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
 import de.tum.in.tumcampusapp.component.ui.news.NewsCard;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 public class FilmCard extends NewsCard {
 
@@ -22,13 +20,6 @@ public class FilmCard extends NewsCard {
     @Nullable
     @Override
     public NavigationDestination getNavigationDestination() {
-        String url = mNews.getLink();
-        if (url.isEmpty()) {
-            Utils.showToast(getContext(), R.string.no_link_existing);
-            return null;
-        }
-
-        // Open url in browser
         Intent intent = new Intent(getContext(), KinoActivity.class);
         intent.putExtra(Const.KINO_DATE, DateTimeUtils.INSTANCE.getDateTimeString(getDate()));
         return new SystemIntent(intent);

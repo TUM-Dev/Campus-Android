@@ -188,7 +188,7 @@
     <string name="examination_aids">Examination aids</string>
 
     <!-- Tuition fees -->
-    <string name="amount_dots">Outstanding balance</string>
+    <string name="outstanding_balance">Outstanding balance</string>
     <string name="deadline_dots">Deadline:</string>
     <string name="amount_dots_card">Outstanding balance: %s</string>
 
@@ -366,7 +366,7 @@
     <string name="room_timetable">Room timetable</string>
     <string name="newspread" translatable="false" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
-    <string name="tuition_fee_more">For information on contributions and exemptions, loans, training assistance and scholarships visit <![CDATA[<a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a>]]>.</string>
+    <string name="student_financial_aid_link" translatable="false">https://www.tum.de/en/studies/fees-and-financial-aid/</string>
     <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMonline token!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
@@ -681,5 +681,7 @@ Signature: %5$s</string>
     <string name="the_ticket_has_been_saved_for_you_in_the_app">The ticket has been saved for you in the app.</string>
     <string name="home">Home</string>
     <string name="about">About</string>
+    <string name="due_on_format_string">Due on %s</string>
+    <string name="student_financial_aid">Student Financial Aid</string>
 
 </resources>

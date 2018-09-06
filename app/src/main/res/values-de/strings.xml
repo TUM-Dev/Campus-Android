@@ -158,7 +158,7 @@
     <string name="examination_aids">Prüfungshilfsmittel</string>
 
     <!-- Tuition fees -->
-    <string name="amount_dots">Offener Betrag</string>
+    <string name="outstanding_balance">Offener Betrag</string>
     <string name="deadline_dots">Deadline:</string>
     <string name="amount_dots_card">Offener Betrag: %s</string>
 
@@ -316,7 +316,6 @@
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
-    <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter <![CDATA[<a href="https://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a>]]>.</string>
     <string name="no_rights_to_access_id">Identität konnte nicht abgefragt werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Leise</string>
@@ -629,4 +628,8 @@ Signatur: %5$s</string>
     <string name="the_ticket_has_been_saved_for_you_in_the_app">Das Ticket wurde für dich in der App gespeichert.</string>
     <string name="remaining_tickets">Verbleibende Tickets</string>
     <string name="payment_confirmation">Zahlungsbestätigung</string>
+    <string name="about">Über</string>
+    <string name="due_on_format_string">Fällig am %s</string>
+    <string name="home">Übersicht</string>
+    <string name="student_financial_aid">Studienfinanzierung</string>
 </resources>
