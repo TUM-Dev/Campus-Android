@@ -7,11 +7,11 @@ import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -102,7 +102,7 @@ public class EventsController implements ProvidesCard {
             if (Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class) != null) {
                 TUMCabeClient.getInstance(context).fetchTickets(context, ticketCallback);
             }
-        } catch (IOException e) {
+        } catch (NoPrivateKey e) {
             Utils.log(e);
         }
     }

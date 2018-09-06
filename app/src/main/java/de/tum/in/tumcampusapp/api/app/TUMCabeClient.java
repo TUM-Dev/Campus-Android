@@ -13,12 +13,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
-import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
+import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
@@ -106,15 +107,16 @@ public final class TUMCabeClient {
     private final TUMCabeAPIService service;
 
     private TUMCabeClient(final Context c) {
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DateTime.class, new DateSerializer())
                 .create();
-        builder.addConverterFactory(GsonConverterFactory.create(gson));
-        builder.client(Helper.getOkHttpClient(c));
-        service = builder.build()
+
+        service = new Retrofit.Builder()
+                .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(Helper.getOkHttpClient(c))
+                .build()
                 .create(TUMCabeAPIService.class);
     }
 
@@ -123,6 +125,26 @@ public final class TUMCabeClient {
             instance = new TUMCabeClient(c.getApplicationContext());
         }
         return instance;
+    }
+
+    private static TUMCabeVerification getMemberVerification(Context context, Object data) throws NoPrivateKey {
+        TUMCabeVerification verification =
+                TUMCabeVerification.createMemberVerification(context, null);
+        if (verification == null) {
+            throw new NoPrivateKey();
+        }
+
+        return verification;
+    }
+
+    private static TUMCabeVerification getDeviceVerification(Context context, Object data) throws NoPrivateKey {
+        TUMCabeVerification verification =
+                TUMCabeVerification.createDeviceVerification(context, data);
+        if (verification == null) {
+            throw new NoPrivateKey();
+        }
+
+        return verification;
     }
 
     public void createRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
@@ -403,16 +425,14 @@ public final class TUMCabeClient {
 
     // Getting ticket information
 
-    public void fetchTickets(Context context, Callback<List<Ticket>> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.
-                createChatVerification(context, null);
-        service.getTickets(chatVerification).enqueue(cb);
+    public void fetchTickets(Context context, Callback<List<Ticket>> cb) throws NoPrivateKey {
+        TUMCabeVerification verification = getMemberVerification(context, null);
+        service.getTickets(verification).enqueue(cb);
     }
 
-    public Call<Ticket> fetchTicket(Context context, int ticketID) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.
-                createChatVerification(context, null);
-        return service.getTicket(ticketID, chatVerification);
+    public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {
+        TUMCabeVerification verification = getMemberVerification(context, null);
+        return service.getTicket(ticketID, verification);
     }
 
     public void fetchTicketTypes(int eventID, Callback<List<TicketType>> cb) {
@@ -421,34 +441,32 @@ public final class TUMCabeClient {
 
     // Ticket reservation
 
-    public void reserveTicket(Context context,
-                              ChatVerification chatVerification,
+    public void reserveTicket(TUMCabeVerification verification,
                               Callback<TicketReservationResponse> cb) {
-        service.reserveTicket(chatVerification).enqueue(cb);
+        service.reserveTicket(verification).enqueue(cb);
     }
 
     public void cancelTicketReservation(Context context, int ticketHistory,
-                                        Callback<TicketSuccessResponse> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.
-                createChatVerification(context, new TicketReservationCancelation(ticketHistory));
-        service.cancelTicketReservation(chatVerification).enqueue(cb);
+                                        Callback<TicketSuccessResponse> cb) throws NoPrivateKey {
+        TicketReservationCancelation cancelation = new TicketReservationCancelation(ticketHistory);
+        TUMCabeVerification verification = getMemberVerification(context, cancelation);
+        service.cancelTicketReservation(verification).enqueue(cb);
     }
 
     // Ticket purchase
 
     public void purchaseTicketStripe(Context context, int ticketHistory, String token,
-                                     String customerName, Callback<Ticket> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.
-                createChatVerification(context,
-                        new TicketPurchaseStripe(ticketHistory, token, customerName));
-        service.purchaseTicketStripe(chatVerification).enqueue(cb);
+                                     String customerName, Callback<Ticket> cb) throws NoPrivateKey {
+        TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketHistory, token, customerName);
+        TUMCabeVerification verification = getMemberVerification(context, purchase);
+        service.purchaseTicketStripe(verification).enqueue(cb);
     }
 
     public void retrieveEphemeralKey(Context context, String apiVersion,
-                                     Callback<HashMap<String, Object>> cb) throws IOException {
-        ChatVerification chatVerification = ChatVerification.Companion.
-                createChatVerification(context, new EphimeralKey(apiVersion));
-        service.retrieveEphemeralKey(chatVerification).enqueue(cb);
+                                     Callback<HashMap<String, Object>> cb) throws NoPrivateKey {
+        EphimeralKey key = new EphimeralKey(apiVersion);
+        TUMCabeVerification verification = getMemberVerification(context, key);
+        service.retrieveEphemeralKey(verification).enqueue(cb);
     }
 
     public void fetchTicketStats(int event, Callback<List<TicketStatus>> cb) {

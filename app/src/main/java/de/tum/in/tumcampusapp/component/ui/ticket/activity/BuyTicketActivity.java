@@ -13,14 +13,13 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
@@ -164,19 +163,15 @@ public class BuyTicketActivity extends BaseActivity {
         int ticketTypeId = ticketType.getId();
         TicketReservation reservation = new TicketReservation(ticketTypeId);
 
-        ChatVerification verification;
-
-        try {
-            verification = ChatVerification.Companion
-                    .createChatVerification(this, reservation);
-        } catch (IOException e) {
+        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, reservation);
+        if (verification == null) {
             handleTicketReservationFailure(R.string.internal_error);
             return;
         }
 
         TUMCabeClient
                 .getInstance(this)
-                .reserveTicket(this, verification, new Callback<TicketReservationResponse>() {
+                .reserveTicket(verification, new Callback<TicketReservationResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<TicketReservationResponse> call,
                                            @NonNull Response<TicketReservationResponse> response) {

@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
@@ -107,7 +108,7 @@ public class ShowTicketActivity extends BaseActivity {
                             handleTicketRefreshFailure();
                         }
                     });
-        } catch (IOException e) {
+        } catch (NoPrivateKey e) {
             Utils.log(e);
         }
     }

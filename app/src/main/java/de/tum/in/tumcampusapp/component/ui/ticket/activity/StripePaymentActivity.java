@@ -33,6 +33,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.TicketEphemeralKeyProvider;
@@ -155,7 +156,7 @@ public class StripePaymentActivity extends BaseActivity {
                                     handleTicketPurchaseFailure();
                                 }
                             });
-        } catch (IOException e) {
+        } catch (NoPrivateKey e) {
             Utils.log(e);
             handleTicketPurchaseFailure();
         }
