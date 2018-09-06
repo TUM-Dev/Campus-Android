@@ -44,7 +44,7 @@ public class RoomFinderListAdapter extends SimpleStickyListHeadersAdapter<RoomFi
 
         // Setting all values in listView
         holder.tvRoomTitle.setText(room.getInfo());
-        holder.tvBuildingTitle.setText(room.getAddress());
+        holder.tvBuildingTitle.setText(room.getFormattedAddress());
         return convertView;
     }
 }

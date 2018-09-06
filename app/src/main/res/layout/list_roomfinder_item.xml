@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:baselineAligned="false"
-              android:orientation="horizontal"
-              android:padding="@dimen/padding_default">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/material_default_padding"
+    android:paddingTop="@dimen/material_small_padding"
+    android:paddingEnd="@dimen/material_default_padding"
+    android:paddingBottom="@dimen/material_small_padding">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/padding_default">
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/material_default_padding">
 
         <ImageView
-            android:layout_width="@dimen/icon_small"
-            android:layout_height="@dimen/icon_small"
+            android:layout_width="@dimen/icon_default"
+            android:layout_height="@dimen/icon_default"
             android:layout_gravity="center"
             android:alpha="0.6"
-            app:srcCompat="@drawable/ic_place"
-            tools:ignore="UnusedAttribute"/>
+            app:srcCompat="@drawable/ic_outline_location_on_24px" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -31,20 +33,19 @@
 
         <TextView
             android:id="@+id/startup_actionbar_title"
+            style="@style/CardTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@android:string/untitled"
-            android:textColor="@color/color_primary_dark"
-            android:textSize="@dimen/large_text_size"
-            android:textStyle="bold"/>
+            android:layout_marginBottom="0dp"
+            android:text="@android:string/untitled" />
 
         <TextView
             android:id="@+id/building"
+            style="@style/CardDetails"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@android:string/untitled"
-            android:textColor="@color/text_dark_gray"
-            android:textSize="@dimen/mid_text_size"/>
+            android:text="@android:string/untitled" />
+
     </LinearLayout>
 
 </LinearLayout>

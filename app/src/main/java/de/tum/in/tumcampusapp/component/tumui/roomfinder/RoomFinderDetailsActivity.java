@@ -183,8 +183,9 @@ public class RoomFinderDetailsActivity
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(room.getInfo());
-            getSupportActionBar().setSubtitle(room.getAddress());
+            getSupportActionBar().setSubtitle(room.getFormattedAddress());
         }
+
         showLoadingEnded();
         loadMapList();
     }

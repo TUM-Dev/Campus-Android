@@ -51,6 +51,10 @@
 
         <!-- Light system UI -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+        <!-- Light navigation bar -->
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
     </style>
 
     <style name="AppThemeFullscreen" parent="Theme.AppCompat.Light.NoActionBar">
