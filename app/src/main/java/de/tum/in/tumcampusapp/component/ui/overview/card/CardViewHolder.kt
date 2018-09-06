@@ -29,8 +29,6 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         destination?.let {
             NavigationManager.open(activity, it)
         }
-        //val intent = currentCard?.getIntent() ?: return
-        //activity.startActivity(intent)
     }
 
     override fun onLongClick(v: View): Boolean {
