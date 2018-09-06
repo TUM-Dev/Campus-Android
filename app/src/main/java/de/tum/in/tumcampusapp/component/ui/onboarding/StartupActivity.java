@@ -102,11 +102,14 @@ public class StartupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Show a loading screen during boot
         setContentView(R.layout.activity_startup);
 
-        // init easter egg (logo)
+        initEasterEgg();
+
+        new Thread(this::init).start();
+    }
+
+    private void initEasterEgg() {
         ImageView tumLogo = findViewById(R.id.startup_tum_logo);
         if (Utils.getSettingBool(this, Const.RAINBOW_MODE, false)) {
             tumLogo.setImageResource(R.drawable.tum_logo_rainbow);
@@ -132,8 +135,6 @@ public class StartupActivity extends AppCompatActivity {
             }
         });
         background.setSoundEffectsEnabled(false);
-
-        new Thread(this::init).start();
     }
 
     @Override
@@ -194,6 +195,7 @@ public class StartupActivity extends AppCompatActivity {
         // Get views to be moved
         final View background = findViewById(R.id.startup_background);
         final ImageView tumLogo = findViewById(R.id.startup_tum_logo);
+        final TextView tumMotto = findViewById(R.id.startup_tum_motto);
         final TextView loadingText = findViewById(R.id.startup_loading);
         final TextView first = findViewById(R.id.startup_loading_first);
 
@@ -206,9 +208,11 @@ public class StartupActivity extends AppCompatActivity {
         set.playTogether(
                 ObjectAnimator.ofFloat(background, "translationY", background.getTranslationX(), actionBarHeight - screenHeight),
                 ObjectAnimator.ofFloat(tumLogo, "alpha", 1, 0, 0),
+                ObjectAnimator.ofFloat(tumMotto, "alpha", 1, 0, 0),
                 ObjectAnimator.ofFloat(loadingText, "alpha", 1, 0, 0),
                 ObjectAnimator.ofFloat(first, "alpha", 1, 0, 0),
                 ObjectAnimator.ofFloat(tumLogo, "translationY", 0, -screenHeight / 3),
+                ObjectAnimator.ofFloat(tumMotto, "translationY", 0, -screenHeight / 3),
                 ObjectAnimator.ofFloat(loadingText, "translationY", 0, -screenHeight / 3),
                 ObjectAnimator.ofFloat(first, "translationY", 0, -screenHeight / 3)
         );
@@ -221,11 +225,10 @@ public class StartupActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                // Start the demo Activity if demo mode is set
                 Intent intent = new Intent(StartupActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                overridePendingTransition(0, 0);
             }
 
             @Override
