@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:fitsSystemWindows="true"
-    android:background="@color/color_primary"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat">
 
@@ -27,7 +27,7 @@
         android:layout_marginEnd="@dimen/material_default_padding"
         android:fontFamily="sans-serif-medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@android:color/white"
+        android:textColor="@color/text_dark_secondary"
         tools:text="Name" />
 
     <TextView
@@ -36,9 +36,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/material_default_padding"
         android:layout_marginEnd="@dimen/material_default_padding"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@android:color/white"
         android:alpha="0.87"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/text_dark_secondary"
         tools:text="E-mail" />
 
     <View

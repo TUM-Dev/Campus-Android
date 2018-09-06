@@ -2,7 +2,9 @@ package de.tum.in.tumcampusapp.component.ui.transportation.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -47,9 +49,16 @@ public class MVVWidgetConfigureActivity
         recentsDao = TcaDb.getInstance(this)
                 .recentsDao();
 
-        // Setup cancel button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            Drawable closeIcon = ContextCompat.getDrawable(this, R.drawable.ic_action_cancel);
+            if (closeIcon != null) {
+                int color = ContextCompat.getColor(this, R.color.color_primary);
+                closeIcon.setTint(color);
+            }
+            getSupportActionBar().setHomeAsUpIndicator(closeIcon);
+        }
 
         // Get appWidgetId from intent
         Intent intent = getIntent();

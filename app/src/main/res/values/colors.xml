@@ -35,6 +35,7 @@
     <color name="study_room_free">#C8E6C9</color>
     <color name="study_room_occupied">#FFCDD2</color>
 
+    <color name="status_bar_background">#F2F2F2</color>
     <color name="navigation_bar_divider">#E0E0E0</color>
     
     <!-- Default colors -->

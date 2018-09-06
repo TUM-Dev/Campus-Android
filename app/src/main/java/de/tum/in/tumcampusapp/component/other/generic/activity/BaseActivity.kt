@@ -120,7 +120,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
 
         val name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, "")
         if (name.isNotEmpty()) {
-            nameTextView.text
+            nameTextView.text = name
         } else {
             nameTextView.visibility = View.INVISIBLE
         }
