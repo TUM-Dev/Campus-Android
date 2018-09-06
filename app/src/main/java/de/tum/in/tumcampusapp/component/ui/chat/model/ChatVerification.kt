@@ -10,6 +10,7 @@ import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*
 
+@Deprecated("Use TUMCabeVerification")
 data class ChatVerification(var signature: String = "",
                             var date: String = "",
                             var rand: String = "",

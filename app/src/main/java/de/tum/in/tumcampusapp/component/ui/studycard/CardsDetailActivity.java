@@ -11,9 +11,9 @@ import java.io.IOException;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -79,13 +79,10 @@ public class CardsDetailActivity extends ActivityForLoadingInBackground<Void, St
         }*/
         try {
             ChatMember chatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-            final ChatVerification v = ChatVerification.Companion.getChatVerification(this.getApplicationContext(), chatMember);
+            final TUMCabeVerification v = TUMCabeVerification.create(this, chatMember);
             final Context c = this;
-            return TUMCabeClient.getInstance(c)
-                    .addStudyCard(card, v);
-        } catch (IOException e) {
-            Utils.log(e);
-        } catch (NoPrivateKey e) {
+            return TUMCabeClient.getInstance(c).addStudyCard(card, v);
+        } catch (IOException | NoPrivateKey e) {
             Utils.log(e);
         }
         return null;
