@@ -16,4 +16,10 @@ data class Departure(var servingLine: String = "",
      */
     val calculatedCountDown: Int
         get() = Minutes.minutesBetween(DateTime.now(), departureTime).minutes
+
+    val formattedDirection: String
+        get() = direction
+                .replace(",", ", ")
+                .replace("\\s+".toRegex(), " ")
+
 }

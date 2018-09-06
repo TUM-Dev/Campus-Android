@@ -156,7 +156,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
                 view.setSymbol(d.getSymbol(), false);
             }
 
-            view.setLine(d.getDirection());
+            view.setLine(d.getFormattedDirection());
             view.setTime(d.getDepartureTime());
             mViewResults.addView(view);
         }
