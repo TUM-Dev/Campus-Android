@@ -36,6 +36,23 @@
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.25" />
 
+                <TextView
+                    android:id="@+id/ticket_type_spinner_container_header"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginTop="@dimen/material_large_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:layout_marginBottom="@dimen/material_default_padding"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/purchase_details"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/color_primary"
+                    app:layout_constraintBottom_toTopOf="@id/ticket_type_spinner_container"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <FrameLayout
                     android:id="@+id/ticket_type_spinner_container"
                     android:layout_width="match_parent"
@@ -46,7 +63,7 @@
                     android:background="@drawable/spinner_border_background"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/ticket_type_spinner_container_header">
 
                     <Spinner
                         android:id="@+id/ticket_type_spinner"

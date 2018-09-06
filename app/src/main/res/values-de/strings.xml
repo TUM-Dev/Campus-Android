@@ -490,7 +490,7 @@ Signatur: %5$s</string>
     <string name="buy_ticket">Ticket kaufen</string>
     <string name="purchase_details">Details zu Ihrem Kauf:</string>
     <string name="continue_to_payment">Weiter zur Zahlung</string>
-    <string name="summary">Zusammenfassung</string>
+    <string name="order_summary">Bestellungsübersicht</string>
     <string name="ticket_type">Tickettyp</string>
     <string name="price">Preis</string>
     <string name="location">Ort</string>

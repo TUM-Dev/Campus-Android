@@ -613,7 +613,7 @@ Signature: %5$s</string>
     <string name="buy_ticket">Buy Ticket</string>
     <string name="purchase_details">Details</string>
     <string name="continue_to_payment">Continue to payment</string>
-    <string name="summary">Summary</string>
+    <string name="order_summary">Order summary</string>
     <string name="ticket_not_fetched">You may have already bought a ticket for this event. Try to reload the events overview.</string>
 
     <!-- Event Activity -->
