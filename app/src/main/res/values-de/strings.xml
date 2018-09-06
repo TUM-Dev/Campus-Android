@@ -84,15 +84,15 @@
 
     <!-- Startup Wizard -->
     <string name="not_connected_to_tumonline">Nicht verbunden</string>
-    <string name="startup_wizard_uppercase">TUMonline-Wizard</string>
-    <string name="welcome_msg">Um den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
+    <string name="startup_wizard">Mit TUMonline verbinden</string>
+    <string name="welcome_msg">Um den Zugriff auf TUMonline-Dienste zu ermöglichen, wird deine <b>TUM-Kennung</b> benötigt.\n\nDie Kennung hat das Format <i>ga12abc</i>.</string>
     <string name="button_skip">Überspringen</string>
     <string name="button_next">Weiter</string>
-    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nBitte aktiviere jetzt das Token in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
+    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nBitte aktiviere das Token in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
     <string name="step_1">Schritt 1</string>
     <string name="step_2">Schritt 2</string>
     <string name="step_3">Schritt 3</string>
-    <string name="set_silent_mode">Aktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
+    <string name="set_silent_mode">Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
     <string name="set_background_mode">Aktiviere oder deaktiviere den <i>Hintergrundmodus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
     <string name="goto_tumcampus">Starte TUM Campus App</string>
 
@@ -303,8 +303,8 @@
     <string name="news_sources">News Quellen</string>
     <string name="only_latest_article">Nur neusten Artikel</string>
     <string name="only_latest_article_summary">Zeigt jeweils nur den neusten Artikel. Ansonsten werden alle Artikel der ausgewählten Quellen angezeigt.</string>
-    <string name="lecture_chat">Vorlesungs-Chat &amp; Bedingungen akzeptieren</string>
-    <string name="set_lecture_chat">Aktiviere oder deaktiviere <i>Vorlesungs-Chat</i>. Wenn es aktiviert ist kannst du Vorlesungs-Chatrooms beitreten und mit deinen Komilitonen diskutieren.</string>
+    <string name="lecture_chat">Vorlesungs-Chat</string>
+    <string name="set_lecture_chat">Wenn es aktiviert ist, kannst du Vorlesungs-Chatrooms beitreten und mit deinen Kommilitonen diskutieren.</string>
     <string name="open_chat_terms">Chatbedingungen</string>
     <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
     <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
@@ -312,7 +312,7 @@
     <string name="view_mode">Ansicht wechseln</string>
     <string name="Refresh">Aktualisieren</string>
     <string name="bug_reports">Anonyme Fehlerberichte</string>
-    <string name="set_bug_reports">Unterstütze das TCA Team indem du anonyme Fehlerberichte zu unseren Server schicken lässt. Diese beinhalten: Stacktrace, Logdatei, Android Version, App Version und Bildschirm Auflösung</string>
+    <string name="set_bug_reports">Unterstütze das TCA-Team mit anonymen Fehlerberichten. Diese beinhalten: Stacktrace, Logdateien, Android-Version, App-Version und Bildschirmauflösung</string>
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
@@ -542,15 +542,15 @@ Signatur: %5$s</string>
 
     <string name="back">Zurück</string>
 
-    <string name="tumonline_advantages">Nach dem Einrichten von TUMonline kannst du:\n\n
+    <string name="tumonline_advantages">Nach dem Einrichten von TUMonline kannst du:\n
                                         &#8226; auf deinen Kalender zugreifen\n
                                         &#8226; Details zu deinen Vorlesungen erfahren\n
                                         &#8226; deine Noten ansehen\n
                                         &#8226; deinen Studienbeitragsstatus prüfen\n
                                         &#8226; mit Komilitonen aus deinen Vorlesungen chatten</string>
     <string name="tumonline_login">Mit TUMonline verbinden</string>
-    <string name="card_login_title">Willkommen zur TUM Campus App!</string>
-    <string name="card_login_body">Verbinde jetzt die App mit TUMonline um alle Features nutzen zu können! Dazu gehören unter anderem dein Kalendar, deine Vorlesungen und deine Noten!</string>
+    <string name="card_login_title">Willkommen zur TUM Campus App</string>
+    <string name="card_login_body">Verbinde die App mit TUMonline, um auf deinen Kalendar, deine Vorlesungen und deine Noten zugreifen zu können.</string>
 
     <string name="watch_trailer">Trailer anschauen</string>
     <string name="show_trailer_error">Trailer kann nicht gezeigt werden</string>

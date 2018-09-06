@@ -25,7 +25,7 @@
             android:layout_marginStart="@dimen/material_small_padding"
             android:layout_marginTop="@dimen/material_small_padding"
             android:layout_marginEnd="@dimen/material_small_padding"
-            android:layout_marginBottom="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_small_padding"
             android:text="@string/card_login_body" />
 
         <android.support.v7.widget.AppCompatButton
