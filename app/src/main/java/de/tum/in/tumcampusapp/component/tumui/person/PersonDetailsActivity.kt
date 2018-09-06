@@ -97,6 +97,8 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
      * @param employee The employee whose information should be displayed.
      */
     private fun displayResult(employee: Employee) {
+        scrollView.visibility = View.VISIBLE
+
         val image = employee.image ?: BitmapFactory.decodeResource(
                 resources, R.drawable.photo_not_available)
 

@@ -60,7 +60,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
                     onDownloadSuccessful(body);
-                } else if (response.isSuccessful() && body == null) {
+                } else if (response.isSuccessful()) {
                     onEmptyDownloadResponse();
                 } else {
                     onDownloadUnsuccessful(response.code());
