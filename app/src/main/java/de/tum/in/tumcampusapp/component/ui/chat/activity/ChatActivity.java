@@ -396,12 +396,11 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             // Download chat messages in new Thread
 
             // If currently nothing has been shown load newest messages from server
-            TUMCabeVerification verification;
-            try {
-                verification = TUMCabeVerification.create(ChatActivity.this, currentChatMember);
-            } catch (NoPrivateKey noPrivateKey) {
+            TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+            if (verification == null) {
                 return; //In this case we simply cannot do anything
             }
+
             if (chatHistoryAdapter == null || chatHistoryAdapter.getCount() == 0 || newMsg) {
                 chatMessageViewModel.getNewMessages(currentChatRoom.getId(), verification, this::onMessagesLoaded);
             } else {
@@ -440,12 +439,9 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
      */
     @Override
     public void onClick(DialogInterface dialog, int which) {
-
         // Send request to the server to remove the user from this room
-        TUMCabeVerification verification;
-        try {
-            verification = TUMCabeVerification.create(this, currentChatMember);
-        } catch (NoPrivateKey noPrivateKey) {
+        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+        if (verification == null) {
             return;
         }
 

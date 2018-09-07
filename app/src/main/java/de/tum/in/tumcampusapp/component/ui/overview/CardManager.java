@@ -5,6 +5,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
+
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -37,6 +43,8 @@ public final class CardManager {
     public static final int CARD_LOGIN = 14;
     public static final int CARD_EDUROAM_FIX = 15;
     public static final int CARD_TOP_NEWS = 16;
+    public static final int CARD_EVENT = 17;
+
 
     private CardManager() {}
 

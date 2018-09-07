@@ -270,17 +270,13 @@ public class AuthenticationManager {
             return;
         }
 
-        ObfuscatedIdsUpload upload;
-        try {
-            upload = new ObfuscatedIdsUpload(
-                    "", "", "",
-                    TUMCabeVerification.create(mContext, null)
-            );
-        } catch (NoPrivateKey noPrivateKey) {
-            Utils.log(noPrivateKey, "Can't upload obfuscated ids: no private key");
+        TUMCabeVerification verification = TUMCabeVerification.createDeviceVerification(mContext, null);
+        if (verification == null) {
+            Utils.log("Can't upload obfuscated ids: no private key");
             return;
         }
 
+        ObfuscatedIdsUpload upload = new ObfuscatedIdsUpload("", "", "", verification);
         String studentId = Utils.getSetting(mContext, Const.TUMO_STUDENT_ID, "");
         String employeeId = Utils.getSetting(mContext, Const.TUMO_EMPLOYEE_ID, "");
         String externalId = Utils.getSetting(mContext, Const.TUMO_EXTERNAL_ID, "");

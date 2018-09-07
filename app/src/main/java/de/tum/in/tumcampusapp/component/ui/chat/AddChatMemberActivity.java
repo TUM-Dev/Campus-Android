@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.Helper;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
@@ -198,35 +197,32 @@ public class AddChatMemberActivity extends BaseActivity {
     }
 
     private void joinRoom(ChatMember member) {
-        TUMCabeVerification verification;
-        try {
-            ChatMember currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-            verification = TUMCabeVerification.create(this, currentChatMember);
-        } catch (NoPrivateKey noPrivateKey) {
-            Utils.showToast(getBaseContext(), R.string.error);
+        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+        if (verification == null) {
+            Utils.showToast(this, R.string.error);
             return;
         }
 
         TUMCabeClient.getInstance(this)
-                     .addUserToChat(room, member, verification, new Callback<ChatRoom>() {
-                         @Override
-                         public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
-                             ChatRoom room = response.body();
-                             if (room != null) {
-                                 TcaDb.getInstance(getBaseContext())
-                                      .chatRoomDao()
-                                      .updateMemberCount(room.getMembers(), room.getId(), room.getName());
-                                 Utils.showToast(getBaseContext(), R.string.chat_member_added);
-                             } else {
-                                 Utils.showToast(getBaseContext(), R.string.error);
-                             }
-                         }
+                .addUserToChat(room, member, verification, new Callback<ChatRoom>() {
+                    @Override
+                    public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
+                        ChatRoom room = response.body();
+                        if (room != null) {
+                            TcaDb.getInstance(getBaseContext())
+                                    .chatRoomDao()
+                                    .updateMemberCount(room.getMembers(), room.getId(), room.getName());
+                            Utils.showToast(getBaseContext(), R.string.chat_member_added);
+                        } else {
+                            Utils.showToast(getBaseContext(), R.string.error);
+                        }
+                    }
 
-                         @Override
-                         public void onFailure(Call<ChatRoom> call, Throwable t) {
-                             Utils.showToast(getBaseContext(), R.string.error);
-                         }
-                     });
+                    @Override
+                    public void onFailure(Call<ChatRoom> call, Throwable t) {
+                        Utils.showToast(getBaseContext(), R.string.error);
+                    }
+                });
     }
 
 }
