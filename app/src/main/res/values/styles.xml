@@ -68,6 +68,14 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <!-- Style for Stripe's payment method activity -->
+    <style name="StripeDefaultTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_primary</item>
+        <item name="titleTextColor">@android:color/white</item>
+    </style>
+
     <style name="CalendarDateTimeItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?android:listPreferredItemHeightSmall</item>
@@ -154,6 +162,18 @@
         <item name="android:transitionName">@string/transition_card</item>
         <item name="cardBackgroundColor">#FFFFFF</item>
         <item name="cardCornerRadius">@dimen/material_corner_radius</item>
+    </style>
+
+    <style name="CardTitle">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:layout_marginBottom">@dimen/material_small_padding</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+    </style>
+
+    <style name="CardBody">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textColor">@color/text_dark_secondary</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

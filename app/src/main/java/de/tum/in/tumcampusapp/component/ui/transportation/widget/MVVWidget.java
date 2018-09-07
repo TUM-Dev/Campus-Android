@@ -85,7 +85,7 @@ public class MVVWidget extends AppWidgetProvider {
         boolean autoReload = false;
         for (int appWidgetId : getActiveWidgetIds(context)) {
             WidgetDepartures widgetDepartures = transportManager.getWidget(appWidgetId);
-            if (widgetDepartures != null && widgetDepartures.getAutoReload()) {
+            if (widgetDepartures.getAutoReload()) {
                 autoReload = true;
                 break;
             }

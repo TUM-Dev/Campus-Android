@@ -55,10 +55,10 @@ public class KinoDetailsFragment extends Fragment {
         context = root.getContext();
 
         kinoViewModel.getKinoByPosition(position)
-                     .subscribe(kino1 -> {
-                         kino = kino1;
-                         showDetails(root);
-                     });
+                .subscribe(kino1 -> {
+                    kino = kino1;
+                    showDetails(root);
+                });
 
         return rootView;
     }
@@ -96,11 +96,11 @@ public class KinoDetailsFragment extends Fragment {
         text.setText(contentString);
         // padding is done programmatically here because we need more padding at the end
         int padding = (int) context.getResources()
-                                   .getDimension(R.dimen.padding_kino);
+                .getDimension(R.dimen.padding_kino);
         int paddingRight = (int) context.getResources()
-                                        .getDimension(R.dimen.padding_kino_right);
+                .getDimension(R.dimen.padding_kino_right);
         int paddingEnd = (int) context.getResources()
-                                      .getDimension(R.dimen.padding_kino_end);
+                .getDimension(R.dimen.padding_kino_end);
         text.setPadding(padding, padding, paddingRight, paddingEnd);
         rootView.addView(view);
     }
@@ -146,6 +146,7 @@ public class KinoDetailsFragment extends Fragment {
                         progress.setVisibility(View.GONE);
                         error.setVisibility(View.GONE);
                     }
+
                     @Override
                     public void onError(Exception e) {
                         progress.setVisibility(View.GONE);
@@ -166,11 +167,11 @@ public class KinoDetailsFragment extends Fragment {
         }
     }
 
-    private String getTrailerSearchString(){
+    private String getTrailerSearchString() {
         String search = kino.getTitle();
         search = search.split(": ")[1];
         search = "trailer " + search;
-        if(!search.contains("OV")){
+        if (!search.contains("OV")) {
             search += " german deutsch";
         }
         search = search.replace(' ', '+');

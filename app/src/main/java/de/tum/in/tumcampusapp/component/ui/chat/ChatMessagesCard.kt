@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.RemoteViews
 import com.google.common.collect.Lists
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
@@ -16,8 +17,8 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoomDbRow
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager.CARD_CHAT
+import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
-import de.tum.`in`.tumcampusapp.component.ui.overview.card.NotificationAwareCard
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import java.util.*
@@ -25,7 +26,8 @@ import java.util.*
 /**
  * Card that shows the cafeteria menu
  */
-class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwareCard(CARD_CHAT, context, "card_chat") {
+class ChatMessagesCard(context: Context,
+                       room: ChatRoomDbRow) : Card(CARD_CHAT, context, "card_chat") {
 
     private var mUnread: List<ChatMessage> = ArrayList<ChatMessage>()
     private var nrUnread = 0;
@@ -40,8 +42,6 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
         chatMessageDao = tcaDb.chatMessageDao()
         setChatRoom(room.name, room.room, "${room.semesterId}:${room.name}")
     }
-
-    override val title = mRoomName
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         super.updateViewHolder(viewHolder)
@@ -58,9 +58,7 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
     private fun setChatRoom(roomName: String, roomId: Int, roomIdString: String) {
         mRoomName = listOf("[A-Z, 0-9(LV\\.Nr)=]+$", "\\([A-Z]+[0-9]+\\)", "\\[[A-Z]+[0-9]+\\]")
                 .map { it.toRegex() }
-                .fold(roomName, { name, regex ->
-                    name.replace(regex, "")
-                })
+                .fold(roomName) { name, regex -> name.replace(regex, "") }
                 .trim()
         chatMessageDao.deleteOldEntries()
         nrUnread = chatMessageDao.getNumberUnread(roomId)
@@ -80,8 +78,6 @@ class ChatMessagesCard(context: Context, room: ChatRoomDbRow) : NotificationAwar
     override fun getId() = mRoomId
 
     override fun discard(editor: Editor) = chatMessageDao.markAsRead(mRoomId)
-
-    override fun shouldShowNotification(prefs: SharedPreferences) = true
 
     companion object {
         fun inflateViewHolder(parent: ViewGroup) =

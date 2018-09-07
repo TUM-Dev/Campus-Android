@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettings
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
@@ -114,6 +115,7 @@ class FavoriteDishAlarmScheduler : BroadcastReceiver() {
                     .setContentIntent(pendingIntent)
                     .setDefaults(Notification.DEFAULT_SOUND)
                     .setAutoCancel(true)
+                    .setColor(ContextCompat.getColor(context, R.color.color_primary))
                     .build()
             notificationManager.notify(IDENTIFIER_STRING, mensaId, notification)
         }

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false">
+
+            <ImageView
+                android:id="@+id/posterView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/placeholder"
+                android:contentDescription="@string/kino_cover_description"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="H,16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/posterProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/posterView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/ticketButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/color_primary"
+                app:layout_constraintBottom_toTopOf="@id/dateContainer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/posterView"
+                tools:text="Buy ticket" />
+
+            <LinearLayout
+                android:id="@+id/dateContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/material_small_padding"
+                android:paddingEnd="@dimen/material_default_padding"
+                android:paddingStart="@dimen/material_default_padding"
+                android:paddingTop="@dimen/material_small_padding"
+                app:layout_constraintBottom_toTopOf="@id/remainingTicketsContainer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ticketButton">
+
+                <TextView
+                    android:id="@+id/dateHeaderTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/date"
+                    android:textColor="@color/color_primary" />
+
+                <TextView
+                    android:id="@+id/dateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/text_dark_primary"
+                    tools:text="Date" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/remainingTicketsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/material_small_padding"
+                android:paddingEnd="@dimen/material_default_padding"
+                android:paddingStart="@dimen/material_default_padding"
+                android:paddingTop="@dimen/material_small_padding"
+                app:layout_constraintBottom_toTopOf="@id/locationContainer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dateContainer">
+
+                <TextView
+                    android:id="@+id/remainingTicketsHeaderTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/remaining_tickets"
+                    android:textColor="@color/color_primary" />
+
+                <TextView
+                    android:id="@+id/remainingTicketsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/text_dark_primary"
+                    tools:text="Remaining" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/locationContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/material_small_padding"
+                android:paddingEnd="@dimen/material_default_padding"
+                android:paddingStart="@dimen/material_default_padding"
+                android:paddingTop="@dimen/material_small_padding"
+                app:layout_constraintBottom_toTopOf="@id/divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/remainingTicketsContainer">
+
+                <TextView
+                    android:id="@+id/locationHeaderTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/location"
+                    android:textColor="@color/color_primary" />
+
+                <TextView
+                    android:id="@+id/locationTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/text_dark_primary"
+                    tools:text="Location" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:background="@color/list_divider"
+                app:layout_constraintBottom_toTopOf="@id/descriptionTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/locationContainer" />
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text_dark_primary"
+                app:layout_constraintBottom_toTopOf="@id/linkButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                tools:text="Description" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/linkButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:text="@string/visit_website"
+                android:textColor="@color/color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/descriptionTextView" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+</android.support.v4.widget.SwipeRefreshLayout>
+
+
+

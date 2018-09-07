@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class SupportCard extends Card {
 
     public SupportCard(Context context) {
-        super(CardManager.CARD_SUPPORT, context, "", true);
+        super(CardManager.CARD_SUPPORT, context, "");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {

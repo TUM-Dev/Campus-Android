@@ -9,6 +9,9 @@
     <dimen name="material_default_elevation">12dp</dimen>
 
     <dimen name="compound_drawable_size">16dp</dimen>
+    <dimen name="icon_default">24dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="two_line_button_padding">12dp</dimen>
 
     <dimen name="padding_chat">2dp</dimen>
     <dimen name="padding_default">8dp</dimen>

@@ -34,7 +34,7 @@ public class TopNewsCard extends Card {
     private Context context;
 
     public TopNewsCard(Context context) {
-        super(CardManager.CARD_TOP_NEWS, context, "top_news", false);
+        super(CardManager.CARD_TOP_NEWS, context, "top_news");
         this.context = context;
     }
 
@@ -78,6 +78,7 @@ public class TopNewsCard extends Card {
 
         // if there is not link don't react to clicks
         return null;
+
     }
 
     @Override

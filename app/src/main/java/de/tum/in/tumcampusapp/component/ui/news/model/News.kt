@@ -3,7 +3,13 @@ package de.tum.`in`.tumcampusapp.component.ui.news.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.RoomWarnings
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import com.google.gson.annotations.SerializedName
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
+import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import org.joda.time.DateTime
 
 /**
@@ -35,6 +41,16 @@ data class News(@PrimaryKey
      */
     fun isFilm(): Boolean {
         return src == "2"
+    }
+
+    fun getIntent(context: Context): Intent? {
+        return if (isFilm()) {
+            Intent(context, KinoActivity::class.java).apply {
+                putExtra(Const.KINO_DATE, DateTimeUtils.getDateTimeString(date))
+            }
+        } else {
+            if (link.isBlank()) null else Intent(Intent.ACTION_VIEW, Uri.parse(link))
+        }
     }
 
 }

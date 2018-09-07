@@ -9,8 +9,10 @@ object Const {
     const val ACTION_EXTRA = "action"
     const val BACKGROUND_MODE = "background_mode"
     const val CAFETERIA_ID = "cafeteriasId"
+    const val CAFETERIA_DATE = "cafeteriaDate"
     const val CAFETERIAS = "cafeterias"
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
+    const val EVENT_BOOKED_MODE = "event_booked_mode"
     const val COMPLETED = "completed"
     const val DATABASE_NAME = "database.db"
     const val DATE = "date"
@@ -20,6 +22,7 @@ object Const {
     const val FORCE_DOWNLOAD = "force_download"
     const val LRZ_ID = "lrz_id"
     const val NEWS = "news"
+    const val EVENTS = "events"
     const val KINO = "kino"
     const val STUDY_ROOM_GROUP_ID = "study_room_group_id"
     const val ROLE = "card_role"
@@ -72,6 +75,9 @@ object Const {
     const val URL_MAP_IMAGE = "https://$API_HOSTNAME${URL_ROOM_FINDER_API}map/"
     const val ROOM_ID = "room_id"
 
+    const val KEY_NOTIFICATION_ID = "notificationID"
+    const val KEY_NOTIFICATION = "notification"
+
     const val NOTIFICATION_CHANNEL_DEFAULT = "general"
     const val NOTIFICATION_CHANNEL_CHAT = "chat"
     const val NOTIFICATION_CHANNEL_EDUROAM = "eduroam"
@@ -119,6 +125,7 @@ object Const {
 
     const val CHAT_BROADCAST_NAME = "chat-message-received"
 
+    const val EVENT_EDIT = "pEdit"
     const val EVENT_TITLE = "pTitel"
     const val EVENT_COMMENT = "pAnmerkung"
     const val EVENT_START = "pVon"
@@ -152,4 +159,12 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX = "calendar_filter_hour_limit_max"
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
+    const val KEY_NOTIFICATION_TYPE_ID = "type_id"
+
+    const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_OJHHpeotVOpaRO4veynROu18"
+    const val KEY_EVENT = "event"
+    const val KEY_EVENT_ID = "eventId"
+    const val KEY_CARD_HOLDER = "cardholder"
+    const val KEY_TICKET_PRICE = "ticketPrice"
+    const val KEY_TICKET_HISTORY = "ticketHistory"
 }

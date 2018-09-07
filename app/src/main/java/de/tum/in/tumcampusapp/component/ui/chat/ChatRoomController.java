@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
@@ -171,7 +170,11 @@ public class ChatRoomController implements ProvidesCard {
                     // Join chat room
                     try {
                         ChatRoom currentChatRoom = new ChatRoom(roomId);
-                        TUMCabeVerification verification = TUMCabeVerification.create(mContext, currentChatMember);
+                        TUMCabeVerification verification =
+                                TUMCabeVerification.createMemberVerification(mContext, null);
+                        if (verification == null) {
+                            return results;
+                        }
 
                         currentChatRoom = client.createRoom(currentChatRoom, verification);
                         if (currentChatRoom != null) {
@@ -179,8 +182,6 @@ public class ChatRoomController implements ProvidesCard {
                         }
                     } catch (IOException e) {
                         Utils.log(e, " - error occured while creating the room!");
-                    } catch (NoPrivateKey noPrivateKey) {
-                        return results;
                     }
                 }
             }

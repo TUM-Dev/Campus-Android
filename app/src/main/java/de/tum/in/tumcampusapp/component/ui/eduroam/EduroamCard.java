@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.eduroam;
 
 import android.Manifest;
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,27 +9,25 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
 
 /**
  * Card that can start {@link SetupEduroamActivity}
  */
-public class EduroamCard extends NotificationAwareCard {
+public class EduroamCard extends Card {
 
     public EduroamCard(Context context) {
-        super(CardManager.CARD_EDUROAM, context, "card_eduroam", true);
+        super(CardManager.CARD_EDUROAM, context, "card_eduroam");
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -72,17 +69,6 @@ public class EduroamCard extends NotificationAwareCard {
         prefs.edit()
              .putBoolean("card_eduroam_start", false)
              .apply();
-    }
-
-    @Override
-    protected Notification fillNotification(@NonNull NotificationCompat.Builder notificationBuilder) {
-        return null;
-    }
-
-    @NonNull
-    @Override
-    public String getTitle() {
-        return getContext().getString(R.string.setup_eduroam);
     }
 
     @Override

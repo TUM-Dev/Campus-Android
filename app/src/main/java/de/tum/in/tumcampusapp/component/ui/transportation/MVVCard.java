@@ -1,40 +1,34 @@
 package de.tum.in.tumcampusapp.component.ui.transportation;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.NotificationCompat;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.StationResult;
-import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 import static de.tum.in.tumcampusapp.component.ui.overview.CardManager.CARD_MVV;
 
 /**
  * Card that shows MVV departure times
  */
-public class MVVCard extends NotificationAwareCard {
+public class MVVCard extends Card {
 
     private static final String MVV_TIME = "mvv_time";
 
-    private StationResult mStationResult;
+    private StationResult mStation;
     private List<Departure> mDepartures;
 
     MVVCard(Context context) {
@@ -48,9 +42,8 @@ public class MVVCard extends NotificationAwareCard {
         return new MVVCardViewHolder(view);
     }
 
-    @Override
     public String getTitle() {
-        return mStationResult.getStation();
+        return mStation.getStation();
     }
 
     @Override
@@ -59,16 +52,14 @@ public class MVVCard extends NotificationAwareCard {
 
         if (viewHolder instanceof MVVCardViewHolder) {
             MVVCardViewHolder holder = (MVVCardViewHolder) viewHolder;
-            holder.bind(mStationResult, mDepartures);
+            holder.bind(mStation, mDepartures);
         }
     }
 
+    @Nullable
     @Override
     public Intent getIntent() {
-        Intent i = new Intent(getContext(), TransportationDetailsActivity.class);
-        i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationResult.getStation());
-        i.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, mStationResult.getId());
-        return i;
+        return mStation.getIntent(getContext());
     }
 
     @Override
@@ -81,42 +72,9 @@ public class MVVCard extends NotificationAwareCard {
         final long prevDate = prefs.getLong(MVV_TIME, 0);
         return prevDate + DateUtils.HOUR_IN_MILLIS < System.currentTimeMillis();
     }
-
-    @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
-
-        String firstContent = "";
-        String firstTime = "";
-
-        int numberOfDepartures = Math.min(mDepartures.size(), 5);
-
-        for (int i = 0; i < numberOfDepartures; i++) {
-            Departure departure = mDepartures.get(i);
-            if (firstTime.isEmpty()) {
-                firstTime = departure.getCountDown() + "min";
-                firstContent = departure.getServingLine() + " " + departure.getDirection();
-            }
-
-            NotificationCompat.Builder pageNotification =
-                    new NotificationCompat.Builder(getContext(), Const.NOTIFICATION_CHANNEL_MVV)
-                            .setContentTitle(departure.getCountDown() + "min")
-                            .setSmallIcon(R.drawable.ic_notification)
-                            .setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_mvv))
-                            .setContentText(departure.getServingLine() + " " + departure.getDirection());
-            morePageNotification.addPage(pageNotification.build());
-        }
-
-        notificationBuilder.setContentTitle(firstTime);
-        notificationBuilder.setContentText(firstContent);
-        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_mvv);
-        morePageNotification.setBackground(bm);
-        return morePageNotification.extend(notificationBuilder)
-                                   .build();
-    }
-
+    
     public void setStation(StationResult station) {
-        mStationResult = station;
+        this.mStation = station;
     }
 
     public void setDepartures(List<Departure> departures) {

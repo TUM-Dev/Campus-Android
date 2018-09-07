@@ -69,7 +69,6 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
         val wifiScansEnabled = Utils.getSettingBool(context, Const.WIFI_SCANS_ALLOWED, false)
         var nextScanScheduled = false
 
-        val wifiScanHandler = WifiScanHandler.getInstance()
         wifiManager.scanResults.forEach { network ->
             if (network.SSID != Const.EDUROAM_SSID && network.SSID != Const.LRZ) {
                 return@forEach
@@ -94,7 +93,6 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
             val minimumBattery = Utils.getSettingFloat(context, Const.WIFI_SCAN_MINIMUM_BATTERY_LEVEL, 50.0f)
 
             if (currentBattery > minimumBattery) {
-                wifiScanHandler.startRepetition(context)
                 Utils.log("WifiScanHandler rescheduled")
             } else {
                 Utils.log("WifiScanHandler stopped")
@@ -176,6 +174,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
                     .addAction(R.drawable.ic_notification_wifi, context.getString(R.string.setup), setupPendingIntent)
                     .setContentIntent(setupPendingIntent)
                     .setAutoCancel(true)
+                    .setColor(ContextCompat.getColor(context, R.color.color_primary))
                     .build()
 
             // Create FcmNotification Manager

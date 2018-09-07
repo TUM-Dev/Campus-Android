@@ -4,5 +4,5 @@
 
     <size android:height="@dimen/compound_drawable_size" android:width="@dimen/compound_drawable_size"/>
     <corners android:radius="2dp"/>
-    <solid android:color="@color/news_source_placeholder"/>
+    <solid android:color="@color/placeholder"/>
 </shape>

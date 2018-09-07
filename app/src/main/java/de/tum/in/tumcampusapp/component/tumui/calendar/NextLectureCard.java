@@ -1,14 +1,10 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
-import android.app.Notification;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,12 +23,12 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
-public class NextLectureCard extends NotificationAwareCard {
+public class NextLectureCard extends Card {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
     private final static int[] IDS = {
@@ -57,9 +53,8 @@ public class NextLectureCard extends NotificationAwareCard {
         return new CardViewHolder(view);
     }
 
-    @Override
-    public String getTitle() {
-        return lectures.get(mSelected).title;
+    public CalendarItem getSelected() {
+        return lectures.get(mSelected);
     }
 
     @Override
@@ -96,10 +91,10 @@ public class NextLectureCard extends NotificationAwareCard {
                       .setSelected(i == sel);
         }
 
-        final CalendarItem item = lectures.get(sel);
+        final CalendarItem item = getSelected();
 
         // Set current title
-        getMTitleView().setText(getTitle());
+        getMTitleView().setText(item.title);
 
         //Add content
         mTimeView.setText(DateTimeUtils.INSTANCE.formatFutureTime(item.start, getContext()));
@@ -121,8 +116,8 @@ public class NextLectureCard extends NotificationAwareCard {
         mEvent.setText(String.format("%s%s - %s", dayOfWeek.print(item.start), time.print(item.start), time.print(item.end)));
         mEvent.setOnClickListener(view -> {
             Intent i = new Intent(getContext(), CalendarActivity.class);
-            CalendarItem item1 = lectures.get(mSelected);
-            i.putExtra(Const.EVENT_TIME, item1.start.getMillis());
+            CalendarItem selectedItem = lectures.get(mSelected);
+            i.putExtra(Const.EVENT_TIME, selectedItem.start.getMillis());
             getContext().startActivity(i);
         });
     }
@@ -148,17 +143,6 @@ public class NextLectureCard extends NotificationAwareCard {
     @Override
     public int getId() {
         return 0;
-    }
-
-    @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        CalendarItem item = lectures.get(0);
-        final String time = DateTimeUtils.INSTANCE.formatFutureTime(item.start, getContext());
-        notificationBuilder.setContentText(item.title + '\n' + time);
-        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_next_lecture);
-        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
-        return notificationBuilder.build();
     }
 
     public void setLectures(List<de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem> calendarItems) {

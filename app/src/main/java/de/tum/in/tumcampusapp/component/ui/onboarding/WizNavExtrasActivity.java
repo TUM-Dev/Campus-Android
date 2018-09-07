@@ -15,10 +15,9 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
-import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
+import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
@@ -126,9 +125,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Try to restore already joined chat rooms from server
         try {
-            List<ChatRoom> rooms = tumCabeClient.getMemberRooms(
-                    member.getId(), TUMCabeVerification.create(this, member)
-            );
+            TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+            List<ChatRoom> rooms = tumCabeClient.getMemberRooms(member.getId(), verification);
             new ChatRoomController(this).replaceIntoRooms(rooms);
 
             // upload obfuscated ids now that we have a member
@@ -139,7 +137,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             }
 
             return member;
-        } catch (IOException | NoPrivateKey e) {
+        } catch (IOException e) {
             Utils.log(e);
         }
 

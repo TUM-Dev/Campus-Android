@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
@@ -18,6 +19,15 @@ object CafeteriaLocalRepository {
 
     lateinit var db: TcaDb
 
+    fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
+        return CafeteriaWithMenus(cafeteriaId).apply {
+            name = getCafeteriaNameFromId(id)
+            menuDates = getAllMenuDates()
+            menus = getCafeteriaMenus(id, nextMenuDate)
+        }
+    }
+
+    private fun getCafeteriaNameFromId(id: Int): String = getCafeteria(id).name
 
     // Menu methods //
 
