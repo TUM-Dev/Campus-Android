@@ -256,6 +256,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     private void refreshWeekView() {
         setupDateTimeInterpreter(mWeekMode);
         int icon;
+
         if (mWeekMode) {
             icon = R.drawable.ic_outline_calendar_view_day_24px;
             mWeekView.setNumberOfVisibleDays(5);
@@ -280,6 +281,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         if (menuItemSwitchView != null) {
             menuItemSwitchView.setIcon(icon);
         }
+
+        mWeekView.invalidate();
     }
 
     /**
