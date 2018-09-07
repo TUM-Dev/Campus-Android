@@ -14,8 +14,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventDetailsActivit
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 
-class EventCard(context: Context) : Card(
-        CardManager.CARD_EVENT, context, "card_event", false) {
+class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_event") {
 
     var event: Event? = null
     private val eventsController = EventsController(context)
