@@ -21,10 +21,14 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
+import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
+import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
+import de.tum.in.tumcampusapp.component.notifications.model.FutureNotification;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
@@ -43,7 +47,8 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 /**
  * Calendar Manager, handles database stuff, external imports.
  */
-public class CalendarController implements ProvidesCard {
+public class CalendarController implements ProvidesCard, ProvidesNotifications {
+
     private static final String[] PROJECTION = {"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
@@ -192,6 +197,19 @@ public class CalendarController implements ProvidesCard {
         return calendarDao.getCalendarItemById(id);
     }
 
+    public void scheduleNotifications(List<Event> events) {
+        List<FutureNotification> notifications = new ArrayList<>();
+        for (int i = 0; i < events.size(); i++) {
+            FutureNotification notification = events.get(i).toNotification(mContext);
+            if (notification != null) {
+                notifications.add(notification);
+            }
+        }
+
+        NotificationScheduler scheduler = new NotificationScheduler(mContext);
+        scheduler.schedule(notifications);
+    }
+
     public void importCalendar(Events newEvents) {
         // Cleanup cache before importing
         removeCache();
@@ -240,6 +258,22 @@ public class CalendarController implements ProvidesCard {
         return calendarDao.getNextCalendarItems();
     }
 
+    @Nullable
+    public CalendarItem getNextCalendarItem() {
+        List<CalendarItem> items = getNextCalendarItems();
+        if (items.isEmpty()) {
+            return null;
+        }
+
+        Collections.sort(items, (lhs, rhs) -> lhs.getEventStart().compareTo(rhs.getEventStart()));
+        return items.get(0);
+    }
+
+    @Nullable
+    public CalendarItem getNextCalendarItem(String eventId) {
+        return calendarDao.getCalendarItemById(eventId);
+    }
+
     /**
      * Gets the coordinates of the next lecture or the current running lecture,
      * if it started during the last 30 minutes
@@ -266,6 +300,11 @@ public class CalendarController implements ProvidesCard {
         }
 
         return results;
+    }
+
+    @Override
+    public boolean hasNotificationsEnabled() {
+        return Utils.getSettingBool(mContext, "card_next_phone", false);
     }
 
     public static class QueryLocationsService extends IntentService {

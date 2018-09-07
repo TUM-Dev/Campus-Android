@@ -9,6 +9,7 @@ object Const {
     const val ACTION_EXTRA = "action"
     const val BACKGROUND_MODE = "background_mode"
     const val CAFETERIA_ID = "cafeteriasId"
+    const val CAFETERIA_DATE = "cafeteriaDate"
     const val CAFETERIAS = "cafeterias"
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
     const val EVENT_BOOKED_MODE = "event_booked_mode"
@@ -73,6 +74,9 @@ object Const {
     const val URL_DEFAULT_MAP_IMAGE = "https://$API_HOSTNAME${URL_ROOM_FINDER_API}defaultMap/"
     const val URL_MAP_IMAGE = "https://$API_HOSTNAME${URL_ROOM_FINDER_API}map/"
     const val ROOM_ID = "room_id"
+
+    const val KEY_NOTIFICATION_ID = "notificationID"
+    const val KEY_NOTIFICATION = "notification"
 
     const val NOTIFICATION_CHANNEL_DEFAULT = "general"
     const val NOTIFICATION_CHANNEL_CHAT = "chat"
@@ -155,6 +159,7 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX = "calendar_filter_hour_limit_max"
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
+    const val KEY_NOTIFICATION_TYPE_ID = "type_id"
 
     const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_OJHHpeotVOpaRO4veynROu18"
     const val KEY_EVENT = "event"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
+import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
@@ -28,7 +30,7 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * Cafeteria Manager, handles database stuff, external imports
  */
-public class CafeteriaManager implements ProvidesCard {
+public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
 
     private Context mContext;
     private final CafeteriaViewModel cafeteriaViewModel;
@@ -55,18 +57,31 @@ public class CafeteriaManager implements ProvidesCard {
     public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
-        // Choose which mensa should be shown
-        int cafeteriaId = getBestMatchMensaId(mContext);
-        if (cafeteriaId == -1) {
+        CafeteriaWithMenus cafeteria = getCafeteriaWithMenus();
+        if (cafeteria == null) {
             return results;
         }
 
         CafeteriaMenuCard card = new CafeteriaMenuCard(mContext);
-        CafeteriaWithMenus cafeteria = cafeteriaViewModel.getCafeteriaWithMenus(cafeteriaId);
         card.setCafeteriaWithMenus(cafeteria);
 
         results.add(card.getIfShowOnStart());
         return results;
+    }
+
+    @Override
+    public boolean hasNotificationsEnabled() {
+        return Utils.getSettingBool(mContext, "card_cafeteria_phone", true);
+    }
+
+    @Nullable
+    private CafeteriaWithMenus getCafeteriaWithMenus() {
+        // Choose which mensa should be shown
+        int cafeteriaId = new LocationManager(mContext).getCafeteria();
+        if (cafeteriaId == -1) {
+            return null;
+        }
+        return cafeteriaViewModel.getCafeteriaWithMenus(cafeteriaId);
     }
 
     /**

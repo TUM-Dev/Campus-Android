@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.google.gson.Gson;
 
@@ -90,6 +91,7 @@ public class Update extends GenericNotification {
                 .setLights(0xff0000ff, 500, 500)
                 .setSound(sound)
                 .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(context, R.color.color_primary))
                 .build();
     }
 

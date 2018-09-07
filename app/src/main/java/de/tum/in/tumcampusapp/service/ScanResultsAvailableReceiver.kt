@@ -174,6 +174,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
                     .addAction(R.drawable.ic_notification_wifi, context.getString(R.string.setup), setupPendingIntent)
                     .setContentIntent(setupPendingIntent)
                     .setAutoCancel(true)
+                    .setColor(ContextCompat.getColor(context, R.color.color_primary))
                     .build()
 
             // Create FcmNotification Manager

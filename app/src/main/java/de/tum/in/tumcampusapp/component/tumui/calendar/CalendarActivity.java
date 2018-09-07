@@ -39,9 +39,12 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
+import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
+import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
@@ -133,21 +136,34 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull Events events) {
+    protected void onDownloadSuccessful(@NonNull Events response) {
         isFetched = true;
+        scheduleNotifications(response.getEvents());
+
         mDisposable.add(
                 Completable
-                        .fromAction(() -> calendarController.importCalendar(events))
+                        .fromAction(() -> calendarController.importCalendar(response))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(() -> {
                             // Update the action bar to display the enabled menu options
                             invalidateOptionsMenu();
-                            Intent intent = new Intent(this,
-                                    CalendarController.QueryLocationsService.class);
+                            Intent intent = new Intent(
+                                    this, CalendarController.QueryLocationsService.class);
                             startService(intent);
                         })
         );
+    }
+
+    private void scheduleNotifications(List<Event> events) {
+        if (calendarController.hasNotificationsEnabled()) {
+            calendarController.scheduleNotifications(events);
+        }
+
+        TransportController transportController = new TransportController(this);
+        if (transportController.hasNotificationsEnabled()) {
+            transportController.scheduleNotifications(events);
+        }
     }
 
     @Override
@@ -419,7 +435,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
     @Override
     public void onEventDeleted(@NotNull String eventId) {
-        TcaDb.getInstance(this).calendarDao().delete(eventId);
+        TcaDb db = TcaDb.getInstance(this);
+        db.calendarDao().delete(eventId);
+
+        int id = Integer.parseInt(eventId);
+        db.scheduledNotificationsDao().delete(NotificationType.CALENDAR.getId(), id);
+
         refreshWeekView();
         Utils.showToast(this, R.string.delete_event_confirmation);
     }

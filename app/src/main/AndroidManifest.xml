@@ -670,6 +670,10 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationReceiver" />
+
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver" />
+
         <activity
             android:name=".component.ui.ticket.activity.ShowTicketActivity"
             android:configChanges="keyboardHidden|screenSize"
@@ -731,6 +735,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.ticket.activity.StripePaymentActivity" />
         </activity>
+
     </application>
 
 </manifest>

@@ -506,10 +506,21 @@ Signature: %5$s</string>
     <string name="show_chart">Show Chart</string>
 
     <string name="channel_general">General</string>
+    <string name="channel_description_general">Next lecture, news and tuition fees reminders</string>
+
     <string name="channel_cafeteria">Cafeteria</string>
+    <string name="channel_description_cafeteria">The day’s menu</string>
+
     <string name="channel_chat">Chat</string>
+    <string name="channel_description_chat">New chat room messages</string>
+
+    <string name="channel_description_eduroam">Setup assistance for eduroam</string>
+
     <string name="channel_mvv">Public Transport</string>
+    <string name="channel_description_mvv">Departures at nearby stations</string>
+
     <string name="channel_tum_alarmierung">TUM Emergency Notifications</string>
+    <string name="channel_description_tum_alarmierung">Alarms about emergencies at TUM</string>
 
     <string name="favorite_dish_info">You will get notifications on days your favorite dishes are available in the cafeteria. Enjoy!</string>
     <string name="location_services_off_title">Location Services are Off</string>
@@ -671,6 +682,8 @@ Signature: %5$s</string>
     <string name="lecture_details_format_string" translatable="false">%1$s - %2$s SWS</string>
     <string name="lecture_list_item_details_format_string" translatable="false">%1$s - %2$s - %3$s SWS</string>
     <string name="checking_if_token_enabled">Checking if token is enabled …</string>
+
+    <string name="new_items_format_string">%d new items</string>
     <string name="no_events_found">No events found</string>
     <string name="no_bookings_found">No bookings found</string>
     <string name="unknown">Unknown</string>

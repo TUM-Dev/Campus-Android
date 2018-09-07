@@ -1,13 +1,10 @@
 package de.tum.in.tumcampusapp.component.tumui.tutionfees;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.NotificationCompat;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +16,14 @@ import org.joda.time.format.DateTimeFormat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
+import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.component.ui.overview.card.NotificationAwareCard;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Card that shows information about your fees that have to be paid or have been paid
  */
-public class TuitionFeesCard extends NotificationAwareCard {
+public class TuitionFeesCard extends Card {
 
     private static final String LAST_FEE_FRIST = "fee_frist";
     private static final String LAST_FEE_SOLL = "fee_soll";
@@ -44,24 +40,8 @@ public class TuitionFeesCard extends NotificationAwareCard {
         return new CardViewHolder(view);
     }
 
-    @Override
     public String getTitle() {
         return getContext().getString(R.string.tuition_fees);
-    }
-
-    @Override
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        if ("0".equals(mTuition.getAmount())) {
-            notificationBuilder.setContentText(String.format(getContext().getString(R.string.reregister_success), mTuition.getSemester()));
-        } else {
-            notificationBuilder.setContentText(mTuition.getAmount() + "€\n" +
-                    String.format(getContext().getString(R.string.reregister_todo), mTuition.getDeadline()));
-        }
-        notificationBuilder.setSmallIcon(R.drawable.ic_notification);
-        notificationBuilder.setLargeIcon(Utils.getLargeIcon(getContext(), R.drawable.ic_money));
-        Bitmap bm = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wear_tuition_fee);
-        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
-        return notificationBuilder.build();
     }
 
     @Override
@@ -75,7 +55,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
 
         TextView reregisterInfoTextView =
@@ -114,7 +94,6 @@ public class TuitionFeesCard extends NotificationAwareCard {
                (prevDeadline.compareTo(deadline) < 0 || prevAmount.compareTo(amount) > 0);
     }
 
-    @Override
     public void discard(Editor editor) {
         String deadline = DateTimeUtils.INSTANCE.getDateString(mTuition.getDeadline());
         String amount = Float.toString(mTuition.getAmount());

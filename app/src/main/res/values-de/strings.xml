@@ -601,11 +601,20 @@ Signatur: %5$s</string>
     <string name="discard_changes_question">Änderungen verwerfen?</string>
     <string name="discard">Verwerfen</string>
     <string name="keep_editing">Weiter bearbeiten</string>
+
+    <string name="channel_description_general">Nächste Vorlesung, News und Erinnerungen über Studienbeiträge</string>
+    <string name="channel_description_cafeteria">Aktuelles Tagesmenü</string>
+    <string name="channel_description_chat">Neue Chat-Nachrichten</string>
+    <string name="channel_description_mvv">Abfahrten an nahegelegenen Haltestellen</string>
+    <string name="channel_description_tum_alarmierung">Alarmierung bei Notfällen an der TUM</string>
+    <string name="channel_description_eduroam">Untersützung beim Einrichten von eduroam</string>
+
     <string name="updating_event">Aktualisiere Event …</string>
     <string name="error_tum_online_unavailable">TUMonline ist aktuell nicht verfügbar.</string>
     <string name="retry">Wiederholen</string>
     <string name="open_settings">Einstellungen öffnen</string>
     <string name="not_available">Nicht verfügbar</string>
+
     <string name="error_accessing_tumonline_header">Fehler beim Zugriff auf TUMonline</string>
     <string name="error_accessing_tumonline_body">Bitte stelle sicher, dass das TUMonline-Access-Token akzeptiert und die entsprechenden Rechte aktiviert wurden.</string>
     <string name="error_no_access_token_setup_header">Kein TUMonline-Access-Token gefunden</string>
@@ -623,6 +632,7 @@ Signatur: %5$s</string>
     <string name="error_unknown">Unbekannter Fehler.</string>
     <string name="export_to_google_error">Ein Fehler ist während des Kalender-Exports zu Google Kalender aufgetreten.</string>
     <string name="checking_if_token_enabled">Überprüfung, ob Token aktiviert ist …</string>
+    <string name="new_items_format_string">%d neue Meldungen</string>
     <string name="no_events_found">Keine Events gefunden</string>
     <string name="no_bookings_found">Keine Buchungen gefunden</string>
     <string name="ticket">Ticket</string>

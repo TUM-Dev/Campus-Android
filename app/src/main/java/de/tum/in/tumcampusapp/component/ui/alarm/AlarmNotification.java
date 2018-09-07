@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 
 import com.google.common.base.Charsets;
@@ -158,6 +159,7 @@ public class AlarmNotification extends GenericNotification {
                 .setLights(0xff0000ff, 500, 500)
                 .setSound(sound)
                 .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(context, R.color.color_primary))
                 .build();
     }
 

@@ -253,14 +253,11 @@ class DownloadService : JobIntentService() {
                     Utils.setSetting(service, LAST_UPDATE, System.currentTimeMillis())
                 }
 
-                // TODO Till: Philipp and I have decided to omit the update of Cards here.
-                // In the future, we’ll introduce a better way for Manager classes to update
-                // themselves in the background, independent of their corresponding Card.
-
                 success = true
             }
 
-            // After done the job, create an broadcast intent and send it. The receivers will be informed that the download service has finished.
+            // After done the job, create an broadcast intent and send it. The receivers will be
+            // informed that the download service has finished.
             Utils.logv("DownloadService was " + (if (success) "" else "not ") + "successful")
             if (success) {
                 service.broadcastDownloadSuccess()
