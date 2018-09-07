@@ -19,7 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.WidgetDepa
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import java.io.IOException
+import io.reactivex.Observable
 import java.util.*
 
 /**
@@ -115,7 +115,7 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         val locMan = LocationManager(context)
         val station = locMan.getStation() ?: return emptyList()
 
-        val departures = getDeparturesFromExternal(context, station.id)
+        val departures = getDeparturesFromExternal(context, station.id).blockingFirst()
         val card = MVVCard(context).apply {
             setStation(station)
             setDepartures(departures)
@@ -160,24 +160,17 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
          * @return List of departures
          */
         @JvmStatic
-        fun getDeparturesFromExternal(context: Context, stationID: String): List<Departure> {
-            try {
-                val departures = MvvClient.getInstance(context)
-                        .getDepartures(stationID).execute().body() ?: return emptyList()
-                val departureList = departures.departureList ?: emptyList()
-
-                return departureList.map { (servingLine, dateTime, countdown) ->
-                    Departure(servingLine.name,
-                            servingLine.direction,
-                            servingLine.symbol,
-                            countdown,
-                            dateTime)
-                }.sortedBy { it.countDown }
-            } catch (e: IOException) {
-                Utils.log(e)
-            }
-
-            return emptyList()
+        fun getDeparturesFromExternal(context: Context, stationID: String): Observable<List<Departure>> {
+            return MvvClient.getInstance(context)
+                    .getDepartures(stationID).map {
+                        it.departureList?.map { (servingLine, dateTime, countdown) ->
+                            Departure(servingLine.name,
+                                    servingLine.direction,
+                                    servingLine.symbol,
+                                    countdown,
+                                    dateTime)
+                        }?.sortedBy { it.countDown }
+                    }
         }
 
         /**
@@ -187,16 +180,9 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
          * @return List of StationResult
          */
         @JvmStatic
-        fun getStationsFromExternal(context: Context, prefix: String): List<StationResult> {
-            try {
-                val (results) = MvvClient.getInstance(context).getStations(prefix).execute().body()
-                        ?: return emptyList()
-                return results.sortedBy { it.quality }
-            } catch (e: IOException) {
-                Utils.log(e)
-            }
-
-            return emptyList()
+        fun getStationsFromExternal(context: Context, prefix: String): Observable<List<StationResult>> {
+            return MvvClient.getInstance(context).getStations(prefix)
+                    .map { it.stations.sortedBy { it.quality } }
         }
 
         @JvmStatic
