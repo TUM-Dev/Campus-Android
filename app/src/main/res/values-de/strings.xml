@@ -314,6 +314,7 @@
     <string name="bug_reports">Anonyme Fehlerberichte</string>
     <string name="set_bug_reports">Unterstütze das TCA Team indem du anonyme Fehlerberichte zu unseren Server schicken lässt. Diese beinhalten: Stacktrace, Logdatei, Android Version, App Version und Bildschirm Auflösung</string>
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
+    <string name="error_pk_verification">Es ist ein Problem bei der Authentifizierung aufgetreten</string>
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
     <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter <![CDATA[<a href="https://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a>]]>.</string>

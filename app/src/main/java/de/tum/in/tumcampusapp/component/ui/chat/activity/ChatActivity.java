@@ -41,6 +41,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.ui.chat.AddChatMemberActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageValidator;
@@ -52,7 +53,6 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
@@ -396,9 +396,9 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             // Download chat messages in new Thread
 
             // If currently nothing has been shown load newest messages from server
-            ChatVerification verification;
+            TUMCabeVerification verification;
             try {
-                verification = ChatVerification.Companion.getChatVerification(ChatActivity.this, currentChatMember);
+                verification = TUMCabeVerification.create(ChatActivity.this, currentChatMember);
             } catch (NoPrivateKey noPrivateKey) {
                 return; //In this case we simply cannot do anything
             }
@@ -442,9 +442,9 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     public void onClick(DialogInterface dialog, int which) {
 
         // Send request to the server to remove the user from this room
-        ChatVerification verification;
+        TUMCabeVerification verification;
         try {
-            verification = ChatVerification.Companion.getChatVerification(this, currentChatMember);
+            verification = TUMCabeVerification.create(this, currentChatMember);
         } catch (NoPrivateKey noPrivateKey) {
             return;
         }

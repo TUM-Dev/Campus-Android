@@ -362,6 +362,7 @@
     <string name="bug_reports">Anonymous Bug Reports</string>
     <string name="set_bug_reports">Support the TCA Team by sending anonymous bug reports to our server which include: stack trace, logfile, android version, app version and screen resolution</string>
     <string name="error_setup_chat_member">Something is wrong with your chat registration!</string>
+    <string name="error_pk_verification">Verification error occurred</string>
     <string name="room_timetable">Room timetable</string>
     <string name="newspread" translatable="false" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>

@@ -20,7 +20,10 @@ import java.util.UUID;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
+import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
+import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
@@ -198,9 +201,7 @@ public class AuthenticationManager {
                                  //Remember that we are done, only if we have submitted with the member information
                                  if (response.isSuccessful() && "ok".equals(response.body()
                                                                                     .getStatus())) {
-                                     if (member != null) {
-                                         Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
-                                     }
+                                     Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
 
                                      AuthenticationManager.this.tryToUploadFcmToken();
                                  }
@@ -247,7 +248,7 @@ public class AuthenticationManager {
                 });
     }
 
-    private void tryToUploadFcmToken() {
+    public void tryToUploadFcmToken() {
         // Check device for Play Services APK. If check succeeds, proceed with FCM registration.
         // Can only be done after the public key has been uploaded
         if (Utils.getSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)
@@ -255,6 +256,53 @@ public class AuthenticationManager {
                                     .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
             FcmIdentificationService idService = new FcmIdentificationService(mContext);
             idService.checkSetup();
+        }
+    }
+
+    /**
+     * synchronous method!
+     * @param uploadStatus
+     */
+    public void uploadObfuscatedIds(UploadStatus uploadStatus) {
+        String lrzId = Utils.getSetting(mContext, Const.LRZ_ID, "");
+        if (lrzId.isEmpty()) {
+            Utils.log("Can't upload obfuscated ids: no lrz id");
+            return;
+        }
+
+        ObfuscatedIdsUpload upload;
+        try {
+            upload = new ObfuscatedIdsUpload(
+                    "", "", "",
+                    TUMCabeVerification.create(mContext, null)
+            );
+        } catch (NoPrivateKey noPrivateKey) {
+            Utils.log(noPrivateKey, "Can't upload obfuscated ids: no private key");
+            return;
+        }
+
+        String studentId = Utils.getSetting(mContext, Const.TUMO_STUDENT_ID, "");
+        String employeeId = Utils.getSetting(mContext, Const.TUMO_EMPLOYEE_ID, "");
+        String externalId = Utils.getSetting(mContext, Const.TUMO_EXTERNAL_ID, "");
+
+        boolean doUpload = false;
+        if (!uploadStatus.getStudentId() && !studentId.isEmpty()) {
+            upload.setStudentId(studentId);
+            doUpload = true;
+        }
+        if (!uploadStatus.getEmployeeId() && !employeeId.isEmpty()) {
+            upload.setEmployeeId(employeeId);
+            doUpload = true;
+        }
+        if (!uploadStatus.getExternalId() && !externalId.isEmpty()) {
+            upload.setExternalId(externalId);
+            doUpload = true;
+        }
+
+        if (doUpload) {
+            Utils.log("uploading obfuscated ids: " + upload.toString());
+            TUMCabeStatus status = TUMCabeClient.getInstance(mContext).uploadObfuscatedIds(lrzId, upload).blockingSingle();
+            Utils.log("uplod obfuscated ids status: " + status.getStatus());
         }
     }
 
@@ -279,7 +327,6 @@ public class AuthenticationManager {
      */
     private void saveKeys(String privateKeyString, String publicKeyString) {
         Utils.setSetting(mContext, Const.PRIVATE_KEY, privateKeyString);
-        Utils.setSetting(mContext, Const.PRIVATE_KEY_ACTIVE, false); //We need to remember this state in order to activate it later
         Utils.setSetting(mContext, Const.PUBLIC_KEY, publicKeyString);
     }
 
