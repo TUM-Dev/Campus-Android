@@ -29,6 +29,7 @@ class TransportNotificationProvider(context: Context) : NotificationProvider(con
         val inboxStyle = NotificationCompat.InboxStyle()
         TransportController
                 .getDeparturesFromExternal(context, station.id)
+                .blockingFirst()
                 .map { "${it.servingLine} (${it.direction}) in ${it.countDown} min" }
                 .forEach { inboxStyle.addLine(it) }
 
