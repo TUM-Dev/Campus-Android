@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.studycard;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,16 +15,13 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
-import de.tum.in.tumcampusapp.component.other.generic.adapter.NoResultsAdapter;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.CardActivityState;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
-import de.tum.in.tumcampusapp.databinding.ActivityCardsBinding;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class CardsActivity extends ActivityForLoadingInBackground<Void, List<StudyCard>>
         implements AdapterView.OnItemClickListener {
 
-    ActivityCardsBinding binding;
     CardActivityState state;
 
     public CardsActivity() {
@@ -40,7 +36,7 @@ public class CardsActivity extends ActivityForLoadingInBackground<Void, List<Stu
 
     @Override
     public void setUpLayout() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cards);
+        /*binding = DataBindingUtil.setContentView(this, R.layout.activity_cards);
         binding.setState(this.state);
         binding.cardList.setOnItemClickListener(this);
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -49,7 +45,7 @@ public class CardsActivity extends ActivityForLoadingInBackground<Void, List<Stu
                 Intent intent = new Intent(binding.fab.getContext(), CardsQuizActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
@@ -93,10 +89,10 @@ public class CardsActivity extends ActivityForLoadingInBackground<Void, List<Stu
     protected void onLoadFinished(List<StudyCard> cards) {
         showLoadingEnded();
         if (cards.size() == 0) {
-            binding.cardList.setAdapter(new NoResultsAdapter(this));
+            //binding.cardList.setAdapter(new NoResultsAdapter(this));
         } else {
             StudyCardListAdapter adapter = new StudyCardListAdapter(this, cards);
-            binding.cardList.setAdapter(adapter);
+            //binding.cardList.setAdapter(adapter);
         }
     }
 
