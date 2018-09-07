@@ -91,6 +91,8 @@ public class WizNavCheckTokenActivity extends ProgressActivity {
         Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscated_ids()
                 .getBedienstete());
 
+        // can't upload the obfuscated ids here since we might not have a (chat) member yet
+
         startActivity(new Intent(this, WizNavExtrasActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         finish();
