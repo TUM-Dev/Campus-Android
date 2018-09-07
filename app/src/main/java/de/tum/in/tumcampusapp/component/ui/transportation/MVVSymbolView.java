@@ -56,7 +56,7 @@ public class MVVSymbolView extends Drawable {
                         Ints.tryParse(line.substring(1)))
                               .or(0);
                 rounded = true;
-                if (num <= 8) {
+                if (num > 0 && num <= 8) {
                     backgroundColor = S_LINE_COLOR[num - 1];
                 } else if (num == 20) {
                     backgroundColor = 0xffca536a;
