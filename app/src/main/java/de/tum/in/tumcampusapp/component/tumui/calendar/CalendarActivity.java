@@ -428,6 +428,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     public void onEditEvent(@NotNull CalendarItem calendarItem) {
         // TODO: CalendarItem should implement Parcelable
         Bundle bundle = new Bundle();
+        bundle.putBoolean(Const.EVENT_EDIT, true);
         bundle.putString(Const.EVENT_TITLE, calendarItem.getTitle());
         bundle.putString(Const.EVENT_COMMENT, calendarItem.getDescription());
         bundle.putString(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(calendarItem.getDtstart()));

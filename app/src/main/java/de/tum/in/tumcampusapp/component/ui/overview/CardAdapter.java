@@ -19,6 +19,7 @@ import de.tum.in.tumcampusapp.component.ui.news.TopNewsCard;
 import de.tum.in.tumcampusapp.component.ui.onboarding.LoginPromptCard;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.MVVCard;
 
 /**
@@ -60,6 +61,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>
                 return LoginPromptCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_TOP_NEWS:
                 return TopNewsCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_EVENT:
+                return EventCard.inflateViewHolder(viewGroup);
             default:
                 throw new UnsupportedOperationException();
         }

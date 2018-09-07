@@ -510,7 +510,6 @@
                 android:value=".component.ui.chat.activity.ChatActivity" />
         </activity>
 
-
         <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".component.ui.cafeteria.widget.MensaWidget"
@@ -671,6 +670,67 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".component.ui.ticket.activity.ShowTicketActivity"
+            android:configChanges="keyboardHidden|screenSize"
+            android:label="@string/your_ticket"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.tufilm.KinoActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.activity.BuyTicketActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/order_summary"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.tufilm.KinoActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.activity.EventsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/events_tickets"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.overview.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.activity.EventDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/events"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.ticket.activity.EventsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.ticket.activity.EventsActivity" />
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.activity.StripePaymentActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/enter_card_info_title"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.ticket.activity.BuyTicketActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.overview.MainActivity" />
+        </activity>
+        <activity
+            android:name=".component.ui.ticket.activity.PaymentConfirmationActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/payment_confirmation"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.ui.ticket.activity.StripePaymentActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.ui.ticket.activity.StripePaymentActivity" />
+        </activity>
     </application>
 
 </manifest>

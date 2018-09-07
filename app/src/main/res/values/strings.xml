@@ -15,7 +15,7 @@
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
     <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
-    
+
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
@@ -153,6 +153,7 @@
     <string name="opening_hours">Opening Hours</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
+    <string name="events" translatable="false">Events</string>
     <string name="barrier_free">Barrier-free Information</string>
 
     <!-- Activity titles -->
@@ -607,6 +608,59 @@ Signature: %5$s</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep editing</string>
 
+    <!-- Ticket Activity -->
+    <string name="your_ticket">Your Ticket</string>
+    <string name="show_ticket">Show Ticket</string>
+    <string name="buy_ticket">Buy Ticket</string>
+    <string name="purchase_details">Details</string>
+    <string name="continue_to_payment">Continue to payment</string>
+    <string name="order_summary">Order summary</string>
+    <string name="ticket_not_fetched">You may have already bought a ticket for this event. Try to reload the events overview.</string>
+
+    <!-- Event Activity -->
+    <string name="show_booked_events">Show booked events</string>
+    <string name="events_tickets">Events &amp; Tickets</string>
+    <string name="ticket_type">Ticket Type</string>
+    <string name="price">Price</string>
+    <string name="location">Location</string>
+    <string name="event" translatable="false">Event</string>
+    <string name="payment_selection">Payment Selection</string>
+    <string name="add_eventcalendar">Add In Calendar</string>
+    <string name="all_events">All Events</string>
+    <string name="booked_events">Booked Events</string>
+    <string name="visit_website">Visit Website</string>
+    <string name="tum_calendar">TUM Calendar</string>
+    <string name="external_calendar">External Calendar</string>
+    <string name="add_to_calendar_info">Add event to calendar</string>
+    <string name="event_export" translatable="false">Event Export</string>
+    <string name="redeemed_format_string">Redeemed: %1$s</string>
+
+    <!-- Payment -->
+    <string name="creditcard">Credit Card</string>
+    <string name="complete_purchase">Buy now</string>
+    <string name="select_payment_method">Select a payment method</string>
+    <string name="enter_card_info_title">Payment Information</string>
+    <string name="enter_card_info_description">Enter your payment information to conclude the purchase:</string>
+    <string name="purchase_progress_message">Requesting Ticket, please wait…</string>
+    <string name="purchase_success_title">Purchase successful</string>
+    <string name="purchase_success_message">You can access your ticket in the ticket section.</string>
+    <string name="purchase_success_continue">Continue</string>
+    <string name="purchase_error_message">Failure during server call.</string>
+    <string name="card_data_invalid">The card data is invalid.</string>
+    <string name="customersession_init_failed">Failed to load saved credit cards.</string>
+    <string name="cardholder">Cardholder</string>
+    <string name="buy_format_string">Buy\n%s</string>
+    <string name="internal_error">Internal Failure</string>
+    <string name="creditcard_ending_in">ending in</string>
+    <string name="empty_cardholder_message">No cardholder specified.</string>
+    <string name="not_logged_in_error">To purchase tickets, you must be logged in and allow access to your name and TUM ID in the TUMonline access token.</string>
+    <string name="ticket_retrieval_error">Failure while receiving ticket from server.</string>
+    <string name="reserving_ticket">Reserving your ticket, please wait…</string>
+    <string name="remaining_tickets_format_string" formatted="true">%d tickets remaining</string>
+    <string name="ticket_contingent_exhausted">All tickets of the requested type are already sold.</string>
+
+    <string name="choose_ticket_type">Choose your ticket type</string>
+
     <string name="retry">Retry</string>
     <string name="updating_event">Updating event …</string>
     <string name="open_settings">Open settings</string>
@@ -617,4 +671,14 @@ Signature: %5$s</string>
     <string name="lecture_details_format_string" translatable="false">%1$s - %2$s SWS</string>
     <string name="lecture_list_item_details_format_string" translatable="false">%1$s - %2$s - %3$s SWS</string>
     <string name="checking_if_token_enabled">Checking if token is enabled …</string>
+    <string name="no_events_found">No events found</string>
+    <string name="no_bookings_found">No bookings found</string>
+    <string name="unknown">Unknown</string>
+    <string name="ticket">Ticket</string>
+    <string name="payment_confirmation">Payment Confirmation</string>
+    <string name="credit_card_format_string" translatable="false">**** **** **** %s</string>
+    <string name="remaining_tickets">Remaining tickets</string>
+    <string name="thanks_for_your_purchase">Thanks for your purchase</string>
+    <string name="the_ticket_has_been_saved_for_you_in_the_app">The ticket has been saved for you in the app.</string>
+
 </resources>

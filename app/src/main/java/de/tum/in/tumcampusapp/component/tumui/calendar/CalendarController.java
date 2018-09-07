@@ -289,6 +289,7 @@ public class CalendarController implements ProvidesCard {
                 if (location.isEmpty()) {
                     continue;
                 }
+
                 Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
                 if (geo.isPresent()) {
                     Utils.logv("inserted " + location + ' ' + geo);

@@ -19,12 +19,10 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.GenericNotification;
 import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository;
@@ -101,32 +99,29 @@ public class ChatNotification extends GenericNotification implements ChatMessage
         Utils.logv("Received GCM notification: room=" + this.extras.getRoom() + " member=" + this.extras.getMember() + " message=" + this.extras.getMessage());
 
         // Get the data necessary for the ChatActivity
-        ChatMember member = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
         chatRoom = TUMCabeClient.getInstance(context)
                                 .getChatRoom(this.extras.getRoom());
-        try {
-            this.getNewMessages(chatRoom, member, this.extras.getMessage());
-        } catch (NoPrivateKey noPrivateKey) {
-            Utils.log(noPrivateKey);
-        }
+
+        getNewMessages(chatRoom, extras.getMessage());
     }
 
-    private void getNewMessages(ChatRoom chatRoom, ChatMember member, int messageId) throws NoPrivateKey, IOException {
+    private void getNewMessages(ChatRoom chatRoom, int messageId) {
         ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
         localRepository.setDb(TcaDb.getInstance(context));
         ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
         remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(context));
         ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, new CompositeDisposable());
 
+        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(context, null);
+        if (verification == null) {
+            return;
+        }
+
         if (messageId == -1) {
-            chatMessageViewModel.getNewMessages(
-                    chatRoom.getId(), TUMCabeVerification.create(context, member), this
-            );
+            chatMessageViewModel.getNewMessages(chatRoom.getId(), verification, this);
         } else {
             // edit
-            chatMessageViewModel.getOlderMessages(
-                    chatRoom.getId(), messageId, TUMCabeVerification.create(context, member), null
-            );
+            chatMessageViewModel.getOlderMessages(chatRoom.getId(), messageId, verification, null);
         }
     }
 

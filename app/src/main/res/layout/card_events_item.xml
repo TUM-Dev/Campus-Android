@@ -1,0 +1,95 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StandardCard">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/events_img"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:background="@color/placeholder"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/poster_progress_bar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="@id/events_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/events_title"
+            style="@style/CardTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:text="@string/info_title"
+            app:layout_constraintBottom_toTopOf="@id/events_src_date"
+            app:layout_constraintEnd_toStartOf="@id/ticketButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/events_img"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/events_src_date"
+            style="@style/CardBody"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:drawablePadding="@dimen/material_default_padding"
+            app:layout_constraintBottom_toTopOf="@id/events_src_locality"
+            app:layout_constraintEnd_toStartOf="@id/ticketButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/events_title"
+            tools:text="Date" />
+
+        <TextView
+            android:id="@+id/events_src_locality"
+            style="@style/CardBody"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:drawablePadding="@dimen/material_default_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ticketButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/events_src_date"
+            tools:text="Locality" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/ticketButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:text="@string/ticket"
+            android:textColor="@color/color_primary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/events_img"
+            tools:visibility="visible" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>

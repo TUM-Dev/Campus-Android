@@ -471,6 +471,57 @@ Signatur: %5$s</string>
     <string name="show_answer">Antwort anzeigen</string>
     <string name="title_activity_cards_quiz">Lernkarten</string>
 
+    <!-- Events Activity -->
+    <string name="show_booked_events">Gebuchte Events anzeigen</string>
+    <string name="events_tickets">Events &amp; Tickets</string>
+    <string name="payment_selection">Zahlungsoption wählen</string>
+    <string name="add_eventcalendar">Zum Kalender hinzufügen</string>
+    <string name="all_events">Alle Events</string>
+    <string name="booked_events">Buchungen</string>
+    <string name="redeemed_format_string">Eingelöst: %1$s</string>
+    <string name="visit_website">Webseite besuchen</string>
+    <string name="tum_calendar">TUM Kalender</string>
+    <string name="external_calendar">Externer Kalender</string>
+    <string name="add_to_calendar_info">Event zu Kalender hinzufügen</string>
+    <string name="ticket_not_fetched">Du hast möglicherweise schon ein Ticket für dieses Event gekauft. Versuche, deine Tickets erneut zu laden, indem du die Eventübersicht aktualisierst.</string>
+
+    <!-- Ticket Activity -->
+    <string name="your_ticket">Dein Ticket</string>
+    <string name="show_ticket">Ticket anzeigen</string>
+    <string name="buy_ticket">Ticket kaufen</string>
+    <string name="purchase_details">Details zu Ihrem Kauf:</string>
+    <string name="continue_to_payment">Weiter zur Zahlung</string>
+    <string name="order_summary">Bestellungsübersicht</string>
+    <string name="ticket_type">Tickettyp</string>
+    <string name="price">Preis</string>
+    <string name="location">Ort</string>
+    <string name="choose_ticket_type">Wähle deinen Ticket-Typ</string>
+    <string name="unknown">Unbekannt</string>
+
+    <!-- Payment -->
+    <string name="creditcard">Kreditkarte</string>
+    <string name="complete_purchase">Jetzt kaufen</string>
+    <string name="select_payment_method">Zahlungsmethode auswählen</string>
+    <string name="enter_card_info_title">Zahlungsinformationen</string>
+    <string name="enter_card_info_description">Gib deine Zahlungsinformationen an, um den Kauf abzuschließen:</string>
+    <string name="purchase_progress_message">Ticket wird angefragt, bitte warten…</string>
+    <string name="purchase_success_title">Kauf abgeschlossen</string>
+    <string name="purchase_success_message">Du kannst dein Ticket nun im Ticketbereich einsehen.</string>
+    <string name="purchase_success_continue">Weiter</string>
+    <string name="purchase_error_message">Fehler bei Server Anfrage.</string>
+    <string name="card_data_invalid">Ungültige Zahlungsdaten.</string>
+    <string name="customersession_init_failed">Fehler beim Laden der gespeicherten Kreditkarten.</string>
+    <string name="cardholder">Karteninhaber</string>
+    <string name="buy_format_string">Bezahlen\n%s</string>
+    <string name="internal_error">Interner Fehler!</string>
+    <string name="creditcard_ending_in">endet mit</string>
+    <string name="empty_cardholder_message">Kein Karteninhaber angegeben.</string>
+    <string name="not_logged_in_error">Du musst eingeloggt sein und in TUMonline den Zugriff auf Name und TUM-ID erlauben, um Tickets zu kaufen.</string>
+    <string name="ticket_retrieval_error">Fehler bei der Übertragung des Tickets.</string>
+    <string name="reserving_ticket">Dein Ticket wird reserviert, bitte warten…</string>
+    <string name="remaining_tickets_format_string" formatted="true">Noch %d Tickets verfügbar</string>
+    <string name="ticket_contingent_exhausted">Für den gewünschten Typ sind alle Tickets bereits ausverkauft.</string>
+
     <!-- Create personal Appointment (Calendar) -->
     <string name="create_event">Termin erstellen</string>
     <string name="comment">Anmerkung</string>
@@ -572,4 +623,11 @@ Signatur: %5$s</string>
     <string name="error_unknown">Unbekannter Fehler.</string>
     <string name="export_to_google_error">Ein Fehler ist während des Kalender-Exports zu Google Kalender aufgetreten.</string>
     <string name="checking_if_token_enabled">Überprüfung, ob Token aktiviert ist …</string>
+    <string name="no_events_found">Keine Events gefunden</string>
+    <string name="no_bookings_found">Keine Buchungen gefunden</string>
+    <string name="ticket">Ticket</string>
+    <string name="thanks_for_your_purchase">Danke für deinen Einkauf</string>
+    <string name="the_ticket_has_been_saved_for_you_in_the_app">Das Ticket wurde für dich in der App gespeichert.</string>
+    <string name="remaining_tickets">Verbleibende Tickets</string>
+    <string name="payment_confirmation">Zahlungsbestätigung</string>
 </resources>

@@ -1,7 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.studycard;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -14,14 +12,13 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
-import de.tum.in.tumcampusapp.databinding.ActivityCardsQuizBinding;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class CardsQuizActivity extends ActivityForLoadingInBackground<Void, List<StudyCard>> {
-    ActivityCardsQuizBinding binding;
+
     List<StudyCard> cards;
     int nextCard;
-    public final ObservableField<Boolean> isShowingAnswer = new ObservableField<>(false);
+    //public final ObservableField<Boolean> isShowingAnswer = new ObservableField<>(false);
 
     public CardsQuizActivity() {
         super(R.layout.activity_cards_quiz);
@@ -35,8 +32,8 @@ public class CardsQuizActivity extends ActivityForLoadingInBackground<Void, List
 
     @Override
     public void setUpLayout() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cards_quiz);
-        binding.setHandler(this);
+        //binding = DataBindingUtil.setContentView(this, R.layout.activity_cards_quiz);
+        //binding.setHandler(this);
     }
 
     @Override
@@ -81,17 +78,17 @@ public class CardsQuizActivity extends ActivityForLoadingInBackground<Void, List
             Toast toast = Toast.makeText(this, "Finished Quiz", Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            this.setTitle((this.nextCard + 1) + "/" + this.cards.size() + ": " + this.cards.get(this.nextCard)
-                                                                                           .getTitle());
-            this.isShowingAnswer.set(false);
-            binding.setCard(this.cards.get(this.nextCard));
+            //this.setTitle((this.nextCard + 1) + "/" + this.cards.size() + ": " + this.cards.get(this.nextCard)
+            //                                                                               .getTitle());
+            //this.isShowingAnswer.set(false);
+            //binding.setCard(this.cards.get(this.nextCard));
             this.nextCard++;
         }
     }
 
-    public void showAnswer() {
+    /*public void showAnswer() {
         this.isShowingAnswer.set(true);
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

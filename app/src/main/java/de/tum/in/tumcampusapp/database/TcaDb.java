@@ -45,6 +45,12 @@ import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomGroupDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventDao;
+import de.tum.in.tumcampusapp.component.ui.ticket.TicketDao;
+import de.tum.in.tumcampusapp.component.ui.ticket.TicketTypeDao;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportDao;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorites;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
@@ -52,6 +58,7 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration11to12;
 import de.tum.in.tumcampusapp.database.migrations.Migration12to13;
+import de.tum.in.tumcampusapp.database.migrations.Migration13to14;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
@@ -67,13 +74,16 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 13, entities = {
+@Database(version = 14, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
         Sync.class,
         BuildingToGps.class,
         Kino.class,
+        Event.class,
+        Ticket.class,
+        TicketType.class,
         ChatMessage.class,
         Location.class,
         News.class,
@@ -101,7 +111,8 @@ public abstract class TcaDb extends RoomDatabase {
             new Migration5to6(),
             new Migration6to7(),
             new Migration11to12(),
-            new Migration12to13()
+            new Migration12to13(),
+            new Migration13to14()
     };
 
     private static TcaDb instance;
@@ -128,6 +139,12 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract BuildingToGpsDao buildingToGpsDao();
 
     public abstract KinoDao kinoDao();
+
+    public abstract EventDao eventDao();
+
+    public abstract TicketDao ticketDao();
+
+    public abstract TicketTypeDao ticketTypeDao();
 
     public abstract CafeteriaLocationDao locationDao();
 

@@ -50,8 +50,6 @@
                 android:id="@+id/button_runtime"
                 style="@style/KinoHeaderButton"/>
 
-
-
             <Button
                 android:id="@+id/button_imdb"
                 style="@style/KinoHeaderButton"/>
@@ -83,6 +81,7 @@
             style="@style/KinoHeaderButton"
             android:drawableStart="@drawable/ic_link"
             android:text="@string/www"/>
+
     </LinearLayout>
 
 </LinearLayout>
