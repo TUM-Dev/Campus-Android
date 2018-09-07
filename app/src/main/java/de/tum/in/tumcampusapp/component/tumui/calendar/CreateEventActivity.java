@@ -3,8 +3,10 @@ package de.tum.in.tumcampusapp.component.tumui.calendar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
@@ -61,6 +63,15 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViews();
+
+        if (getSupportActionBar() != null) {
+            Drawable closeIcon = ContextCompat.getDrawable(this, R.drawable.ic_clear);
+            int color = ContextCompat.getColor(this, R.color.color_primary);
+            if (closeIcon != null) {
+                closeIcon.setTint(color);
+                getSupportActionBar().setHomeAsUpIndicator(closeIcon);
+            }
+        }
 
         titleView.addTextChangedListener(new TextWatcher() {
             @Override
