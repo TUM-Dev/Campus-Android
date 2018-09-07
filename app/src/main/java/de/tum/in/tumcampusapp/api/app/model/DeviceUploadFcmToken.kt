@@ -4,17 +4,24 @@ import android.content.Context
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.exception.NoPrivateKey
 
-data class DeviceUploadFcmToken(var verification: DeviceVerification? = null,
-                                var token: String = "",
-                                var signature: String = "") {
+data class DeviceUploadFcmToken(
+        val verification: TUMCabeVerification,
+        val token: String,
+        val signature: String
+) {
+
     companion object {
+
         @Throws(NoPrivateKey::class)
         fun getDeviceUploadFcmToken(c: Context, token: String): DeviceUploadFcmToken {
+            val verification = TUMCabeVerification.createDeviceVerification(c) ?: throw NoPrivateKey()
             return DeviceUploadFcmToken(
-                    verification = DeviceVerification.getDeviceVerification(c),
+                    verification = verification,
                     token = token,
                     signature = AuthenticationManager(c).sign(token)
             )
         }
+
     }
+
 }

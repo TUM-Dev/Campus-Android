@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -13,10 +14,10 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 public interface TicketDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<Ticket> ticket);
+    void insert(Ticket... ticket);
 
     @Query("SELECT * FROM tickets")
-    List<Ticket> getAll();
+    LiveData<List<Ticket>> getAll();
 
     @Query("SELECT * FROM tickets where event_id = :eventId")
     Ticket getByEventId(int eventId);

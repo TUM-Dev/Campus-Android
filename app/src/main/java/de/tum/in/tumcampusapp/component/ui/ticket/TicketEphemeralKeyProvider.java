@@ -7,10 +7,10 @@ import android.support.annotation.Size;
 import com.stripe.android.EphemeralKeyProvider;
 import com.stripe.android.EphemeralKeyUpdateListener;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +50,7 @@ public class TicketEphemeralKeyProvider implements EphemeralKeyProvider {
                     Utils.log(t);
                 }
             });
-        } catch (IOException e) {
+        } catch (NoPrivateKey e) {
             Utils.log(e);
         }
     }

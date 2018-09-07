@@ -690,7 +690,7 @@
         <activity
             android:name=".component.ui.ticket.activity.BuyTicketActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/summary"
+            android:label="@string/order_summary"
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.tufilm.KinoActivity">
             <meta-data

@@ -40,8 +40,10 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
 
     private fun runCheckmarkAnimation() {
         Timer().schedule(200) {
-            val animatedCheckmark = imageView.drawable as? Animatable
-            animatedCheckmark?.start()
+            runOnUiThread {
+                val animatedCheckmark = imageView.drawable as? Animatable
+                animatedCheckmark?.start()
+            }
         }
     }
 

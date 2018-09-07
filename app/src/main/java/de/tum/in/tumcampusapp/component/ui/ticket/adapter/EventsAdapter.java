@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +17,14 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventDiffUtil;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
@@ -33,12 +36,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
 
     private Context mContext;
-    private final List<Event> mEvents;
     private EventsController mEventsController;
 
-    public EventsAdapter(Context context, List<Event> events) {
+    private List<Event> mEvents = new ArrayList<>();
+
+    public EventsAdapter(Context context) {
         mContext = context;
-        mEvents = events;
         mEventsController = new EventsController(context);
     }
 
@@ -65,6 +68,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     @Override
     public int getItemCount() {
         return mEvents.size();
+    }
+
+    public void update(List<Event> newEvents) {
+        DiffUtil.Callback callback = new EventDiffUtil(mEvents, newEvents);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
+
+        mEvents.clear();
+        mEvents.addAll(newEvents);
+
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public static class EventViewHolder extends CardViewHolder {

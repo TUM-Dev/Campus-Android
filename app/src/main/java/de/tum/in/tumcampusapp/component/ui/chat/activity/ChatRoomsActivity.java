@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.NoResultsAdapter;
@@ -36,7 +36,6 @@ import de.tum.in.tumcampusapp.component.ui.chat.adapter.ChatRoomListAdapter;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatVerification;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -146,16 +145,17 @@ public class ChatRoomsActivity
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> {
             try {
-                ChatVerification verification =
-                        ChatVerification.Companion.getChatVerification(this, currentChatMember);
+                TUMCabeVerification verification =
+                        TUMCabeVerification.createMemberVerification(this, null);
+                if (verification == null) {
+                    runOnUiThread(this::finish);
+                }
 
                 List<ChatRoom> rooms = TUMCabeClient
                         .getInstance(this)
                         .getMemberRooms(currentChatMember.getId(), verification);
 
                 manager.replaceIntoRooms(rooms);
-            } catch (NoPrivateKey e) {
-                this.runOnUiThread(this::finish);
             } catch (IOException e) {
                 Utils.log(e);
             }
@@ -261,11 +261,9 @@ public class ChatRoomsActivity
 
         currentChatRoom = new ChatRoom(name);
 
-        ChatVerification verification;
-        try {
-            verification = ChatVerification.Companion.getChatVerification(this, this.currentChatMember);
-        } catch (NoPrivateKey noPrivateKey) {
-            this.finish();
+        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+        if (verification == null) {
+            finish();
             return;
         }
 

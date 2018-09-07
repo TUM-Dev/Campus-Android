@@ -362,6 +362,7 @@
     <string name="bug_reports">Anonymous Bug Reports</string>
     <string name="set_bug_reports">Support the TCA team by sending anonymous bug reports which include: stack trace, logfile, Android version, app version and screen resolution.</string>
     <string name="error_setup_chat_member">Something is wrong with your chat registration!</string>
+    <string name="error_pk_verification">Verification error occurred</string>
     <string name="room_timetable">Room timetable</string>
     <string name="newspread" translatable="false" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
@@ -612,7 +613,7 @@ Signature: %5$s</string>
     <string name="buy_ticket">Buy Ticket</string>
     <string name="purchase_details">Details</string>
     <string name="continue_to_payment">Continue to payment</string>
-    <string name="summary">Summary</string>
+    <string name="order_summary">Order summary</string>
     <string name="ticket_not_fetched">You may have already bought a ticket for this event. Try to reload the events overview.</string>
 
     <!-- Event Activity -->

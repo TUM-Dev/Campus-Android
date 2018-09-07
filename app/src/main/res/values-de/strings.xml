@@ -314,6 +314,7 @@
     <string name="bug_reports">Anonyme Fehlerberichte</string>
     <string name="set_bug_reports">Unterstütze das TCA-Team mit anonymen Fehlerberichten. Diese beinhalten: Stacktrace, Logdateien, Android-Version, App-Version und Bildschirmauflösung</string>
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
+    <string name="error_pk_verification">Es ist ein Problem bei der Authentifizierung aufgetreten</string>
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
     <string name="no_rights_to_access_id">Identität konnte nicht abgefragt werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
@@ -489,7 +490,7 @@ Signatur: %5$s</string>
     <string name="buy_ticket">Ticket kaufen</string>
     <string name="purchase_details">Details zu Ihrem Kauf:</string>
     <string name="continue_to_payment">Weiter zur Zahlung</string>
-    <string name="summary">Zusammenfassung</string>
+    <string name="order_summary">Bestellungsübersicht</string>
     <string name="ticket_type">Tickettyp</string>
     <string name="price">Preis</string>
     <string name="location">Ort</string>

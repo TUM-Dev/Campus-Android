@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,7 +20,11 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.io.IOException;
+
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
@@ -26,15 +32,21 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ShowTicketActivity extends BaseActivity {
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private TextView locationTextView;
     private ImageView ticketQrCodeImageView;
     private TextView titleTextView;
     private TextView dateTextView;
     private TextView priceTextView;
     private TextView redemptionStateTextView;
+
+    private EventsController eventsController;
 
     private Ticket ticket;
     private Event event;
@@ -64,10 +76,58 @@ public class ShowTicketActivity extends BaseActivity {
         priceTextView = findViewById(R.id.ticket_event_price);
         redemptionStateTextView = findViewById(R.id.ticket_event_redemption_state);
         ticketQrCodeImageView = findViewById(R.id.ticket_qr_code);
+
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200
+        );
+        swipeRefreshLayout.setOnRefreshListener(this::loadRedemptionStatus);
+    }
+
+    private void loadRedemptionStatus() {
+        try {
+            TUMCabeClient.getInstance(this)
+                    .fetchTicket(this, ticket.getId())
+                    .enqueue(new Callback<Ticket>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Ticket> call,
+                                               @NonNull Response<Ticket> response) {
+                            Ticket ticket = response.body();
+                            if (response.isSuccessful() && ticket != null) {
+                                handleTicketRefreshSuccess(ticket);
+                            } else {
+                                handleTicketRefreshFailure();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
+                            Utils.log(t);
+                            handleTicketRefreshFailure();
+                        }
+                    });
+        } catch (NoPrivateKey e) {
+            Utils.log(e);
+        }
+    }
+
+    private void handleTicketRefreshSuccess(Ticket ticket) {
+        this.ticket = ticket;
+        eventsController.insert(ticket);
+
+        setViewData();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void handleTicketRefreshFailure() {
+        Utils.showToast(this, R.string.error_something_wrong);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void loadTicketData() {
-        EventsController eventsController = new EventsController(this);
+        eventsController = new EventsController(this);
         int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
         ticket = eventsController.getTicketByEventId(eventId);
