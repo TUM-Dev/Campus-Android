@@ -106,9 +106,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         Intent service = new Intent(this, SilenceService.class);
         this.startService(service);
 
-        // redundant call; DownloadService was already called by the StartupActivity
-        //downloadNewsAlert();
-
         // Set the list's click listener
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
