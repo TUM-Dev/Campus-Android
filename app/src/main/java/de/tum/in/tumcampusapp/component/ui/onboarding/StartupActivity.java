@@ -130,8 +130,10 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
+        // unregister the BroadcastReceiver in onPause() (rather than onDestroy()),
+        // so the BroadcastReceiver is unregistered when MainActivity.onCreate() is called
         LocalBroadcastManager.getInstance(this)
                              .unregisterReceiver(receiver);
     }
