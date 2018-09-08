@@ -109,20 +109,20 @@ public class CafeteriaMenuManager {
     /**
      * Returns all the favorite dishes that a particular mensa serves on the specified date.
      *
-     * @param mensaId The Cafeteria for which to return the favorite dishes served
+     * @param queriedMensaId The Cafeteria for which to return the favorite dishes served
      * @param date The date for which to return the favorite dishes served
      * @return the favourite dishes at the given date
      */
-    public List<CafeteriaMenu> getFavoriteDishesServed(int mensaId, DateTime date) {
+    public List<CafeteriaMenu> getFavoriteDishesServed(int queriedMensaId, DateTime date) {
         List<CafeteriaMenu> results = new ArrayList<>();
         String dateString = DateTimeUtils.INSTANCE.getDateString(date);
 
         List<CafeteriaMenu> upcomingServings = favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString);
 
         for (CafeteriaMenu upcomingServing : upcomingServings) {
-            int cafeteriaId = upcomingServing.getCafeteriaId();
+            int currentMensaId = upcomingServing.getCafeteriaId();
 
-            if (cafeteriaId == mensaId) {
+            if (currentMensaId == queriedMensaId) {
                 results.add(upcomingServing);
             }
         }
