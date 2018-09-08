@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_default_padding"
                 android:background="?attr/selectableItemBackground"
-                android:drawableStart="@drawable/ic_location"
+                android:drawableStart="@drawable/ic_outline_location_on_24px_light_blue"
                 android:drawablePadding="@dimen/material_small_padding"
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"

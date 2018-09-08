@@ -95,7 +95,7 @@
             android:layout_gravity="end"
             android:background="@drawable/rounded_corners_background"
             android:backgroundTint="@color/tum_300"
-            android:drawableEnd="@drawable/ic_users_white"
+            android:drawableEnd="@drawable/ic_outline_people_outline_24px_white"
             android:drawablePadding="3dp"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
