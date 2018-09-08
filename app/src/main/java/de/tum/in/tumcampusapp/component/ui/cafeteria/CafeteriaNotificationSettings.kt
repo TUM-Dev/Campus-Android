@@ -74,7 +74,7 @@ class CafeteriaNotificationSettings(context: Context) {
                 .any { it }
 
         return if (didChangeTime) {
-            cafeteriaMenuManager.scheduleFoodAlarms(true)
+            cafeteriaMenuManager.scheduleNotificationAlarms();
             true
         } else {
             false

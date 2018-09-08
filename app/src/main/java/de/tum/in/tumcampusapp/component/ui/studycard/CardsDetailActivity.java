@@ -22,8 +22,7 @@ public class CardsDetailActivity extends ActivityForLoadingInBackground<Void, St
         super.onCreate(savedInstanceState);
 
         // TODO handle different states (add/view/edit)
-        setTitle(this.getResources()
-                .getString(R.string.title_activity_cards_detail));
+        setTitle(this.getResources().getString(R.string.title_activity_cards_detail));
     }
 
     @Override

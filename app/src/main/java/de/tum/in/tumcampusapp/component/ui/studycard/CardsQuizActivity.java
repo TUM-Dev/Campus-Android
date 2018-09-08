@@ -30,6 +30,11 @@ public class CardsQuizActivity extends ActivityForLoadingInBackground<Void, List
         startLoading();
     }
 
+    public void setUpLayout() {
+        //binding = DataBindingUtil.setContentView(this, R.layout.activity_cards_quiz);
+        //binding.setHandler(this);
+    }
+
     @Override
     public void setUpToolbar() {
         super.setUpToolbar();

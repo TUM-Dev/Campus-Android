@@ -3,8 +3,11 @@ package de.tum.`in`.tumcampusapp.component.ui.transportation
 import android.content.Context
 import android.util.SparseArray
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
+import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvClient
@@ -16,15 +19,15 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.WidgetDepa
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import java.io.IOException
+import io.reactivex.Observable
 import java.util.*
 
 /**
  * Transport Manager, handles querying data from mvv and card creation
  */
-class TransportController(private val mContext: Context) : ProvidesCard {
+class TransportController(private val context: Context) : ProvidesCard, ProvidesNotifications {
 
-    private val transportDao = TcaDb.getInstance(mContext).transportDao()
+    private val transportDao = TcaDb.getInstance(context).transportDao()
 
     /**
      * Check if the transport symbol is one of the user's favorites.
@@ -49,7 +52,8 @@ class TransportController(private val mContext: Context) : ProvidesCard {
     fun deleteFavorite(symbol: String) = transportDao.deleteFavorite(symbol)
 
     /**
-     * Adds the settingsPrefix of a widget to the widget list, replaces the existing settingsPrefix if there are some
+     * Adds the settingsPrefix of a widget to the widget list, replaces the existing settingsPrefix
+     * if there are some
      */
     fun addWidget(appWidgetId: Int, widgetDepartures: WidgetDepartures) {
         val widgetsTransport = WidgetsTransport().apply {
@@ -77,8 +81,9 @@ class TransportController(private val mContext: Context) : ProvidesCard {
      * A WidgetDepartures Object containing the settingsPrefix of this widget.
      * This object can provide the departures needed by this widget as well.
      * The settingsPrefix are cached, only the first time its loded from the database.
-     * If there is no widget with this id saved (in cache and the database) a new WidgetDepartures Object is generated
-     * containing a NULL for the station and an empty string for the station id. This is not cached or saved to the database.
+     * If there is no widget with this id saved (in cache and the database) a new WidgetDepartures
+     * Object is generated containing a NULL for the station and an empty string for the station id.
+     * This is not cached or saved to the database.
      *
      * @param widgetId The id of the widget
      * @return The WidgetDepartures Object
@@ -102,22 +107,47 @@ class TransportController(private val mContext: Context) : ProvidesCard {
 
     override fun getCards(cacheControl: CacheControl): List<Card> {
         val results = ArrayList<Card>()
-        if (!NetUtils.isConnected(mContext)) {
-            return results
+        if (!NetUtils.isConnected(context)) {
+            return emptyList()
         }
 
         // Get station for current campus
-        val locMan = LocationManager(mContext)
-        val station = locMan.getStation() ?: return results
+        val locMan = LocationManager(context)
+        val station = locMan.getStation() ?: return emptyList()
 
-        val departures = getDeparturesFromExternal(mContext, station.id)
-        val card = MVVCard(mContext).apply {
+        val departures = getDeparturesFromExternal(context, station.id).blockingFirst()
+        val card = MVVCard(context).apply {
             setStation(station)
             setDepartures(departures)
         }
         results.add(card.getIfShowOnStart()!!)
 
         return results
+    }
+
+    override fun hasNotificationsEnabled(): Boolean {
+        return Utils.getSettingBool(context, "card_mvv_phone", false)
+    }
+
+    fun scheduleNotifications(events: List<Event>) {
+        if (events.isEmpty()) {
+            return
+        }
+
+        // Schedule a notification alarm for every last calendar item of a day
+        val notificationCandidates = events
+                .dropLast(1)
+                .filterIndexed { index, current ->
+                    val next = events[index + 1]
+                    if (current.startTime == null || next.startTime == null) {
+                        false
+                    } else {
+                        current.startTime.dayOfYear != next.startTime.dayOfYear
+                    }
+                }
+
+        val notifications = notificationCandidates.mapNotNull { it.toNotification(context) }
+        NotificationScheduler(context).schedule(notifications)
     }
 
     companion object {
@@ -130,24 +160,17 @@ class TransportController(private val mContext: Context) : ProvidesCard {
          * @return List of departures
          */
         @JvmStatic
-        fun getDeparturesFromExternal(context: Context, stationID: String): List<Departure> {
-            try {
-                val departures = MvvClient.getInstance(context)
-                        .getDepartures(stationID).execute().body() ?: return emptyList()
-                val departureList = departures.departureList ?: emptyList()
-
-                return departureList.map { (servingLine, dateTime, countdown) ->
-                    Departure(servingLine.name,
-                            servingLine.direction,
-                            servingLine.symbol,
-                            countdown,
-                            dateTime)
-                }.sortedBy { it.countDown }
-            } catch (e: IOException) {
-                Utils.log(e)
-            }
-
-            return emptyList()
+        fun getDeparturesFromExternal(context: Context, stationID: String): Observable<List<Departure>> {
+            return MvvClient.getInstance(context)
+                    .getDepartures(stationID).map {
+                        it.departureList?.map { (servingLine, dateTime, countdown) ->
+                            Departure(servingLine.name,
+                                    servingLine.direction,
+                                    servingLine.symbol,
+                                    countdown,
+                                    dateTime)
+                        }?.sortedBy { it.countDown }
+                    }
         }
 
         /**
@@ -157,16 +180,9 @@ class TransportController(private val mContext: Context) : ProvidesCard {
          * @return List of StationResult
          */
         @JvmStatic
-        fun getStationsFromExternal(context: Context, prefix: String): List<StationResult> {
-            try {
-                val (results) = MvvClient.getInstance(context).getStations(prefix).execute().body()
-                        ?: return emptyList()
-                return results.sortedBy { it.quality }
-            } catch (e: IOException) {
-                Utils.log(e)
-            }
-
-            return emptyList()
+        fun getStationsFromExternal(context: Context, prefix: String): Observable<List<StationResult>> {
+            return MvvClient.getInstance(context).getStations(prefix)
+                    .map { it.stations.sortedBy { it.quality } }
         }
 
         @JvmStatic

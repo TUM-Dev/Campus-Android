@@ -8,8 +8,6 @@ import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
 import de.tum.in.tumcampusapp.component.ui.news.NewsCard;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
-import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 public class FilmCard extends NewsCard {
 
@@ -19,10 +17,20 @@ public class FilmCard extends NewsCard {
 
     @Nullable
     @Override
+<<<<<<< HEAD
     public NavigationDestination getNavigationDestination() {
         Intent intent = new Intent(getContext(), KinoActivity.class);
         intent.putExtra(Const.KINO_DATE, DateTimeUtils.INSTANCE.getDateTimeString(getDate()));
         return new SystemIntent(intent);
+||||||| merged common ancestors
+    public Intent getIntent() {
+        Intent intent = new Intent(getContext(), KinoActivity.class);
+        intent.putExtra(Const.KINO_DATE, DateTimeUtils.INSTANCE.getDateTimeString(getDate()));
+        return intent;
+=======
+    public Intent getIntent() {
+        return mNews.getIntent(getContext());
+>>>>>>> d027d24d2097be437522a05f7e6abc7c2a5e863e
     }
 
 }

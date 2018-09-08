@@ -13,7 +13,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-
 import com.squareup.picasso.RequestCreator
 import com.squareup.picasso.Callback
 
@@ -116,3 +115,4 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, callback: (T) -> Unit)
         }
     })
 }
+

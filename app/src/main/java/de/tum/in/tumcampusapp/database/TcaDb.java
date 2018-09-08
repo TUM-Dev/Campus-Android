@@ -8,6 +8,8 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.Intent;
 
+import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotification;
+import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotificationsDao;
 import de.tum.in.tumcampusapp.component.other.general.NotificationDao;
 import de.tum.in.tumcampusapp.component.other.general.RecentsDao;
 import de.tum.in.tumcampusapp.component.other.general.model.Recent;
@@ -59,6 +61,7 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration11to12;
 import de.tum.in.tumcampusapp.database.migrations.Migration12to13;
 import de.tum.in.tumcampusapp.database.migrations.Migration13to14;
+import de.tum.in.tumcampusapp.database.migrations.Migration14to15;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
@@ -74,7 +77,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 14, entities = {
+@Database(version = 15, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -99,7 +102,8 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         FcmNotification.class,
         TransportFavorites.class,
         WidgetsTransport.class,
-        ChatRoomDbRow.class
+        ChatRoomDbRow.class,
+        ScheduledNotification.class
 })
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
@@ -112,7 +116,8 @@ public abstract class TcaDb extends RoomDatabase {
             new Migration6to7(),
             new Migration11to12(),
             new Migration12to13(),
-            new Migration13to14()
+            new Migration13to14(),
+            new Migration14to15()
     };
 
     private static TcaDb instance;
@@ -176,6 +181,8 @@ public abstract class TcaDb extends RoomDatabase {
 
     public abstract ChatRoomDao chatRoomDao();
 
+    public abstract ScheduledNotificationsDao scheduledNotificationsDao();
+
     /**
      * Drop all tables, so we can do a complete clean start
      * Careful: After executing this method, almost all the managers are in an illegal state, and
@@ -199,50 +206,6 @@ public abstract class TcaDb extends RoomDatabase {
         CacheManager cacheManager = new CacheManager(c);
         cacheManager.clearCache();
 
-        //Clear the db?
-        //TODO remove this, as we want to keep the data
-        TcaDb tdb = TcaDb.getInstance(c);
-        tdb.cafeteriaDao()
-           .removeCache();
-        tdb.cafeteriaMenuDao()
-           .removeCache();
-        tdb.calendarDao()
-           .flush();
-        tdb.locationDao()
-           .removeCache();
-        tdb.newsDao()
-           .flush();
-        tdb.newsSourcesDao()
-           .flush();
-        tdb.recentsDao()
-           .removeCache();
-        tdb.roomLocationsDao()
-           .flush();
-        tdb.syncDao()
-           .removeCache();
-        tdb.chatMessageDao()
-           .removeCache();
-        tdb.chatRoomDao()
-           .removeCache();
-        tdb.facultyDao()
-           .flush();
-        tdb.transportDao()
-           .removeCache();
-        tdb.studyRoomDao()
-           .removeCache();
-        tdb.studyRoomGroupDao()
-           .removeCache();
-        tdb.kinoDao()
-           .flush();
-        tdb.widgetsTimetableBlacklistDao()
-           .flush();
-        tdb.notificationDao()
-           .cleanup();
-        tdb.favoriteDishDao()
-           .removeCache();
-        tdb.buildingToGpsDao()
-           .removeCache();
-        tdb.wifiMeasurementDao()
-           .cleanup();
+        TcaDb.getInstance(c).clearAllTables();
     }
 }

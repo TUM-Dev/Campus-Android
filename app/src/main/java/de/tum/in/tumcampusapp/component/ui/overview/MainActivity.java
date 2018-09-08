@@ -99,6 +99,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         Intent service = new Intent(this, SilenceService.class);
         this.startService(service);
 
+        // TODO: Keep?
         downloadNewsAlert();
 
         mViewModel = ViewModelProviders

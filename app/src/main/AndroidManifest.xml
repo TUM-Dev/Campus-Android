@@ -190,16 +190,6 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-            android:name=".component.ui.transportation.TransportationDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/mvv"
-            android:parentActivityName=".component.ui.transportation.TransportationActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.transportation.TransportationActivity" />
-        </activity>
-        <activity
             android:name=".component.tumui.lectures.activity.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/lectures_appointments"
@@ -605,7 +595,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Used to reAlarmNotificationlarm when device has been restarted -->
+        <!-- Used to restart alarm when device has been restarted -->
         <receiver android:name=".service.StartSyncReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -613,9 +603,6 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-
-        <!-- Used to set Notification for favoriteDish -->
-        <receiver android:name=".service.FavoriteDishAlarmScheduler" />
 
         <service
             android:name=".service.DownloadService"
@@ -738,6 +725,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.ticket.activity.StripePaymentActivity" />
         </activity>
+
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationReceiver" />
+
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver" />
+
     </application>
 
 </manifest>

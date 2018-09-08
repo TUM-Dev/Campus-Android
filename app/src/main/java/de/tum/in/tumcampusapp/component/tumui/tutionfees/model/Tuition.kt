@@ -1,11 +1,13 @@
 package de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model
 
 import android.content.Context
+import android.content.Intent
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateConverter
 import de.tum.`in`.tumcampusapp.api.tumonline.converters.FloatConverter
+import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesActivity
 import org.joda.time.DateTime
 import java.text.ParseException
 import java.util.*
@@ -24,6 +26,8 @@ data class Tuition(@PropertyElement(name = "frist", converter = DateConverter::c
                    val semester: String,
                    @PropertyElement(name = "soll", converter = FloatConverter::class)
                    val amount: Float) {
+
+    fun getIntent(context: Context): Intent = Intent(context, TuitionFeesActivity::class.java)
 
     val isPaid: Boolean
         get() = amount == 0f
