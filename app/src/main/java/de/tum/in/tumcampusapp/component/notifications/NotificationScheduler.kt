@@ -142,7 +142,7 @@ class NotificationScheduler(private val context: Context) {
     private fun getAlarmIntent(futureNotification: FutureNotification,
                                globalNotificationId: Long): PendingIntent {
         val intent = Intent(context, NotificationReceiver::class.java).apply {
-            putExtra(Const.KEY_NOTIFICATION_ID, globalNotificationId)
+            putExtra(Const.KEY_NOTIFICATION_ID, globalNotificationId.toInt())
             putExtra(Const.KEY_NOTIFICATION, futureNotification.notification)
         }
         return PendingIntent.getBroadcast(context,
