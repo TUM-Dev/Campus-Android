@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +24,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -65,7 +66,8 @@ public class FeedbackActivity extends BaseActivity {
     private static final int PERMISSION_FILES = 15;
 
     private CheckBox includeEmail, includeLocation;
-    private EditText feedbackView, customEmailView;
+    private TextInputLayout customEmailViewLayout;
+    private TextInputEditText feedbackView, customEmailView;
 
     private String mCurrentPhotoPath;
     private int feedbackTopic;
@@ -95,6 +97,7 @@ public class FeedbackActivity extends BaseActivity {
         feedbackTopic = GENERAL_FEEDBACK; // General feedback by default
 
         feedbackView = findViewById(R.id.feedback_message);
+        customEmailViewLayout = findViewById(R.id.feedback_custom_email_layout);
         customEmailView = findViewById(R.id.feedback_custom_email);
         includeEmail = findViewById(R.id.feedback_include_email);
         includeLocation = findViewById(R.id.feedback_include_location);
@@ -240,11 +243,11 @@ public class FeedbackActivity extends BaseActivity {
     private void onIncludeEmailClick() {
         if (includeEmail.isChecked()) {
             if (Strings.isNullOrEmpty(lrzId)) {
-                customEmailView.setVisibility(View.VISIBLE);
+                customEmailViewLayout.setVisibility(View.VISIBLE);
                 customEmailView.setText(email);
             }
         } else {
-            customEmailView.setVisibility(View.GONE);
+            customEmailViewLayout.setVisibility(View.GONE);
         }
     }
 

@@ -30,6 +30,8 @@
     <color name="spinner_background">#F2F2F2</color>
     <color name="spinner_border">#BDBDBD</color>
 
+    <color name="input_layout_border">@color/color_primary</color>
+
     <color name="navigation_drawer_item_background">#EDEDED</color>
     <color name="navigation_drawer_icon_tint">#757575</color>
     <color name="navigation_drawer_item_text">#222222</color>

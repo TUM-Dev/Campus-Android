@@ -8,6 +8,8 @@
     <dimen name="material_corner_radius">8dp</dimen>
     <dimen name="material_default_elevation">12dp</dimen>
 
+    <dimen name="input_layout_border">1dp</dimen>
+
     <dimen name="compound_drawable_size">16dp</dimen>
 
     <dimen name="icon_default">24dp</dimen>
