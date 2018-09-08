@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.arch.lifecycle.Lifecycle;
 import android.content.ContentUris;
 import android.content.DialogInterface;
@@ -15,6 +14,7 @@ import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
 import android.util.TypedValue;
 import android.view.Menu;
