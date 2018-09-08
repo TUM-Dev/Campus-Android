@@ -28,7 +28,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     }
 
     public IntegratedCalendarEvent(String id, String title, DateTime startTime, DateTime endTime, String location, int color) {
-        super(id, title, startTime.toGregorianCalendar(), endTime.toGregorianCalendar());
+        super(Long.parseLong(id), title, startTime.toGregorianCalendar(), endTime.toGregorianCalendar());
         this.location = location;
         this.setColor(color);
     }

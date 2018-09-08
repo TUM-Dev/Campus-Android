@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary</item>
         <item name="colorAccent">@color/color_primary</item>
@@ -43,7 +43,7 @@
         <item name="android:background">@drawable/wear_tuition_fee</item>
     </style>
 
-    <style name="AppThemeStartup" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppThemeStartup" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimaryDark">@android:color/white</item>
         <item name="android:windowBackground">@android:color/white</item>
 
@@ -55,7 +55,7 @@
         <item name="android:navigationBarColor">@android:color/white</item>
     </style>
 
-    <style name="AppThemeFullscreen" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeFullscreen" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary</item>
         <item name="colorAccent">@color/color_primary</item>
@@ -66,7 +66,7 @@
     </style>
 
     <!-- Style for Stripe's payment method activity -->
-    <style name="StripeDefaultTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="StripeDefaultTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_primary</item>

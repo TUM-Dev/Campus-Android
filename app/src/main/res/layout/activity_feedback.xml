@@ -49,8 +49,8 @@
                 android:id="@+id/feedback_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_default_padding"
                 android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_default_padding"
                 android:background="@android:color/transparent"
                 android:gravity="top"
                 android:hint="@string/feedback_hint"
@@ -63,8 +63,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/material_default_padding"
                 android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_default_padding"
                 android:background="@color/text_light_gray" />
 
             <LinearLayout
@@ -81,6 +81,7 @@
                     android:padding="@dimen/material_default_padding"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_outline_add_photo_alternate_24px"
+                    android:tint="@android:color/white"
                     app:backgroundTint="@color/color_primary" />
 
                 <android.support.v7.widget.RecyclerView
@@ -95,8 +96,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/material_default_padding"
                 android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_default_padding"
                 android:background="@color/text_light_gray" />
 
             <CheckBox
