@@ -35,13 +35,14 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         tools:text="Lorem ipsum solor dit amet" />
 
-    <android.support.v7.widget.AppCompatButton
+    <android.support.design.button.MaterialButton
         android:id="@+id/button"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_default_padding"
         android:text="@string/retry"
+        android:textAllCaps="false"
         android:textColor="@color/color_primary" />
 
 </LinearLayout>

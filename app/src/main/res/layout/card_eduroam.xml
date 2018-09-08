@@ -31,13 +31,14 @@
             android:layout_marginEnd="@dimen/material_small_padding"
             android:text="@string/eduroam_setup_question" />
 
-        <android.support.v7.widget.AppCompatButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/eduroam_action_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/material_small_padding"
             android:text="@string/eduroam_setup"
+            android:textAllCaps="false"
             android:textColor="@color/color_primary" />
 
     </LinearLayout>

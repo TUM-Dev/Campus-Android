@@ -3,7 +3,7 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatButton;
+import android.support.design.button.MaterialButton;
 import android.view.View;
 import android.widget.TextView;
 
@@ -65,7 +65,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
         dateTextView = findViewById(R.id.dateTextView);
         examinationAidsTextView = findViewById(R.id.examinationAidsTextView);
 
-        AppCompatButton appointmentsButton = findViewById(R.id.appointmentsButton);
+        MaterialButton appointmentsButton = findViewById(R.id.appointmentsButton);
         appointmentsButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
 

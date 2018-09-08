@@ -9,10 +9,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.AppCompatButton;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,7 +104,7 @@ public class KinoDetailsFragment extends Fragment {
         TextView directorTextView = rootView.findViewById(R.id.directorTextView);
         directorTextView.setText(kino.getDirector());
 
-        AppCompatButton moreInfoButton = rootView.findViewById(R.id.moreInfoButton);
+        MaterialButton moreInfoButton = rootView.findViewById(R.id.moreInfoButton);
         moreInfoButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(kino.getLink()));
             startActivity(intent);
@@ -112,7 +112,7 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     private void loadPoster(Kino kino) {
-        AppCompatButton trailerButton = rootView.findViewById(R.id.trailerButton);
+        MaterialButton trailerButton = rootView.findViewById(R.id.trailerButton);
         trailerButton.setOnClickListener(v -> showTrailer(kino));
 
         ImageView posterView = rootView.findViewById(R.id.kino_cover);
@@ -142,6 +142,10 @@ public class KinoDetailsFragment extends Fragment {
 
     private void loadColorPalette(Bitmap bitmap) {
         Palette.from(bitmap).generate(palette -> {
+            if (palette == null) {
+                return;
+            }
+
             Palette.Swatch swatch = palette.getVibrantSwatch();
             int colorPrimary = ContextCompat.getColor(requireContext(), R.color.color_primary);
             int color = (swatch != null) ? swatch.getRgb() : colorPrimary;
@@ -154,8 +158,8 @@ public class KinoDetailsFragment extends Fragment {
             setCompoundDrawablesTint(runtimeTextView, color);
             setCompoundDrawablesTint(ratingTextView, color);
 
-            AppCompatButton trailerButton = rootView.findViewById(R.id.trailerButton);
-            AppCompatButton moreInfoButton = rootView.findViewById(R.id.moreInfoButton);
+            MaterialButton trailerButton = rootView.findViewById(R.id.trailerButton);
+            MaterialButton moreInfoButton = rootView.findViewById(R.id.moreInfoButton);
 
             trailerButton.setTextColor(color);
             moreInfoButton.setTextColor(color);

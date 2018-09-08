@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatButton;
+import android.support.design.button.MaterialButton;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -41,7 +41,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         deadlineTextView = findViewById(R.id.deadlineTextView);
         semesterTextView = findViewById(R.id.semesterTextView);
 
-        AppCompatButton button = findViewById(R.id.financialAidButton);
+        MaterialButton button = findViewById(R.id.financialAidButton);
         button.setOnClickListener(v -> {
             String url = getString(R.string.student_financial_aid_link);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

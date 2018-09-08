@@ -165,6 +165,7 @@
                     android:alpha="0.5"
                     android:enabled="false"
                     android:padding="@dimen/two_line_button_padding"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     app:backgroundTint="@color/color_primary"

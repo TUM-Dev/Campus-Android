@@ -82,14 +82,15 @@
                     android:layout_marginBottom="@dimen/material_small_padding"
                     android:background="@color/list_divider" />
 
-                <android.support.v7.widget.AppCompatButton
+                <android.support.design.button.MaterialButton
                     android:id="@+id/financialAidButton"
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_small_padding"
                     android:layout_marginBottom="@dimen/material_small_padding"
                     android:text="@string/student_financial_aid"
+                    android:textAllCaps="false"
                     android:textColor="@color/color_primary" />
 
             </LinearLayout>

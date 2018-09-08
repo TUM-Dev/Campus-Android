@@ -28,42 +28,47 @@
                 android:text="@string/app_info_text"
                 android:textSize="15sp" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/button_facebook"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_facebook_white"
-                android:text="@string/facebook" />
+                android:text="@string/facebook"
+                android:textAllCaps="false"
+                app:icon="@drawable/ic_facebook_white" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/button_github"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_github_white"
-                android:text="@string/github_contribute" />
+                android:text="@string/github_contribute"
+                android:textAllCaps="false"
+                app:icon="@drawable/ic_github_white" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/button_privacy"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/privacy_policy" />
+                android:text="@string/privacy_policy"
+                android:textAllCaps="false" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/button_chat_terms"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/open_chat_terms" />
+                android:text="@string/open_chat_terms"
+                android:textAllCaps="false" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/button_licenses"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/licences" />
+                android:text="@string/licences"
+                android:textAllCaps="false" />
 
             <TextView
                 android:id="@+id/txt_version"

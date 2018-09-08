@@ -21,35 +21,41 @@
             android:layout_marginBottom="@dimen/material_default_padding"
             android:text="@string/support_us" />
 
-        <android.support.v7.widget.AppCompatButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/facebook_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_outline_thumb_up_24px_white"
-            android:drawablePadding="@dimen/material_small_padding"
             android:text="@string/like_us_on_facebook"
-            android:textColor="@android:color/white"
-            app:backgroundTint="@color/facebook" />
+            android:textAllCaps="false"
+            android:textColor="@color/facebook"
+            app:icon="@drawable/ic_outline_thumb_up_24px_white"
+            app:iconPadding="@dimen/material_small_padding"
+            app:iconTint="@color/facebook" />
 
-        <android.support.v7.widget.AppCompatButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/github_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_code_white_24dp"
-            android:drawablePadding="@dimen/material_small_padding"
             android:text="@string/check_us_out_on_github"
-            android:textColor="@android:color/white"
-            app:backgroundTint="@color/github" />
+            android:textAllCaps="false"
+            android:textColor="@color/github"
+            app:icon="@drawable/ic_code_white_24dp"
+            app:iconPadding="@dimen/material_small_padding"
+            app:iconTint="@color/github" />
 
-        <android.support.v7.widget.AppCompatButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/email_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_outline_email_24px_white"
-            android:drawablePadding="@dimen/material_small_padding"
             android:text="@string/e_mail_us"
-            android:textColor="@android:color/white"
-            app:backgroundTint="@color/email" />
+            android:textAllCaps="false"
+            android:textColor="@color/email"
+            app:icon="@drawable/ic_outline_email_24px_white"
+            app:iconPadding="@dimen/material_small_padding"
+            app:iconTint="@color/email" />
 
     </LinearLayout>
 

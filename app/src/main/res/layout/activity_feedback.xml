@@ -158,6 +158,7 @@
                 android:layout_marginBottom="@dimen/material_default_padding"
                 android:onClick="onSendClicked"
                 android:text="@string/feedback_send_button"
+                android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 app:backgroundTint="@color/color_primary"
                 app:cornerRadius="20dp" />

@@ -83,6 +83,7 @@
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
             android:text="@string/ticket"
+            android:textAllCaps="false"
             android:textColor="@color/color_primary"
             android:visibility="gone"
             app:cornerRadius="20dp"

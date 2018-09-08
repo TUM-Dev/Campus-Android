@@ -100,6 +100,7 @@
                 android:layout_marginEnd="@dimen/material_default_padding"
                 android:onClick="onClickTUMOnline"
                 android:text="@string/open_tum_online"
+                android:textAllCaps="false"
                 android:textColor="@color/color_primary" />
 
             <android.support.design.button.MaterialButton
@@ -109,6 +110,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClickNext"
                 android:text="@string/button_next"
+                android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 app:backgroundTint="@color/color_primary"
                 app:cornerRadius="20dp" />

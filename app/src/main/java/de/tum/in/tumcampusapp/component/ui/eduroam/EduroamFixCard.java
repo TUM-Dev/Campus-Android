@@ -8,7 +8,7 @@ import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.AppCompatButton;
+import android.support.design.button.MaterialButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +54,7 @@ public class EduroamFixCard extends Card {
         TextView errorsTv = getMCard().findViewById(R.id.eduroam_errors);
         errorsTv.setText(Joiner.on("\n").join(errors));
 
-        AppCompatButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
+        MaterialButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
         button.setOnClickListener(v -> performEduroamFix());
 
         // only error is missing realm which is not insecure per se but also not right

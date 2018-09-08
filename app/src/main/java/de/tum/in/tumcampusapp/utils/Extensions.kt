@@ -6,16 +6,15 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.button.MaterialButton
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.widget.AppCompatButton
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.squareup.picasso.RequestCreator
 import com.squareup.picasso.Callback
-
+import com.squareup.picasso.RequestCreator
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.SideNavigationItem
 
 /**
@@ -74,7 +73,7 @@ fun TextView.setTextOrHide(resId: Int?) {
     visibility = View.GONE
 }
 
-fun AppCompatButton.setTextOrHide(resId: Int?) {
+fun MaterialButton.setTextOrHide(resId: Int?) {
     resId?.let {
         text = context.getString(it)
         return

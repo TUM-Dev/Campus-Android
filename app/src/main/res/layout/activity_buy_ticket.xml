@@ -208,6 +208,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/material_default_padding"
                     android:text="@string/continue_to_payment"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     app:backgroundTint="@color/color_primary"
                     app:cornerRadius="20dp"

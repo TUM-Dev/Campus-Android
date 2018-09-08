@@ -6,8 +6,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.support.design.button.MaterialButton
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.AppCompatButton
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -46,8 +46,8 @@ abstract class ProgressActivity(
         errorLayout.findViewById<TextView>(R.id.messageTextView)
     }
 
-    private val errorButton: AppCompatButton by lazy {
-        errorLayout.findViewById<AppCompatButton>(R.id.button)
+    private val errorButton: MaterialButton by lazy {
+        errorLayout.findViewById<MaterialButton>(R.id.button)
     }
 
     private val progressLayout: FrameLayout by lazy {

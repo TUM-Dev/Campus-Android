@@ -104,6 +104,7 @@
             android:clickable="false"
             android:onClick="onClickNext"
             android:text="@string/button_next"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/color_primary"
             app:cornerRadius="20dp" />

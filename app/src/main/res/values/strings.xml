@@ -484,7 +484,7 @@ Signature: %5$s</string>
     <string name="feedback_include_email_tum_id">Include my email to get a reply (%s)</string>
     <string name="feedback_email_hint">Your email</string>
     <string name="feedback_include_location">Include current location</string>
-    <string name="feedback_send_button">Send Feedback</string>
+    <string name="feedback_send_button">Send feedback</string>
     <string name="feedback_add_picture">Add Picture</string>
     <string name="feedback_take_picture">Take Picture</string>
     <string name="gallery">Gallery</string>
@@ -638,7 +638,7 @@ Signature: %5$s</string>
     <string name="add_eventcalendar">Add In Calendar</string>
     <string name="all_events">All Events</string>
     <string name="booked_events">Booked Events</string>
-    <string name="visit_website">Visit Website</string>
+    <string name="visit_website">Visit website</string>
     <string name="tum_calendar">TUM Calendar</string>
     <string name="external_calendar">External Calendar</string>
     <string name="add_to_calendar_info">Add event to calendar</string>

@@ -214,13 +214,14 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/material_small_padding">
 
-        <android.support.v7.widget.AppCompatButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/appointmentsButton"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:text="@string/lectures_appointments"
+            android:textAllCaps="false"
             android:textColor="@color/color_primary" />
 
     </FrameLayout>

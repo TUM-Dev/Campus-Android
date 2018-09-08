@@ -28,12 +28,13 @@
             android:layout_marginBottom="@dimen/material_small_padding"
             android:text="@string/card_login_body" />
 
-        <android.support.v7.widget.AppCompatButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/login_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tumonline_login"
+            android:textAllCaps="false"
             android:textColor="@color/color_primary" />
 
     </LinearLayout>

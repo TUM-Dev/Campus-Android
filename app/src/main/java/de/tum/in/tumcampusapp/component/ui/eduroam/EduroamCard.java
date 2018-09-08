@@ -9,8 +9,8 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +39,7 @@ public class EduroamCard extends Card {
 
     @Override
     public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
-        AppCompatButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
+        MaterialButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), SetupEduroamActivity.class);
             getContext().startActivity(intent);
