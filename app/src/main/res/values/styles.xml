@@ -200,18 +200,6 @@
         <item name="android:textColor">@color/text_dark_secondary</item>
     </style>
 
-    <style name="CardTitle">
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="android:layout_marginBottom">@dimen/material_small_padding</item>
-        <item name="android:textColor">@color/text_dark_primary</item>
-    </style>
-
-    <style name="CardBody">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="android:textColor">@color/text_dark_secondary</item>
-    </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
