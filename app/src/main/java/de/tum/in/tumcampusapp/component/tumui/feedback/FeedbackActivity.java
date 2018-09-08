@@ -211,12 +211,11 @@ public class FeedbackActivity extends BaseActivity {
         if (location == null) { // we don't know anything about the location
             includeLocation.setChecked(false);
 
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setIcon(R.drawable.ic_location);
-            dialog.setTitle(R.string.location_services_off_title);
-            dialog.setMessage(R.string.location_services_off_message);
-            dialog.setPositiveButton(R.string.ok, null);
-            dialog.show();
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.location_services_off_title)
+                    .setMessage(R.string.location_services_off_message)
+                    .setPositiveButton(R.string.ok, null)
+                    .show();
         }
     }
 
@@ -329,12 +328,11 @@ public class FeedbackActivity extends BaseActivity {
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.send_feedback_question);
-        builder.setIcon(R.drawable.ic_feedback);
-        builder.setPositiveButton(R.string.send, (dialogInterface, i) -> sendFeedback());
-        builder.setNegativeButton(R.string.no, null);
-        builder.show();
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.send_feedback_question)
+                .setPositiveButton(R.string.send, (dialogInterface, i) -> sendFeedback())
+                .setNegativeButton(R.string.no, null)
+                .show();
     }
 
     public void sendFeedback() {
@@ -400,23 +398,22 @@ public class FeedbackActivity extends BaseActivity {
 
     @SuppressLint("NewApi")
     public void addPicture(View view) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle(R.string.feedback_add_picture);
-        dialog.setIcon(R.drawable.ic_add_photo_colored);
         String[] options = {getString(R.string.feedback_take_picture), getString(R.string.gallery)};
-        dialog.setItems(options, (dialogInterface, i) -> {
-            if (i == 0) {
-                if (checkPermission(Manifest.permission.CAMERA)) {
-                    startTakingPicture();
-                }
-            } else {
-                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    openGallery();
-                }
-            }
-        });
-        dialog.setNegativeButton(R.string.cancel, null);
-        dialog.show();
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.feedback_add_picture)
+                .setItems(options, (dialogInterface, i) -> {
+                    if (i == 0) {
+                        if (checkPermission(Manifest.permission.CAMERA)) {
+                            startTakingPicture();
+                        }
+                    } else {
+                        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            openGallery();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @Override

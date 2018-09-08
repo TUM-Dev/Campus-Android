@@ -4,21 +4,21 @@
 
     <item
         android:id="@+id/action_room_timetable"
-        android:icon="@drawable/ic_room_timetable"
+        android:icon="@drawable/ic_outline_event_note_24px"
         android:title="@string/room_timetable"
         app:iconTint="@color/color_primary"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_directions"
-        android:icon="@drawable/ic_action_directions"
+        android:icon="@drawable/ic_outline_directions_24px"
         android:title="@string/navigate"
         app:iconTint="@color/color_primary"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_switch_map"
-        android:icon="@drawable/ic_action_map"
+        android:icon="@drawable/ic_outline_map_24px"
         android:title="@string/switch_map"
         app:iconTint="@color/color_primary"
         app:showAsAction="ifRoom" />

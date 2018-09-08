@@ -128,7 +128,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="@dimen/material_default_padding"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_action_edit"
+                            android:src="@drawable/ic_outline_edit_24px"
                             android:tint="@color/sections_gray"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"

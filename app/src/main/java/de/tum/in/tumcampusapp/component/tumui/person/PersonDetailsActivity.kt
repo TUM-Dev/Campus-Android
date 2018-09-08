@@ -83,10 +83,9 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         }
 
         AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_add_to_contacts)
+                .setMessage(R.string.dialog_add_to_contacts)
                 .setPositiveButton(R.string.add) { _, _ -> addContact(employee) }
                 .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .setIcon(R.drawable.ic_action_add_person_blue)
                 .show()
     }
 

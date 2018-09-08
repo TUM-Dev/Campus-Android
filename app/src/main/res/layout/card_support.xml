@@ -45,7 +45,7 @@
             android:id="@+id/email_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_email_white_24dp"
+            android:drawableStart="@drawable/ic_outline_email_24px_white"
             android:drawablePadding="@dimen/material_small_padding"
             android:text="@string/e_mail_us"
             android:textColor="@android:color/white"

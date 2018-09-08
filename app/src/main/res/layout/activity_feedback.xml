@@ -80,7 +80,7 @@
                     android:onClick="addPicture"
                     android:padding="@dimen/material_default_padding"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_add_photo"
+                    android:src="@drawable/ic_outline_add_photo_alternate_24px"
                     app:backgroundTint="@color/color_primary" />
 
                 <android.support.v7.widget.RecyclerView

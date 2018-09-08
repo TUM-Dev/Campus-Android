@@ -223,7 +223,7 @@ public class StartupActivity extends AppCompatActivity {
                 Intent intent = new Intent(StartupActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                overridePendingTransition(0, 0);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
 
             @Override

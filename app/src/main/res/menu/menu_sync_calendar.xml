@@ -24,7 +24,7 @@
 
     <item
         android:id="@+id/action_export_calendar"
-        android:icon="@drawable/ic_sync_cloud"
+        android:icon="@drawable/ic_outline_cloud_done_24px"
         android:title="@string/export_to_google"
         app:iconTint="@color/color_primary"
         app:showAsAction="never" />

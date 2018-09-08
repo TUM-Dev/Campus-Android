@@ -176,15 +176,14 @@ public class AddChatMemberActivity extends BaseActivity {
     }
 
     private void showConfirmDialog(ChatMember member) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setIcon(R.drawable.ic_action_add_person_blue);
-        dialog.setMessage(getString(R.string.add_user_to_chat_message, member.getDisplayName(), room.getActualName()));
-        dialog.setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-            joinRoom(member);
-            reset();
-        });
-        dialog.setNegativeButton(R.string.no, null);
-        dialog.show();
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.add_user_to_chat_message, member.getDisplayName(), room.getActualName()))
+                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                    joinRoom(member);
+                    reset();
+                })
+                .setNegativeButton(R.string.no, null)
+                .show();
     }
 
     /**

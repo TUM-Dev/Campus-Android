@@ -86,7 +86,7 @@ public class RoomFinderDetailsActivity
         switchMap.setVisible(!"10".equals(mapId) && mapsLoaded && fragment == null);
         MenuItem timetable = menu.findItem(R.id.action_room_timetable);
         timetable.setVisible(infoLoaded);
-        timetable.setIcon(fragment == null ? R.drawable.ic_room_timetable : R.drawable.ic_action_map);
+        timetable.setIcon(fragment == null ? R.drawable.ic_outline_event_note_24px : R.drawable.ic_outline_map_24px);
         menu.findItem(R.id.action_directions)
             .setVisible(infoLoaded && fragment == null);
         return true;
