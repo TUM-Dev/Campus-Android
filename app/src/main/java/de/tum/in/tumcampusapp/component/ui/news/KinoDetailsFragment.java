@@ -89,6 +89,11 @@ public class KinoDetailsFragment extends Fragment {
         TextView ratingTextView = rootView.findViewById(R.id.ratingTextView);
         ratingTextView.setText(kino.getRating());
 
+        int colorPrimary = ContextCompat.getColor(requireContext(), R.color.color_primary);
+        setCompoundDrawablesTint(dateTextView, colorPrimary);
+        setCompoundDrawablesTint(runtimeTextView, colorPrimary);
+        setCompoundDrawablesTint(ratingTextView, colorPrimary);
+
         TextView descriptionTextView = rootView.findViewById(R.id.descriptionTextView);
         descriptionTextView.setText(kino.getFormattedDescription());
 
@@ -125,7 +130,7 @@ public class KinoDetailsFragment extends Fragment {
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         progressBar.setVisibility(View.GONE);
                         posterView.setImageBitmap(bitmap);
-                        loadColorPalette(bitmap);
+                        //loadColorPalette(bitmap);
                     }
 
                     @Override
