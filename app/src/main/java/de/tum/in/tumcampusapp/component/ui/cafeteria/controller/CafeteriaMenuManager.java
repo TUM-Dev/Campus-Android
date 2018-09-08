@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.cafeteria.CafeteriaAPIClient;
@@ -14,12 +14,12 @@ import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettings;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.FavoriteDishDao;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.FavoriteFoodAlarmStorage;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaResponse;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.model.FavoriteDish;
 import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -86,72 +86,48 @@ public class CafeteriaMenuManager {
         menuDao.insert(menus);
 
         scheduleNotificationAlarms();
-        scheduleFoodAlarms(true);
     }
 
-    private void scheduleNotificationAlarms() {
-        List<DateTime> notificationTimes = menuDao.getAllDates();
+    public void scheduleNotificationAlarms() {
+        List<DateTime> menuDates = menuDao.getAllDates();
+        List<DateTime> notificationTimes = new ArrayList<>();
+
+        CafeteriaNotificationSettings settings = new CafeteriaNotificationSettings(mContext);
+
+        for (DateTime menuDate : menuDates) {
+            LocalTime weekdayNotificationTime = settings.retrieveLocalTime(menuDate);
+            if (weekdayNotificationTime != null) {
+                DateTime notificationTime = weekdayNotificationTime.toDateTimeToday();
+                notificationTimes.add(notificationTime);
+            }
+        }
+
         NotificationScheduler scheduler = new NotificationScheduler(mContext);
         scheduler.scheduleAlarms(NotificationType.CAFETERIA, notificationTimes);
     }
 
-    public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {
-        favoriteDishDao.insertFavouriteDish(FavoriteDish.Companion.create(mensaId, dishName, date, tag));
-        scheduleFoodAlarms(false);
-    }
-
-    public void deleteFavoriteDish(int mensaId, String dishName) {
-        favoriteDishDao.deleteFavoriteDish(mensaId, dishName);
-        scheduleFoodAlarms(true);
-    }
-
     /**
-     * Prepares a bundle, which can be sent to the FavoriteDishAlarmScheduler, which contains all necessary
-     * information to schedule the FavoriteDishAlarms. Its procedure is the following: Get the names
-     * of all the favorite dishes and their corresponding mensaId (the user flags a food as favorite,
-     * which also stores the mensaId). By assuming that the user will only rate the food as a favorite,
-     * if he actually goes to that specific mensa. The alarm is then stored and scheduled, if it's not
-     * scheduled already.
+     * Returns all the favorite dishes that a particular mensa serves on the specified date.
      *
-     * @param completeReschedule True if all currently scheduled alarms should be discarded, False if not
-     */
-    public void scheduleFoodAlarms(boolean completeReschedule) {
-        FavoriteFoodAlarmStorage favoriteFoodAlarmStorage = FavoriteFoodAlarmStorage.getInstance()
-                .initialize(mContext);
-        if (completeReschedule) {
-            favoriteFoodAlarmStorage.cancelOutstandingAlarms();
-        }
-
-        List<String> dates = favoriteDishDao.getFavouriteDishDates();
-
-        for (String date : dates) {
-            favoriteFoodAlarmStorage.scheduleAlarm(date);
-        }
-    }
-
-    /**
-     * This method returns all the mensas serving favorite dishes at a given day and their unique
-     * dishes
-     *
-     * @param dayMonthYear String with ISO-Date (yyyy-mm-dd)
+     * @param queriedMensaId The Cafeteria for which to return the favorite dishes served
+     * @param date The date for which to return the favorite dishes served
      * @return the favourite dishes at the given date
      */
-    public HashMap<Integer, HashSet<CafeteriaMenu>> getServedFavoritesAtDate(String dayMonthYear) {
-        HashMap<Integer, HashSet<CafeteriaMenu>> cafeteriaServedDish = new HashMap<>();
+    public List<CafeteriaMenu> getFavoriteDishesServed(int queriedMensaId, DateTime date) {
+        List<CafeteriaMenu> results = new ArrayList<>();
+        String dateString = DateTimeUtils.INSTANCE.getDateString(date);
 
-        List<CafeteriaMenu> upcomingServings = favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dayMonthYear);
+        List<CafeteriaMenu> upcomingServings = favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString);
+
         for (CafeteriaMenu upcomingServing : upcomingServings) {
-            int mensaId = upcomingServing.getCafeteriaId();
-            HashSet<CafeteriaMenu> servedAtCafeteria;
-            if (cafeteriaServedDish.containsKey(mensaId)) {
-                servedAtCafeteria = cafeteriaServedDish.get(mensaId);
-            } else {
-                servedAtCafeteria = new HashSet<>();
-                cafeteriaServedDish.put(mensaId, servedAtCafeteria);
+            int currentMensaId = upcomingServing.getCafeteriaId();
+
+            if (currentMensaId == queriedMensaId) {
+                results.add(upcomingServing);
             }
-            servedAtCafeteria.add(upcomingServing);
         }
 
-        return cafeteriaServedDish;
+        return results;
     }
+
 }

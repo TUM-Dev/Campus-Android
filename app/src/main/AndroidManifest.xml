@@ -598,7 +598,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Used to reAlarmNotificationlarm when device has been restarted -->
+        <!-- Used to restart alarm when device has been restarted -->
         <receiver android:name=".service.StartSyncReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -606,9 +606,6 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-
-        <!-- Used to set Notification for favoriteDish -->
-        <receiver android:name=".service.FavoriteDishAlarmScheduler" />
 
         <service
             android:name=".service.DownloadService"
@@ -669,6 +666,10 @@
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationReceiver" />
+
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver" />
 
         <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationReceiver" />
 

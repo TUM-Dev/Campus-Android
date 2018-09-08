@@ -632,7 +632,10 @@ Signatur: %5$s</string>
     <string name="error_unknown">Unbekannter Fehler.</string>
     <string name="export_to_google_error">Ein Fehler ist während des Kalender-Exports zu Google Kalender aufgetreten.</string>
     <string name="checking_if_token_enabled">Überprüfung, ob Token aktiviert ist …</string>
+
     <string name="new_items_format_string">%d neue Meldungen</string>
+    <string name="including_format_string">inklusive %s</string>
+
     <string name="no_events_found">Keine Events gefunden</string>
     <string name="no_bookings_found">Keine Buchungen gefunden</string>
     <string name="ticket">Ticket</string>

@@ -159,6 +159,7 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX = "calendar_filter_hour_limit_max"
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
+
     const val KEY_NOTIFICATION_TYPE_ID = "type_id"
 
     const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_OJHHpeotVOpaRO4veynROu18"

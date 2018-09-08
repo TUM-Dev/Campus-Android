@@ -683,7 +683,9 @@ Signature: %5$s</string>
     <string name="lecture_list_item_details_format_string" translatable="false">%1$s - %2$s - %3$s SWS</string>
     <string name="checking_if_token_enabled">Checking if token is enabled …</string>
 
+    <string name="including_format_string">including %s</string>
     <string name="new_items_format_string">%d new items</string>
+
     <string name="no_events_found">No events found</string>
     <string name="no_bookings_found">No bookings found</string>
     <string name="unknown">Unknown</string>
@@ -693,5 +695,4 @@ Signature: %5$s</string>
     <string name="remaining_tickets">Remaining tickets</string>
     <string name="thanks_for_your_purchase">Thanks for your purchase</string>
     <string name="the_ticket_has_been_saved_for_you_in_the_app">The ticket has been saved for you in the app.</string>
-
 </resources>
