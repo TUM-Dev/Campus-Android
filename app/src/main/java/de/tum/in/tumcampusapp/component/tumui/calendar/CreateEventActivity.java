@@ -6,9 +6,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -52,7 +52,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private TextView startTimeView;
     private TextView endDateView;
     private TextView endTimeView;
-    private AppCompatButton createButton;
+    private MaterialButton createButton;
     private CalendarItem event;
 
     public CreateEventActivity() {
