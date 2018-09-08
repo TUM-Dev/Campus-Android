@@ -70,8 +70,8 @@
                     android:text="@string/set_lecture_chat"
                     android:textSize="15sp" />
 
-                <android.support.v7.widget.AppCompatButton
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                <android.support.design.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="onClickTerms"
@@ -107,8 +107,9 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />
 
-    <android.support.v7.widget.AppCompatButton
+    <android.support.design.button.MaterialButton
         android:id="@+id/finish_button"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -118,6 +119,7 @@
         android:onClick="onClickDone"
         android:text="@string/goto_tumcampus"
         android:textColor="@android:color/white"
-        app:backgroundTint="@color/color_primary" />
+        app:backgroundTint="@color/color_primary"
+        app:cornerRadius="20dp" />
 
 </LinearLayout>

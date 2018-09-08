@@ -2,11 +2,13 @@ package de.tum.in.tumcampusapp.component.ui.onboarding;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -41,7 +43,7 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
     private String lrzId;
 
     private EditText lrzIdEditText;
-    private AppCompatButton nextButton;
+    private MaterialButton nextButton;
 
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
@@ -53,6 +55,15 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
 
         disableRefresh();
         findViewById(R.id.wizard_start_layout).requestFocus();
+
+        if (getSupportActionBar() != null) {
+            Drawable closeIcon = ContextCompat.getDrawable(this, R.drawable.ic_clear);
+            if (closeIcon != null) {
+                int color = ContextCompat.getColor(this, R.color.color_primary);
+                closeIcon.setTint(color);
+            }
+            getSupportActionBar().setHomeAsUpIndicator(closeIcon);
+        }
 
         nextButton = findViewById(R.id.next_button);
 

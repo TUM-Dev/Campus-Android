@@ -92,23 +92,26 @@
             android:layout_marginBottom="@dimen/material_small_padding"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/open_tum_online_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/material_default_padding"
                 android:onClick="onClickTUMOnline"
                 android:text="@string/open_tum_online"
                 android:textColor="@color/color_primary" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/next_button"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onClickNext"
                 android:text="@string/button_next"
                 android:textColor="@android:color/white"
-                app:backgroundTint="@color/color_primary" />
+                app:backgroundTint="@color/color_primary"
+                app:cornerRadius="20dp" />
 
         </LinearLayout>
 
