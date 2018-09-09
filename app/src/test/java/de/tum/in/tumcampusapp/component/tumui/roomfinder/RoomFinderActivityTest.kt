@@ -1,27 +1,25 @@
 package de.tum.`in`.tumcampusapp.component.tumui.roomfinder
 
-import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.TestApp
-import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivityTest
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.*
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
+import de.tum.`in`.tumcampusapp.R
+import org.hamcrest.Matchers.allOf
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-@RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, application = TestApp::class)
-class RoomFinderActivityTest : BaseActivityTest() {
+@RunWith(AndroidJUnit4::class)
+class RoomFinderActivityTest {
 
-    @Test
-    override fun mainComponentDisplayedTest() {
-        //idIsDisplayed(R.id.list);
-    }
+    @get:Rule
+    val rule = ActivityTestRule(RoomFinderActivity::class.java)
 
     @Test
-    @Throws(InterruptedException::class)
-    fun searchTest() {
-        // Adapted from https://android.googlesource.com/platform/frameworks/testing/+/android-support-test/espresso/sample/src/androidTest/java/android/support/test/testapp/ActionBarSearchActivityTest.java
-        /*
+    fun testSearchWithExpectedResult() {
         onView(allOf(withId(R.id.action_search), isDisplayed()))
                 .perform(click());
 
@@ -34,7 +32,7 @@ class RoomFinderActivityTest : BaseActivityTest() {
         Thread.sleep(500);
 
         onView(withText("00.08.053, Seminarraum"))
-                .check(matches(isDisplayed()));*/
+                .check(matches(isDisplayed()));
     }
 
 }

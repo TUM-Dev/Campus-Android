@@ -1,13 +1,13 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation.api
 
+import android.support.test.runner.AndroidJUnit4
 import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class MvvDepartureListTest {
 
     @Test

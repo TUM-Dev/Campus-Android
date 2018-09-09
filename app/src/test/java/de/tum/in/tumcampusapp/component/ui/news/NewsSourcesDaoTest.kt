@@ -1,34 +1,35 @@
 package de.tum.`in`.tumcampusapp.component.ui.news
 
-import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.TestApp
+import android.arch.persistence.room.Room
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
 import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsSources
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
-@Ignore
-@RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, application = TestApp::class)
+@RunWith(AndroidJUnit4::class)
 class NewsSourcesDaoTest {
-    private var dao: NewsSourcesDao? = null
+
+    private lateinit var database: TcaDb
+    
+    private val dao: NewsSourcesDao by lazy {
+        database.newsSourcesDao()
+    }
 
     @Before
-    fun setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application).newsSourcesDao()
+    fun initDatabase() {
+        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), TcaDb::class.java)
+                .allowMainThreadQueries()
+                .build()
     }
 
     @After
-    fun tearDown() {
-        dao!!.flush()
-        TcaDb.getInstance(RuntimeEnvironment.application).close()
+    fun closeDatabase() {
+        database.close()
     }
 
     /**
@@ -37,12 +38,12 @@ class NewsSourcesDaoTest {
      */
     @Test
     fun getNewsSourcesAllTest() {
-        dao!!.insert(NewsSources(0, "0", ""))
-        dao!!.insert(NewsSources(1, "1", ""))
-        dao!!.insert(NewsSources(14, "2", ""))
-        dao!!.insert(NewsSources(15, "3", ""))
+        dao.insert(NewsSources(0, "0", ""))
+        dao.insert(NewsSources(1, "1", ""))
+        dao.insert(NewsSources(14, "2", ""))
+        dao.insert(NewsSources(15, "3", ""))
 
-        assertThat(dao!!.getNewsSources("1")).hasSize(4)
+        assertThat(dao.getNewsSources("1")).hasSize(4)
     }
 
     /**
@@ -51,12 +52,12 @@ class NewsSourcesDaoTest {
      */
     @Test
     fun getNewsSourcesSomeTest() {
-        dao!!.insert(NewsSources(0, "0", ""))
-        dao!!.insert(NewsSources(9, "1", "")) // should be excluded
-        dao!!.insert(NewsSources(10, "2", "")) // should be excluded
-        dao!!.insert(NewsSources(15, "3", ""))
+        dao.insert(NewsSources(0, "0", ""))
+        dao.insert(NewsSources(9, "1", "")) // should be excluded
+        dao.insert(NewsSources(10, "2", "")) // should be excluded
+        dao.insert(NewsSources(15, "3", ""))
 
-        assertThat(dao!!.getNewsSources("1")).hasSize(2)
+        assertThat(dao.getNewsSources("1")).hasSize(2)
     }
 
     /**
@@ -65,12 +66,12 @@ class NewsSourcesDaoTest {
      */
     @Test
     fun getNewsSourcesNoneTest() {
-        dao!!.insert(NewsSources(8, "0", ""))
-        dao!!.insert(NewsSources(9, "1", ""))
-        dao!!.insert(NewsSources(10, "2", ""))
-        dao!!.insert(NewsSources(11, "3", ""))
+        dao.insert(NewsSources(8, "0", ""))
+        dao.insert(NewsSources(9, "1", ""))
+        dao.insert(NewsSources(10, "2", ""))
+        dao.insert(NewsSources(11, "3", ""))
 
-        assertThat(dao!!.getNewsSources("1")).hasSize(0)
+        assertThat(dao.getNewsSources("1")).hasSize(0)
     }
 
     /**
@@ -79,12 +80,12 @@ class NewsSourcesDaoTest {
      */
     @Test
     fun getNewsSourcesSelectedSourceTest() {
-        dao!!.insert(NewsSources(8, "0", ""))
-        dao!!.insert(NewsSources(9, "1", ""))
-        dao!!.insert(NewsSources(10, "2", ""))
-        dao!!.insert(NewsSources(11, "3", ""))
+        dao.insert(NewsSources(8, "0", ""))
+        dao.insert(NewsSources(9, "1", ""))
+        dao.insert(NewsSources(10, "2", ""))
+        dao.insert(NewsSources(11, "3", ""))
 
-        assertThat(dao!!.getNewsSources("9")).hasSize(1)
+        assertThat(dao.getNewsSources("9")).hasSize(1)
     }
 
     /**
@@ -93,14 +94,15 @@ class NewsSourcesDaoTest {
      */
     @Test
     fun getNewsSourceTest() {
-        dao!!.insert(NewsSources(8, "8", "8"))
-        dao!!.insert(NewsSources(9, "9", "9"))
-        dao!!.insert(NewsSources(10, "10", "10"))
-        dao!!.insert(NewsSources(11, "11", "11"))
+        dao.insert(NewsSources(8, "8", "8"))
+        dao.insert(NewsSources(9, "9", "9"))
+        dao.insert(NewsSources(10, "10", "10"))
+        dao.insert(NewsSources(11, "11", "11"))
 
-        val (id, title, icon) = dao!!.getNewsSource(9)
+        val (id, title, icon) = dao.getNewsSource(9)
         assertThat(id).isEqualTo(9)
         assertThat(title).isEqualTo("9")
         assertThat(icon).isEqualTo("9")
     }
+
 }

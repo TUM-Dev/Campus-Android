@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.chat
 
-import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.TestApp
+import android.support.test.runner.AndroidJUnit4
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatPublicKey
 import org.junit.Assert.assertFalse
@@ -9,42 +8,43 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 import java.util.*
 
-@RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, application = TestApp::class)
+@RunWith(AndroidJUnit4::class)
 class ChatMessageValidatorTestCase {
 
-    private var validator: ChatMessageValidator? = null
-    private var publicKeyFixtures: MutableList<ChatPublicKey>? = null
-    private var messageFixtures: MutableList<ChatMessage>? = null
+    private lateinit var validator: ChatMessageValidator
+    private lateinit var publicKeyFixtures: MutableList<ChatPublicKey>
+    private lateinit var messageFixtures: MutableList<ChatMessage>
 
     @Before
     fun setUp() {
-        publicKeyFixtures = mutableListOf()
-        publicKeyFixtures!!.add(ChatPublicKey(
-                "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDR4+3zbRYVRAecvMcn0vLswZAI1z7JqQ2Q0Mkq\n" +
-                        "ZAy78cE/tja8qcD4DXXiQYCKC8BdI68W+DqYLohPuOs6rTYfD/pLsbPKaJLHEb4dw0Uchq36pb60\n" +
-                        "6G6aCjZrYM0JJYO/pKbwl6ceF6EJRacGswUQ8qY3ZYd6W7R3J7MQxzJ+lQIDAQAB"))
+        publicKeyFixtures = mutableListOf(
+                ChatPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDR4+3zbRYVRAecvMcn0vLswZAI1z7JqQ2Q0Mkq\n" +
+                                "ZAy78cE/tja8qcD4DXXiQYCKC8BdI68W+DqYLohPuOs6rTYfD/pLsbPKaJLHEb4dw0Uchq36pb60\n" +
+                                "6G6aCjZrYM0JJYO/pKbwl6ceF6EJRacGswUQ8qY3ZYd6W7R3J7MQxzJ+lQIDAQAB")
+        )
 
-        messageFixtures = mutableListOf()
-        messageFixtures!!.add(buildChatMessage(
-                "This is a message!",
-                "MwBZFVhzIGehiGAVaoxp0k04BJN8YyyqlPQg1hXwg1bQxgjtEXz6KsVzYOWo40/TdhcbUHo+hUhk\n" +
-                        "/rLLBrkFldQuNGhd/ltwiMeN2KwdLYm5nl9DWIjPXXviCBogkVtwrBdAhgknr5Kn5Zy4TbGdMr9z\n" +
-                        "d/iOl27L7GYepazgNW8="))
-        messageFixtures!!.add(buildChatMessage(
-                "A message with German characters: öäüßÖÄÜ!",
-                "qCOAmFho4tKW24qn6vv6j0x4jc3OVKPbVVm7EqYeJKBStGOmEcx6Crtx0MEMFxNe4Zyqo0kYMXNO\n" +
-                        "/NPTvhUJlAr5x6Hlc1iKWBT5eGE8F3mKE8pTSObrCWhEBXylQjkwej5eQpahW+uexZWzeme702V0\n" +
-                        "1C3FoeYUC9rSOfLlyss="))
-        messageFixtures!!.add(buildChatMessage(
-                "This is a Korean message: \uC88B\uC740 \uAC8C\uC784",
-                "L6DPFzKiVWrO3TeAjJwPNtC4U5D69ODloH3zmCXCpZx+fiZhopzC5cUAeolm2l/++KYZu3vR6IJK\n" +
-                        "HLjXaMd4jDruY8DiWNmCbOnR/ywHQ96sCuMcdfhot5AgM05NbBH7GiAFBDJQzDejuK7M7hGmHZ6s\n" +
-                        "L4WYKETiNiP1Oc6d58w="))
+        messageFixtures = mutableListOf(
+                buildChatMessage(
+                        "This is a message!",
+                        "MwBZFVhzIGehiGAVaoxp0k04BJN8YyyqlPQg1hXwg1bQxgjtEXz6KsVzYOWo40/TdhcbUHo+hUhk\n" +
+                                "/rLLBrkFldQuNGhd/ltwiMeN2KwdLYm5nl9DWIjPXXviCBogkVtwrBdAhgknr5Kn5Zy4TbGdMr9z\n" +
+                                "d/iOl27L7GYepazgNW8="
+                ),
+                buildChatMessage(
+                        "A message with German characters: öäüßÖÄÜ!",
+                        "qCOAmFho4tKW24qn6vv6j0x4jc3OVKPbVVm7EqYeJKBStGOmEcx6Crtx0MEMFxNe4Zyqo0kYMXNO\n" +
+                                "/NPTvhUJlAr5x6Hlc1iKWBT5eGE8F3mKE8pTSObrCWhEBXylQjkwej5eQpahW+uexZWzeme702V0\n" +
+                                "1C3FoeYUC9rSOfLlyss="
+                ),
+                buildChatMessage(
+                        "This is a Korean message: \uC88B\uC740 \uAC8C\uC784",
+                        "L6DPFzKiVWrO3TeAjJwPNtC4U5D69ODloH3zmCXCpZx+fiZhopzC5cUAeolm2l/++KYZu3vR6IJK\n" +
+                                "HLjXaMd4jDruY8DiWNmCbOnR/ywHQ96sCuMcdfhot5AgM05NbBH7GiAFBDJQzDejuK7M7hGmHZ6s\n" +
+                                "L4WYKETiNiP1Oc6d58w="
+                )
+        )
     }
 
     /**
@@ -54,19 +54,15 @@ class ChatMessageValidatorTestCase {
      * @param end   The index after the last element to include in the list
      */
     private fun buildPublicKeyList(start: Int, end: Int): List<ChatPublicKey> {
-        val list = ArrayList<ChatPublicKey>()
-        for (i in start until end) {
-            list.add(publicKeyFixtures!![i])
-        }
-
-        return list
+        return (start until end)
+                .map { publicKeyFixtures[it] }
+                .toList()
     }
 
     private fun buildChatMessage(text: String, signature: String): ChatMessage {
-        val message = ChatMessage(text)
-        message.signature = signature
-
-        return message
+        return ChatMessage(text).apply {
+            this.signature = signature
+        }
     }
 
     /**
@@ -76,9 +72,8 @@ class ChatMessageValidatorTestCase {
     @Test
     fun testAsciiValidMessageOneKey() {
         validator = ChatMessageValidator(buildPublicKeyList(0, 1))
-        val message = messageFixtures!![0]
-
-        assertTrue(validator!!.validate(message))
+        val message = messageFixtures.first()
+        assertTrue(validator.validate(message))
     }
 
     /**
@@ -88,12 +83,12 @@ class ChatMessageValidatorTestCase {
     @Test
     fun testAsciiInvalidMessageOneKey() {
         validator = ChatMessageValidator(buildPublicKeyList(0, 1))
-        val message = messageFixtures!![0]
-        // Take a signature of a different message
-        message.signature = messageFixtures!![1]
-                .signature
+        val message = messageFixtures.first().apply {
+            // Take a signature of a different message
+            signature = messageFixtures[1].signature
+        }
 
-        assertFalse(validator!!.validate(message))
+        assertFalse(validator.validate(message))
     }
 
     /**
@@ -102,9 +97,8 @@ class ChatMessageValidatorTestCase {
     @Test
     fun testUnicodeValidMessageOneKey() {
         validator = ChatMessageValidator(buildPublicKeyList(0, 1))
-        val message = messageFixtures!![1]
-
-        assertTrue(validator!!.validate(message))
+        val message = messageFixtures[1]
+        assertTrue(validator.validate(message))
     }
 
     /**
@@ -113,9 +107,8 @@ class ChatMessageValidatorTestCase {
     @Test
     fun testUnicodeKoreanValidMessageOneKey() {
         validator = ChatMessageValidator(buildPublicKeyList(0, 1))
-        val message = messageFixtures!![2]
-
-        assertTrue(validator!!.validate(message))
+        val message = messageFixtures[2]
+        assertTrue(validator.validate(message))
     }
 
     /**
@@ -126,8 +119,7 @@ class ChatMessageValidatorTestCase {
     fun testInvalidBase64Signature() {
         validator = ChatMessageValidator(buildPublicKeyList(0, 1))
         val message = buildChatMessage("This is a message!", "This is not valid base64...")
-
-        assertFalse(validator!!.validate(message))
+        assertFalse(validator.validate(message))
     }
 
     /**
@@ -137,12 +129,10 @@ class ChatMessageValidatorTestCase {
     @Test
     fun testInvalidBase64PublicKey() {
         val list = buildPublicKeyList(0, 1)
-        list[0]
-                .key = "This is not valid base 64"
+        list[0].key = "This is not valid base 64"
         validator = ChatMessageValidator(list)
-        val message = messageFixtures!![0]
-
-        assertFalse(validator!!.validate(message))
+        val message = messageFixtures.first()
+        assertFalse(validator.validate(message))
     }
 
     /**
@@ -152,9 +142,8 @@ class ChatMessageValidatorTestCase {
     @Test
     fun testNoPublicKeys() {
         validator = ChatMessageValidator(ArrayList())
-
-        for (message in messageFixtures!!) {
-            assertFalse(validator!!.validate(message))
+        for (message in messageFixtures) {
+            assertFalse(validator.validate(message))
         }
     }
 
@@ -164,13 +153,14 @@ class ChatMessageValidatorTestCase {
      */
     @Test
     fun testOneInvalidKey() {
-        val list = ArrayList<ChatPublicKey>()
-        list.add(ChatPublicKey("This is not a valid key"))
-        list.add(publicKeyFixtures!![0])
+        val list = listOf(
+                ChatPublicKey("This is not a valid key"),
+                publicKeyFixtures[0]
+        )
         validator = ChatMessageValidator(list)
-        val message = messageFixtures!![0]
+        val message = messageFixtures[0]
 
-        assertTrue(validator!!.validate(message))
+        assertTrue(validator.validate(message))
     }
 
 }

@@ -1,7 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
-import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.TestApp
+import android.arch.persistence.room.Room
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
 import de.tum.`in`.tumcampusapp.component.other.locations.RoomLocationsDao
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist
@@ -12,45 +13,44 @@ import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
-@Ignore
-@RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, application = TestApp::class)
+@RunWith(AndroidJUnit4::class)
 class CalendarDaoTest {
 
-    private var dao: CalendarDao? = null
-    private var wtbDao: WidgetsTimetableBlacklistDao? = null
-    private var rlDao: RoomLocationsDao? = null
+    private lateinit var database: TcaDb
+
+    private val calendarDao: CalendarDao by lazy {
+        database.calendarDao()
+    }
+
+    private val roomLocationsDao: RoomLocationsDao by lazy {
+        database.roomLocationsDao()
+    }
+
+    private val timetableBlacklistDao: WidgetsTimetableBlacklistDao by lazy {
+        database.widgetsTimetableBlacklistDao()
+    }
+
     private var nr: Int = 0
 
     @Before
-    fun setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application)
-                .calendarDao()
-        wtbDao = TcaDb.getInstance(RuntimeEnvironment.application)
-                .widgetsTimetableBlacklistDao()
-        rlDao = TcaDb.getInstance(RuntimeEnvironment.application)
-                .roomLocationsDao()
+    fun setup() {
+        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), TcaDb::class.java)
+                .allowMainThreadQueries()
+                .build()
         nr = 0
-        JodaTimeAndroid.init(RuntimeEnvironment.application)
+        JodaTimeAndroid.init(InstrumentationRegistry.getContext())
     }
 
     @After
     fun tearDown() {
-        dao!!.flush()
-        wtbDao!!.flush()
-        rlDao!!.flush()
-        TcaDb.getInstance(RuntimeEnvironment.application)
-                .close()
+        database.close()
     }
 
-    private fun createCalendarItem(status: String, startDate: DateTime, endDate: DateTime = startDate): CalendarItem {
+    private fun createCalendarItem(status: String,
+                                   startDate: DateTime, endDate: DateTime = startDate): CalendarItem {
         val item = CalendarItem(Integer.toString(nr),
                 status,
                 "dummy url",
@@ -71,12 +71,12 @@ class CalendarDaoTest {
     @Test
     fun getAllNotCancelledAll() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("OPEN", now))
-        dao!!.insert(createCalendarItem("OTHER", now))
-        dao!!.insert(createCalendarItem("OTHER", now))
-        dao!!.insert(createCalendarItem("OPEN", now))
+        calendarDao.insert(createCalendarItem("OPEN", now))
+        calendarDao.insert(createCalendarItem("OTHER", now))
+        calendarDao.insert(createCalendarItem("OTHER", now))
+        calendarDao.insert(createCalendarItem("OPEN", now))
 
-        assertThat(dao!!.allNotCancelled).hasSize(4)
+        assertThat(calendarDao.allNotCancelled).hasSize(4)
     }
 
     /**
@@ -86,12 +86,12 @@ class CalendarDaoTest {
     @Test
     fun getAllNotCancelledSome() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("CANCEL", now))
-        dao!!.insert(createCalendarItem("OTHER", now))
-        dao!!.insert(createCalendarItem("CANCEL", now))
-        dao!!.insert(createCalendarItem("OPEN", now))
+        calendarDao.insert(createCalendarItem("CANCEL", now))
+        calendarDao.insert(createCalendarItem("OTHER", now))
+        calendarDao.insert(createCalendarItem("CANCEL", now))
+        calendarDao.insert(createCalendarItem("OPEN", now))
 
-        assertThat(dao!!.allNotCancelled).hasSize(2)
+        assertThat(calendarDao.allNotCancelled).hasSize(2)
     }
 
     /**
@@ -101,12 +101,12 @@ class CalendarDaoTest {
     @Test
     fun getAllNotCancelledNone() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("CANCEL", now))
-        dao!!.insert(createCalendarItem("CANCEL", now))
-        dao!!.insert(createCalendarItem("CANCEL", now))
-        dao!!.insert(createCalendarItem("CANCEL", now))
+        calendarDao.insert(createCalendarItem("CANCEL", now))
+        calendarDao.insert(createCalendarItem("CANCEL", now))
+        calendarDao.insert(createCalendarItem("CANCEL", now))
+        calendarDao.insert(createCalendarItem("CANCEL", now))
 
-        assertThat(dao!!.allNotCancelled).hasSize(0)
+        assertThat(calendarDao.allNotCancelled).hasSize(0)
     }
 
     /**
@@ -116,12 +116,12 @@ class CalendarDaoTest {
     @Test
     fun getAllByDateNotCancelledSomeDates() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GO", now.plusMonths(10)))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("OTHER", now.minusMonths(10)))
-        dao!!.insert(createCalendarItem("COOL", now))
+        calendarDao.insert(createCalendarItem("GO", now.plusMonths(10)))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("OTHER", now.minusMonths(10)))
+        calendarDao.insert(createCalendarItem("COOL", now))
 
-        assertThat(dao!!.getAllByDate(now)).hasSize(2)
+        assertThat(calendarDao.getAllByDate(now)).hasSize(2)
     }
 
     /**
@@ -131,12 +131,12 @@ class CalendarDaoTest {
     @Test
     fun getAllByDateNotCancelledNoneDates() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GO", now.plusMonths(10)))
-        dao!!.insert(createCalendarItem("OK", now.plusDays(123)))
-        dao!!.insert(createCalendarItem("OTHER", now.minusMonths(10)))
-        dao!!.insert(createCalendarItem("COOL", now.minusDays(123)))
+        calendarDao.insert(createCalendarItem("GO", now.plusMonths(10)))
+        calendarDao.insert(createCalendarItem("OK", now.plusDays(123)))
+        calendarDao.insert(createCalendarItem("OTHER", now.minusMonths(10)))
+        calendarDao.insert(createCalendarItem("COOL", now.minusDays(123)))
 
-        assertThat(dao!!.getAllByDate(now)).hasSize(0)
+        assertThat(calendarDao.getAllByDate(now)).hasSize(0)
     }
 
     /**
@@ -146,12 +146,12 @@ class CalendarDaoTest {
     @Test
     fun getAllByDateNotCancelledMix() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("CANCEL", now.minusDays(123)))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(123)))
-        dao!!.insert(createCalendarItem("CANCEL", now))
+        calendarDao.insert(createCalendarItem("CANCEL", now.minusDays(123)))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(123)))
+        calendarDao.insert(createCalendarItem("CANCEL", now))
 
-        assertThat(dao!!.getAllByDate(now)).hasSize(2)
+        assertThat(calendarDao.getAllByDate(now)).hasSize(2)
     }
 
     /**
@@ -161,16 +161,16 @@ class CalendarDaoTest {
     @Test
     fun getNextDaysAll() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.minusDays(3)))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(3)))
-        dao!!.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("GOOD", now.minusDays(3)))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(3)))
+        calendarDao.insert(createCalendarItem("YES", now))
 
         val from = now.minusDays(4)
         val to = now.plusDays(4)
 
         // widgetId is used only for blacklisting
-        assertThat(dao!!.getNextDays(from, to, "1")).hasSize(4)
+        assertThat(calendarDao.getNextDays(from, to, "1")).hasSize(4)
     }
 
     /**
@@ -180,18 +180,18 @@ class CalendarDaoTest {
     @Test
     fun getNextDaysSomeBlacklisted() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.minusDays(3)))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(3)))
-        dao!!.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("GOOD", now.minusDays(3)))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(3)))
+        calendarDao.insert(createCalendarItem("YES", now))
 
         val from = now.minusDays(4)
         val to = now.plusDays(4)
 
-        wtbDao!!.insert(WidgetsTimetableBlacklist(1, "title 0"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(1, "title 0"))
 
         // widgetId is used only for blacklisting
-        assertThat(dao!!.getNextDays(from, to, "1")).hasSize(3)
+        assertThat(calendarDao.getNextDays(from, to, "1")).hasSize(3)
     }
 
     /**
@@ -201,16 +201,16 @@ class CalendarDaoTest {
     @Test
     fun getNextDaysSomeOutOfDateRange() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.minusDays(3)))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(3)))
-        dao!!.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("GOOD", now.minusDays(3)))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(3)))
+        calendarDao.insert(createCalendarItem("YES", now))
 
         val from = now.minusDays(2)
         val to = now.plusDays(2)
 
         // widgetId is used only for blacklisting
-        assertThat(dao!!.getNextDays(from, to, "1")).hasSize(2)
+        assertThat(calendarDao.getNextDays(from, to, "1")).hasSize(2)
     }
 
     /**
@@ -220,12 +220,12 @@ class CalendarDaoTest {
     @Test
     fun getCurrentLecturesAll() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.minusDays(1), now.plusDays(1)))
-        dao!!.insert(createCalendarItem("OK", now.minusHours(1), now.plusHours(1)))
-        dao!!.insert(createCalendarItem("DUNNO", now.minusDays(5), now.plusHours(1)))
-        dao!!.insert(createCalendarItem("YES", now.minusDays(1), now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("GOOD", now.minusDays(1), now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("OK", now.minusHours(1), now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("DUNNO", now.minusDays(5), now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("YES", now.minusDays(1), now.plusDays(1)))
 
-        assertThat(dao!!.currentLectures).hasSize(4)
+        assertThat(calendarDao.currentLectures).hasSize(4)
     }
 
     /**
@@ -235,12 +235,12 @@ class CalendarDaoTest {
     @Test
     fun getCurrentLecturesSome() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.plusDays(1), now.plusDays(1)))
-        dao!!.insert(createCalendarItem("OK", now.minusHours(1), now.plusHours(1)))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(5), now.plusHours(1)))
-        dao!!.insert(createCalendarItem("YES", now.plusDays(1), now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("GOOD", now.plusDays(1), now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("OK", now.minusHours(1), now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(5), now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("YES", now.plusDays(1), now.plusDays(1)))
 
-        assertThat(dao!!.currentLectures).hasSize(1)
+        assertThat(calendarDao.currentLectures).hasSize(1)
     }
 
     /**
@@ -250,12 +250,12 @@ class CalendarDaoTest {
     @Test
     fun getCurrentLecturesNone() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.plusDays(1), now.plusDays(1)))
-        dao!!.insert(createCalendarItem("OK", now.plusHours(1), now.plusHours(1)))
-        dao!!.insert(createCalendarItem("DUNNO", now.minusDays(5), now.minusHours(1)))
-        dao!!.insert(createCalendarItem("YES", now.plusDays(1), now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("GOOD", now.plusDays(1), now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("OK", now.plusHours(1), now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("DUNNO", now.minusDays(5), now.minusHours(1)))
+        calendarDao.insert(createCalendarItem("YES", now.plusDays(1), now.plusDays(1)))
 
-        assertThat(dao!!.currentLectures).hasSize(0)
+        assertThat(calendarDao.currentLectures).hasSize(0)
     }
 
     /**
@@ -265,12 +265,12 @@ class CalendarDaoTest {
     @Test
     fun hasLectures() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("DUNNO", now))
-        dao!!.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("GOOD", now))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("DUNNO", now))
+        calendarDao.insert(createCalendarItem("YES", now))
 
-        assertThat(dao!!.hasLectures()).isEqualTo(true)
+        assertThat(calendarDao.hasLectures()).isEqualTo(true)
     }
 
     /**
@@ -279,7 +279,7 @@ class CalendarDaoTest {
      */
     @Test
     fun hasLecturesEmpty() {
-        assertThat(dao!!.hasLectures()).isEqualTo(false)
+        assertThat(calendarDao.hasLectures()).isEqualTo(false)
     }
 
     /**
@@ -289,14 +289,14 @@ class CalendarDaoTest {
     @Test
     fun getLecturesWithoutCoordinates() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("DUNNO", now))
-        dao!!.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("GOOD", now))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("DUNNO", now))
+        calendarDao.insert(createCalendarItem("YES", now))
 
-        rlDao!!.insert(RoomLocations("dummy location", "", ""))
+        roomLocationsDao.insert(RoomLocations("dummy location", "", ""))
 
-        assertThat(dao!!.lecturesWithoutCoordinates).hasSize(1)
+        assertThat(calendarDao.lecturesWithoutCoordinates).hasSize(1)
     }
 
     /**
@@ -306,14 +306,14 @@ class CalendarDaoTest {
     @Test
     fun getLecturesWithoutCoordinatesNone() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("DUNNO", now))
-        dao!!.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("GOOD", now))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("DUNNO", now))
+        calendarDao.insert(createCalendarItem("YES", now))
 
-        rlDao!!.insert(RoomLocations("dummy location", "coordinate", "coordinate"))
+        roomLocationsDao.insert(RoomLocations("dummy location", "coordinate", "coordinate"))
 
-        assertThat(dao!!.lecturesWithoutCoordinates).hasSize(0)
+        assertThat(calendarDao.lecturesWithoutCoordinates).hasSize(0)
     }
 
     /**
@@ -324,12 +324,12 @@ class CalendarDaoTest {
     fun getNextCalendarItem() {
         val now = DateTime.now()
         val expected = createCalendarItem("GOOD", now.plusHours(1))
-        dao!!.insert(expected)
-        dao!!.insert(createCalendarItem("OK", now.plusDays(5)))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(1)))
-        dao!!.insert(createCalendarItem("YES", now.plusDays(2)))
+        calendarDao.insert(expected)
+        calendarDao.insert(createCalendarItem("OK", now.plusDays(5)))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("YES", now.plusDays(2)))
 
-        val results = dao!!.nextCalendarItems
+        val results = calendarDao.nextCalendarItems
         assertThat(results).hasSize(1)
         assertThat(results[0]).isEqualToComparingFieldByField(expected)
     }
@@ -341,17 +341,17 @@ class CalendarDaoTest {
     @Test
     fun getLecturesWithBlacklist() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.plusHours(1)))
-        dao!!.insert(createCalendarItem("OK", now.plusDays(5)))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(1)))
-        dao!!.insert(createCalendarItem("YES", now.plusDays(2)))
+        calendarDao.insert(createCalendarItem("GOOD", now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("OK", now.plusDays(5)))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("YES", now.plusDays(2)))
 
-        wtbDao!!.insert(WidgetsTimetableBlacklist(1, "title 0"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(1, "title 1"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(1, "title 2"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(1, "title 3"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(1, "title 0"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(1, "title 1"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(1, "title 2"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(1, "title 3"))
 
-        assertThat(dao!!.getLecturesInBlacklist("1")).hasSize(4)
+        assertThat(calendarDao.getLecturesInBlacklist("1")).hasSize(4)
     }
 
     /**
@@ -361,15 +361,15 @@ class CalendarDaoTest {
     @Test
     fun getLecturesWithBlacklistSomeTitles() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.plusHours(1)))
-        dao!!.insert(createCalendarItem("OK", now.plusDays(5)))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(1)))
-        dao!!.insert(createCalendarItem("YES", now.plusDays(2)))
+        calendarDao.insert(createCalendarItem("GOOD", now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("OK", now.plusDays(5)))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("YES", now.plusDays(2)))
 
-        wtbDao!!.insert(WidgetsTimetableBlacklist(1, "title 0"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(1, "title 1"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(1, "title 0"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(1, "title 1"))
 
-        assertThat(dao!!.getLecturesInBlacklist("1")).hasSize(2)
+        assertThat(calendarDao.getLecturesInBlacklist("1")).hasSize(2)
     }
 
     /**
@@ -379,17 +379,17 @@ class CalendarDaoTest {
     @Test
     fun getLecturesWithBlacklistSomeWidget() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.plusHours(1)))
-        dao!!.insert(createCalendarItem("OK", now.plusDays(5)))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(1)))
-        dao!!.insert(createCalendarItem("YES", now.plusDays(2)))
+        calendarDao.insert(createCalendarItem("GOOD", now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("OK", now.plusDays(5)))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("YES", now.plusDays(2)))
 
-        wtbDao!!.insert(WidgetsTimetableBlacklist(1, "title 0"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(1, "title 1"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 2"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 3"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(1, "title 0"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(1, "title 1"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 2"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 3"))
 
-        assertThat(dao!!.getLecturesInBlacklist("1")).hasSize(2)
+        assertThat(calendarDao.getLecturesInBlacklist("1")).hasSize(2)
     }
 
     /**
@@ -399,12 +399,12 @@ class CalendarDaoTest {
     @Test
     fun getLecturesWithBlacklistNone() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.plusHours(1)))
-        dao!!.insert(createCalendarItem("OK", now.plusDays(5)))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(1)))
-        dao!!.insert(createCalendarItem("YES", now.plusDays(2)))
+        calendarDao.insert(createCalendarItem("GOOD", now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("OK", now.plusDays(5)))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("YES", now.plusDays(2)))
 
-        assertThat(dao!!.getLecturesInBlacklist("1")).hasSize(0)
+        assertThat(calendarDao.getLecturesInBlacklist("1")).hasSize(0)
     }
 
     /**
@@ -414,17 +414,17 @@ class CalendarDaoTest {
     @Test
     fun getLecturesWithBlacklistNoneWidget() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now.plusHours(1)))
-        dao!!.insert(createCalendarItem("OK", now.plusDays(5)))
-        dao!!.insert(createCalendarItem("DUNNO", now.plusDays(1)))
-        dao!!.insert(createCalendarItem("YES", now.plusDays(2)))
+        calendarDao.insert(createCalendarItem("GOOD", now.plusHours(1)))
+        calendarDao.insert(createCalendarItem("OK", now.plusDays(5)))
+        calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(1)))
+        calendarDao.insert(createCalendarItem("YES", now.plusDays(2)))
 
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 0"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 1"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 2"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 3"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 0"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 1"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 2"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 3"))
 
-        assertThat(dao!!.getLecturesInBlacklist("1")).hasSize(0)
+        assertThat(calendarDao.getLecturesInBlacklist("1")).hasSize(0)
     }
 
     /**
@@ -434,11 +434,11 @@ class CalendarDaoTest {
     @Test
     fun getLecturesNotInBlacklist() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("GOOD", now))
-        dao!!.insert(createCalendarItem("GOOD", now))
-        dao!!.insert(createCalendarItem("GOOD", now))
+        calendarDao.insert(createCalendarItem("GOOD", now))
+        calendarDao.insert(createCalendarItem("GOOD", now))
+        calendarDao.insert(createCalendarItem("GOOD", now))
 
-        assertThat(dao!!.getLecturesNotInBlacklist("1")).hasSize(3)
+        assertThat(calendarDao.getLecturesNotInBlacklist("1")).hasSize(3)
     }
 
     /**
@@ -448,15 +448,15 @@ class CalendarDaoTest {
     @Test
     fun getLecturesNotInBlacklistSome() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("BAD", now))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("YES", now))
-        dao!!.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("BAD", now))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("YES", now))
 
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 0"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 1"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 0"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 1"))
 
-        assertThat(dao!!.getLecturesNotInBlacklist("2")).hasSize(2)
+        assertThat(calendarDao.getLecturesNotInBlacklist("2")).hasSize(2)
     }
 
     /**
@@ -466,17 +466,17 @@ class CalendarDaoTest {
     @Test
     fun getLecturesNotInBlacklistNone() {
         val now = DateTime.now()
-        dao!!.insert(createCalendarItem("BAD", now))
-        dao!!.insert(createCalendarItem("OK", now))
-        dao!!.insert(createCalendarItem("YES", now))
-        dao!!.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("BAD", now))
+        calendarDao.insert(createCalendarItem("OK", now))
+        calendarDao.insert(createCalendarItem("YES", now))
+        calendarDao.insert(createCalendarItem("YES", now))
 
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 0"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 1"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 2"))
-        wtbDao!!.insert(WidgetsTimetableBlacklist(2, "title 3"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 0"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 1"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 2"))
+        timetableBlacklistDao.insert(WidgetsTimetableBlacklist(2, "title 3"))
 
-        assertThat(dao!!.getLecturesNotInBlacklist("2")).hasSize(0)
+        assertThat(calendarDao.getLecturesNotInBlacklist("2")).hasSize(0)
     }
 
 }

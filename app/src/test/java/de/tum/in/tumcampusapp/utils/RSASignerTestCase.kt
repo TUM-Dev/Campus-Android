@@ -1,29 +1,25 @@
 package de.tum.`in`.tumcampusapp.utils
 
+import android.support.test.runner.AndroidJUnit4
 import android.util.Base64
-import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.TestApp
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 import java.security.KeyFactory
 import java.security.PrivateKey
 import java.security.spec.InvalidKeySpecException
 import java.security.spec.PKCS8EncodedKeySpec
-import java.util.*
 
-@RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, application = TestApp::class)
+@RunWith(AndroidJUnit4::class)
 class RSASignerTestCase {
 
-    private var signer: RSASigner? = null
+    private lateinit var signer: RSASigner
+    private lateinit var messageFixtures: MutableList<ChatMessage>
+
     private var privateKeyFixture: PrivateKey? = null
-    private var messageFixtures: MutableList<ChatMessage>? = null
 
     private fun buildPrivateKey(privateKeyString: String): PrivateKey? {
         val privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT)
@@ -55,22 +51,23 @@ class RSASignerTestCase {
                         "9tg4rD0aCHQZ6kEquwN6emc9QM0X6DR0dx6Bqq8CGDkVdk0hXHBR9VUBGE4YSsxpn+LnyWSWyJum" +
                         "dWuepeUKig==")
 
-        messageFixtures = ArrayList()
-        messageFixtures!!.add(buildChatMessage(
-                "This is a message!",
-                "Tw7Geajto7C/orsLT4TfNCUa1gnu6pGumfp+Nck7/QoOmDxilgQCpuzlpxa5Y7xuQ2rQB4XhFSm4\n" +
-                        "3gOHijTwF91SQx2sdIWClofzr/H0JABpQRkkMbsVQikwOnQYp+d9c1eylNPeendoYW4NAEBKpNyw\n" +
-                        "ShtHN6jcC2Usw1lAfxE=\n"))
-        messageFixtures!!.add(buildChatMessage(
-                "A message with German characters: öäüßÖÄÜ!",
-                "tSHKrusEPatW7CUJGbPjLfpPkoO/hQnJPMCQDztVjQJNqpEk+Jbm+FTwakOQ49OaMtmZTfnKUoJQ\n" +
-                        "MBwgp/I6zL7Xlafxiw+jA72ah/kvixm46VlpGFF2sEYfC0Ts3Agyq1T7XXYgkrGKjC3vs6sGNFGv\n" +
-                        "IefIoEAOGaWIfZnnbuM=\n"))
-        messageFixtures!!.add(buildChatMessage(
-                "This is a Korean message: \uC88B\uC740 \uAC8C\uC784",
-                "Td+E1WOg5FweCrBKzsjjVbbf3EeiNLu/PWID1Tg41ak5NFllqsFUcPEzPP0bZ+Dpv0sU7deQ9BaQ\n" +
-                        "lNVaNClQsI7Y5jTmoqS5elRdrig+eq9Qzl7bvEr0EI5CUvwLZJU4LCpLYUJEGD++IOzE0xZxB6/j\n" +
-                        "MES0525W5YVR0knzoKw=\n"))
+        messageFixtures = mutableListOf(
+                buildChatMessage(
+                        "This is a message!",
+                        "Tw7Geajto7C/orsLT4TfNCUa1gnu6pGumfp+Nck7/QoOmDxilgQCpuzlpxa5Y7xuQ2rQB4XhFSm4\n" +
+                                "3gOHijTwF91SQx2sdIWClofzr/H0JABpQRkkMbsVQikwOnQYp+d9c1eylNPeendoYW4NAEBKpNyw\n" +
+                                "ShtHN6jcC2Usw1lAfxE=\n"),
+                buildChatMessage(
+                        "A message with German characters: öäüßÖÄÜ!",
+                        "tSHKrusEPatW7CUJGbPjLfpPkoO/hQnJPMCQDztVjQJNqpEk+Jbm+FTwakOQ49OaMtmZTfnKUoJQ\n" +
+                                "MBwgp/I6zL7Xlafxiw+jA72ah/kvixm46VlpGFF2sEYfC0Ts3Agyq1T7XXYgkrGKjC3vs6sGNFGv\n" +
+                                "IefIoEAOGaWIfZnnbuM=\n"),
+                buildChatMessage(
+                        "This is a Korean message: \uC88B\uC740 \uAC8C\uC784",
+                        "Td+E1WOg5FweCrBKzsjjVbbf3EeiNLu/PWID1Tg41ak5NFllqsFUcPEzPP0bZ+Dpv0sU7deQ9BaQ\n" +
+                                "lNVaNClQsI7Y5jTmoqS5elRdrig+eq9Qzl7bvEr0EI5CUvwLZJU4LCpLYUJEGD++IOzE0xZxB6/j\n" +
+                                "MES0525W5YVR0knzoKw=\n")
+        )
     }
 
     private fun buildChatMessage(text: String, signature: String): ChatMessage {
@@ -85,9 +82,8 @@ class RSASignerTestCase {
     @Test
     fun testAsciiMessageSigning() {
         signer = RSASigner(privateKeyFixture)
-        val message = messageFixtures!![0]
-
-        assertThat(signer!!.sign(message.text)).isEqualTo(message.signature)
+        val message = messageFixtures.first()
+        assertThat(signer.sign(message.text)).isEqualTo(message.signature)
     }
 
     /**
@@ -96,9 +92,8 @@ class RSASignerTestCase {
     @Test
     fun testUnicodeMessageSigning() {
         signer = RSASigner(privateKeyFixture)
-        val message = messageFixtures!![1]
-
-        assertThat(signer!!.sign(message.text)).isEqualTo(message.signature)
+        val message = messageFixtures[1]
+        assertThat(signer.sign(message.text)).isEqualTo(message.signature)
     }
 
     /**
@@ -107,9 +102,8 @@ class RSASignerTestCase {
     @Test
     fun testUnicodeKoreanMessageSigning() {
         signer = RSASigner(privateKeyFixture)
-        val message = messageFixtures!![2]
-
-        assertThat(signer!!.sign(message.text)).isEqualTo(message.signature)
+        val message = messageFixtures[2]
+        assertThat(signer.sign(message.text)).isEqualTo(message.signature)
     }
 
     /**
@@ -119,8 +113,7 @@ class RSASignerTestCase {
     @Test
     fun testPrivateKeyNull() {
         signer = RSASigner(null)
-        val message = messageFixtures!![0]
-
-        assertThat(signer!!.sign(message.text)).isNull()
+        val message = messageFixtures.first()
+        assertThat(signer.sign(message.text)).isNull()
     }
 }

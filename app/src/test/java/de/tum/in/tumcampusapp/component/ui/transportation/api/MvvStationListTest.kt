@@ -1,9 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation.api
 
+import android.support.test.runner.AndroidJUnit4
 import com.google.gson.GsonBuilder
 import org.junit.Assert
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class MvvStationListTest {
 
     @Test

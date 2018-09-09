@@ -1,7 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.other.locations
 
-import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.TestApp
+import android.arch.persistence.room.Room
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarDao
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.RoomLocations
@@ -11,37 +12,36 @@ import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
-@Ignore
-@RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, application = TestApp::class)
+@RunWith(AndroidJUnit4::class)
 class RoomLocationsDaoTest {
-    private var dao: RoomLocationsDao? = null
-    private var calendarDao: CalendarDao? = null
+
+    private lateinit var database: TcaDb
+
+    private val roomLocationsDao: RoomLocationsDao by lazy {
+        database.roomLocationsDao()
+    }
+
+    private val calendarDao: CalendarDao by lazy {
+        database.calendarDao()
+    }
+
     private var nr: Int = 0
 
     @Before
-    fun setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application)
-                .roomLocationsDao()
-        calendarDao = TcaDb.getInstance(RuntimeEnvironment.application)
-                .calendarDao()
+    fun setup() {
+        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), TcaDb::class.java)
+                .allowMainThreadQueries()
+                .build()
         nr = 0
-        JodaTimeAndroid.init(RuntimeEnvironment.application)
+        JodaTimeAndroid.init(InstrumentationRegistry.getContext())
     }
 
     @After
     fun tearDown() {
-        dao!!.flush()
-        calendarDao!!.flush()
-        TcaDb.getInstance(RuntimeEnvironment.application)
-                .close()
+        database.close()
     }
 
     private fun createCalendarItem(startDate: DateTime, location: String): CalendarItem {
@@ -65,17 +65,17 @@ class RoomLocationsDaoTest {
     @Test
     fun getNextLectureCoordinates() {
         val now = DateTime.now()
-        calendarDao!!.insert(createCalendarItem(now.plusHours(1), "dummy location"))
-        calendarDao!!.insert(createCalendarItem(now.plusHours(5), "some other location"))
-        calendarDao!!.insert(createCalendarItem(now.plusHours(3), "dummy location"))
-        calendarDao!!.insert(createCalendarItem(now.plusHours(2), "yet another location"))
+        calendarDao.insert(createCalendarItem(now.plusHours(1), "dummy location"))
+        calendarDao.insert(createCalendarItem(now.plusHours(5), "some other location"))
+        calendarDao.insert(createCalendarItem(now.plusHours(3), "dummy location"))
+        calendarDao.insert(createCalendarItem(now.plusHours(2), "yet another location"))
 
         val expected = RoomLocations("dummy location", "123", "321")
 
-        dao!!.insert(expected)
-        dao!!.insert(RoomLocations("some other location", "456", "654"))
-        dao!!.insert(RoomLocations("yet another location", "789", "987"))
+        roomLocationsDao.insert(expected)
+        roomLocationsDao.insert(RoomLocations("some other location", "456", "654"))
+        roomLocationsDao.insert(RoomLocations("yet another location", "789", "987"))
 
-        assertThat(dao!!.nextLectureCoordinates).isEqualToComparingFieldByField(expected)
+        assertThat(roomLocationsDao.nextLectureCoordinates).isEqualToComparingFieldByField(expected)
     }
 }
