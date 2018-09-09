@@ -67,7 +67,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                                  .getInt(Const.CAFETERIA_ID);
         }
 
-        mViewPager = findViewById(R.id.pager);
+        mViewPager = findViewById(R.id.kinoViewPager);
 
         /*
          *set pagelimit to avoid losing toggle button state.

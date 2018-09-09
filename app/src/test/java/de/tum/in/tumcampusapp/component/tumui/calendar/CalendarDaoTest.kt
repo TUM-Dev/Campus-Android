@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -13,11 +14,16 @@ import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.test.assertEquals
 
 @RunWith(AndroidJUnit4::class)
 class CalendarDaoTest {
+
+    @get:Rule
+    val rule = InstantTaskExecutorRule()
 
     private lateinit var database: TcaDb
 
@@ -322,8 +328,11 @@ class CalendarDaoTest {
      */
     @Test
     fun getNextCalendarItem() {
-        val now = DateTime.now()
+        // We currently don't store milliseconds in the database, as we use a String in ISO format.
+        // For that reason, we omit the milliseconds in the expected time.
+        val now = DateTime.now().withMillisOfSecond(0)
         val expected = createCalendarItem("GOOD", now.plusHours(1))
+
         calendarDao.insert(expected)
         calendarDao.insert(createCalendarItem("OK", now.plusDays(5)))
         calendarDao.insert(createCalendarItem("DUNNO", now.plusDays(1)))
@@ -331,7 +340,7 @@ class CalendarDaoTest {
 
         val results = calendarDao.nextCalendarItems
         assertThat(results).hasSize(1)
-        assertThat(results[0]).isEqualToComparingFieldByField(expected)
+        assertEquals(results.first(), expected)
     }
 
     /**

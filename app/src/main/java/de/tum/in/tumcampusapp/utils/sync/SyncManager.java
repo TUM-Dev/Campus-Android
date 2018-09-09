@@ -53,8 +53,7 @@ public class SyncManager {
      * @param obj Gives class name as sync ID
      */
     public void replaceIntoDb(Object obj) {
-        replaceIntoDb(obj.getClass()
-                         .getName());
+        replaceIntoDb(obj.getClass().getName());
     }
 
     /**

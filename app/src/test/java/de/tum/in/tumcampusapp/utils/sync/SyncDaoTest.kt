@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.utils.sync
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -9,29 +10,31 @@ import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class SyncManagerTest {
+class SyncDaoTest {
+
+    @get:Rule
+    val rule = InstantTaskExecutorRule()
     
     private lateinit var database: TcaDb
-    private lateinit var syncManager: SyncManager
-    
+
     private val syncDao: SyncDao by lazy {
         database.syncDao()
     }
 
     @Before
-    fun setUp() {
+    fun initDatabase() {
         database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), TcaDb::class.java)
                 .allowMainThreadQueries()
                 .build()
-        syncManager = SyncManager(InstrumentationRegistry.getContext())
     }
 
     @After
-    fun tearDown() {
+    fun closeDatabase() {
         database.close()
     }
 
@@ -43,7 +46,7 @@ class SyncManagerTest {
     fun needSyncNeedsResyncTest() {
         val syncId = "needSyncNeedsResyncTest"
         syncDao.insert(Sync(syncId, DateTime(0)))
-        assertThat(syncManager.needSync(syncId, 1234)).isTrue()
+        assertThat(syncDao.getSyncSince(syncId, 1234) == null).isTrue()
     }
 
     /**
@@ -53,7 +56,7 @@ class SyncManagerTest {
     @Test
     fun needSyncNoIdTest() {
         val syncId = "needSyncNoIdTest"
-        assertThat(syncManager.needSync(syncId, 1234)).isTrue()
+        assertThat(syncDao.getSyncSince(syncId, 1234) == null).isTrue()
     }
 
     /**
@@ -64,7 +67,7 @@ class SyncManagerTest {
     fun needSyncTooEarlyTest() {
         val syncId = "needSyncTooEarlyTest"
         syncDao.insert(Sync(syncId, DateTime.now()))
-        assertThat(syncManager.needSync(syncId, 1234)).isFalse()
+        assertThat(syncDao.getSyncSince(syncId, 1234) == null).isFalse()
     }
 
     /**
@@ -79,8 +82,8 @@ class SyncManagerTest {
     fun replaceIntoDbNormal() {
         val syncId = "replaceIntoDbNormal"
         syncDao.insert(Sync(syncId, DateTime(0)))
-        assertThat(syncManager.needSync(syncId, 1234)).isTrue()
-        syncManager.replaceIntoDb(syncId)
-        assertThat(syncManager.needSync(syncId, 1234)).isFalse()
+        assertThat(syncDao.getSyncSince(syncId, 1234) == null).isTrue()
+        syncDao.insert(Sync(syncId, DateTime.now()))
+        assertThat(syncDao.getSyncSince(syncId, 1234) == null).isFalse()
     }
 }

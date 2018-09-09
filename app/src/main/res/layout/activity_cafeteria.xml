@@ -46,7 +46,7 @@
                 android:layout_height="fill_parent" />
 
             <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
+                android:id="@+id/kinoViewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

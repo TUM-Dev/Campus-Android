@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.news
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -8,11 +9,15 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class NewsSourcesDaoTest {
+
+    @get:Rule
+    val rule = InstantTaskExecutorRule()
 
     private lateinit var database: TcaDb
     
