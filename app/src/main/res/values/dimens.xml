@@ -7,7 +7,7 @@
     <dimen name="material_card_view_padding">8dp</dimen>
     <dimen name="material_corner_radius">8dp</dimen>
     <dimen name="material_default_elevation">12dp</dimen>
-    <dimen name="material_button_corner_radius">20dp</dimen>
+    <dimen name="material_button_corner_radius">8dp</dimen>
 
     <dimen name="input_layout_border">1dp</dimen>
 
