@@ -1,10 +1,8 @@
-package de.tum.`in`.tumcampusapp.database.dao
+package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.TestApp
 import de.tum.`in`.tumcampusapp.component.other.locations.RoomLocationsDao
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarDao
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.RoomLocations

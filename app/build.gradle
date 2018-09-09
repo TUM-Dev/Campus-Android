@@ -146,11 +146,9 @@ dependencies {
     implementation 'com.github.quivr:android-week-view:2.3.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.stripe:stripe-android:6.1.2'
 
-    // DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
-    // debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
-
-    // Used for testing
+    // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.21.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
@@ -160,9 +158,6 @@ dependencies {
 
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'
-
-    // TicketSale
-    implementation 'com.stripe:stripe-android:6.1.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

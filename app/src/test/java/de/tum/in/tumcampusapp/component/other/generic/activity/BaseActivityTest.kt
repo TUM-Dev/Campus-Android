@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.activities
+package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.TestApp

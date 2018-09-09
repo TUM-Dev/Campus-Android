@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.activities
+package de.tum.`in`.tumcampusapp.component.ui.tufilm
 
 import android.support.v4.view.ViewPager
 import android.view.View
@@ -8,9 +8,6 @@ import de.tum.`in`.tumcampusapp.TestApp
 import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoAdapter
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDao
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import io.reactivex.android.plugins.RxAndroidPlugins

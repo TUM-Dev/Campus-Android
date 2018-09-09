@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.database.dao
+package de.tum.`in`.tumcampusapp.component.ui.news
 
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.TestApp

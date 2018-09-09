@@ -1,9 +1,8 @@
-package de.tum.`in`.tumcampusapp.models.tumo
+package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
 import com.tickaroo.tikxml.TikXml
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.TestApp
-import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
 import okio.Okio
 import org.junit.Test
 import org.junit.runner.RunWith

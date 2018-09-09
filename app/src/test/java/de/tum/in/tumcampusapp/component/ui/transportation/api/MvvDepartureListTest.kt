@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation.api
 
 import com.google.gson.GsonBuilder
-import org.junit.Assert
 import org.joda.time.DateTime
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner

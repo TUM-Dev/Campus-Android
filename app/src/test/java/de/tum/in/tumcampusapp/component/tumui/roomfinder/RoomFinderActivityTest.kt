@@ -1,7 +1,8 @@
-package de.tum.`in`.tumcampusapp.activities
+package de.tum.`in`.tumcampusapp.component.tumui.roomfinder
 
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.TestApp
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivityTest
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
