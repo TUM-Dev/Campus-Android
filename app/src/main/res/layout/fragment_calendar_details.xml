@@ -108,21 +108,24 @@
 
             <android.support.design.button.MaterialButton
                 android:id="@+id/deleteButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/delete_event_button"
                 android:textAllCaps="false"
-                android:textColor="@color/color_primary" />
+                android:textColor="@color/color_primary"
+                app:cornerRadius="@dimen/material_button_corner_radius" />
 
             <android.support.design.button.MaterialButton
                 android:id="@+id/editButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_small_padding"
                 android:text="@string/edit_event_button"
                 android:textAllCaps="false"
-                android:textColor="@color/color_primary" />
+                android:textColor="@color/color_primary"
+                app:cornerRadius="@dimen/material_button_corner_radius" />
 
         </LinearLayout>
 

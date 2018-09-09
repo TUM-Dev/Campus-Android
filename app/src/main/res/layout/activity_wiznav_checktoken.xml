@@ -97,11 +97,12 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_small_padding"
                 android:onClick="onClickTUMOnline"
                 android:text="@string/open_tum_online"
                 android:textAllCaps="false"
-                android:textColor="@color/color_primary" />
+                android:textColor="@color/color_primary"
+                app:cornerRadius="@dimen/material_button_corner_radius" />
 
             <android.support.design.button.MaterialButton
                 android:id="@+id/next_button"

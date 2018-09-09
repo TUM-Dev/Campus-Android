@@ -75,23 +75,18 @@
                     android:textSize="16sp"
                     tools:text="Due on Aug 15, 2018" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/material_default_padding"
-                    android:layout_marginBottom="@dimen/material_small_padding"
-                    android:background="@color/list_divider" />
-
                 <android.support.design.button.MaterialButton
                     android:id="@+id/financialAidButton"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/material_small_padding"
-                    android:layout_marginBottom="@dimen/material_small_padding"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:layout_marginBottom="@dimen/material_default_padding"
                     android:text="@string/student_financial_aid"
                     android:textAllCaps="false"
-                    android:textColor="@color/color_primary" />
+                    android:textColor="@color/color_primary"
+                    app:cornerRadius="@dimen/material_button_corner_radius" />
 
             </LinearLayout>
 
