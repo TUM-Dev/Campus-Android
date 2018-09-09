@@ -80,7 +80,7 @@ class KinoActivityTest {
         waitForUI()
         //For some reason the ui needs a while until it's been updated.
         Thread.sleep(100)
-        assertThat(kinoActivity!!.findViewById<View>(R.id.no_movies_layout).visibility).isEqualTo(View.VISIBLE)
+        assertThat(kinoActivity!!.findViewById<View>(R.id.error_layout).visibility).isEqualTo(View.VISIBLE)
     }
 
     /**

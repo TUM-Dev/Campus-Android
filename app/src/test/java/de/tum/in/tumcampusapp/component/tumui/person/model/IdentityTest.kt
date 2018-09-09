@@ -41,18 +41,18 @@ class IdentityTest {
         private const val FAMILIENNAME_EXPECTED = "Mustermann"
         private const val OBFUSCATED_ID_EXPECTED = "anobfuscatedID"
         private const val XML_RESPONSE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                "                                                                   <rowset>\n" +
-                "                                                                   <row>\n" +
-                "                                                                   <kennung>$KENNUNG_EXPECTED</kennung>\n" +
-                "                                                                   <vorname>$VORNAME_EXPECTED</vorname>\n" +
-                "                                                                   <familienname>$FAMILIENNAME_EXPECTED</familienname>\n" +
-                "                                                                   <obfuscated_id>$OBFUSCATED_ID_EXPECTED</obfuscated_id>\n" +
-                "                                                                   <obfuscated_ids>\n" +
-                "                                                                   <studierende>asad</studierende>\n" +
-                "                                                                   <bedienstete isnull=\"true\"></bedienstete>\n" +
-                "                                                                   <extern isnull=\"true\"></extern>\n" +
-                "                                                                   </obfuscated_ids>\n" +
-                "                                                                   </row>\n" +
-                "                                                                   </rowset>"
+                "<rowset>\n" +
+                "<row>\n" +
+                "<kennung>$KENNUNG_EXPECTED</kennung>\n" +
+                "<vorname>$VORNAME_EXPECTED</vorname>\n" +
+                "<familienname>$FAMILIENNAME_EXPECTED</familienname>\n" +
+                "<obfuscated_id>$OBFUSCATED_ID_EXPECTED</obfuscated_id>\n" +
+                "<obfuscated_ids>\n" +
+                "<studierende>asad</studierende>\n" +
+                "<bedienstete isnull=\"true\"></bedienstete>\n" +
+                "<extern isnull=\"true\"></extern>\n" +
+                "</obfuscated_ids>\n" +
+                "</row>\n" +
+                "</rowset>"
     }
 }
