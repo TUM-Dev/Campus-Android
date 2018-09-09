@@ -21,44 +21,53 @@
             android:layout_marginBottom="@dimen/material_default_padding"
             android:text="@string/support_us" />
 
-        <android.support.design.button.MaterialButton
-            android:id="@+id/facebook_button"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/like_us_on_facebook"
-            android:textAllCaps="false"
-            android:textColor="@color/facebook"
-            app:cornerRadius="@dimen/material_button_corner_radius"
-            app:icon="@drawable/ic_outline_thumb_up_24px_white"
-            app:iconPadding="@dimen/material_small_padding"
-            app:iconTint="@color/facebook" />
+            android:orientation="horizontal">
 
-        <android.support.design.button.MaterialButton
-            android:id="@+id/github_button"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/check_us_out_on_github"
-            android:textAllCaps="false"
-            android:textColor="@color/github"
-            app:cornerRadius="@dimen/material_button_corner_radius"
-            app:icon="@drawable/ic_code_white_24dp"
-            app:iconPadding="@dimen/material_small_padding"
-            app:iconTint="@color/github" />
+            <android.support.design.button.MaterialButton
+                android:id="@+id/facebook_button"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/facebook"
+                android:textAllCaps="false"
+                android:textColor="@color/facebook"
+                app:cornerRadius="@dimen/material_button_corner_radius"
+                app:icon="@drawable/ic_outline_thumb_up_24px_white"
+                app:iconPadding="@dimen/material_small_padding"
+                app:iconTint="@color/facebook" />
 
-        <android.support.design.button.MaterialButton
-            android:id="@+id/email_button"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/e_mail_us"
-            android:textAllCaps="false"
-            android:textColor="@color/email"
-            app:cornerRadius="@dimen/material_button_corner_radius"
-            app:icon="@drawable/ic_outline_email_24px_white"
-            app:iconPadding="@dimen/material_small_padding"
-            app:iconTint="@color/email" />
+            <android.support.design.button.MaterialButton
+                android:id="@+id/github_button"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_small_padding"
+                android:layout_marginEnd="@dimen/material_small_padding"
+                android:text="@string/github"
+                android:textAllCaps="false"
+                android:textColor="@color/github"
+                app:cornerRadius="@dimen/material_button_corner_radius"
+                app:icon="@drawable/ic_code_white_24dp"
+                app:iconPadding="@dimen/material_small_padding"
+                app:iconTint="@color/github" />
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/email_button"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/e_mail"
+                android:textAllCaps="false"
+                android:textColor="@color/email"
+                app:cornerRadius="@dimen/material_button_corner_radius"
+                app:icon="@drawable/ic_outline_email_24px_white"
+                app:iconPadding="@dimen/material_small_padding"
+                app:iconTint="@color/email" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

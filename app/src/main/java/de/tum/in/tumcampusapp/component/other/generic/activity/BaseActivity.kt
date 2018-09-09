@@ -121,6 +121,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
     private fun setupDrawerHeader(headerView: View) {
         val nameTextView = headerView.findViewById<TextView>(R.id.nameTextView)
         val emailTextView = headerView.findViewById<TextView>(R.id.emailTextView)
+        val loginButton = headerView.findViewById<MaterialButton>(R.id.loginButton)
 
         if (AccessTokenManager.hasValidAccessToken(this)) {
             val name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, "")
@@ -137,11 +138,12 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
             } else {
                 emailTextView.visibility = View.GONE
             }
+
+            loginButton.visibility = View.GONE
         } else {
             nameTextView.visibility = View.GONE
             emailTextView.visibility = View.GONE
 
-            val loginButton = headerView.findViewById<MaterialButton>(R.id.loginButton)
             loginButton.visibility = View.VISIBLE
             loginButton.setOnClickListener {
                 val intent = Intent(this, WizNavStartActivity::class.java);

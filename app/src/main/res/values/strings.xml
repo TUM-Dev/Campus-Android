@@ -417,9 +417,9 @@ Signature: %5$s</string>
     <string name="widget_configure_description">Configure the cards to show</string>
 
     <string name="update_notification_description">A new version of the Tum Campus App has been released on %s. Tap to download now.</string>
-    <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
+    <string name="support_us">Help us to spread the word about the Campus App. Like us on Facebook, suggest an exciting idea on GitHub or send an e-mail telling us what you think.</string>
     <string name="support_email_link" translatable="false">mailto:app@tum.de</string>
-    <string name="support_us_title">Support us!</string>
+    <string name="support_us_title">Support us</string>
     <string name="permission_calendar_explanation">This App needs permission to access your calendar to be able to sync it with your TUM calendar.</string>
     <string name="permission_location_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
     <string name="permission_contacts_explanation">The App needs permission to access your contacts to be able to add this person to your contacts.</string>
@@ -584,10 +584,6 @@ Signature: %5$s</string>
     <string name="add_user_to_chat_message">Add <b>%s</b> to chat room <b>%s</b>?</string>
     <string name="chat_member_added">User was added</string>
 
-
-    <string name="like_us_on_facebook">Like us on Facebook</string>
-    <string name="check_us_out_on_github">Check us out on GitHub</string>
-    <string name="e_mail_us">E-mail us</string>
     <string name="enter_your_tum_id">Enter your TUM ID …</string>
     <string name="generate_new_token">Generate new token</string>
     <string name="open_tum_online">Open TUMonline</string>
