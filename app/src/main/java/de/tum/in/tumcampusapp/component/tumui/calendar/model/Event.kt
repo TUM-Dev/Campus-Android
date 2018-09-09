@@ -26,6 +26,9 @@ data class Event(
         @PropertyElement(name = "title") val title: String,
         @PropertyElement(name = "url") val url: String? = null) {
 
+    val isFutureEvent: Boolean
+        get() = startTime?.isAfterNow ?: false
+
     /**
      * Retrieve related values for calendar item as CalendarItem object
      */
@@ -55,7 +58,7 @@ data class Event(
                 .setTimeoutAfter(duration)
                 .build()
 
-        val notificationTime = startTime.minusMinutes(15) // TODO: Is "id" an Int?
+        val notificationTime = startTime.minusMinutes(15)
         return FutureNotification(NotificationType.CALENDAR, id.toInt(), notification, notificationTime)
     }
 
