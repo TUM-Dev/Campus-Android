@@ -193,16 +193,18 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
     }
 
     @Nullable
-    public CalendarItem getCalendarItemById(String id) {
+    CalendarItem getCalendarItemById(String id) {
         return calendarDao.getCalendarItemById(id);
     }
 
-    public void scheduleNotifications(List<Event> events) {
+    void scheduleNotifications(List<Event> events) {
         List<FutureNotification> notifications = new ArrayList<>();
-        for (int i = 0; i < events.size(); i++) {
-            FutureNotification notification = events.get(i).toNotification(mContext);
-            if (notification != null) {
-                notifications.add(notification);
+        for (Event event : events) {
+            if (event.isFutureEvent()) {
+                FutureNotification notification = event.toNotification(mContext);
+                if (notification != null) {
+                    notifications.add(notification);
+                }
             }
         }
 
