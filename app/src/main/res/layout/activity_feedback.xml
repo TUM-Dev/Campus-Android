@@ -92,7 +92,7 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_outline_add_photo_alternate_24px"
                     android:tint="@color/color_primary"
-                    app:cornerRadius="20dp" />
+                    app:cornerRadius="@dimen/material_button_corner_radius" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/feedback_image_list"
@@ -161,7 +161,7 @@
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 app:backgroundTint="@color/color_primary"
-                app:cornerRadius="20dp" />
+                app:cornerRadius="@dimen/material_button_corner_radius" />
 
         </LinearLayout>
 

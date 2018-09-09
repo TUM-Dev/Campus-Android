@@ -78,7 +78,7 @@
                     android:text="@string/open_chat_terms"
                     android:textAllCaps="false"
                     android:textColor="@color/color_primary"
-                    app:cornerRadius="20dp" />
+                    app:cornerRadius="@dimen/material_button_corner_radius" />
 
                 <CheckBox
                     android:id="@+id/chk_bug_reports"
@@ -123,6 +123,6 @@
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:backgroundTint="@color/color_primary"
-        app:cornerRadius="20dp" />
+        app:cornerRadius="@dimen/material_button_corner_radius" />
 
 </LinearLayout>
