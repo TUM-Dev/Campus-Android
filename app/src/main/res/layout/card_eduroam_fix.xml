@@ -40,7 +40,9 @@
             android:layout_marginStart="@dimen/material_small_padding"
             android:layout_marginTop="@dimen/material_small_padding"
             android:layout_marginEnd="@dimen/material_small_padding"
-            tools:text="Errors" />
+            android:visibility="gone"
+            tools:text="Errors"
+            tools:visibility="visible" />
 
         <android.support.design.button.MaterialButton
             android:id="@+id/eduroam_action_button"

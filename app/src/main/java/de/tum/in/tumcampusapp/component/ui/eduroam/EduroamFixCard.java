@@ -51,8 +51,12 @@ public class EduroamFixCard extends Card {
         super.updateViewHolder(viewHolder);
         setMCard(viewHolder.itemView);
         setMLinearLayout(getMCard().findViewById(R.id.card_view));
+
         TextView errorsTv = getMCard().findViewById(R.id.eduroam_errors);
-        errorsTv.setText(Joiner.on("\n").join(errors));
+        if (errors != null && !errors.isEmpty()) {
+            errorsTv.setVisibility(View.VISIBLE);
+            errorsTv.setText(Joiner.on("\n").join(errors));
+        }
 
         MaterialButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
         button.setOnClickListener(v -> performEduroamFix());

@@ -345,6 +345,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/setup_eduroam"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoDrawerLayout"
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.other.generic.activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.design.button.MaterialButton
 import android.support.design.widget.NavigationView
 import android.support.v4.app.NavUtils
 import android.support.v4.widget.DrawerLayout
@@ -24,7 +25,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
-import kotlinx.android.synthetic.main.drawer_header.*
 import java.util.*
 
 /**
@@ -141,6 +141,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
             nameTextView.visibility = View.GONE
             emailTextView.visibility = View.GONE
 
+            val loginButton = headerView.findViewById<MaterialButton>(R.id.loginButton)
             loginButton.visibility = View.VISIBLE
             loginButton.setOnClickListener {
                 val intent = Intent(this, WizNavStartActivity::class.java);

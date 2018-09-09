@@ -42,7 +42,7 @@ public class EduroamCard extends Card {
         MaterialButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), SetupEduroamActivity.class);
-            getContext().startActivity(intent);
+            v.getContext().startActivity(intent);
         });
     }
 

@@ -34,7 +34,7 @@ public class SetupEduroamActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         if (getIntent().getBooleanExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, false)) {
-            showDeleteProfileDialog(true);
+            showDeleteProfileDialog();
         }
 
         // Enable 'More Info' links
@@ -45,18 +45,18 @@ public class SetupEduroamActivity extends BaseActivity {
         password = findViewById(R.id.wifi_password);
 
         //Set the focus for improved UX experience
-        if (lrz.getText().length() == 0) {
+        if (lrz.getText() != null && lrz.getText().length() == 0) {
             lrz.requestFocus();
         } else {
             password.requestFocus();
         }
 
         findViewById(R.id.eduroam_config_error).setOnClickListener(view -> {
-            showDeleteProfileDialog(false);
+            showDeleteProfileDialog();
         });
     }
 
-    private void showDeleteProfileDialog(boolean showAtStart) {
+    private void showDeleteProfileDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.eduroam_dialog_title)
                 .setMessage(R.string.eduroam_dialog_info_text)
