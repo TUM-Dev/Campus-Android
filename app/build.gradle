@@ -37,6 +37,9 @@ android {
         targetSdkVersion 27
         versionCode 545
         versionName "2.0-dev"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
         kapt.arguments {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
@@ -156,8 +159,8 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
-    testImplementation 'com.android.support.test:rules:1.0.2'
-    testImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
