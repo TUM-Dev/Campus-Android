@@ -17,7 +17,6 @@ import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeInfoActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
-import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
@@ -51,9 +50,6 @@ class DrawerMenuHelper(private val activity: Activity) {
                 myTumMenu.add(activity, it, drawerBundle)
                 allItems.add(it)
             }
-        } else {
-            myTumMenu.add(activity, LOGIN)
-            allItems.add(LOGIN)
         }
 
         // General information which mostly can be used without a TUMonline token
@@ -87,7 +83,6 @@ class DrawerMenuHelper(private val activity: Activity) {
     companion object {
 
         private val HOME = SideNavigationItem(R.string.home, R.drawable.ic_outline_home_24px, MainActivity::class.java)
-        private val LOGIN = SideNavigationItem(R.string.tumonline_login, R.drawable.ic_link, WizNavStartActivity::class.java)
 
         private val MY_TUM = arrayOf(
                 SideNavigationItem(R.string.schedule, R.drawable.ic_outline_event_24px, CalendarActivity::class.java, true),

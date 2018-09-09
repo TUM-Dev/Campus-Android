@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -17,6 +18,18 @@
         android:layout_marginEnd="@dimen/material_default_padding"
         android:background="@drawable/circle_background"
         android:src="@drawable/photo_not_available" />
+
+    <android.support.design.button.MaterialButton
+        android:id="@+id/loginButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_default_padding"
+        android:layout_marginTop="@dimen/material_default_padding"
+        android:text="@string/tumonline_login"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:strokeColor="@android:color/white" />
 
     <TextView
         android:id="@+id/nameTextView"

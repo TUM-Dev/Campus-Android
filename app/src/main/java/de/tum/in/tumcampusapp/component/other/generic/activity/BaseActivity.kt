@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -15,12 +16,15 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerMenuHelper
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
+import kotlinx.android.synthetic.main.drawer_header.*
 import java.util.*
 
 /**
@@ -118,19 +122,30 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
         val nameTextView = headerView.findViewById<TextView>(R.id.nameTextView)
         val emailTextView = headerView.findViewById<TextView>(R.id.emailTextView)
 
-        val name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, "")
-        if (name.isNotEmpty()) {
-            nameTextView.text = name
-        } else {
-            nameTextView.visibility = View.INVISIBLE
-        }
+        if (AccessTokenManager.hasValidAccessToken(this)) {
+            val name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, "")
+            if (name.isNotEmpty()) {
+                nameTextView.text = name
+            } else {
+                nameTextView.visibility = View.INVISIBLE
+            }
 
-        val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
-        val email = if (lrzId.isNotEmpty()) "$lrzId@mytum.de" else ""
-        if (email.isNotEmpty()) {
-            emailTextView.text = email
+            val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
+            val email = if (lrzId.isNotEmpty()) "$lrzId@mytum.de" else ""
+            if (email.isNotEmpty()) {
+                emailTextView.text = email
+            } else {
+                emailTextView.visibility = View.GONE
+            }
         } else {
+            nameTextView.visibility = View.GONE
             emailTextView.visibility = View.GONE
+
+            loginButton.visibility = View.VISIBLE
+            loginButton.setOnClickListener {
+                val intent = Intent(this, WizNavStartActivity::class.java);
+                startActivity(intent);
+            }
         }
 
         fetchProfilePicture(headerView)

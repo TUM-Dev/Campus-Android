@@ -71,13 +71,14 @@
                     android:textSize="15sp" />
 
                 <android.support.design.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="onClickTerms"
                     android:text="@string/open_chat_terms"
                     android:textAllCaps="false"
-                    android:textColor="@color/color_primary" />
+                    android:textColor="@color/color_primary"
+                    app:cornerRadius="20dp" />
 
                 <CheckBox
                     android:id="@+id/chk_bug_reports"

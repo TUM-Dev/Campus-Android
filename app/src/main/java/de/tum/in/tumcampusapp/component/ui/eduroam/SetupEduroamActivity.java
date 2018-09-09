@@ -3,10 +3,10 @@ package de.tum.in.tumcampusapp.component.ui.eduroam;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.regex.Pattern;
@@ -22,8 +22,8 @@ import de.tum.in.tumcampusapp.utils.Utils;
  */
 public class SetupEduroamActivity extends BaseActivity {
 
-    private EditText lrz;
-    private EditText password;
+    private TextInputEditText lrz;
+    private TextInputEditText password;
 
     public SetupEduroamActivity() {
         super(R.layout.activity_setup_eduroam);
@@ -45,8 +45,7 @@ public class SetupEduroamActivity extends BaseActivity {
         password = findViewById(R.id.wifi_password);
 
         //Set the focus for improved UX experience
-        if (lrz.getText()
-               .length() == 0) {
+        if (lrz.getText().length() == 0) {
             lrz.requestFocus();
         } else {
             password.requestFocus();
@@ -58,21 +57,15 @@ public class SetupEduroamActivity extends BaseActivity {
     }
 
     private void showDeleteProfileDialog(boolean showAtStart) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle(R.string.eduroam_dialog_title);
-        View content = getLayoutInflater().inflate(R.layout.delete_wifi_config, null);
-        content.findViewById(R.id.button_open_wifi_preferences)
-               .setOnClickListener(view1 -> startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)));
-        if (showAtStart) {
-            content.findViewById(R.id.eduroam_delete_info)
-                   .setVisibility(View.VISIBLE);
-        } else {
-            content.findViewById(R.id.eduroam_delete_info)
-                   .setVisibility(View.GONE);
-        }
-        dialog.setView(content);
-        dialog.setPositiveButton(R.string.done, null);
-        dialog.show();
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.eduroam_dialog_title)
+                .setMessage(R.string.eduroam_dialog_info_text)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.eduroam_dialog_preferences, (dialogInterface, i) -> {
+                    Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                    startActivity(intent);
+                })
+                .show();
     }
 
     /**
