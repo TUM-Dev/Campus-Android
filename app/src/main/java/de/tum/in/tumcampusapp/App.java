@@ -9,6 +9,7 @@ import com.squareup.picasso.Picasso;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import de.tum.in.tumcampusapp.component.notifications.NotificationUtils;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 public class App extends Application {
 
@@ -33,7 +34,11 @@ public class App extends Application {
             built.setIndicatorsEnabled(true);
         }
 
-        Picasso.setSingletonInstance(built);
+        try {
+            Picasso.setSingletonInstance(built);
+        } catch (IllegalStateException e) {
+            Utils.log(e);
+        }
     }
 
     protected void setupStrictMode() {
