@@ -113,7 +113,7 @@ public class ChatNotification extends GenericNotification implements ChatMessage
         remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(context));
         ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, new CompositeDisposable());
 
-        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(context, null);
+        TUMCabeVerification verification = TUMCabeVerification.create(context, null);
         if (verification == null) {
             return;
         }

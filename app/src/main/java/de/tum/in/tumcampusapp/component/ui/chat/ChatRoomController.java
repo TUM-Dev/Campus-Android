@@ -170,8 +170,7 @@ public class ChatRoomController implements ProvidesCard {
                     // Join chat room
                     try {
                         ChatRoom currentChatRoom = new ChatRoom(roomId);
-                        TUMCabeVerification verification =
-                                TUMCabeVerification.createMemberVerification(mContext, null);
+                        TUMCabeVerification verification = TUMCabeVerification.create(mContext, null);
                         if (verification == null) {
                             return results;
                         }

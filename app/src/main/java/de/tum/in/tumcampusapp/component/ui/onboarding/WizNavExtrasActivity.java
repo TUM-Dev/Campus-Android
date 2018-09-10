@@ -125,7 +125,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Try to restore already joined chat rooms from server
         try {
-            TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+            TUMCabeVerification verification = TUMCabeVerification.create(this, null);
             List<ChatRoom> rooms = tumCabeClient.getMemberRooms(member.getId(), verification);
             new ChatRoomController(this).replaceIntoRooms(rooms);
 

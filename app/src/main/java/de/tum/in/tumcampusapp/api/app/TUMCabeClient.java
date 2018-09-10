@@ -129,7 +129,7 @@ public final class TUMCabeClient {
 
     private static TUMCabeVerification getMemberVerification(Context context, Object data) throws NoPrivateKey {
         TUMCabeVerification verification =
-                TUMCabeVerification.createMemberVerification(context, null);
+                TUMCabeVerification.create(context, null);
         if (verification == null) {
             throw new NoPrivateKey();
         }
@@ -139,7 +139,7 @@ public final class TUMCabeClient {
 
     private static TUMCabeVerification getDeviceVerification(Context context, Object data) throws NoPrivateKey {
         TUMCabeVerification verification =
-                TUMCabeVerification.createDeviceVerification(context, data);
+                TUMCabeVerification.create(context, data);
         if (verification == null) {
             throw new NoPrivateKey();
         }
