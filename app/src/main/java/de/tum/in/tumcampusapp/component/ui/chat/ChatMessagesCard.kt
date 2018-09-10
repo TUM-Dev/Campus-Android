@@ -1,14 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.ui.chat
 
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.RemoteViews
 import com.google.common.collect.Lists
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
@@ -24,7 +21,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import java.util.*
-import kotlin.coroutines.experimental.EmptyCoroutineContext.fold
 
 /**
  * Card that shows the cafeteria menu
@@ -68,13 +64,6 @@ class ChatMessagesCard(context: Context,
         mUnread = Lists.reverse(chatMessageDao.getLastUnread(roomId))
         mRoomIdString = roomIdString
         mRoomId = roomId
-    }
-
-    override fun getIntent() = Intent(context, ChatActivity::class.java).apply {
-        putExtra(Const.CURRENT_CHAT_ROOM, Gson().toJson(ChatRoom(mRoomIdString).apply {
-            id = mRoomId
-        }))
-        putExtras(Bundle())
     }
 
     override fun getNavigationDestination(): NavigationDestination? {

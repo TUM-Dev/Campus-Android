@@ -105,19 +105,6 @@ public class EduroamFixCard extends Card {
     }
 
     @Override
-    public Intent getIntent() {
-        if (eduroam != null) {
-            WifiManager wifi = (WifiManager) getContext().getApplicationContext()
-                                                         .getSystemService(Context.WIFI_SERVICE);
-            wifi.removeNetwork(eduroam.networkId);
-        }
-        Intent intent = new Intent(getContext(), SetupEduroamActivity.class);
-        // TCA should only produce correct profiles, so incorrect ones were configured somewhere else
-        intent.putExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, true);
-        return intent;
-    }
-
-    @Override
     public int getId() {
         return 0;
     }

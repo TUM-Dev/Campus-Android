@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -64,13 +63,6 @@ public class CafeteriaMenuCard extends Card {
 
     public String getTitle() {
         return mCafeteria.getName();
-    }
-
-    @Override
-    public Intent getIntent() {
-        Intent i = new Intent(getContext(), CafeteriaActivity.class);
-        i.putExtra(Const.CAFETERIA_ID, mCafeteria.getId());
-        return i;
     }
 
     @Nullable
