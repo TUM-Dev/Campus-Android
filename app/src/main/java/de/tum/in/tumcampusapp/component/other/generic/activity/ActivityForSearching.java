@@ -127,7 +127,9 @@ public abstract class ActivityForSearching extends ProgressActivity {
             public boolean onQueryTextChange(String s) {
                 // The user is currently typing in the search box and the keyboard is visible.
                 // We disable the drawer to prevent interference between the two.
-                enableDrawer(false);
+                // This method is also called with an empty string when the search box is closed.
+                // That's why we check whether the string is empty.
+                enableDrawer(s.isEmpty());
                 return false;
             }
         });

@@ -44,11 +44,10 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
 
     private var drawerToggle: ActionBarDrawerToggle? = null
 
-    private val shouldShowDrawer: Boolean
-        get() {
-            val askedToShowDrawer = intent.getBooleanExtra(Const.SHOW_DRAWER, false)
-            return drawerLayout != null && (askedToShowDrawer || this is MainActivity)
-        }
+    private val shouldShowDrawer: Boolean by lazy {
+        val askedToShowDrawer = intent.getBooleanExtra(Const.SHOW_DRAWER, false)
+        drawerLayout != null && (askedToShowDrawer || this is MainActivity)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
