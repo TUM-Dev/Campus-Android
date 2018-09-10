@@ -8,6 +8,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.app.exception.NoNetworkConnectionException
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearching
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
@@ -21,9 +22,10 @@ import io.reactivex.schedulers.Schedulers
 /**
  * Activity to show transport stations and departures
  */
-class TransportationActivity :
-        ActivityForSearching(R.layout.activity_transportation, MVVStationSuggestionProvider.AUTHORITY, 3),
-        OnItemClickListener {
+class TransportationActivity : ActivityForSearching(
+        R.layout.activity_transportation,
+        MVVStationSuggestionProvider.AUTHORITY, 3
+), OnItemClickListener {
 
     private lateinit var listViewResults: ListView
     private lateinit var adapterStations: ArrayAdapter<StationResult>
@@ -89,11 +91,13 @@ class TransportationActivity :
         disposable.add(TransportController.getStationsFromExternal(this, query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::displayStations) {
+                .subscribe(this::displayStations) { t ->
                     // Something went wrong
-                    Utils.showToast(this, R.string.something_wrong)
-                    Utils.log(it)
-                    onStartSearch()
+                    Utils.log(t)
+                    when (t) {
+                        is NoNetworkConnectionException -> showNoInternetLayout()
+                        else -> showError(R.string.something_wrong)
+                    }
                 })
     }
 
@@ -101,7 +105,7 @@ class TransportationActivity :
         showLoadingEnded()
 
         if (stations.isEmpty()) {
-            listViewResults.adapter = NoResultsAdapter(this)
+            showEmptyResponseLayout(R.string.no_search_result)
             return
         }
 

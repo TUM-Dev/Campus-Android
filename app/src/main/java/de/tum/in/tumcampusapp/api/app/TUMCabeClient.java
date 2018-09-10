@@ -59,6 +59,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -111,11 +112,16 @@ public final class TUMCabeClient {
                 .registerTypeAdapter(DateTime.class, new DateSerializer())
                 .create();
 
+        OkHttpClient client = Helper.getOkHttpClient(c)
+                .newBuilder()
+                .retryOnConnectionFailure(false)
+                .build();
+
         service = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(Helper.getOkHttpClient(c))
+                .client(client)
                 .build()
                 .create(TUMCabeAPIService.class);
     }

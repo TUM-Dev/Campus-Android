@@ -30,6 +30,10 @@ abstract class ProgressActivity(
         findViewById<SwipeRefreshLayout>(R.id.ptr_layout)
     }
 
+    private val errorLayoutsContainer: FrameLayout by lazy {
+        findViewById<FrameLayout>(R.id.errors_layout)
+    }
+
     private val errorLayout: LinearLayout by lazy {
         findViewById<LinearLayout>(R.id.error_layout)
     }
@@ -128,6 +132,7 @@ abstract class ProgressActivity(
         errorButton.setTextOrHide(viewState.buttonTextResId)
         errorButton.setOnClickListener { retryRequest() }
 
+        errorLayoutsContainer.visibility = View.VISIBLE
         errorLayout.visibility = View.VISIBLE
     }
 
@@ -146,6 +151,7 @@ abstract class ProgressActivity(
             return
         }
 
+        errorLayoutsContainer.visibility = View.VISIBLE
         errorLayout.visibility = View.GONE
         progressLayout.visibility = View.VISIBLE
     }
@@ -155,6 +161,7 @@ abstract class ProgressActivity(
      * and setting [SwipeRefreshLayout]'s state to completed
      */
     protected fun showLoadingEnded() {
+        errorLayoutsContainer.visibility = View.GONE
         progressLayout.visibility = View.GONE
         errorLayout.visibility = View.GONE
         swipeRefreshLayout?.isRefreshing = false

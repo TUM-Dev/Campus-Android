@@ -4,6 +4,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/default_window_background"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -27,19 +28,26 @@
                 android:id="@+id/spinnerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/material_small_padding"
-                android:background="@drawable/spinner_border_background"
+                android:background="@color/secondary_window_background"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible">
 
-                <Spinner
-                    android:id="@+id/spinner"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:prompt="@string/events" />
+                    android:layout_margin="@dimen/material_small_padding"
+                    android:background="@drawable/spinner_border_background">
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:prompt="@string/events" />
+
+                </FrameLayout>
 
             </FrameLayout>
 

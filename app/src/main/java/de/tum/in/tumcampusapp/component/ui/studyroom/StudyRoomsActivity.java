@@ -177,6 +177,8 @@ public class StudyRoomsActivity extends ProgressActivity
                 });
     }
 
+
+
     private void onDownloadSuccessful(@NonNull List<StudyRoomGroup> groups) {
         Handler handler = new Handler();
         handler.post(() -> {

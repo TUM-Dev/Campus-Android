@@ -51,6 +51,7 @@
     <color name="text_dark_secondary">#8A000000</color> <!--8A for 54% opacity-->
 
     <color name="default_window_background">@android:color/white</color>
+    <color name="secondary_window_background">#F2F2F2</color>
     <color name="semitransparent_dark_background">#4D000000</color>
 
     <!-- official TUM accent colors (style guide) -->

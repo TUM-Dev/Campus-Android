@@ -190,7 +190,8 @@ public abstract class ActivityForSearching extends ProgressActivity {
 
     @Override
     public void onRefresh() {
-        requestSearch(query);
+        String input = (query != null) ? query : "";
+        requestSearch(input);
     }
 
 }
