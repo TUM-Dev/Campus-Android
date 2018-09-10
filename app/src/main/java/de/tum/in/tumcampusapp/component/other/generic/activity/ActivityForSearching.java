@@ -114,29 +114,10 @@ public abstract class ActivityForSearching extends ProgressActivity {
             return false;
         });
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                // The user has closed the keyboard by submitting the query, which means we can
-                // enable the navigation drawer again
-                enableDrawer(true);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                // The user is currently typing in the search box and the keyboard is visible.
-                // We disable the drawer to prevent interference between the two.
-                // This method is also called with an empty string when the search box is closed.
-                // That's why we check whether the string is empty.
-                enableDrawer(s.isEmpty());
-                return false;
-            }
-        });
-
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                enableDrawer(false);
                 return true;
             }
 
@@ -144,6 +125,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 query = null;
                 onStartSearch();
+                enableDrawer(true);
                 return true;
             }
         });

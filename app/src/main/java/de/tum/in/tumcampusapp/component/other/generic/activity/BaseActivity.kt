@@ -139,7 +139,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
 
             loginButton.visibility = View.VISIBLE
             loginButton.setOnClickListener {
-                val intent = Intent(this, WizNavStartActivity::class.java);
+                val intent = Intent(this, WizNavStartActivity::class.java)
                 startActivity(intent);
             }
         }
