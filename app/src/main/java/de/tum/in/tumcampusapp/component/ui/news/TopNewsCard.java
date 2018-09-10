@@ -72,18 +72,6 @@ public class TopNewsCard extends Card {
         return 0;
     }
 
-    @Override
-    public Intent getIntent() {
-        String url = Utils.getSetting(getContext(), Const.NEWS_ALERT_LINK, "");
-        if (!url.isEmpty()) {
-            return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        }
-
-        // if there is not link don't react to clicks
-        return null;
-
-    }
-
     @Nullable
     @Override
     public NavigationDestination getNavigationDestination() {
@@ -93,7 +81,7 @@ public class TopNewsCard extends Card {
             return new SystemIntent(data);
         }
 
-        // if there is not link don't react to clicks
+        // If there is no link, don't react to clicks
         return null;
     }
 

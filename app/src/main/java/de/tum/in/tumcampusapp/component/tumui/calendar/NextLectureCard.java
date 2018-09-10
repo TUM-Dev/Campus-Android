@@ -141,11 +141,6 @@ public class NextLectureCard extends Card {
     }
 
     @Override
-    public Intent getIntent() {
-        return null;
-    }
-
-    @Override
     public int getId() {
         return 0;
     }

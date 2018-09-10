@@ -12,8 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.graphics.Palette;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,7 +128,6 @@ public class KinoDetailsFragment extends Fragment {
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         progressBar.setVisibility(View.GONE);
                         posterView.setImageBitmap(bitmap);
-                        //loadColorPalette(bitmap);
                     }
 
                     @Override
@@ -143,44 +140,6 @@ public class KinoDetailsFragment extends Fragment {
                         // Free ad space
                     }
                 });
-    }
-
-    private void loadColorPalette(Bitmap bitmap) {
-        Palette.from(bitmap).generate(palette -> {
-            if (palette == null) {
-                return;
-            }
-
-            Palette.Swatch swatch = palette.getVibrantSwatch();
-            int colorPrimary = ContextCompat.getColor(requireContext(), R.color.color_primary);
-            int color = (swatch != null) ? swatch.getRgb() : colorPrimary;
-
-            TextView dateTextView = rootView.findViewById(R.id.dateTextView);
-            TextView runtimeTextView = rootView.findViewById(R.id.runtimeTextView);
-            TextView ratingTextView = rootView.findViewById(R.id.ratingTextView);
-
-            setCompoundDrawablesTint(dateTextView, color);
-            setCompoundDrawablesTint(runtimeTextView, color);
-            setCompoundDrawablesTint(ratingTextView, color);
-
-            MaterialButton trailerButton = rootView.findViewById(R.id.trailerButton);
-            MaterialButton moreInfoButton = rootView.findViewById(R.id.moreInfoButton);
-
-            trailerButton.setTextColor(color);
-            moreInfoButton.setTextColor(color);
-
-            TextView genresHeaderTextView = rootView.findViewById(R.id.genresHeaderTextView);
-            TextView releaseYearHeaderTextView = rootView.findViewById(R.id.releaseYearHeaderTextView);
-            TextView actorsHeaderTextView = rootView.findViewById(R.id.actorsHeaderTextView);
-            TextView directorHeaderTextView = rootView.findViewById(R.id.directorHeaderTextView);
-
-            genresHeaderTextView.setTextColor(color);
-            releaseYearHeaderTextView.setTextColor(color);
-            actorsHeaderTextView.setTextColor(color);
-            directorHeaderTextView.setTextColor(color);
-
-            TransitionManager.beginDelayedTransition((ViewGroup) rootView);
-        });
     }
 
     private void setCompoundDrawablesTint(TextView textView, int color) {

@@ -86,21 +86,8 @@ public class NewsCard extends Card {
             return null;
         }
 
-        // Open url in browser
         Intent data = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         return new SystemIntent(data);
-    }
-
-    public Intent getIntent() {
-        // Show regular news in browser
-        String url = mNews.getLink();
-        if (url.isEmpty()) {
-            Utils.showToast(getContext(), R.string.no_link_existing);
-            return null;
-        }
-
-        // Opens url in browser
-        return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     }
 
     @Override

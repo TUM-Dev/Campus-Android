@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
@@ -28,12 +27,6 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
         val eventViewHolder = viewHolder as? EventsAdapter.EventViewHolder ?: return
         val hasTicket = eventsController.isEventBooked(event)
         eventViewHolder.bind(event, hasTicket)
-    }
-
-    override fun getIntent(): Intent? {
-        return Intent(context, EventDetailsActivity::class.java).apply {
-            putExtra("event", event)
-        }
     }
 
     override fun getNavigationDestination(): NavigationDestination? {

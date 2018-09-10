@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.tutionfees;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.support.annotation.NonNull;
@@ -51,11 +50,6 @@ public class TuitionFeesCard extends Card {
     @Override
     public int getId() {
         return 0;
-    }
-
-    @Override
-    public Intent getIntent() {
-        return new Intent(getContext(), TuitionFeesActivity.class);
     }
 
     @Nullable

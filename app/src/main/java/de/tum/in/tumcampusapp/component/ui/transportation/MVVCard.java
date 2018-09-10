@@ -1,10 +1,8 @@
 package de.tum.in.tumcampusapp.component.ui.transportation;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -16,7 +14,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
+import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
@@ -61,17 +59,8 @@ public class MVVCard extends Card {
 
     @Nullable
     @Override
-    public Intent getIntent() {
-        return mStation.getIntent(getContext());
-    }
-
-    @Nullable
-    @Override
     public NavigationDestination getNavigationDestination() {
-        Bundle bundle = new Bundle();
-        bundle.putString(TransportationDetailsActivity.EXTRA_STATION_ID, mStation.getId());
-        bundle.putString(TransportationDetailsActivity.EXTRA_STATION_ID, mStation.getStation());
-        return new SystemActivity(TransportationDetailsActivity.class, bundle);
+        return new SystemIntent(mStation.getIntent(getContext()));
     }
 
     @Override

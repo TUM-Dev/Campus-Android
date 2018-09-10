@@ -38,7 +38,9 @@ public class ImageViewTouchFragment extends Fragment {
         Utils.log("room finder url: " + mURL);
 
         Drawable icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_outline_map_24px);
-        icon.setTint(Color.WHITE);
+        if (icon != null) {
+            icon.setTint(Color.WHITE);
+        }
 
         Picasso.get()
                 .load(mURL)
