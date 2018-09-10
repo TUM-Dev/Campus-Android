@@ -162,7 +162,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
     // TicketSale
-    implementation 'com.stripe:stripe-android:6.1.2'
+    implementation 'com.stripe:stripe-android:8.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
