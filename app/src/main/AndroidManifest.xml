@@ -165,9 +165,7 @@
             android:name=".component.ui.openinghour.OpeningHoursListActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/opening_hours"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
+            android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -189,6 +187,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
+        <activity
+            android:name=".component.ui.transportation.TransportationDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".component.ui.transportation.TransportationActivity" />
         <activity
             android:name=".component.tumui.lectures.activity.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
@@ -345,8 +347,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/setup_eduroam"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoDrawerLayout"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />

@@ -35,6 +35,7 @@ public class StudyRoomsActivity extends ProgressActivity
 
     private List<StudyRoomGroup> mStudyRoomGroupList;
     private int mSelectedStudyRoomGroupId = -1;
+
     private ViewPager mViewPager;
     private StudyRoomsPagerAdapter mSectionsPagerAdapter;
 
@@ -199,6 +200,8 @@ public class StudyRoomsActivity extends ProgressActivity
 
         Spinner spinner = getStudyRoomGroupsSpinner();
         selectCurrentSpinnerItem(spinner);
+
+        findViewById(R.id.spinnerContainer).setVisibility(View.VISIBLE);
         showLoadingEnded();
     }
 

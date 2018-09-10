@@ -18,7 +18,7 @@
 
     <style name="AppTheme.NoDrawerLayout" parent="AppTheme">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="android:statusBarColor">@color/color_primary</item>
+        <item name="android:statusBarColor">@color/tum_dark_gray</item>
     </style>
 
     <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
