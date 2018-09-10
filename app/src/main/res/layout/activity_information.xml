@@ -33,7 +33,7 @@
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/facebook"
+                android:text="@string/like"
                 android:textAllCaps="false"
                 app:icon="@drawable/ic_facebook_white" />
 

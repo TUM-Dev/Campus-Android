@@ -109,7 +109,7 @@
 
     <string name="about_tca">About the App</string>
     <string name="information">Information</string>
-    <string name="facebook" translatable="false">Facebook</string>
+    <string name="like" translatable="false">Like</string>
     <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
     <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
     <string name="github" translatable="false">GitHub</string>

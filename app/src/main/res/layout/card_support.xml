@@ -31,7 +31,7 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/facebook"
+                android:text="@string/like"
                 android:textAllCaps="false"
                 android:textColor="@color/facebook"
                 app:cornerRadius="@dimen/material_button_corner_radius"
