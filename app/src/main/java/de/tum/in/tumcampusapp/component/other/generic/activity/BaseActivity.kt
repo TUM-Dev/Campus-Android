@@ -85,13 +85,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
         }
 
         supportActionBar?.let {
-            val mode = if (shouldShowDrawer) {
-                DrawerLayout.LOCK_MODE_UNLOCKED
-            } else {
-                DrawerLayout.LOCK_MODE_LOCKED_CLOSED
-            }
-
-            drawerLayout?.setDrawerLockMode(mode)
+            enableDrawer(shouldShowDrawer)
             drawerToggle?.isDrawerIndicatorEnabled = shouldShowDrawer
         }
 
@@ -163,6 +157,16 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
             divider.visibility = View.VISIBLE
             rainbowBar.visibility = View.GONE
         }
+    }
+
+    protected fun enableDrawer(isEnabled: Boolean) {
+        val mode = if (isEnabled) {
+            DrawerLayout.LOCK_MODE_UNLOCKED
+        } else {
+            DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+        }
+
+        drawerLayout?.setDrawerLockMode(mode)
     }
 
     fun openDrawer() {

@@ -114,4 +114,3 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, callback: (T) -> Unit)
         }
     })
 }
-
