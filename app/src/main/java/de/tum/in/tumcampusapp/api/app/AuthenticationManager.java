@@ -270,7 +270,7 @@ public class AuthenticationManager {
             return;
         }
 
-        TUMCabeVerification verification = TUMCabeVerification.createDeviceVerification(mContext, null);
+        TUMCabeVerification verification = TUMCabeVerification.create(mContext, null);
         if (verification == null) {
             Utils.log("Can't upload obfuscated ids: no private key");
             return;
