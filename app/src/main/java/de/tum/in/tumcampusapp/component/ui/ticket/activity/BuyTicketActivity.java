@@ -163,7 +163,7 @@ public class BuyTicketActivity extends BaseActivity {
         int ticketTypeId = ticketType.getId();
         TicketReservation reservation = new TicketReservation(ticketTypeId);
 
-        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, reservation);
+        TUMCabeVerification verification = TUMCabeVerification.create(this, reservation);
         if (verification == null) {
             handleTicketReservationFailure(R.string.internal_error);
             return;

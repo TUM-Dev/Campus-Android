@@ -395,7 +395,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             // Download chat messages in new Thread
 
             // If currently nothing has been shown load newest messages from server
-            TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+            TUMCabeVerification verification = TUMCabeVerification.create(this, null);
             if (verification == null) {
                 return; //In this case we simply cannot do anything
             }
@@ -439,7 +439,7 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
     @Override
     public void onClick(DialogInterface dialog, int which) {
         // Send request to the server to remove the user from this room
-        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+        TUMCabeVerification verification = TUMCabeVerification.create(this, null);
         if (verification == null) {
             return;
         }

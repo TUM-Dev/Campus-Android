@@ -145,8 +145,7 @@ public class ChatRoomsActivity
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> {
             try {
-                TUMCabeVerification verification =
-                        TUMCabeVerification.createMemberVerification(this, null);
+                TUMCabeVerification verification = TUMCabeVerification.create(this, null);
                 if (verification == null) {
                     runOnUiThread(this::finish);
                 }
@@ -261,7 +260,7 @@ public class ChatRoomsActivity
 
         currentChatRoom = new ChatRoom(name);
 
-        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+        TUMCabeVerification verification = TUMCabeVerification.create(this, null);
         if (verification == null) {
             finish();
             return;
