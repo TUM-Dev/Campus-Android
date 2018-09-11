@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="0dp"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="0dp">
+    android:paddingStart="@dimen/material_default_padding"
+    android:paddingTop="@dimen/material_default_padding"
+    android:paddingEnd="@dimen/material_default_padding">
 
     <ImageView
-        android:id="@+id/feedback_big_image_land"
-        android:layout_width="@dimen/feedback_img_big"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:visibility="gone"/>
-
-    <ImageView
-        android:id="@+id/feedback_big_image_portrait"
-        android:layout_width="wrap_content"
+        android:id="@+id/feedback_big_image"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/feedback_img_big"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:visibility="gone"/>
+        android:scaleType="fitCenter"
+        tools:src="@drawable/chat_background" />
 
 </LinearLayout>

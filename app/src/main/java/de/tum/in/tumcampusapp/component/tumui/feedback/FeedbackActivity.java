@@ -214,11 +214,17 @@ public class FeedbackActivity extends BaseActivity {
         if (location == null) { // we don't know anything about the location
             includeLocation.setChecked(false);
 
-            new AlertDialog.Builder(this)
+            AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.location_services_off_title)
                     .setMessage(R.string.location_services_off_message)
                     .setPositiveButton(R.string.ok, null)
-                    .show();
+                    .create();
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            }
+
+            dialog.show();
         }
     }
 
@@ -331,11 +337,17 @@ public class FeedbackActivity extends BaseActivity {
             }
         }
 
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.send_feedback_question)
                 .setPositiveButton(R.string.send, (dialogInterface, i) -> sendFeedback())
                 .setNegativeButton(R.string.no, null)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     public void sendFeedback() {
@@ -376,12 +388,18 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void showProgressBarDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.feedback_sending);
-        builder.setView(new ProgressBar(this));
-        builder.setCancelable(false);
-        builder.setNeutralButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
-        progress = builder.show();
+        progress = new AlertDialog.Builder(this)
+                .setTitle(R.string.feedback_sending)
+                .setView(new ProgressBar(this))
+                .setCancelable(false)
+                .setNeutralButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel())
+                .create();
+
+        if (progress.getWindow() != null) {
+            progress.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        progress.show();
     }
 
     private void showErrorDialog() {
@@ -389,20 +407,25 @@ public class FeedbackActivity extends BaseActivity {
             return;
         }
         progress.cancel();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.feedback_sending_error);
-        builder.setIcon(R.drawable.ic_error_outline);
-        builder.setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback());
 
-        // Or save message to send later -> db table needed? / sharedPreferences
-        builder.setNegativeButton(R.string.ok, null);
-        errorDialog = builder.show();
+        errorDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.feedback_sending_error)
+                .setIcon(R.drawable.ic_error_outline)
+                .setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback())
+                .setNegativeButton(R.string.ok, null)
+                .create();
+
+        if (errorDialog.getWindow() != null) {
+            errorDialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        errorDialog.show();
     }
 
     @SuppressLint("NewApi")
     public void addPicture(View view) {
         String[] options = {getString(R.string.feedback_take_picture), getString(R.string.gallery)};
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.feedback_add_picture)
                 .setItems(options, (dialogInterface, i) -> {
                     if (i == 0) {
@@ -416,7 +439,13 @@ public class FeedbackActivity extends BaseActivity {
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     @Override

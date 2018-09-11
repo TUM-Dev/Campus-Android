@@ -127,10 +127,16 @@ public class NewsActivity extends ActivityForDownloadingExternal implements Dial
             CharSequence[] items = Iterables.toArray(itemsList, CharSequence.class);
             boolean[] checkedItems = Booleans.toArray(checkedList);
 
-            new AlertDialog.Builder(this)
+            AlertDialog dialog = new AlertDialog.Builder(this)
                     .setMultiChoiceItems(items, checkedItems, this)
-                    .create()
-                    .show();
+                    .create();
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            }
+
+            dialog.show();
+
             return true;
         }
         return super.onOptionsItemSelected(item);

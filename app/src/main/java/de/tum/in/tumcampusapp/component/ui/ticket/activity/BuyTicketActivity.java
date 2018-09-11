@@ -208,15 +208,21 @@ public class BuyTicketActivity extends BaseActivity {
     }
 
     private void handleTicketNotFetched() {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.ticket_not_fetched))
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                .setPositiveButton(R.string.ok, (dialogInterface, which) -> {
                     loadingLayout.setVisibility(View.GONE);
                     TransitionManager.beginDelayedTransition(loadingLayout);
                     paymentButton.setEnabled(true);
                 })
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     private void handleTicketReservationFailure(int messageResId) {

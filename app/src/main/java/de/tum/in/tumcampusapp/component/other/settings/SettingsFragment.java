@@ -222,11 +222,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 break;
             case BUTTON_CLEAR_CACHE:
                 // This button invokes the clear cache method
-                new AlertDialog.Builder(mContext)
+                AlertDialog dialog = new AlertDialog.Builder(mContext)
                         .setMessage(R.string.delete_cache_sure)
                         .setPositiveButton(R.string.delete, (dialogInterface, i) -> clearCache())
                         .setNegativeButton(R.string.cancel, null)
-                        .show();
+                        .create();
+
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+                }
+
+                dialog.show();
                 break;
             default:
                 return false;

@@ -104,12 +104,18 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             // Build a alert dialog containing the mapping of ingredients to the numbers
             String ingredients = getString(R.string.cafeteria_ingredients);
             SpannableString title = CafeteriaMenuInflater.menuToSpan(this, ingredients);
-            new AlertDialog.Builder(this)
+
+            AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.action_ingredients)
                     .setMessage(title)
                     .setPositiveButton(R.string.ok, null)
-                    .create()
-                    .show();
+                    .create();
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            }
+
+            dialog.show();
             return true;
         }
         if (item.getItemId() == R.id.action_settings) {

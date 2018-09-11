@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.component.tumui.calendar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
@@ -75,11 +74,7 @@ class LimitPickerDialog extends Dialog {
                     alertDialog.setMessage(context.getResources().getString(R.string.calendar_filter_hour_limit_error_message));
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,
                                           context.getResources().getString(R.string.ok),
-                                          new DialogInterface.OnClickListener() {
-                                              public void onClick(DialogInterface dialog, int which) {
-                                                  alertDialog.dismiss();
-                                              }
-                                          });
+                            (dialog, which) -> alertDialog.dismiss());
                     alertDialog.show();
                 }
             }

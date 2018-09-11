@@ -51,7 +51,7 @@
             android:text="@string/watch_trailer"
             android:textAllCaps="false"
             android:textColor="@color/color_primary"
-            app:cornerRadius="@dimen/material_button_corner_radius" />
+            app:cornerRadius="@dimen/material_corner_radius" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -216,7 +216,7 @@
             android:text="@string/more_info"
             android:textAllCaps="false"
             android:textColor="@color/color_primary"
-            app:cornerRadius="@dimen/material_button_corner_radius" />
+            app:cornerRadius="@dimen/material_corner_radius" />
 
     </LinearLayout>
 

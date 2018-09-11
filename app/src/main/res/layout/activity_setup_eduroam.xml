@@ -107,7 +107,7 @@
                     android:onClick="showDataBackupSettings"
                     android:text="@string/disable_data_backup"
                     android:textAllCaps="false"
-                    app:cornerRadius="@dimen/material_button_corner_radius" />
+                    app:cornerRadius="@dimen/material_corner_radius" />
 
             </LinearLayout>
 
@@ -141,7 +141,7 @@
                 android:onClick="onClickCancel"
                 android:text="@android:string/cancel"
                 android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_button_corner_radius" />
+                app:cornerRadius="@dimen/material_corner_radius" />
 
             <android.support.design.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button"
@@ -151,7 +151,7 @@
                 android:onClick="onClickSetup"
                 android:text="@string/setup"
                 android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_button_corner_radius" />
+                app:cornerRadius="@dimen/material_corner_radius" />
 
         </LinearLayout>
 

@@ -57,7 +57,7 @@ public class SetupEduroamActivity extends BaseActivity {
     }
 
     private void showDeleteProfileDialog() {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.eduroam_dialog_title)
                 .setMessage(R.string.eduroam_dialog_info_text)
                 .setNegativeButton(R.string.cancel, null)
@@ -65,7 +65,13 @@ public class SetupEduroamActivity extends BaseActivity {
                     Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                     startActivity(intent);
                 })
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     /**

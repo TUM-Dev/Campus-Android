@@ -44,7 +44,7 @@
             android:onClick="openLink"
             android:textAllCaps="false"
             android:textColor="#006c90"
-            app:cornerRadius="@dimen/material_button_corner_radius"
+            app:cornerRadius="@dimen/material_corner_radius"
             tools:text="@string/roomfinder" />
 
     </LinearLayout>

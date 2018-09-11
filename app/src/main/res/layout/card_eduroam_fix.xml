@@ -39,7 +39,7 @@
         <android.support.design.button.MaterialButton
             android:id="@+id/eduroam_action_button"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            app:cornerRadius="@dimen/material_button_corner_radius"
+            app:cornerRadius="@dimen/material_corner_radius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/material_small_padding"

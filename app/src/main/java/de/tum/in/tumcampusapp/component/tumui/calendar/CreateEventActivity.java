@@ -316,11 +316,17 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void displayCloseDialog() {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage(R.string.discard_changes_question)
-                .setNegativeButton(R.string.discard, (dialog, which) -> finish())
+                .setNegativeButton(R.string.discard, (dialogInterface, which) -> finish())
                 .setPositiveButton(R.string.keep_editing, null)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     @Override
@@ -334,12 +340,18 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void showErrorDialog(String message) {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
             .setTitle(R.string.error)
             .setMessage(message)
             .setIcon(R.drawable.ic_error_outline)
             .setPositiveButton(R.string.ok, null)
-            .show();
+            .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
 }

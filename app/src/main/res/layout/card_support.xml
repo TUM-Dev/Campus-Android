@@ -34,7 +34,7 @@
                 android:text="@string/like"
                 android:textAllCaps="false"
                 android:textColor="@color/facebook"
-                app:cornerRadius="@dimen/material_button_corner_radius"
+                app:cornerRadius="@dimen/material_corner_radius"
                 app:icon="@drawable/ic_outline_thumb_up_24px_white"
                 app:iconPadding="@dimen/material_small_padding"
                 app:iconTint="@color/facebook" />
@@ -49,7 +49,7 @@
                 android:text="@string/github"
                 android:textAllCaps="false"
                 android:textColor="@color/github"
-                app:cornerRadius="@dimen/material_button_corner_radius"
+                app:cornerRadius="@dimen/material_corner_radius"
                 app:icon="@drawable/ic_code_white_24dp"
                 app:iconPadding="@dimen/material_small_padding"
                 app:iconTint="@color/github" />
@@ -62,7 +62,7 @@
                 android:text="@string/e_mail"
                 android:textAllCaps="false"
                 android:textColor="@color/email"
-                app:cornerRadius="@dimen/material_button_corner_radius"
+                app:cornerRadius="@dimen/material_corner_radius"
                 app:icon="@drawable/ic_outline_email_24px_white"
                 app:iconPadding="@dimen/material_small_padding"
                 app:iconTint="@color/email" />

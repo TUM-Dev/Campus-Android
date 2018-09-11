@@ -86,7 +86,7 @@
                     android:text="@string/student_financial_aid"
                     android:textAllCaps="false"
                     android:textColor="@color/color_primary"
-                    app:cornerRadius="@dimen/material_button_corner_radius" />
+                    app:cornerRadius="@dimen/material_corner_radius" />
 
             </LinearLayout>
 

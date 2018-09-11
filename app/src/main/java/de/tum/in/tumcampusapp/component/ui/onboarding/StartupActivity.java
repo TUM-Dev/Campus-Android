@@ -159,9 +159,22 @@ public class StartupActivity extends AppCompatActivity {
             // For example, if the request has been denied previously.
 
             // Display an AlertDialog with an explanation and a button to trigger the request.
-            runOnUiThread(() -> new AlertDialog.Builder(StartupActivity.this).setMessage(getString(R.string.permission_location_explanation))
-                                                                             .setPositiveButton(R.string.ok, (dialog, id) -> ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION, REQUEST_LOCATION))
-                                                                             .show());
+            runOnUiThread(() -> {
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.permission_location_explanation))
+                        .setPositiveButton(R.string.ok, (dialogInterface, id) -> {
+                            ActivityCompat.requestPermissions(
+                                    this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
+                        })
+                        .create();
+
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawableResource(
+                            R.drawable.rounded_corners_background);
+                }
+
+                dialog.show();
+            });
         } else {
             ActivityCompat.requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
         }

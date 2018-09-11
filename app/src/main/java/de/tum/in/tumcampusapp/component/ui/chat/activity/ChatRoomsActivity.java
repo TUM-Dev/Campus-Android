@@ -234,17 +234,23 @@ public class ChatRoomsActivity
                 .inflate(R.layout.dialog_input, null);
         final EditText input = view.findViewById(R.id.inputEditText);
 
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.new_chat_room)
                 .setMessage(R.string.new_chat_room_desc)
                 .setView(view)
-                .setPositiveButton(R.string.create, (dialog, whichButton) -> {
+                .setPositiveButton(R.string.create, (dialogInterface, whichButton) -> {
                     String value = input.getText().toString();
                     String randId = Integer.toHexString((int) (Math.random() * 4096));
                     createOrJoinChatRoom(randId + ':' + value);
                 })
                 .setNegativeButton(android.R.string.cancel, null)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     /**

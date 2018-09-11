@@ -62,11 +62,14 @@ class TransportationDetailsActivity : ProgressActivity(R.layout.activity_transpo
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_transport_usage) {
-            AlertDialog.Builder(this)
+            val dialog = AlertDialog.Builder(this)
                     .setTitle(R.string.transport_action_usage)
                     .setMessage(R.string.transport_help_text)
                     .setPositiveButton(android.R.string.ok, null)
-                    .show()
+                    .create()
+
+            dialog.window.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+            dialog.show()
             return true
         }
         return super.onOptionsItemSelected(item)

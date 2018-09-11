@@ -86,7 +86,7 @@
             android:textAllCaps="false"
             android:textColor="@color/color_primary"
             android:visibility="gone"
-            app:cornerRadius="@dimen/material_button_corner_radius"
+            app:cornerRadius="@dimen/material_corner_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/events_img"

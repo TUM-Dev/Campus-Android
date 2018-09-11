@@ -40,7 +40,7 @@
                 android:layout_marginEnd="@dimen/material_default_padding"
                 android:text="@string/like"
                 android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_button_corner_radius"
+                app:cornerRadius="@dimen/material_corner_radius"
                 app:icon="@drawable/ic_facebook_white" />
 
             <android.support.design.button.MaterialButton
@@ -52,7 +52,7 @@
                 android:layout_marginEnd="@dimen/material_default_padding"
                 android:text="@string/github_contribute"
                 android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_button_corner_radius"
+                app:cornerRadius="@dimen/material_corner_radius"
                 app:icon="@drawable/ic_github_white" />
 
             <android.support.design.button.MaterialButton
@@ -64,7 +64,7 @@
                 android:layout_marginEnd="@dimen/material_default_padding"
                 android:text="@string/privacy_policy"
                 android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_button_corner_radius" />
+                app:cornerRadius="@dimen/material_corner_radius" />
 
             <android.support.design.button.MaterialButton
                 android:id="@+id/button_chat_terms"
@@ -75,7 +75,7 @@
                 android:layout_marginEnd="@dimen/material_default_padding"
                 android:text="@string/open_chat_terms"
                 android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_button_corner_radius" />
+                app:cornerRadius="@dimen/material_corner_radius" />
 
             <android.support.design.button.MaterialButton
                 android:id="@+id/button_licenses"
@@ -86,7 +86,7 @@
                 android:layout_marginEnd="@dimen/material_default_padding"
                 android:text="@string/licences"
                 android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_button_corner_radius" />
+                app:cornerRadius="@dimen/material_corner_radius" />
 
             <TextView
                 android:id="@+id/txt_version"
