@@ -197,7 +197,7 @@ public class AddChatMemberActivity extends BaseActivity {
     }
 
     private void joinRoom(ChatMember member) {
-        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+        TUMCabeVerification verification = TUMCabeVerification.create(this, null);
         if (verification == null) {
             Utils.showToast(this, R.string.error);
             return;
