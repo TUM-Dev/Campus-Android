@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/material_default_padding"
                 android:layout_marginEnd="@dimen/material_default_padding"
-                android:text="@string/like"
+                android:text="@string/facebook"
                 android:textAllCaps="false"
                 app:cornerRadius="@dimen/material_corner_radius"
                 app:icon="@drawable/ic_facebook_white" />
