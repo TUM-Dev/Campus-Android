@@ -149,7 +149,7 @@ dependencies {
     implementation 'com.github.thellmund:Android-Week-View:2.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-
+    
     // Used for testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.22.0'
