@@ -32,18 +32,15 @@ public class MVVWidget extends AppWidgetProvider {
     static final String MVV_WIDGET_FORCE_RELOAD =
             "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD";
 
-    private static Timer timer;
-    private static TransportController transportManager;
-
     public static final int UPDATE_ALARM_DELAY = 60 * 1000;
     public static final int UPDATE_TRIGGER_DELAY = 20 * 1000;
     public static final int DOWNLOAD_DELAY = 5 * 60 * 1000;
 
+    private static Timer timer = new Timer();
+    private TransportController transportController;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        if (transportManager == null) {
-            transportManager = new TransportController(context);
-        }
         updateAppWidgets(context, appWidgetManager, appWidgetIds);
         setAlarm(context);
         super.onUpdate(context, appWidgetManager, appWidgetIds);
@@ -51,24 +48,12 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        if (transportManager == null) {
-            transportManager = new TransportController(context);
-        }
         // When the user deletes the widget, delete the associated setting from the database.
         for (int appWidgetId : appWidgetIds) {
-            transportManager.deleteWidget(appWidgetId);
+            transportController.deleteWidget(appWidgetId);
         }
-        transportManager = null;
-        super.onDeleted(context, appWidgetIds);
-    }
 
-    @Override
-    public void onEnabled(Context context) {
-        if (transportManager == null) {
-            transportManager = new TransportController(context);
-        }
-        // Enter relevant functionality for when the first widget is created
-        setAlarm(context);
+        super.onDeleted(context, appWidgetIds);
     }
 
     @Override
@@ -81,15 +66,17 @@ public class MVVWidget extends AppWidgetProvider {
     /**
      * If no alarm is running yet a new alarm is started which repeats every minute
      */
-    public static void setAlarm(Context context) {
+    public void setAlarm(Context context) {
         boolean autoReload = false;
+
         for (int appWidgetId : getActiveWidgetIds(context)) {
-            WidgetDepartures widgetDepartures = transportManager.getWidget(appWidgetId);
+            WidgetDepartures widgetDepartures = transportController.getWidget(appWidgetId);
             if (widgetDepartures.getAutoReload()) {
                 autoReload = true;
                 break;
             }
         }
+
         Intent intent = new Intent(context, MVVWidget.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -106,13 +93,9 @@ public class MVVWidget extends AppWidgetProvider {
     /**
      * Plans updates the widgets after 30s and 60s
      */
-    static void planUpdates(final Context context) {
-        if (MVVWidget.timer == null) {
-            MVVWidget.timer = new Timer();
-        }
-
+    private void planUpdates(final Context context) {
         for (int i = 1; i <= 3; i++) {
-            MVVWidget.timer.schedule(new TimerTask() {
+            timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     Intent reloadIntent = new Intent(context, MVVWidget.class);
@@ -128,9 +111,9 @@ public class MVVWidget extends AppWidgetProvider {
      *
      * @param appWidgetIds the array of widget ids to update
      */
-    static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    private void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int widgetId : appWidgetIds) {
-            MVVWidget.updateAppWidget(context, appWidgetManager, widgetId, false);
+            updateAppWidget(context, appWidgetManager, widgetId, false);
         }
     }
 
@@ -139,10 +122,10 @@ public class MVVWidget extends AppWidgetProvider {
      *
      * @param appWidgetId the id of the widget to update
      */
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, boolean forceLoadData) {
-        // Get the settingsPrefix for this widget from the database
-        WidgetDepartures widgetDepartures = transportManager.getWidget(appWidgetId);
+    private void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                 int appWidgetId, boolean forceLoadData) {
+        // Get the settings for this widget from the database
+        WidgetDepartures widgetDepartures = transportController.getWidget(appWidgetId);
 
         // Instantiate the RemoteViews object for the app widget layout.
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mvv_widget);
@@ -186,9 +169,8 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        if (transportManager == null) {
-            transportManager = new TransportController(context);
-        }
+        // onReceive is the entry point to the widget, so we initialise transportController here.
+        transportController = new TransportController(context);
 
         String action = intent.getAction();
         if (action == null || action.equals(MVVWidget.BROADCAST_RELOAD_ALL)) {
