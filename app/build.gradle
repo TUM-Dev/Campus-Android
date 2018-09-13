@@ -76,7 +76,7 @@ android {
 }
 
 def androidSupportVersion = '27.1.1'
-def retrofitVersion = '2.3.0'
+def retrofitVersion = '2.4.0'
 def tikXmlVersion = '0.8.13'
 
 configurations.all {
