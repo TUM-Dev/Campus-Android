@@ -42,13 +42,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="end|center_vertical"
             android:textColor="@color/sections_gray" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="end|center_vertical"
             android:textColor="@color/sections_gray" />
 
     </TextSwitcher>

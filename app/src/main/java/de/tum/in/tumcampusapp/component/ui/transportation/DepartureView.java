@@ -116,8 +116,7 @@ public class DepartureView extends LinearLayout {
     }
 
     public String getSymbol() {
-        return mSymbolView.getText()
-                          .toString();
+        return mSymbolView.getText().toString();
     }
 
     /**
