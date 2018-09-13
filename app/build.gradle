@@ -151,7 +151,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     // DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
-    // debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
+    // debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 
     // Used for testing
     testImplementation 'junit:junit:4.12'
