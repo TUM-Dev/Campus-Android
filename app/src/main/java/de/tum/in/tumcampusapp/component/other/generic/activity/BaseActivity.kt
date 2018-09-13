@@ -72,15 +72,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
     private fun setUpDrawer() {
         drawerToggle = object : ActionBarDrawerToggle(
                 this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
-            override fun onDrawerClosed(drawerView: View) {
-                super.onDrawerClosed(drawerView)
-                //this@BaseActivity.invalidateOptionsMenu()
-            }
-
-            override fun onDrawerOpened(drawerView: View) {
-                super.onDrawerOpened(drawerView)
-                //this@BaseActivity.invalidateOptionsMenu()
-            }
+            // Free ad space
         }
 
         supportActionBar?.let {

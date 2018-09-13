@@ -98,6 +98,9 @@ object NavigationManager {
         if (isNavigationItem && showDrawer) {
             openNavigationDrawer(current)
             return
+        } else if (isNavigationItem) {
+            current.onBackPressed()
+            return
         }
 
         val upIntent = NavUtils.getParentActivityIntent(current) ?: return
@@ -119,9 +122,10 @@ object NavigationManager {
 
     fun onBackPressed(current: Activity): Boolean {
         val isTopLevel = current::class.java in topLevelActivities
+        val showDrawer = current.intent.extras?.getBoolean(Const.SHOW_DRAWER) ?: false
         val parentName = current.parentActivityIntent.component.className
 
-        if (isTopLevel && parentName == MainActivity::class.java.name) {
+        if (isTopLevel && showDrawer && parentName == MainActivity::class.java.name) {
             val intent = Intent(current, MainActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
