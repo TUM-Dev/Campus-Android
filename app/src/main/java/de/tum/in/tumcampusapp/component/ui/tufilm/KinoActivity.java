@@ -34,6 +34,8 @@ public class KinoActivity extends ProgressActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setBackgroundDrawableResource(R.color.secondary_window_background);
+
         KinoLocalRepository.db = TcaDb.getInstance(this);
 
         KinoViewModel kinoViewModel = new KinoViewModel(

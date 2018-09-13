@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/default_window_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,6 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ic_outline_event_24px"
+                android:drawablePadding="@dimen/material_tiny_padding"
                 android:gravity="center_horizontal"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text_dark_primary"
@@ -77,6 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ic_outline_access_time_24px"
+                android:drawablePadding="@dimen/material_tiny_padding"
                 android:gravity="center_horizontal"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text_dark_primary"
@@ -88,6 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ic_star_black_24dp"
+                android:drawablePadding="@dimen/material_tiny_padding"
                 android:gravity="center_horizontal"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text_dark_primary"
