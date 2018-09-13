@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.api.app;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -22,8 +23,8 @@ import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
-import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
+import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
@@ -31,6 +32,8 @@ import de.tum.in.tumcampusapp.service.FcmIdentificationService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -263,6 +266,7 @@ public class AuthenticationManager {
      * synchronous method!
      * @param uploadStatus
      */
+    @SuppressLint("CheckResult")
     public void uploadObfuscatedIds(UploadStatus uploadStatus) {
         String lrzId = Utils.getSetting(mContext, Const.LRZ_ID, "");
         if (lrzId.isEmpty()) {
@@ -297,8 +301,13 @@ public class AuthenticationManager {
 
         if (doUpload) {
             Utils.log("uploading obfuscated ids: " + upload.toString());
-            TUMCabeStatus status = TUMCabeClient.getInstance(mContext).uploadObfuscatedIds(lrzId, upload).blockingSingle();
-            Utils.log("uplod obfuscated ids status: " + status.getStatus());
+            TUMCabeClient.getInstance(mContext)
+                    .uploadObfuscatedIds(lrzId, upload)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(status -> {
+                        Utils.log("Upload obfuscated IDs status: " + status.getStatus());
+                    }, Utils::log);
         }
     }
 
