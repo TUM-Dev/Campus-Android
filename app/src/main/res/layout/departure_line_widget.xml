@@ -8,22 +8,17 @@
     android:orientation="horizontal"
     android:padding="@dimen/material_small_padding">
 
-    <LinearLayout
-        android:id="@+id/line_symbol_ll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/line_symbol"
-            android:layout_width="40dp"
-            android:layout_height="24dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="U6" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/line_symbol"
+        android:layout_width="40dp"
+        android:layout_height="24dp"
+        android:background="@drawable/rounded_corners_background"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:backgroundTint="@android:color/holo_red_dark"
+        tools:text="U6"
+        tools:textColor="@android:color/white" />
 
     <TextView
         android:id="@+id/line_name"
