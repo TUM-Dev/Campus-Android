@@ -32,6 +32,8 @@ import de.tum.in.tumcampusapp.service.FcmIdentificationService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -299,13 +301,14 @@ public class AuthenticationManager {
         }
 
         if (doUpload) {
-            Utils.log("Uploading obfuscated IDs: " + upload.toString());
-            TUMCabeClient
-                    .getInstance(mContext)
+            Utils.log("uploading obfuscated ids: " + upload.toString());
+            TUMCabeClient.getInstance(mContext)
                     .uploadObfuscatedIds(lrzId, upload)
                     .subscribeOn(Schedulers.io())
-                    .subscribe(status -> Utils.log("Uploaded obfuscated IDs: " + status.getStatus()),
-                               Utils::log);
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(status -> {
+                        Utils.log("Upload obfuscated IDs status: " + status.getStatus());
+                    }, Utils::log);
         }
     }
 

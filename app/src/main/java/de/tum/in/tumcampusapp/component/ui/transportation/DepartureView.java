@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.ui.transportation;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Handler;
 import android.view.Gravity;
@@ -58,7 +59,7 @@ public class DepartureView extends LinearLayout {
         setOrientation(LinearLayout.HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(context);
         if (big) {
             inflater.inflate(R.layout.departure_line_big, this, true);
         } else {
@@ -90,7 +91,7 @@ public class DepartureView extends LinearLayout {
         MVVSymbolView d = new MVVSymbolView(symbol);
         mSymbolView.setTextColor(d.getTextColor());
         mSymbolView.setText(symbol);
-        mSymbolView.setBackgroundDrawable(d);
+        mSymbolView.setBackgroundTintList(ColorStateList.valueOf(d.getBackgroundColor()));
 
         if (highlight) {
             if (big) {
@@ -115,8 +116,7 @@ public class DepartureView extends LinearLayout {
     }
 
     public String getSymbol() {
-        return mSymbolView.getText()
-                          .toString();
+        return mSymbolView.getText().toString();
     }
 
     /**

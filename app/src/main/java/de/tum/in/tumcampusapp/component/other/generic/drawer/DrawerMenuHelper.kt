@@ -22,7 +22,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventsActivity
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.add
@@ -96,7 +95,6 @@ class DrawerMenuHelper(private val activity: Activity) {
                 SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, CafeteriaActivity::class.java),
                 SideNavigationItem(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsActivity::class.java),
                 SideNavigationItem(R.string.roomfinder, R.drawable.ic_outline_location_on_24px, RoomFinderActivity::class.java),
-                SideNavigationItem(R.string.mvv, R.drawable.ic_outline_train_24px, TransportationActivity::class.java),
                 SideNavigationItem(R.string.person_search, R.drawable.ic_outline_people_outline_24px, PersonSearchActivity::class.java, true),
                 SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity::class.java),
                 SideNavigationItem(R.string.events_tickets, R.drawable.ic_outline_event_seat_24px, EventsActivity::class.java),
