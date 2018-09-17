@@ -45,7 +45,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     public static final String FRAGMENT_TAG = "my_preference_fragment";
-    //private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
     private static final String BUTTON_LOGOUT = "button_logout";
     private static final String SETUP_EDUROAM = "card_eduroam_setup";
 
@@ -53,7 +52,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
-        //Load the correct preference category
+        // Load the correct preference category
         setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
 
@@ -66,11 +65,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
             silentSwitch.setEnabled(false);
         }
 
-        //Only do these things if we are in the root of the preferences
+        // Only do these things if we are in the root of the preferences
         if (rootKey == null) {
             // Click listener for preference list entries. Used to simulate a button
             // (since it is not possible to add a button to the preferences screen)
-            //findPreference(BUTTON_CLEAR_CACHE).setOnPreferenceClickListener(this);
             findPreference(BUTTON_LOGOUT).setOnPreferenceClickListener(this);
 
             setSummary("card_default_campus");
@@ -224,11 +222,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             case SETUP_EDUROAM:
                 startActivity(new Intent(getContext(), SetupEduroamActivity.class));
                 break;
-            /*
-            case BUTTON_CLEAR_CACHE:
-                showDialogWithAction(R.string.delete_cache_sure, R.string.delete, ((dialog, i) -> clearCache()));
-                break;
-            */
             case BUTTON_LOGOUT:
                 showLogoutDialog();
                 break;
