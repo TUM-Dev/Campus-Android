@@ -91,6 +91,9 @@
     <string name="extras">Extras</string>
     <string name="open_wizard">Open Startup-Wizard</string>
     <string name="open_wizard_detail">The Startup-Wizard helps you in order to set the basic preferences for accessing TUMonline services and the layout of this App.</string>
+    <string name="account" translatable="false">Account</string>
+    <string name="logout">Log out</string>
+    <string name="logout_message">Are you sure you want to log out?</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="clear_cache_detail">Deletes all data which was downloaded by the TUM Campus App and stored on your device.</string>
     <string name="delete_cache_sure">Are you sure you want to delete all data?</string>

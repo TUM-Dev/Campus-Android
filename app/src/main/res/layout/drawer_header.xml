@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_primary"
+    android:background="@color/tum_light_gray"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat">
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/material_default_padding"
+        android:layout_marginBottom="@dimen/material_default_padding"
+        android:src="@drawable/uhrenturm"
+        app:layout_constraintBottom_toBottomOf="@id/rainbow_bar"
+        app:layout_constraintDimensionRatio="H, 1.3:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImageView"
@@ -17,11 +30,13 @@
         android:layout_marginTop="@dimen/material_default_padding"
         android:layout_marginEnd="@dimen/material_default_padding"
         android:background="@drawable/circle_background"
-        android:src="@drawable/photo_not_available" />
+        android:src="@drawable/photo_not_available"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.button.MaterialButton
         android:id="@+id/loginButton"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/material_default_padding"
@@ -30,6 +45,8 @@
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:cornerRadius="@dimen/material_corner_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileImageView"
         app:strokeColor="@android:color/white" />
 
     <TextView
@@ -41,7 +58,9 @@
         android:layout_marginEnd="@dimen/material_default_padding"
         android:fontFamily="sans-serif-medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@android:color/white"
+        android:textColor="@color/text_dark_primary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginButton"
         tools:text="Name" />
 
     <TextView
@@ -50,9 +69,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/material_default_padding"
         android:layout_marginEnd="@dimen/material_default_padding"
-        android:alpha="0.87"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@android:color/white"
+        android:textColor="@color/text_dark_secondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameTextView"
         tools:text="E-mail" />
 
     <View
@@ -60,12 +80,16 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/material_default_padding"
-        android:background="@color/placeholder" />
+        android:background="@color/placeholder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailTextView" />
 
     <include
         layout="@layout/rainbow_bar"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:layout_marginTop="@dimen/material_default_padding" />
+        android:layout_marginTop="@dimen/material_default_padding"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
