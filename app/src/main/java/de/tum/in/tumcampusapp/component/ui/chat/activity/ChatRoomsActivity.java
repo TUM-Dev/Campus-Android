@@ -97,10 +97,8 @@ public class ChatRoomsActivity
             }
         });
 
-        tabLayout.addTab(tabLayout.newTab()
-                                  .setText(R.string.joined));
-        tabLayout.addTab(tabLayout.newTab()
-                                  .setText(R.string.not_joined));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.joined));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.not_joined));
     }
 
     @Override
@@ -144,32 +142,23 @@ public class ChatRoomsActivity
     }
 
     private void updateDatabase(@NonNull ChatMember currentChatMember) {
-        try {
-            ChatVerification verification =
-                    ChatVerification.Companion.getChatVerification(this, currentChatMember);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
+            try {
+                TUMCabeVerification verification = TUMCabeVerification.create(this, null);
+                if (verification == null) {
+                    runOnUiThread(this::finish);
+                }
 
-            TUMCabeClient
-                    .getInstance(this)
-                    .getMemberRooms(currentChatMember.getId(), verification)
-                    .enqueue(new Callback<List<ChatRoom>>() {
-                        @Override
-                        public void onResponse(@NonNull Call<List<ChatRoom>> call,
-                                               @NonNull Response<List<ChatRoom>> response) {
-                            List<ChatRoom> rooms = response.body();
-                            if (response.isSuccessful() && rooms != null) {
-                                manager.replaceIntoRooms(rooms);
-                            }
-                        }
+                List<ChatRoom> rooms = TUMCabeClient
+                        .getInstance(this)
+                        .getMemberRooms(currentChatMember.getId(), verification);
 
-                        @Override
-                        public void onFailure(@NonNull Call<List<ChatRoom>> call,
-                                              @NonNull Throwable t) {
-                            Utils.log(t);
-                        }
-                    });
-        } catch (NoPrivateKey e) {
-            this.runOnUiThread(this::finish);
-        }
+                manager.replaceIntoRooms(rooms);
+            } catch (IOException e) {
+                Utils.log(e);
+            }
+        });
     }
 
     /**
@@ -242,7 +231,7 @@ public class ChatRoomsActivity
     private void newChatRoom() {
         // Set an EditText view to get user input
         final View view = LayoutInflater.from(this)
-                                        .inflate(R.layout.dialog_input, null);
+                .inflate(R.layout.dialog_input, null);
         final EditText input = view.findViewById(R.id.inputEditText);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -250,8 +239,7 @@ public class ChatRoomsActivity
                 .setMessage(R.string.new_chat_room_desc)
                 .setView(view)
                 .setPositiveButton(R.string.create, (dialogInterface, whichButton) -> {
-                    String value = input.getText()
-                                        .toString();
+                    String value = input.getText().toString();
                     String randId = Integer.toHexString((int) (Math.random() * 4096));
                     createOrJoinChatRoom(randId + ':' + value);
                 })
@@ -259,8 +247,7 @@ public class ChatRoomsActivity
                 .create();
 
         if (dialog.getWindow() != null) {
-            dialog.getWindow()
-                  .setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
 
         dialog.show();

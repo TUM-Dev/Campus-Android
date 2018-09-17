@@ -130,18 +130,19 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Try to restore already joined chat rooms from server
         try {
-            List<ChatRoom> rooms = TUMCabeClient
-                    .getInstance(this)
-                    .getMemberRooms(member.getId(), ChatVerification.Companion.getChatVerification(this, member))
-                    .execute()
-                    .body();
+            TUMCabeVerification verification = TUMCabeVerification.create(this, null);
+            List<ChatRoom> rooms = tumCabeClient.getMemberRooms(member.getId(), verification);
             new ChatRoomController(this).replaceIntoRooms(rooms);
 
-            //Store that this key was activated
-            Utils.setSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
+            // upload obfuscated ids now that we have a member
+            UploadStatus uploadStatus = TUMCabeClient.getInstance(this)
+                    .getUploadStatus(Utils.getSetting(this, Const.LRZ_ID, ""));
+            if (uploadStatus != null) {
+                new AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
+            }
 
             return member;
-        } catch (IOException | NoPrivateKey e) {
+        } catch (IOException e) {
             Utils.log(e);
         }
 
