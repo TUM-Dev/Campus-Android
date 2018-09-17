@@ -78,15 +78,16 @@ public class StartupActivity extends AppCompatActivity {
 
                 // use the other logo and invert the setting
                 boolean rainbowEnabled = Utils.getSettingBool(this, Const.RAINBOW_MODE, false);
+                rainbowEnabled = !rainbowEnabled;
                 ImageView tumLogo = findViewById(R.id.startupTumLogo);
 
                 if (rainbowEnabled) {
-                    tumLogo.setImageResource(R.drawable.tum_logo);
-                } else {
                     tumLogo.setImageResource(R.drawable.tum_logo_rainbow);
+                } else {
+                    tumLogo.setImageResource(R.drawable.tum_logo_blue);
                 }
 
-                Utils.setSetting(this, Const.RAINBOW_MODE, !rainbowEnabled);
+                Utils.setSetting(this, Const.RAINBOW_MODE, rainbowEnabled);
             }
         });
         background.setSoundEffectsEnabled(false);
