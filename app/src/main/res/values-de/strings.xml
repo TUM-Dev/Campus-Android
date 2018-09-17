@@ -639,4 +639,6 @@ Signatur: %5$s</string>
 
     <string name="new_items_format_string">%d neue Meldungen</string>
     <string name="including_format_string">inklusive %s</string>
+    <string name="logout">Abmelden</string>
+    <string name="logout_message">Bist du sicher, dass du dich abmelden willst?</string>
 </resources>

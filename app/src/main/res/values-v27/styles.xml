@@ -8,7 +8,7 @@
         <item name="android:windowBackground">@color/default_window_background</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="android:textCursorDrawable">@drawable/cursor_text_field</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
 
         <!-- Transparent status bar -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

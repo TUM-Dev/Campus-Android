@@ -1,6 +1,8 @@
 package de.tum.in.tumcampusapp.component.other.settings;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -43,14 +45,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     public static final String FRAGMENT_TAG = "my_preference_fragment";
-    private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
+    private static final String BUTTON_LOGOUT = "button_logout";
     private static final String SETUP_EDUROAM = "card_eduroam_setup";
 
     private FragmentActivity mContext;
 
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
-        //Load the correct preference category
+        // Load the correct preference category
         setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
 
@@ -63,11 +65,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
             silentSwitch.setEnabled(false);
         }
 
-        //Only do these things if we are in the root of the preferences
+        // Only do these things if we are in the root of the preferences
         if (rootKey == null) {
             // Click listener for preference list entries. Used to simulate a button
             // (since it is not possible to add a button to the preferences screen)
-            findPreference(BUTTON_CLEAR_CACHE).setOnPreferenceClickListener(this);
+            findPreference(BUTTON_LOGOUT).setOnPreferenceClickListener(this);
 
             setSummary("card_default_campus");
             setSummary("silent_mode_set_to");
@@ -220,19 +222,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
             case SETUP_EDUROAM:
                 startActivity(new Intent(getContext(), SetupEduroamActivity.class));
                 break;
-            case BUTTON_CLEAR_CACHE:
-                // This button invokes the clear cache method
-                AlertDialog dialog = new AlertDialog.Builder(mContext)
-                        .setMessage(R.string.delete_cache_sure)
-                        .setPositiveButton(R.string.delete, (dialogInterface, i) -> clearCache())
-                        .setNegativeButton(R.string.cancel, null)
-                        .create();
-
-                if (dialog.getWindow() != null) {
-                    dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
-                }
-
-                dialog.show();
+            case BUTTON_LOGOUT:
+                showLogoutDialog();
                 break;
             default:
                 return false;
@@ -241,24 +232,52 @@ public class SettingsFragment extends PreferenceFragmentCompat
         return true;
     }
 
-    /**
-     * Clears all downloaded data from SD card and database
-     */
-    private void clearCache() {
-        TcaDb.resetDb(mContext);
+    private void showLogoutDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(mContext)
+                .setMessage(R.string.logout_message)
+                .setPositiveButton(R.string.logout, ((dialogInterface, i) -> logout()))
+                .setNegativeButton(R.string.cancel, null)
+                .create();
 
-        // delete local calendar
-        Utils.setSetting(mContext, Const.SYNC_CALENDAR, false);
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            CalendarController.deleteLocalCalendar(mContext);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
 
-        Utils.showToast(mContext, R.string.success_clear_cache);
+        dialog.show();
+    }
+
+    private void logout() {
+        clearData();
         Utils.setSetting(mContext, Const.EVERYTHING_SETUP, false);
 
         mContext.finish();
         startActivity(new Intent(mContext, StartupActivity.class));
+    }
+
+    private void clearData() {
+        TcaDb.resetDb(mContext);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        sharedPrefs.edit().clear().apply();
+
+        // Remove all notifications that are currently shown
+        NotificationManager notificationManager =
+                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancelAll();
+        }
+
+        int readCalendar = ContextCompat.checkSelfPermission(
+                requireActivity(), Manifest.permission.READ_CALENDAR);
+        int writeCalendar = ContextCompat.checkSelfPermission(
+                requireActivity(), Manifest.permission.WRITE_CALENDAR);
+
+        // Delete local calendar
+        Utils.setSetting(mContext, Const.SYNC_CALENDAR, false);
+        if (readCalendar == PackageManager.PERMISSION_GRANTED &&
+                writeCalendar == PackageManager.PERMISSION_GRANTED) {
+            CalendarController.deleteLocalCalendar(mContext);
+        }
     }
 
 }
