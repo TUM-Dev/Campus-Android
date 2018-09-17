@@ -1,12 +1,14 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatButton;
+import android.support.design.button.MaterialButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -41,7 +43,7 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
     private String lrzId;
 
     private EditText lrzIdEditText;
-    private AppCompatButton nextButton;
+    private MaterialButton nextButton;
 
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
@@ -54,11 +56,22 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
         disableRefresh();
         findViewById(R.id.wizard_start_layout).requestFocus();
 
+        if (getSupportActionBar() != null) {
+            Drawable closeIcon = ContextCompat.getDrawable(this, R.drawable.ic_clear);
+            if (closeIcon != null) {
+                int color = ContextCompat.getColor(this, R.color.color_primary);
+                closeIcon.setTint(color);
+            }
+            getSupportActionBar().setHomeAsUpIndicator(closeIcon);
+        }
+
         nextButton = findViewById(R.id.next_button);
 
         lrzIdEditText = findViewById(R.id.lrz_id);
         lrzIdEditText.addTextChangedListener(this);
-        lrzIdEditText.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
+
+        String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
+        lrzIdEditText.setText(lrzId);
     }
 
     @Override
@@ -91,17 +104,23 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
         // is access token already set?
         if (AccessTokenManager.hasValidAccessToken(this)) {
             // show Dialog first
-            new AlertDialog.Builder(this)
+            AlertDialog dialog = new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.error_access_token_already_set_generate_new))
-                    .setPositiveButton(getString(R.string.generate_new_token), (dialog, which) -> {
+                    .setPositiveButton(getString(R.string.generate_new_token), (dialogInterface, which) -> {
                         AuthenticationManager am =
                                 new AuthenticationManager(WizNavStartActivity.this);
                         am.clearKeys();
                         am.generatePrivateKey(null);
                         requestNewToken(lrzId);
                     })
-                    .setNegativeButton(getString(R.string.cancel), (dialog, which) -> openNextWizardStep())
-                    .show();
+                    .setNegativeButton(getString(R.string.cancel), (dialogInterface, which) -> openNextWizardStep())
+                    .create();
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            }
+
+            dialog.show();
         } else {
             requestNewToken(lrzId);
         }
@@ -180,11 +199,17 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
             messageResId = R.string.error_access_token_could_not_be_generated;
         }
 
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage(messageResId)
                 .setPositiveButton(R.string.ok, null)
                 .setCancelable(true)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     /**

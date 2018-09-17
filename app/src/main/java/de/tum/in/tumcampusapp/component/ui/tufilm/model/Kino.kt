@@ -5,6 +5,8 @@ import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import java.util.*
 
 /**
  * Kino Constructor
@@ -43,6 +45,27 @@ data class Kino(@PrimaryKey
                 var created: DateTime = DateTime(),
                 var link: String = "") {
 
+    val formattedDate: String
+        get() {
+            val formatter = DateTimeFormat.mediumDate().withLocale(Locale.getDefault())
+            return formatter.print(date)
+        }
+
+    val formattedDescription: String
+        get() {
+            return description
+                    .replace("\n", "")
+                    .replace("\r", "\r\n")
+                    .removeSuffix("\r\n")
+        }
+
+    val trailerSearchUrl: String
+        get() {
+            val actualTitle = title.split(": ")[1]
+            return "https://www.youtube.com/results?search_query=Trailer $actualTitle".replace(" ", "+")
+        }
+
     fun isFutureMovie() = date.isAfterNow
+
 }
 

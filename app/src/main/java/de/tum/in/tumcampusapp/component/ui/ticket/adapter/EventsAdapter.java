@@ -3,8 +3,8 @@ package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -88,7 +88,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         TextView titleTextView;
         TextView localityTextView;
         TextView dateTextView;
-        AppCompatButton ticketButton;
+        MaterialButton ticketButton;
 
         public EventViewHolder(View view) {
             super(view);

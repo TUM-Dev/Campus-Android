@@ -1,13 +1,13 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v7.widget.AppCompatButton;
+import android.support.design.button.MaterialButton;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.transition.TransitionManager;
@@ -27,7 +27,6 @@ import com.stripe.android.model.Source;
 import com.stripe.android.model.SourceCardData;
 import com.stripe.android.view.PaymentMethodsActivity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class StripePaymentActivity extends BaseActivity {
     private FrameLayout loadingLayout;
     private EditText cardholderEditText;
     private ViewSwitcher selectMethodSwitcher;
-    private AppCompatButton purchaseButton;
+    private MaterialButton purchaseButton;
 
     private PaymentSession paymentSession;
     private boolean didSelectPaymentMethod;
@@ -191,11 +190,17 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
     private void showError(String message) {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, null)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     @Override

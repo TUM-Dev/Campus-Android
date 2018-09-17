@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview.card
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.preference.PreferenceManager
@@ -10,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -23,7 +23,8 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 abstract class Card(
         val cardType: Int,
         protected var context: Context,
-        val settingsPrefix: String = "") : Comparable<Card> {
+        val settingsPrefix: String = ""
+) : Comparable<Card> {
 
     // UI Elements
     protected var mCard: View? = null
@@ -34,7 +35,7 @@ abstract class Card(
     protected var mShowStart = Utils.getSettingBool(context, settingsPrefix + "_start", true)
 
     open fun getId(): Int {
-        return 0;
+        return 0
     }
 
     /**
@@ -49,11 +50,10 @@ abstract class Card(
         set(position) =
             Utils.setSetting(context, "${this.javaClass.simpleName}${CARD_POSITION_PREFERENCE_SUFFIX}", position)
 
-
     /**
-     * @return Should return the intent that should be launched if the card or the notification gets clicked, null if nothing should happen
+     * Returns the [NavigationDestination] when the card is clicked, or null if nothing should happen
      */
-    open fun getIntent(): Intent? {
+    open fun getNavigationDestination(): NavigationDestination? {
         return null
     }
 

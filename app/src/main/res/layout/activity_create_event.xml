@@ -25,15 +25,16 @@
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/material_default_padding">
+                android:layout_margin="@dimen/material_default_padding"
+                android:hint="@string/event_title">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/event_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/event_title"
                     android:imeOptions="actionDone"
                     android:inputType="textAutoComplete|textCapSentences"
                     android:maxLines="1"
@@ -66,8 +67,8 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center_vertical"
-                    android:paddingEnd="@dimen/material_default_padding"
                     android:paddingStart="@dimen/material_default_padding"
+                    android:paddingEnd="@dimen/material_default_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     tools:text="11:30" />
 
@@ -97,8 +98,8 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center_vertical"
-                    android:paddingEnd="@dimen/material_default_padding"
                     android:paddingStart="@dimen/material_default_padding"
+                    android:paddingEnd="@dimen/material_default_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     tools:text="12:30" />
 
@@ -107,10 +108,12 @@
         </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/material_default_padding"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:hint="@string/comment">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/event_description"
@@ -118,15 +121,15 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:gravity="top"
-                android:hint="@string/comment"
                 android:imeOptions="normal"
                 android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
                 android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.v7.widget.AppCompatButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/create_event_button"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -134,8 +137,10 @@
             android:alpha="0.5"
             android:enabled="false"
             android:text="@string/save"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            app:backgroundTint="@color/color_primary" />
+            app:backgroundTint="@color/color_primary"
+            app:cornerRadius="@dimen/material_corner_radius" />
 
     </LinearLayout>
 

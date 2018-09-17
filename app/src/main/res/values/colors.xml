@@ -20,25 +20,38 @@
     <color name="tum_A400">#2A7FC8</color>
     <color name="tum_A700">#004C8E</color>
 
+    <color name="tum_light_gray">#F4F4F4</color>
+    <color name="tum_dark_gray">#E6E6E6</color>
+    <color name="tum_blue">@color/tum_500</color>
+
     <color name="facebook">#3B5998</color>
     <color name="github">#24292E</color>
     <color name="email">#757575</color>
 
     <color name="placeholder">#E2E2E2</color>
     <color name="list_divider">#EEEEEE</color>
-    <color name="spinner_background">#F2F2F2</color>
-    <color name="spinner_border">#BDBDBD</color>
+
+    <color name="spinner_background">#FFFFFF</color>
+    <color name="spinner_border">#E0E0E0</color>
+
+    <color name="input_layout_border">@color/color_primary</color>
+
+    <color name="navigation_drawer_item_background">#EDEDED</color>
+    <color name="navigation_drawer_icon_tint">#757575</color>
+    <color name="navigation_drawer_item_text">#222222</color>
 
     <color name="study_room_free">#C8E6C9</color>
     <color name="study_room_occupied">#FFCDD2</color>
 
+    <color name="status_bar_background">#F2F2F2</color>
     <color name="navigation_bar_divider">#E0E0E0</color>
     
     <!-- Default colors -->
     <color name="text_dark_primary">#DE000000</color> <!--DE for 87% opacity-->
     <color name="text_dark_secondary">#8A000000</color> <!--8A for 54% opacity-->
 
-    <color name="default_window_background">#FAFAFA</color>
+    <color name="default_window_background">@android:color/white</color>
+    <color name="secondary_window_background">#F2F2F2</color>
     <color name="semitransparent_dark_background">#4D000000</color>
 
     <!-- official TUM accent colors (style guide) -->
@@ -53,7 +66,7 @@
     <color name="sections_gray">#a5a5a5</color>
 
     <color name="color_primary">@color/tum_500</color>
-    <color name="color_primary_dark">@color/tum_800</color>
+    <color name="color_primary_dark">@color/tum_700</color>
 
     <color name="card_pressed">#fff8f8f8</color>
     <color name="card_activated">@color/tum_100</color>

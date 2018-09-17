@@ -20,7 +20,7 @@
                 android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/color_primary"
+                android:background="@android:color/white"
                 android:elevation="12dp"
                 android:theme="@style/TumToolbar"
                 app:popupTheme="@style/TumToolbarPopUp">
@@ -96,34 +96,38 @@
                 android:visibility="visible"
                 tools:text="1.0" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/showListButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/material_tiny_padding"
-                android:drawablePadding="@dimen/material_small_padding"
                 android:drawableStart="@drawable/ic_list_bulleted"
+                android:drawablePadding="@dimen/material_small_padding"
                 android:gravity="center"
                 android:onClick="toggleInLandscape"
                 android:text="@string/show_list"
                 android:textColor="@android:color/white"
-                app:backgroundTint="@color/color_primary" />
+                app:backgroundTint="@color/color_primary"
+                app:cornerRadius="@dimen/material_corner_radius" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/showChartButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/material_tiny_padding"
-                android:drawablePadding="@dimen/material_small_padding"
                 android:drawableStart="@drawable/ic_pie_chart"
+                android:drawablePadding="@dimen/material_small_padding"
                 android:gravity="center"
                 android:onClick="toggleInLandscape"
                 android:text="@string/show_chart"
                 android:textColor="@android:color/white"
                 android:visibility="gone"
-                app:backgroundTint="@color/color_primary" />
+                app:backgroundTint="@color/color_primary"
+                app:cornerRadius="@dimen/material_corner_radius" />
 
         </LinearLayout>
 

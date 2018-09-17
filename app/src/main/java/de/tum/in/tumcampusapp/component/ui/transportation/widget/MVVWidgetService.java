@@ -80,7 +80,7 @@ public class MVVWidgetService extends RemoteViewsService {
             rv.setInt(R.id.line_symbol_background, "setColorFilter", d.getBackgroundColor());
 
             // Setup the line name and the departure time
-            rv.setTextViewText(R.id.line_name, currentItem.getDirection());
+            rv.setTextViewText(R.id.line_name, currentItem.getFormattedDirection());
             rv.setTextViewText(R.id.departure_time, currentItem.getCalculatedCountDown() + " min");
 
             return rv;

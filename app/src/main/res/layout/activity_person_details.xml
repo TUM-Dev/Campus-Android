@@ -7,96 +7,100 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar" />
 
-        <LinearLayout
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <include
-                layout="@layout/layout_all_errors"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <ScrollView
-                android:id="@+id/scrollView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
+                <include
+                    layout="@layout/layout_all_errors"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent" />
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/pictureImageView"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginTop="24dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/photo_not_available"
-                        app:civ_border_width="0dp"
-                        app:civ_circle_background_color="@color/text_light_gray" />
+                <ScrollView
+                    android:id="@+id/scrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
-                    <TextView
-                        android:id="@+id/nameTextView"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:gravity="center_horizontal"
-                        android:padding="@dimen/padding_default"
-                        android:textSize="@dimen/large_text_size"
-                        tools:text="Mr. Prof. Dr. Bernd Brügge" />
+                        android:orientation="vertical">
 
-                    <View
-                        android:id="@+id/dividerNameGroups"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-                        android:background="?android:attr/listDivider" />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/pictureImageView"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginBottom="16dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/photo_not_available"
+                            app:civ_border_width="0dp"
+                            app:civ_circle_background_color="@color/text_light_gray" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/groupsRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:overScrollMode="never" />
+                        <TextView
+                            android:id="@+id/nameTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_horizontal"
+                            android:padding="@dimen/padding_default"
+                            android:textSize="@dimen/large_text_size"
+                            tools:text="Mr. Prof. Dr. Bernd Brügge" />
 
-                    <View
-                        android:id="@+id/dividerGroupsContactItems"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-                        android:background="?android:attr/listDivider" />
+                        <View
+                            android:id="@+id/dividerNameGroups"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="?android:attr/listDivider" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/contactItemsRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:overScrollMode="never" />
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/groupsRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            android:overScrollMode="never" />
 
-                </LinearLayout>
+                        <View
+                            android:id="@+id/dividerGroupsContactItems"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="?android:attr/listDivider" />
 
-            </ScrollView>
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/contactItemsRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            android:overScrollMode="never" />
 
-        </LinearLayout>
+                    </LinearLayout>
+
+                </ScrollView>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
-
-    <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

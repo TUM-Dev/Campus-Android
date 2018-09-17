@@ -1,5 +1,4 @@
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
 
@@ -12,25 +11,31 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/material_small_padding"
+            tools:ignore="UselessParent">
 
             <TextView
                 android:id="@+id/cafeteriaNameTextView"
+                style="@style/CardTitle"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                tools:text="Title"/>
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1"
+                tools:text="Title" />
 
             <TextView
                 android:id="@+id/menuDateTextView"
+                style="@style/CardDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                tools:text="Date"/>
+                tools:text="Date" />
 
         </LinearLayout>
 
+        <!-- Cafeteria menu items will be inserted here -->
+
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</android.support.design.card.MaterialCardView>

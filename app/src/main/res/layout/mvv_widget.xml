@@ -43,7 +43,8 @@
             android:layout_marginEnd="@dimen/material_tiny_padding"
             android:background="@android:color/transparent"
             android:padding="12dp"
-            android:src="@drawable/ic_action_settings" />
+            android:src="@drawable/ic_outline_settings_24px"
+            android:tint="@android:color/white" />
 
     </LinearLayout>
 

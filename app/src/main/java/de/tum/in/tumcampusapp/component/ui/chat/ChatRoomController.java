@@ -164,7 +164,8 @@ public class ChatRoomController implements ProvidesCard {
             if (Utils.getSettingBool(mContext, Const.AUTO_JOIN_NEW_ROOMS, false)) {
                 TUMCabeClient client = TUMCabeClient.getInstance(mContext);
                 List<String> newRooms = this.getNewUnjoined();
-                ChatMember currentChatMember = Utils.getSetting(mContext, Const.CHAT_MEMBER, ChatMember.class);
+                ChatMember currentChatMember = Utils.getSetting(
+                        mContext, Const.CHAT_MEMBER, ChatMember.class);
 
                 for (String roomId : newRooms) {
                     // Join chat room

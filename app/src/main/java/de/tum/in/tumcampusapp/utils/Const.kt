@@ -160,12 +160,14 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
 
-    const val KEY_NOTIFICATION_TYPE_ID = "type_id"
-
     const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_OJHHpeotVOpaRO4veynROu18"
     const val KEY_EVENT = "event"
     const val KEY_EVENT_ID = "eventId"
     const val KEY_CARD_HOLDER = "cardholder"
     const val KEY_TICKET_PRICE = "ticketPrice"
     const val KEY_TICKET_HISTORY = "ticketHistory"
+
+    const val SHOW_DRAWER = "showDrawer"
+
+    const val KEY_NOTIFICATION_TYPE_ID = "type_id"
 }

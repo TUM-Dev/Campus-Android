@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
-import com.alamkanak.weekview.WeekViewEvent;
+import com.alamkanak.weekview.WeekViewDisplayable;
 import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
@@ -34,7 +34,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 
 public class WeekViewFragment extends Fragment implements MonthLoader.MonthChangeListener {
 
-    private final SparseArray<List<WeekViewEvent>> loadedEvents = new SparseArray<>();
+    private final SparseArray<List<WeekViewDisplayable>> loadedEvents = new SparseArray<>();
 
     private String roomApiCode;
     private WeekView mWeekView;
@@ -55,7 +55,7 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
     }
 
     @Override
-    public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
+    public List<WeekViewDisplayable> onMonthChange(int newYear, int newMonth) {
         if (!isLoaded(newYear, newMonth)) {
             loadEventsInBackground(newYear, newMonth);
             return new ArrayList<>();
@@ -83,7 +83,7 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
             String endTime = format.print(end);
 
             //Convert to the proper type
-            final List<WeekViewEvent> events = fetchEventList(roomApiCode, startTime, endTime);
+            final List<WeekViewDisplayable> events = fetchEventList(roomApiCode, startTime, endTime);
 
             //Finish loading
             context.runOnUiThread(() -> {
@@ -118,8 +118,8 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
         return loadedEvents.get(calculateLoadedKey(year, month)) != null;
     }
 
-    private List<WeekViewEvent> fetchEventList(String roomId, String startDate, String endDate) {
-        List<WeekViewEvent> events = new ArrayList<>();
+    private List<WeekViewDisplayable> fetchEventList(String roomId, String startDate, String endDate) {
+        List<WeekViewDisplayable> events = new ArrayList<>();
         try {
             Optional<List<RoomFinderSchedule>> result = Optional.of(TUMCabeClient.getInstance(context)
                     .fetchSchedule(roomId, startDate, endDate));

@@ -1,27 +1,21 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <!-- The toolbar aka SupportActionBar -->
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <include
         layout="@layout/layout_all_errors"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/pager_title_strip"
-            style="@style/SectionHeadline"
-            android:text="@string/startup_wizard_uppercase"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
@@ -40,38 +34,42 @@
                     android:padding="@dimen/material_default_padding">
 
                     <TextView
-                        style="?android:attr/listSeparatorTextViewStyle"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
                         android:text="@string/step_2"
-                        android:textColor="@color/text_light_gray"/>
+                        android:textAllCaps="false"
+                        android:textColor="@color/color_primary"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="2dp"
-                        android:text="@string/need_to_enable"/>
+                        android:layout_marginTop="@dimen/material_small_padding"
+                        android:lineSpacingMultiplier="1.1"
+                        android:text="@string/need_to_enable"
+                        android:textSize="15sp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingBottom="2dp"
-                        android:paddingTop="2dp"
-                        android:src="@drawable/tokenmanagement"/>
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:src="@drawable/tokenmanagement" />
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingBottom="4dp"
-                        android:paddingTop="4dp"
-                        android:src="@drawable/wizz_activate_token"/>
+                        android:layout_marginTop="@dimen/material_small_padding"
+                        android:src="@drawable/wizz_activate_token" />
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/wizz_activate_rights"/>
+                        android:layout_marginTop="@dimen/material_small_padding"
+                        android:src="@drawable/wizz_activate_rights" />
 
                 </LinearLayout>
 
@@ -83,34 +81,43 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"/>
+            android:background="?android:attr/listDivider" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_gravity="end"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginTop="@dimen/material_small_padding"
-            android:layout_marginBottom="@dimen/material_small_padding"
+            android:layout_gravity="end"
+            android:clipChildren="false"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/open_tum_online_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/material_small_padding"
+                android:layout_marginEnd="@dimen/material_small_padding"
+                android:layout_marginBottom="@dimen/material_small_padding"
                 android:onClick="onClickTUMOnline"
                 android:text="@string/open_tum_online"
-                android:textColor="@color/color_primary"/>
+                android:textAllCaps="false"
+                android:textColor="@color/color_primary"
+                app:cornerRadius="@dimen/material_corner_radius" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
                 android:id="@+id/next_button"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/material_small_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_small_padding"
                 android:onClick="onClickNext"
                 android:text="@string/button_next"
+                android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                app:backgroundTint="@color/color_primary"/>
+                app:backgroundTint="@color/color_primary"
+                app:cornerRadius="@dimen/material_corner_radius" />
 
         </LinearLayout>
 

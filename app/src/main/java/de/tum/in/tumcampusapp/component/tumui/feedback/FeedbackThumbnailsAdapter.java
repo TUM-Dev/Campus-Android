@@ -1,9 +1,9 @@
 package de.tum.in.tumcampusapp.component.tumui.feedback;
 
-import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,26 +71,23 @@ public class FeedbackThumbnailsAdapter extends RecyclerView.Adapter<FeedbackThum
             viewing = (int) view.getTag();
             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
 
-            LinearLayout layout = (LinearLayout) LayoutInflater.from(view.getContext())
-                                                               .inflate(R.layout.picture_dialog, null);
+            LinearLayout layout =
+                    (LinearLayout) View.inflate(view.getContext(), R.layout.picture_dialog, null);
 
-            Bitmap thumb = thumbs.get(viewing);
-            ImageView imgView;
-            if (thumb.getWidth() < thumb.getHeight()) {
-                imgView = layout.findViewById(R.id.feedback_big_image_portrait);
-            } else {
-                imgView = layout.findViewById(R.id.feedback_big_image_land);
-            }
-            imgView.setVisibility(View.VISIBLE);
+            ImageView imgView = layout.findViewById(R.id.feedback_big_image);
             imgView.setImageURI(Uri.fromFile(new File(paths.get(viewing))));
 
             builder.setView(layout);
             builder.setNegativeButton(R.string.cancel, null);
             builder.setPositiveButton(R.string.feedback_remove_image, (dialogInterface, i) -> {
                 removeImage();
-                dialogInterface.cancel();
             });
-            builder.show();
+
+            AlertDialog dialog = builder.create();
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            }
+            dialog.show();
         });
     }
 

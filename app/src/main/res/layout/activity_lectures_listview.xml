@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,17 +20,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:textColor="@color/tum_300"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/text_dark_primary"
             android:textSize="18sp"
-            android:textStyle="bold"
-            tools:text="Lecture"/>
+            tools:text="Lecture" />
 
         <TextView
             android:id="@+id/typeTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:text="Type"/>
+            tools:text="Type"
+            tools:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,13 +45,14 @@
                 android:layout_margin="3dp"
                 android:background="@drawable/unread_messages_bg"
                 android:gravity="center"
-                android:paddingBottom="2dp"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:paddingTop="2dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="2dp"
                 android:textColor="@android:color/white"
                 android:visibility="gone"
-                tools:text="Unread messages"/>
+                tools:text="Unread messages"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/professorTextView"
@@ -59,7 +60,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                tools:text="Professor"/>
+                android:textColor="@color/text_dark_secondary"
+                android:textSize="16sp"
+                tools:text="Professor" />
 
         </LinearLayout>
 
@@ -83,24 +86,25 @@
             android:gravity="end"
             android:maxLines="1"
             android:visibility="visible"
-            tools:text="…"/>
+            tools:text="…" />
 
         <TextView
             android:id="@+id/membersTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background="@color/tum_300"
-            android:drawableEnd="@drawable/ic_users_white"
+            android:background="@drawable/rounded_corners_background"
+            android:backgroundTint="@color/tum_300"
+            android:drawableEnd="@drawable/ic_outline_people_outline_24px_white"
             android:drawablePadding="3dp"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:paddingBottom="@dimen/padding_chat"
             android:paddingLeft="@dimen/padding_default"
-            android:paddingRight="@dimen/padding_default"
             android:paddingTop="@dimen/padding_chat"
+            android:paddingRight="@dimen/padding_default"
+            android:paddingBottom="@dimen/padding_chat"
             android:textColor="@android:color/white"
-            android:textStyle="bold"
-            tools:text="Members"/>
+            tools:text="Members" />
 
     </LinearLayout>
 

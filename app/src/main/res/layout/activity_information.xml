@@ -6,96 +6,113 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- The main content view -->
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:orientation="vertical">
 
-        <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar" />
 
-        <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="fill_vertical"
-            android:fillViewport="true"
-            android:padding="@dimen/padding_default"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:clipChildren="false"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:autoLink="all"
+                android:lineSpacingMultiplier="1.1"
+                android:text="@string/app_info_text"
+                android:textSize="15sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autoLink="all"
-                    android:text="@string/app_info_text" />
+            <android.support.design.button.MaterialButton
+                android:id="@+id/button_facebook"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:text="@string/facebook"
+                android:textAllCaps="false"
+                app:cornerRadius="@dimen/material_corner_radius"
+                app:icon="@drawable/ic_facebook_white" />
 
-                <Button
-                    android:id="@+id/button_facebook"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_facebook_white"
-                    android:text="@string/facebook" />
+            <android.support.design.button.MaterialButton
+                android:id="@+id/button_github"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:text="@string/github_contribute"
+                android:textAllCaps="false"
+                app:cornerRadius="@dimen/material_corner_radius"
+                app:icon="@drawable/ic_github_white" />
 
-                <Button
-                    android:id="@+id/button_github"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_github_white"
-                    android:text="@string/github_contribute" />
+            <android.support.design.button.MaterialButton
+                android:id="@+id/button_privacy"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:text="@string/privacy_policy"
+                android:textAllCaps="false"
+                app:cornerRadius="@dimen/material_corner_radius" />
 
-                <Button
-                    android:id="@+id/button_privacy"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/privacy_policy" />
+            <android.support.design.button.MaterialButton
+                android:id="@+id/button_chat_terms"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:text="@string/open_chat_terms"
+                android:textAllCaps="false"
+                app:cornerRadius="@dimen/material_corner_radius" />
 
-                <Button
-                    android:id="@+id/button_chat_terms"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/open_chat_terms" />
+            <android.support.design.button.MaterialButton
+                android:id="@+id/button_licenses"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:text="@string/licences"
+                android:textAllCaps="false"
+                app:cornerRadius="@dimen/material_corner_radius" />
 
-                <Button
-                    android:id="@+id/button_licenses"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/licences" />
+            <TextView
+                android:id="@+id/txt_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:autoLink="all"
+                android:clickable="true"
+                android:focusable="true"
+                android:lineSpacingMultiplier="1.1"
+                android:text="@string/add_info"
+                android:textSize="@dimen/large_text_size" />
 
+            <TableLayout
+                android:id="@+id/debugInfos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:visibility="invisible" />
 
-                <TextView
-                    android:id="@+id/txt_version"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autoLink="all"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="@string/add_info"
-                    android:textSize="@dimen/large_text_size" />
+        </LinearLayout>
 
-                <TableLayout
-                    android:id="@+id/debugInfos"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible" />
-
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
-
-    </android.support.design.widget.CoordinatorLayout>
-
-    <!-- The navigation drawer -->
-    <include layout="@layout/navigation_drawer" />
+    </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

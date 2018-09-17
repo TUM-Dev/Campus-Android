@@ -1,21 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- The toolbar aka SupportActionBar -->
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <include
         layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
-
-    <TextView
-        android:id="@+id/pager_title_strip"
-        style="@style/SectionHeadline"
-        android:text="@string/startup_wizard_uppercase"/>
+        android:layout_height="fill_parent" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/ptr_layout"
@@ -25,22 +20,24 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/divider">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="@dimen/padding_default">
+                android:padding="@dimen/material_small_padding">
 
                 <TextView
-                    style="?android:attr/listSeparatorTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_small_padding"
+                    android:layout_marginTop="@dimen/material_small_padding"
+                    android:fontFamily="sans-serif-medium"
                     android:text="@string/step_3"
-                    android:textColor="@color/text_light_gray"/>
-
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_primary"
+                    android:textSize="15sp" />
 
                 <CheckBox
                     android:id="@+id/chk_silent_mode"
@@ -48,14 +45,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/silence_phone"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_default"
-                    android:text="@string/set_silent_mode"/>
-
+                    android:text="@string/set_silent_mode"
+                    android:textSize="15sp" />
 
                 <CheckBox
                     android:id="@+id/chk_group_chat"
@@ -63,21 +60,25 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/lecture_chat"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_default"
-                    android:text="@string/set_lecture_chat"/>
+                    android:text="@string/set_lecture_chat"
+                    android:textSize="15sp" />
 
-                <android.support.v7.widget.AppCompatButton
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:textColor="@color/color_primary"
+                <android.support.design.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_small_padding"
                     android:onClick="onClickTerms"
-                    android:text="@string/open_chat_terms"/>
+                    android:text="@string/open_chat_terms"
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_primary"
+                    app:cornerRadius="@dimen/material_corner_radius" />
 
                 <CheckBox
                     android:id="@+id/chk_bug_reports"
@@ -86,14 +87,15 @@
                     android:layout_marginTop="16dp"
                     android:checked="true"
                     android:text="@string/bug_reports"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_default"
-                    android:text="@string/set_bug_reports"/>
+                    android:text="@string/set_bug_reports"
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -105,19 +107,22 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?android:attr/listDivider"/>
+        android:background="?android:attr/listDivider" />
 
-    <android.support.v7.widget.AppCompatButton
+    <android.support.design.button.MaterialButton
         android:id="@+id/finish_button"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/material_default_padding"
-        android:layout_marginTop="@dimen/material_small_padding"
-        android:layout_marginBottom="@dimen/material_small_padding"
         android:layout_gravity="end"
+        android:layout_marginTop="@dimen/material_small_padding"
+        android:layout_marginEnd="@dimen/material_default_padding"
+        android:layout_marginBottom="@dimen/material_small_padding"
         android:onClick="onClickDone"
         android:text="@string/goto_tumcampus"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
-        app:backgroundTint="@color/color_primary"/>
+        app:backgroundTint="@color/color_primary"
+        app:cornerRadius="@dimen/material_corner_radius" />
 
 </LinearLayout>

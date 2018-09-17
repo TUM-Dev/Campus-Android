@@ -1,51 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:weightSum="100">
+    android:layout_marginTop="@dimen/material_tiny_padding"
+    android:layout_marginBottom="@dimen/material_tiny_padding">
 
     <TextView
         android:id="@+id/line_name"
+        style="@style/CardBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="70"
         android:ellipsize="none"
+        android:gravity="top"
         android:maxLines="5"
-        android:paddingBottom="@dimen/material_tiny_padding"
-        android:paddingTop="@dimen/material_tiny_padding"
         android:scrollHorizontally="false"
-        android:textSize="16sp"
-        tools:text="Line name"/>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="2"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/line_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Lorem ipsum dolor sit" />
 
     <TextView
         android:id="@+id/line_price"
-        android:layout_width="0dp"
+        style="@style/CardBody"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="15"
-        android:minWidth="50dp"
+        android:layout_marginStart="@dimen/material_default_padding"
+        android:gravity="end"
         android:textColor="@color/sections_green"
-        android:textSize="16sp"
-        tools:text="Price"/>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="3"/>
+        app:layout_constraintBottom_toBottomOf="@id/line_name"
+        app:layout_constraintEnd_toStartOf="@id/favoriteDish"
+        app:layout_constraintStart_toEndOf="@id/line_name"
+        app:layout_constraintTop_toTopOf="@id/line_name"
+        tools:text="Price" />
 
     <ImageView
         android:id="@+id/favoriteDish"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="9"
-        android:src="@drawable/star_toggle"/>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="@dimen/material_default_padding"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/material_small_padding"
+        android:src="@drawable/star_toggle"
+        app:layout_constraintBottom_toBottomOf="@id/line_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/line_price"
+        app:layout_constraintTop_toTopOf="@id/line_name" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

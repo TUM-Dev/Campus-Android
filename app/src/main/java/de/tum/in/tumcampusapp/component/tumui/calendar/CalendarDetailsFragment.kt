@@ -1,11 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
-import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,7 +84,7 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
     }
 
     private fun displayDeleteDialog(eventId: String) {
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(requireContext())
                 .setTitle(R.string.event_delete_title)
                 .setMessage(R.string.delete_event_info)
                 .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }

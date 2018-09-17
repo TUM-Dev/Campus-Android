@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.NavigationView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/left_drawer"
     android:layout_width="320dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    android:fitsSystemWindows="true" />
+    android:fitsSystemWindows="true"
+    app:itemBackground="@drawable/navigation_drawer_item_background_selector"
+    app:itemIconTint="@color/navigation_drawer_icon_tint"
+    app:itemTextColor="@color/navigation_drawer_item_text" />

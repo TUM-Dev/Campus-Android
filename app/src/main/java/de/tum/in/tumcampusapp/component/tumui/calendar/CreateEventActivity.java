@@ -3,10 +3,12 @@ package de.tum.in.tumcampusapp.component.tumui.calendar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -50,7 +52,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private TextView startTimeView;
     private TextView endDateView;
     private TextView endTimeView;
-    private AppCompatButton createButton;
+    private MaterialButton createButton;
     private CalendarItem event;
 
     public CreateEventActivity() {
@@ -61,6 +63,15 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViews();
+
+        if (getSupportActionBar() != null) {
+            Drawable closeIcon = ContextCompat.getDrawable(this, R.drawable.ic_clear);
+            int color = ContextCompat.getColor(this, R.color.color_primary);
+            if (closeIcon != null) {
+                closeIcon.setTint(color);
+                getSupportActionBar().setHomeAsUpIndicator(closeIcon);
+            }
+        }
 
         titleView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -305,11 +316,17 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void displayCloseDialog() {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage(R.string.discard_changes_question)
-                .setNegativeButton(R.string.discard, (dialog, which) -> finish())
+                .setNegativeButton(R.string.discard, (dialogInterface, which) -> finish())
                 .setPositiveButton(R.string.keep_editing, null)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     @Override
@@ -323,12 +340,18 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void showErrorDialog(String message) {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
             .setTitle(R.string.error)
             .setMessage(message)
             .setIcon(R.drawable.ic_error_outline)
             .setPositiveButton(R.string.ok, null)
-            .show();
+            .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
 }

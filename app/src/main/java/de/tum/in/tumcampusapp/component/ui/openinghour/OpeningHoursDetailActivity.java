@@ -3,8 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.openinghour;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.view.MenuItem;
 import android.view.View;
 
 import de.tum.in.tumcampusapp.R;
@@ -52,15 +50,6 @@ public class OpeningHoursDetailActivity extends BaseActivity {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            NavUtils.navigateUpTo(this, new Intent(this, OpeningHoursListActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

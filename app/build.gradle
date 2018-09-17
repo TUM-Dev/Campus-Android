@@ -15,8 +15,8 @@ apply from: '../gradle/scripts/detekt.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -34,7 +34,7 @@ android {
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 545
         versionName "2.0-dev"
         kapt.arguments {
@@ -75,7 +75,7 @@ android {
     }
 }
 
-def androidSupportVersion = '27.1.1'
+def androidSupportVersion = '28.0.0-rc02'
 def retrofitVersion = '2.4.0'
 def tikXmlVersion = '0.8.13'
 
@@ -146,13 +146,10 @@ dependencies {
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
-    implementation 'com.github.quivr:android-week-view:2.3.0'
+    implementation 'com.github.thellmund:Android-Week-View:2.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-
-    // DB Debugging: adb forward tcp:8080 tcp:8080 - look for DebugDB in logcat
-    // debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
-
+    
     // Used for testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.22.0'

@@ -1,4 +1,4 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
 
@@ -11,12 +11,12 @@
 
         <TextView
             android:id="@+id/stationNameTextView"
+            style="@style/CardTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/material_small_padding"
-            android:textSize="20sp"
             tools:text="Title" />
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</android.support.design.card.MaterialCardView>

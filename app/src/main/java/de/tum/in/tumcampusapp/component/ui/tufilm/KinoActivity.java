@@ -2,22 +2,26 @@ package de.tum.in.tumcampusapp.component.ui.tufilm;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.View;
+
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.ui.news.KinoViewModel;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
+import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
- * Activity to show TU Kino details (e.g. imdb rating)
+ * Activity to show TU Kino films
  */
-public class KinoActivity extends BaseActivity {
+public class KinoActivity extends ProgressActivity {
+
     private int startPosition;
     private ViewPager mPager;
 
@@ -25,52 +29,51 @@ public class KinoActivity extends BaseActivity {
         super(R.layout.activity_kino);
     }
 
-    private KinoViewModel kinoViewModel;
-
-    private final CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setBackgroundDrawableResource(R.color.secondary_window_background);
+
         KinoLocalRepository.db = TcaDb.getInstance(this);
-        kinoViewModel = new KinoViewModel(KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposable);
+
+        KinoViewModel kinoViewModel = new KinoViewModel(
+                KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposables);
 
         String date = getIntent().getStringExtra(Const.KINO_DATE);
-        if(date != null){
-            startPosition = kinoViewModel.getPosition(date);
-        } else {
-            startPosition = 0;
-        }
+        startPosition = (date != null) ? kinoViewModel.getPosition(date) : 0;
 
-        Utils.log("startPos " + startPosition);
-
-        View noMovies = findViewById(R.id.no_movies_layout);
-
-        // set up ViewPager and adapter
         mPager = findViewById(R.id.pager);
 
-        disposable.add(
-                kinoViewModel.getAllKinos()
-                        .subscribe(kinos -> {
-                            if (kinos.isEmpty()) {
-                                noMovies.setVisibility(View.VISIBLE);
-                            } else {
-                                noMovies.setVisibility(View.GONE);
-                                KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
-                                mPager.setAdapter(kinoAdapter);
-                                mPager.setCurrentItem(startPosition);
-                            }
-                        }, throwable -> {
-                            Utils.log(throwable);
-                            setContentView(R.layout.layout_error);
-                        } )
-        );
+        int margin = getResources().getDimensionPixelSize(R.dimen.material_default_padding);
+        mPager.setPageMargin(margin);
+
+        Disposable disposable = kinoViewModel
+                .getAllKinos()
+                .subscribe(this::showKinosOrPlaceholder, throwable -> {
+                    Utils.log(throwable);
+                    showError(R.string.error_something_wrong);
+                });
+
+        disposables.add(disposable);
+    }
+
+    private void showKinosOrPlaceholder(List<Kino> kinos) {
+        if (kinos.isEmpty()) {
+            showEmptyResponseLayout(R.string.no_movies, R.drawable.no_movies);
+            return;
+        }
+
+        KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
+        mPager.setAdapter(kinoAdapter);
+        mPager.setCurrentItem(startPosition);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        disposable.dispose();
+    protected void onDestroy() {
+        super.onDestroy();
+        disposables.dispose();
     }
 
 }
