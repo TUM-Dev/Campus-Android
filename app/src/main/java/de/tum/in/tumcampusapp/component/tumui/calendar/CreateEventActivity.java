@@ -152,6 +152,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private void setDateAndTimeListeners() {
         // DATE
         startDateView.setOnClickListener(view -> {
+            hideKeyboard();
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
                 start = start.withDate(year, month, dayOfMonth);
                 if (end.isBefore(start)) {
@@ -162,6 +163,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
         });
         endDateView.setOnClickListener(view -> {
+            hideKeyboard();
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
                 end = end.withDate(year, month, dayOfMonth);
                 updateDateViews();
@@ -170,6 +172,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
         // TIME
         startTimeView.setOnClickListener(view -> {
+            hideKeyboard();
             new TimePickerDialog(this, (timePicker, hour, minute) -> {
                 long eventLength = end.getMillis() - start.getMillis();
                 start = start.withHourOfDay(hour)
@@ -180,6 +183,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
 
         endTimeView.setOnClickListener(view -> {
+            hideKeyboard();
             new TimePickerDialog(this, (timePicker, hour, minute) -> {
                 end = end.withHourOfDay(hour)
                          .withMinuteOfHour(minute);
@@ -196,7 +200,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void updateDateViews() {
-        DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy")
+        DateTimeFormatter format = DateTimeFormat.forPattern("EEE, dd.MM.yyyy")
                                                  .withLocale(Locale.getDefault());
         startDateView.setText(format.print(start));
         endDateView.setText(format.print(end));
