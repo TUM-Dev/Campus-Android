@@ -212,10 +212,8 @@ public final class TUMCabeClient {
         return service.getNewMessages(roomId, verification);
     }
 
-    public List<ChatRoom> getMemberRooms(int memberId, TUMCabeVerification verification) throws IOException {
-        return service.getMemberRooms(memberId, verification)
-                .execute()
-                .body();
+    public Call<List<ChatRoom>> getMemberRooms(int memberId, ChatVerification verification) {
+        return service.getMemberRooms(memberId, verification);
     }
 
     public void getPublicKeysForMember(ChatMember member, Callback<List<ChatPublicKey>> cb) {
