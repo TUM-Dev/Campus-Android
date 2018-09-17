@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -101,9 +102,12 @@ public class StartupActivity extends AppCompatActivity {
         am.generatePrivateKey(null);
 
         // On first setup show remark that loading could last longer than normally
-        boolean isSetup = Utils.getSettingBool(this, Const.EVERYTHING_SETUP, false);
-        if (!isSetup) {
-            runOnUiThread(() -> findViewById(R.id.startupLoadingFirst).setVisibility(View.VISIBLE));
+        boolean isAlreadySetup = Utils.getSettingBool(this, Const.EVERYTHING_SETUP, false);
+        if (!isAlreadySetup) {
+            runOnUiThread(() -> {
+                ProgressBar progressBar = findViewById(R.id.startupLoadingProgressBar);
+                progressBar.setVisibility(View.VISIBLE);
+            });
         }
 
         // Register receiver for background service

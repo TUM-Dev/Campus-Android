@@ -45,6 +45,8 @@
 
     <color name="status_bar_background">#F2F2F2</color>
     <color name="navigation_bar_divider">#E0E0E0</color>
+
+    <color name="startup_progress_bar">#a5a5a5</color>
     
     <!-- Default colors -->
     <color name="text_dark_primary">#DE000000</color> <!--DE for 87% opacity-->
