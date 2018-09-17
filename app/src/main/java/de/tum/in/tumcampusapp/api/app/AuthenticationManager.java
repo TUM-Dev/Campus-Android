@@ -197,26 +197,25 @@ public class AuthenticationManager {
             DeviceRegister dr = DeviceRegister.Companion.getDeviceRegister(mContext, publicKey, member);
 
             // Upload public key to the server
-            TUMCabeClient.getInstance(mContext)
-                         .deviceRegister(dr, new Callback<TUMCabeStatus>() {
+            TUMCabeClient.getInstance(mContext).deviceRegister(dr, new Callback<TUMCabeStatus>() {
+                @Override
+                public void onResponse(@NonNull Call<TUMCabeStatus> call,
+                                       @NonNull Response<TUMCabeStatus> response) {
+                    //Remember that we are done, only if we have submitted with the member information
+                    TUMCabeStatus status = response.body();
+                    if (response.isSuccessful() && status != null && status.getStatus().equals("ok")) {
+                        Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
 
-                             @Override
-                             public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
-                                 //Remember that we are done, only if we have submitted with the member information
-                                 if (response.isSuccessful() && "ok".equals(response.body()
-                                                                                    .getStatus())) {
-                                     Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
+                        AuthenticationManager.this.tryToUploadFcmToken();
+                    }
+                }
 
-                                     AuthenticationManager.this.tryToUploadFcmToken();
-                                 }
-                             }
-
-                             @Override
-                             public void onFailure(Call<TUMCabeStatus> call, Throwable t) {
-                                 Utils.log(t, "Failure uploading public key");
-                                 Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
-                             }
-                         });
+                @Override
+                public void onFailure(@NonNull Call<TUMCabeStatus> call, @NonNull Throwable t) {
+                    Utils.log(t, "Failure uploading public key");
+                    Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
+                }
+            });
         } catch (NoPrivateKey noPrivateKey) {
             this.clearKeys();
         }

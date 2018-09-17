@@ -87,10 +87,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="@dimen/material_small_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_small_padding"
-            android:orientation="horizontal">
+            android:clipChildren="false"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/material_default_padding"
+            android:paddingTop="@dimen/material_small_padding"
+            android:paddingEnd="@dimen/material_default_padding"
+            android:paddingBottom="@dimen/material_small_padding">
 
             <android.support.design.button.MaterialButton
                 android:id="@+id/open_tum_online_button"

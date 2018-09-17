@@ -228,7 +228,7 @@ class DownloadService : JobIntentService() {
                     else -> {
                         success = service.downloadAll(force)
                         val isSetup = Utils.getSettingBool(service, Const.EVERYTHING_SETUP, false)
-                        if (!isSetup) {
+                        if (isSetup) {
                             val cacheManager = CacheManager(service)
                             cacheManager.syncCalendar()
 

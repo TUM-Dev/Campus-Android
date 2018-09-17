@@ -54,7 +54,6 @@
                     android:text="@string/set_silent_mode"
                     android:textSize="15sp" />
 
-
                 <CheckBox
                     android:id="@+id/chk_group_chat"
                     android:layout_width="wrap_content"
@@ -74,6 +73,7 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_small_padding"
                     android:onClick="onClickTerms"
                     android:text="@string/open_chat_terms"
                     android:textAllCaps="false"
