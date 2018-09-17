@@ -48,11 +48,7 @@ public class StartupActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (DownloadService.BROADCAST_NAME.equals(intent.getAction())) {
-                // Only proceed to start the App, if initialization is finished
-                if (initializationFinished.compareAndSet(false, true)) {
-                    return;
-                }
-                openMainActivity();
+                openMainActivityIfInitializationFinished();
             }
         }
     };
@@ -112,8 +108,7 @@ public class StartupActivity extends AppCompatActivity {
 
         // Register receiver for background service
         IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
-        LocalBroadcastManager.getInstance(this)
-                .registerReceiver(receiver, filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
         // Start background service and ensure cards are set
         Intent i = new Intent(this, StartSyncReceiver.class);
@@ -132,11 +127,7 @@ public class StartupActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
             && ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             //We already got the permissions, to proceed normally
-            //Only proceed to start the App, if initialization is finished
-            if (initializationFinished.compareAndSet(false, true)) {
-                return;
-            }
-            openMainActivity();
+            openMainActivityIfInitializationFinished();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_COARSE_LOCATION) ||
                    ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
             // Provide an additional rationale to the user if the permission was not granted
@@ -173,8 +164,13 @@ public class StartupActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        // Only proceed to start the App, if initialization is finished
-        if (initializationFinished.compareAndSet(false, true)) {
+        openMainActivityIfInitializationFinished();
+    }
+
+    private void openMainActivityIfInitializationFinished() {
+        if (initializationFinished.compareAndSet(false, true) || isFinishing()) {
+            // If the initialization process is not yet finished or if the Activity is
+            // already being finished, there's no need to open MainActivity.
             return;
         }
         openMainActivity();
@@ -184,7 +180,6 @@ public class StartupActivity extends AppCompatActivity {
      * Animates the TUM logo into place (left upper corner) and animates background up.
      * Afterwards {@link MainActivity} gets started
      */
-
     private void openMainActivity() {
         Intent intent = new Intent(StartupActivity.this, MainActivity.class);
         startActivity(intent);
@@ -193,12 +188,11 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        // unregister the BroadcastReceiver in onPause() (rather than onDestroy()),
+    protected void onStop() {
+        super.onStop();
+        // Unregister the BroadcastReceiver in onStop() (rather than onDestroy()),
         // so the BroadcastReceiver is unregistered when MainActivity.onCreate() is called
-        LocalBroadcastManager.getInstance(this)
-                .unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
 }
