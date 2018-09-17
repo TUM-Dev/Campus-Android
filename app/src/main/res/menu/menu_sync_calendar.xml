@@ -1,48 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_create_event"
         android:icon="@drawable/ic_add"
         android:title="@string/create_event"
-        tumcampus:showAsAction="ifRoom"/>
+        app:iconTint="@color/color_primary"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_switch_view_mode"
-        android:icon="@drawable/ic_action_week_view"
+        android:icon="@drawable/ic_outline_view_column_24px"
         android:title="@string/view_mode"
-        tumcampus:showAsAction="ifRoom"/>
+        app:iconTint="@color/color_primary"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_update_calendar"
         android:icon="@drawable/ic_refresh_white"
         android:title="@string/Refresh"
-        tumcampus:showAsAction="ifRoom"/>
+        app:iconTint="@color/color_primary"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_export_calendar"
-        android:icon="@drawable/ic_sync_cloud"
+        android:icon="@drawable/ic_outline_cloud_done_24px"
         android:title="@string/export_to_google"
-        tumcampus:showAsAction="ifRoom"/>
+        app:iconTint="@color/color_primary"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_delete_calendar"
         android:icon="@drawable/ic_stop_sync_cloud"
         android:title="@string/delete_from_google"
-        tumcampus:showAsAction="ifRoom"/>
+        app:iconTint="@color/color_primary"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_calendar_change_filters"
         android:icon="@drawable/ic_filter_list"
         android:title="@string/calendar_filter_title"
-        tumcampus:showAsAction="ifRoom">
+        app:showAsAction="never">
+
         <menu>
-            <group android:checkableBehavior="all" >
-                <item android:id="@+id/action_calendar_filter_canceled"
-                      android:title="@string/calendar_filter_canceled"
-                      tumcampus:showAsAction="ifRoom" />
+
+            <group android:checkableBehavior="all">
+
+                <item
+                    android:id="@+id/action_calendar_filter_canceled"
+                    android:title="@string/calendar_filter_canceled"
+                    app:iconTint="@color/color_primary"
+                    app:showAsAction="ifRoom" />
+
             </group>
 
-            <item android:id="@+id/action_calendar_filter_hour_limit"
-                  android:title="@string/calendar_filter_hour_limit"
-                  tumcampus:showAsAction="ifRoom" />
         </menu>
+
     </item>
+
 </menu>

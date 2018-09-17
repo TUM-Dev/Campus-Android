@@ -1,5 +1,4 @@
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
 
@@ -20,30 +19,30 @@
 
             <TextView
                 android:id="@+id/card_title"
+                style="@style/CardTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:typeface="sans"
-                tools:text="Title"/>
+                tools:text="Title" />
 
             <TextView
                 android:id="@+id/card_time"
+                style="@style/CardBody"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="Time"/>
+                tools:text="Time" />
 
             <TextView
                 android:id="@+id/card_location_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/material_small_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
                 android:background="?attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_outline_location_on_24px_light_blue"
                 android:drawablePadding="@dimen/material_small_padding"
-                android:drawableStart="@drawable/ic_location"
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#00a7de"
-                tools:text="Location"/>
+                tools:text="Location" />
 
             <TextView
                 android:id="@+id/card_event_action"
@@ -51,12 +50,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_tiny_padding"
                 android:background="?attr/selectableItemBackground"
-                android:drawablePadding="@dimen/material_small_padding"
                 android:drawableStart="@drawable/ic_event"
+                android:drawablePadding="@dimen/material_small_padding"
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#00a7de"
-                tools:text="Event"/>
+                tools:text="Event" />
 
         </LinearLayout>
 
@@ -80,7 +79,7 @@
                     android:background="@drawable/next_lecture_select"
                     android:text="1"
                     android:textColor="#ffffffff"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
                 <Button
                     android:id="@+id/lecture_2"
@@ -90,7 +89,7 @@
                     android:background="@drawable/next_lecture_select"
                     android:text="2"
                     android:textColor="#ffffffff"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 
@@ -107,7 +106,7 @@
                     android:background="@drawable/next_lecture_select"
                     android:text="3"
                     android:textColor="#ffffffff"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
                 <Button
                     android:id="@+id/lecture_4"
@@ -117,7 +116,7 @@
                     android:background="@drawable/next_lecture_select"
                     android:text="4"
                     android:textColor="#ffffffff"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 
@@ -125,4 +124,4 @@
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</android.support.design.card.MaterialCardView>

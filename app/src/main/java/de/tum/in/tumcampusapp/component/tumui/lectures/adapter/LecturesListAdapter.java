@@ -28,8 +28,8 @@ public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<Lecture>
     }
 
     @Override
-    public String genenrateHeaderName(Lecture item) {
-        String headerText = super.genenrateHeaderName(item);
+    public String generateHeaderName(Lecture item) {
+        String headerText = super.generateHeaderName(item);
         headerText = headerText.replaceAll("Sommersemester", this.context.getString(R.string.semester_summer));
         headerText = headerText.replaceAll("Wintersemester", this.context.getString(R.string.semester_winter));
         return headerText;

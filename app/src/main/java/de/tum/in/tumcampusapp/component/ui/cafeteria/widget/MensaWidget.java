@@ -37,7 +37,7 @@ public class MensaWidget extends AppWidgetProvider {
             CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
             localRepository.setDb(TcaDb.getInstance(context));
 
-            int cafeteriaId = mensaManager.getBestMatchMensaId(context);
+            int cafeteriaId = mensaManager.getBestMatchMensaId();
             Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
             rv.setTextViewText(R.id.mensa_widget_header, cafeteria.getName());
 
@@ -48,7 +48,7 @@ public class MensaWidget extends AppWidgetProvider {
 
             // Set the header on click to open the mensa activity
             Intent mensaIntent = new Intent(context, CafeteriaActivity.class);
-            mensaIntent.putExtra(Const.CAFETERIA_ID, mensaManager.getBestMatchMensaId(context));
+            mensaIntent.putExtra(Const.CAFETERIA_ID, mensaManager.getBestMatchMensaId());
             PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, mensaIntent, 0);
             rv.setOnClickPendingIntent(R.id.mensa_widget_header_container, pendingIntent);
 

@@ -1,13 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_window_background">
 
     <LinearLayout
-        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/material_large_padding"
+            app:cardCornerRadius="@dimen/material_corner_radius"
+            app:cardElevation="@dimen/material_default_elevation"
+            app:cardUseCompatPadding="true">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/kino_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/spinner_background"
+                    android:contentDescription="@string/kino_cover_description"
+                    android:scaleType="centerCrop" />
+
+                <ProgressBar
+                    android:id="@+id/kino_cover_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/trailerButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:text="@string/watch_trailer"
+            android:textAllCaps="false"
+            android:textColor="@color/color_primary"
+            app:cornerRadius="@dimen/material_corner_radius" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/material_default_padding"
+            android:paddingEnd="@dimen/material_default_padding">
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_outline_event_24px"
+                android:drawablePadding="@dimen/material_tiny_padding"
+                android:gravity="center_horizontal"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text_dark_primary"
+                tools:text="10/11" />
+
+            <TextView
+                android:id="@+id/runtimeTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_outline_access_time_24px"
+                android:drawablePadding="@dimen/material_tiny_padding"
+                android:gravity="center_horizontal"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text_dark_primary"
+                tools:text="135 min" />
+
+            <TextView
+                android:id="@+id/ratingTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_star_black_24dp"
+                android:drawablePadding="@dimen/material_tiny_padding"
+                android:gravity="center_horizontal"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text_dark_primary"
+                tools:text="7 / 10" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:background="@color/list_divider" />
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:lineSpacingMultiplier="1.1"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/text_dark_primary"
+            tools:text="Lorem ipsum dolor sit amet" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:background="@color/list_divider" />
+
+        <TextView
+            android:id="@+id/genresHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/genres"
+            android:textColor="@color/color_primary" />
+
+        <TextView
+            android:id="@+id/genresTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:lineSpacingMultiplier="1.1"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/text_dark_primary"
+            tools:text="Genres" />
+
+        <TextView
+            android:id="@+id/releaseYearHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/released"
+            android:textColor="@color/color_primary" />
+
+        <TextView
+            android:id="@+id/releaseYearTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/text_dark_primary"
+            tools:text="2018" />
+
+        <TextView
+            android:id="@+id/actorsHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/actors"
+            android:textColor="@color/color_primary" />
+
+        <TextView
+            android:id="@+id/actorsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:lineSpacingMultiplier="1.1"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/text_dark_primary"
+            tools:text="Actors" />
+
+        <TextView
+            android:id="@+id/directorHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/director"
+            android:textColor="@color/color_primary" />
+
+        <TextView
+            android:id="@+id/directorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/text_dark_primary"
+            tools:text="Director" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/moreInfoButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:text="@string/more_info"
+            android:textAllCaps="false"
+            android:textColor="@color/color_primary"
+            app:cornerRadius="@dimen/material_corner_radius" />
+
+    </LinearLayout>
 
 </ScrollView>

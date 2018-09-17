@@ -35,17 +35,25 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/text_dark_secondary" />
 
-                <EditText
-                    android:id="@+id/cardholder_edit_text"
+                <android.support.design.widget.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_default_padding"
                     android:layout_marginTop="@dimen/material_default_padding"
                     android:layout_marginEnd="@dimen/material_default_padding"
-                    android:hint="@string/cardholder"
-                    android:inputType="textPersonName|textCapWords"
-                    android:singleLine="true"
-                    android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+                    android:hint="@string/cardholder">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/cardholder_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName|textCapWords"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+
+                </android.support.design.widget.TextInputLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -128,7 +136,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="@dimen/material_default_padding"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_action_edit"
+                            android:src="@drawable/ic_outline_edit_24px"
                             android:tint="@color/sections_gray"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -148,17 +156,20 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <android.support.v7.widget.AppCompatButton
+                <android.support.design.button.MaterialButton
                     android:id="@+id/complete_purchase_button"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_default_padding"
                     android:alpha="0.5"
                     android:enabled="false"
                     android:padding="@dimen/two_line_button_padding"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     app:backgroundTint="@color/color_primary"
+                    app:cornerRadius="30dp"
                     tools:text="@string/buy_ticket" />
 
             </LinearLayout>

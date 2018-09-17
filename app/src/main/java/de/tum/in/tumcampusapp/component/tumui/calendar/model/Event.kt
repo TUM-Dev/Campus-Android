@@ -52,7 +52,7 @@ data class Event(
                 .setContentTitle(title)
                 .setContentText(timestamp)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_calendar)
+                .setSmallIcon(R.drawable.ic_outline_event_24px)
                 .setShowWhen(false)
                 .setColor(ContextCompat.getColor(context, R.color.color_primary))
                 .setTimeoutAfter(duration)

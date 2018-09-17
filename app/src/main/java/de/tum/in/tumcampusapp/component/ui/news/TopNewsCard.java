@@ -15,9 +15,12 @@ import android.widget.ProgressBar;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
+import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -69,16 +72,17 @@ public class TopNewsCard extends Card {
         return 0;
     }
 
+    @Nullable
     @Override
-    public Intent getIntent() {
+    public NavigationDestination getNavigationDestination() {
         String url = Utils.getSetting(getContext(), Const.NEWS_ALERT_LINK, "");
         if (!url.isEmpty()) {
-            return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            Intent data = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            return new SystemIntent(data);
         }
 
-        // if there is not link don't react to clicks
+        // If there is no link, don't react to clicks
         return null;
-
     }
 
     @Override

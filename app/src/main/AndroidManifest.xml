@@ -121,7 +121,7 @@
         <activity
             android:name=".component.ui.overview.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
+            android:label="@string/home"
             android:launchMode="singleTop" />
         <activity
             android:name=".component.ui.news.NewsActivity"
@@ -165,9 +165,7 @@
             android:name=".component.ui.openinghour.OpeningHoursListActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/opening_hours"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
+            android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -192,18 +190,17 @@
         <activity
             android:name=".component.ui.transportation.TransportationDetailsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/mvv"
-            android:parentActivityName=".component.ui.transportation.TransportationActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.transportation.TransportationActivity" />
-        </activity>
+            android:parentActivityName=".component.ui.transportation.TransportationActivity" />
         <activity
             android:name=".component.tumui.lectures.activity.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/lectures_appointments"
-            android:theme="@style/AppTheme.NoDrawerLayout" />
+            android:parentActivityName=".component.tumui.lectures.activity.LecturesDetailsActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesDetailsActivity" />
+        </activity>
         <activity
             android:name=".component.tumui.lectures.activity.LecturesDetailsActivity"
             android:configChanges="orientation|screenSize"
@@ -350,7 +347,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/setup_eduroam"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -358,7 +356,7 @@
         <activity
             android:name=".component.ui.onboarding.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
+            android:label="@string/startup_wizard"
             android:parentActivityName=".component.ui.overview.MainActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
@@ -368,7 +366,7 @@
         <activity
             android:name=".component.ui.onboarding.WizNavCheckTokenActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
+            android:label="@string/startup_wizard"
             android:parentActivityName=".component.ui.onboarding.WizNavStartActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
@@ -378,7 +376,7 @@
         <activity
             android:name=".component.ui.onboarding.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
+            android:label="@string/startup_wizard"
             android:parentActivityName=".component.ui.onboarding.WizNavCheckTokenActivity"
             android:theme="@style/AppTheme.NoDrawerLayout"
             android:windowSoftInputMode="stateHidden">
@@ -546,27 +544,6 @@
             android:name=".component.ui.transportation.widget.MVVWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <activity
-            android:name=".component.ui.transportation.widget.MVVWidgetConfigureActivity"
-            android:allowTaskReparenting="false"
-            android:configChanges="orientation|screenSize"
-            android:excludeFromRecents="true"
-            android:label="@string/mvv_widget_select_station"
-            android:launchMode="singleTop"
-            android:taskAffinity="">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable_mvv" />
-
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
         <!-- receiver for the TimetableWidget -->
 
         <receiver
@@ -592,7 +569,8 @@
             android:excludeFromRecents="true"
             android:label="@string/timetable_widget_select_lectures"
             android:launchMode="singleTop"
-            android:taskAffinity="">
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -667,14 +645,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationReceiver" />
-
-        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver" />
-
-        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationReceiver" />
-
-        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver" />
-
         <activity
             android:name=".component.ui.ticket.activity.ShowTicketActivity"
             android:configChanges="keyboardHidden|screenSize"
@@ -736,6 +706,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.ticket.activity.StripePaymentActivity" />
         </activity>
+
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationReceiver" />
+
+        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver" />
 
     </application>
 

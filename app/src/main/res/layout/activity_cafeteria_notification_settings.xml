@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_default_padding"
-            android:drawablePadding="@dimen/material_default_padding"
             android:drawableStart="@drawable/ic_action_info_black"
+            android:drawablePadding="@dimen/material_default_padding"
             android:text="@string/favorite_dish_info"
             android:textColor="#000000" />
 
@@ -27,15 +27,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <android.support.v7.widget.AppCompatButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/notificationSettingsSaveButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/material_default_padding"
             android:text="@string/save"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            app:backgroundTint="@color/color_primary" />
+            app:backgroundTint="@color/color_primary"
+            app:cornerRadius="@dimen/material_corner_radius" />
 
     </LinearLayout>
 

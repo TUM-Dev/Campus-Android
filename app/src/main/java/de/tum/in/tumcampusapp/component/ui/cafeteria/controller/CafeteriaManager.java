@@ -89,7 +89,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
      * best-matching cafeteria, it returns an empty list.
      */
     public List<CafeteriaMenu> getBestMatchCafeteriaMenus() {
-        int cafeteriaId = getBestMatchMensaId(mContext);
+        int cafeteriaId = getBestMatchMensaId();
         if (cafeteriaId == -1) {
             return Collections.emptyList();
         }
@@ -97,9 +97,9 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         return getCafeteriaMenusByCafeteriaId(cafeteriaId);
     }
 
-    public int getBestMatchMensaId(Context context) {
+    public int getBestMatchMensaId() {
         // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
+        int cafeteriaId = new LocationManager(mContext).getCafeteria();
         if (cafeteriaId == -1) {
             Utils.log("could not get a Cafeteria from locationManager!");
         }

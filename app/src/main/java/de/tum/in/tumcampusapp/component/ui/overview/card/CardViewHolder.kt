@@ -2,14 +2,13 @@ package de.tum.`in`.tumcampusapp.component.ui.overview.card
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 
@@ -26,12 +25,10 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
     }
 
     override fun onClick(v: View) {
-        val intent = currentCard?.getIntent() ?: return
-        val transitionName = activity.getString(R.string.transition_card)
-
-        val options = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity, v, transitionName)
-        ContextCompat.startActivity(activity, intent, options.toBundle())
+        val destination = currentCard?.getNavigationDestination()
+        destination?.let {
+            NavigationManager.open(activity, it)
+        }
     }
 
     override fun onLongClick(v: View): Boolean {

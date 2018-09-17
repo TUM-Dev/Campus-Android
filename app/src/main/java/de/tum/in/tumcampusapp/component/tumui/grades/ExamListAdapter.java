@@ -59,8 +59,8 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
     }
 
     @Override
-    public String genenrateHeaderName(Exam item) {
-        String headerText = super.genenrateHeaderName(item);
+    public String generateHeaderName(Exam item) {
+        String headerText = super.generateHeaderName(item);
         int year = Integer.parseInt(headerText.substring(0, 2));
         if (headerText.charAt(2) == 'W') {
             return context.getString(R.string.winter_semester, year, year + 1);

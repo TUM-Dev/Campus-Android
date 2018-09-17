@@ -70,14 +70,11 @@ public abstract class ActivityForSearching extends ProgressActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        // Inflate the menu; this adds a SearchView to the ActionBar
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
-        // Get SearchView
         searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
 
-        // Set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
         searchView.setSearchableInfo(info);
@@ -112,6 +109,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
         searchView.setOnCloseListener(() -> {
             searchItem.collapseActionView();
             query = null;
+            enableDrawer(true);
             onStartSearch();
             return false;
         });
@@ -119,6 +117,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                enableDrawer(false);
                 return true;
             }
 
@@ -126,6 +125,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 query = null;
                 onStartSearch();
+                enableDrawer(true);
                 return true;
             }
         });
@@ -135,7 +135,8 @@ public abstract class ActivityForSearching extends ProgressActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (openSearch) {
-            searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            searchItem.setShowAsAction(
+                    MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
             searchItem.expandActionView();
             return true;
         }
@@ -168,13 +169,9 @@ public abstract class ActivityForSearching extends ProgressActivity {
             return;
         }
 
-        /*if (!Utils.isConnected(this)) {
-            showNoInternetLayout();
-            return;
-        }*/
-
         // Add query to recents
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, authority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+                this, authority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
         suggestions.saveRecentQuery(query, null);
 
         // Tell activity to start searching
@@ -193,6 +190,8 @@ public abstract class ActivityForSearching extends ProgressActivity {
 
     @Override
     public void onRefresh() {
-        requestSearch(query);
+        String input = (query != null) ? query : "";
+        requestSearch(input);
     }
+
 }

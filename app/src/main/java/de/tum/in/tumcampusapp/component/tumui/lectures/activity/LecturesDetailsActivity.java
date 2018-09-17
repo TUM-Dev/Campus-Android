@@ -3,11 +3,11 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.widget.Button;
+import android.support.design.button.MaterialButton;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
@@ -32,17 +32,16 @@ import retrofit2.Call;
  */
 public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<LectureDetailsResponse> {
 
-    private Button btnLDetailsTermine;
-    private TextView tvLDetailsDozent;
-    private TextView tvLDetailsInhalt;
-    private TextView tvLDetailsLiteratur;
-    private TextView tvLDetailsMethode;
-    private TextView tvLDetailsName;
-    private TextView tvLDetailsOrg;
-    private TextView tvLDetailsSemester;
-    private TextView tvLDetailsSWS;
-    private TextView tvLDetailsTermin;
-    private TextView tvLDetailsZiele;
+    private TextView lectureNameTextView;
+    private TextView swsTextView;
+    private TextView semesterTextView;
+    private TextView professorTextView;
+    private TextView orgTextView;
+    private TextView contentTextView;
+    private TextView methodTextView;
+    private TextView examinationAidsTextView;
+    private TextView dateTextView;
+    private TextView targetsTextView;
 
     private LectureDetails currentItem;
     private String mLectureId;
@@ -55,19 +54,19 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        tvLDetailsName = findViewById(R.id.tvLDetailsName);
-        tvLDetailsSWS = findViewById(R.id.tvLDetailsSWS);
-        tvLDetailsSemester = findViewById(R.id.tvLDetailsSemester);
-        tvLDetailsDozent = findViewById(R.id.tvLDetailsDozent);
-        tvLDetailsOrg = findViewById(R.id.tvLDetailsOrg);
-        tvLDetailsInhalt = findViewById(R.id.tvLDetailInhalt);
-        tvLDetailsMethode = findViewById(R.id.tvLDetailsMethode);
-        tvLDetailsZiele = findViewById(R.id.tvLDetailsZiele);
-        tvLDetailsTermin = findViewById(R.id.tvLDetailsTermin);
-        tvLDetailsLiteratur = findViewById(R.id.tvLDetailsLiteratur);
+        lectureNameTextView = findViewById(R.id.lectureNameTextView);
+        swsTextView = findViewById(R.id.swsTextView);
+        semesterTextView = findViewById(R.id.semesterTextView);
+        professorTextView = findViewById(R.id.professorTextView);
+        orgTextView = findViewById(R.id.orgTextView);
+        contentTextView = findViewById(R.id.contentTextView);
+        methodTextView = findViewById(R.id.methodTextView);
+        targetsTextView = findViewById(R.id.targetsTextView);
+        dateTextView = findViewById(R.id.dateTextView);
+        examinationAidsTextView = findViewById(R.id.examinationAidsTextView);
 
-        btnLDetailsTermine = findViewById(R.id.btnLDetailsTermine);
-        btnLDetailsTermine.setOnClickListener(v -> {
+        MaterialButton appointmentsButton = findViewById(R.id.appointmentsButton);
+        appointmentsButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
 
             // LectureAppointments need the name and id of the facing lecture
@@ -108,24 +107,45 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
         }
 
         currentItem = lectureDetails.get(0);
-        tvLDetailsName.setText(currentItem.getTitle().toUpperCase(Locale.getDefault()));
+        lectureNameTextView.setText(currentItem.getTitle());
 
         StringBuilder strLectureLanguage = new StringBuilder(currentItem.getSemesterName());
         if (currentItem.getMainLanguage() != null) {
             strLectureLanguage.append(" - ")
                     .append(currentItem.getMainLanguage());
         }
-        tvLDetailsSemester.setText(strLectureLanguage);
+        semesterTextView.setText(strLectureLanguage);
 
-        tvLDetailsSWS.setText(getString(R.string.lecture_details_format_string,
+        swsTextView.setText(getString(R.string.lecture_details_format_string,
                 currentItem.getLectureType(), currentItem.getDuration()));
-        tvLDetailsDozent.setText(currentItem.getLecturers());
-        tvLDetailsOrg.setText(currentItem.getChairName());
-        tvLDetailsInhalt.setText(currentItem.getLectureContent());
-        tvLDetailsMethode.setText(currentItem.getTeachingMethod());
-        tvLDetailsZiele.setText(currentItem.getTeachingTargets());
-        tvLDetailsLiteratur.setText(currentItem.getExaminationAids());
-        tvLDetailsTermin.setText(currentItem.getFirstAppointment());
+        professorTextView.setText(currentItem.getLecturers());
+        orgTextView.setText(currentItem.getChairName());
+        contentTextView.setText(currentItem.getLectureContent());
+        dateTextView.setText(currentItem.getFirstAppointment());
+
+        String teachingMethod = currentItem.getTeachingMethod();
+        if (teachingMethod == null || teachingMethod.isEmpty()) {
+            findViewById(R.id.methodHeaderTextView).setVisibility(View.GONE);
+            methodTextView.setVisibility(View.GONE);
+        } else {
+            methodTextView.setText(teachingMethod);
+        }
+
+        String targets = currentItem.getTeachingTargets();
+        if (targets == null || targets.isEmpty()) {
+            findViewById(R.id.targetsHeaderTextView).setVisibility(View.GONE);
+            targetsTextView.setVisibility(View.GONE);
+        } else {
+            targetsTextView.setText(targets);
+        }
+
+        String aids = currentItem.getExaminationAids();
+        if (aids == null || aids.isEmpty()) {
+            findViewById(R.id.examinationAidsHeaderTextView).setVisibility(View.GONE);
+            examinationAidsTextView.setVisibility(View.GONE);
+        } else {
+            examinationAidsTextView.setText(aids);
+        }
     }
 
 }

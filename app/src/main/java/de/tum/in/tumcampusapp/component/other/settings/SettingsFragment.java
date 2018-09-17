@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.other.settings;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -222,11 +222,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 break;
             case BUTTON_CLEAR_CACHE:
                 // This button invokes the clear cache method
-                new AlertDialog.Builder(mContext)
+                AlertDialog dialog = new AlertDialog.Builder(mContext)
                         .setMessage(R.string.delete_cache_sure)
                         .setPositiveButton(R.string.delete, (dialogInterface, i) -> clearCache())
                         .setNegativeButton(R.string.cancel, null)
-                        .show();
+                        .create();
+
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+                }
+
+                dialog.show();
                 break;
             default:
                 return false;

@@ -1,11 +1,12 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -35,8 +38,6 @@ import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
-
-import static de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment.menuToSpan;
 
 /**
  * Lists all dishes at selected cafeteria
@@ -61,10 +62,16 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         super.onCreate(savedInstanceState);
         // Get id from intent if specified
         final Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null && intent.getExtras()
-                                                                  .containsKey(Const.CAFETERIA_ID)) {
+        if (intent != null && intent.getExtras() != null
+                && intent.getExtras().containsKey(Const.CAFETERIA_ID)) {
             mCafeteriaId = intent.getExtras()
                                  .getInt(Const.CAFETERIA_ID);
+        } else {
+            // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
+            int cafeteriaId = new CafeteriaManager(this).getBestMatchMensaId();
+            if (cafeteriaId == -1) {
+                mCafeteriaId = cafeteriaId;
+            }
         }
 
         mViewPager = findViewById(R.id.pager);
@@ -74,10 +81,13 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
          *by default it's 1.
          */
         mViewPager.setOffscreenPageLimit(50);
+
         CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
         remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+
         CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
         localRepository.setDb(TcaDb.getInstance(this));
+
         cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
     }
 
@@ -92,11 +102,20 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_ingredients) {
             // Build a alert dialog containing the mapping of ingredients to the numbers
-            new AlertDialog.Builder(this).setTitle(R.string.action_ingredients)
-                                         .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
-                                         .setPositiveButton(android.R.string.ok, null)
-                                         .create()
-                                         .show();
+            String ingredients = getString(R.string.cafeteria_ingredients);
+            SpannableString title = CafeteriaMenuInflater.menuToSpan(this, ingredients);
+
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.action_ingredients)
+                    .setMessage(title)
+                    .setPositiveButton(R.string.ok, null)
+                    .create();
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            }
+
+            dialog.show();
             return true;
         }
         if (item.getItemId() == R.id.action_settings) {
@@ -114,12 +133,13 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         super.onStart();
 
         // Adapter for drop-down navigation
-        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
-            final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(
+                this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
+            final LayoutInflater inflater = LayoutInflater.from(getContext());
 
             @Override
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar, parent, false);
+                View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar_two_line, parent, false);
                 Cafeteria c = getItem(position);
 
                 TextView name = v.findViewById(android.R.id.text1); // Set name
@@ -135,9 +155,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 return v;
             }
         };
+
         Spinner spinner = findViewById(R.id.spinnerToolbar);
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
+
         Location currLocation = new LocationManager(this).getCurrentOrNextLocation();
         Flowable<List<Cafeteria>> cafeterias = cafeteriaViewModel.getAllCafeterias(currLocation);
         mDisposable.add(

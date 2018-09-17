@@ -1,50 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/AppTheme.DrawerHeaderBackground"
     android:layout_width="match_parent"
-    android:layout_height="172dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:layout_height="wrap_content"
+    android:background="@color/color_primary"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.AppCompat">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="@dimen/icon_large"
+        android:layout_height="@dimen/icon_large"
+        android:layout_marginStart="@dimen/material_default_padding"
+        android:layout_marginTop="@dimen/material_default_padding"
+        android:layout_marginEnd="@dimen/material_default_padding"
+        android:background="@drawable/circle_background"
+        android:src="@drawable/photo_not_available" />
+
+    <android.support.design.button.MaterialButton
+        android:id="@+id/loginButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_default_padding"
+        android:layout_marginTop="@dimen/material_default_padding"
+        android:text="@string/tumonline_login"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:cornerRadius="@dimen/material_corner_radius"
+        app:strokeColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_default_padding"
+        android:layout_marginTop="@dimen/material_default_padding"
+        android:layout_marginEnd="@dimen/material_default_padding"
+        android:fontFamily="sans-serif-medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/white"
+        tools:text="Name" />
+
+    <TextView
+        android:id="@+id/emailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_default_padding"
+        android:layout_marginEnd="@dimen/material_default_padding"
+        android:alpha="0.87"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/white"
+        tools:text="E-mail" />
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.35"
-        android:background="@android:color/black" />
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/material_default_padding"
+        android:background="@color/placeholder" />
 
-    <LinearLayout
+    <include
+        layout="@layout/rainbow_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/material_small_padding"
-        android:layout_marginStart="@dimen/material_default_padding"
-        android:orientation="vertical">
+        android:layout_height="4dp"
+        android:layout_marginTop="@dimen/material_default_padding" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profileImageView"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginBottom="@dimen/material_small_padding"
-            android:elevation="4dp"
-            android:src="@drawable/photo_not_available" />
-
-        <TextView
-            android:id="@+id/nameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/white"
-            tools:text="Name" />
-
-        <TextView
-            android:id="@+id/emailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:alpha="0.87"
-            tools:text="E-mail" />
-
-    </LinearLayout>
-
-</FrameLayout>
+</LinearLayout>

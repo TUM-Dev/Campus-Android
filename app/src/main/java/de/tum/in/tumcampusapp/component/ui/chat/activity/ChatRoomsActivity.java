@@ -1,15 +1,15 @@
 package de.tum.in.tumcampusapp.component.ui.chat.activity;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -120,16 +120,41 @@ public class ChatRoomsActivity
     @Override
     protected void onDownloadSuccessful(@NonNull LecturesResponse response) {
         List<Lecture> lectures = response.getLectures();
+
+        // We're starting more background work, so we show a loading indicator again
+        showLoadingStart();
+        Handler handler = new Handler();
+        handler.post(() -> createLectureRoomsAndUpdateDatabase(lectures));
+    }
+
+    @WorkerThread
+    private void createLectureRoomsAndUpdateDatabase(List<Lecture> lectures) {
         manager.createLectureRooms(lectures);
 
         populateCurrentChatMember();
 
         if (currentChatMember != null) {
-            updateDatabase(currentChatMember);
+            try {
+                TUMCabeVerification verification = TUMCabeVerification.create(this, null);
+                if (verification == null) {
+                    finish();
+                    return;
+                }
+
+                List<ChatRoom> rooms = TUMCabeClient
+                        .getInstance(this)
+                        .getMemberRooms(currentChatMember.getId(), verification);
+                manager.replaceIntoRooms(rooms);
+            } catch (IOException e) {
+                Utils.log(e);
+            }
         }
 
         List<ChatRoomAndLastMessage> chatRoomAndLastMessages = manager.getAllByStatus(mCurrentMode);
-        displayChatRoomsAndMessages(chatRoomAndLastMessages);
+        runOnUiThread(() -> {
+                displayChatRoomsAndMessages(chatRoomAndLastMessages);
+                showLoadingEnded();
+        });
     }
 
     private void displayChatRoomsAndMessages(List<ChatRoomAndLastMessage> results) {
@@ -139,26 +164,6 @@ public class ChatRoomsActivity
             chatRoomAdapter = new ChatRoomListAdapter(this, results, mCurrentMode);
             lvMyChatRoomList.setAdapter(chatRoomAdapter);
         }
-    }
-
-    private void updateDatabase(@NonNull ChatMember currentChatMember) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> {
-            try {
-                TUMCabeVerification verification = TUMCabeVerification.create(this, null);
-                if (verification == null) {
-                    runOnUiThread(this::finish);
-                }
-
-                List<ChatRoom> rooms = TUMCabeClient
-                        .getInstance(this)
-                        .getMemberRooms(currentChatMember.getId(), verification);
-
-                manager.replaceIntoRooms(rooms);
-            } catch (IOException e) {
-                Utils.log(e);
-            }
-        });
     }
 
     /**
@@ -234,17 +239,23 @@ public class ChatRoomsActivity
                 .inflate(R.layout.dialog_input, null);
         final EditText input = view.findViewById(R.id.inputEditText);
 
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.new_chat_room)
                 .setMessage(R.string.new_chat_room_desc)
                 .setView(view)
-                .setPositiveButton(R.string.create, (dialog, whichButton) -> {
+                .setPositiveButton(R.string.create, (dialogInterface, whichButton) -> {
                     String value = input.getText().toString();
                     String randId = Integer.toHexString((int) (Math.random() * 4096));
                     createOrJoinChatRoom(randId + ':' + value);
                 })
                 .setNegativeButton(android.R.string.cancel, null)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     /**

@@ -1,9 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.chat;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.inputmethod.EditorInfo;
@@ -176,14 +176,19 @@ public class AddChatMemberActivity extends BaseActivity {
     }
 
     private void showConfirmDialog(ChatMember member) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setIcon(R.drawable.ic_action_add_person_blue);
-        dialog.setMessage(getString(R.string.add_user_to_chat_message, member.getDisplayName(), room.getActualName()));
-        dialog.setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-            joinRoom(member);
-            reset();
-        });
-        dialog.setNegativeButton(R.string.no, null);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.add_user_to_chat_message, member.getDisplayName(), room.getActualName()))
+                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                    joinRoom(member);
+                    reset();
+                })
+                .setNegativeButton(R.string.no, null)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
         dialog.show();
     }
 

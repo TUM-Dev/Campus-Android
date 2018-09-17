@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.chat.activity;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,6 +16,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -302,12 +302,19 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
             startActivity(intent);
             return true;
         } else if (i == R.id.action_leave_chat_room) {
-            new AlertDialog.Builder(this).setTitle(R.string.leave_chat_room)
-                                         .setMessage(getResources().getString(R.string.leave_chat_room_body))
-                                         .setPositiveButton(android.R.string.ok, this)
-                                         .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
-                                         .create()
-                                         .show();
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.leave_chat_room)
+                    .setMessage(getResources().getString(R.string.leave_chat_room_body))
+                    .setPositiveButton(android.R.string.ok, this)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .create();
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            }
+
+            dialog.show();
+
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -524,11 +531,17 @@ public class ChatActivity extends ActivityForDownloadingExternal implements Dial
                                                                getString(message.getStatusStringRes()),
                                                                getString(result ? R.string.valid : R.string.not_valid));
 
-                             new AlertDialog.Builder(ChatActivity.this)
+                             AlertDialog dialog = new AlertDialog.Builder(ChatActivity.this)
                                      .setTitle(R.string.message_details)
                                      .setMessage(Utils.fromHtml(messageStr))
-                                     .create()
-                                     .show();
+                                     .create();
+
+                             if (dialog.getWindow() != null) {
+                                 dialog.getWindow().setBackgroundDrawableResource(
+                                         R.drawable.rounded_corners_background);
+                             }
+
+                             dialog.show();
                          }
 
                          @Override

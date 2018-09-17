@@ -5,11 +5,15 @@
     <dimen name="material_tiny_padding">4dp</dimen>
 
     <dimen name="material_card_view_padding">8dp</dimen>
-    <dimen name="material_corner_radius">2dp</dimen>
+    <dimen name="material_corner_radius">8dp</dimen>
     <dimen name="material_default_elevation">12dp</dimen>
 
+    <dimen name="input_layout_border">1dp</dimen>
+
     <dimen name="compound_drawable_size">16dp</dimen>
+
     <dimen name="icon_default">24dp</dimen>
+    <dimen name="icon_large">64dp</dimen>
     <dimen name="divider_height">1dp</dimen>
     <dimen name="two_line_button_padding">12dp</dimen>
 
@@ -26,7 +30,7 @@
     <dimen name="next_lecture_select_width">30dp</dimen>
     <dimen name="card_padding_vertical">0dp</dimen>
     <dimen name="card_padding_horizontal">16dp</dimen>
-    <dimen name="card_view_elevation">2dp</dimen>
+    <dimen name="card_view_elevation">4dp</dimen>
     <dimen name="cardview_corner_radius">2dp</dimen>
 
     <dimen name="widget_margin">0dp</dimen>

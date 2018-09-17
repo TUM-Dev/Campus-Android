@@ -62,7 +62,7 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
      * @param item the item
      * @return the header for this item
      */
-    public String genenrateHeaderName(T item) {
+    public String generateHeaderName(T item) {
         return item.getHeadName();
     }
 
@@ -80,7 +80,7 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
             holder = (HeaderViewHolder) view.getTag();
         }
 
-        String headerText = genenrateHeaderName(infoList.get(position));
+        String headerText = generateHeaderName(infoList.get(position));
         holder.text.setText(headerText);
 
         return view;

@@ -1,6 +1,4 @@
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/StandardCard">
 
     <FrameLayout
@@ -11,21 +9,22 @@
         android:gravity="center_horizontal"
         android:onClick="restoreCards"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/material_small_padding"
-        android:paddingEnd="@dimen/material_default_padding"
         android:paddingStart="@dimen/material_default_padding"
-        android:paddingTop="@dimen/material_small_padding">
+        android:paddingTop="@dimen/material_small_padding"
+        android:paddingEnd="@dimen/material_default_padding"
+        android:paddingBottom="@dimen/material_small_padding">
 
         <TextView
             android:id="@+id/textView"
+            style="@style/CardBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawablePadding="@dimen/material_default_padding"
             android:drawableStart="@drawable/ic_action_restore"
+            android:drawablePadding="@dimen/material_default_padding"
             android:text="@string/restore_all_cards"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </FrameLayout>
 
-</android.support.v7.widget.CardView>
+</android.support.design.card.MaterialCardView>

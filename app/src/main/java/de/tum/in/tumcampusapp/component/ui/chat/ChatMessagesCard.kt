@@ -1,17 +1,16 @@
 package de.tum.`in`.tumcampusapp.component.ui.chat
 
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.RemoteViews
 import com.google.common.collect.Lists
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
+import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
@@ -67,13 +66,14 @@ class ChatMessagesCard(context: Context,
         mRoomId = roomId
     }
 
-    override fun getIntent() = Intent(context, ChatActivity::class.java).apply {
-        putExtra(Const.CURRENT_CHAT_ROOM, Gson().toJson(ChatRoom(mRoomIdString).apply {
-            id = mRoomId
-        }))
-        putExtras(Bundle())
+    override fun getNavigationDestination(): NavigationDestination? {
+        val bundle = Bundle().apply {
+            val chatRoom = ChatRoom(mRoomIdString).apply { id = mRoomId }
+            val value = Gson().toJson(chatRoom)
+            putString(Const.CURRENT_CHAT_ROOM, value)
+        }
+        return SystemActivity(ChatActivity::class.java, bundle)
     }
-
 
     override fun getId() = mRoomId
 

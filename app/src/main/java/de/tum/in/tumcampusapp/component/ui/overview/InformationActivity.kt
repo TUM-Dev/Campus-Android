@@ -73,59 +73,61 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
 
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
-            this.addDebugRow(debugInfos, "App Version", packageInfo.versionName)
+            this.addDebugRow(debugInfos, "App version", packageInfo.versionName)
         } catch (ignore: NameNotFoundException) {
         }
+
         this.addDebugRow(debugInfos, "TUM ID", sp.getString(Const.LRZ_ID, ""))
         val token = sp.getString(Const.ACCESS_TOKEN, "")
-        if(token == ""){
-            this.addDebugRow(debugInfos, "TUM Access token", "")
+        if (token == "") {
+            this.addDebugRow(debugInfos, "TUM access token", "")
         } else {
-            this.addDebugRow(debugInfos, "TUM Access token", token.substring(0, 5) + "...")
+            this.addDebugRow(debugInfos, "TUM access token", token.substring(0, 5) + "...")
         }
-        this.addDebugRow(debugInfos, "Bugreports", sp.getBoolean(Const.BUG_REPORTS, false).toString() + " ")
+        this.addDebugRow(debugInfos, "Bug reports", sp.getBoolean(Const.BUG_REPORTS, false).toString() + " ")
 
         this.addDebugRow(debugInfos, "REG ID", Utils.getSetting(this, Const.FCM_REG_ID, ""))
-        this.addDebugRow(debugInfos, "REG Transmission", DateUtils.getRelativeDateTimeString(this,
+        this.addDebugRow(debugInfos, "REG transmission", DateUtils.getRelativeDateTimeString(this,
                 Utils.getSettingLong(this, Const.FCM_REG_ID_LAST_TRANSMISSION, 0),
                 DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0).toString())
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
-            this.addDebugRow(debugInfos, "VersionCode", packageInfo.versionCode.toString())
+            this.addDebugRow(debugInfos, "Version code", packageInfo.versionCode.toString())
         } catch (ignore: NameNotFoundException) {
         }
 
-        this.addDebugRow(debugInfos, "BuildConfig, Debug = ", BuildConfig.DEBUG.toString())
+        this.addDebugRow(debugInfos, "Build configuration", BuildConfig.DEBUG.toString())
 
         debugInfos.visibility = View.VISIBLE
     }
 
-    private fun addDebugRow(t: TableLayout, label: String, value: String?) {
-        //Create new row
+    private fun addDebugRow(tableLayout: TableLayout, label: String, value: String?) {
         val tableRow = TableRow(this)
         tableRow.layoutParams = rowParams
 
-        //Add our text fields
-        val l = TextView(this)
-        l.text = label
-        l.layoutParams = rowParams
-        l.setPadding(0,0,25,0)
-        tableRow.addView(l)
+        val labelTextView = TextView(this).apply {
+            text = label
+            layoutParams = rowParams
 
-        val v = TextView(this)
-        v.text = value
-        v.layoutParams = rowParams
-        v.isClickable = true
-
-        //Copy to clipboard
-        v.setOnClickListener { v1 ->
-            val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText(label, value)
-            clipboard.primaryClip = clip
+            val padding = resources.getDimensionPixelSize(R.dimen.material_small_padding)
+            setPadding(0, 0, padding, 0)
         }
-        tableRow.addView(v)
+        tableRow.addView(labelTextView)
 
-        //Add it to the table
-        t.addView(tableRow)
+        val valueTextView = TextView(this).apply {
+            text = value
+            layoutParams = rowParams
+            isClickable = true
+
+            setOnLongClickListener {
+                val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText(label, value)
+                clipboard.primaryClip = clip
+                true
+            }
+        }
+        tableRow.addView(valueTextView)
+
+        tableLayout.addView(tableRow)
     }
 }

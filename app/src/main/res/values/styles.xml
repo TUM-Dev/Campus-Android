@@ -1,36 +1,32 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="SectionHeadline">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:autoLink">none</item>
-        <item name="android:background">@color/color_primary_dark</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:scrollHorizontally">false</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/section_text_size</item>
-    </style>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/tum_light_gray</item>
+        <item name="colorPrimaryDark">@color/tum_dark_gray</item>
+        <item name="colorAccent">@color/tum_blue</item>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
-        <item name="colorAccent">@color/color_primary</item>
+        <item name="android:windowBackground">@color/default_window_background</item>
+
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field</item>
 
-        <!-- Light navigation bar -->
+        <!-- Light status bar -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+        <!-- Light system UI -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.NoDrawerLayout" parent="AppTheme">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="android:statusBarColor">@color/color_primary_dark</item>
+        <item name="android:statusBarColor">@color/tum_dark_gray</item>
     </style>
 
     <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/color_primary</item>
+        <item name="android:textColorSecondary">@color/color_primary</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
     </style>
 
     <style name="TumToolbarPopUp" parent="ThemeOverlay.AppCompat.Light">
@@ -53,12 +49,19 @@
         <item name="android:background">@drawable/wear_tuition_fee</item>
     </style>
 
-    <style name="AppThemeStartup" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
-        <item name="android:windowBackground">@color/color_primary</item>
+    <style name="AppThemeStartup" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimaryDark">@android:color/white</item>
+        <item name="android:windowBackground">@android:color/white</item>
+
+        <!-- Light system UI -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+        <!-- Light navigation bar -->
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
     </style>
 
-    <style name="AppThemeFullscreen" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeFullscreen" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary</item>
         <item name="colorAccent">@color/color_primary</item>
@@ -69,11 +72,26 @@
     </style>
 
     <!-- Style for Stripe's payment method activity -->
-    <style name="StripeDefaultTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/color_primary</item>
+    <style name="StripeDefaultTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_primary</item>
-        <item name="titleTextColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/color_primary</item>
+        <item name="android:textColorSecondary">@color/color_primary</item>
+        <item name="titleTextColor">@color/color_primary</item>
+    </style>
+
+    <style name="SectionHeadline">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:autoLink">none</item>
+        <item name="android:gravity">center</item>
+        <item name="android:scrollHorizontally">false</item>
+        <item name="android:textColor">@color/color_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingTop">@dimen/material_tiny_padding</item>
+        <item name="android:paddingBottom">@dimen/material_tiny_padding</item>
+        <item name="android:textSize">@dimen/section_text_size</item>
     </style>
 
     <style name="CalendarDateTimeItem">
@@ -144,24 +162,18 @@
         <item name="android:layout_margin">5dp</item>
     </style>
 
-    <style name="InfoBox">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:drawableStart">@drawable/ic_action_info_blue</item>
-        <item name="android:drawablePadding">10dp</item>
-        <item name="android:background">@drawable/rounded_corners_background</item>
-        <item name="android:padding">12dp</item>
-    </style>
-
     <style name="StandardCard" parent="CardView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:elevation">@dimen/card_view_elevation</item>
         <item name="android:transitionName">@string/transition_card</item>
+        <item name="android:clipToPadding">true</item>
         <item name="cardBackgroundColor">#FFFFFF</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/spinner_border</item>
         <item name="cardCornerRadius">@dimen/material_corner_radius</item>
+        <item name="android:background">?android:selectableItemBackground</item>
     </style>
 
     <style name="CardTitle">
@@ -173,6 +185,15 @@
 
     <style name="CardBody">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textColor">@color/text_dark_secondary</item>
+    </style>
+
+    <style name="CardDetails">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textColor">@color/text_dark_secondary</item>
+    </style>
+
+    <style name="CardSource">
         <item name="android:textColor">@color/text_dark_secondary</item>
     </style>
 

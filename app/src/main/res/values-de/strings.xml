@@ -78,21 +78,21 @@
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
     <string name="about_tca">Über die App</string>
     <string name="information">Informationen</string>
-    <string name="github_contribute">Mitmachen auf Github</string>
-    <string name="licences">Open Source-Lizenzen</string>
+    <string name="github_contribute">Mitmachen auf GitHub</string>
+    <string name="licences">Open-Source-Lizenzen</string>
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
 
     <!-- Startup Wizard -->
     <string name="not_connected_to_tumonline">Nicht verbunden</string>
-    <string name="startup_wizard_uppercase">TUMonline-Wizard</string>
-    <string name="welcome_msg">Um den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
+    <string name="startup_wizard">Mit TUMonline verbinden</string>
+    <string name="welcome_msg">Um den Zugriff auf TUMonline-Dienste zu ermöglichen, wird deine <b>TUM-Kennung</b> benötigt.\n\nDie Kennung hat das Format <i>ga12abc</i>.</string>
     <string name="button_skip">Überspringen</string>
     <string name="button_next">Weiter</string>
-    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nBitte aktiviere jetzt das Token in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
+    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nBitte aktiviere das Token in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
     <string name="step_1">Schritt 1</string>
     <string name="step_2">Schritt 2</string>
     <string name="step_3">Schritt 3</string>
-    <string name="set_silent_mode">Aktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
+    <string name="set_silent_mode">Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
     <string name="set_background_mode">Aktiviere oder deaktiviere den <i>Hintergrundmodus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
     <string name="goto_tumcampus">Starte TUM Campus App</string>
 
@@ -104,7 +104,7 @@
     <string name="imdb_rating">IMDb-Wertung</string>
     <string name="year">Erscheinungsjahr</string>
     <string name="runtime">Laufzeit</string>
-    <string name="genre">Genre</string>
+    <string name="genres">Genres</string>
     <string name="director">Regisseur</string>
     <string name="actors">Schauspieler</string>
     <string name="description">Beschreibung</string>
@@ -158,7 +158,7 @@
     <string name="examination_aids">Prüfungshilfsmittel</string>
 
     <!-- Tuition fees -->
-    <string name="amount_dots">Offener Betrag</string>
+    <string name="outstanding_balance">Offener Betrag</string>
     <string name="deadline_dots">Deadline:</string>
     <string name="amount_dots_card">Offener Betrag: %s</string>
 
@@ -277,7 +277,7 @@
     <string name="password">Passwort</string>
     <string name="not_ask_again">Nicht mehr fragen</string>
     <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
-    <string name="eduroam_setup_question_desc">Hier klicken, um eduroam einzurichten</string>
+    <string name="eduroam_setup">eduroam einrichten</string>
     <string name="card_eduroam_summary">Hilft dir, eduroam einzurichten</string>
     <string name="pin_lock">PIN-Sperre</string>
     <string name="pin_lock_desc">Für die Einrichtung des WLAN-Zugangs wird eine PIN-Sperre benötigt.
@@ -303,8 +303,8 @@
     <string name="news_sources">News Quellen</string>
     <string name="only_latest_article">Nur neusten Artikel</string>
     <string name="only_latest_article_summary">Zeigt jeweils nur den neusten Artikel. Ansonsten werden alle Artikel der ausgewählten Quellen angezeigt.</string>
-    <string name="lecture_chat">Vorlesungs-Chat &amp; Bedingungen akzeptieren</string>
-    <string name="set_lecture_chat">Aktiviere oder deaktiviere <i>Vorlesungs-Chat</i>. Wenn es aktiviert ist kannst du Vorlesungs-Chatrooms beitreten und mit deinen Komilitonen diskutieren.</string>
+    <string name="lecture_chat">Vorlesungs-Chat</string>
+    <string name="set_lecture_chat">Wenn es aktiviert ist, kannst du Vorlesungs-Chatrooms beitreten und mit deinen Kommilitonen diskutieren.</string>
     <string name="open_chat_terms">Chatbedingungen</string>
     <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
     <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
@@ -312,12 +312,11 @@
     <string name="view_mode">Ansicht wechseln</string>
     <string name="Refresh">Aktualisieren</string>
     <string name="bug_reports">Anonyme Fehlerberichte</string>
-    <string name="set_bug_reports">Unterstütze das TCA Team indem du anonyme Fehlerberichte zu unseren Server schicken lässt. Diese beinhalten: Stacktrace, Logdatei, Android Version, App Version und Bildschirm Auflösung</string>
+    <string name="set_bug_reports">Unterstütze das TCA-Team mit anonymen Fehlerberichten. Diese beinhalten: Stacktrace, Logdateien, Android-Version, App-Version und Bildschirmauflösung</string>
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
     <string name="error_pk_verification">Es ist ein Problem bei der Authentifizierung aufgetreten</string>
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
-    <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter <![CDATA[<a href="https://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a>]]>.</string>
     <string name="no_rights_to_access_id">Identität konnte nicht abgefragt werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Leise</string>
@@ -359,11 +358,11 @@ Signatur: %5$s</string>
     <string name="semester_summer">Sommersemester</string>
     <string name="semester_winter">Wintersemester</string>
     <string name="update_notification_description">Eine neue Version der Tum Campus App wurde am %s released. Hier tippen zum herunterladen.</string>
-    <string name="support_us">Hilf uns die TUM Campus App besser zu machen! Gib’ uns ein ‘Gefällt mir’ auf Facebook, schlag’ uns neue Ideen auf Github vor oder sag’ uns deine Meinung per E-Mail!</string>
-    <string name="support_us_title">Unterstütze uns!</string>
-    <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Standort zugreifen zu dürfen, um zum Beispiel Mensa Speisepläne in deiner Nähe oder Fahrpläne der nächstgelegenen MVV Station anzeigen zu können. \n Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
-    <string name="permission_calendar_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zugreifen zu dürfen, um diesen mit deinem TUM-Kalender abgleichen zu können.</string>
-    <string name="permission_contacts_explanation">Diese App braucht die Erlaubnis auf deine Kontakte zugreifen zu dürfen, um diese Person hinzufügen zu können.</string>
+    <string name="support_us">Hilf uns die TUM Campus App besser zu machen. Like uns auf Facebook, schlage neue Ideen auf GitHub vor oder sage uns deine Meinung per E-Mail.</string>
+    <string name="support_us_title">Unterstütze uns</string>
+    <string name="permission_location_explanation">Die TUM Campus App braucht die Erlaubnis, auf deinen Standort zugreifen zu dürfen, um Mensa-Speisepläne in deiner Nähe oder Fahrpläne der nächstgelegenen MVV-Station anzeigen zu können. Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
+    <string name="permission_calendar_explanation">Die TUM Campus App braucht die Erlaubnis, auf deinen Kalender zugreifen zu dürfen, um diesen mit deinem TUM-Kalender abgleichen zu können.</string>
+    <string name="permission_contacts_explanation">Die TUM Campus App braucht die Erlaubnis, auf deine Kontakte zugreifen zu dürfen, um diese Person hinzufügen zu können.</string>
     <string name="cancel">Abbruch</string>
     <string name="grant_permission">Erlauben</string>
     <string name="ok">OK</string>
@@ -383,7 +382,7 @@ Signatur: %5$s</string>
     <string name="MINUTES">minuten</string>
     <string name="AT">um</string>
     <string name="startup_motto">Von Studierenden - Für Studierende</string>
-    <string name="eduroam_fix">Jetzt reparieren!</string>
+    <string name="eduroam_fix">Jetzt reparieren</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">eduroam reparieren</string>
     <string name="wifi_identity_zone">Du hast eduroam ohne Angabe der Heimateinrichtung (z.B. \“@eduroam.mwn.de\”) im Benutzernamen konfiguriert. Dadurch wird eduroam abseits der TUM nicht funktionieren.</string>
@@ -408,13 +407,10 @@ Signatur: %5$s</string>
     <string name="facilities">Einrichtungen</string>
     <string name="nerby_facilities">Einrichtungen in der Nähe</string>
 
-    <string name="eduroam_dialog_title">Altes Eduroam Profil Löschen</string>
+    <string name="eduroam_dialog_title">Altes Eduroam-Profil löschen</string>
     <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
     <string name="done">Fertig</string>
-    <string name="eduroam_dialgo_step_1">1.</string>
-    <string name="eduroam_dialog_step_2">2. Auf \‘eduroam\’ klicken</string>
-    <string name="eduroam_dialog_step_3">3. Auf \‘Entfernen\’ klicken</string>
-    <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann.</string>
+    <string name="eduroam_dialog_info_text">Die WLAN-Konfiguration muss entfernt werden, da die App andere Konfigurationen nicht überschreiben kann. Öffne die WLAN-Einstellungen, wähle eduroam aus und klicke auf Entfernen.</string>
 
     <!-- Feedback Activity -->
     <string name="feedback">Feedback</string>
@@ -544,17 +540,17 @@ Signatur: %5$s</string>
 
     <string name="back">Zurück</string>
 
-    <string name="tumonline_advantages">Nach dem Einrichten von TUMonline kannst du:\n\n
+    <string name="tumonline_advantages">Nach dem Einrichten von TUMonline kannst du:\n
                                         &#8226; auf deinen Kalender zugreifen\n
                                         &#8226; Details zu deinen Vorlesungen erfahren\n
                                         &#8226; deine Noten ansehen\n
                                         &#8226; deinen Studienbeitragsstatus prüfen\n
                                         &#8226; mit Komilitonen aus deinen Vorlesungen chatten</string>
     <string name="tumonline_login">Mit TUMonline verbinden</string>
-    <string name="card_login_title">Willkommen zur TUM Campus App!</string>
-    <string name="card_login_body">Verbinde jetzt die App mit TUMonline um alle Features nutzen zu können! Dazu gehören unter anderem dein Kalendar, deine Vorlesungen und deine Noten!</string>
+    <string name="card_login_title">Willkommen zur TUM Campus App</string>
+    <string name="card_login_body">Verbinde die App mit TUMonline, um auf deinen Kalendar, deine Vorlesungen und deine Noten zugreifen zu können.</string>
 
-    <string name="trailer">Trailer</string>
+    <string name="watch_trailer">Trailer anschauen</string>
     <string name="show_trailer_error">Trailer kann nicht gezeigt werden</string>
     <string name="kino_cover_description">Cover</string>
 
@@ -562,9 +558,7 @@ Signatur: %5$s</string>
 
     <string name="app_info_text">
         Die TUM Campus App wird von Freiwilligen Helfern, Studierenden des Android Praktikums und Lehrstuhlmitarbeitern des Informatik Fachgebiet 13 unter
-        Professor Dr. Baumgarten entwickelt.
-        Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird vom TCA-Team für Android und iOS bereitgestellt.\n\n
-        Für besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
+        Professor Dr. Baumgarten entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird vom TCA-Team für Android und iOS bereitgestellt.\n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
     </string>
     <string name="dialog_add_to_contacts">Zu Kontakten hinzufügen?</string>
     <string name="add">Hinzufügen</string>
@@ -584,14 +578,11 @@ Signatur: %5$s</string>
 
     <string name="topic">Über</string>
     <string name="generate_new_token">Neuen Token generieren</string>
-    <string name="open_tum_online">TUM Online öffnen</string>
+    <string name="open_tum_online">TUMonline öffnen</string>
     <string name="create">Erstellen</string>
     <string name="enter_name_placeholder">Name eingeben …</string>
     <string name="go_to_room">Raum anzeigen</string>
     <string name="enter_your_tum_id">TUM-ID eingeben …</string>
-    <string name="e_mail_us">Schreib uns eine E-Mail</string>
-    <string name="like_us_on_facebook">Like uns auf Facebook</string>
-    <string name="check_us_out_on_github">Besuche uns auf GitHub</string>
 
     <string name="send_feedback_question">Feedback absenden?</string>
     <string name="feedback_empty">Bitte gib hier dein Feedback ein</string>
@@ -633,9 +624,6 @@ Signatur: %5$s</string>
     <string name="export_to_google_error">Ein Fehler ist während des Kalender-Exports zu Google Kalender aufgetreten.</string>
     <string name="checking_if_token_enabled">Überprüfung, ob Token aktiviert ist …</string>
 
-    <string name="new_items_format_string">%d neue Meldungen</string>
-    <string name="including_format_string">inklusive %s</string>
-
     <string name="no_events_found">Keine Events gefunden</string>
     <string name="no_bookings_found">Keine Buchungen gefunden</string>
     <string name="ticket">Ticket</string>
@@ -643,4 +631,12 @@ Signatur: %5$s</string>
     <string name="the_ticket_has_been_saved_for_you_in_the_app">Das Ticket wurde für dich in der App gespeichert.</string>
     <string name="remaining_tickets">Verbleibende Tickets</string>
     <string name="payment_confirmation">Zahlungsbestätigung</string>
+    <string name="about">Über</string>
+    <string name="due_on_format_string">Fällig am %s</string>
+    <string name="home">Übersicht</string>
+    <string name="student_financial_aid">Studienfinanzierung</string>
+    <string name="released">Veröffentlicht</string>
+
+    <string name="new_items_format_string">%d neue Meldungen</string>
+    <string name="including_format_string">inklusive %s</string>
 </resources>

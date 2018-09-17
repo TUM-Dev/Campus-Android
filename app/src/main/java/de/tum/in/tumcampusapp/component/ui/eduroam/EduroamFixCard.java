@@ -8,6 +8,7 @@ import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.design.button.MaterialButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,8 +51,15 @@ public class EduroamFixCard extends Card {
         super.updateViewHolder(viewHolder);
         setMCard(viewHolder.itemView);
         setMLinearLayout(getMCard().findViewById(R.id.card_view));
+
         TextView errorsTv = getMCard().findViewById(R.id.eduroam_errors);
-        errorsTv.setText(Joiner.on("\n").join(errors));
+        if (errors != null && !errors.isEmpty()) {
+            errorsTv.setVisibility(View.VISIBLE);
+            errorsTv.setText(Joiner.on("\n").join(errors));
+        }
+
+        MaterialButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
+        button.setOnClickListener(v -> performEduroamFix());
 
         // only error is missing realm which is not insecure per se but also not right
         if (errors.size() == 1 && errors.get(0)
@@ -59,6 +67,21 @@ public class EduroamFixCard extends Card {
             getMCard().findViewById(R.id.eduroam_insecure_message)
                       .setVisibility(View.GONE);
         }
+    }
+
+    private void performEduroamFix() {
+        if (eduroam != null) {
+            WifiManager wifi = (WifiManager) getContext().getApplicationContext()
+                    .getSystemService(Context.WIFI_SERVICE);
+            if (wifi != null) {
+                wifi.removeNetwork(eduroam.networkId);
+            }
+        }
+
+        Intent intent = new Intent(getContext(), SetupEduroamActivity.class);
+        // TCA should only produce correct profiles, so incorrect ones were configured somewhere else
+        intent.putExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, true);
+        getContext().startActivity(intent);
     }
 
     @Override
@@ -79,19 +102,6 @@ public class EduroamFixCard extends Card {
         prefs.edit()
              .putBoolean("card_eduroam_fix_start", false)
              .apply();
-    }
-
-    @Override
-    public Intent getIntent() {
-        if (eduroam != null) {
-            WifiManager wifi = (WifiManager) getContext().getApplicationContext()
-                                                         .getSystemService(Context.WIFI_SERVICE);
-            wifi.removeNetwork(eduroam.networkId);
-        }
-        Intent intent = new Intent(getContext(), SetupEduroamActivity.class);
-        // TCA should only produce correct profiles, so incorrect ones were configured somewhere else
-        intent.putExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, true);
-        return intent;
     }
 
     @Override

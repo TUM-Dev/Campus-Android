@@ -5,13 +5,11 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar" />
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -29,21 +27,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
+                <!-- TODO: Improve design -->
                 <com.alamkanak.weekview.WeekView
                     android:id="@+id/weekView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:columnGap="2dp"
+                    app:columnGap="8dp"
                     app:dayBackgroundColor="#05000000"
+                    app:eventCornerRadius="4dp"
                     app:eventTextColor="@android:color/white"
                     app:headerColumnBackground="#ffffffff"
                     app:headerColumnPadding="8dp"
+                    app:headerColumnTextColor="@color/color_primary"
+                    app:headerRowBackgroundColor="@android:color/white"
                     app:headerRowPadding="12dp"
-                    app:hourHeight="40dp"
-                    app:noOfVisibleDays="1"
-                    app:textSize="14sp"
+                    app:hourHeight="60dp"
+                    app:noOfVisibleDays="3"
+                    app:overlappingEventGap="4dp"
+                    app:textSize="12sp"
                     app:todayBackgroundColor="#1848adff"
-                    app:xScrollingSpeed="0.4" />
+                    app:todayHeaderTextColor="@color/color_primary" />
 
             </LinearLayout>
 
@@ -51,7 +54,6 @@
 
     </LinearLayout>
 
-    <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -158,11 +158,14 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if (!isLoggedIn || lrzId.isEmpty() || chatRoomName.isEmpty()) {
             context?.let {
-                AlertDialog.Builder(it)
+                val dialog = AlertDialog.Builder(it)
                         .setTitle(R.string.error)
                         .setMessage(R.string.not_logged_in_error)
                         .setPositiveButton(R.string.ok) { _, _ -> activity?.finish() }
-                        .show()
+                        .create()
+
+                dialog.window.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+                dialog.show()
             }
             return
         }
@@ -222,7 +225,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 getString(R.string.tum_calendar)
         )
 
-        AlertDialog.Builder(context)
+        val dialog = AlertDialog.Builder(context)
                 .setTitle(R.string.add_to_calendar_info)
                 .setSingleChoiceItems(calendars, 0, null)
                 .setNegativeButton(R.string.cancel, null)
@@ -230,7 +233,10 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     handleCalendarExportSelection(which)
                 }
                 .setCancelable(true)
-                .show()
+                .create()
+
+        dialog.window.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+        dialog.show()
     }
 
     private fun handleCalendarExportSelection(which: Int) {

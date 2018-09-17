@@ -47,14 +47,7 @@ public class LoginPromptCard extends Card {
     protected boolean shouldShow(@NonNull SharedPreferences sharedPrefs) {
         // show on top as long as user hasn't swiped it away and isn't connected to TUMonline
         return Utils.getSettingBool(this.getContext(), CardManager.SHOW_LOGIN, true)
-               && Utils.getSetting(this.getContext(), Const.LRZ_ID, "").isEmpty();
-    }
-
-    @Override
-    public Intent getIntent() {
-        // Returns null, because tapping the card (instead of the button) will transition to the setup wizard with a fade animation.
-        // We want the slide-up animation of Android activities.
-        return null;
+               && Utils.getSetting(getContext(), Const.LRZ_ID, "").isEmpty();
     }
 
     @Override

@@ -105,6 +105,8 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
             setDrawEntryLabels(false)
             legend.isWordWrapEnabled = true
             description = null
+
+            setTouchEnabled(false)
             invalidate()
         }
     }
@@ -134,6 +136,7 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
             }
 
             description = null
+            setTouchEnabled(false)
             invalidate()
         }
     }
@@ -255,10 +258,12 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         showListButton?.visibility = if (showChart) View.VISIBLE else View.GONE
         showChartButton?.visibility = if (showChart) View.GONE else View.VISIBLE
 
+        val refreshLayout = swipeRefreshLayout ?: return
+
         if (chartsContainer.visibility == View.GONE) {
-            crossFadeViews(swipeRefreshLayout, chartsContainer)
+            crossFadeViews(refreshLayout, chartsContainer)
         } else {
-            crossFadeViews(chartsContainer, swipeRefreshLayout)
+            crossFadeViews(chartsContainer, refreshLayout)
         }
     }
 
@@ -267,7 +272,6 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
      * transition is animated via android:animateLayoutChanges in the layout file.
      */
     fun toggleChart(view: View) {
-        //toggleChartVisibility()
         val transition = LayoutTransition()
 
         val showCharts = chartsContainer.visibility == View.GONE

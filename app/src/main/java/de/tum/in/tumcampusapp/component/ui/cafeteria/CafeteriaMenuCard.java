@@ -1,17 +1,20 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
+import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
@@ -62,11 +65,12 @@ public class CafeteriaMenuCard extends Card {
         return mCafeteria.getName();
     }
 
+    @Nullable
     @Override
-    public Intent getIntent() {
-        Intent i = new Intent(getContext(), CafeteriaActivity.class);
-        i.putExtra(Const.CAFETERIA_ID, mCafeteria.getId());
-        return i;
+    public NavigationDestination getNavigationDestination() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(Const.CAFETERIA_ID, mCafeteria.getId());
+        return new SystemActivity(CafeteriaActivity.class, bundle);
     }
 
     @Override

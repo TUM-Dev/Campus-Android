@@ -13,6 +13,7 @@ data class FavoriteDish(@PrimaryKey(autoGenerate = true)
                         var date: String = "",
                         var tag: String = "") {
     companion object {
+        @JvmStatic
         fun create(cafeteriaId: Int, dishName: String, date: String, tag: String) = FavoriteDish(
                 cafeteriaId = cafeteriaId,
                 dishName = dishName,

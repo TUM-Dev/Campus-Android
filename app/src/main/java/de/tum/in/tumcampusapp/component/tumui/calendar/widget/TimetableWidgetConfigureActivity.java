@@ -2,7 +2,9 @@ package de.tum.in.tumcampusapp.component.tumui.calendar.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -25,12 +27,20 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
 
         // Setup toolbar and save button
         setSupportActionBar(findViewById(R.id.main_toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_check);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            Drawable closeIcon = ContextCompat.getDrawable(this, R.drawable.ic_check);
+            if (closeIcon != null) {
+                int color = ContextCompat.getColor(this, R.color.color_primary);
+                closeIcon.setTint(color);
+            }
+            getSupportActionBar().setHomeAsUpIndicator(closeIcon);
+        }
 
         // Get appWidgetId from intent
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
+        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             appWidgetId = extras.getInt(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,

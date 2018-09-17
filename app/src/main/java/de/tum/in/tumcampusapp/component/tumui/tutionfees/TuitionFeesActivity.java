@@ -1,14 +1,15 @@
 package de.tum.in.tumcampusapp.component.tumui.tutionfees;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
+import android.support.design.button.MaterialButton;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Locale;
 
@@ -36,15 +37,16 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        amountTextView = findViewById(R.id.soll);
-        deadlineTextView = findViewById(R.id.deadline);
-        semesterTextView = findViewById(R.id.semester);
+        amountTextView = findViewById(R.id.amountTextView);
+        deadlineTextView = findViewById(R.id.deadlineTextView);
+        semesterTextView = findViewById(R.id.semesterTextView);
 
-        // Set the text in the information box and make the link clickable
-        TextView informationTextView = findViewById(R.id.fees_aid);
-        Spanned information = Html.fromHtml(getString(R.string.tuition_fee_more));
-        informationTextView.setText(information);
-        informationTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        MaterialButton button = findViewById(R.id.financialAidButton);
+        button.setOnClickListener(v -> {
+            String url = getString(R.string.student_financial_aid_link);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        });
 
         refreshData(CacheControl.USE_CACHE);
     }
@@ -67,9 +69,11 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         amountTextView.setText(amountText);
 
         DateTime deadline = tuition.getDeadline();
-        deadlineTextView.setText(DateTimeFormat.longDate().print(deadline));
+        DateTimeFormatter formatter = DateTimeFormat.longDate().withLocale(Locale.getDefault());
+        String formattedDeadline = formatter.print(deadline);
+        deadlineTextView.setText(getString(R.string.due_on_format_string, formattedDeadline));
 
-        String semester = tuition.getSemester().toUpperCase(Locale.getDefault());
+        String semester = tuition.getSemester();
         semesterTextView.setText(semester);
 
         if (tuition.isPaid()) {

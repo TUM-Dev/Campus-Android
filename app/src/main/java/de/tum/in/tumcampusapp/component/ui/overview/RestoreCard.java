@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.overview;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +22,6 @@ public class RestoreCard extends StickyCard {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_restore, parent, false);
         return new CardViewHolder(view);
-    }
-
-    @Override
-    public Intent getIntent() {
-        return null;
     }
 
     @Override
