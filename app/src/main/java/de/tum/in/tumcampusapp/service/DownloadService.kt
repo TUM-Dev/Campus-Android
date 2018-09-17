@@ -227,6 +227,11 @@ class DownloadService : JobIntentService() {
                     Const.TOP_NEWS -> success = service.downloadTopNews()
                     else -> {
                         success = service.downloadAll(force)
+
+                        if (success) {
+                            Utils.setSetting(service, Const.EVERYTHING_SETUP, true)
+                        }
+
                         val isSetup = Utils.getSettingBool(service, Const.EVERYTHING_SETUP, false)
                         if (isSetup) {
                             val cacheManager = CacheManager(service)
