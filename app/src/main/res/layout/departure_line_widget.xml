@@ -8,22 +8,30 @@
     android:orientation="horizontal"
     android:padding="@dimen/material_small_padding">
 
-    <LinearLayout
-        android:id="@+id/line_symbol_ll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical">
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="24dp">
+
+        <!-- Use this workaround as setting background tint
+             on a TextView via RemoteViews does not work -->
+        <ImageView
+            android:id="@+id/line_symbol_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/rounded_corners_background"
+            tools:tint="@android:color/holo_red_dark" />
 
         <TextView
             android:id="@+id/line_symbol"
-            android:layout_width="40dp"
-            android:layout_height="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="U6" />
+            tools:text="U6"
+            tools:textColor="@android:color/white" />
 
-    </LinearLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/line_name"

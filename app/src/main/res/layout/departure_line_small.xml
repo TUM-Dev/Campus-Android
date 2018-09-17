@@ -1,59 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/material_tiny_padding"
+    android:paddingBottom="@dimen/material_tiny_padding">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:orientation="horizontal">
-
-    <LinearLayout
-        android:id="@+id/line_symbol_ll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="6dp">
-
-        <TextView
-            android:id="@+id/line_symbol"
-            android:layout_width="36dp"
-            android:layout_height="22dp"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/line_symbol"
+        android:layout_width="36dp"
+        android:layout_height="22dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/rounded_corners_background"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:backgroundTint="@android:color/holo_red_dark"
+        tools:text="U3"
+        tools:textColor="@android:color/white" />
 
     <TextView
         android:id="@+id/line_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="4dp"
-        android:layout_toEndOf="@id/line_symbol_ll"
-        android:layout_toLeftOf="@id/line_switcher"
-        android:layout_toRightOf="@id/line_symbol_ll"
-        android:layout_toStartOf="@id/line_switcher"/>
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/material_small_padding"
+        android:layout_weight="1"
+        android:textColor="@color/text_dark_primary"
+        android:textSize="15sp"
+        tools:text="Line name" />
 
     <TextSwitcher
         android:id="@+id/line_switcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:minWidth="50dp"
-        android:layout_marginRight="5dp">
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/material_small_padding"
+        android:minWidth="50dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right|center_vertical"
-            android:textColor="@color/sections_gray"/>
+            android:gravity="end|center_vertical"
+            android:textColor="@color/sections_gray" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right|center_vertical"
-            android:textColor="@color/sections_gray"/>
+            android:gravity="end|center_vertical"
+            android:textColor="@color/sections_gray" />
+
     </TextSwitcher>
-</RelativeLayout>
+
+</LinearLayout>

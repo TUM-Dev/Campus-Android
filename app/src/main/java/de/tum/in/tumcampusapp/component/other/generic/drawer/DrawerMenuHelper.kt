@@ -25,7 +25,6 @@ import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListActivit
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventsActivity
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 
@@ -86,7 +85,6 @@ class DrawerMenuHelper(private val mContext: Context, private val mDrawerLayout:
                 SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, CafeteriaActivity::class.java, false, false),
                 SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work, StudyRoomsActivity::class.java, false, false),
                 SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, RoomFinderActivity::class.java, false, false),
-                SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity::class.java, false, false),
                 SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonSearchActivity::class.java, true, false),
                 SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity::class.java, false, false),
                 SideNavigationItem(R.string.events_tickets, R.drawable.ic_events, EventsActivity::class.java, false, false),

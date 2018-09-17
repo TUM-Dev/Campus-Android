@@ -1,63 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/material_default_padding"
+    android:paddingTop="@dimen/material_small_padding"
+    android:paddingEnd="@dimen/material_default_padding"
+    android:paddingBottom="@dimen/material_small_padding">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal">
-
-    <LinearLayout
-        android:id="@+id/line_symbol_ll"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/line_symbol"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/line_symbol"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/rounded_corners_background"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:backgroundTint="@android:color/holo_red_dark"
+        tools:text="U3"
+        tools:textColor="@android:color/white" />
 
     <TextView
         android:id="@+id/line_name"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="4dp"
-        android:layout_toEndOf="@id/line_symbol_ll"
-        android:layout_toLeftOf="@+id/line_switcher"
-        android:layout_toRightOf="@id/line_symbol_ll"
-        android:layout_toStartOf="@id/line_switcher"
-        android:gravity="center_vertical"
-        android:textSize="16sp"/>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/material_default_padding"
+        android:layout_marginEnd="@dimen/material_small_padding"
+        android:layout_weight="1"
+        android:textSize="16sp"
+        tools:text="Line name" />
 
     <TextSwitcher
         android:id="@id/line_switcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:padding="5dp"
-        android:minWidth="50dp">
+        android:layout_gravity="center_vertical"
+        android:minWidth="50dp"
+        android:padding="5dp">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="end"
             android:textColor="@color/sections_gray"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="end"
             android:textColor="@color/sections_gray"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
+
     </TextSwitcher>
-</RelativeLayout>
+
+</LinearLayout>

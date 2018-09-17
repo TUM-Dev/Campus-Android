@@ -77,7 +77,7 @@ public class MVVWidgetService extends RemoteViewsService {
             rv.setTextViewText(R.id.line_symbol, currentItem.getSymbol());
             MVVSymbolView d = new MVVSymbolView(currentItem.getSymbol());
             rv.setTextColor(R.id.line_symbol, d.getTextColor());
-            rv.setInt(R.id.line_symbol, "setBackgroundColor", d.getBackgroundColor());
+            rv.setInt(R.id.line_symbol_background, "setColorFilter", d.getBackgroundColor());
 
             // Setup the line name and the departure time
             rv.setTextViewText(R.id.line_name, currentItem.getDirection());
