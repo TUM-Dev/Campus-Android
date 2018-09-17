@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/startupTumLogo"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="90dp"
         android:layout_centerInParent="true"
         android:layout_marginStart="@dimen/material_default_padding"
         android:layout_marginEnd="@dimen/material_default_padding"
@@ -17,20 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/startupTumMotto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/startupTumLogo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/material_default_padding"
-        android:text="@string/startup_motto"
-        android:textColor="@color/color_primary"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/startupTumLogo" />
 
     <ProgressBar
         android:id="@+id/startupLoadingProgressBar"
@@ -43,7 +29,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/startupTumMotto"
+        app:layout_constraintTop_toBottomOf="@id/startupTumLogo"
         tools:visibility="visible" />
 
 </android.support.constraint.ConstraintLayout>
