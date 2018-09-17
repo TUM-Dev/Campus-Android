@@ -10,6 +10,7 @@
     android:theme="@style/ThemeOverlay.AppCompat">
 
     <ImageView
+        android:id="@+id/background"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="@dimen/material_default_padding"

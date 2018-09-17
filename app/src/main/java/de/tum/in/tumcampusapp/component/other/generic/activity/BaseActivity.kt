@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
@@ -104,11 +105,15 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
     }
 
     private fun setupDrawerHeader(headerView: View) {
+        val background = headerView.findViewById<ImageView>(R.id.background)
         val nameTextView = headerView.findViewById<TextView>(R.id.nameTextView)
         val emailTextView = headerView.findViewById<TextView>(R.id.emailTextView)
         val loginButton = headerView.findViewById<MaterialButton>(R.id.loginButton)
 
-        if (AccessTokenManager.hasValidAccessToken(this)) {
+        val isLoggedIn = AccessTokenManager.hasValidAccessToken(this)
+        background.visibility = if (isLoggedIn) View.VISIBLE else View.GONE
+
+        if (isLoggedIn) {
             val name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, "")
             if (name.isNotEmpty()) {
                 nameTextView.text = name
@@ -132,7 +137,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
             loginButton.visibility = View.VISIBLE
             loginButton.setOnClickListener {
                 val intent = Intent(this, WizNavStartActivity::class.java)
-                startActivity(intent);
+                startActivity(intent)
             }
         }
 
