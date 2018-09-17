@@ -331,8 +331,8 @@ public class AuthenticationManager {
      * Save private key in shared preferences.
      */
     private void saveKeys(String privateKeyString, String publicKeyString) {
-        Utils.setSetting(mContext, Const.PRIVATE_KEY, privateKeyString);
-        Utils.setSetting(mContext, Const.PUBLIC_KEY, publicKeyString);
+        Utils.setSetting(mContext, Const.PRIVATE_KEY, privateKeyString.trim());
+        Utils.setSetting(mContext, Const.PUBLIC_KEY, publicKeyString.trim());
     }
 
     /**

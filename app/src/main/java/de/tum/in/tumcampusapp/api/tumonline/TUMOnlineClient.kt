@@ -91,6 +91,8 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     companion object {
 
         private const val BASE_URL = "https://campus.tum.de/tumonline/"
+        // For testing
+        // private const val BASE_URL = "https://campusquality.tum.de/QSYSTEM_TUM/"
 
         private var client: TUMOnlineClient? = null
 
