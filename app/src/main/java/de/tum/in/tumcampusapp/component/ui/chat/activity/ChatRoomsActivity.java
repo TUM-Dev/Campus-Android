@@ -6,8 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -123,11 +123,14 @@ public class ChatRoomsActivity
 
         // We're starting more background work, so we show a loading indicator again
         showLoadingStart();
-        Handler handler = new Handler();
+
+        HandlerThread handlerThread = new HandlerThread("UpdateDatabaseThread");
+        handlerThread.start();
+
+        Handler handler = new Handler(handlerThread.getLooper());
         handler.post(() -> createLectureRoomsAndUpdateDatabase(lectures));
     }
 
-    @WorkerThread
     private void createLectureRoomsAndUpdateDatabase(List<Lecture> lectures) {
         manager.createLectureRooms(lectures);
 
