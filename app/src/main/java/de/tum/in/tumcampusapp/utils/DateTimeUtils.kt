@@ -133,7 +133,6 @@ object DateTimeUtils {
     fun isSameDay(first: DateTime, second: DateTime) =
             first.year() == second.year() && first.dayOfYear() == second.dayOfYear()
 
-
     private val dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     /**

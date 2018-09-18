@@ -1,23 +1,22 @@
 package de.tum.`in`.tumcampusapp.api.tumonline.converters
 
 import com.tickaroo.tikxml.TypeConverter
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
-class DateTimeConverter : TypeConverter<DateTime?> {
-
-    private val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
+class IsoDateTimeConverter : TypeConverter<DateTime?> {
 
     override fun read(value: String?): DateTime? {
         value?.let {
-            return formatter.parseDateTime(it)
+            return DateTimeUtils.getDateTime(value)
         }
+
         return null
     }
 
     override fun write(value: DateTime?): String {
         value?.let {
-            return formatter.print(it)
+            return DateTimeUtils.getDateTimeString(value)
         }
         return ""
     }

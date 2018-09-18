@@ -6,7 +6,7 @@ import android.support.v4.content.ContextCompat
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter
+import de.tum.`in`.tumcampusapp.api.tumonline.converters.IsoDateTimeConverter
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
@@ -17,8 +17,8 @@ import org.joda.time.DateTime
 @Xml(name = "event")
 data class Event(
         @PropertyElement(name = "description") val description: String? = null,
-        @PropertyElement(name = "dtstart", converter = DateTimeConverter::class) val startTime: DateTime? = null,
-        @PropertyElement(name = "dtend", converter = DateTimeConverter::class) val endTime: DateTime? = null,
+        @PropertyElement(name = "dtstart", converter = IsoDateTimeConverter::class) val startTime: DateTime? = null,
+        @PropertyElement(name = "dtend", converter = IsoDateTimeConverter::class) val endTime: DateTime? = null,
         @PropertyElement(name = "geo") val geo: Geo? = null,
         @PropertyElement(name = "location") val location: String? = null,
         @PropertyElement(name = "nr") val id: String? = null,
