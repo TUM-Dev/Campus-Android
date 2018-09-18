@@ -16,7 +16,6 @@ import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepos
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.disposables.CompositeDisposable;
 
 import static de.tum.in.tumcampusapp.utils.Const.SEND_MESSAGE_SERVICE_JOB_ID;
 
@@ -35,21 +34,20 @@ public class SendMessageService extends JobIntentService {
     protected void onHandleWork(@NonNull Intent intent) {
         TcaDb tcaDb = TcaDb.getInstance(this);
 
-        final CompositeDisposable mDisposable = new CompositeDisposable();
         ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
         remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
 
         ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
         localRepository.setDb(tcaDb);
 
-        ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, mDisposable);
-        chatMessageViewModel.deleteOldEntries();
+        ChatMessageViewModel viewModel = new ChatMessageViewModel(localRepository, remoteRepository);
+        viewModel.deleteOldEntries();
 
-        // Get all unsent messages from database
-        List<ChatMessage> unsentMsg = chatMessageViewModel.getUnsent();
+        List<ChatMessage> unsentMsg = viewModel.getUnsent();
         if (unsentMsg.isEmpty()) {
             return;
         }
+
         int numberOfAttempts = 0;
         AuthenticationManager am = new AuthenticationManager(this);
 
@@ -61,11 +59,9 @@ public class SendMessageService extends JobIntentService {
                     message.setSignature(am.sign(message.getText()));
 
                     // Send the message to the server
-                    chatMessageViewModel.sendMessage(message.getRoom(), message, this.getApplicationContext());
-                    //Utils.logv("successfully sent message: " + message.getText());
+                    viewModel.sendMessage(message.getRoom(), message, this.getApplicationContext());
                 }
 
-                //Exit the loop
                 return;
             } catch (NoPrivateKey noPrivateKey) {
                 return; //Nothing can be done, just exit
@@ -74,7 +70,7 @@ public class SendMessageService extends JobIntentService {
                 numberOfAttempts++;
             }
 
-            //Sleep for five seconds, maybe the server is currently really busy
+            // Sleep for five seconds, maybe the server is currently really busy
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

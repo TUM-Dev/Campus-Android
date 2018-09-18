@@ -16,8 +16,8 @@ import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 @Entity(tableName = "chat_message")
 public class ChatMessage implements Parcelable {
 
-    public static final int STATUS_SENDING = 1;
     public static final int STATUS_SENT = 0;
+    public static final int STATUS_SENDING = 1;
     public static final int STATUS_ERROR = 2;
 
     @PrimaryKey

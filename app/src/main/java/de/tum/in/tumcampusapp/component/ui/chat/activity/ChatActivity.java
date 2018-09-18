@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -44,6 +45,7 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,6 +63,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
     public static ChatRoom mCurrentOpenChatRoom; // determines whether there will be a notification or not
 
     private ChatMessageViewModel chatMessageViewModel;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     private ListView messagesListView;
     private ChatHistoryAdapter chatHistoryAdapter;
@@ -95,7 +98,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
     }
 
     private void setupToolbarTitle() {
-        currentChatRoom = new Gson().fromJson(getIntent().getStringExtra(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
+        String encodedChatRoom = getIntent().getStringExtra(Const.CURRENT_CHAT_ROOM);
+        currentChatRoom = new Gson().fromJson(encodedChatRoom, ChatRoom.class);
         currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
 
         if (getSupportActionBar() != null) {
@@ -112,8 +116,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
         localRepository.setDb(tcaDb);
 
-        chatMessageViewModel = new ChatMessageViewModel(
-                localRepository, remoteRepository, new CompositeDisposable());
+        chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository);
     }
 
     @Override
@@ -180,11 +183,12 @@ public class ChatActivity extends ActivityForDownloadingExternal
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
-    /**
+    /*
      * Method to handle any incoming GCM/Firebase notifications
      *
      * @param extras model that contains infos about the message we should get
      */
+    /*
     private void handleRoomBroadcast(FcmChat extras) {
         if (extras.getRoom() != currentChatRoom.getId() || chatHistoryAdapter == null) {
             return;
@@ -208,6 +212,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
 
         getNextHistoryFromServer(true);
     }
+    */
 
     /**
      * User pressed on the notification and wants to view the room with the new messages
@@ -337,8 +342,10 @@ public class ChatActivity extends ActivityForDownloadingExternal
      */
     private void bindUIElements() {
         messagesListView = findViewById(R.id.lvMessageHistory);
-        //messagesListView.setOnItemLongClickListener(this);
         messagesListView.setOnScrollListener(this);
+
+        chatHistoryAdapter = new ChatHistoryAdapter(this, currentChatMember);
+        messagesListView.setAdapter(chatHistoryAdapter);
 
         // Add the button for loading more messages to list header
         progressbar = new ProgressBar(this);
@@ -374,14 +381,30 @@ public class ChatActivity extends ActivityForDownloadingExternal
     /**
      * Loads older chat messages from the server and sets the adapter accordingly
      */
-    private void getNextHistoryFromServer(final boolean hasNewMessage) {
+    private void getNextHistoryFromServer(boolean hasNewMessage) {
         isLoadingMore = true;
-        new Thread(() -> {
-            TUMCabeVerification verification = TUMCabeVerification.create(this, null);
-            if (verification == null) {
-                return;
-            }
 
+        TUMCabeVerification verification = TUMCabeVerification.create(this, null);
+        if (verification == null) {
+            return;
+        }
+
+        Observable<List<ChatMessage>> observable;
+
+        if (hasNewMessage || chatHistoryAdapter.isEmpty()) {
+            observable = chatMessageViewModel.getNewMessages(currentChatRoom, verification);
+            //chatMessageViewModel.getNewMessages(currentChatRoom.getId(), verification, this::onMessagesLoaded);
+        } else {
+            ChatMessage latestMessage = chatHistoryAdapter.getItem(0);
+            long latestId = latestMessage.getId();
+            observable = chatMessageViewModel.getOlderMessages(currentChatRoom, latestId, verification);
+            //chatMessageViewModel.getOlderMessages(currentChatRoom.getId(), latestId, verification, this::onMessagesLoaded);
+        }
+
+        disposables.add(observable.subscribe(this::showMessages, Utils::log));
+
+        /*
+        new Thread(() -> {
             // If currently nothing has been shown, load newest messages from server
             if (chatHistoryAdapter == null || chatHistoryAdapter.getCount() == 0 || hasNewMessage) {
                 chatMessageViewModel.getNewMessages(currentChatRoom.getId(), verification, this::onMessagesLoaded);
@@ -390,8 +413,31 @@ public class ChatActivity extends ActivityForDownloadingExternal
                 chatMessageViewModel.getOlderMessages(currentChatRoom.getId(), id, verification, this::onMessagesLoaded);
             }
         }).start();
+        */
     }
 
+    private void showMessages(List<ChatMessage> messages) {
+        List<ChatMessage> unsent = chatMessageViewModel.getUnsentInChatRoom(currentChatRoom);
+        messages.addAll(unsent);
+
+        Collections.sort(messages, (lhs, rhs) -> lhs.getDateTime().compareTo(rhs.getDateTime()));
+        chatHistoryAdapter.updateHistory(messages);
+
+        if (messages.isEmpty()) {
+            messagesListView.removeHeaderView(progressbar);
+            return;
+        }
+
+        // We remove the progress indicator in the header view if all messages are loaded
+        ChatMessage firstMessage = messages.get(0);
+        if (firstMessage.getPrevious() == 0 || chatHistoryAdapter.isEmpty()) {
+            messagesListView.removeHeaderView(progressbar);
+        } else {
+            isLoadingMore = false;
+        }
+    }
+
+    /*
     private void onMessagesLoaded() {
         final List<ChatMessage> messages = chatMessageViewModel.getAll(currentChatRoom.getId());
 
@@ -413,5 +459,11 @@ public class ChatActivity extends ActivityForDownloadingExternal
             }
         });
     }
+    */
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposables.dispose();
+    }
 }

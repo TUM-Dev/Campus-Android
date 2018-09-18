@@ -16,19 +16,26 @@ object ChatMessageLocalRepository {
 
     fun deleteOldEntries() = db.chatMessageDao().deleteOldEntries()
 
-    fun addToUnsent(message: ChatMessage) =
-            executor.execute { db.chatMessageDao().replaceMessage(message) }
+    fun addToUnsent(message: ChatMessage) {
+        executor.execute { db.chatMessageDao().replaceMessage(message) }
+    }
 
-    fun getAllChatMessagesList(room: Int): List<ChatMessage> =
-            db.chatMessageDao().getAll(room)
+    fun getAllChatMessagesList(room: Int): List<ChatMessage> = db.chatMessageDao().getAll(room)
 
-    fun getUnsent(): List<ChatMessage> =
-            db.chatMessageDao().getUnsent()
+    fun getUnsent(): List<ChatMessage> = db.chatMessageDao().unsent
 
-    fun replaceMessage(chatMessage: ChatMessage) =
-            executor.execute { db.chatMessageDao().replaceMessage(chatMessage) }
+    fun getUnsentInChatRoom(roomId: Int): List<ChatMessage> = db.chatMessageDao().getUnsentInChatRoom(roomId)
 
-    fun removeUnsent(chatMessage: ChatMessage) =
-            executor.execute { db.chatMessageDao().removeUnsent(chatMessage.text) }
+    fun replaceMessages(chatMessages: List<ChatMessage>) {
+        chatMessages.forEach { replaceMessage(it) }
+    }
+
+    fun replaceMessage(chatMessage: ChatMessage) {
+        executor.execute { db.chatMessageDao().replaceMessage(chatMessage) }
+    }
+
+    fun removeUnsent(chatMessage: ChatMessage) {
+        executor.execute { db.chatMessageDao().removeUnsent(chatMessage.text) }
+    }
 
 }

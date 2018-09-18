@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -24,7 +25,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
     private static final int OUTGOING_MESSAGE = 0;
     private static final int INCOMING_MESSAGE = 1;
 
-    private List<ChatMessage> chatHistoryList;
+    private List<ChatMessage> chatHistoryList = new ArrayList<>();
 
     private Context mContext;
     private OnRetrySendListener mRetryListener;
@@ -33,10 +34,9 @@ public class ChatHistoryAdapter extends BaseAdapter {
     //public ChatMessage mCheckedItem;
     //public ChatMessage mEditedItem;
 
-    public ChatHistoryAdapter(Context context, List<ChatMessage> chatHistory, ChatMember member) {
+    public ChatHistoryAdapter(Context context, ChatMember member) {
         mContext = context;
         mRetryListener = (OnRetrySendListener) mContext;
-        chatHistoryList = chatHistory;
         currentChatMember = member;
     }
 
@@ -58,6 +58,10 @@ public class ChatHistoryAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return chatHistoryList.get(position).getId();
+    }
+
+    public boolean isEmpty() {
+        return getCount() == 0;
     }
 
     public int getViewTypeCount() {
