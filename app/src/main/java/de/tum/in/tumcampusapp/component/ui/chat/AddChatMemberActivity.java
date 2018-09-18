@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.component.ui.chat;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -158,14 +159,15 @@ public class AddChatMemberActivity extends BaseActivity {
         Utils.log("Get suggestions for " + input);
         tumCabeClient.searchChatMember(input, new Callback<List<ChatMember>>() {
             @Override
-            public void onResponse(Call<List<ChatMember>> call, Response<List<ChatMember>> response) {
+            public void onResponse(@NonNull Call<List<ChatMember>> call,
+                                   @NonNull Response<List<ChatMember>> response) {
                 searchView.setError(null);
                 suggestions = response.body();
                 ((MemberSuggestionsListAdapter) searchView.getAdapter()).updateSuggestions(suggestions);
             }
 
             @Override
-            public void onFailure(Call<List<ChatMember>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<ChatMember>> call, @NonNull Throwable t) {
                 onError();
             }
         });
@@ -176,13 +178,15 @@ public class AddChatMemberActivity extends BaseActivity {
     }
 
     private void showConfirmDialog(ChatMember member) {
+        String message = getString(R.string.add_user_to_chat_message,
+                member.getDisplayName(), room.getActualName());
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.add_user_to_chat_message, member.getDisplayName(), room.getActualName()))
-                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                .setMessage(message)
+                .setPositiveButton(R.string.add, (dialogInterface, i) -> {
                     joinRoom(member);
                     reset();
                 })
-                .setNegativeButton(R.string.no, null)
+                .setNegativeButton(android.R.string.cancel, null)
                 .create();
 
         if (dialog.getWindow() != null) {
@@ -211,7 +215,8 @@ public class AddChatMemberActivity extends BaseActivity {
         TUMCabeClient.getInstance(this)
                 .addUserToChat(room, member, verification, new Callback<ChatRoom>() {
                     @Override
-                    public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
+                    public void onResponse(@NonNull Call<ChatRoom> call,
+                                           @NonNull Response<ChatRoom> response) {
                         ChatRoom room = response.body();
                         if (room != null) {
                             TcaDb.getInstance(getBaseContext())
@@ -219,12 +224,12 @@ public class AddChatMemberActivity extends BaseActivity {
                                     .updateMemberCount(room.getMembers(), room.getId(), room.getName());
                             Utils.showToast(getBaseContext(), R.string.chat_member_added);
                         } else {
-                            Utils.showToast(getBaseContext(), R.string.error);
+                            Utils.showToast(getBaseContext(), R.string.error_something_wrong);
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<ChatRoom> call, Throwable t) {
+                    public void onFailure(@NonNull Call<ChatRoom> call, @NonNull Throwable t) {
                         Utils.showToast(getBaseContext(), R.string.error);
                     }
                 });

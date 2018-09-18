@@ -354,7 +354,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.leave_chat_room)
                 .setMessage(getResources().getString(R.string.leave_chat_room_body))
-                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> removeUserFromChatRoom())
+                .setPositiveButton(R.string.leave, (dialogInterface, i) -> removeUserFromChatRoom())
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
 
