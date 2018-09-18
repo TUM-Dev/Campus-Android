@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.Manifest;
-import android.arch.lifecycle.Lifecycle;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -25,8 +24,6 @@ import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewDisplayable;
 import com.alamkanak.weekview.WeekViewEvent;
-import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
-import com.trello.rxlifecycle2.LifecycleProvider;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -44,7 +41,7 @@ import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationTy
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.EventsResponse;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -59,7 +56,7 @@ import retrofit2.Call;
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
+public class CalendarActivity extends ActivityForAccessingTumOnline<EventsResponse>
         implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener,
         CalendarDetailsFragment.OnEventInteractionListener {
 
@@ -131,18 +128,24 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     }
 
     private void loadEvents(CacheControl cacheControl) {
-        Call<Events> apiCall = apiClient.getCalendar(cacheControl);
+        Call<EventsResponse> apiCall = apiClient.getCalendar(cacheControl);
         fetch(apiCall);
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull Events response) {
+    protected void onDownloadSuccessful(@NonNull EventsResponse response) {
         isFetched = true;
-        scheduleNotifications(response.getEvents());
+
+        List<Event> events = response.getEvents();
+        if (events == null) {
+            return;
+        }
+
+        scheduleNotifications(events);
 
         mDisposable.add(
                 Completable
-                        .fromAction(() -> calendarController.importCalendar(response))
+                        .fromAction(() -> calendarController.importCalendar(events))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(() -> {
@@ -155,7 +158,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         );
     }
 
-    private void scheduleNotifications(List<Event> events) {
+    private void scheduleNotifications(@NonNull List<Event> events) {
         if (calendarController.hasNotificationsEnabled()) {
             calendarController.scheduleNotifications(events);
         }
