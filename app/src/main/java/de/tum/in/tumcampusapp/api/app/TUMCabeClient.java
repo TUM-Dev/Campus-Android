@@ -48,10 +48,8 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.EphimeralKey;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketPurchaseStripe;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationCancelation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -127,17 +125,7 @@ public final class TUMCabeClient {
         return instance;
     }
 
-    private static TUMCabeVerification getMemberVerification(Context context, Object data) throws NoPrivateKey {
-        TUMCabeVerification verification =
-                TUMCabeVerification.create(context, null);
-        if (verification == null) {
-            throw new NoPrivateKey();
-        }
-
-        return verification;
-    }
-
-    private static TUMCabeVerification getDeviceVerification(Context context, Object data) throws NoPrivateKey {
+    private static TUMCabeVerification getVerification(Context context, @Nullable Object data) throws NoPrivateKey {
         TUMCabeVerification verification =
                 TUMCabeVerification.create(context, data);
         if (verification == null) {
@@ -426,12 +414,12 @@ public final class TUMCabeClient {
     // Getting ticket information
 
     public void fetchTickets(Context context, Callback<List<Ticket>> cb) throws NoPrivateKey {
-        TUMCabeVerification verification = getMemberVerification(context, null);
+        TUMCabeVerification verification = getVerification(context, null);
         service.getTickets(verification).enqueue(cb);
     }
 
     public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {
-        TUMCabeVerification verification = getMemberVerification(context, null);
+        TUMCabeVerification verification = getVerification(context, null);
         return service.getTicket(ticketID, verification);
     }
 
@@ -446,26 +434,19 @@ public final class TUMCabeClient {
         service.reserveTicket(verification).enqueue(cb);
     }
 
-    public void cancelTicketReservation(Context context, int ticketHistory,
-                                        Callback<TicketSuccessResponse> cb) throws NoPrivateKey {
-        TicketReservationCancelation cancelation = new TicketReservationCancelation(ticketHistory);
-        TUMCabeVerification verification = getMemberVerification(context, cancelation);
-        service.cancelTicketReservation(verification).enqueue(cb);
-    }
-
     // Ticket purchase
 
     public void purchaseTicketStripe(Context context, int ticketHistory, String token,
                                      String customerName, Callback<Ticket> cb) throws NoPrivateKey {
         TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketHistory, token, customerName);
-        TUMCabeVerification verification = getMemberVerification(context, purchase);
+        TUMCabeVerification verification = getVerification(context, purchase);
         service.purchaseTicketStripe(verification).enqueue(cb);
     }
 
     public void retrieveEphemeralKey(Context context, String apiVersion,
                                      Callback<HashMap<String, Object>> cb) throws NoPrivateKey {
         EphimeralKey key = new EphimeralKey(apiVersion);
-        TUMCabeVerification verification = getMemberVerification(context, key);
+        TUMCabeVerification verification = getVerification(context, key);
         service.retrieveEphemeralKey(verification).enqueue(cb);
     }
 
