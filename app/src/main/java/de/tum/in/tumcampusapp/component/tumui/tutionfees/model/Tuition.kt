@@ -5,7 +5,7 @@ import android.content.Intent
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateConverter
+import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter
 import de.tum.`in`.tumcampusapp.api.tumonline.converters.FloatConverter
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesActivity
 import org.joda.time.DateTime
@@ -20,7 +20,7 @@ import java.util.*
  * corresponding request.
  */
 @Xml(name = "row")
-data class Tuition(@PropertyElement(name = "frist", converter = DateConverter::class)
+data class Tuition(@PropertyElement(name = "frist", converter = DateTimeConverter::class)
                    val deadline: DateTime,
                    @PropertyElement(name = "semester_bezeichnung")
                    val semester: String,

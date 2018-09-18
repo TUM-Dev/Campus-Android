@@ -5,7 +5,7 @@ import android.support.v4.content.ContextCompat
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateConverter
+import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
 import org.joda.time.DateTime
@@ -25,7 +25,7 @@ data class Exam(
         val course: String,
         @PropertyElement(name = "lv_credits")
         val credits: String? = null,
-        @PropertyElement(name = "datum", converter = DateConverter::class)
+        @PropertyElement(name = "datum", converter = DateTimeConverter::class)
         val date: DateTime? = null,
         @PropertyElement(name = "pruefer_nachname")
         val examiner: String? = null,
