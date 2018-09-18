@@ -68,7 +68,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
                                                           Manifest.permission.WRITE_CALENDAR};
 
-    private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
     private CalendarController calendarController;
 
     /**
