@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -151,6 +152,10 @@ public class ChatMessage implements Parcelable {
 
     public DateTime getDateTime() {
         return DateTimeUtils.INSTANCE.getDate(timestamp);
+    }
+
+    public String getFormattedTimestamp(Context context) {
+        return DateTimeUtils.INSTANCE.formatTimeOrDay(getDateTime(), context);
     }
 
     public void setTimestamp(String timestamp) {

@@ -15,9 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -62,7 +60,7 @@ import retrofit2.Response;
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
 public class ChatActivity extends ActivityForDownloadingExternal
-        implements AbsListView.OnScrollListener, AdapterView.OnItemLongClickListener {
+        implements AbsListView.OnScrollListener, ChatHistoryAdapter.OnRetrySendListener /*, AdapterView.OnItemLongClickListener*/ {
 
     // Key for the string that's delivered in the action's intent
     //public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
@@ -98,48 +96,6 @@ public class ChatActivity extends ActivityForDownloadingExternal
             */
         }
     };
-
-    private void handleBroadcastReceive(Intent intent) {
-        Utils.logv("Message sent. Trying to parse...");
-
-        FcmChat chat = (FcmChat) intent.getSerializableExtra(Const.FCM_CHAT);
-        if (chat != null) {
-            handleSuccessBroadcast(chat);
-        } else {
-            handleFailureBroadcast();
-        }
-    }
-
-    private void handleFailureBroadcast() {
-        // TODO: Show Toast
-        // TODO: Offer option to resend
-        Utils.showToast(this, R.string.chat_message_send_error);
-        getNextHistoryFromServer(true);
-    }
-
-    private void handleSuccessBroadcast(FcmChat chat) {
-        if (chat.getRoom() != currentChatRoom.getId() || chatHistoryAdapter == null) {
-            return;
-        }
-
-        if (chat.getMember() != currentChatMember.getId() && chat.getMessage() == -1) {
-            // This is a new message from a different user
-            AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            if (am != null && am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                // Play a notification sound
-                MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
-                mediaPlayer.start();
-            } else if (am != null && am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
-                // Possibly only vibration is enabled
-                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                if (vibrator != null) {
-                    vibrator.vibrate(500);
-                }
-            }
-        }
-
-        getNextHistoryFromServer(true);
-    }
 
     //private ActionMode mActionMode;
 
@@ -217,13 +173,6 @@ public class ChatActivity extends ActivityForDownloadingExternal
         setupToolbarTitle();
         initChatMessageViewModel();
         bindUIElements();
-
-        /*RemoteInputRemoteInput
-        CharSequence message = getMessageText(getIntent());
-        if (message != null) {
-            sendMessage(message.toString());
-        }
-        */
     }
 
     private void setupToolbarTitle() {
@@ -231,7 +180,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(currentChatRoom.getName());
+            getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
         }
     }
 
@@ -264,6 +213,48 @@ public class ChatActivity extends ActivityForDownloadingExternal
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }
 
+    private void handleBroadcastReceive(Intent intent) {
+        Utils.logv("Message sent. Trying to parse...");
+
+        FcmChat chat = (FcmChat) intent.getSerializableExtra(Const.FCM_CHAT);
+        if (chat != null) {
+            handleSuccessBroadcast(chat);
+        } else {
+            handleFailureBroadcast();
+        }
+    }
+
+    private void handleFailureBroadcast() {
+        // TODO: Show Toast
+        // TODO: Offer option to resend
+        Utils.showToast(this, R.string.chat_message_send_error);
+        getNextHistoryFromServer(true);
+    }
+
+    private void handleSuccessBroadcast(FcmChat chat) {
+        if (chat.getRoom() != currentChatRoom.getId() || chatHistoryAdapter == null) {
+            return;
+        }
+
+        if (chat.getMember() != currentChatMember.getId() && chat.getMessage() == -1) {
+            // This is a new message from a different user
+            AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            if (am != null && am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                // Play a notification sound
+                MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
+                mediaPlayer.start();
+            } else if (am != null && am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                // Possibly only vibration is enabled
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                if (vibrator != null) {
+                    vibrator.vibrate(500);
+                }
+            }
+        }
+
+        getNextHistoryFromServer(true);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -271,32 +262,6 @@ public class ChatActivity extends ActivityForDownloadingExternal
         mCurrentOpenChatRoom = null;
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
-
-    /*
-     * Gets the text from speech input and returns null if no input was provided
-     */
-    /*
-    private static CharSequence getMessageText(Intent intent) {
-        Bundle remoteInput;
-        remoteInput = RemoteInput.getResultsFromIntent(intent);
-        if (remoteInput != null) {
-            return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
-        }
-        return null;
-    }
-    */
-
-    //@TargetApi(android.os.Build.VERSION_CODES.O)
-    /*
-    private static void vibrate(Vibrator v) {
-        //v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-        v.vibrate(500);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        } else {
-        }
-    }
-    */
 
     /**
      * Method to handle any incoming GCM/Firebase notifications
@@ -432,6 +397,11 @@ public class ChatActivity extends ActivityForDownloadingExternal
     }
 
     private void sendMessage(String text) {
+        final ChatMessage message = new ChatMessage(text, currentChatMember);
+        message.setRoom(currentChatRoom.getId());
+        chatHistoryAdapter.add(message);
+        chatMessageViewModel.addToUnsent(message);
+        /*
         if (chatHistoryAdapter.mEditedItem == null) {
             final ChatMessage message = new ChatMessage(text, currentChatMember);
             message.setRoom(currentChatRoom.getId());
@@ -448,9 +418,20 @@ public class ChatActivity extends ActivityForDownloadingExternal
             chatMessageViewModel.markAsRead(currentChatRoom.getId());
             chatHistoryAdapter.updateHistory(chatMessageViewModel.getAll(currentChatRoom.getId()));
         }
+        */
 
         // Let the service handle the actual sending of the message
         SendMessageService.enqueueWork(this, new Intent());
+    }
+
+    @Override
+    public void onRetrySending(ChatMessage message) {
+        //chatMessageViewModel.removeUnsent(message);
+        message.setSendingStatus(ChatMessage.STATUS_SENDING);
+        sendMessage(message.getText());
+
+        List<ChatMessage> messages = chatMessageViewModel.getAll(currentChatRoom.getId());
+        chatHistoryAdapter.updateHistory(messages);
     }
 
     /**
@@ -458,7 +439,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
      */
     private void bindUIElements() {
         messagesListView = findViewById(R.id.lvMessageHistory);
-        messagesListView.setOnItemLongClickListener(this);
+        //messagesListView.setOnItemLongClickListener(this);
         messagesListView.setOnScrollListener(this);
 
         // Add the button for loading more messages to list header
@@ -538,19 +519,18 @@ public class ChatActivity extends ActivityForDownloadingExternal
     /**
      * Validates chat message if long clicked on an item
      *
-     * @param parent   ListView
-     * @param view     View of the selected message
-     * @param position Index of the selected view
-     * @param id       Id of the selected item
+     * @param //parent   ListView
+     * @param //view     View of the selected message
+     * @param //position Index of the selected view
+     * @param //id       Id of the selected item
      * @return True if the method consumed the on long click event
      */
+    /*
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        /*
         if (mActionMode != null) {
             return false;
         }
-        */
 
         //Calculate the proper position of the item without the header from pull to refresh
         int positionActual = position - messagesListView.getHeaderViewsCount();
@@ -559,7 +539,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         ChatMessage message = chatHistoryAdapter.getItem(positionActual);
 
         // TODO(jacqueline8711): If we are in a certain timespan and its the users own message allow editing
-        /*if ((System.currentTimeMillis() - message.getTimestampDate()
+        if ((System.currentTimeMillis() - message.getTimestampDate()
                            .getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember()
                            .getId() == currentChatMember.getId()) {
 
@@ -573,11 +553,14 @@ public class ChatActivity extends ActivityForDownloadingExternal
             chatHistoryAdapter.notifyDataSetChanged();
         } else {
             this.showInfo(message);
-        }*/
+        }
+
         showInfo(message);
         return true;
     }
+    */
 
+    /*
     private void showInfo(final ChatMessage message) {
         //Verify the message with RSA
         TUMCabeClient.getInstance(ChatActivity.this)
@@ -598,6 +581,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
                          }
                      });
     }
+    */
 
     private void showMessageDetailsDialog(ChatMessage message, List<ChatPublicKey> keys) {
         ChatMessageValidator validator = new ChatMessageValidator(keys);

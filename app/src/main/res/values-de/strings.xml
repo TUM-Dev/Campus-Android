@@ -642,4 +642,5 @@ Signatur: %5$s</string>
     <string name="logout">Abmelden</string>
     <string name="logout_message">Bist du sicher, dass du dich abmelden willst?</string>
     <string name="chat_message_send_error">Nachricht konnte nicht gesendet werden</string>
+    <string name="chat_message_try_again">Die Nachricht konnte nicht gesendet werden. Erneut versuchen?</string>
 </resources>
