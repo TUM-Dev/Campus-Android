@@ -111,7 +111,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
         }
 
         holder.tvMessage.setText(msg.getText());
-        holder.tvTimestamp.setText(DateTimeUtils.INSTANCE.formatTimeOrDay(msg.getTimestamp(), mContext));
+        holder.tvTimestamp.setText(DateTimeUtils.INSTANCE.formatTimeOrDay(msg.getDateTime(), mContext));
 
         if (!outgoing) {
             holder.tvUser.setText(msg.getMember()
@@ -122,9 +122,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
             holder.pbSending.setVisibility(sending ? View.VISIBLE : View.GONE);
         }
 
-        if (msg.getMember()
-               .getLrzId()
-               .equals("bot")) {
+        if (msg.getMember().getLrzId().equals("bot")) {
             holder.tvUser.setText("");
             holder.tvTimestamp.setText("");
         }

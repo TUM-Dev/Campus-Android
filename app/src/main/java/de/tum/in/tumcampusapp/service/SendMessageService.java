@@ -27,10 +27,6 @@ public class SendMessageService extends JobIntentService {
 
     public static final int MAX_SEND_TRIES = 5;
 
-    /**
-     * Interval in milliseconds to check for current lectures
-     */
-
     public static void enqueueWork(Context context, Intent work) {
         enqueueWork(context, SendMessageService.class, SEND_MESSAGE_SERVICE_JOB_ID, work);
     }
@@ -66,7 +62,7 @@ public class SendMessageService extends JobIntentService {
 
                     // Send the message to the server
                     chatMessageViewModel.sendMessage(message.getRoom(), message, this.getApplicationContext());
-                    Utils.logv("successfully sent message: " + message.getText());
+                    //Utils.logv("successfully sent message: " + message.getText());
                 }
 
                 //Exit the loop

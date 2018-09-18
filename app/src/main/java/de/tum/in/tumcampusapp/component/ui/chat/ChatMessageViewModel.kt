@@ -4,7 +4,6 @@ package de.tum.`in`.tumcampusapp.component.ui.chat
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import de.tum.`in`.tumcampusapp.api.app.model.TUMCabeVerification
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
@@ -72,20 +71,30 @@ class ChatMessageViewModel(private val localRepository: ChatMessageLocalReposito
                             }, { t -> Utils.logwithTag("ChatMessageViewModel", t.message) })
             )
 
-    fun sendMessage(roomId: Int, chatMessage: ChatMessage, context: Context): Boolean =
-            compositeDisposable.add(
-                    remoteRepository.sendMessage(roomId, chatMessage)
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(Schedulers.io())
-                    .subscribe({
-                        it.sendingStatus = ChatMessage.STATUS_SENT
-                        localRepository.replaceMessage(it)
-                        localRepository.removeUnsent(chatMessage)
+    fun sendMessage(roomId: Int, chatMessage: ChatMessage, context: Context): Boolean {
+        val broadcastManager = LocalBroadcastManager.getInstance(context)
+        return compositeDisposable.add(
+                remoteRepository.sendMessage(roomId, chatMessage)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.io())
+                        .subscribe({ message ->
+                            message.sendingStatus = ChatMessage.STATUS_SENT
+                            localRepository.replaceMessage(message)
+                            localRepository.removeUnsent(chatMessage)
 
-                        // Send broadcast to eventually open ChatActivity
-                        val extras = Bundle()
-                        extras.putSerializable("FcmChat", FcmChat(it.room, it.member.id, 0))
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(Const.CHAT_BROADCAST_NAME).putExtras(extras))
-                    }, { t -> Utils.logwithTag("ChatMessageViewModel", t.message) })
-            )
+                            // Send broadcast to eventually open ChatActivity
+                            val intent = Intent(Const.CHAT_BROADCAST_NAME).apply {
+                                val fcmChat = FcmChat(message.room, message.member.id, 0)
+                                putExtra(Const.FCM_CHAT, fcmChat)
+                            }
+                            broadcastManager.sendBroadcast(intent)
+                        }, { t ->
+                            Utils.logwithTag("ChatMessageViewModel", t.message)
+                            chatMessage.sendingStatus = ChatMessage.STATUS_ERROR
+                            localRepository.replaceMessage(chatMessage)
+                            val intent = Intent(Const.CHAT_BROADCAST_NAME)
+                            broadcastManager.sendBroadcast(intent)
+                        })
+        )
+    }
 }

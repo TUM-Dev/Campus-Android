@@ -123,6 +123,8 @@ object Const {
     const val EDUROAM_SSID = "eduroam"
     const val LRZ = "lrz"
 
+    const val FCM_CHAT = "fcmChat"
+    const val CHAT_MESSAGE = "chatMessage"
     const val CHAT_BROADCAST_NAME = "chat-message-received"
 
     const val EVENT_EDIT = "pEdit"

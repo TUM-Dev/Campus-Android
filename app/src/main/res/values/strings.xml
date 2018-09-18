@@ -695,4 +695,5 @@ Signature: %5$s</string>
 
     <string name="including_format_string">including %s</string>
     <string name="new_items_format_string">%d new items</string>
+    <string name="chat_message_send_error">Message couldn’t be sent</string>
 </resources>
