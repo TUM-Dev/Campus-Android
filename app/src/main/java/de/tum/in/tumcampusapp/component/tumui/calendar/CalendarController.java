@@ -34,7 +34,6 @@ import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -212,18 +211,15 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         scheduler.schedule(notifications);
     }
 
-    public void importCalendar(Events newEvents) {
+    public void importCalendar(@NonNull List<Event> events) {
         // Cleanup cache before importing
         removeCache();
 
         // Import the new events
-        List<Event> events = newEvents.getEvents();
-        if (events != null) {
-            try {
-                replaceIntoDb(events);
-            } catch (Exception e) {
-                Utils.log(e);
-            }
+        try {
+            replaceIntoDb(events);
+        } catch (Exception e) {
+            Utils.log(e);
         }
 
         new SyncManager(mContext).replaceIntoDb(Const.SYNC_CALENDAR_IMPORT);

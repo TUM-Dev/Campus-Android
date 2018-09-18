@@ -5,7 +5,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Events
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import okhttp3.Cache
@@ -32,14 +32,15 @@ class CacheManager(private val context: Context) {
         TUMOnlineClient
                 .getInstance(context)
                 .getCalendar(CacheControl.USE_CACHE)
-                .enqueue(object : Callback<Events> {
-                    override fun onResponse(call: Call<Events>, response: Response<Events>) {
-                        val events = response.body() ?: return
+                .enqueue(object : Callback<EventsResponse> {
+                    override fun onResponse(call: Call<EventsResponse>, response: Response<EventsResponse>) {
+                        val eventsResponse = response.body() ?: return
+                        val events = eventsResponse.events ?: return
                         CalendarController(context).importCalendar(events)
                         loadRoomLocations()
                     }
 
-                    override fun onFailure(call: Call<Events>, t: Throwable) {
+                    override fun onFailure(call: Call<EventsResponse>, t: Throwable) {
                         Utils.log(t, "Error while loading calendar in CacheManager")
                     }
                 })

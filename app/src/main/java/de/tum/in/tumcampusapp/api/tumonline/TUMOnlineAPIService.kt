@@ -4,7 +4,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Events
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsResponse
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse
@@ -25,7 +25,7 @@ interface TUMOnlineAPIService {
             @Query("pMonateVor") start: Int,
             @Query("pMonateNach") end: Int,
             @Header("Cache-Control") cacheControl: String
-    ): Call<Events>
+    ): Call<EventsResponse>
 
     @GET("wbservicesbasic.terminCreate")
     fun createCalendarEvent(

@@ -10,4 +10,4 @@ import com.tickaroo.tikxml.annotation.Xml
  * @see LecturesSearchRow
  */
 @Xml(name = "events")
-data class Events(@Element val events: List<Event>? = null)
+data class EventsResponse(@Element val events: List<Event>? = null)
