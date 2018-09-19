@@ -140,8 +140,22 @@ public class DepartureView extends LinearLayout {
 
     private void updateDepartureTime() {
         int departureOffset = Seconds.secondsBetween(DateTime.now(), mDepartureTime).getSeconds();
-        String text = String.format(Locale.getDefault(), "%2d:%02d", departureOffset / 60, departureOffset % 60);
+
+        int minutes = departureOffset / 60;
+        int seconds = departureOffset % 60;
+
         if (departureOffset > 0) {
+            int hours = minutes / 60;
+            minutes = minutes % 60;
+
+            String text;
+
+            if (hours > 0) {
+                text = String.format(Locale.getDefault(), "%2d:%02d:%02d", hours, minutes, seconds);
+            } else {
+                text = String.format(Locale.getDefault(), "%2d:%02d", minutes, seconds);
+            }
+
             mTimeSwitcher.setCurrentText(text);
         } else {
             animateOut();
