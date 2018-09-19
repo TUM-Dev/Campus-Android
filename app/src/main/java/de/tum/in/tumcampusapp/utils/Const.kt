@@ -59,7 +59,6 @@ object Const {
     const val PREFERENCE_SCREEN = "preference_screen"
     const val P_TOKEN = "pToken"
 
-    const val EVERYTHING_SETUP = "everything_setup"
     const val SYNC_CALENDAR_IMPORT = "calendar_import"
     const val GROUP_CHAT_ENABLED = "group_chat_enabled"
     const val BUG_REPORTS = "bug_reports"

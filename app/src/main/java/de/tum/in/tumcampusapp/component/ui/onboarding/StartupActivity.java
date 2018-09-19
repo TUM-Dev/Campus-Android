@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -102,10 +103,10 @@ public class StartupActivity extends AppCompatActivity {
         am.generatePrivateKey(null);
 
         // On first setup show remark that loading could last longer than normally
-        boolean isSetup = Utils.getSettingBool(this, Const.EVERYTHING_SETUP, false);
-        if (!isSetup) {
-            runOnUiThread(() -> findViewById(R.id.startupLoadingFirst).setVisibility(View.VISIBLE));
-        }
+        runOnUiThread(() -> {
+            ContentLoadingProgressBar progressBar = findViewById(R.id.startupLoadingProgressBar);
+            progressBar.show();
+        });
 
         // Register receiver for background service
         IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
@@ -127,7 +128,7 @@ public class StartupActivity extends AppCompatActivity {
         //Check, if we already have permission
         if (ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
             && ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-            //We already got the permissions, to proceed normally
+            // We already got the permissions, to proceed normally
             openMainActivityIfInitializationFinished();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_COARSE_LOCATION) ||
                    ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {

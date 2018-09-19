@@ -441,7 +441,6 @@ Signature: %5$s</string>
     <string name="IN">in</string>
     <string name="MINUTES">minutes</string>
     <string name="AT">at</string>
-    <string name="startup_motto">By students - For students</string>
     <string name="fix_eduroam">Fix eduroam</string>
     <string name="eduroam_fix">Fix it now</string>
     <string name="eduroam_insecure_configuration">We have detected an insecure eduroam wifi configuration. You are subject to leaking information about you and your account.</string>
