@@ -56,7 +56,9 @@ class ChatMessageViewModel(
 
     fun sendMessage(roomId: Int, chatMessage: ChatMessage, context: Context): Disposable {
         val broadcastManager = LocalBroadcastManager.getInstance(context)
-        return remoteRepository.sendMessage(roomId, chatMessage)
+        val verification = TUMCabeVerification.create(context, chatMessage)
+
+        return remoteRepository.sendMessage(roomId, verification)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .subscribe({ message ->

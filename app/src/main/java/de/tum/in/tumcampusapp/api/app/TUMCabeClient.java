@@ -183,13 +183,13 @@ public final class TUMCabeClient {
                 .enqueue(cb);
     }
 
-    public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessage) {
+    public Observable<ChatMessage> sendMessage(int roomId, TUMCabeVerification verification) {
         //If the id is zero then its an new entry otherwise try to update it
-        Utils.log("Sending: " + chatMessage.getId() + " " + chatMessage.getText());
-        if (chatMessage.getId() == 0) {
-            return service.sendMessage(roomId, chatMessage);
+        int id = ((ChatMessage) verification.getData()).getId();
+        if (id == 0) {
+            return service.sendMessage(roomId, verification);
         }
-        return service.updateMessage(roomId, chatMessage.getId(), chatMessage);
+        return service.updateMessage(roomId, id, verification);
     }
 
     public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body TUMCabeVerification verification) {
