@@ -27,14 +27,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <!-- TODO: Improve design -->
                 <com.alamkanak.weekview.WeekView
                     android:id="@+id/weekView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:columnGap="8dp"
-                    app:dayBackgroundColor="#05000000"
+                    app:dayBackgroundColor="@android:color/white"
                     app:eventCornerRadius="4dp"
+                    app:eventPadding="6dp"
                     app:eventTextColor="@android:color/white"
                     app:headerColumnBackground="#ffffffff"
                     app:headerColumnPadding="8dp"
@@ -43,8 +43,9 @@
                     app:headerRowPadding="12dp"
                     app:hourHeight="60dp"
                     app:noOfVisibleDays="3"
-                    app:overlappingEventGap="4dp"
-                    app:textSize="12sp"
+                    app:overlappingEventGap="@dimen/material_small_padding"
+                    app:singleDayHorizontalMargin="@dimen/material_small_padding"
+                    app:textSize="14sp"
                     app:todayBackgroundColor="#1848adff"
                     app:todayHeaderTextColor="@color/color_primary" />
 

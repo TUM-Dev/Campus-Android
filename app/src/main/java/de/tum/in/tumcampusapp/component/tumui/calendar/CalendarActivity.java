@@ -27,6 +27,7 @@ import com.alamkanak.weekview.WeekViewEvent;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -45,7 +46,6 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.EventsResponse;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -250,7 +250,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                 deleteCalendarFromGoogle();
                 return true;
             case R.id.action_create_event:
-                startActivity(new Intent(this, CreateEventActivity.class));
+                LocalDate currentDate = new LocalDate(mWeekView.getFirstVisibleDay());
+                Intent intent = new Intent(this, CreateEventActivity.class);
+                intent.putExtra(Const.DATE, currentDate);
+                startActivity(intent);
                 return true;
             case R.id.action_calendar_filter_canceled:
                 item.setChecked(!item.isChecked());
@@ -278,14 +281,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             mWeekView.setNumberOfVisibleDays(5);
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
             mWeekView.setXScrollingSpeed(1);
         } else {
             icon = R.drawable.ic_outline_view_column_24px;
             mWeekView.setNumberOfVisibleDays(1);
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
             mWeekView.setXScrollingSpeed(0.4f);
         }
 
@@ -455,8 +458,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         bundle.putBoolean(Const.EVENT_EDIT, true);
         bundle.putString(Const.EVENT_TITLE, calendarItem.getTitle());
         bundle.putString(Const.EVENT_COMMENT, calendarItem.getDescription());
-        bundle.putString(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(calendarItem.getDtstart()));
-        bundle.putString(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(calendarItem.getDtend()));
+        bundle.putSerializable(Const.EVENT_START, calendarItem.getDtstart());
+        bundle.putSerializable(Const.EVENT_END, calendarItem.getDtend());
         bundle.putString(Const.EVENT_NR, calendarItem.getNr());
         Intent intent = new Intent(this, CreateEventActivity.class);
         intent.putExtras(bundle);
@@ -477,11 +480,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         detailsFragment.show(getSupportFragmentManager(), null);
     }
 
-    protected void onResume() {
-        super.onResume();
-        refreshWeekView();
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -499,15 +497,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         }
     }
 
-    protected int calcHourHeightToFit(int min, int max) {
-        // get the height of the weekView and subtract the height of its header
-        // to get height of actual calendar section, then divide by 24 to get height of a single hour
-        return (mWeekView.getMeasuredHeight()             // height of weekView
-                - mWeekView.getTextSize()                 // height of text in header of weekView
-                - (3 * mWeekView.getHeaderRowPadding()))    // height of padding above and below text in header
-               / (max - min);                             // amount of hours
-    }
-
     protected void initFilterCheckboxes() {
         boolean settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
         menuItemFilterCanceled.setChecked(settings);
@@ -517,13 +506,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     protected void applyFilterCanceled(boolean val) {
         Utils.setSetting(this, Const.CALENDAR_FILTER_CANCELED, val);
         refreshWeekView();
-    }
-
-    protected void hourHeightFitScreen() {
-        int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
-        int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
-        int hourHeight = calcHourHeightToFit(minHour, maxHour);
-        mWeekView.setHourHeight(hourHeight);
     }
 
     @Override

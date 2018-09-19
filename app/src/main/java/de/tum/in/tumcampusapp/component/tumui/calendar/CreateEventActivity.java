@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -31,7 +32,6 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -131,18 +131,22 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void initStartEndDates(Bundle extras) {
-        if (extras != null) { // editing indicates extras are not null
-            start = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_START));
-            end = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_END));
-        } else {
-            // initial start: round up to the next full hour
-            start = new DateTime()
-                    .plusHours(1)
-                    .withMinuteOfHour(0);
+        LocalDate initialDate = (LocalDate) extras.getSerializable(Const.DATE);
+        start = (DateTime) extras.getSerializable(Const.EVENT_START);
+        end = (DateTime) extras.getSerializable(Const.EVENT_END);
 
-            // initial length: 1 hour
-            end = new DateTime(start)
-                    .plusHours(1);
+        if (start == null || end == null) {
+            if (initialDate == null) {
+                throw new IllegalStateException("No date provided for CreateEventActivity");
+            }
+
+            // We’re creating a new event, so we set the start and end time to the next full hour
+            start = initialDate.toDateTimeAtCurrentTime()
+                    .plusHours(1)
+                    .withMinuteOfHour(0)
+                    .withSecondOfMinute(0)
+                    .withMillisOfSecond(0);
+            end = start.plusHours(1);
         }
 
         updateDateViews();
