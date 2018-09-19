@@ -28,6 +28,11 @@ import de.tum.in.tumcampusapp.R;
  * automatically down counting departure time
  */
 public class DepartureView extends LinearLayout {
+
+    private static final int ONE_HOUR_IN_SECONDS = 3600;
+    private static final int MINUTES_PER_HOUR = 60;
+    private static final int ONE_MINUTE_IN_SECONDS = 60;
+
     private final boolean big;
     private final TextView mSymbolView;
     private final TextView mLineView;
@@ -141,12 +146,11 @@ public class DepartureView extends LinearLayout {
     private void updateDepartureTime() {
         int departureOffset = Seconds.secondsBetween(DateTime.now(), mDepartureTime).getSeconds();
 
-        int minutes = departureOffset / 60;
-        int seconds = departureOffset % 60;
-
         if (departureOffset > 0) {
-            int hours = minutes / 60;
-            minutes = minutes % 60;
+
+            int hours = departureOffset / ONE_HOUR_IN_SECONDS;
+            int minutes = (departureOffset / ONE_MINUTE_IN_SECONDS) % MINUTES_PER_HOUR;
+            int seconds = departureOffset % ONE_MINUTE_IN_SECONDS;
 
             String text;
 
