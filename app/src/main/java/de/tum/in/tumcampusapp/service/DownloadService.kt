@@ -8,6 +8,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
+import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
@@ -103,7 +104,7 @@ class DownloadService : JobIntentService() {
         val cafeSuccess = downloadCafeterias(force)
         val kinoSuccess = downloadKino(force)
         val newsSuccess = downloadNews(force)
-        val eventsSuccess = downloadEvents(force)
+        val eventsSuccess = downloadEvents()
         val topNewsSuccess = downloadTopNews()
         return cafeSuccess && kinoSuccess && newsSuccess && topNewsSuccess && eventsSuccess
     }
@@ -156,7 +157,7 @@ class DownloadService : JobIntentService() {
         return true
     }
 
-    private fun downloadEvents(force: Boolean): Boolean {
+    private fun downloadEvents(): Boolean {
         EventsController(this).downloadFromService()
         return true
     }
@@ -220,7 +221,7 @@ class DownloadService : JobIntentService() {
                 Utils.logv("Handle action <$action>")
 
                 when (action) {
-                    Const.EVENTS -> success = service.downloadEvents(force)
+                    Const.EVENTS -> success = service.downloadEvents()
                     Const.NEWS -> success = service.downloadNews(force)
                     Const.CAFETERIAS -> success = service.downloadCafeterias(force)
                     Const.KINO -> success = service.downloadKino(force)
@@ -228,18 +229,9 @@ class DownloadService : JobIntentService() {
                     else -> {
                         success = service.downloadAll(force)
 
-                        if (success) {
-                            Utils.setSetting(service, Const.EVERYTHING_SETUP, true)
-                        }
-
-                        val isSetup = Utils.getSettingBool(service, Const.EVERYTHING_SETUP, false)
-                        if (isSetup) {
+                        if (AccessTokenManager.hasValidAccessToken(service)) {
                             val cacheManager = CacheManager(service)
-                            cacheManager.syncCalendar()
-
-                            if (success) {
-                                Utils.setSetting(service, Const.EVERYTHING_SETUP, true)
-                            }
+                            cacheManager.fillCache()
                         }
                     }
                 }
@@ -268,11 +260,6 @@ class DownloadService : JobIntentService() {
                 service.broadcastDownloadSuccess()
             } else {
                 service.broadcastDownloadError(R.string.exception_unknown)
-            }
-
-            // Do all other import stuff that is not relevant for creating the viewing the start page
-            if (action == Const.DOWNLOAD_ALL_FROM_EXTERNAL) {
-                FillCacheService.enqueueWork(service.baseContext, Intent())
             }
         }
 

@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
-import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
@@ -20,12 +19,10 @@ class CacheManager(private val context: Context) {
         get() = Cache(context.cacheDir, 10 * 1024 * 1024) // 10 MB
 
     fun fillCache() {
-        if (!AccessTokenManager.hasValidAccessToken(context)) {
-            return
+        doAsync {
+            syncCalendar()
+            syncPersonalLectures()
         }
-
-        syncCalendar()
-        syncPersonalLectures()
     }
 
     fun syncCalendar() {
@@ -47,9 +44,7 @@ class CacheManager(private val context: Context) {
     }
 
     private fun loadRoomLocations() {
-        doAsync {
-            CalendarController.QueryLocationsService.loadGeo(context)
-        }
+        CalendarController.QueryLocationsService.loadGeo(context)
     }
 
     private fun syncPersonalLectures() {
@@ -59,14 +54,14 @@ class CacheManager(private val context: Context) {
                 .enqueue(object : Callback<LecturesResponse> {
                     override fun onResponse(call: Call<LecturesResponse>,
                                             response: Response<LecturesResponse>) {
-                        Utils.log("Successfully updated personal lectures in backround")
+                        Utils.log("Successfully updated personal lectures in background")
                         val lectures = response.body()?.lectures ?: return
                         val chatRoomController = ChatRoomController(context)
                         chatRoomController.createLectureRooms(lectures)
                     }
 
                     override fun onFailure(call: Call<LecturesResponse>, t: Throwable) {
-                        Utils.log(t, "Error loading personal lectures in backround")
+                        Utils.log(t, "Error loading personal lectures in background")
                     }
                 })
     }
