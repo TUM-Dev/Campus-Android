@@ -149,19 +149,6 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
             end = start.plusHours(1);
         }
 
-        /*
-        } else {
-            // initial start: round up to the next full hour
-            start = new DateTime()
-                    .plusHours(1)
-                    .withMinuteOfHour(0);
-
-            // initial length: 1 hour
-            end = new DateTime(start)
-                    .plusHours(1);
-        }
-        */
-
         updateDateViews();
         updateTimeViews();
     }
