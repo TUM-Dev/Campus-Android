@@ -381,7 +381,6 @@ Signatur: %5$s</string>
     <string name="IN">in</string>
     <string name="MINUTES">minuten</string>
     <string name="AT">um</string>
-    <string name="startup_motto">Von Studierenden - Für Studierende</string>
     <string name="eduroam_fix">Jetzt reparieren</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">eduroam reparieren</string>

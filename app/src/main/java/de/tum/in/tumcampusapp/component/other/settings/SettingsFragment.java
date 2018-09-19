@@ -248,10 +248,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     private void logout() {
         clearData();
-        Utils.setSetting(mContext, Const.EVERYTHING_SETUP, false);
-
-        mContext.finish();
         startActivity(new Intent(mContext, StartupActivity.class));
+        mContext.finish();
     }
 
     private void clearData() {
