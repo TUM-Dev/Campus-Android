@@ -184,12 +184,16 @@ public final class TUMCabeClient {
     }
 
     public Observable<ChatMessage> sendMessage(int roomId, TUMCabeVerification verification) {
-        //If the id is zero then its an new entry otherwise try to update it
-        int id = ((ChatMessage) verification.getData()).getId();
-        if (id == 0) {
+        ChatMessage message = (ChatMessage) verification.getData();
+        if (message == null) {
+            throw new IllegalStateException("TUMCabeVerification data is not a ChatMessage");
+        }
+
+        if (message.isNewMessage()) {
             return service.sendMessage(roomId, verification);
         }
-        return service.updateMessage(roomId, id, verification);
+
+        return service.updateMessage(roomId, message.getId(), verification);
     }
 
     public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body TUMCabeVerification verification) {

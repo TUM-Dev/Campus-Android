@@ -179,6 +179,9 @@ public class ChatMessage implements Parcelable {
             return R.string.status_sending_failed;
         }
     }
+    public boolean isNewMessage() {
+        return id == 0;
+    }
 
     @Override
     public int describeContents() {
