@@ -136,7 +136,6 @@ public class StripePaymentActivity extends BaseActivity {
             String methodId = paymentSession.getPaymentSessionData().getSelectedPaymentMethodId();
             if (methodId == null) {
                 Utils.showToast(this, R.string.error_something_wrong);
-                finish();
                 return;
             }
 
