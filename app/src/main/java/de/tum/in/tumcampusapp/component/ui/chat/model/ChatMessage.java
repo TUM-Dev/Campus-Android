@@ -4,26 +4,34 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 @Entity(tableName = "chat_message")
-public class ChatMessage {
-    public static final int STATUS_SENDING = 1;
+public class ChatMessage implements Parcelable {
+
     public static final int STATUS_SENT = 0;
-    //public static final int STATUS_SENDING_FAILED = -1;
+    public static final int STATUS_SENDING = 1;
+    public static final int STATUS_ERROR = 2;
 
     @PrimaryKey
     @ColumnInfo(name = "_id")
     private int id;
+
     private int previous;
     private int room;
     private String text;
-    private DateTime timestamp;
+    private String timestamp;
+
     private String signature;
     private ChatMember member;
+
     @ColumnInfo(name = "sending")
     private int sendingStatus;
 
@@ -32,7 +40,7 @@ public class ChatMessage {
      */
     @Ignore
     public ChatMessage() {
-        this.sendingStatus = STATUS_SENT;
+        this.sendingStatus = STATUS_SENDING;
     }
 
     @Ignore
@@ -53,7 +61,7 @@ public class ChatMessage {
         this.member = member;
         this.sendingStatus = STATUS_SENDING;
         this.previous = 0;
-        this.timestamp = DateTime.now();
+        this.timestamp = DateTimeUtils.INSTANCE.getDateTimeString(DateTime.now());
     }
 
     @Ignore
@@ -62,10 +70,33 @@ public class ChatMessage {
         this.id = id;
         this.text = text;
         this.member = member;
-        this.timestamp = timestamp;
-        this.sendingStatus = STATUS_SENT;
+        this.timestamp = DateTimeUtils.INSTANCE.getDateTimeString(timestamp);
+        this.sendingStatus = STATUS_SENDING;
         this.previous = previous;
     }
+
+    protected ChatMessage(Parcel in) {
+        id = in.readInt();
+        previous = in.readInt();
+        room = in.readInt();
+        text = in.readString();
+        timestamp = in.readString();
+        signature = in.readString();
+        member = in.readParcelable(ChatMember.class.getClassLoader());
+        sendingStatus = in.readInt();
+    }
+
+    public static final Creator<ChatMessage> CREATOR = new Creator<ChatMessage>() {
+        @Override
+        public ChatMessage createFromParcel(Parcel in) {
+            return new ChatMessage(in);
+        }
+
+        @Override
+        public ChatMessage[] newArray(int size) {
+            return new ChatMessage[size];
+        }
+    };
 
     public int getRoom() {
         return room;
@@ -115,11 +146,19 @@ public class ChatMessage {
         this.member = member;
     }
 
-    public DateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(DateTime timestamp) {
+    public DateTime getDateTime() {
+        return DateTimeUtils.INSTANCE.getDate(timestamp);
+    }
+
+    public String getFormattedTimestamp(Context context) {
+        return DateTimeUtils.INSTANCE.formatTimeOrDay(getDateTime(), context);
+    }
+
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -140,4 +179,24 @@ public class ChatMessage {
             return R.string.status_sending_failed;
         }
     }
+    public boolean isNewMessage() {
+        return id == 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeInt(id);
+        parcel.writeInt(previous);
+        parcel.writeString(text);
+        parcel.writeString(timestamp);
+        parcel.writeString(signature);
+        parcel.writeParcelable(member, flags);
+        parcel.writeInt(sendingStatus);
+    }
+
 }

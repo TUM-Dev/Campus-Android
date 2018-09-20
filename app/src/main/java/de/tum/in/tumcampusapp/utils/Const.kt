@@ -122,6 +122,8 @@ object Const {
     const val EDUROAM_SSID = "eduroam"
     const val LRZ = "lrz"
 
+    const val FCM_CHAT = "fcmChat"
+    const val CHAT_MESSAGE = "chatMessage"
     const val CHAT_BROADCAST_NAME = "chat-message-received"
 
     const val EVENT_EDIT = "pEdit"
@@ -159,7 +161,7 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
 
-    const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_OJHHpeotVOpaRO4veynROu18"
+    const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_MQjLRRi8jzpOEhrNqbMeMY8g"
     const val KEY_EVENT = "event"
     const val KEY_EVENT_ID = "eventId"
     const val KEY_CARD_HOLDER = "cardholder"

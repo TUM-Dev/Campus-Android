@@ -242,6 +242,7 @@
     <!-- Chat rooms -->
     <string name="my_chat_rooms">My Chat Rooms</string>
     <string name="send">Send</string>
+    <string name="leave">Leave</string>
     <string name="leave_chat_room">Leave chat room</string>
     <string name="leave_chat_room_body">Are you sure you want to leave this chat room?</string>
 
@@ -584,7 +585,7 @@ Signature: %5$s</string>
     <string name="error_invalid_tum_id_format">Invalid TUM-ID format</string>
     <string name="error_user_not_found">No user found</string>
     <string name="add_user_to_chat_message">Add <b>%s</b> to chat room <b>%s</b>?</string>
-    <string name="chat_member_added">User was added</string>
+    <string name="chat_member_added">Added user to chat room</string>
 
     <string name="enter_your_tum_id">Enter your TUM ID …</string>
     <string name="generate_new_token">Generate new token</string>
@@ -694,5 +695,7 @@ Signature: %5$s</string>
 
     <string name="including_format_string">including %s</string>
     <string name="new_items_format_string">%d new items</string>
+    <string name="chat_message_send_error">Message couldn’t be sent</string>
+    <string name="chat_message_try_again">The message couldn’t be send. Try again?</string>
     <string name="today">Today</string>
 </resources>

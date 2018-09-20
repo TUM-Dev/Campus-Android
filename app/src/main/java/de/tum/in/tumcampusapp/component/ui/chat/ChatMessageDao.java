@@ -34,8 +34,11 @@ public interface ChatMessageDao {
     @Query("DELETE FROM chat_message")
     void removeCache();
 
-    @Query("SELECT c.* FROM chat_message c WHERE c.sending=1 ORDER BY c.timestamp")
+    @Query("SELECT c.* FROM chat_message c WHERE c.sending IN (1, 2) ORDER BY c.timestamp")
     List<ChatMessage> getUnsent();
+
+    @Query("SELECT c.* FROM chat_message c WHERE c.room = :roomId AND c.sending IN (1, 2) ORDER BY c.timestamp")
+    List<ChatMessage> getUnsentInChatRoom(int roomId);
 
     @Query("SELECT c.* FROM chat_message c, chat_room r "
            + "WHERE c.room=:room AND c.room = r.room AND c._id > r.last_read ORDER BY c.timestamp DESC LIMIT 5")
