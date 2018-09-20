@@ -36,7 +36,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 546
-        versionName "2.0-beta2-dev"
+        versionName "2.0-beta3-dev"
         kapt.arguments {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
