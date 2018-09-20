@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.di
 
-import android.app.Application
 import android.arch.persistence.room.Room.databaseBuilder
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -10,12 +10,12 @@ import de.tum.`in`.tumcampusapp.utils.Const.DATABASE_NAME
 import javax.inject.Singleton
 
 @Module
-class DatabaseModule(private val application: Application) {
+class DatabaseModule(private val context: Context) {
 
     @Provides
     @Singleton
     fun providesDatabase(): TcaDb {
-        return databaseBuilder(application.applicationContext, TcaDb::class.java, DATABASE_NAME)
+        return databaseBuilder(context.applicationContext, TcaDb::class.java, DATABASE_NAME)
                 .allowMainThreadQueries()
                 .addMigrations(*migrations)
                 .fallbackToDestructiveMigration()

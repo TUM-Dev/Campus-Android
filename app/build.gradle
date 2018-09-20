@@ -44,8 +44,11 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        kapt.arguments {
-            arg("room.schemaLocation", "$projectDir/schemas".toString())
+        kapt {
+            generateStubs = true
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
         }
     }
     lintOptions {
