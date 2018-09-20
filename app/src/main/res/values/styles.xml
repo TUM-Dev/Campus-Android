@@ -72,12 +72,15 @@
 
     <!-- Style for Stripe's payment method activity -->
     <style name="StripeDefaultTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
-        <item name="colorAccent">@color/color_primary</item>
+        <item name="colorPrimary">@color/tum_light_gray</item>
+        <item name="colorPrimaryDark">@color/tum_dark_gray</item>
+        <item name="colorAccent">@color/tum_blue</item>
         <item name="android:textColorPrimary">@color/color_primary</item>
         <item name="android:textColorSecondary">@color/color_primary</item>
         <item name="titleTextColor">@color/color_primary</item>
+
+        <!-- Light status bar -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="SectionHeadline">

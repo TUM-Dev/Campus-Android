@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.api.app;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -440,8 +441,9 @@ public final class TUMCabeClient {
 
     // Ticket purchase
 
-    public void purchaseTicketStripe(Context context, int ticketHistory, String token,
-                                     String customerName, Callback<Ticket> cb) throws NoPrivateKey {
+    public void purchaseTicketStripe(
+            Context context, int ticketHistory, @NonNull String token,
+            @NonNull String customerName, Callback<Ticket> cb) throws NoPrivateKey {
         TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketHistory, token, customerName);
         TUMCabeVerification verification = getVerification(context, purchase);
         service.purchaseTicketStripe(verification).enqueue(cb);

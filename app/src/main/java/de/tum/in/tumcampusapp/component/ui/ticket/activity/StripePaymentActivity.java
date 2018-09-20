@@ -133,13 +133,16 @@ public class StripePaymentActivity extends BaseActivity {
         showLoading(true);
 
         try {
-            String paymentMethodId =
-                    paymentSession.getPaymentSessionData().getSelectedPaymentMethodId();
+            String methodId = paymentSession.getPaymentSessionData().getSelectedPaymentMethodId();
+            if (methodId == null) {
+                Utils.showToast(this, R.string.error_something_wrong);
+                return;
+            }
 
             TUMCabeClient
                     .getInstance(this)
                     .purchaseTicketStripe(this, ticketHistory,
-                            paymentMethodId, cardholder, new Callback<Ticket>() {
+                            methodId, cardholder, new Callback<Ticket>() {
                                 @Override
                                 public void onResponse(@NonNull Call<Ticket> call,
                                                        @NonNull Response<Ticket> response) {

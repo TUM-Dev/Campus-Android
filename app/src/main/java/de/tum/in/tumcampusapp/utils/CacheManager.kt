@@ -25,7 +25,7 @@ class CacheManager(private val context: Context) {
         }
     }
 
-    fun syncCalendar() {
+    private fun syncCalendar() {
         TUMOnlineClient
                 .getInstance(context)
                 .getCalendar(CacheControl.USE_CACHE)
@@ -44,7 +44,9 @@ class CacheManager(private val context: Context) {
     }
 
     private fun loadRoomLocations() {
-        CalendarController.QueryLocationsService.loadGeo(context)
+        doAsync {
+            CalendarController.QueryLocationsService.loadGeo(context)
+        }
     }
 
     private fun syncPersonalLectures() {

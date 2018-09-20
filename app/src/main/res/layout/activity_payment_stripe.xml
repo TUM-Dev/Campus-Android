@@ -164,12 +164,12 @@
                     android:layout_margin="@dimen/material_default_padding"
                     android:alpha="0.5"
                     android:enabled="false"
-                    android:padding="@dimen/two_line_button_padding"
+                    android:padding="@dimen/material_small_padding"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     app:backgroundTint="@color/color_primary"
-                    app:cornerRadius="30dp"
+                    app:cornerRadius="@dimen/material_corner_radius"
                     tools:text="@string/buy_ticket" />
 
             </LinearLayout>
