@@ -101,9 +101,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         mWeekView.setMonthChangeListener(this);
         mWeekView.setOnEventClickListener(this);
         mWeekView.setScrollListener((newFirstVisibleDay, oldFirstVisibleDay) -> {
-            DateTime visibleDay = new LocalDate(newFirstVisibleDay).toDateTimeAtStartOfDay();
-            DateTime today = DateTime.now().withTimeAtStartOfDay();
-            boolean isToday = visibleDay.getMillis() == today.getMillis();
+            LocalDate visibleDay = new LocalDate(newFirstVisibleDay);
+            LocalDate today = LocalDate.now();
+            boolean isToday = visibleDay.equals(today);
             mTodayButton.setVisibility(isToday ? View.GONE : View.VISIBLE);
             TransitionManager.beginDelayedTransition(getSwipeRefreshLayout());
         });
