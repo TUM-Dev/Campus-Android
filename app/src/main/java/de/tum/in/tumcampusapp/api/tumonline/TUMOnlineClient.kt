@@ -13,7 +13,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.model.TokenConfirmation
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Events
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsResponse
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse
@@ -30,7 +30,7 @@ import retrofit2.Retrofit
 
 class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
 
-    fun getCalendar(cacheControl: CacheControl): Call<Events> {
+    fun getCalendar(cacheControl: CacheControl): Call<EventsResponse> {
         return apiService.getCalendar(
                 Const.CALENDAR_MONTHS_BEFORE, Const.CALENDAR_MONTHS_AFTER, cacheControl.header)
     }
@@ -91,6 +91,8 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
     companion object {
 
         private const val BASE_URL = "https://campus.tum.de/tumonline/"
+        // For testing
+        // private const val BASE_URL = "https://campusquality.tum.de/QSYSTEM_TUM/"
 
         private var client: TUMOnlineClient? = null
 

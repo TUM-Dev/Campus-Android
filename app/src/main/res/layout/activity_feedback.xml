@@ -19,6 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
             android:orientation="vertical"
             android:padding="@dimen/material_default_padding">
 
@@ -45,26 +46,34 @@
 
             </RadioGroup>
 
-            <EditText
-                android:id="@+id/feedback_message"
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/material_large_padding"
                 android:layout_marginBottom="@dimen/material_default_padding"
-                android:layout_marginTop="@dimen/material_default_padding"
-                android:background="@android:color/transparent"
-                android:gravity="top"
                 android:hint="@string/feedback_hint"
-                android:inputType="textMultiLine"
-                android:maxHeight="300dp"
-                android:minHeight="200dp"
-                android:scrollbars="vertical"
-                android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+                app:boxStrokeColor="@color/input_layout_border"
+                app:boxStrokeWidth="@dimen/input_layout_border">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/feedback_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:maxHeight="300dp"
+                    android:minHeight="200dp"
+                    android:scrollbars="vertical"
+                    android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/material_default_padding"
                 android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_default_padding"
                 android:background="@color/text_light_gray" />
 
             <LinearLayout
@@ -73,6 +82,7 @@
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.AppCompatImageButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="@dimen/add_thumbnail_button_size"
                     android:layout_height="@dimen/add_thumbnail_button_size"
                     android:layout_gravity="center_vertical"
@@ -80,8 +90,9 @@
                     android:onClick="addPicture"
                     android:padding="@dimen/material_default_padding"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_add_photo"
-                    app:backgroundTint="@color/color_primary" />
+                    android:src="@drawable/ic_outline_add_photo_alternate_24px"
+                    android:tint="@color/color_primary"
+                    app:cornerRadius="@dimen/material_corner_radius" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/feedback_image_list"
@@ -95,8 +106,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/material_default_padding"
                 android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_default_padding"
                 android:background="@color/text_light_gray" />
 
             <CheckBox
@@ -107,16 +118,28 @@
                 android:checked="true"
                 android:text="@string/feedback_include_email" />
 
-            <EditText
-                android:id="@+id/feedback_custom_email"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/feedback_custom_email_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="@dimen/material_small_padding"
                 android:hint="@string/feedback_email_hint"
-                android:inputType="textEmailAddress"
                 android:visibility="gone"
-                tools:visibility="visible" />
+                app:boxStrokeColor="@color/input_layout_border"
+                app:boxStrokeWidth="@dimen/input_layout_border"
+                tools:visibility="visible">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/feedback_custom_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/feedback_include_location"
@@ -126,15 +149,19 @@
                 android:checked="false"
                 android:text="@string/feedback_include_location" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.design.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_default_padding"
                 android:onClick="onSendClicked"
                 android:text="@string/feedback_send_button"
+                android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                app:backgroundTint="@color/color_primary" />
+                app:backgroundTint="@color/color_primary"
+                app:cornerRadius="@dimen/material_corner_radius" />
 
         </LinearLayout>
 

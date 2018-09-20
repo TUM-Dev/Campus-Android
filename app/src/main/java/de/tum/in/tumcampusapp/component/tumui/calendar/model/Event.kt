@@ -26,6 +26,9 @@ data class Event(
         @PropertyElement(name = "title") val title: String,
         @PropertyElement(name = "url") val url: String? = null) {
 
+    val isFutureEvent: Boolean
+        get() = startTime?.isAfterNow ?: false
+
     /**
      * Retrieve related values for calendar item as CalendarItem object
      */
@@ -49,13 +52,13 @@ data class Event(
                 .setContentTitle(title)
                 .setContentText(timestamp)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_calendar)
+                .setSmallIcon(R.drawable.ic_outline_event_24px)
                 .setShowWhen(false)
                 .setColor(ContextCompat.getColor(context, R.color.color_primary))
                 .setTimeoutAfter(duration)
                 .build()
 
-        val notificationTime = startTime.minusMinutes(15) // TODO: Is "id" an Int?
+        val notificationTime = startTime.minusMinutes(15)
         return FutureNotification(NotificationType.CALENDAR, id.toInt(), notification, notificationTime)
     }
 

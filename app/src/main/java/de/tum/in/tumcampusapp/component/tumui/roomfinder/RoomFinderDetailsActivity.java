@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.tumui.roomfinder;
 
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -86,7 +86,7 @@ public class RoomFinderDetailsActivity
         switchMap.setVisible(!"10".equals(mapId) && mapsLoaded && fragment == null);
         MenuItem timetable = menu.findItem(R.id.action_room_timetable);
         timetable.setVisible(infoLoaded);
-        timetable.setIcon(fragment == null ? R.drawable.ic_room_timetable : R.drawable.ic_action_map);
+        timetable.setIcon(fragment == null ? R.drawable.ic_outline_event_note_24px : R.drawable.ic_outline_map_24px);
         menu.findItem(R.id.action_directions)
             .setVisible(infoLoaded && fragment == null);
         return true;
@@ -183,8 +183,9 @@ public class RoomFinderDetailsActivity
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(room.getInfo());
-            getSupportActionBar().setSubtitle(room.getAddress());
+            getSupportActionBar().setSubtitle(room.getFormattedAddress());
         }
+
         showLoadingEnded();
         loadMapList();
     }

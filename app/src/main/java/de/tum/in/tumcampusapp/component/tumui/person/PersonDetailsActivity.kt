@@ -1,12 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -83,10 +83,9 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         }
 
         AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_add_to_contacts)
+                .setMessage(R.string.dialog_add_to_contacts)
                 .setPositiveButton(R.string.add) { _, _ -> addContact(employee) }
                 .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .setIcon(R.drawable.ic_action_add_person_blue)
                 .show()
     }
 
@@ -97,6 +96,8 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
      * @param employee The employee whose information should be displayed.
      */
     private fun displayResult(employee: Employee) {
+        scrollView.visibility = View.VISIBLE
+
         val image = employee.image ?: BitmapFactory.decodeResource(
                 resources, R.drawable.photo_not_available)
 

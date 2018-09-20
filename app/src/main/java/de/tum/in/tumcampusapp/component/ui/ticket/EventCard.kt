@@ -1,12 +1,14 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
+import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
@@ -27,10 +29,9 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
         eventViewHolder.bind(event, hasTicket)
     }
 
-    override fun getIntent(): Intent? {
-        return Intent(context, EventDetailsActivity::class.java).apply {
-            putExtra("event", event)
-        }
+    override fun getNavigationDestination(): NavigationDestination? {
+        val bundle = Bundle().apply { putParcelable("event", event) }
+        return SystemActivity(EventDetailsActivity::class.java, bundle)
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {

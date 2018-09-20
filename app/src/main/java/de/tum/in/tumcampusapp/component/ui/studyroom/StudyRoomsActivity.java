@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -36,6 +35,7 @@ public class StudyRoomsActivity extends ProgressActivity
 
     private List<StudyRoomGroup> mStudyRoomGroupList;
     private int mSelectedStudyRoomGroupId = -1;
+
     private ViewPager mViewPager;
     private StudyRoomsPagerAdapter mSectionsPagerAdapter;
 
@@ -68,38 +68,32 @@ public class StudyRoomsActivity extends ProgressActivity
 
     private Spinner getStudyRoomGroupsSpinner() {
         // Adapter for drop-down navigation
-        SpinnerAdapter adapterCafeterias =
-                new ArrayAdapter<StudyRoomGroup>(this, R.layout.simple_spinner_item_actionbar,
+        ArrayAdapter adapterCafeterias =
+                new ArrayAdapter<StudyRoomGroup>(this, android.R.layout.simple_spinner_dropdown_item,
                                                  android.R.id.text1, mStudyRoomGroupList) {
                     final LayoutInflater inflater = LayoutInflater.from(getContext());
 
                     @Override
                     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                        View v = inflater.inflate(
-                                R.layout.simple_spinner_dropdown_item_actionbar,
-                                                  parent, false);
+                        View v = inflater.inflate(android.R.layout.simple_spinner_dropdown_item,
+                                parent, false);
+
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
                         TextView nameTextView = v.findViewById(android.R.id.text1);
-                        TextView detailsTextView = v.findViewById(android.R.id.text2);
 
                         if (studyRoomGroup != null) {
                             String name = studyRoomGroup.getName();
-                            String details = studyRoomGroup.getDetails();
-
                             nameTextView.setText(name);
-                            detailsTextView.setText(details);
-
-                            if (details.isEmpty()) {
-                                detailsTextView.setVisibility(View.GONE);
-                            }
                         }
 
                         return v;
                     }
                 };
 
-        Spinner spinner = findViewById(R.id.spinnerToolbar);
+        adapterCafeterias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner spinner = findViewById(R.id.spinner);
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
         return spinner;
@@ -183,6 +177,8 @@ public class StudyRoomsActivity extends ProgressActivity
                 });
     }
 
+
+
     private void onDownloadSuccessful(@NonNull List<StudyRoomGroup> groups) {
         Handler handler = new Handler();
         handler.post(() -> {
@@ -206,6 +202,8 @@ public class StudyRoomsActivity extends ProgressActivity
 
         Spinner spinner = getStudyRoomGroupsSpinner();
         selectCurrentSpinnerItem(spinner);
+
+        findViewById(R.id.spinnerContainer).setVisibility(View.VISIBLE);
         showLoadingEnded();
     }
 

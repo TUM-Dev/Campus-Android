@@ -34,7 +34,6 @@ public class CardsActivity extends ActivityForLoadingInBackground<Void, List<Stu
         super.onCreate(savedInstanceState);
     }
 
-    @Override
     public void setUpLayout() {
         /*binding = DataBindingUtil.setContentView(this, R.layout.activity_cards);
         binding.setState(this.state);

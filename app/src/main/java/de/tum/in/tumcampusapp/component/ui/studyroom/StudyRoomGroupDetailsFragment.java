@@ -2,9 +2,9 @@ package de.tum.in.tumcampusapp.component.ui.studyroom;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -119,7 +119,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
         CardView cardView;
         TextView headerTextView;
         TextView detailsTextView;
-        AppCompatButton openRoomFinderButton;
+        MaterialButton openRoomFinderButton;
 
         StudyRoomViewHolder(View itemView) {
             super(itemView);

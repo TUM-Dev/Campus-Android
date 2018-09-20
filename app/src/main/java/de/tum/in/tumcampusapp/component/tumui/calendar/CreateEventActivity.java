@@ -3,10 +3,12 @@ package de.tum.in.tumcampusapp.component.tumui.calendar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -29,7 +32,6 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +52,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private TextView startTimeView;
     private TextView endDateView;
     private TextView endTimeView;
-    private AppCompatButton createButton;
+    private MaterialButton createButton;
     private CalendarItem event;
 
     public CreateEventActivity() {
@@ -61,6 +63,21 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViews();
+
+        if (getSupportActionBar() != null) {
+            Drawable closeIcon = ContextCompat.getDrawable(this, R.drawable.ic_clear);
+            int color = ContextCompat.getColor(this, R.color.color_primary);
+            if (closeIcon != null) {
+                closeIcon.setTint(color);
+                getSupportActionBar().setHomeAsUpIndicator(closeIcon);
+            }
+        }
+
+        if (getSwipeRefreshLayout() != null) {
+            // We only use the SwipeRefreshLayout to indicate progress, not to allow
+            // the user to pull to refresh.
+            getSwipeRefreshLayout().setEnabled(false);
+        }
 
         titleView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -120,18 +137,22 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void initStartEndDates(Bundle extras) {
-        if (extras != null) { // editing indicates extras are not null
-            start = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_START));
-            end = DateTimeUtils.INSTANCE.getDateTime(extras.getString(Const.EVENT_END));
-        } else {
-            // initial start: round up to the next full hour
-            start = new DateTime()
-                    .plusHours(1)
-                    .withMinuteOfHour(0);
+        LocalDate initialDate = (LocalDate) extras.getSerializable(Const.DATE);
+        start = (DateTime) extras.getSerializable(Const.EVENT_START);
+        end = (DateTime) extras.getSerializable(Const.EVENT_END);
 
-            // initial length: 1 hour
-            end = new DateTime(start)
-                    .plusHours(1);
+        if (start == null || end == null) {
+            if (initialDate == null) {
+                throw new IllegalStateException("No date provided for CreateEventActivity");
+            }
+
+            // We’re creating a new event, so we set the start and end time to the next full hour
+            start = initialDate.toDateTimeAtCurrentTime()
+                    .plusHours(1)
+                    .withMinuteOfHour(0)
+                    .withSecondOfMinute(0)
+                    .withMillisOfSecond(0);
+            end = start.plusHours(1);
         }
 
         updateDateViews();
@@ -141,6 +162,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private void setDateAndTimeListeners() {
         // DATE
         startDateView.setOnClickListener(view -> {
+            hideKeyboard();
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
                 start = start.withDate(year, month, dayOfMonth);
                 if (end.isBefore(start)) {
@@ -151,6 +173,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
         });
         endDateView.setOnClickListener(view -> {
+            hideKeyboard();
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
                 end = end.withDate(year, month, dayOfMonth);
                 updateDateViews();
@@ -159,6 +182,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
         // TIME
         startTimeView.setOnClickListener(view -> {
+            hideKeyboard();
             new TimePickerDialog(this, (timePicker, hour, minute) -> {
                 long eventLength = end.getMillis() - start.getMillis();
                 start = start.withHourOfDay(hour)
@@ -169,6 +193,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         });
 
         endTimeView.setOnClickListener(view -> {
+            hideKeyboard();
             new TimePickerDialog(this, (timePicker, hour, minute) -> {
                 end = end.withHourOfDay(hour)
                          .withMinuteOfHour(minute);
@@ -185,7 +210,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void updateDateViews() {
-        DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy")
+        DateTimeFormatter format = DateTimeFormat.forPattern("EEE, dd.MM.yyyy")
                                                  .withLocale(Locale.getDefault());
         startDateView.setText(format.print(start));
         endDateView.setText(format.print(end));
@@ -305,11 +330,17 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void displayCloseDialog() {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage(R.string.discard_changes_question)
-                .setNegativeButton(R.string.discard, (dialog, which) -> finish())
+                .setNegativeButton(R.string.discard, (dialogInterface, which) -> finish())
                 .setPositiveButton(R.string.keep_editing, null)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     @Override
@@ -323,12 +354,18 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     private void showErrorDialog(String message) {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
             .setTitle(R.string.error)
             .setMessage(message)
             .setIcon(R.drawable.ic_error_outline)
             .setPositiveButton(R.string.ok, null)
-            .show();
+            .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
 }

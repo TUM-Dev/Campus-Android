@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.api.app;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -48,10 +49,8 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.EphimeralKey;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketPurchaseStripe;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationCancelation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -127,19 +126,9 @@ public final class TUMCabeClient {
         return instance;
     }
 
-    private static TUMCabeVerification getMemberVerification(Context context, Object data) throws NoPrivateKey {
+    private static TUMCabeVerification getVerification(Context context, @Nullable Object data) throws NoPrivateKey {
         TUMCabeVerification verification =
-                TUMCabeVerification.createMemberVerification(context, null);
-        if (verification == null) {
-            throw new NoPrivateKey();
-        }
-
-        return verification;
-    }
-
-    private static TUMCabeVerification getDeviceVerification(Context context, Object data) throws NoPrivateKey {
-        TUMCabeVerification verification =
-                TUMCabeVerification.createDeviceVerification(context, data);
+                TUMCabeVerification.create(context, data);
         if (verification == null) {
             throw new NoPrivateKey();
         }
@@ -195,13 +184,17 @@ public final class TUMCabeClient {
                 .enqueue(cb);
     }
 
-    public Observable<ChatMessage> sendMessage(int roomId, ChatMessage chatMessage) {
-        //If the id is zero then its an new entry otherwise try to update it
-        Utils.log("Sending: " + chatMessage.getId() + " " + chatMessage.getText());
-        if (chatMessage.getId() == 0) {
-            return service.sendMessage(roomId, chatMessage);
+    public Observable<ChatMessage> sendMessage(int roomId, TUMCabeVerification verification) {
+        ChatMessage message = (ChatMessage) verification.getData();
+        if (message == null) {
+            throw new IllegalStateException("TUMCabeVerification data is not a ChatMessage");
         }
-        return service.updateMessage(roomId, chatMessage.getId(), chatMessage);
+
+        if (message.isNewMessage()) {
+            return service.sendMessage(roomId, verification);
+        }
+
+        return service.updateMessage(roomId, message.getId(), verification);
     }
 
     public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body TUMCabeVerification verification) {
@@ -426,12 +419,12 @@ public final class TUMCabeClient {
     // Getting ticket information
 
     public void fetchTickets(Context context, Callback<List<Ticket>> cb) throws NoPrivateKey {
-        TUMCabeVerification verification = getMemberVerification(context, null);
+        TUMCabeVerification verification = getVerification(context, null);
         service.getTickets(verification).enqueue(cb);
     }
 
     public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {
-        TUMCabeVerification verification = getMemberVerification(context, null);
+        TUMCabeVerification verification = getVerification(context, null);
         return service.getTicket(ticketID, verification);
     }
 
@@ -446,26 +439,20 @@ public final class TUMCabeClient {
         service.reserveTicket(verification).enqueue(cb);
     }
 
-    public void cancelTicketReservation(Context context, int ticketHistory,
-                                        Callback<TicketSuccessResponse> cb) throws NoPrivateKey {
-        TicketReservationCancelation cancelation = new TicketReservationCancelation(ticketHistory);
-        TUMCabeVerification verification = getMemberVerification(context, cancelation);
-        service.cancelTicketReservation(verification).enqueue(cb);
-    }
-
     // Ticket purchase
 
-    public void purchaseTicketStripe(Context context, int ticketHistory, String token,
-                                     String customerName, Callback<Ticket> cb) throws NoPrivateKey {
+    public void purchaseTicketStripe(
+            Context context, int ticketHistory, @NonNull String token,
+            @NonNull String customerName, Callback<Ticket> cb) throws NoPrivateKey {
         TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketHistory, token, customerName);
-        TUMCabeVerification verification = getMemberVerification(context, purchase);
+        TUMCabeVerification verification = getVerification(context, purchase);
         service.purchaseTicketStripe(verification).enqueue(cb);
     }
 
     public void retrieveEphemeralKey(Context context, String apiVersion,
                                      Callback<HashMap<String, Object>> cb) throws NoPrivateKey {
         EphimeralKey key = new EphimeralKey(apiVersion);
-        TUMCabeVerification verification = getMemberVerification(context, key);
+        TUMCabeVerification verification = getVerification(context, key);
         service.retrieveEphemeralKey(verification).enqueue(cb);
     }
 

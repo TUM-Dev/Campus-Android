@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.component.tumui.feedback;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,14 +14,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -65,7 +66,8 @@ public class FeedbackActivity extends BaseActivity {
     private static final int PERMISSION_FILES = 15;
 
     private CheckBox includeEmail, includeLocation;
-    private EditText feedbackView, customEmailView;
+    private TextInputLayout customEmailViewLayout;
+    private TextInputEditText feedbackView, customEmailView;
 
     private String mCurrentPhotoPath;
     private int feedbackTopic;
@@ -95,6 +97,7 @@ public class FeedbackActivity extends BaseActivity {
         feedbackTopic = GENERAL_FEEDBACK; // General feedback by default
 
         feedbackView = findViewById(R.id.feedback_message);
+        customEmailViewLayout = findViewById(R.id.feedback_custom_email_layout);
         customEmailView = findViewById(R.id.feedback_custom_email);
         includeEmail = findViewById(R.id.feedback_include_email);
         includeLocation = findViewById(R.id.feedback_include_location);
@@ -211,11 +214,16 @@ public class FeedbackActivity extends BaseActivity {
         if (location == null) { // we don't know anything about the location
             includeLocation.setChecked(false);
 
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setIcon(R.drawable.ic_location);
-            dialog.setTitle(R.string.location_services_off_title);
-            dialog.setMessage(R.string.location_services_off_message);
-            dialog.setPositiveButton(R.string.ok, null);
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.location_services_off_title)
+                    .setMessage(R.string.location_services_off_message)
+                    .setPositiveButton(R.string.ok, null)
+                    .create();
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            }
+
             dialog.show();
         }
     }
@@ -241,11 +249,11 @@ public class FeedbackActivity extends BaseActivity {
     private void onIncludeEmailClick() {
         if (includeEmail.isChecked()) {
             if (Strings.isNullOrEmpty(lrzId)) {
-                customEmailView.setVisibility(View.VISIBLE);
+                customEmailViewLayout.setVisibility(View.VISIBLE);
                 customEmailView.setText(email);
             }
         } else {
-            customEmailView.setVisibility(View.GONE);
+            customEmailViewLayout.setVisibility(View.GONE);
         }
     }
 
@@ -329,12 +337,17 @@ public class FeedbackActivity extends BaseActivity {
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.send_feedback_question);
-        builder.setIcon(R.drawable.ic_feedback);
-        builder.setPositiveButton(R.string.send, (dialogInterface, i) -> sendFeedback());
-        builder.setNegativeButton(R.string.no, null);
-        builder.show();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.send_feedback_question)
+                .setPositiveButton(R.string.send, (dialogInterface, i) -> sendFeedback())
+                .setNegativeButton(R.string.no, null)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     public void sendFeedback() {
@@ -375,12 +388,18 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void showProgressBarDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.feedback_sending);
-        builder.setView(new ProgressBar(this));
-        builder.setCancelable(false);
-        builder.setNeutralButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
-        progress = builder.show();
+        progress = new AlertDialog.Builder(this)
+                .setTitle(R.string.feedback_sending)
+                .setView(new ProgressBar(this))
+                .setCancelable(false)
+                .setNeutralButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel())
+                .create();
+
+        if (progress.getWindow() != null) {
+            progress.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        progress.show();
     }
 
     private void showErrorDialog() {
@@ -388,34 +407,44 @@ public class FeedbackActivity extends BaseActivity {
             return;
         }
         progress.cancel();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.feedback_sending_error);
-        builder.setIcon(R.drawable.ic_error_outline);
-        builder.setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback());
 
-        // Or save message to send later -> db table needed? / sharedPreferences
-        builder.setNegativeButton(R.string.ok, null);
-        errorDialog = builder.show();
+        errorDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.feedback_sending_error)
+                .setIcon(R.drawable.ic_error_outline)
+                .setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback())
+                .setNegativeButton(R.string.ok, null)
+                .create();
+
+        if (errorDialog.getWindow() != null) {
+            errorDialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        errorDialog.show();
     }
 
     @SuppressLint("NewApi")
     public void addPicture(View view) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle(R.string.feedback_add_picture);
-        dialog.setIcon(R.drawable.ic_add_photo_colored);
         String[] options = {getString(R.string.feedback_take_picture), getString(R.string.gallery)};
-        dialog.setItems(options, (dialogInterface, i) -> {
-            if (i == 0) {
-                if (checkPermission(Manifest.permission.CAMERA)) {
-                    startTakingPicture();
-                }
-            } else {
-                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    openGallery();
-                }
-            }
-        });
-        dialog.setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.feedback_add_picture)
+                .setItems(options, (dialogInterface, i) -> {
+                    if (i == 0) {
+                        if (checkPermission(Manifest.permission.CAMERA)) {
+                            startTakingPicture();
+                        }
+                    } else {
+                        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            openGallery();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
         dialog.show();
     }
 

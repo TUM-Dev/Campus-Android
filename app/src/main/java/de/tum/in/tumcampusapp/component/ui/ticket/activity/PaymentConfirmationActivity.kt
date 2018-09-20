@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.activity
 import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.os.Bundle
+import android.view.MenuItem
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -45,6 +46,29 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
                 animatedCheckmark?.start()
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                handleOnBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        handleOnBackPressed()
+    }
+
+    private fun handleOnBackPressed() {
+        // Go back to events and finish this activity to prevent the user from purchasing
+        // another ticket.
+        val intent = Intent(this, EventsActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+        finish()
     }
 
 }

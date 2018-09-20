@@ -147,12 +147,9 @@ class MVVWidgetConfigureActivity :
      * Saves the selection to the database, triggers a widget update and closes this activity
      */
     private fun saveAndReturn() {
-        // save the settingsPrefix
+        // save the settings
         val transportManager = TransportController(this)
         transportManager.addWidget(appWidgetId, widgetDepartures)
-
-        // update alarms
-        MVVWidget.setAlarm(this)
 
         // update widget
         val reloadIntent = Intent(this, MVVWidget::class.java)

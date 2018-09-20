@@ -1,8 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.arch.lifecycle.Lifecycle;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -13,22 +11,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
+import android.transition.TransitionManager;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
+import com.alamkanak.weekview.WeekViewDisplayable;
 import com.alamkanak.weekview.WeekViewEvent;
-import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
-import com.trello.rxlifecycle2.LifecycleProvider;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -43,11 +45,10 @@ import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationTy
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
-import de.tum.in.tumcampusapp.component.tumui.calendar.model.Events;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.EventsResponse;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -58,27 +59,28 @@ import retrofit2.Call;
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
+public class CalendarActivity extends ActivityForAccessingTumOnline<EventsResponse>
         implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener,
-        CalendarDetailsFragment.OnEventInteractionListener,LimitPickerDialogListener {
+        CalendarDetailsFragment.OnEventInteractionListener {
 
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
     private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
                                                           Manifest.permission.WRITE_CALENDAR};
 
-    private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
     private CalendarController calendarController;
 
     /**
      * Used as a flag, if there are results fetched from internet
      */
-    private boolean isFetched = false;
+    private boolean isFetched;
     private boolean mWeekMode;
     private DateTime mShowDate;
-    private WeekView mWeekView;
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;
+
+    private WeekView mWeekView;
+    private MaterialButton mTodayButton;
 
     private CompositeDisposable mDisposable = new CompositeDisposable();
 
@@ -92,19 +94,28 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Get a reference for the week view in the layout.
         mWeekView = findViewById(R.id.weekView);
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(this);
         mWeekView.setOnEventClickListener(this);
+        mWeekView.setScrollListener((newFirstVisibleDay, oldFirstVisibleDay) -> {
+            LocalDate visibleDay = new LocalDate(newFirstVisibleDay);
+            LocalDate today = LocalDate.now();
+            boolean isToday = visibleDay.equals(today);
+            mTodayButton.setVisibility(isToday ? View.GONE : View.VISIBLE);
+            TransitionManager.beginDelayedTransition(getSwipeRefreshLayout());
+        });
+
+        mTodayButton = findViewById(R.id.todayButton);
+        mTodayButton.setOnClickListener(view -> refreshWeekView());
 
         // The week view adds a horizontal bar below the Toolbar. When refreshing, the refresh
         // spinner covers it. Therefore, we adjust the spinner's end position.
-        int startOffset = swipeRefreshLayout.getProgressViewStartOffset();
-        int endOffset = swipeRefreshLayout.getProgressViewEndOffset();
-        swipeRefreshLayout.setProgressViewOffset(false, startOffset, endOffset);
+        int startOffset = getSwipeRefreshLayout().getProgressViewStartOffset();
+        int endOffset = getSwipeRefreshLayout().getProgressViewEndOffset();
+        getSwipeRefreshLayout().setProgressViewOffset(false, startOffset, endOffset);
 
         // Get time to show e.g. a lectures starting time or 0 for now
         Intent i = getIntent();
@@ -116,13 +127,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
         // Get setting from sharedprefs and refresh the view with everything
         mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
-        refreshWeekView();
 
         disableRefresh();
-
         calendarController = new CalendarController(this);
-
         loadEvents(CacheControl.USE_CACHE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        refreshWeekView();
     }
 
     @Override
@@ -131,18 +145,24 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     }
 
     private void loadEvents(CacheControl cacheControl) {
-        Call<Events> apiCall = apiClient.getCalendar(cacheControl);
+        Call<EventsResponse> apiCall = apiClient.getCalendar(cacheControl);
         fetch(apiCall);
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull Events response) {
+    protected void onDownloadSuccessful(@NonNull EventsResponse response) {
         isFetched = true;
-        scheduleNotifications(response.getEvents());
+
+        List<Event> events = response.getEvents();
+        if (events == null) {
+            return;
+        }
+
+        scheduleNotifications(events);
 
         mDisposable.add(
                 Completable
-                        .fromAction(() -> calendarController.importCalendar(response))
+                        .fromAction(() -> calendarController.importCalendar(events))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(() -> {
@@ -155,7 +175,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         );
     }
 
-    private void scheduleNotifications(List<Event> events) {
+    private void scheduleNotifications(@NonNull List<Event> events) {
         if (calendarController.hasNotificationsEnabled()) {
             calendarController.scheduleNotifications(events);
         }
@@ -234,7 +254,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
             case R.id.action_switch_view_mode:
                 mWeekMode = !mWeekMode;
                 Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
-                this.refreshWeekView();
+                refreshWeekView();
                 return true;
             case R.id.action_export_calendar:
                 exportCalendarToGoogle();
@@ -247,14 +267,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
                 deleteCalendarFromGoogle();
                 return true;
             case R.id.action_create_event:
-                startActivity(new Intent(this, CreateEventActivity.class));
+                LocalDate currentDate = new LocalDate(mWeekView.getFirstVisibleDay());
+                Intent intent = new Intent(this, CreateEventActivity.class);
+                intent.putExtra(Const.DATE, currentDate);
+                startActivity(intent);
                 return true;
             case R.id.action_calendar_filter_canceled:
                 item.setChecked(!item.isChecked());
                 applyFilterCanceled(item.isChecked());
-                return true;
-            case R.id.action_calendar_filter_hour_limit:
-                showHourLimitFilterDialog();
                 return true;
             case R.id.action_update_calendar:
                 loadEvents(CacheControl.BYPASS_CACHE);
@@ -272,19 +292,20 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     private void refreshWeekView() {
         setupDateTimeInterpreter(mWeekMode);
         int icon;
+
         if (mWeekMode) {
-            icon = R.drawable.ic_action_day_view;
+            icon = R.drawable.ic_outline_calendar_view_day_24px;
             mWeekView.setNumberOfVisibleDays(5);
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
             mWeekView.setXScrollingSpeed(1);
         } else {
-            icon = R.drawable.ic_action_week_view;
+            icon = R.drawable.ic_outline_view_column_24px;
             mWeekView.setNumberOfVisibleDays(1);
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
             mWeekView.setXScrollingSpeed(0.4f);
         }
 
@@ -296,6 +317,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         if (menuItemSwitchView != null) {
             menuItemSwitchView.setIcon(icon);
         }
+
+        mWeekView.invalidate();
     }
 
     /**
@@ -375,9 +398,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
     }
 
     @Override
-    public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
+    public List<WeekViewDisplayable> onMonthChange(int newYear, int newMonth) {
         // Populate the week view with the events of the month to display
-        List<WeekViewEvent> events = new ArrayList<>();
+        List<WeekViewDisplayable> events = new ArrayList<>();
 
         DateTime begin = new DateTime().withDate(newYear, newMonth, 1);
 
@@ -424,10 +447,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
             }
 
             @Override
-            public String interpretTime(int hour, int minutes) {
+            public String interpretTime(int hour) {
                 DateTimeFormatter hourFormat = DateTimeFormat.forPattern("HH:mm")
                                                              .withLocale(Locale.getDefault());
-                DateTime time = new DateTime().withTime(hour, minutes, 0, 0);
+                DateTime time = new DateTime().withTime(hour, 0, 0, 0);
                 return hourFormat.print(time);
             }
         });
@@ -452,8 +475,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         bundle.putBoolean(Const.EVENT_EDIT, true);
         bundle.putString(Const.EVENT_TITLE, calendarItem.getTitle());
         bundle.putString(Const.EVENT_COMMENT, calendarItem.getDescription());
-        bundle.putString(Const.EVENT_START, DateTimeUtils.INSTANCE.getDateTimeString(calendarItem.getDtstart()));
-        bundle.putString(Const.EVENT_END, DateTimeUtils.INSTANCE.getDateTimeString(calendarItem.getDtend()));
+        bundle.putSerializable(Const.EVENT_START, calendarItem.getDtstart());
+        bundle.putSerializable(Const.EVENT_END, calendarItem.getDtend());
         bundle.putString(Const.EVENT_NR, calendarItem.getNr());
         Intent intent = new Intent(this, CreateEventActivity.class);
         intent.putExtras(bundle);
@@ -463,10 +486,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
-        String eventId = weekViewEvent.getIdentifier();
-        if (eventId == null) {
-            return;
-        }
+        String eventId = String.valueOf(weekViewEvent.getId());
 
         CalendarItem item = calendarController.getCalendarItemById(eventId);
         if (item == null) {
@@ -475,11 +495,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
 
         detailsFragment = CalendarDetailsFragment.newInstance(item, this);
         detailsFragment.show(getSupportFragmentManager(), null);
-    }
-
-    protected void onResume() {
-        super.onResume();
-        refreshWeekView();
     }
 
     @Override
@@ -499,63 +514,15 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<Events>
         }
     }
 
-    protected int calcHourHeightToFit(int min, int max) {
-        // get the height of the weekView and subtract the height of its header
-        // to get height of actual calendar section, then divide by 24 to get height of a single hour
-        return (mWeekView.getMeasuredHeight()             // height of weekView
-                - mWeekView.getTextSize()                 // height of text in header of weekView
-                - (3 * mWeekView.getHeaderRowPadding()))    // height of padding above and below text in header
-               / (max - min);                             // amount of hours
-    }
-
     protected void initFilterCheckboxes() {
         boolean settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
         menuItemFilterCanceled.setChecked(settings);
         applyFilterCanceled(settings);
-
-        int savedMin = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
-        int savedMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
-        applyFilterLimitHours(savedMin, savedMax);
     }
 
     protected void applyFilterCanceled(boolean val) {
         Utils.setSetting(this, Const.CALENDAR_FILTER_CANCELED, val);
         refreshWeekView();
-    }
-
-    protected void hourHeightFitScreen() {
-        int minHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT));
-        int maxHour = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT));
-        int hourHeight = calcHourHeightToFit(minHour, maxHour);
-        mWeekView.setHourHeight(hourHeight);
-    }
-
-    protected void applyFilterLimitHours(int min, int max) {
-        // Get old max value to check, if new min will be bigger, in which case the order of setting the new values must be reversed
-        int oldMax = Integer.parseInt(Utils.getSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, "0"));
-
-        Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MIN, Integer.toString(min));
-        Utils.setSetting(this, Const.CALENDAR_FILTER_HOUR_LIMIT_MAX, Integer.toString(max));
-
-        if (min >= oldMax) {
-            mWeekView.setMaxTime(max);
-            mWeekView.setMinTime(min);
-        } else {
-            mWeekView.setMinTime(min);
-            mWeekView.setMaxTime(max);
-        }
-        hourHeightFitScreen();
-    }
-
-    protected void showHourLimitFilterDialog() {
-        LimitPickerDialog dialog = new LimitPickerDialog(this);
-        dialog.addListener(this);
-        dialog.show();
-    }
-
-    @Override
-    public void onSelected(int min, int max) {
-        applyFilterLimitHours(min, max);
     }
 
     @Override

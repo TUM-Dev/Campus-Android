@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?android:listPreferredItemHeightSmall"
-    android:layout_marginEnd="@dimen/material_default_padding"
     android:layout_marginStart="@dimen/material_default_padding"
+    android:layout_marginEnd="@dimen/material_default_padding"
     android:orientation="horizontal">
 
     <TextView
@@ -14,6 +14,7 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/text_dark_primary"
         tools:text="Monday" />
 
     <TextView
@@ -22,9 +23,10 @@
         android:layout_height="match_parent"
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
-        android:paddingEnd="@dimen/material_default_padding"
         android:paddingStart="@dimen/material_default_padding"
+        android:paddingEnd="@dimen/material_default_padding"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/text_dark_primary"
         tools:text="9:30" />
 
     <CheckBox

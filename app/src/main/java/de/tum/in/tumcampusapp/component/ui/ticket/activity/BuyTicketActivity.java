@@ -1,9 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -163,7 +163,7 @@ public class BuyTicketActivity extends BaseActivity {
         int ticketTypeId = ticketType.getId();
         TicketReservation reservation = new TicketReservation(ticketTypeId);
 
-        TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, reservation);
+        TUMCabeVerification verification = TUMCabeVerification.create(this, reservation);
         if (verification == null) {
             handleTicketReservationFailure(R.string.internal_error);
             return;
@@ -208,15 +208,21 @@ public class BuyTicketActivity extends BaseActivity {
     }
 
     private void handleTicketNotFetched() {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.ticket_not_fetched))
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                .setPositiveButton(R.string.ok, (dialogInterface, which) -> {
                     loadingLayout.setVisibility(View.GONE);
                     TransitionManager.beginDelayedTransition(loadingLayout);
                     paymentButton.setEnabled(true);
                 })
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     private void handleTicketReservationFailure(int messageResId) {

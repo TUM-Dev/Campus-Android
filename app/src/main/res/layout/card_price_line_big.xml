@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/material_default_padding"
+    android:weightSum="100">
+
+    <TextView
+        android:id="@+id/line_name"
+        style="@style/CardTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="0dp"
+        android:layout_weight="70"
+        android:ellipsize="none"
+        android:maxLines="5"
+        android:scrollHorizontally="false"
+        tools:text="Line name" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="2" />
+
+    <TextView
+        android:id="@+id/line_price"
+        style="@style/CardBody"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="15"
+        android:minWidth="50dp"
+        android:textColor="@color/sections_green"
+        tools:text="Price" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="3" />
+
+    <ImageView
+        android:id="@+id/favoriteDish"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="9"
+        android:padding="@dimen/material_tiny_padding"
+        android:src="@drawable/star_toggle" />
+
+</LinearLayout>

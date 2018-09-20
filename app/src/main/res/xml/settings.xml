@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="cards_pref_container">
 
     <android.support.v7.preference.PreferenceCategory android:title="@string/campus">
@@ -9,8 +8,9 @@
             android:defaultValue="G"
             android:entries="@array/default_campus_entries"
             android:entryValues="@array/default_campus_values"
+            android:icon="@drawable/ic_outline_business_24px"
             android:key="card_default_campus"
-            android:title="@string/default_campus"/>
+            android:title="@string/default_campus" />
 
     </android.support.v7.preference.PreferenceCategory>
 
@@ -18,6 +18,7 @@
 
         <!-- Cafeteria card -->
         <android.support.v7.preference.PreferenceScreen
+            android:icon="@drawable/ic_cutlery"
             android:key="card_cafeteria"
             android:summary="@string/card_cafeteria_summary"
             android:title="@string/cafeteria">
@@ -27,12 +28,12 @@
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_start"
-                    android:title="@string/startpage"/>
+                    android:title="@string/startpage" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_phone"
-                    android:title="@string/notification"/>
+                    android:title="@string/notification" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -43,21 +44,21 @@
                     android:entries="@array/cafeterias_G"
                     android:entryValues="@array/cafeterias_G_val"
                     android:key="card_cafeteria_default_G"
-                    android:title="@string/campus_garching"/>
+                    android:title="@string/campus_garching" />
 
                 <android.support.v7.preference.ListPreference
                     android:defaultValue="414"
                     android:entries="@array/cafeterias_K"
                     android:entryValues="@array/cafeterias_K_val"
                     android:key="card_cafeteria_default_K"
-                    android:title="@string/campus_klinikum"/>
+                    android:title="@string/campus_klinikum" />
 
                 <android.support.v7.preference.ListPreference
                     android:defaultValue="423"
                     android:entries="@array/cafeterias_W"
                     android:entryValues="@array/cafeterias_W_val"
                     android:key="card_cafeteria_default_W"
-                    android:title="@string/campus_weihenstephan"/>
+                    android:title="@string/campus_weihenstephan" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -66,32 +67,32 @@
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_tg"
-                    android:title="Tagesgerichte"/>
+                    android:title="Tagesgerichte" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_ae"
-                    android:title="Aktionsessen"/>
+                    android:title="Aktionsessen" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_akt"
-                    android:title="Aktion"/>
+                    android:title="Aktion" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_bei"
-                    android:title="Beilagen"/>
+                    android:title="Beilagen" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_bg"
-                    android:title="Biogericht"/>
+                    android:title="Biogericht" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_cafeteria_bio"
-                    android:title="Bio"/>
+                    android:title="Bio" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -103,7 +104,7 @@
                     android:entryValues="@array/roles_values"
                     android:key="card_role"
                     android:summary="@string/role_summary"
-                    android:title="@string/role"/>
+                    android:title="@string/role" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -111,6 +112,7 @@
 
         <!-- MVV card -->
         <android.support.v7.preference.PreferenceScreen
+            android:icon="@drawable/ic_outline_train_24px"
             android:key="card_mvv"
             android:summary="@string/card_mvv_summary"
             android:title="@string/mvv">
@@ -120,7 +122,7 @@
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_mvv_start"
-                    android:title="@string/startpage"/>
+                    android:title="@string/startpage" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -131,21 +133,21 @@
                     android:entries="@array/stations_G"
                     android:entryValues="@array/stations_G"
                     android:key="card_stations_default_G"
-                    android:title="@string/campus_garching"/>
+                    android:title="@string/campus_garching" />
 
                 <android.support.v7.preference.ListPreference
                     android:defaultValue="Theresienstraße"
                     android:entries="@array/stations_C"
                     android:entryValues="@array/stations_C"
                     android:key="card_stations_default_C"
-                    android:title="@string/campus_main"/>
+                    android:title="@string/campus_main" />
 
                 <android.support.v7.preference.ListPreference
                     android:defaultValue="Klinikum Großhadern"
                     android:entries="@array/stations_K"
                     android:entryValues="@array/stations_K"
                     android:key="card_stations_default_K"
-                    android:title="@string/campus_klinikum_großhadern"/>
+                    android:title="@string/campus_klinikum_großhadern" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -153,6 +155,7 @@
 
         <!-- Next lecture card -->
         <android.support.v7.preference.PreferenceScreen
+            android:icon="@drawable/ic_outline_event_24px"
             android:key="card_next_lecture"
             android:summary="@string/card_next_lecture_summary"
             android:title="@string/next_lecture">
@@ -162,12 +165,12 @@
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_next_lecture_start"
-                    android:title="@string/startpage"/>
+                    android:title="@string/startpage" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_next_lecture_phone"
-                    android:title="@string/notification"/>
+                    android:title="@string/notification" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -175,6 +178,7 @@
 
         <!-- Tuition fee card -->
         <android.support.v7.preference.PreferenceScreen
+            android:icon="@drawable/ic_money"
             android:key="card_tuition_fee"
             android:summary="@string/card_tuition_fee_summary"
             android:title="@string/tuition_fees">
@@ -184,12 +188,12 @@
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_tuition_fee_start"
-                    android:title="@string/startpage"/>
+                    android:title="@string/startpage" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_tuition_fee_phone"
-                    android:title="@string/notification"/>
+                    android:title="@string/notification" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -197,6 +201,7 @@
 
         <!-- News card -->
         <android.support.v7.preference.PreferenceScreen
+            android:icon="@drawable/ic_rss"
             android:key="card_news"
             android:summary="@string/card_news_summary"
             android:title="@string/news">
@@ -206,12 +211,12 @@
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_news_start"
-                    android:title="@string/startpage"/>
+                    android:title="@string/startpage" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="card_news_phone"
-                    android:title="@string/notification"/>
+                    android:title="@string/notification" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -227,7 +232,7 @@
                     android:defaultValue="true"
                     android:key="card_news_latest_only"
                     android:summary="@string/only_latest_article_summary"
-                    android:title="@string/only_latest_article"/>
+                    android:title="@string/only_latest_article" />
 
                 <android.support.v7.preference.ListPreference
                     android:defaultValue="7"
@@ -235,7 +240,7 @@
                     android:entryValues="@array/newspread_values"
                     android:key="news_newspread"
                     android:summary="@string/newspread_summary"
-                    android:title="@string/newspread"/>
+                    android:title="@string/newspread" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -243,6 +248,7 @@
 
         <!-- Chat card -->
         <android.support.v7.preference.PreferenceScreen
+            android:icon="@drawable/ic_outline_chat_bubble_outline_24px"
             android:key="card_chat"
             android:summary="@string/card_chat_summary"
             android:title="@string/chat">
@@ -252,12 +258,12 @@
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_chat_start"
-                    android:title="@string/startpage"/>
+                    android:title="@string/startpage" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_chat_phone"
-                    android:title="@string/notification"/>
+                    android:title="@string/notification" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -265,6 +271,7 @@
 
         <!-- Eduroam card -->
         <android.support.v7.preference.PreferenceScreen
+            android:icon="@drawable/ic_action_network_wifi"
             android:key="card_eduroam"
             android:summary="@string/card_eduroam_summary"
             android:title="@string/eduroam">
@@ -274,12 +281,12 @@
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_eduroam_start"
-                    android:title="@string/startpage"/>
+                    android:title="@string/startpage" />
 
                 <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_eduroam_phone"
-                    android:title="@string/notification"/>
+                    android:title="@string/notification" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -287,7 +294,7 @@
 
                 <android.support.v7.preference.Preference
                     android:key="card_eduroam_setup"
-                    android:title="@string/setup_eduroam_now"/>
+                    android:title="@string/setup_eduroam_now" />
 
             </android.support.v7.preference.PreferenceCategory>
 
@@ -298,9 +305,10 @@
     <android.support.v7.preference.PreferenceCategory android:title="@string/services">
 
         <android.support.v7.preference.SwitchPreferenceCompat
+            android:icon="@drawable/ic_outline_phonelink_ring_24px"
             android:key="silent_mode"
             android:summary="@string/silence_phone_info"
-            android:title="@string/silence_phone"/>
+            android:title="@string/silence_phone" />
 
         <android.support.v7.preference.ListPreference
             android:defaultValue="0"
@@ -308,12 +316,13 @@
             android:entries="@array/silent_entries"
             android:entryValues="@array/silent_mode_values"
             android:key="silent_mode_set_to"
-            android:title="@string/mode_silent_mode"/>
+            android:title="@string/mode_silent_mode" />
 
         <android.support.v7.preference.SwitchPreferenceCompat
+            android:icon="@drawable/ic_outline_update_24px"
             android:key="background_mode"
             android:summary="@string/background_info"
-            android:title="@string/background_mode"/>
+            android:title="@string/background_mode" />
 
         <android.support.v7.preference.ListPreference
             android:defaultValue="0"
@@ -321,21 +330,22 @@
             android:entries="@array/background_entries"
             android:entryValues="@array/background_mode_values"
             android:key="background_mode_set_to"
-            android:title="@string/mode_background_mode"/>
+            android:title="@string/mode_background_mode" />
 
         <android.support.v7.preference.SwitchPreferenceCompat
+            android:icon="@drawable/ic_outline_group_add_24px"
             android:key="auto_join_new_rooms"
             android:summary="@string/set_auto_join_chat"
-            android:title="@string/auto_join_chat"/>
+            android:title="@string/auto_join_chat" />
 
     </android.support.v7.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/extras">
+    <android.support.v7.preference.PreferenceCategory android:title="@string/account">
 
         <android.support.v7.preference.Preference
-            android:key="button_clear_cache"
-            android:summary="@string/clear_cache_detail"
-            android:title="@string/clear_cache"/>
+            android:icon="@drawable/ic_outline_exit_to_app_24px"
+            android:key="button_logout"
+            android:title="@string/logout" />
 
     </android.support.v7.preference.PreferenceCategory>
 

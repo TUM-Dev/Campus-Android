@@ -1,11 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
-import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,12 +19,13 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_calendar_details.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CalendarDetailsFragment : BottomSheetDialogFragment() {
+class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private lateinit var listener: OnEventInteractionListener
     private lateinit var dao: CalendarDao
@@ -84,7 +84,7 @@ class CalendarDetailsFragment : BottomSheetDialogFragment() {
     }
 
     private fun displayDeleteDialog(eventId: String) {
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(requireContext())
                 .setTitle(R.string.event_delete_title)
                 .setMessage(R.string.delete_event_info)
                 .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }

@@ -85,46 +85,6 @@ public final class Utils {
     }
 
     /**
-     * Builds a HTML document out of a css file and the body content.
-     *
-     * @param css  The CSS specification
-     * @param body The body content
-     * @return The HTML document.
-     */
-    public static String buildHTMLDocument(String css, String body) {
-        String header = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"de\" lang=\"de\">" +
-                        "<head><meta name=\"viewport\" content=\"width=device-width\" />" +
-                        "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>";
-        String resultCss = "<style type=\"text/css\">" + css + "</style>";
-        String resultBody = "<body>" + body + "</body>";
-        String footer = "</html>";
-        //noinspection StringConcatenationMissingWhitespace
-        return header + resultCss + resultBody + footer;
-    }
-
-    /**
-     * Cut substring from a text.
-     *
-     * @param text        The text.
-     * @param startString Start string where the cutting begins.
-     * @param endString   End string where the cutting ends.
-     * @return The cut text.
-     */
-    public static String cutText(String text, String startString, String endString) {
-        int startPos = text.indexOf(startString);
-        int endPos = text.indexOf(endString, startPos);
-
-        if (startPos == -1) {
-            startPos = 0;
-        }
-        if (endPos == -1 || endPos < startPos) {
-            endPos = text.length();
-        }
-
-        return text.substring(startPos + startString.length(), endPos);
-    }
-
-    /**
      * Get a value from the default shared preferences
      *
      * @param c          Context

@@ -94,8 +94,13 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // by now we should have generated rsa key and uploaded it to our server and tumonline
 
         // Get the users lrzId and initialise chat member
-        ChatMember currentChatMember = new ChatMember(Utils.getSetting(this, Const.LRZ_ID, ""));
-        currentChatMember.setDisplayName(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, ""));
+        String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
+        String name = Utils.getSetting(this,
+                Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.not_connected_to_tumonline));
+
+        ChatMember currentChatMember = new ChatMember(lrzId);
+        currentChatMember.setDisplayName(name);
+
         if (currentChatMember.getLrzId().equals("")) {
             return currentChatMember;
         }
@@ -125,7 +130,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
         // Try to restore already joined chat rooms from server
         try {
-            TUMCabeVerification verification = TUMCabeVerification.createMemberVerification(this, null);
+            TUMCabeVerification verification = TUMCabeVerification.create(this, null);
             List<ChatRoom> rooms = tumCabeClient.getMemberRooms(member.getId(), verification);
             new ChatRoomController(this).replaceIntoRooms(rooms);
 

@@ -162,7 +162,8 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         @JvmStatic
         fun getDeparturesFromExternal(context: Context, stationID: String): Observable<List<Departure>> {
             return MvvClient.getInstance(context)
-                    .getDepartures(stationID).map {
+                    .getDepartures(stationID)
+                    .map {
                         it.departureList?.map { (servingLine, dateTime, countdown) ->
                             Departure(servingLine.name,
                                     servingLine.direction,

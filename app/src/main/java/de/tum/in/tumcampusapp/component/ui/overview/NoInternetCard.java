@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.overview;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -50,11 +49,6 @@ public class NoInternetCard extends StickyCard {
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         return !NetUtils.isConnected(getContext());
-    }
-
-    @Override
-    public Intent getIntent() {
-        return null;
     }
 
     @Override

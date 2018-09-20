@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_settings"
-        android:icon="@drawable/ic_notifications"
+        android:icon="@drawable/ic_outline_notifications_24px"
         android:title="@string/action_ingredients"
-        tumcampus:showAsAction="ifRoom"/>
+        app:iconTint="@color/color_primary"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_ingredients"
-        android:icon="@drawable/ic_action_info_white"
+        android:icon="@drawable/ic_action_info_black"
         android:title="@string/action_ingredients"
-        tumcampus:showAsAction="ifRoom"/>
+        app:iconTint="@color/color_primary"
+        app:showAsAction="ifRoom" />
 
 </menu>

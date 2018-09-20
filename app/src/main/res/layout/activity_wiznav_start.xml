@@ -17,11 +17,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/pager_title_strip"
-            style="@style/SectionHeadline"
-            android:text="@string/startup_wizard_uppercase" />
-
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
@@ -42,32 +37,47 @@
                     android:padding="@dimen/material_default_padding">
 
                     <TextView
-                        style="?android:attr/listSeparatorTextViewStyle"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
                         android:text="@string/step_1"
-                        android:textColor="@color/text_light_gray" />
+                        android:textAllCaps="false"
+                        android:textColor="@color/color_primary"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/welcome_msg" />
+                        android:layout_marginTop="@dimen/material_small_padding"
+                        android:lineSpacingMultiplier="1.1"
+                        android:text="@string/welcome_msg"
+                        android:textSize="15sp" />
 
-                    <EditText
-                        android:id="@+id/lrz_id"
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/enter_your_tum_id"
-                        android:inputType="text"
-                        android:padding="@dimen/padding_default"
-                        android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:hint="@string/enter_your_tum_id">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/lrz_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:importantForAutofill="no"
+                            android:inputType="text"
+                            android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+
+                    </android.support.design.widget.TextInputLayout>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/tumonline_advantages" />
+                        android:lineSpacingMultiplier="1.1"
+                        android:text="@string/tumonline_advantages"
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -81,20 +91,23 @@
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
-        <android.support.v7.widget.AppCompatButton
+        <android.support.design.button.MaterialButton
             android:id="@+id/next_button"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/material_small_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_small_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_small_padding"
             android:alpha="0.5"
             android:clickable="false"
             android:onClick="onClickNext"
             android:text="@string/button_next"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            app:backgroundTint="@color/color_primary" />
+            app:backgroundTint="@color/color_primary"
+            app:cornerRadius="@dimen/material_corner_radius" />
 
     </LinearLayout>
 

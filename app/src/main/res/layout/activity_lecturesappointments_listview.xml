@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/material_small_padding"
-    android:paddingEnd="@dimen/material_default_padding"
-    android:paddingStart="@dimen/material_default_padding"
-    android:paddingTop="@dimen/material_small_padding">
+    android:padding="@dimen/material_default_padding">
 
     <TextView
         android:id="@+id/tvTerminZeit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/text_light_blue"
+        android:textColor="@color/text_dark_primary"
         android:textSize="18sp"
-        tools:text="Header"/>
+        tools:text="Date" />
 
     <TextView
         android:id="@+id/tvTerminOrt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Details"/>
+        android:layout_marginTop="@dimen/material_tiny_padding"
+        android:textColor="@color/text_dark_secondary"
+        android:textSize="16sp"
+        tools:text="Details" />
 
     <TextView
         android:id="@+id/tvTerminBetreff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="More details"/>
+        android:textColor="@color/text_dark_secondary"
+        android:textSize="16sp"
+        tools:text="More details" />
 
 </LinearLayout>

@@ -2,8 +2,8 @@ package de.tum.in.tumcampusapp.component.ui.openinghour;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
@@ -93,7 +93,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         String remark = location.getRemark();
         String room = location.getRoom();
 
-        AppCompatButton openLinkButton = view.findViewById(R.id.openLinkButton);
+        MaterialButton openLinkButton = view.findViewById(R.id.openLinkButton);
 
         if (location.getUrl().isEmpty()) {
             openLinkButton.setVisibility(View.GONE);

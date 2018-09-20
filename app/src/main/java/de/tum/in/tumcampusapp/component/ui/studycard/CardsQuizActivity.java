@@ -30,7 +30,6 @@ public class CardsQuizActivity extends ActivityForLoadingInBackground<Void, List
         startLoading();
     }
 
-    @Override
     public void setUpLayout() {
         //binding = DataBindingUtil.setContentView(this, R.layout.activity_cards_quiz);
         //binding.setHandler(this);

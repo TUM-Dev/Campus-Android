@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/pie_chart_menu"
         android:icon="@drawable/ic_pie_chart"
         android:orderInCategory="100"
         android:title="@string/show_pie_chart"
-        tumcampus:showAsAction="ifRoom"
-        android:visible="false"/>
+        android:visible="false"
+        app:iconTint="@color/color_primary"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/bar_chart_menu"
-        android:icon="@drawable/ic_column_chart"
+        android:icon="@drawable/ic_outline_insert_chart_outlined_24px"
         android:orderInCategory="100"
         android:title="@string/show_column_chart"
-        tumcampus:showAsAction="ifRoom"/>
+        app:iconTint="@color/color_primary"
+        app:showAsAction="ifRoom" />
 
 </menu>

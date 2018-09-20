@@ -1,11 +1,10 @@
 package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
-import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Events
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import okhttp3.Cache
@@ -20,26 +19,25 @@ class CacheManager(private val context: Context) {
         get() = Cache(context.cacheDir, 10 * 1024 * 1024) // 10 MB
 
     fun fillCache() {
-        if (!AccessTokenManager.hasValidAccessToken(context)) {
-            return
+        doAsync {
+            syncCalendar()
+            syncPersonalLectures()
         }
-
-        syncCalendar()
-        syncPersonalLectures()
     }
 
-    fun syncCalendar() {
+    private fun syncCalendar() {
         TUMOnlineClient
                 .getInstance(context)
                 .getCalendar(CacheControl.USE_CACHE)
-                .enqueue(object : Callback<Events> {
-                    override fun onResponse(call: Call<Events>, response: Response<Events>) {
-                        val events = response.body() ?: return
+                .enqueue(object : Callback<EventsResponse> {
+                    override fun onResponse(call: Call<EventsResponse>, response: Response<EventsResponse>) {
+                        val eventsResponse = response.body() ?: return
+                        val events = eventsResponse.events ?: return
                         CalendarController(context).importCalendar(events)
                         loadRoomLocations()
                     }
 
-                    override fun onFailure(call: Call<Events>, t: Throwable) {
+                    override fun onFailure(call: Call<EventsResponse>, t: Throwable) {
                         Utils.log(t, "Error while loading calendar in CacheManager")
                     }
                 })
@@ -58,14 +56,14 @@ class CacheManager(private val context: Context) {
                 .enqueue(object : Callback<LecturesResponse> {
                     override fun onResponse(call: Call<LecturesResponse>,
                                             response: Response<LecturesResponse>) {
-                        Utils.log("Successfully updated personal lectures in backround")
+                        Utils.log("Successfully updated personal lectures in background")
                         val lectures = response.body()?.lectures ?: return
                         val chatRoomController = ChatRoomController(context)
                         chatRoomController.createLectureRooms(lectures)
                     }
 
                     override fun onFailure(call: Call<LecturesResponse>, t: Throwable) {
-                        Utils.log(t, "Error loading personal lectures in backround")
+                        Utils.log(t, "Error loading personal lectures in background")
                     }
                 })
     }

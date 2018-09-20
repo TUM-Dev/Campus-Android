@@ -4,7 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
+import de.tum.in.tumcampusapp.component.other.navigation.NavigationManager;
+import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -105,9 +108,11 @@ public class NextLectureCard extends Card {
         } else {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(v -> {
-                Intent i = new Intent(getContext(), RoomFinderActivity.class);
-                i.putExtra(SearchManager.QUERY, item.locationForSearch);
-                getContext().startActivity(i);
+                Bundle bundle = new Bundle();
+                bundle.putString(SearchManager.QUERY, item.locationForSearch);
+                NavigationDestination destination =
+                        new SystemActivity(RoomFinderActivity.class, bundle);
+                NavigationManager.INSTANCE.open(getContext(), destination);
             });
         }
 
@@ -123,7 +128,7 @@ public class NextLectureCard extends Card {
     }
 
     @Override
-    protected void discard(Editor editor) {
+    protected void discard(SharedPreferences.Editor editor) {
         CalendarItem item = lectures.get(lectures.size() - 1);
         editor.putLong(NEXT_LECTURE_DATE, item.start.getMillis());
     }
@@ -133,11 +138,6 @@ public class NextLectureCard extends Card {
         CalendarItem item = lectures.get(0);
         long prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0);
         return item.start.getMillis() > prevTime;
-    }
-
-    @Override
-    public Intent getIntent() {
-        return null;
     }
 
     @Override

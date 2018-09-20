@@ -15,6 +15,5 @@ object ChatMessageRemoteRepository {
     fun getNewMessages(roomId: Int, verification: TUMCabeVerification): Observable<List<ChatMessage>>
             = tumCabeClient.getNewMessages(roomId, verification)
 
-    fun sendMessage(roomId: Int, chatMessage: ChatMessage): Observable<ChatMessage>
-            = tumCabeClient.sendMessage(roomId, chatMessage)
+    fun sendMessage(roomId: Int, verification: TUMCabeVerification?): Observable<ChatMessage> = tumCabeClient.sendMessage(roomId, verification)
 }

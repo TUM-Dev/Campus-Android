@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.api.app;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -22,8 +23,8 @@ import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
-import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
+import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
@@ -31,6 +32,9 @@ import de.tum.in.tumcampusapp.service.FcmIdentificationService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -193,26 +197,25 @@ public class AuthenticationManager {
             DeviceRegister dr = DeviceRegister.Companion.getDeviceRegister(mContext, publicKey, member);
 
             // Upload public key to the server
-            TUMCabeClient.getInstance(mContext)
-                         .deviceRegister(dr, new Callback<TUMCabeStatus>() {
+            TUMCabeClient.getInstance(mContext).deviceRegister(dr, new Callback<TUMCabeStatus>() {
+                @Override
+                public void onResponse(@NonNull Call<TUMCabeStatus> call,
+                                       @NonNull Response<TUMCabeStatus> response) {
+                    //Remember that we are done, only if we have submitted with the member information
+                    TUMCabeStatus status = response.body();
+                    if (response.isSuccessful() && status != null && status.getStatus().equals("ok")) {
+                        Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
 
-                             @Override
-                             public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
-                                 //Remember that we are done, only if we have submitted with the member information
-                                 if (response.isSuccessful() && "ok".equals(response.body()
-                                                                                    .getStatus())) {
-                                     Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
+                        AuthenticationManager.this.tryToUploadFcmToken();
+                    }
+                }
 
-                                     AuthenticationManager.this.tryToUploadFcmToken();
-                                 }
-                             }
-
-                             @Override
-                             public void onFailure(Call<TUMCabeStatus> call, Throwable t) {
-                                 Utils.log(t, "Failure uploading public key");
-                                 Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
-                             }
-                         });
+                @Override
+                public void onFailure(@NonNull Call<TUMCabeStatus> call, @NonNull Throwable t) {
+                    Utils.log(t, "Failure uploading public key");
+                    Utils.setSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
+                }
+            });
         } catch (NoPrivateKey noPrivateKey) {
             this.clearKeys();
         }
@@ -263,6 +266,7 @@ public class AuthenticationManager {
      * synchronous method!
      * @param uploadStatus
      */
+    @SuppressLint("CheckResult")
     public void uploadObfuscatedIds(UploadStatus uploadStatus) {
         String lrzId = Utils.getSetting(mContext, Const.LRZ_ID, "");
         if (lrzId.isEmpty()) {
@@ -270,7 +274,7 @@ public class AuthenticationManager {
             return;
         }
 
-        TUMCabeVerification verification = TUMCabeVerification.createDeviceVerification(mContext, null);
+        TUMCabeVerification verification = TUMCabeVerification.create(mContext, null);
         if (verification == null) {
             Utils.log("Can't upload obfuscated ids: no private key");
             return;
@@ -297,8 +301,13 @@ public class AuthenticationManager {
 
         if (doUpload) {
             Utils.log("uploading obfuscated ids: " + upload.toString());
-            TUMCabeStatus status = TUMCabeClient.getInstance(mContext).uploadObfuscatedIds(lrzId, upload).blockingSingle();
-            Utils.log("uplod obfuscated ids status: " + status.getStatus());
+            TUMCabeClient.getInstance(mContext)
+                    .uploadObfuscatedIds(lrzId, upload)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(status -> {
+                        Utils.log("Upload obfuscated IDs status: " + status.getStatus());
+                    }, Utils::log);
         }
     }
 
@@ -322,8 +331,8 @@ public class AuthenticationManager {
      * Save private key in shared preferences.
      */
     private void saveKeys(String privateKeyString, String publicKeyString) {
-        Utils.setSetting(mContext, Const.PRIVATE_KEY, privateKeyString);
-        Utils.setSetting(mContext, Const.PUBLIC_KEY, publicKeyString);
+        Utils.setSetting(mContext, Const.PRIVATE_KEY, privateKeyString.trim());
+        Utils.setSetting(mContext, Const.PUBLIC_KEY, publicKeyString.trim());
     }
 
     /**

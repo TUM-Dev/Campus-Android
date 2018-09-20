@@ -41,7 +41,6 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(this)
                              .registerReceiver(receiver, new IntentFilter(DownloadService.BROADCAST_NAME));
-
     }
 
     /**
@@ -50,9 +49,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            if (!intent.getAction()
-                       .equals(DownloadService.BROADCAST_NAME)) {
+            if (!intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
                 return;
             }
 
@@ -66,9 +63,10 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
                     // receives data from a new download
                     onStart();
                 }
+
                 if (action.equals(Const.ERROR)) {
-                    String message = intent.getStringExtra(Const.MESSAGE);
-                    showError(message);
+                    int messageResId = intent.getIntExtra(Const.MESSAGE, 0);
+                    showError(messageResId);
                 }
             }
         }

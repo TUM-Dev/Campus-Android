@@ -59,7 +59,6 @@ object Const {
     const val PREFERENCE_SCREEN = "preference_screen"
     const val P_TOKEN = "pToken"
 
-    const val EVERYTHING_SETUP = "everything_setup"
     const val SYNC_CALENDAR_IMPORT = "calendar_import"
     const val GROUP_CHAT_ENABLED = "group_chat_enabled"
     const val BUG_REPORTS = "bug_reports"
@@ -123,6 +122,8 @@ object Const {
     const val EDUROAM_SSID = "eduroam"
     const val LRZ = "lrz"
 
+    const val FCM_CHAT = "fcmChat"
+    const val CHAT_MESSAGE = "chatMessage"
     const val CHAT_BROADCAST_NAME = "chat-message-received"
 
     const val EVENT_EDIT = "pEdit"
@@ -160,12 +161,14 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
 
-    const val KEY_NOTIFICATION_TYPE_ID = "type_id"
-
-    const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_OJHHpeotVOpaRO4veynROu18"
+    const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_MQjLRRi8jzpOEhrNqbMeMY8g"
     const val KEY_EVENT = "event"
     const val KEY_EVENT_ID = "eventId"
     const val KEY_CARD_HOLDER = "cardholder"
     const val KEY_TICKET_PRICE = "ticketPrice"
     const val KEY_TICKET_HISTORY = "ticketHistory"
+
+    const val SHOW_DRAWER = "showDrawer"
+
+    const val KEY_NOTIFICATION_TYPE_ID = "type_id"
 }

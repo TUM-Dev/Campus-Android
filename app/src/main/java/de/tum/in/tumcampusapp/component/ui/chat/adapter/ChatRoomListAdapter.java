@@ -183,7 +183,6 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         notifyDataSetChanged();
     }
 
-    // the layout of the list
     static class ViewHolder {
 
         TextView lectureNameTextView;

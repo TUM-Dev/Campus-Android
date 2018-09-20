@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_default_padding"
-                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:layout_marginTop="@dimen/material_small_padding"
                     android:layout_marginEnd="@dimen/material_default_padding"
                     android:background="@drawable/spinner_border_background"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -200,15 +200,18 @@
                     app:layout_constraintStart_toEndOf="@id/guideline"
                     tools:text="123" />
 
-                <android.support.v7.widget.AppCompatButton
+                <android.support.design.button.MaterialButton
                     android:id="@+id/paymentButton"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/material_default_padding"
                     android:text="@string/continue_to_payment"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     app:backgroundTint="@color/color_primary"
+                    app:cornerRadius="@dimen/material_corner_radius"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

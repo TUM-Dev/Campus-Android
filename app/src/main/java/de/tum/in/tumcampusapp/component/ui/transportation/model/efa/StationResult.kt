@@ -15,8 +15,8 @@ data class StationResult(var station: String = "",
 
     fun getIntent(context: Context): Intent {
         return Intent(context, TransportationDetailsActivity::class.java).apply {
-            putExtra(TransportationDetailsActivity.EXTRA_STATION, id)
-            putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, station)
+            putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, id)
+            putExtra(TransportationDetailsActivity.EXTRA_STATION, station)
         }
     }
 
