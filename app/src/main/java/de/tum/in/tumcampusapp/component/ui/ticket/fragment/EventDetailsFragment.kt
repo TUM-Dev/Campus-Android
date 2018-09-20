@@ -181,14 +181,13 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun addToTUMCalendar() {
         val event = event ?: return
         val endTime = event.endTime ?: event.startTime.plus(Event.defaultDuration.toLong())
-        val eventEnd = DateTimeUtils.getDateTimeString(endTime)
 
         val intent = Intent(context, CreateEventActivity::class.java).apply {
             putExtra(Const.EVENT_EDIT, false)
             putExtra(Const.EVENT_TITLE, event.title)
             putExtra(Const.EVENT_COMMENT, event.description)
-            putExtra(Const.EVENT_START, DateTimeUtils.getDateTimeString(event.startTime))
-            putExtra(Const.EVENT_END, eventEnd)
+            putExtra(Const.EVENT_START, event.startTime)
+            putExtra(Const.EVENT_END, endTime)
         }
 
         startActivity(intent)
