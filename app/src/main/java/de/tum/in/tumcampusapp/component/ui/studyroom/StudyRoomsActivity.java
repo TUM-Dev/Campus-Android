@@ -46,7 +46,7 @@ public class StudyRoomsActivity extends ProgressActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewPager = findViewById(R.id.kinoViewPager);
+        mViewPager = findViewById(R.id.viewPager);
         loadStudyRooms();
     }
 

@@ -162,6 +162,11 @@ dependencies {
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     testImplementation "org.robolectric:robolectric:4.0-alpha-1"
 
+    // Dagger
+    implementation 'com.google.dagger:dagger-android:2.15'
+    implementation 'com.google.dagger:dagger-android-support:2.15'
+    kapt 'com.google.dagger:dagger-android-processor:2.15'
+
     testImplementation 'android.arch.persistence.room:testing:1.1.1'
     testImplementation 'android.arch.core:core-testing:1.1.1'
 }

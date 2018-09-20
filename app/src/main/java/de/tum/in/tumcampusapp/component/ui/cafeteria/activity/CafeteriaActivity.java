@@ -74,7 +74,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             }
         }
 
-        mViewPager = findViewById(R.id.kinoViewPager);
+        mViewPager = findViewById(R.id.viewPager);
 
         /*
          *set pagelimit to avoid losing toggle button state.
