@@ -113,13 +113,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
         // Get setting from sharedprefs and refresh the view with everything
         mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
-        refreshWeekView();
 
         disableRefresh();
-
         calendarController = new CalendarController(this);
-
         loadEvents(CacheControl.USE_CACHE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        refreshWeekView();
     }
 
     @Override
@@ -237,7 +240,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             case R.id.action_switch_view_mode:
                 mWeekMode = !mWeekMode;
                 Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
-                this.refreshWeekView();
+                refreshWeekView();
                 return true;
             case R.id.action_export_calendar:
                 exportCalendarToGoogle();
