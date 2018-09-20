@@ -111,6 +111,8 @@ public class StripePaymentActivity extends BaseActivity {
         });
 
         selectMethodSwitcher = findViewById(R.id.select_payment_method_switcher);
+
+        // TODO: Produced NPE
         selectMethodSwitcher.setOnClickListener(v -> paymentSession.presentPaymentMethodSelection());
 
         String purchaseButtonString = getString(R.string.buy_format_string, ticketPrice);
@@ -135,6 +137,8 @@ public class StripePaymentActivity extends BaseActivity {
         try {
             String paymentMethodId =
                     paymentSession.getPaymentSessionData().getSelectedPaymentMethodId();
+
+            // TODO: Payment Method ID can't be null
 
             TUMCabeClient
                     .getInstance(this)

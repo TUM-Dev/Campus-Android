@@ -131,9 +131,11 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         val sum = statuses.sumBy { it.availableTicketCount }
 
                         val text = String.format(Locale.getDefault(), "%d", sum)
-                        remainingTicketsTextView.text = text
 
-                        swipeRefreshLayout.isRefreshing = false
+                        if (isDetached.not()) {
+                            remainingTicketsTextView.text = text
+                            swipeRefreshLayout.isRefreshing = false
+                        }
                     }
 
                     override fun onFailure(call: Call<List<TicketStatus>>, t: Throwable) {

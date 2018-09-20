@@ -115,6 +115,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         private const val KEY_EVENT_TYPE = "type"
 
+        @JvmStatic
         fun newInstance(eventType: EventType): EventsFragment {
             return EventsFragment().apply {
                 arguments = Bundle().apply {
