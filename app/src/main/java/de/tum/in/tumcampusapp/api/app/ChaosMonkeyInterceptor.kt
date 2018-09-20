@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom
  */
 class ChaosMonkeyInterceptor : Interceptor {
 
-    private val failProbability = 0.1
+    private val failProbability = 0.01
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {

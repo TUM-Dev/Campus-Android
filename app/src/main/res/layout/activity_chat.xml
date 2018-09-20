@@ -14,63 +14,63 @@
 
         <include layout="@layout/toolbar" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:transitionName="@string/transition_card"
-            tools:ignore="UnusedAttribute">
+            android:orientation="vertical"
+            android:transitionName="@string/transition_card">
 
             <ListView
                 android:id="@+id/lvMessageHistory"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/relativeLayout"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:background="@drawable/chat_background"
+                android:clipToPadding="false"
                 android:divider="@android:color/transparent"
-                android:dividerHeight="5.0sp"
-                android:paddingBottom="3dp"
+                android:dividerHeight="@dimen/material_small_padding"
+                android:drawSelectorOnTop="false"
+                android:paddingBottom="@dimen/material_default_padding"
                 android:stackFromBottom="true"
                 android:transcriptMode="normal" />
 
-            <RelativeLayout
-                android:id="@id/relativeLayout"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="#FFFFFF">
+                android:background="#FFFFFF"
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/etMessage"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_toStartOf="@+id/btnSend"
+                    android:layout_marginStart="@dimen/material_small_padding"
+                    android:layout_marginTop="@dimen/material_tiny_padding"
+                    android:layout_marginBottom="@dimen/material_tiny_padding"
+                    android:layout_weight="1"
                     android:hint="@string/send"
+                    android:importantForAutofill="no"
                     android:inputType="textCapSentences|textMultiLine"
                     android:maxLines="4"
                     android:scrollbars="vertical"
-                    android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+                    android:textCursorDrawable="@drawable/cursor_text_field_colorful"
+                    tools:ignore="UnusedAttribute" />
 
                 <ImageButton
                     android:id="@+id/btnSend"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_alignBottom="@+id/etMessage"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
                     android:layout_gravity="center_vertical"
                     android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/send"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    app:srcCompat="@drawable/ic_action_send_now" />
+                    android:paddingStart="@dimen/material_small_padding"
+                    android:paddingEnd="@dimen/material_small_padding"
+                    android:src="@drawable/ic_action_send_now"
+                    android:tint="@color/tum_blue" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

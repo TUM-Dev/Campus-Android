@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.chat;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -33,12 +34,11 @@ import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Creates/modifies the notification when there is a new chat message.
  */
-public class ChatNotification extends GenericNotification implements ChatMessageViewModel.DataLoadInterface {
+public class ChatNotification extends GenericNotification {
 
     private static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
 
@@ -97,7 +97,8 @@ public class ChatNotification extends GenericNotification implements ChatMessage
     }
 
     private void prepare() throws IOException {
-        Utils.logv("Received GCM notification: room=" + this.extras.getRoom() + " member=" + this.extras.getMember() + " message=" + this.extras.getMessage());
+        Utils.logv("Received GCM notification: room=" + this.extras.getRoom()
+                + " member=" + this.extras.getMember() + " message=" + this.extras.getMessage());
 
         // Get the data necessary for the ChatActivity
         chatRoom = TUMCabeClient.getInstance(context)
@@ -106,12 +107,16 @@ public class ChatNotification extends GenericNotification implements ChatMessage
         getNewMessages(chatRoom, extras.getMessage());
     }
 
+    @SuppressLint("CheckResult")
     private void getNewMessages(ChatRoom chatRoom, int messageId) {
         ChatMessageLocalRepository localRepository = ChatMessageLocalRepository.INSTANCE;
         localRepository.setDb(TcaDb.getInstance(context));
+
         ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
         remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(context));
-        ChatMessageViewModel chatMessageViewModel = new ChatMessageViewModel(localRepository, remoteRepository, new CompositeDisposable());
+
+        ChatMessageViewModel chatMessageViewModel =
+                new ChatMessageViewModel(localRepository, remoteRepository);
 
         TUMCabeVerification verification = TUMCabeVerification.create(context, null);
         if (verification == null) {
@@ -119,14 +124,19 @@ public class ChatNotification extends GenericNotification implements ChatMessage
         }
 
         if (messageId == -1) {
-            chatMessageViewModel.getNewMessages(chatRoom.getId(), verification, this);
+            chatMessageViewModel
+                    .getNewMessages(chatRoom, verification)
+                    .subscribe(chatMessages -> onDataLoaded(), Utils::log);
         } else {
-            // edit
-            chatMessageViewModel.getOlderMessages(chatRoom.getId(), messageId, verification, null);
+            chatMessageViewModel
+                    .getOlderMessages(chatRoom, messageId, verification)
+                    .subscribe(chatMessages -> {
+                        // Free ad space
+                    }, Utils::log);
         }
     }
 
-    public void onDataLoaded(){
+    private void onDataLoaded() {
         List<ChatMessage> messages = Lists.reverse(chatMessageDao.getLastUnread(chatRoom.getId()));
         Intent intent = new Intent(Const.CHAT_BROADCAST_NAME);
         intent.putExtra("FcmChat", this.extras);

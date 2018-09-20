@@ -570,7 +570,7 @@ Signatur: %5$s</string>
     <string name="error_invalid_tum_id_format">Inkorrekte TUM Kennung</string>
     <string name="error_user_not_found">Kein Nutzer gefunden</string>
     <string name="add_user_to_chat_message"><b>%s</b> zum Chatroom <b>%s</b> hinzufügen?</string>
-    <string name="chat_member_added">User wurde hinzugefügt</string>
+    <string name="chat_member_added">Nutzer hinzugefügt</string>
 
     <string name="or">oder</string>
     <string name="join_chat_via_qr_code">via QR-code beitreten</string>
@@ -640,5 +640,8 @@ Signatur: %5$s</string>
     <string name="including_format_string">inklusive %s</string>
     <string name="logout">Abmelden</string>
     <string name="logout_message">Bist du sicher, dass du dich abmelden willst?</string>
+    <string name="chat_message_send_error">Nachricht konnte nicht gesendet werden</string>
+    <string name="chat_message_try_again">Die Nachricht konnte nicht gesendet werden. Erneut versuchen?</string>
+    <string name="leave">Verlassen</string>
     <string name="today">Heute</string>
 </resources>

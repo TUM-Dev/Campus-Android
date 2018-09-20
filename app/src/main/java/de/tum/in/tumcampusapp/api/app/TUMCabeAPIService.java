@@ -96,10 +96,10 @@ public interface TUMCabeAPIService {
 
     //Get/Update single message
     @PUT(API_CHAT_ROOMS + "{room}/message/")
-    Observable<ChatMessage> sendMessage(@Path("room") int roomId, @Body ChatMessage message);
+    Observable<ChatMessage> sendMessage(@Path("room") int roomId, @Body TUMCabeVerification message);
 
     @PUT(API_CHAT_ROOMS + "{room}/message/{message}/")
-    Observable<ChatMessage> updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body ChatMessage message);
+    Observable<ChatMessage> updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body TUMCabeVerification message);
 
     //Get all recent messages or older ones
     @POST(API_CHAT_ROOMS + "{room}/messages/{page}/")
