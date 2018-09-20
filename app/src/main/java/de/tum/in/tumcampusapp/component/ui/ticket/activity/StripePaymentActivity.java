@@ -111,8 +111,6 @@ public class StripePaymentActivity extends BaseActivity {
         });
 
         selectMethodSwitcher = findViewById(R.id.select_payment_method_switcher);
-
-        // TODO: Produced NPE
         selectMethodSwitcher.setOnClickListener(v -> paymentSession.presentPaymentMethodSelection());
 
         String purchaseButtonString = getString(R.string.buy_format_string, ticketPrice);
@@ -135,15 +133,17 @@ public class StripePaymentActivity extends BaseActivity {
         showLoading(true);
 
         try {
-            String paymentMethodId =
-                    paymentSession.getPaymentSessionData().getSelectedPaymentMethodId();
-
-            // TODO: Payment Method ID can't be null
+            String methodId = paymentSession.getPaymentSessionData().getSelectedPaymentMethodId();
+            if (methodId == null) {
+                Utils.showToast(this, R.string.error_something_wrong);
+                finish();
+                return;
+            }
 
             TUMCabeClient
                     .getInstance(this)
                     .purchaseTicketStripe(this, ticketHistory,
-                            paymentMethodId, cardholder, new Callback<Ticket>() {
+                            methodId, cardholder, new Callback<Ticket>() {
                                 @Override
                                 public void onResponse(@NonNull Call<Ticket> call,
                                                        @NonNull Response<Ticket> response) {
