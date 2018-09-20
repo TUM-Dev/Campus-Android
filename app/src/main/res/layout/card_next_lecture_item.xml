@@ -29,13 +29,14 @@
                 style="@style/CardBody"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_default_padding"
                 tools:text="Time" />
 
             <TextView
                 android:id="@+id/card_location_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_tiny_padding"
                 android:background="?attr/selectableItemBackground"
                 android:drawableStart="@drawable/ic_outline_location_on_24px_light_blue"
                 android:drawablePadding="@dimen/material_small_padding"
@@ -48,7 +49,6 @@
                 android:id="@+id/card_event_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/material_tiny_padding"
                 android:background="?attr/selectableItemBackground"
                 android:drawableStart="@drawable/ic_event"
                 android:drawablePadding="@dimen/material_small_padding"

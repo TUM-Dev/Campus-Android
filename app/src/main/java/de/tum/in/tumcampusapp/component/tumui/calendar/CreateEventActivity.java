@@ -73,6 +73,12 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
             }
         }
 
+        if (getSwipeRefreshLayout() != null) {
+            // We only use the SwipeRefreshLayout to indicate progress, not to allow
+            // the user to pull to refresh.
+            getSwipeRefreshLayout().setEnabled(false);
+        }
+
         titleView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

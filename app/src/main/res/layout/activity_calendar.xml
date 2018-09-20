@@ -22,10 +22,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <include
-                    layout="@layout/layout_all_errors"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                <include layout="@layout/layout_all_errors" />
 
                 <com.alamkanak.weekview.WeekView
                     android:id="@+id/weekView"
@@ -43,7 +40,10 @@
                     app:headerRowPadding="12dp"
                     app:hourHeight="60dp"
                     app:noOfVisibleDays="3"
+                    app:nowLineColor="@color/tum_blue"
+                    app:nowLineThickness="1dp"
                     app:overlappingEventGap="@dimen/material_small_padding"
+                    app:showNowLine="true"
                     app:singleDayHorizontalMargin="@dimen/material_small_padding"
                     app:textSize="14sp"
                     app:todayBackgroundColor="#1848adff"
