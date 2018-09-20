@@ -36,25 +36,10 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_calendar_change_filters"
-        android:icon="@drawable/ic_filter_list"
-        android:title="@string/calendar_filter_title"
-        app:showAsAction="never">
-
-        <menu>
-
-            <group android:checkableBehavior="all">
-
-                <item
-                    android:id="@+id/action_calendar_filter_canceled"
-                    android:title="@string/calendar_filter_canceled"
-                    app:iconTint="@color/color_primary"
-                    app:showAsAction="ifRoom" />
-
-            </group>
-
-        </menu>
-
-    </item>
+        android:id="@+id/action_calendar_filter_canceled"
+        android:title="@string/calendar_filter_canceled"
+        app:iconTint="@color/color_primary"
+        android:checkable="true"
+        app:showAsAction="ifRoom" />
 
 </menu>

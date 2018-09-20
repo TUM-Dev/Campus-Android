@@ -14,137 +14,141 @@
         <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar" />
 
-        <include
-            layout="@layout/layout_all_errors"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+        <include layout="@layout/layout_all_errors" />
 
-        <LinearLayout
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <android.support.design.widget.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/material_default_padding"
-                android:hint="@string/event_title">
+                android:orientation="vertical">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/event_title"
+                <android.support.design.widget.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionDone"
-                    android:inputType="textAutoComplete|textCapSentences"
-                    android:maxLines="1"
-                    android:textCursorDrawable="@drawable/cursor_text_field_colorful"
-                    android:textSize="20sp" />
+                    android:layout_margin="@dimen/material_default_padding"
+                    android:hint="@string/event_title">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/event_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:inputType="textAutoComplete|textCapSentences"
+                        android:maxLines="1"
+                        android:textCursorDrawable="@drawable/cursor_text_field_colorful"
+                        android:textSize="20sp" />
 
-            <LinearLayout style="@style/CalendarDateTimeItem">
+                </android.support.design.widget.TextInputLayout>
 
-                <TextView
-                    android:id="@+id/event_start_date"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                <LinearLayout style="@style/CalendarDateTimeItem">
+
+                    <TextView
+                        android:id="@+id/event_start_date"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?android:selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/material_default_padding"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/text_dark_primary"
+                        tools:ignore="RtlSymmetry"
+                        tools:text="Mon, Jun 11, 2018" />
+
+                    <TextView
+                        android:id="@+id/event_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="?android:selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/material_default_padding"
+                        android:paddingEnd="@dimen/material_default_padding"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/text_dark_primary"
+                        tools:text="11:30" />
+
+                </LinearLayout>
+
+                <LinearLayout style="@style/CalendarDateTimeItem">
+
+                    <TextView
+                        android:id="@+id/event_end_date"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?android:selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/material_default_padding"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/text_dark_primary"
+                        tools:ignore="RtlSymmetry"
+                        tools:text="Mon, Jun 11, 2018" />
+
+                    <TextView
+                        android:id="@+id/event_end_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="?android:selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/material_default_padding"
+                        android:paddingEnd="@dimen/material_default_padding"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/text_dark_primary"
+                        tools:text="12:30" />
+
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/material_default_padding"
                     android:layout_weight="1"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/material_default_padding"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/text_dark_primary"
-                    tools:ignore="RtlSymmetry"
-                    tools:text="Mon, Jun 11, 2018" />
+                    android:hint="@string/comment">
 
-                <TextView
-                    android:id="@+id/event_start_time"
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/event_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:gravity="top"
+                        android:imeOptions="normal"
+                        android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
+                        android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/create_event_button"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/material_default_padding"
-                    android:paddingEnd="@dimen/material_default_padding"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/text_dark_primary"
-                    tools:text="11:30" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="@dimen/material_default_padding"
+                    android:alpha="0.5"
+                    android:enabled="false"
+                    android:text="@string/save"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    app:backgroundTint="@color/color_primary"
+                    app:cornerRadius="@dimen/material_corner_radius" />
 
             </LinearLayout>
 
-            <LinearLayout style="@style/CalendarDateTimeItem">
-
-                <TextView
-                    android:id="@+id/event_end_date"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/material_default_padding"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/text_dark_primary"
-                    tools:ignore="RtlSymmetry"
-                    tools:text="Mon, Jun 11, 2018" />
-
-                <TextView
-                    android:id="@+id/event_end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/material_default_padding"
-                    android:paddingEnd="@dimen/material_default_padding"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/text_dark_primary"
-                    tools:text="12:30" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <android.support.design.widget.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/material_default_padding"
-            android:layout_weight="1"
-            android:hint="@string/comment">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/event_description"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:gravity="top"
-                android:imeOptions="normal"
-                android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
-                android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/create_event_button"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_margin="@dimen/material_default_padding"
-            android:alpha="0.5"
-            android:enabled="false"
-            android:text="@string/save"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            app:backgroundTint="@color/color_primary"
-            app:cornerRadius="@dimen/material_corner_radius" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

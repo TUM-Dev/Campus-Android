@@ -11,13 +11,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
+import android.transition.TransitionManager;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
@@ -73,9 +76,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     private boolean isFetched;
     private boolean mWeekMode;
     private DateTime mShowDate;
-    private WeekView mWeekView;
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;
+
+    private WeekView mWeekView;
+    private MaterialButton mTodayButton;
 
     private CompositeDisposable mDisposable = new CompositeDisposable();
 
@@ -89,13 +94,22 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Get a reference for the week view in the layout.
         mWeekView = findViewById(R.id.weekView);
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(this);
         mWeekView.setOnEventClickListener(this);
+        mWeekView.setScrollListener((newFirstVisibleDay, oldFirstVisibleDay) -> {
+            LocalDate visibleDay = new LocalDate(newFirstVisibleDay);
+            LocalDate today = LocalDate.now();
+            boolean isToday = visibleDay.equals(today);
+            mTodayButton.setVisibility(isToday ? View.GONE : View.VISIBLE);
+            TransitionManager.beginDelayedTransition(getSwipeRefreshLayout());
+        });
+
+        mTodayButton = findViewById(R.id.todayButton);
+        mTodayButton.setOnClickListener(view -> refreshWeekView());
 
         // The week view adds a horizontal bar below the Toolbar. When refreshing, the refresh
         // spinner covers it. Therefore, we adjust the spinner's end position.
@@ -113,13 +127,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
         // Get setting from sharedprefs and refresh the view with everything
         mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
-        refreshWeekView();
 
         disableRefresh();
-
         calendarController = new CalendarController(this);
-
         loadEvents(CacheControl.USE_CACHE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        refreshWeekView();
     }
 
     @Override
@@ -237,7 +254,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             case R.id.action_switch_view_mode:
                 mWeekMode = !mWeekMode;
                 Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
-                this.refreshWeekView();
+                refreshWeekView();
                 return true;
             case R.id.action_export_calendar:
                 exportCalendarToGoogle();

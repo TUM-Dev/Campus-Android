@@ -643,4 +643,5 @@ Signatur: %5$s</string>
     <string name="chat_message_send_error">Nachricht konnte nicht gesendet werden</string>
     <string name="chat_message_try_again">Die Nachricht konnte nicht gesendet werden. Erneut versuchen?</string>
     <string name="leave">Verlassen</string>
+    <string name="today">Heute</string>
 </resources>
