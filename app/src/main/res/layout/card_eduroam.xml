@@ -10,13 +10,28 @@
         android:orientation="vertical"
         android:padding="@dimen/material_default_padding">
 
-        <TextView
-            style="@style/CardTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:drawableStart="@drawable/ic_action_network_wifi"
-            android:drawablePadding="@dimen/material_default_padding"
-            android:text="@string/setup_eduroam" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/CardTitle"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_action_network_wifi"
+                android:drawablePadding="@dimen/material_default_padding"
+                android:text="@string/setup_eduroam" />
+
+            <ImageButton
+                android:id="@+id/cardMoreIcon"
+                style="@style/CardMoreIcon" />
+
+        </LinearLayout>
 
         <TextView
             style="@style/CardBody"

@@ -41,6 +41,7 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     public static NewsViewHolder newNewsView(ViewGroup parent, boolean isFilm) {
         View card;
+
         if (isFilm) {
             card = LayoutInflater.from(parent.getContext())
                                  .inflate(R.layout.card_news_film_item, parent, false);
@@ -48,6 +49,7 @@ public class NewsAdapter extends RecyclerView.Adapter<CardViewHolder> {
             card = LayoutInflater.from(parent.getContext())
                                  .inflate(R.layout.card_news_item, parent, false);
         }
+
         NewsViewHolder holder = new NewsViewHolder(card);
         holder.imageView = card.findViewById(R.id.news_img);
         holder.titleTextView = card.findViewById(R.id.news_title);

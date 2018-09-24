@@ -19,6 +19,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:id="@+id/cardMoreIcon"
+            style="@style/CardOutlinedMoreIcon"
+            android:layout_margin="@dimen/material_default_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ProgressBar
             android:id="@+id/poster_progress_bar"
             android:layout_width="50dp"

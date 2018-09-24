@@ -1,4 +1,5 @@
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
 
@@ -14,7 +15,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:maxHeight="200dp"
-            android:minHeight="50dp"
+            android:minHeight="100dp"
             android:scaleType="centerCrop"
             tools:background="@android:color/darker_gray" />
 
@@ -24,13 +25,28 @@
             android:orientation="vertical"
             android:padding="@dimen/material_default_padding">
 
-            <TextView
-                android:id="@+id/news_title"
-                style="@style/CardTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/info_title"
-                tools:text="News title" />
+                android:layout_marginBottom="@dimen/material_default_padding"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/news_title"
+                    style="@style/CardTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/info_title"
+                    tools:text="News title" />
+
+                <ImageButton
+                    android:id="@+id/cardMoreIcon"
+                    style="@style/CardMoreIcon" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/news_src_date"
@@ -53,5 +69,6 @@
         </LinearLayout>
 
     </LinearLayout>
+    -->
 
 </android.support.design.card.MaterialCardView>

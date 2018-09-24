@@ -13,6 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/material_small_padding"
+            android:gravity="center_vertical"
             tools:ignore="UselessParent">
 
             <TextView
@@ -29,8 +30,11 @@
                 style="@style/CardDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 tools:text="Date" />
+
+            <ImageButton
+                android:id="@+id/cardMoreIcon"
+                style="@style/CardMoreIcon" />
 
         </LinearLayout>
 
