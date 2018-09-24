@@ -206,11 +206,13 @@
     </style>
 
     <style name="CardMoreIcon" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_width">@dimen/icon_default</item>
-        <item name="android:layout_height">@dimen/icon_default</item>
+        <item name="android:layout_width">@dimen/card_options_icon</item>
+        <item name="android:layout_height">@dimen/card_options_icon</item>
         <item name="android:src">@drawable/ic_more_vert</item>
+        <item name="android:padding">@dimen/material_small_padding</item>
         <item name="android:layout_marginStart">@dimen/material_default_padding</item>
         <item name="android:tint">@color/card_more_icon</item>
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
     </style>
 
     <style name="CardOutlinedMoreIcon" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -237,10 +239,8 @@
     </style>
 
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog">
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent
-        </item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/white
-        </item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/white</item>
     </style>
 
 </resources>

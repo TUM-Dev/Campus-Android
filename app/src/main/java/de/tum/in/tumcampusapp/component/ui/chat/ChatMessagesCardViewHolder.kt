@@ -9,8 +9,6 @@ import kotlinx.android.synthetic.main.card_chat_messages.view.*
 
 class ChatMessagesCardViewHolder(itemView: View) : CardViewHolder(itemView) {
 
-    private var didBind = false
-
     fun bind(roomName: String, roomId: Int, roomIdStr: String, unreadMessages: List<ChatMessage>) {
         with(itemView) {
             chatRoomNameTextView.text = if (unreadMessages.size > 5) {
@@ -19,7 +17,7 @@ class ChatMessagesCardViewHolder(itemView: View) : CardViewHolder(itemView) {
                 roomName
             }
 
-            if (!didBind) {
+            if (contentContainerLayout.childCount == 0) {
                 unreadMessages
                         .map { message ->
                             val memberName = message.member.displayName
@@ -33,7 +31,6 @@ class ChatMessagesCardViewHolder(itemView: View) : CardViewHolder(itemView) {
                         .forEach { textView ->
                             contentContainerLayout.addView(textView)
                         }
-                didBind = true
             }
         }
     }

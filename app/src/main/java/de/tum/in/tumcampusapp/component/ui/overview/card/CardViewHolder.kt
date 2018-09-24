@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageButton
+import android.widget.ImageView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
@@ -29,7 +29,7 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
         }
 
-        val moreIcon = itemView.findViewById<ImageButton>(R.id.cardMoreIcon)
+        val moreIcon = itemView.findViewById<ImageView>(R.id.cardMoreIcon)
         moreIcon?.setOnClickListener { openOptionsPopup(it) }
     }
 

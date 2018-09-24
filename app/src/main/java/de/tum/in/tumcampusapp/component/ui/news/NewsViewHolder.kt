@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import de.tum.`in`.tumcampusapp.R
@@ -70,9 +71,7 @@ class NewsViewHolder(itemView: View) : CardViewHolder(itemView) {
     private fun bindNews(newsItem: News) {
         val imageUrl = newsItem.image
         if (imageUrl.isNotEmpty()) {
-            Picasso.get()
-                    .load(newsItem.image)
-                    .into(imageView)
+            loadNewsImage(imageUrl)
         } else {
             imageView?.visibility = View.GONE
         }
@@ -83,6 +82,18 @@ class NewsViewHolder(itemView: View) : CardViewHolder(itemView) {
         if (showTitle) {
             titleTextView?.text = newsItem.title
         }
+    }
+
+    private fun loadNewsImage(url: String) {
+        Picasso.get()
+                .load(url)
+                .into(imageView, object : Callback {
+                    override fun onSuccess() = Unit
+
+                    override fun onError(e: Exception?) {
+                        imageView?.visibility = View.GONE
+                    }
+                })
     }
 
     companion object {

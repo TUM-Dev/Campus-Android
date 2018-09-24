@@ -1,6 +1,76 @@
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/news_img"
+            android:layout_width="120dp"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/news_title"
+            style="@style/CardTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginBottom="0dp"
+            android:layout_weight="1"
+            android:text="@string/info_title"
+            app:layout_constraintEnd_toStartOf="@id/cardMoreIcon"
+            app:layout_constraintStart_toEndOf="@id/news_img"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
+
+        <ImageButton
+            android:id="@+id/cardMoreIcon"
+            style="@style/CardMoreIcon"
+            android:layout_marginEnd="@dimen/material_small_padding"
+            app:layout_constraintBottom_toBottomOf="@id/news_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/news_title" />
+
+        <TextView
+            android:id="@+id/news_src_date"
+            style="@style/CardDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            app:layout_constraintEnd_toStartOf="@id/cardMoreIcon"
+            app:layout_constraintStart_toEndOf="@id/news_img"
+            app:layout_constraintTop_toBottomOf="@id/news_title"
+            tools:text="Source Date" />
+
+        <TextView
+            android:id="@+id/news_src_title"
+            style="@style/CardSource"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:drawableStart="@drawable/news_source_placeholder"
+            android:drawablePadding="@dimen/material_small_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/news_img"
+            tools:text="Source Title" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/card_view"
@@ -8,6 +78,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
+        <!--
         <ImageView
             android:id="@+id/news_img"
             android:layout_width="120dp"
@@ -67,6 +138,7 @@
                 tools:text="Source Title" />
 
         </LinearLayout>
+        -->
 
     </LinearLayout>
 
