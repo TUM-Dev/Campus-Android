@@ -213,11 +213,11 @@
         <item name="android:tint">@color/card_more_icon</item>
     </style>
 
-    <style name="CardOutlinedMoreIcon" parent="@style/Widget.AppCompat.Button">
+    <style name="CardOutlinedMoreIcon" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">@dimen/icon_default</item>
         <item name="android:layout_height">@dimen/icon_default</item>
         <item name="android:background">@drawable/circle_background</item>
-        <item name="android:backgroundTint">@color/pop_up_background</item>
+        <item name="android:backgroundTint">@android:color/white</item>
         <item name="android:src">@drawable/ic_more_vert</item>
         <item name="android:layout_marginStart">@dimen/material_default_padding</item>
         <item name="android:tint">@color/card_more_icon</item>

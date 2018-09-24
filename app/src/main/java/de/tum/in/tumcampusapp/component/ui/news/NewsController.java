@@ -186,12 +186,11 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
 
         List<News> news;
         if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
-            news = newsDao.getBySourcesLatest(sources.toArray(new Integer[sources.size()]));
+            news = newsDao.getBySourcesLatest(sources.toArray(new Integer[0]));
         } else {
-            news = newsDao.getBySources(sources.toArray(new Integer[sources.size()]));
+            news = newsDao.getBySources(sources.toArray(new Integer[0]));
         }
 
-        //Display resulting cards
         for (News n : news) {
             NewsCard card;
             if (n.isFilm()) {

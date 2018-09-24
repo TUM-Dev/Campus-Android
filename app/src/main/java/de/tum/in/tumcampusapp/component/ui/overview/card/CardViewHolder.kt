@@ -34,7 +34,7 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     private fun openOptionsPopup(anchorView: View) {
-        PopupMenu(context, anchorView, Gravity.BOTTOM).apply {
+        PopupMenu(context, anchorView, Gravity.END).apply {
             menuInflater.inflate(R.menu.card_popup_menu, menu)
             setOnMenuItemClickListener { onOptionSelected(it) }
             show()
