@@ -25,8 +25,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.MVVCard;
 /**
  * Adapter for the cards start page used in {@link MainActivity}
  */
-public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>
-        implements MainActivity.ItemTouchHelperAdapter {
+public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     private List<Card> mItems = new ArrayList<>();
 
@@ -91,7 +90,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>
         return mItems.size();
     }
 
-    public void updateItems(List<Card> newCards) {
+    void updateItems(List<Card> newCards) {
         DiffUtil.DiffResult diffResult =
                 DiffUtil.calculateDiff(new Card.DiffCallback(mItems, newCards));
 
@@ -112,8 +111,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder>
         notifyItemInserted(position);
     }
 
-    @Override
-    public void onItemMove(int fromPosition, int toPosition) {
+    void onItemMove(int fromPosition, int toPosition) {
         toPosition = validatePosition(fromPosition, toPosition);
         Card card = mItems.remove(fromPosition);
         mItems.add(toPosition, card);

@@ -12,7 +12,9 @@ import android.widget.ImageView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
 
 open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -20,6 +22,7 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val context: Context by lazy { itemView.context }
     private val activity: Activity by lazy { context as Activity }
+    private val listener: CardInteractionListener? by lazy { context as? CardInteractionListener }
 
     init {
         itemView.setOnClickListener {
@@ -34,6 +37,8 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     private fun openOptionsPopup(anchorView: View) {
+        Utils.log(activity::class.java.name)
+
         PopupMenu(context, anchorView, Gravity.END).apply {
             menuInflater.inflate(R.menu.card_popup_menu, menu)
             setOnMenuItemClickListener { onOptionSelected(it) }
@@ -62,6 +67,7 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private fun alwaysHideCard() {
         currentCard?.hideAlways()
         currentCard?.discardCard()
+        listener?.onAlwaysHideCard(adapterPosition)
     }
 
 }
