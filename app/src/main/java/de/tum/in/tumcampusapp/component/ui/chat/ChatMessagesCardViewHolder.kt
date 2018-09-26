@@ -18,7 +18,8 @@ class ChatMessagesCardViewHolder(itemView: View) : CardViewHolder(itemView) {
             }
 
             if (contentContainerLayout.childCount == 0) {
-                unreadMessages
+                // We have not yet inflated the chat messages
+                unreadMessages.asSequence()
                         .map { message ->
                             val memberName = message.member.displayName
                             context.getString(R.string.card_message_line, memberName, message.text)
@@ -28,6 +29,7 @@ class ChatMessagesCardViewHolder(itemView: View) : CardViewHolder(itemView) {
                                 text = messageText
                             }
                         }
+                        .toList()
                         .forEach { textView ->
                             contentContainerLayout.addView(textView)
                         }
