@@ -38,6 +38,11 @@ public class EduroamCard extends Card {
     }
 
     @Override
+    public boolean getHasSettings() {
+        return true;
+    }
+
+    @Override
     public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         MaterialButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
         button.setOnClickListener(v -> {

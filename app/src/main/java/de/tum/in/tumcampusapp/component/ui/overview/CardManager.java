@@ -40,7 +40,6 @@ public final class CardManager {
     public static final int CARD_TOP_NEWS = R.layout.card_top_news;
     public static final int CARD_EVENT = R.layout.card_events_item;
 
-
     private CardManager() {}
 
     /**

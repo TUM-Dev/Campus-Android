@@ -39,6 +39,11 @@ public class LoginPromptCard extends Card {
     }
 
     @Override
+    public boolean getHasSettings() {
+        return true;
+    }
+
+    @Override
     public void discard(@NonNull SharedPreferences.Editor editor) {
         Utils.setSetting(this.getContext(), CardManager.SHOW_LOGIN, false);
     }

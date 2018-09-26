@@ -52,6 +52,11 @@ public class CafeteriaMenuCard extends Card {
         }
     }
 
+    @Override
+    public boolean getHasSettings() {
+        return true;
+    }
+
     /**
      * Sets the information needed to build the card
      *

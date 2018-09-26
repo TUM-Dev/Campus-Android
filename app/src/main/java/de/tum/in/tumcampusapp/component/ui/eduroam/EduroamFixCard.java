@@ -8,6 +8,7 @@ import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -47,7 +48,7 @@ public class EduroamFixCard extends Card {
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
         setMCard(viewHolder.itemView);
         setMLinearLayout(getMCard().findViewById(R.id.card_view));

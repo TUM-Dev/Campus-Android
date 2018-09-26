@@ -14,7 +14,6 @@ import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Utils
 
 open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -37,10 +36,15 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     private fun openOptionsPopup(anchorView: View) {
-        Utils.log(activity::class.java.name)
+        val card = currentCard ?: return
+        val menuId = if (card.hasSettings) {
+            R.menu.card_popup_menu
+        } else {
+            R.menu.card_popup_menu_no_settings
+        }
 
         PopupMenu(context, anchorView, Gravity.END).apply {
-            menuInflater.inflate(R.menu.card_popup_menu, menu)
+            menuInflater.inflate(menuId, menu)
             setOnMenuItemClickListener { onOptionSelected(it) }
             show()
         }

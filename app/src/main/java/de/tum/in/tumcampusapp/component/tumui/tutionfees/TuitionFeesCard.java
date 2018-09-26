@@ -43,6 +43,11 @@ public class TuitionFeesCard extends Card {
         return new CardViewHolder(view);
     }
 
+    @Override
+    public boolean getHasSettings() {
+        return true;
+    }
+
     public String getTitle() {
         return getContext().getString(R.string.tuition_fees);
     }

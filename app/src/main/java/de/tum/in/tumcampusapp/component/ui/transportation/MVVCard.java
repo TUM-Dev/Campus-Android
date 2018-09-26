@@ -43,6 +43,11 @@ public class MVVCard extends Card {
         return new MVVCardViewHolder(view);
     }
 
+    @Override
+    public boolean getHasSettings() {
+        return true;
+    }
+
     public String getTitle() {
         return mStation.getStation();
     }

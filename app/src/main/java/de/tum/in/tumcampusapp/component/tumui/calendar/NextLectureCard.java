@@ -56,6 +56,11 @@ public class NextLectureCard extends Card {
         return new CardViewHolder(view);
     }
 
+    @Override
+    public boolean getHasSettings() {
+        return true;
+    }
+
     public CalendarItem getSelected() {
         return lectures.get(mSelected);
     }

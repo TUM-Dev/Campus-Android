@@ -39,10 +39,18 @@ abstract class Card(
     }
 
     /**
-     * Tells the list adapter and indirectly the SwipeDismissList if the item is dismissible, e.g.: The restore card is not dismissible.
+     * Tells the list adapter and indirectly the SwipeDismissList if the item is dismissible.
+     * E.g.: The restore card is not dismissible.
      */
     open val isDismissible: Boolean
         get() = true
+
+    /**
+     * Describes whether a settings screen exists for this card. If not, the option "Open card settings"
+     * is not displayed in the card's options menu.
+     */
+    open val hasSettings: Boolean
+        get() = false
 
     open var position: Int
         get() =

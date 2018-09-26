@@ -43,6 +43,11 @@ public class NewsCard extends Card {
     }
 
     @Override
+    public boolean getHasSettings() {
+        return true;
+    }
+
+    @Override
     public int getId() {
         return Integer.parseInt(mNews.getId());
     }
