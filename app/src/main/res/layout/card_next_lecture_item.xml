@@ -1,127 +1,96 @@
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
 
-    <LinearLayout
-        android:id="@+id/card_view"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:padding="@dimen/material_default_padding">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/card_title"
+            style="@style/CardTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginBottom="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
+            app:layout_constraintEnd_toStartOf="@id/cardMoreIcon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
 
-            <TextView
-                android:id="@+id/card_title"
-                style="@style/CardTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="Title" />
+        <ImageButton
+            android:id="@+id/cardMoreIcon"
+            style="@style/CardMoreIcon"
+            android:layout_marginEnd="@dimen/material_small_padding"
+            app:layout_constraintBottom_toBottomOf="@id/card_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/card_title" />
 
-            <TextView
-                android:id="@+id/card_time"
-                style="@style/CardBody"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_default_padding"
-                tools:text="Time" />
+        <TextView
+            android:id="@+id/card_time"
+            style="@style/CardBody"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            app:layout_constraintBottom_toTopOf="@id/card_location_action"
+            app:layout_constraintEnd_toStartOf="@id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_title"
+            tools:text="Time" />
 
-            <TextView
-                android:id="@+id/card_location_action"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_tiny_padding"
-                android:background="?attr/selectableItemBackground"
-                android:drawableStart="@drawable/ic_outline_location_on_24px_light_blue"
-                android:drawablePadding="@dimen/material_small_padding"
-                android:gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#00a7de"
-                tools:text="Location" />
+        <TextView
+            android:id="@+id/card_location_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_tiny_padding"
+            android:background="?attr/selectableItemBackground"
+            android:drawableStart="@drawable/ic_outline_location_on_24px_light_blue"
+            android:drawablePadding="@dimen/material_small_padding"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#00a7de"
+            app:layout_constraintEnd_toStartOf="@id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_time"
+            tools:text="Location" />
 
-            <TextView
-                android:id="@+id/card_event_action"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:drawableStart="@drawable/ic_event"
-                android:drawablePadding="@dimen/material_small_padding"
-                android:gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#00a7de"
-                tools:text="Event" />
+        <TextView
+            android:id="@+id/card_event_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_tiny_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:background="?attr/selectableItemBackground"
+            android:drawableStart="@drawable/ic_event"
+            android:drawablePadding="@dimen/material_small_padding"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#00a7de"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_location_action"
+            tools:text="Event" />
 
-        </LinearLayout>
-
-        <LinearLayout
+        <include
             android:id="@+id/linearLayout"
+            layout="@layout/layout_lecture_selection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:layout_marginEnd="@dimen/material_default_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cardMoreIcon" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/lecture_1"
-                    android:layout_width="@dimen/next_lecture_select_width"
-                    android:layout_height="@dimen/next_lecture_select_width"
-                    android:layout_margin="1dp"
-                    android:background="@drawable/next_lecture_select"
-                    android:text="1"
-                    android:textColor="#ffffffff"
-                    tools:ignore="HardcodedText" />
-
-                <Button
-                    android:id="@+id/lecture_2"
-                    android:layout_width="@dimen/next_lecture_select_width"
-                    android:layout_height="@dimen/next_lecture_select_width"
-                    android:layout_margin="1dp"
-                    android:background="@drawable/next_lecture_select"
-                    android:text="2"
-                    android:textColor="#ffffffff"
-                    tools:ignore="HardcodedText" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/lecture_3"
-                    android:layout_width="@dimen/next_lecture_select_width"
-                    android:layout_height="@dimen/next_lecture_select_width"
-                    android:layout_margin="1dp"
-                    android:background="@drawable/next_lecture_select"
-                    android:text="3"
-                    android:textColor="#ffffffff"
-                    tools:ignore="HardcodedText" />
-
-                <Button
-                    android:id="@+id/lecture_4"
-                    android:layout_width="@dimen/next_lecture_select_width"
-                    android:layout_height="@dimen/next_lecture_select_width"
-                    android:layout_margin="1dp"
-                    android:background="@drawable/next_lecture_select"
-                    android:text="4"
-                    android:textColor="#ffffffff"
-                    tools:ignore="HardcodedText" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.design.card.MaterialCardView>

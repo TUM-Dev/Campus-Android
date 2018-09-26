@@ -29,7 +29,7 @@ public class LoginPromptCard extends Card {
         final View view = LayoutInflater.from(parent.getContext())
                                         .inflate(R.layout.card_login_prompt, parent, false);
 
-        view.findViewById(R.id.login_button)
+        view.findViewById(R.id.loginButton)
             .setOnClickListener(v -> {
                 Intent loginIntent = new Intent(view.getContext(), WizNavStartActivity.class);
                 view.getContext().startActivity(loginIntent);

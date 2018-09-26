@@ -112,9 +112,12 @@
         <item name="preferenceStyle">@style/Preference.Material</item>
         <item name="preferenceInformationStyle">@style/Preference.Information.Material</item>
         <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference.Material</item>
-        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat.Material</item>
+        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat.Material
+        </item>
         <item name="dialogPreferenceStyle">@style/Preference.DialogPreference.Material</item>
-        <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference.Material</item>
+        <item name="editTextPreferenceStyle">
+            @style/Preference.DialogPreference.EditTextPreference.Material
+        </item>
         <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList.Material</item>
     </style>
 
@@ -178,20 +181,44 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:layout_marginBottom">@dimen/material_small_padding</item>
         <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CardBody">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CardDetails">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="CardSource">
         <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CardMoreIcon" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">@dimen/card_options_icon</item>
+        <item name="android:layout_height">@dimen/card_options_icon</item>
+        <item name="android:src">@drawable/ic_more_vert</item>
+        <item name="android:padding">@dimen/material_small_padding</item>
+        <item name="android:layout_marginStart">@dimen/material_default_padding</item>
+        <item name="android:tint">@color/card_more_icon</item>
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="CardOutlinedMoreIcon" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">@dimen/card_options_icon</item>
+        <item name="android:layout_height">@dimen/card_options_icon</item>
+        <item name="android:padding">@dimen/material_small_padding</item>
+        <item name="android:src">@drawable/ic_more_vert</item>
+        <item name="android:layout_marginStart">@dimen/material_default_padding</item>
+        <item name="android:tint">@color/card_more_icon</item>
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

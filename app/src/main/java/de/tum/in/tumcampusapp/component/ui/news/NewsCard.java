@@ -25,7 +25,9 @@ import de.tum.in.tumcampusapp.utils.Utils;
  */
 public class NewsCard extends Card {
 
-    protected News mNews;
+    private static NewsInflater mNewsInflater;
+
+    private News mNews;
 
     public NewsCard(Context context) {
         this(CardManager.CARD_NEWS, context);
@@ -35,8 +37,14 @@ public class NewsCard extends Card {
         super(type, context, "card_news");
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent, int type) {
-        return NewsAdapter.newNewsView(parent, type == CardManager.CARD_NEWS_FILM);
+    public static CardViewHolder inflateViewHolder(ViewGroup parent, int viewType) {
+        mNewsInflater = new NewsInflater(parent.getContext());
+        return mNewsInflater.onCreateNewsView(parent, viewType);
+    }
+
+    @Override
+    public int getOptionsMenuResId() {
+        return R.menu.card_popup_menu;
     }
 
     @Override
@@ -58,9 +66,10 @@ public class NewsCard extends Card {
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
-        NewsAdapter.bindNewsView(viewHolder, mNews, getContext());
+        NewsViewHolder holder = (NewsViewHolder) viewHolder;
+        mNewsInflater.onBindNewsView(holder, mNews);
     }
 
     /**
@@ -73,7 +82,7 @@ public class NewsCard extends Card {
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         return (mNews.getDismissed() & 1) == 0;
     }
 

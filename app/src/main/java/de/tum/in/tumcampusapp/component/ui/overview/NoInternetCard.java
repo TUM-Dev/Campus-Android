@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.ui.overview;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -34,7 +35,7 @@ public class NoInternetCard extends StickyCard {
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
 
         View v = viewHolder.itemView;
@@ -47,7 +48,7 @@ public class NoInternetCard extends StickyCard {
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         return !NetUtils.isConnected(getContext());
     }
 

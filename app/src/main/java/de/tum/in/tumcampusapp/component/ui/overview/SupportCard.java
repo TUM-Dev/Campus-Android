@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,12 +60,12 @@ public class SupportCard extends Card {
     }
 
     @Override
-    public void discard(Editor editor) {
+    public void discard(@NonNull Editor editor) {
         Utils.setSetting(getContext(), CardManager.SHOW_SUPPORT, false);
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences p) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         return Utils.getSettingBool(getContext(), CardManager.SHOW_SUPPORT, true);
     }
 

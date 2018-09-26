@@ -14,7 +14,7 @@ class CafeteriaMenuViewHolder(itemView: View) : CardViewHolder(itemView) {
             cafeteriaNameTextView.text = cafeteria.name
             menuDateTextView.text = DateTimeFormat.mediumDate().print(cafeteria.nextMenuDate)
 
-            if (contentContainerLayout.childCount == 1) {
+            if (contentContainerLayout.childCount == 0) {
                 // We have not yet added the cafeteria menu items to the card
                 CafeteriaDetailsSectionFragment.showMenu(contentContainerLayout,
                         cafeteria.id, cafeteria.nextMenuDate, false, cafeteria.menus)

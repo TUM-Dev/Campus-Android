@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.button.MaterialButton
 import android.support.v4.widget.DrawerLayout
@@ -113,4 +114,9 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, callback: (T) -> Unit)
             callback(it)
         }
     })
+}
+
+fun TextView.addCompoundDrawablesWithIntrinsicBounds(
+        start: Drawable? = null, top: Drawable? = null, right: Drawable? = null, bottom: Drawable? = null) {
+    setCompoundDrawablesWithIntrinsicBounds(start, top, right, bottom)
 }

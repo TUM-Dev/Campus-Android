@@ -34,17 +34,15 @@ data class News(@PrimaryKey
                 var date: DateTime = DateTime(),
                 var created: DateTime = DateTime(),
                 var dismissed: Int = 0) {
-    /**
-     * Identifies News as a film.
-     *
-     * @return true if News is a film; else false
-     */
-    fun isFilm(): Boolean {
-        return src == "2"
-    }
+
+    val isFilm: Boolean
+        get() = src == "2"
+
+    val isNewspread: Boolean
+        get() = setOf(7, 8, 9, 13).contains(src.toInt())
 
     fun getIntent(context: Context): Intent? {
-        return if (isFilm()) {
+        return if (isFilm) {
             Intent(context, KinoActivity::class.java).apply {
                 putExtra(Const.KINO_DATE, DateTimeUtils.getDateTimeString(date))
             }

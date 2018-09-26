@@ -33,7 +33,7 @@ public class TuitionFeesCard extends Card {
 
     private Tuition mTuition;
 
-    public TuitionFeesCard(Context context) {
+    TuitionFeesCard(Context context) {
         super(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee");
     }
 
@@ -41,6 +41,11 @@ public class TuitionFeesCard extends Card {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_tuition_fees, parent, false);
         return new CardViewHolder(view);
+    }
+
+    @Override
+    public int getOptionsMenuResId() {
+        return R.menu.card_popup_menu;
     }
 
     public String getTitle() {
@@ -86,7 +91,7 @@ public class TuitionFeesCard extends Card {
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         String prevDeadline = prefs.getString(LAST_FEE_FRIST, "");
         String prevAmount = prefs.getString(LAST_FEE_SOLL, Float.toString(mTuition.getAmount()));
 
@@ -98,7 +103,7 @@ public class TuitionFeesCard extends Card {
                (prevDeadline.compareTo(deadline) < 0 || prevAmount.compareTo(amount) > 0);
     }
 
-    public void discard(Editor editor) {
+    public void discard(@NonNull Editor editor) {
         String deadline = DateTimeUtils.INSTANCE.getDateString(mTuition.getDeadline());
         String amount = Float.toString(mTuition.getAmount());
         editor.putString(LAST_FEE_FRIST, deadline);

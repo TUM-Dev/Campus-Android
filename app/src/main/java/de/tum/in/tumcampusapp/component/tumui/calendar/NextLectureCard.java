@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +47,7 @@ public class NextLectureCard extends Card {
     private int mSelected;
     private TextView mEvent;
 
-    public NextLectureCard(Context context) {
+    NextLectureCard(Context context) {
         super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture");
     }
 
@@ -56,12 +57,17 @@ public class NextLectureCard extends Card {
         return new CardViewHolder(view);
     }
 
+    @Override
+    public int getOptionsMenuResId() {
+        return R.menu.card_popup_menu;
+    }
+
     public CalendarItem getSelected() {
         return lectures.get(mSelected);
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
         setMCard(viewHolder.itemView);
         setMLinearLayout(getMCard().findViewById(R.id.card_view));
@@ -128,13 +134,13 @@ public class NextLectureCard extends Card {
     }
 
     @Override
-    protected void discard(SharedPreferences.Editor editor) {
+    protected void discard(@NonNull SharedPreferences.Editor editor) {
         CalendarItem item = lectures.get(lectures.size() - 1);
         editor.putLong(NEXT_LECTURE_DATE, item.start.getMillis());
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         CalendarItem item = lectures.get(0);
         long prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0);
         return item.start.getMillis() > prevTime;

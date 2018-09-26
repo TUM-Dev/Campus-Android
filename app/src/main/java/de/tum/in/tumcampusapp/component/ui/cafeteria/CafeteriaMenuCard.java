@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,13 +44,18 @@ public class CafeteriaMenuCard extends Card {
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
 
         if (viewHolder instanceof CafeteriaMenuViewHolder) {
             CafeteriaMenuViewHolder holder = (CafeteriaMenuViewHolder) viewHolder;
             holder.bind(mCafeteria);
         }
+    }
+
+    @Override
+    public int getOptionsMenuResId() {
+        return R.menu.card_popup_menu;
     }
 
     /**
@@ -74,13 +80,13 @@ public class CafeteriaMenuCard extends Card {
     }
 
     @Override
-    public void discard(Editor editor) {
+    public void discard(@NonNull Editor editor) {
         DateTime date = mCafeteria.getNextMenuDate();
         editor.putLong(CAFETERIA_DATE, date.getMillis());
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         final long prevDate = prefs.getLong(CAFETERIA_DATE, 0);
         DateTime date = mCafeteria.getNextMenuDate();
         return prevDate < date.getMillis();
