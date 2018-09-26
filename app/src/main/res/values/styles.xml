@@ -2,24 +2,20 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/tum_light_gray</item>
-        <item name="colorPrimaryDark">@color/tum_dark_gray</item>
+        <item name="colorPrimaryDark">@color/tum_light_gray</item>
         <item name="colorAccent">@color/tum_blue</item>
-
         <item name="android:windowBackground">@color/default_window_background</item>
-
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
 
-        <!-- Light status bar -->
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-
         <!-- Light system UI -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.NoDrawerLayout" parent="AppTheme">
-        <item name="android:statusBarColor">@color/tum_dark_gray</item>
+        <item name="android:statusBarColor">@color/tum_light_gray</item>
     </style>
 
     <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
