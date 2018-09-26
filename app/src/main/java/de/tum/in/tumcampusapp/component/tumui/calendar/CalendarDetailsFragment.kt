@@ -111,12 +111,13 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun handleDeleteEventError(t: Throwable) {
+        val c = context ?: return
         val messageResId = when (t) {
             is NoNetworkConnectionException -> R.string.error_no_internet_connection
             is RequestLimitReachedException -> R.string.error_request_limit_reached
             else -> R.string.error_unknown
         }
-        Utils.showToast(context, messageResId)
+        Utils.showToast(c, messageResId)
     }
 
     private fun onLocationClicked(location: String) {
