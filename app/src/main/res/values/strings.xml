@@ -421,7 +421,7 @@ Signature: %5$s</string>
     <string name="widget_configure_description">Configure the cards to show</string>
 
     <string name="update_notification_description">A new version of the Tum Campus App has been released on %s. Tap to download now.</string>
-    <string name="support_us">Help us to spread the word about the Campus App. Like us on Facebook, suggest an exciting idea on GitHub or send an e-mail telling us what you think.</string>
+    <string name="support_us">Help us to spread the word about the TUM Campus App. Like us on Facebook, suggest an exciting idea on GitHub or send an e-mail telling us what you think.</string>
     <string name="support_email_link" translatable="false">mailto:app@tum.de</string>
     <string name="support_us_title">Support us</string>
     <string name="permission_calendar_explanation">TUM Campus App needs permission to access your calendar to be able to sync it with your TUM calendar.</string>

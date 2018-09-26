@@ -59,45 +59,4 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <!--
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/CardTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginTop="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:text="@string/card_login_title" />
-
-        <TextView
-            style="@style/CardBody"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_small_padding"
-            android:text="@string/card_login_body" />
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/login_button"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_default_padding"
-            android:text="@string/tumonline_login"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            app:cornerRadius="@dimen/material_corner_radius" />
-
-    </LinearLayout>
-    -->
-
 </android.support.design.card.MaterialCardView>

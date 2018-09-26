@@ -19,7 +19,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- The background of the more icon, separate to allow for padding -->
+        <!-- The background of the more icon, separate to allow for padding around the background -->
         <ImageView
             android:id="@+id/cardMoreIconBackground"
             android:layout_width="@dimen/icon_default"

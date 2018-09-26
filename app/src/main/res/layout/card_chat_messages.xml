@@ -47,40 +47,4 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <!--
-    <LinearLayout
-        android:id="@+id/contentContainerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/material_default_padding">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/material_default_padding"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
-
-            <TextView
-                android:id="@+id/chatRoomNameTextView"
-                style="@style/CardTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1"
-                tools:text="Title" />
-
-            <ImageButton
-                android:id="@+id/cardMoreIcon"
-                style="@style/CardMoreIcon" />
-
-        </LinearLayout>
-
-        <!- Content will be filled in here ->
-
-    </LinearLayout>
-    -->
-
 </android.support.design.card.MaterialCardView>

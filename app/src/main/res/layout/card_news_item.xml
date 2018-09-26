@@ -21,7 +21,7 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:background="@android:color/darker_gray" />
 
-        <!-- The background of the more icon, separate to allow for padding -->
+        <!-- The background of the more icon, separate to allow for padding around the background -->
         <ImageView
             android:id="@+id/cardMoreIconBackground"
             android:layout_width="@dimen/icon_default"
@@ -84,57 +84,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/news_src_date"
             tools:text="News source title" />
-
-        <!--
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/material_default_padding">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_default_padding"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/news_title"
-                    style="@style/CardTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="0dp"
-                    android:layout_weight="1"
-                    android:text="@string/info_title"
-                    tools:text="News title" />
-
-                <ImageButton
-                    android:id="@+id/cardMoreIcon"
-                    style="@style/CardMoreIcon" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/news_src_date"
-                style="@style/CardDetails"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_default_padding"
-                tools:text="News source date" />
-
-            <TextView
-                android:id="@+id/news_src_title"
-                style="@style/CardSource"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:drawableStart="@drawable/news_source_placeholder"
-                android:drawablePadding="@dimen/material_small_padding"
-                tools:text="News source title" />
-
-        </LinearLayout>
-        -->
 
     </android.support.constraint.ConstraintLayout>
 

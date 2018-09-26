@@ -4,6 +4,7 @@
     style="@style/StandardCard">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -57,35 +58,5 @@
             tools:text="Outstanding balance" />
 
     </android.support.constraint.ConstraintLayout>
-
-    <LinearLayout
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/material_default_padding">
-
-        <!--
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/material_default_padding"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/CardTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1"
-                android:text="@string/tuition_fees" />
-
-            <ImageButton
-                android:id="@+id/cardMoreIcon"
-                style="@style/CardMoreIcon" />
-            -->
-
-    </LinearLayout>
 
 </android.support.design.card.MaterialCardView>
