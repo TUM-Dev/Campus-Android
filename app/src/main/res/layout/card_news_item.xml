@@ -21,10 +21,21 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:background="@android:color/darker_gray" />
 
+        <!-- The background of the more icon, separate to allow for padding -->
+        <ImageView
+            android:id="@+id/cardMoreIconBackground"
+            android:layout_width="@dimen/icon_default"
+            android:layout_height="@dimen/icon_default"
+            android:layout_margin="@dimen/material_default_padding"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageButton
             android:id="@+id/cardMoreIcon"
             style="@style/CardOutlinedMoreIcon"
-            android:layout_margin="@dimen/material_default_padding"
+            android:layout_margin="@dimen/material_small_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
