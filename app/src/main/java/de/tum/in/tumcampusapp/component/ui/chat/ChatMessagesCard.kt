@@ -37,7 +37,7 @@ class ChatMessagesCard(context: Context,
     private val chatMessageDao: ChatMessageDao
 
     override val optionsMenuResId: Int
-        get() = R.menu.card_popup_menu_no_settings
+        get() = R.menu.card_popup_menu
 
     init {
         val tcaDb = TcaDb.getInstance(context)

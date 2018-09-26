@@ -39,7 +39,7 @@ public class EduroamCard extends Card {
 
     @Override
     public int getOptionsMenuResId() {
-        return R.menu.card_popup_menu_no_settings;
+        return R.menu.card_popup_menu;
     }
 
     @Override
