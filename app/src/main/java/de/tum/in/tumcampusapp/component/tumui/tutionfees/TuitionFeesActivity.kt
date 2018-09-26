@@ -27,7 +27,7 @@ class TuitionFeesActivity : ActivityForAccessingTumOnline<TuitionList>(R.layout.
         super.onCreate(savedInstanceState)
 
         val button = findViewById<MaterialButton>(R.id.financialAidButton)
-        button.setOnClickListener { _ ->
+        button.setOnClickListener {
             val url = getString(R.string.student_financial_aid_link)
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)

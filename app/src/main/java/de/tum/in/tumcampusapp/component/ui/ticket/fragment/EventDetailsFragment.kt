@@ -220,7 +220,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun displayAddToCalendarDialog() {
-        val context = context ?: return
+        val context = requireContext()
 
         val calendars = arrayOf(
                 getString(R.string.external_calendar),

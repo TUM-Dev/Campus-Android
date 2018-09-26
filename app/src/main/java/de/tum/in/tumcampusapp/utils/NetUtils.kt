@@ -1,22 +1,22 @@
 package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
-import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
-import android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED
-import android.os.Build
+import android.net.NetworkCapabilities.*
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.M
+import org.jetbrains.anko.connectivityManager
 
 object NetUtils {
 
     private fun NetworkCapabilities.hasConnectivity(): Boolean {
-        val capability = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) NET_CAPABILITY_INTERNET else NET_CAPABILITY_VALIDATED
+        val capability = if (SDK_INT < M) NET_CAPABILITY_INTERNET else NET_CAPABILITY_VALIDATED
         return hasCapability(capability)
     }
 
-    private inline fun anyConnectedNetwork(context: Context, condition: (NetworkCapabilities) -> Boolean): Boolean {
-        val connectivityMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-                ?: return false
+    private inline fun anyConnectedNetwork(context: Context,
+                                           condition: (NetworkCapabilities) -> Boolean): Boolean {
+        val connectivityMgr = context.connectivityManager
 
         return connectivityMgr.allNetworks.asSequence().filter {
             connectivityMgr.getNetworkInfo(it)?.isConnected ?: false
@@ -46,8 +46,7 @@ object NetUtils {
     @JvmStatic
     fun isConnectedWifi(context: Context): Boolean {
         return anyConnectedNetwork(context) {
-            it.hasConnectivity()
-                    && it.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+            it.hasConnectivity() && it.hasCapability(NET_CAPABILITY_NOT_METERED)
         }
     }
 }

@@ -20,6 +20,7 @@ import android.widget.Toast
 import com.google.common.base.Charsets
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.BuildConfig
+import org.jetbrains.anko.defaultSharedPreferences
 import java.io.IOException
 import java.io.InputStream
 import java.io.PrintWriter
@@ -41,7 +42,7 @@ object Utils {
             return
         }
 
-        val prefsEditor = PreferenceManager.getDefaultSharedPreferences(context).edit()
+        val prefsEditor = context.defaultSharedPreferences.edit()
 
         for ((key, value) in entries) {
             when (value) {
@@ -54,7 +55,7 @@ object Utils {
         }
         prefsEditor.apply()
 
-        //Delete any old settingsPrefix
+        // Delete any old settings
         prefsLegacy.edit()
                 .clear()
                 .apply()
@@ -163,22 +164,21 @@ object Utils {
      * If you can give a better description of what went wrong
      * use [.log] instead.
      *
-     * @param e Exception (source for message and stack trace)
+     * @param t the source of message and stack trace
      */
     @JvmStatic
-    fun log(e: Throwable) {
+    fun log(t: Throwable) {
         try {
             StringWriter().use { sw ->
-                e.printStackTrace(PrintWriter(sw))
+                t.printStackTrace(PrintWriter(sw))
                 val s = Thread.currentThread()
                         .stackTrace[3].className
                         .replace(LOGGING_REGEX.toRegex(), "")
-                Log.e(s, "$e\n$sw")
+                Log.e(s, "$t\n$sw")
             }
-        } catch (e1: IOException) {
+        } catch (ignore: IOException) {
             // there is a time to stop logging errors
         }
-
     }
 
     /**
@@ -375,7 +375,7 @@ object Utils {
      * @return Formatted meters. e.g. 10m, 12.5km
      */
     @JvmStatic
-    fun formatDist(meters: Float): String {
+    fun formatDistance(meters: Float): String {
         return when {
             meters < 1000 -> "${meters.toInt()}m"
             meters < 10000 -> {
@@ -424,7 +424,8 @@ object Utils {
 
     @JvmStatic
     fun isBackgroundServicePermitted(context: Context): Boolean {
-        return isBackgroundServiceEnabled(context) && (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context))
+        return isBackgroundServiceEnabled(context)
+                && (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context))
     }
 
     private fun isBackgroundServiceEnabled(context: Context): Boolean {
