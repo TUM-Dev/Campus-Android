@@ -37,14 +37,9 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private fun openOptionsPopup(anchorView: View) {
         val card = currentCard ?: return
-        val menuId = if (card.hasSettings) {
-            R.menu.card_popup_menu
-        } else {
-            R.menu.card_popup_menu_no_settings
-        }
 
         PopupMenu(context, anchorView, Gravity.END).apply {
-            menuInflater.inflate(menuId, menu)
+            menuInflater.inflate(card.optionsMenuResId, menu)
             setOnMenuItemClickListener { onOptionSelected(it) }
             show()
         }

@@ -43,8 +43,8 @@ public class NewsCard extends Card {
     }
 
     @Override
-    public boolean getHasSettings() {
-        return true;
+    public int getOptionsMenuResId() {
+        return R.menu.card_popup_menu_no_settings;
     }
 
     @Override

@@ -86,7 +86,7 @@ public class EduroamFixCard extends Card {
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         //Check if wifi is turned on at all, as we cannot say if it was configured if its off
         WifiManager wifi = (WifiManager) getContext().getApplicationContext()
                                                      .getSystemService(Context.WIFI_SERVICE);
@@ -98,7 +98,7 @@ public class EduroamFixCard extends Card {
     }
 
     @Override
-    protected void discard(SharedPreferences.Editor editor) {
+    protected void discard(@NonNull SharedPreferences.Editor editor) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit()
              .putBoolean("card_eduroam_fix_start", false)
