@@ -15,7 +15,8 @@ object NetUtils {
     }
 
     private inline fun anyConnectedNetwork(context: Context,
-                                           condition: (NetworkCapabilities) -> Boolean): Boolean {
+                                           condition: (NetworkCapabilities) -> Boolean = { true })
+            : Boolean {
         val connectivityMgr = context.connectivityManager
 
         return connectivityMgr.allNetworks.asSequence().filter {
@@ -23,7 +24,7 @@ object NetUtils {
         }.mapNotNull {
             connectivityMgr.getNetworkCapabilities(it)
         }.any {
-            condition(it)
+            it.hasConnectivity() && condition(it)
         }
     }
 
@@ -34,7 +35,7 @@ object NetUtils {
      */
     @JvmStatic
     fun isConnected(context: Context): Boolean {
-        return anyConnectedNetwork(context) { it.hasConnectivity() }
+        return anyConnectedNetwork(context)
     }
 
     /**
@@ -45,8 +46,6 @@ object NetUtils {
      */
     @JvmStatic
     fun isConnectedWifi(context: Context): Boolean {
-        return anyConnectedNetwork(context) {
-            it.hasConnectivity() && it.hasCapability(NET_CAPABILITY_NOT_METERED)
-        }
+        return anyConnectedNetwork(context) { it.hasCapability(NET_CAPABILITY_NOT_METERED) }
     }
 }
