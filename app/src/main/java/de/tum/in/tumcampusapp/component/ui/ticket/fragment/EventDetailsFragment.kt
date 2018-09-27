@@ -154,8 +154,9 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun buyTicket(event: Event) {
-        val lrzId = Utils.getSetting(context, Const.LRZ_ID, "")
-        val chatRoomName = Utils.getSetting(context, Const.CHAT_ROOM_DISPLAY_NAME, "")
+        val c = context ?: return
+        val lrzId = Utils.getSetting(c, Const.LRZ_ID, "")
+        val chatRoomName = Utils.getSetting(c, Const.CHAT_ROOM_DISPLAY_NAME, "")
         val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)
 
         if (!isLoggedIn || lrzId.isEmpty() || chatRoomName.isEmpty()) {
@@ -219,7 +220,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun displayAddToCalendarDialog() {
-        val context = context ?: return
+        val context = requireContext()
 
         val calendars = arrayOf(
                 getString(R.string.external_calendar),

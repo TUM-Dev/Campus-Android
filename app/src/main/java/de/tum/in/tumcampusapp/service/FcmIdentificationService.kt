@@ -15,10 +15,10 @@ import retrofit2.Response
 import java.io.IOException
 import java.util.*
 
-class FcmIdentificationService(val context: Context? = null) : FirebaseInstanceIdService() {
+class FcmIdentificationService(val context: Context) : FirebaseInstanceIdService() {
 
     private val currentToken: String
-        get() = Utils.getSetting(this.context, Const.FCM_TOKEN_ID, "")
+        get() = Utils.getSetting(context, Const.FCM_TOKEN_ID, "")
 
     /**
      * Registers this phone with InstanceID and returns a valid token to be transmitted to the server
@@ -30,13 +30,13 @@ class FcmIdentificationService(val context: Context? = null) : FirebaseInstanceI
         val instanceID = FirebaseInstanceId.getInstance()
         val token = instanceID.token
         Utils.setSetting(context, Const.FCM_INSTANCE_ID, instanceID.id)
-        Utils.setSetting(context, Const.FCM_TOKEN_ID, token)
+        Utils.setSetting(context, Const.FCM_TOKEN_ID, token ?: "")
         return token
     }
 
     override fun onTokenRefresh() {
         val refreshedToken = FirebaseInstanceId.getInstance().token
-        Utils.setSetting(this, Const.FCM_TOKEN_ID, refreshedToken)
+        Utils.setSetting(this, Const.FCM_TOKEN_ID, refreshedToken ?: "")
     }
 
     fun checkSetup() {
@@ -90,10 +90,6 @@ class FcmIdentificationService(val context: Context? = null) : FirebaseInstanceI
         //Check if all parameters are present
         if (token == null || token.isEmpty()) {
             Utils.logv("Parameter missing for sending reg id")
-            return
-        }
-
-        if (context == null) {
             return
         }
 

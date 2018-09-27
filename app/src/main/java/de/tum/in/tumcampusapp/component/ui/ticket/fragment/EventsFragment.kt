@@ -37,8 +37,9 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
 
         override fun onFailure(call: Call<List<Event>>, t: Throwable) {
+            val c = requireContext()
             Utils.log(t)
-            Utils.showToast(context, R.string.error_something_wrong)
+            Utils.showToast(c, R.string.error_something_wrong)
             eventsRefreshLayout.isRefreshing = false
         }
     }
@@ -51,8 +52,9 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
 
         override fun onFailure(call: Call<List<Ticket>>, t: Throwable) {
+            val c = requireContext()
             Utils.log(t)
-            Utils.showToast(context, R.string.error_something_wrong)
+            Utils.showToast(c, R.string.error_something_wrong)
             eventsRefreshLayout.isRefreshing = false
         }
     }
