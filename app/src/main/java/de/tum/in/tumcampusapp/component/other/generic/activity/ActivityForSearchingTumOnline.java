@@ -3,8 +3,9 @@ package de.tum.in.tumcampusapp.component.other.generic.activity;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import java.net.UnknownHostException;
+
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
@@ -71,6 +72,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
                 onDownloadFailure(t);
+                showLoadingEnded();
             }
         });
     }
@@ -92,29 +94,29 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     protected final void onDownloadUnsuccessful(int statusCode) {
         if (statusCode == 503) {
             // The service is unavailable
-            showError(R.string.error_tum_online_unavailable);
+            showErrorSnackbar(R.string.error_tum_online_unavailable);
         } else {
-            showError(R.string.error_unknown);
+            showErrorSnackbar(R.string.error_unknown);
         }
     }
 
     protected final void onDownloadFailure(@NonNull Throwable throwable) {
         Utils.log(throwable);
 
-        if (throwable instanceof NoNetworkConnectionException) {
+        if (throwable instanceof UnknownHostException) {
             showNoInternetLayout();
         } else if (throwable instanceof InactiveTokenException) {
-            showFailedTokenLayout(R.string.error_access_token_inactive);
+            showErrorSnackbar(R.string.error_access_token_inactive);
         } else if (throwable instanceof InvalidTokenException) {
-            showFailedTokenLayout(R.string.error_invalid_access_token);
+            showErrorSnackbar(R.string.error_invalid_access_token);
         } else if (throwable instanceof MissingPermissionException) {
-            showFailedTokenLayout(R.string.error_no_rights_to_access_function);
+            showErrorSnackbar(R.string.error_no_rights_to_access_function);
         } else if (throwable instanceof TokenLimitReachedException) {
-            showFailedTokenLayout(R.string.error_access_token_limit_reached);
+            showErrorSnackbar(R.string.error_access_token_limit_reached);
         } else if (throwable instanceof RequestLimitReachedException) {
-            showFailedTokenLayout(R.string.error_request_limit_reached);
+            showErrorSnackbar(R.string.error_request_limit_reached);
         } else {
-            showError(R.string.error_unknown);
+            showErrorSnackbar(R.string.error_unknown);
         }
     }
 

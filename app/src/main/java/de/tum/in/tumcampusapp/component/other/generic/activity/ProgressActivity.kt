@@ -4,11 +4,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.design.button.MaterialButton
+import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -25,6 +28,10 @@ import de.tum.`in`.tumcampusapp.utils.setTextOrHide
 abstract class ProgressActivity(
         layoutId: Int
 ) : BaseActivity(layoutId), SwipeRefreshLayout.OnRefreshListener {
+
+    private val contentView: ViewGroup by lazy {
+        findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
+    }
 
     protected val swipeRefreshLayout: SwipeRefreshLayout? by lazy {
         findViewById<SwipeRefreshLayout>(R.id.ptr_layout)
@@ -91,6 +98,15 @@ abstract class ProgressActivity(
     protected fun showError(messageResId: Int) {
         runOnUiThread {
             showError(UnknownErrorViewState(messageResId))
+        }
+    }
+
+    protected fun showErrorSnackbar(messageResId: Int) {
+        runOnUiThread {
+            Snackbar.make(contentView, messageResId, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry) { retryRequest() }
+                    .setActionTextColor(Color.WHITE)
+                    .show()
         }
     }
 
