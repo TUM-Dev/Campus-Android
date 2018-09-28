@@ -4,9 +4,8 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Switch
@@ -24,9 +23,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class MVVWidgetConfigureActivity :
-        ActivityForSearching(R.layout.activity_mvv_widget_configure, MVVStationSuggestionProvider.AUTHORITY, 3),
-        AdapterView.OnItemClickListener {
+class MVVWidgetConfigureActivity : ActivityForSearching(
+        R.layout.activity_mvv_widget_configure, MVVStationSuggestionProvider.AUTHORITY, 3) {
 
     private var appWidgetId: Int = 0
     private lateinit var listViewResults: ListView
@@ -44,50 +42,47 @@ class MVVWidgetConfigureActivity :
 
         // Setup cancel button
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_action_cancel)
-
-        // Get appWidgetId from intent
-        val intent = intent
-        val extras = intent.extras
-        if (extras != null) {
-            appWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID)
+        supportActionBar?.let { actionBar ->
+            actionBar.setDisplayHomeAsUpEnabled(true)
+            val closeIcon = ContextCompat.getDrawable(this, R.drawable.ic_action_cancel)
+            val color = ContextCompat.getColor(this, R.color.tum_blue)
+            closeIcon?.setTint(color)
+            actionBar.setHomeAsUpIndicator(closeIcon)
         }
 
-        val tm = TransportController(this)
-        this.widgetDepartures = tm.getWidget(appWidgetId)
+        // Get appWidgetId from intent
+        appWidgetId = intent.extras.getInt(
+                AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+
+        val controller = TransportController(this)
+        widgetDepartures = controller.getWidget(appWidgetId)
 
         val autoReloadSwitch = findViewById<Switch>(R.id.mvv_widget_auto_reload)
-        autoReloadSwitch.isChecked = this.widgetDepartures.autoReload
+        autoReloadSwitch.isChecked = widgetDepartures.autoReload
         autoReloadSwitch.setOnCheckedChangeListener { _, checked ->
             widgetDepartures.autoReload = checked
         }
         // TODO add handling for use location
 
         listViewResults = findViewById(R.id.activity_transport_listview_result)
-        listViewResults.onItemClickListener = this
+        listViewResults.setOnItemClickListener { adapterView, _, position, id ->
+            val (station, stationId) = adapterView.adapter.getItem(position) as StationResult
+            widgetDepartures.station = station
+            widgetDepartures.stationId = stationId
+            saveAndReturn()
+        }
 
         // Initialize stations adapter
-        val recentStations = recentsDao.getAll(RecentsDao.STATIONS) ?: emptyList()
-        adapterStations = ArrayAdapter(this, android.R.layout.simple_list_item_1,
-                TransportController.getRecentStations(recentStations))
+        val recentQueries = recentsDao.getAll(RecentsDao.STATIONS) ?: emptyList()
+        val stations = TransportController.getRecentStations(recentQueries)
+        adapterStations = ArrayAdapter(this, android.R.layout.simple_list_item_1, stations)
 
-        if (adapterStations.count == 0) {
+        if (adapterStations.isEmpty) {
             openSearch()
             return
         }
-        listViewResults.adapter = adapterStations
-    }
 
-    /**
-     * Click on station in list
-     */
-    override fun onItemClick(av: AdapterView<*>, v: View, position: Int, id: Long) {
-        val (station, stationId) = av.adapter.getItem(position) as StationResult
-        widgetDepartures.station = station
-        widgetDepartures.stationId = stationId
-        saveAndReturn()
+        listViewResults.adapter = adapterStations
     }
 
     override fun onStartSearch() {
