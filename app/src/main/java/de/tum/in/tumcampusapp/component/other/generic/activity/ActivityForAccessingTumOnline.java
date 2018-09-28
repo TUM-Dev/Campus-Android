@@ -94,13 +94,9 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
     protected final void onDownloadUnsuccessful(int statusCode) {
         if (statusCode == 503) {
             // The service is unavailable
-            showErrorSnackbar(R.string.error_tum_online_unavailable);
+            showError(R.string.error_tum_online_unavailable);
         } else {
-            if (hadSuccessfulRequest) {
-                showErrorSnackbar(R.string.error_unknown);
-            } else {
-                showError(R.string.error_unknown);
-            }
+            showErrorSnackbar(R.string.error_unknown);
         }
     }
 
