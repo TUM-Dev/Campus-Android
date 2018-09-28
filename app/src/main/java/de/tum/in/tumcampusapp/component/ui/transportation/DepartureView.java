@@ -91,26 +91,25 @@ public class DepartureView extends LinearLayout {
      *
      * @param symbol Symbol e.g. U6, S1, T14
      */
-    @SuppressWarnings("deprecation")
     public void setSymbol(String symbol, boolean highlight) {
-        MVVSymbolView d = new MVVSymbolView(symbol);
-        mSymbolView.setTextColor(d.getTextColor());
+        MVVSymbol mvvSymbol = new MVVSymbol(symbol);
+        mSymbolView.setTextColor(mvvSymbol.getTextColor());
         mSymbolView.setText(symbol);
-        mSymbolView.setBackgroundTintList(ColorStateList.valueOf(d.getBackgroundColor()));
+        mSymbolView.setBackgroundTintList(ColorStateList.valueOf(mvvSymbol.getBackgroundColor()));
 
         if (highlight) {
             if (big) {
-                setBackgroundColor(d.getBackgroundColor());
+                setBackgroundColor(mvvSymbol.getBackgroundColor());
                 mLineView.setTextColor(Color.WHITE);
                 for (int i = 0; i < mTimeSwitcher.getChildCount(); i++) {
                     TextView tw = (TextView) mTimeSwitcher.getChildAt(i);
                     tw.setTextColor(Color.WHITE);
                 }
             } else {
-                setBackgroundColor(0x20ffffff & d.getBackgroundColor());
+                setBackgroundColor(0x20ffffff & mvvSymbol.getBackgroundColor());
             }
         } else {
-            setBackgroundColor(d.getTextColor());
+            setBackgroundColor(mvvSymbol.getTextColor());
             mLineView.setTextColor(Color.BLACK);
 
             for (int i = 0; i < mTimeSwitcher.getChildCount(); i++) {
