@@ -3,15 +3,8 @@ package de.tum.in.tumcampusapp.component.other.generic.activity;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import java.net.UnknownHostException;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
-import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -102,7 +95,9 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
 
     protected final void onDownloadFailure(@NonNull Throwable throwable) {
         Utils.log(throwable);
+        showErrorLayout(throwable);
 
+        /*
         if (throwable instanceof UnknownHostException) {
             showNoInternetLayout();
         } else if (throwable instanceof InactiveTokenException) {
@@ -118,6 +113,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
         } else {
             showErrorSnackbar(R.string.error_unknown);
         }
+        */
     }
 
 }

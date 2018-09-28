@@ -4,15 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import java.net.UnknownHostException;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
-import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,6 +19,7 @@ import retrofit2.Response;
 public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity {
 
     protected TUMOnlineClient apiClient;
+    private boolean hadSuccessfulRequest;
 
     /**
      * Standard constructor for ActivityForAccessingTumOnline.
@@ -66,6 +60,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
             public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
+                    hadSuccessfulRequest = true;
                     onDownloadSuccessful(body);
                 } else if (response.isSuccessful()) {
                     onEmptyDownloadResponse();
@@ -101,7 +96,11 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
             // The service is unavailable
             showErrorSnackbar(R.string.error_tum_online_unavailable);
         } else {
-            showErrorSnackbar(R.string.error_unknown);
+            if (hadSuccessfulRequest) {
+                showErrorSnackbar(R.string.error_unknown);
+            } else {
+                showError(R.string.error_unknown);
+            }
         }
     }
 
@@ -112,6 +111,13 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
     protected final void onDownloadFailure(@NonNull Throwable throwable) {
         Utils.log(throwable);
 
+        if (hadSuccessfulRequest) {
+            showErrorSnackbar(throwable);
+        } else {
+            showErrorLayout(throwable);
+        }
+
+        /*
         if (throwable instanceof UnknownHostException) {
             showErrorSnackbar(R.string.no_internet_connection);
             //showNoInternetLayout();
@@ -134,6 +140,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
             showErrorSnackbar(R.string.error_unknown);
             //showError(R.string.error_unknown);
         }
+        */
     }
 
 }

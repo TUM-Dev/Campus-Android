@@ -21,10 +21,10 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.net.UnknownHostException;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
@@ -253,7 +253,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private void displayErrorMessage(Throwable t) {
         int messageResId;
 
-        if (t instanceof NoNetworkConnectionException) {
+        if (t instanceof UnknownHostException) {
             messageResId = R.string.error_no_internet_connection;
         } else if (t instanceof RequestLimitReachedException) {
             messageResId = R.string.error_request_limit_reached;

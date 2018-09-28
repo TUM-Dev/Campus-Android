@@ -75,8 +75,6 @@ public final class Helper {
             builder.addInterceptor(new ChaosMonkeyInterceptor());
         }
 
-        builder.addNetworkInterceptor(new ConnectivityInterceptor(c));
-
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
 

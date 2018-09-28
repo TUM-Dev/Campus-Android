@@ -43,7 +43,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
-        StudyRoomGroupManager manager = new StudyRoomGroupManager(getContext());
+        StudyRoomGroupManager manager = new StudyRoomGroupManager(requireContext());
 
         List<StudyRoom> studyRooms = manager.getAllStudyRoomsForGroup(mStudyRoomGroupId);
         StudyRoomAdapter adapter = new StudyRoomAdapter(studyRooms);

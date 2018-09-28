@@ -46,7 +46,7 @@ class TuitionFeesActivity : ActivityForAccessingTumOnline<TuitionList>(R.layout.
     }
 
     override fun onDownloadSuccessful(response: TuitionList) {
-        val tuition = response.tuitions[0]
+        val tuition = response.tuitions.first()
 
         val amountText = tuition.getAmountText(this)
         amountTextView.text = amountText
@@ -70,4 +70,5 @@ class TuitionFeesActivity : ActivityForAccessingTumOnline<TuitionList>(R.layout.
             }
         }
     }
+
 }
