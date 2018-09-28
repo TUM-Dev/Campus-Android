@@ -72,8 +72,8 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-                onDownloadFailure(t);
                 showLoadingEnded();
+                onDownloadFailure(t);
             }
         });
     }
