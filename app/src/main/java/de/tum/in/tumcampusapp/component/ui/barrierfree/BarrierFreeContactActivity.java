@@ -16,8 +16,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<Void, List<BarrierfreeContact>> {
 
     public StickyListHeadersListView listview;
-    private List<BarrierfreeContact> contacts;
-    private BarrierfreeContactAdapter adapter;
 
     public BarrierFreeContactActivity() {
         super(R.layout.activity_barrier_free_list_info);
@@ -51,8 +49,8 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
             showErrorLayout();
             return;
         }
-        contacts = result;
-        adapter = new BarrierfreeContactAdapter(this, contacts);
+
+        BarrierfreeContactAdapter adapter = new BarrierfreeContactAdapter(this, result);
         listview.setAdapter(adapter);
     }
 }
