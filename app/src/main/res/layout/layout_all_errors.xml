@@ -2,7 +2,7 @@
     android:id="@+id/errors_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <include
         layout="@layout/layout_progress"
@@ -14,6 +14,6 @@
         layout="@layout/layout_error"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </FrameLayout>
