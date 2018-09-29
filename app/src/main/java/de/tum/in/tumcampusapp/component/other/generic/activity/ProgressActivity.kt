@@ -89,10 +89,6 @@ abstract class ProgressActivity(
                     R.color.tum_A200
             )
         }
-
-        if (NetUtils.isConnected(this).not()) {
-            showErrorSnackbar(R.string.error_no_internet_connection)
-        }
     }
 
     /**
