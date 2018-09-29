@@ -112,31 +112,6 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
         } else {
             showErrorLayout(throwable);
         }
-
-        /*
-        if (throwable instanceof UnknownHostException) {
-            showErrorSnackbar(R.string.no_internet_connection);
-            //showNoInternetLayout();
-        } else if (throwable instanceof InactiveTokenException) {
-            showFailedTokenLayout(R.string.error_access_token_inactive);
-            //showFailedTokenLayout(R.string.error_access_token_inactive);
-        } else if (throwable instanceof InvalidTokenException) {
-            showErrorSnackbar(R.string.error_invalid_access_token);
-            //showFailedTokenLayout(R.string.error_invalid_access_token);
-        } else if (throwable instanceof MissingPermissionException) {
-            showErrorSnackbar(R.string.error_no_rights_to_access_function);
-            //showFailedTokenLayout(R.string.error_no_rights_to_access_function);
-        } else if (throwable instanceof TokenLimitReachedException) {
-            showErrorSnackbar(R.string.error_access_token_limit_reached);
-            //showFailedTokenLayout(R.string.error_access_token_limit_reached);
-        } else if (throwable instanceof RequestLimitReachedException) {
-            showErrorSnackbar(R.string.error_request_limit_reached);
-            //showError(R.string.error_request_limit_reached);
-        } else {
-            showErrorSnackbar(R.string.error_unknown);
-            //showError(R.string.error_unknown);
-        }
-        */
     }
 
 }

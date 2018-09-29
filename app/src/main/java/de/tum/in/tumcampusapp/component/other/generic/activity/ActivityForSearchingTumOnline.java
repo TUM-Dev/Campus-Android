@@ -96,24 +96,6 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     protected final void onDownloadFailure(@NonNull Throwable throwable) {
         Utils.log(throwable);
         showErrorLayout(throwable);
-
-        /*
-        if (throwable instanceof UnknownHostException) {
-            showNoInternetLayout();
-        } else if (throwable instanceof InactiveTokenException) {
-            showErrorSnackbar(R.string.error_access_token_inactive);
-        } else if (throwable instanceof InvalidTokenException) {
-            showErrorSnackbar(R.string.error_invalid_access_token);
-        } else if (throwable instanceof MissingPermissionException) {
-            showErrorSnackbar(R.string.error_no_rights_to_access_function);
-        } else if (throwable instanceof TokenLimitReachedException) {
-            showErrorSnackbar(R.string.error_access_token_limit_reached);
-        } else if (throwable instanceof RequestLimitReachedException) {
-            showErrorSnackbar(R.string.error_request_limit_reached);
-        } else {
-            showErrorSnackbar(R.string.error_unknown);
-        }
-        */
     }
 
 }
