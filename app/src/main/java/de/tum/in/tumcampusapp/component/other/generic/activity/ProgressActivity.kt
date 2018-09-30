@@ -4,20 +4,25 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.design.button.MaterialButton
+import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.*
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.*
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
+import java.net.UnknownHostException
 
 /**
  * Generic class which handles can handle a long running background task
@@ -25,6 +30,10 @@ import de.tum.`in`.tumcampusapp.utils.setTextOrHide
 abstract class ProgressActivity(
         layoutId: Int
 ) : BaseActivity(layoutId), SwipeRefreshLayout.OnRefreshListener {
+
+    private val contentView: ViewGroup by lazy {
+        findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
+    }
 
     protected val swipeRefreshLayout: SwipeRefreshLayout? by lazy {
         findViewById<SwipeRefreshLayout>(R.id.ptr_layout)
@@ -91,6 +100,41 @@ abstract class ProgressActivity(
     protected fun showError(messageResId: Int) {
         runOnUiThread {
             showError(UnknownErrorViewState(messageResId))
+        }
+    }
+
+    protected fun showErrorSnackbar(t: Throwable) {
+        val messageResId = when (t) {
+            is UnknownHostException -> R.string.no_internet_connection
+            is InactiveTokenException -> R.string.error_access_token_inactive
+            is InvalidTokenException -> R.string.error_invalid_access_token
+            is MissingPermissionException -> R.string.error_no_rights_to_access_function
+            is TokenLimitReachedException -> R.string.error_access_token_limit_reached
+            is RequestLimitReachedException -> R.string.error_request_limit_reached
+            else -> R.string.error_unknown
+        }
+
+        showErrorSnackbar(messageResId)
+    }
+
+    protected fun showErrorSnackbar(messageResId: Int) {
+        runOnUiThread {
+            Snackbar.make(contentView, messageResId, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry) { retryRequest() }
+                    .setActionTextColor(Color.WHITE)
+                    .show()
+        }
+    }
+
+    protected fun showErrorLayout(throwable: Throwable) {
+        when (throwable) {
+            is UnknownHostException -> showNoInternetLayout()
+            is InactiveTokenException -> showFailedTokenLayout(R.string.error_access_token_inactive)
+            is InvalidTokenException -> showFailedTokenLayout(R.string.error_invalid_access_token)
+            is MissingPermissionException -> showFailedTokenLayout(R.string.error_no_rights_to_access_function)
+            is TokenLimitReachedException -> showFailedTokenLayout(R.string.error_access_token_limit_reached)
+            is RequestLimitReachedException -> showError(R.string.error_request_limit_reached)
+            else -> showError(R.string.error_unknown)
         }
     }
 

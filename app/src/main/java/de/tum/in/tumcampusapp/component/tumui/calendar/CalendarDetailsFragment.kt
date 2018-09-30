@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.app.exception.NoNetworkConnectionException
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
@@ -24,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_calendar_details.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.UnknownHostException
 
 class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
@@ -113,7 +113,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun handleDeleteEventError(t: Throwable) {
         val c = requireContext()
         val messageResId = when (t) {
-            is NoNetworkConnectionException -> R.string.error_no_internet_connection
+            is UnknownHostException -> R.string.error_no_internet_connection
             is RequestLimitReachedException -> R.string.error_request_limit_reached
             else -> R.string.error_unknown
         }

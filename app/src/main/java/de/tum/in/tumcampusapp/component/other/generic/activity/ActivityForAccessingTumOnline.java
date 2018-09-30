@@ -5,13 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
-import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +19,7 @@ import retrofit2.Response;
 public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity {
 
     protected TUMOnlineClient apiClient;
+    private boolean hadSuccessfulRequest;
 
     /**
      * Standard constructor for ActivityForAccessingTumOnline.
@@ -65,8 +60,9 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
             public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
+                    hadSuccessfulRequest = true;
                     onDownloadSuccessful(body);
-                } else if (response.isSuccessful() && body == null) {
+                } else if (response.isSuccessful()) {
                     onEmptyDownloadResponse();
                 } else {
                     onDownloadUnsuccessful(response.code());
@@ -76,6 +72,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                showLoadingEnded();
                 onDownloadFailure(t);
             }
         });
@@ -99,7 +96,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
             // The service is unavailable
             showError(R.string.error_tum_online_unavailable);
         } else {
-            showError(R.string.error_unknown);
+            showErrorSnackbar(R.string.error_unknown);
         }
     }
 
@@ -110,20 +107,10 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
     protected final void onDownloadFailure(@NonNull Throwable throwable) {
         Utils.log(throwable);
 
-        if (throwable instanceof NoNetworkConnectionException) {
-            showNoInternetLayout();
-        } else if (throwable instanceof InactiveTokenException) {
-            showFailedTokenLayout(R.string.error_access_token_inactive);
-        } else if (throwable instanceof InvalidTokenException) {
-            showFailedTokenLayout(R.string.error_invalid_access_token);
-        } else if (throwable instanceof MissingPermissionException) {
-            showFailedTokenLayout(R.string.error_no_rights_to_access_function);
-        } else if (throwable instanceof TokenLimitReachedException) {
-            showFailedTokenLayout(R.string.error_access_token_limit_reached);
-        } else if (throwable instanceof RequestLimitReachedException) {
-            showError(R.string.error_request_limit_reached);
+        if (hadSuccessfulRequest) {
+            showErrorSnackbar(throwable);
         } else {
-            showError(R.string.error_unknown);
+            showErrorLayout(throwable);
         }
     }
 

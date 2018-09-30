@@ -103,7 +103,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         mWeekView.setScrollListener((newFirstVisibleDay, oldFirstVisibleDay) -> {
             LocalDate visibleDay = new LocalDate(newFirstVisibleDay);
             LocalDate today = LocalDate.now();
-            boolean isToday = visibleDay.equals(today);
+            boolean isToday = visibleDay.isEqual(today);
+
             mTodayButton.setVisibility(isToday ? View.GONE : View.VISIBLE);
             TransitionManager.beginDelayedTransition(getSwipeRefreshLayout());
         });
@@ -248,7 +249,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int i = item.getItemId();
         switch (i) {
             case R.id.action_switch_view_mode:

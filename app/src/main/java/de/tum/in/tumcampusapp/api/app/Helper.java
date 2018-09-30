@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 
-import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
@@ -22,13 +21,14 @@ import java.util.concurrent.TimeUnit;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.utils.Utils;
 import okhttp3.CertificatePinner;
+import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-import static de.tum.in.tumcampusapp.utils.Const.STUDY_ROOMS_HOSTNAME;
 import static de.tum.in.tumcampusapp.utils.Const.API_HOSTNAME;
 import static de.tum.in.tumcampusapp.utils.Const.API_HOSTNAME_NEW;
+import static de.tum.in.tumcampusapp.utils.Const.STUDY_ROOMS_HOSTNAME;
 
 public final class Helper {
     private static final String TAG = "TUM_API_CALL";
@@ -61,7 +61,7 @@ public final class Helper {
                 .build();
 
         //We want to persist our cookies through app session
-        ClearableCookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(c));
+        CookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(c));
 
         //Start building the http client
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
@@ -74,8 +74,6 @@ public final class Helper {
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(new ChaosMonkeyInterceptor());
         }
-
-        builder.addInterceptor(new ConnectivityInterceptor(c));
 
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);

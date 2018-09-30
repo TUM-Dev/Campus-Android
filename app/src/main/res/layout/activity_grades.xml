@@ -36,8 +36,8 @@
 
         <include
             layout="@layout/layout_all_errors"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <FrameLayout
             android:id="@+id/contentContainer"
