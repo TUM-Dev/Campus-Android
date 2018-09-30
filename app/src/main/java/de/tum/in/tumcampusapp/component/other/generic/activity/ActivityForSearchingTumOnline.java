@@ -87,9 +87,9 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     protected final void onDownloadUnsuccessful(int statusCode) {
         if (statusCode == 503) {
             // The service is unavailable
-            showErrorSnackbar(R.string.error_tum_online_unavailable);
+            showError(R.string.error_tum_online_unavailable);
         } else {
-            showErrorSnackbar(R.string.error_unknown);
+            showError(R.string.error_unknown);
         }
     }
 
