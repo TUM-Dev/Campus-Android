@@ -1,11 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Color
-import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
+import android.net.Network
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.support.design.button.MaterialButton
 import android.support.design.widget.Snackbar
@@ -22,6 +20,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.*
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
+import org.jetbrains.anko.connectivityManager
 import java.net.UnknownHostException
 
 /**
@@ -69,11 +68,9 @@ abstract class ProgressActivity(
 
     private var registered: Boolean = false
 
-    private val connectivityChangeReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (NetUtils.isConnected(context)) {
-                onRefresh()
-            }
+    private val networkCallback: NetworkCallback = object : NetworkCallback() {
+        override fun onAvailable(network: Network?) {
+            onRefresh()
         }
     }
 
@@ -149,8 +146,10 @@ abstract class ProgressActivity(
             showError(NoInternetViewState())
         }
 
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(connectivityChangeReceiver, filter)
+        val request = NetworkRequest.Builder()
+                .addCapability(NetUtils.internetCapability)
+                .build()
+        connectivityManager.requestNetwork(request, networkCallback)
         registered = true
     }
 
@@ -186,7 +185,7 @@ abstract class ProgressActivity(
      */
     protected fun showLoadingStart() {
         if (registered) {
-            unregisterReceiver(connectivityChangeReceiver)
+            connectivityManager.unregisterNetworkCallback(networkCallback)
             registered = false
         }
 
@@ -242,7 +241,7 @@ abstract class ProgressActivity(
     override fun onDestroy() {
         super.onDestroy()
         if (registered) {
-            unregisterReceiver(connectivityChangeReceiver)
+            connectivityManager.unregisterNetworkCallback(networkCallback)
             registered = false
         }
     }
