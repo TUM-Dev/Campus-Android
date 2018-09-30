@@ -17,7 +17,7 @@ import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.*
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.*
-import de.tum.`in`.tumcampusapp.utils.NetUtils
+import de.tum.`in`.tumcampusapp.utils.NetUtils.internetCapability
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
 import org.jetbrains.anko.connectivityManager
@@ -70,7 +70,7 @@ abstract class ProgressActivity(
 
     private val networkCallback: NetworkCallback = object : NetworkCallback() {
         override fun onAvailable(network: Network?) {
-            onRefresh()
+            runOnUiThread(this@ProgressActivity::onRefresh)
         }
     }
 
@@ -147,9 +147,9 @@ abstract class ProgressActivity(
         }
 
         val request = NetworkRequest.Builder()
-                .addCapability(NetUtils.internetCapability)
+                .addCapability(internetCapability)
                 .build()
-        connectivityManager.requestNetwork(request, networkCallback)
+        connectivityManager.registerNetworkCallback(request, networkCallback)
         registered = true
     }
 

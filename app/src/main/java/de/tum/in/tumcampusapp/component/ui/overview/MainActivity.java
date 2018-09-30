@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity
     final NetworkCallback networkCallback = new NetworkCallback() {
         @Override
         public void onAvailable(Network network) {
-            refreshCards();
+            runOnUiThread(MainActivity.this::refreshCards);
         }
     };
 
@@ -114,9 +114,9 @@ public class MainActivity extends BaseActivity
 
         if (!NetUtils.isConnected(this) && !mIsConnectivityChangeReceiverRegistered) {
             NetworkRequest request = new NetworkRequest.Builder()
-                    .addTransportType(NetUtils.getInternetCapability())
+                    .addCapability(NetUtils.getInternetCapability())
                     .build();
-            connectivityManager.requestNetwork(request, networkCallback);
+            connectivityManager.registerNetworkCallback(request, networkCallback);
             mIsConnectivityChangeReceiverRegistered = true;
         }
     }
