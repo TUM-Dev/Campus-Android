@@ -50,9 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             android:layout_toStartOf="@id/mvv_widget_auto_reload"
-            android:layout_toLeftOf="@+id/mvv_widget_auto_reload"
             android:text="@string/mvv_widget_auto_reload"
             android:textSize="17sp" />
 
@@ -61,9 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/mvv_widget_auto_reload_label"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             android:layout_toStartOf="@id/mvv_widget_auto_reload"
-            android:layout_toLeftOf="@+id/mvv_widget_auto_reload"
             android:text="@string/mvv_widget_auto_reload_hint"
             android:textSize="12sp" />
 
@@ -72,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true" />
+
     </RelativeLayout>
 
 </RelativeLayout>

@@ -76,8 +76,10 @@ public abstract class ActivityForSearching extends ProgressActivity {
         searchView = (SearchView) searchItem.getActionView();
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
-        searchView.setSearchableInfo(info);
+        if (searchManager != null) {
+            SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
+            searchView.setSearchableInfo(info);
+        }
 
         // If activity gets called via Intent with a search query set SearchView accordingly
         if (query != null) {
@@ -99,8 +101,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
             }
 
             private String getSuggestion(int position) {
-                Cursor cursor = (Cursor) searchView.getSuggestionsAdapter()
-                                                    .getItem(position);
+                Cursor cursor = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
                 return cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
             }
         });

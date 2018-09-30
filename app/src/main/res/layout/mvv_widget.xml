@@ -24,7 +24,7 @@
             android:fontFamily="sans-serif-medium"
             android:lines="1"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
             tools:text="Station" />
 
         <ImageButton
