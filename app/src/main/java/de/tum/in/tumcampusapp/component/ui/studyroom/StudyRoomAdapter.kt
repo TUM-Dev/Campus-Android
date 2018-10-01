@@ -26,15 +26,15 @@ class StudyRoomAdapter(private val fragment: Fragment, private val studyRooms: L
         holder.apply {
             openRoomFinderButton.setText(R.string.go_to_room)
             openRoomFinderButton.tag = code
-            headerTextView.text = "$code - $name"
-            val detailsText = StringBuilder(buildingName)
+            headerTextView.text = code
             val isOccupied = occupiedUntil != null && !occupiedUntil.isBeforeNow
+
+            val detailsText = StringBuilder("$name<br>$buildingName")
             if (isOccupied) {
-                detailsText.append("<br>${fragment.getString(R.string.occupied)} <b>")
-                        .append(DateTimeFormat.forPattern("HH:mm")
-                                .withLocale(Locale.getDefault())
-                                .print(occupiedUntil))
-                        .append("</b>")
+                val time = DateTimeFormat.forPattern("HH:mm")
+                        .withLocale(Locale.getDefault())
+                        .print(occupiedUntil)
+                detailsText.append("<br>${fragment.getString(R.string.occupied)} <b>$time</b>")
             }
 
             detailsTextView.text = Utils.fromHtml(detailsText.toString())
