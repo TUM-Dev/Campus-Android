@@ -39,7 +39,7 @@ public class NewsCard extends Card {
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent, int viewType) {
         mNewsInflater = new NewsInflater(parent.getContext());
-        return mNewsInflater.onCreateNewsView(parent, viewType);
+        return mNewsInflater.onCreateNewsView(parent, viewType, true);
     }
 
     @Override

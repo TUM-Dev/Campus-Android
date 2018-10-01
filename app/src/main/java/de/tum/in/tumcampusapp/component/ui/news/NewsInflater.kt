@@ -12,9 +12,10 @@ class NewsInflater(context: Context) {
         TcaDb.getInstance(context).newsSourcesDao()
     }
 
-    fun onCreateNewsView(parent: ViewGroup, layoutId: Int): NewsViewHolder {
+    fun onCreateNewsView(parent: ViewGroup,
+                         layoutId: Int, showOptionsButton: Boolean = true): NewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-        return NewsViewHolder(view)
+        return NewsViewHolder(view, showOptionsButton)
     }
 
     fun onBindNewsView(viewHolder: NewsViewHolder, newsItem: News) {
