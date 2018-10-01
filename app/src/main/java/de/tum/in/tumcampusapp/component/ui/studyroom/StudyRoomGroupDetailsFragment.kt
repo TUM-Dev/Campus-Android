@@ -2,13 +2,13 @@ package de.tum.`in`.tumcampusapp.component.ui.studyroom
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
+import de.tum.`in`.tumcampusapp.component.other.generic.adapter.GridEqualSpacingDecoration
 import de.tum.`in`.tumcampusapp.utils.Const
 
 /**
@@ -31,12 +31,12 @@ class StudyRoomGroupDetailsFragment : Fragment() {
         val studyRooms = StudyRoomGroupManager(requireContext()).getAllStudyRoomsForGroup(groupId)
 
         rootView.findViewById<RecyclerView>(R.id.fragment_item_detail_recyclerview).apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
+            val spanCount = 2
+            layoutManager = GridLayoutManager(context, spanCount)
             adapter = StudyRoomAdapter(this@StudyRoomGroupDetailsFragment, studyRooms)
 
             val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
-            addItemDecoration(EqualSpacingItemDecoration(spacing))
+            addItemDecoration(GridEqualSpacingDecoration(spacing, spanCount))
         }
 
         return rootView

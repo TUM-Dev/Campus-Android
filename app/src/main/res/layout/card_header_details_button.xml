@@ -6,10 +6,10 @@
     style="@style/StandardCard">
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/material_default_padding"
-        android:minHeight="?android:attr/listPreferredItemHeight">
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:padding="@dimen/material_default_padding">
 
         <TextView
             android:id="@+id/headerTextView"
@@ -20,18 +20,14 @@
             android:textColor="@color/text_dark_primary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread"
             tools:text="Header" />
 
         <TextView
             android:id="@+id/detailsTextView"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="@dimen/material_default_padding"
             android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            app:layout_constraintEnd_toStartOf="@+id/openLinkButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/headerTextView"
             tools:text="Details" />
@@ -46,9 +42,17 @@
             android:textAllCaps="false"
             android:textColor="#006c90"
             app:cornerRadius="@dimen/material_corner_radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/headerTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="@string/roomfinder" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/openLinkButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detailsTextView" />
 
 
     </android.support.constraint.ConstraintLayout>
