@@ -4,7 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.support.constraint.Group
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Callback
@@ -19,8 +22,12 @@ import de.tum.`in`.tumcampusapp.utils.addCompoundDrawablesWithIntrinsicBounds
 import org.joda.time.format.DateTimeFormat
 import java.util.regex.Pattern
 
-class NewsViewHolder(itemView: View) : CardViewHolder(itemView) {
+class NewsViewHolder(
+        itemView: View,
+        private val showOptionsButton: Boolean = true
+) : CardViewHolder(itemView) {
 
+    private val optionsButtonGroup: Group by lazy { itemView.findViewById<Group>(R.id.cardMoreIconGroup) }
     private val imageView: ImageView? by lazy { itemView.findViewById<ImageView>(R.id.news_img) }
     private val titleTextView: TextView? by lazy { itemView.findViewById<TextView>(R.id.news_title) }
     private val dateTextView: TextView by lazy { itemView.findViewById<TextView>(R.id.news_src_date) }
@@ -33,6 +40,8 @@ class NewsViewHolder(itemView: View) : CardViewHolder(itemView) {
 
         val dateFormatter = DateTimeFormat.mediumDate()
         dateTextView.text = dateFormatter.print(newsItem.date)
+
+        optionsButtonGroup.visibility = if (showOptionsButton) VISIBLE else GONE
 
         loadNewsSourceInformation(context, newsSource)
 
@@ -77,7 +86,7 @@ class NewsViewHolder(itemView: View) : CardViewHolder(itemView) {
         }
 
         val showTitle = newsItem.isNewspread.not()
-        titleTextView?.visibility = if (showTitle) View.VISIBLE else View.GONE
+        titleTextView?.visibility = if (showTitle) VISIBLE else View.GONE
 
         if (showTitle) {
             titleTextView?.text = newsItem.title

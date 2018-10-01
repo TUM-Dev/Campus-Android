@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.Group;
 import android.support.design.button.MaterialButton;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
@@ -31,6 +32,9 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
 
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
@@ -50,7 +54,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_events_item, parent, false);
-        return new EventViewHolder(view);
+        return new EventViewHolder(view, false);
     }
 
     @Override
@@ -82,6 +86,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     public static class EventViewHolder extends CardViewHolder {
 
+        private boolean showOptionsButton;
+        Group optionsButtonGroup;
+
         CardView cardView;
         ProgressBar progressBar;
         ImageView imageView;
@@ -90,10 +97,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         TextView dateTextView;
         MaterialButton ticketButton;
 
-        public EventViewHolder(View view) {
+        public EventViewHolder(View view, boolean showOptionsButton) {
             super(view);
+            this.showOptionsButton = showOptionsButton;
+
             cardView = (CardView) view;
             progressBar = view.findViewById(R.id.poster_progress_bar);
+            optionsButtonGroup = view.findViewById(R.id.cardMoreIconGroup);
             imageView = view.findViewById(R.id.events_img);
             titleTextView = view.findViewById(R.id.events_title);
             localityTextView = view.findViewById(R.id.events_src_locality);
@@ -105,24 +115,26 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             String imageUrl = event.getImageUrl();
             boolean showImage = imageUrl != null && !imageUrl.isEmpty();
 
+            optionsButtonGroup.setVisibility(showOptionsButton ? VISIBLE : GONE);
+
             if (showImage) {
                 Picasso.get()
                         .load(imageUrl)
                         .into(imageView, new Callback() {
                             @Override
                             public void onSuccess() {
-                                progressBar.setVisibility(View.GONE);
+                                progressBar.setVisibility(GONE);
                             }
 
                             @Override
                             public void onError(Exception e) {
                                 Utils.log(e);
-                                progressBar.setVisibility(View.GONE);
+                                progressBar.setVisibility(GONE);
                             }
                         });
             } else {
-                progressBar.setVisibility(View.GONE);
-                imageView.setVisibility(View.GONE);
+                progressBar.setVisibility(GONE);
+                imageView.setVisibility(GONE);
             }
 
             String title = event.getTitle();
@@ -136,11 +148,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             dateTextView.setText(startTime);
 
             if (!hasTicket) {
-                ticketButton.setVisibility(View.GONE);
+                ticketButton.setVisibility(GONE);
                 return;
             }
 
-            ticketButton.setVisibility(View.VISIBLE);
+            ticketButton.setVisibility(VISIBLE);
             ticketButton.setOnClickListener(v -> {
                 Context context = itemView.getContext();
                 Intent intent = new Intent(context, ShowTicketActivity.class);

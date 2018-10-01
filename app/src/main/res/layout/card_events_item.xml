@@ -38,6 +38,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <android.support.constraint.Group
+            android:id="@+id/cardMoreIconGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="cardMoreIconBackground,cardMoreIcon" />
+
         <ProgressBar
             android:id="@+id/poster_progress_bar"
             android:layout_width="50dp"
