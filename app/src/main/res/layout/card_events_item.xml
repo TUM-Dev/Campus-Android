@@ -25,6 +25,7 @@
             android:layout_width="@dimen/icon_default"
             android:layout_height="@dimen/icon_default"
             android:layout_margin="@dimen/material_default_padding"
+            android:alpha="0.7"
             android:background="@drawable/circle_background"
             android:backgroundTint="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
