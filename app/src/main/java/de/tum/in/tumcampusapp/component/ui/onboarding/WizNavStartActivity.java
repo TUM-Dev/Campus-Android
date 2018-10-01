@@ -212,16 +212,10 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
         dialog.show();
     }
 
-    /**
-     * Resets the LRZ ID (TUM ID) to null.
-     */
     private void resetLrzId() {
         Utils.setSetting(this, Const.LRZ_ID, "");
     }
 
-    /**
-     * Resets the TUMonline access token to null.
-     */
     private void resetAccessToken() {
         Utils.setSetting(this, Const.ACCESS_TOKEN, "");
     }
