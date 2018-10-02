@@ -16,7 +16,7 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
- * Card that describes how to dismiss a card
+ * Card that describes how to dismiss a cardView
  */
 public class SupportCard extends Card {
 

@@ -80,7 +80,7 @@ public class CardsQuizActivity extends ActivityForLoadingInBackground<Void, List
             //this.setTitle((this.nextCard + 1) + "/" + this.cards.size() + ": " + this.cards.get(this.nextCard)
             //                                                                               .getTitle());
             //this.isShowingAnswer.set(false);
-            //binding.setCard(this.cards.get(this.nextCard));
+            //binding.setCardView(this.cards.get(this.nextCard));
             this.nextCard++;
         }
     }

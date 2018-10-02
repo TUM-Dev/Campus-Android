@@ -17,9 +17,9 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**
  * Base class for all cards
- * @param type Individual integer for each card type
+ * @param type Individual integer for each cardView type
  * @param context Android Context
- * @param settingsPrefix Preference key prefix used for all preferences belonging to that card
+ * @param settingsPrefix Preference key prefix used for all preferences belonging to that cardView
  */
 abstract class Card(
         val cardType: Int,
@@ -28,11 +28,11 @@ abstract class Card(
 ) : Comparable<Card> {
 
     // UI Elements
-    protected var mCard: View? = null
-    protected var mLinearLayout: LinearLayout? = null
-    protected var mTitleView: TextView? = null
+    protected var cardView: View? = null
+    protected var contentLayout: LinearLayout? = null
+    protected var titleView: TextView? = null
 
-    // Settings for showing this card on start page or as notification
+    // Settings for showing this cardView on start page or as notification
     protected var mShowStart = Utils.getSettingBool(context, settingsPrefix + "_start", true)
 
     open fun getId(): Int {
@@ -41,13 +41,13 @@ abstract class Card(
 
     /**
      * Tells the list adapter and indirectly the SwipeDismissList if the item is dismissible.
-     * E.g.: The restore card is not dismissible.
+     * E.g.: The restore cardView is not dismissible.
      */
     open val isDismissible: Boolean
         get() = true
 
     /**
-     * The options menu that should be inflated when the user presses the options icon in a card.
+     * The options menu that should be inflated when the user presses the options icon in a cardView.
      */
     open val optionsMenuResId: Int
         get() = R.menu.card_popup_menu_no_settings
@@ -59,7 +59,7 @@ abstract class Card(
             Utils.setSetting(context, "${this.javaClass.simpleName}${CARD_POSITION_PREFERENCE_SUFFIX}", position)
 
     /**
-     * Returns the [NavigationDestination] when the card is clicked, or null if nothing should happen
+     * Returns the [NavigationDestination] when the cardView is clicked, or null if nothing should happen
      */
     open fun getNavigationDestination(): NavigationDestination? {
         return null
@@ -67,7 +67,7 @@ abstract class Card(
 
     /**
      * Updates the Cards content.
-     * Override this method, if the card contains any dynamic content, that is not already in its XML
+     * Override this method, if the cardView contains any dynamic content, that is not already in its XML
      *
      * @param viewHolder The Card specific view holder
      */
@@ -76,7 +76,7 @@ abstract class Card(
     }
 
     /**
-     * Adds a new text view to the main card layout
+     * Adds a new text view to the main cardView layout
      *
      * @param text Text that should be shown
      * @return Handle to the [TextView]
@@ -84,12 +84,12 @@ abstract class Card(
     protected fun addTextView(text: CharSequence): TextView {
         val textView = TextView(context)
         textView.text = text
-        mLinearLayout!!.addView(textView)
+        contentLayout!!.addView(textView)
         return textView
     }
 
     /**
-     * Should be called after the user has dismissed the card
+     * Should be called after the user has dismissed the cardView
      */
     fun discardCard() {
         val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
@@ -115,17 +115,17 @@ abstract class Card(
     }
 
     /**
-     * Determines if the card should be shown. Decision is based on the given SharedPreferences.
+     * Determines if the cardView should be shown. Decision is based on the given SharedPreferences.
      * This method should be overridden in most cases.
      *
-     * @return returns true if the card should be shown
+     * @return returns true if the cardView should be shown
      */
     protected open fun shouldShow(prefs: SharedPreferences): Boolean {
         return true
     }
 
     /**
-     * Sets preferences so that this card does not show up again until
+     * Sets preferences so that this cardView does not show up again until
      * reactivated manually by the user
      */
     fun hideAlways() {
@@ -141,7 +141,7 @@ abstract class Card(
     }
 
     /**
-     * Save information about the dismissed card/notification to decide later if the card should be shown again
+     * Save information about the dismissed cardView/notification to decide later if the cardView should be shown again
      *
      * @param editor Editor to be used for saving values
      */

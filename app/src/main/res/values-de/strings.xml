@@ -270,7 +270,7 @@
     <string name="closes">Schließt</string>
     <string name="closed">Geschlossen</string>
 
-    <!-- Eduroam card -->
+    <!-- Eduroam cardView -->
     <string name="setup">Einrichten</string>
     <string name="setup_eduroam">Eduroam einrichten</string>
     <string name="setup_eduroam_now">Jetzt Eduroam einrichten</string>

@@ -52,7 +52,7 @@ class ChatMessagesCard(context: Context,
     }
 
     /**
-     * Sets the information needed to build the card
+     * Sets the information needed to build the cardView
      *
      * @param roomName Name of the chat room
      * @param roomId   Id of the chat room

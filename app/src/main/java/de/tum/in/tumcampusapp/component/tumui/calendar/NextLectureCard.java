@@ -1,36 +1,25 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
-import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationManager;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
+import de.tum.in.tumcampusapp.component.tumui.NextLectureCardViewHolder;
+import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 public class NextLectureCard extends Card {
 
@@ -42,7 +31,7 @@ public class NextLectureCard extends Card {
             R.id.lecture_4
     };
     private TextView mLocation;
-    private final List<CalendarItem> lectures = new ArrayList<>();
+    private final List<CardCalendarItem> lectures = new ArrayList<>();
     private TextView mTimeView;
     private int mSelected;
     private TextView mEvent;
@@ -54,7 +43,7 @@ public class NextLectureCard extends Card {
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_next_lecture_item, parent, false);
-        return new CardViewHolder(view);
+        return new NextLectureCardViewHolder(view);
     }
 
     @Override
@@ -62,19 +51,25 @@ public class NextLectureCard extends Card {
         return R.menu.card_popup_menu;
     }
 
-    public CalendarItem getSelected() {
+    public CardCalendarItem getSelected() {
         return lectures.get(mSelected);
     }
 
     @Override
     public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
+        if (viewHolder instanceof NextLectureCardViewHolder) {
+            NextLectureCardViewHolder holder = (NextLectureCardViewHolder) viewHolder;
+            holder.bind(lectures);
+        }
+
+        /*
         super.updateViewHolder(viewHolder);
-        setMCard(viewHolder.itemView);
-        setMLinearLayout(getMCard().findViewById(R.id.card_view));
-        setMTitleView(getMCard().findViewById(R.id.card_title));
-        mTimeView = getMCard().findViewById(R.id.card_time);
-        mLocation = getMCard().findViewById(R.id.card_location_action);
-        mEvent = getMCard().findViewById(R.id.card_event_action);
+        setCardView(viewHolder.itemView);
+        setContentLayout(getCardView().findViewById(R.id.card_view));
+        setTitleView(getCardView().findViewById(R.id.card_title));
+        mTimeView = getCardView().findViewById(R.id.card_time);
+        mLocation = getCardView().findViewById(R.id.card_location_action);
+        mEvent = getCardView().findViewById(R.id.card_event_action);
 
         showItem(0);
 
@@ -82,28 +77,30 @@ public class NextLectureCard extends Card {
         if (lectures.size() > 1) {
             for (; i < lectures.size(); i++) {
                 final int j = i;
-                Button text = getMCard().findViewById(IDS[i]);
+                Button text = getCardView().findViewById(IDS[i]);
                 text.setOnClickListener(view -> showItem(j));
             }
         }
         for (; i < 4; i++) {
-            View text = getMCard().findViewById(IDS[i]);
+            View text = getCardView().findViewById(IDS[i]);
             text.setVisibility(View.GONE);
         }
+        */
     }
 
-    private void showItem(int sel) {
+    /*
+    private void showItem(int selected) {
         // Set selection on the buttons
-        mSelected = sel;
+        mSelected = selected;
         for (int i = 0; i < 4; i++) {
-            getMCard().findViewById(IDS[i])
-                      .setSelected(i == sel);
+            getCardView().findViewById(IDS[i])
+                      .setSelected(i == selected);
         }
 
         final CalendarItem item = getSelected();
 
         // Set current title
-        getMTitleView().setText(item.title);
+        getTitleView().setText(item.title);
 
         //Add content
         mTimeView.setText(DateTimeUtils.INSTANCE.formatFutureTime(item.start, getContext()));
@@ -132,16 +129,17 @@ public class NextLectureCard extends Card {
             getContext().startActivity(i);
         });
     }
+    */
 
     @Override
     protected void discard(@NonNull SharedPreferences.Editor editor) {
-        CalendarItem item = lectures.get(lectures.size() - 1);
+        CardCalendarItem item = lectures.get(lectures.size() - 1);
         editor.putLong(NEXT_LECTURE_DATE, item.start.getMillis());
     }
 
     @Override
     protected boolean shouldShow(@NonNull SharedPreferences prefs) {
-        CalendarItem item = lectures.get(0);
+        CardCalendarItem item = lectures.get(0);
         long prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0);
         return item.start.getMillis() > prevTime;
     }
@@ -151,9 +149,9 @@ public class NextLectureCard extends Card {
         return 0;
     }
 
-    public void setLectures(List<de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem> calendarItems) {
-        for (de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem calendarItem : calendarItems) {
-            CalendarItem item = new CalendarItem();
+    public void setLectures(List<CalendarItem> calendarItems) {
+        for (CalendarItem calendarItem : calendarItems) {
+            CardCalendarItem item = new CardCalendarItem();
             item.start = calendarItem.getDtstart();
             item.end = calendarItem.getDtend();
 
@@ -169,12 +167,12 @@ public class NextLectureCard extends Card {
         }
     }
 
-    private static class CalendarItem {
-        String title;
-        DateTime start;
-        DateTime end;
-        String location;
-        String locationForSearch;
+    public static class CardCalendarItem {
+        public String title;
+        public DateTime start;
+        public DateTime end;
+        public String location;
+        public String locationForSearch;
     }
 
 }
