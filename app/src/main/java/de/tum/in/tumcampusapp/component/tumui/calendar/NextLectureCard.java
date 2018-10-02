@@ -68,8 +68,6 @@ public class NextLectureCard extends Card {
     }
 
     public void setLectures(List<CalendarItem> calendarItems) {
-        List<CalendarItem> duplicates = new ArrayList<>(calendarItems);
-        calendarItems.addAll(duplicates);
         for (CalendarItem calendarItem : calendarItems) {
             CardCalendarItem item = new CardCalendarItem();
             item.start = calendarItem.getDtstart();
