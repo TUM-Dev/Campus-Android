@@ -9,8 +9,5 @@
         android:top="1dp"/>
 
     <corners
-        android:bottomLeftRadius="7dp"
-        android:bottomRightRadius="7dp"
-        android:topLeftRadius="7dp"
-        android:topRightRadius="7dp"/>
+        android:radius="@dimen/material_corner_radius" />
 </shape>

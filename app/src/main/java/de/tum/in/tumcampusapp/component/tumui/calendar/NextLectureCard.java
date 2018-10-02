@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
@@ -24,17 +23,8 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 public class NextLectureCard extends Card {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
-    private final static int[] IDS = {
-            R.id.lecture_1,
-            R.id.lecture_2,
-            R.id.lecture_3,
-            R.id.lecture_4
-    };
-    private TextView mLocation;
+
     private final List<CardCalendarItem> lectures = new ArrayList<>();
-    private TextView mTimeView;
-    private int mSelected;
-    private TextView mEvent;
 
     NextLectureCard(Context context) {
         super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture");
@@ -49,10 +39,6 @@ public class NextLectureCard extends Card {
     @Override
     public int getOptionsMenuResId() {
         return R.menu.card_popup_menu;
-    }
-
-    public CardCalendarItem getSelected() {
-        return lectures.get(mSelected);
     }
 
     @Override
@@ -82,6 +68,8 @@ public class NextLectureCard extends Card {
     }
 
     public void setLectures(List<CalendarItem> calendarItems) {
+        List<CalendarItem> duplicates = new ArrayList<>(calendarItems);
+        calendarItems.addAll(duplicates);
         for (CalendarItem calendarItem : calendarItems) {
             CardCalendarItem item = new CardCalendarItem();
             item.start = calendarItem.getDtstart();

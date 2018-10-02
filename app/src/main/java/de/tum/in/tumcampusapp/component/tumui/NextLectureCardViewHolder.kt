@@ -3,8 +3,8 @@ package de.tum.`in`.tumcampusapp.component.tumui
 import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.button.MaterialButton
 import android.view.View
-import android.widget.Button
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
@@ -21,11 +21,10 @@ import java.util.*
 class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
 
     fun bind(items: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
-        //card_title
         showLecture(items.first(), 0)
 
         IDS.forEachIndexed { index, buttonResId ->
-            val button = findViewById<Button>(buttonResId)
+            val button = findViewById<MaterialButton>(buttonResId)
             if (index < items.size && items.size > 1) {
                 val lecture = items[index]
                 button.setOnClickListener { showLecture(lecture, index) }
@@ -37,7 +36,8 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
 
     private fun showLecture(lecture: NextLectureCard.CardCalendarItem, index: Int) = with(itemView) {
         for (i in 0 until 4) {
-            findViewById<Button>(IDS[i]).isSelected = (i == index)
+            val button = findViewById<MaterialButton>(IDS[i])
+            button.isSelected = (i == index)
         }
 
         lectureTitleTextView.text = lecture.title
@@ -62,7 +62,7 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
         val startTime = timeFormatter.print(lecture.start)
         val endTime = timeFormatter.print(lecture.end)
 
-        lectureEventTextView.text = String.format("%s, %s - %s", dayOfWeek, startTime, endTime)
+        lectureEventTextView.text = String.format("%s, %s–%s", dayOfWeek, startTime, endTime)
         lectureEventTextView.setOnClickListener {
             val intent = Intent(context, CalendarActivity::class.java)
             intent.putExtra(Const.EVENT_TIME, lecture.start.getMillis())

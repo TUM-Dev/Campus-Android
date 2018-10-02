@@ -1,63 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <android.support.design.button.MaterialButton
+        android:id="@+id/lecture_1"
+        android:layout_width="@dimen/next_lecture_select_width"
+        android:layout_height="@dimen/next_lecture_select_height"
+        android:background="@drawable/next_lecture_select"
+        android:padding="0dp"
+        android:text="1"
+        android:textColor="@android:color/white"
+        app:cornerRadius="20dp"
+        tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/lecture_1"
-            android:layout_width="@dimen/next_lecture_select_width"
-            android:layout_height="@dimen/next_lecture_select_width"
-            android:layout_margin="1dp"
-            android:background="@drawable/next_lecture_select"
-            android:text="1"
-            android:textColor="#ffffffff"
-            tools:ignore="HardcodedText" />
+    <android.support.design.button.MaterialButton
+        android:id="@+id/lecture_2"
+        android:layout_width="@dimen/next_lecture_select_width"
+        android:layout_height="@dimen/next_lecture_select_height"
+        android:layout_marginStart="@dimen/material_tiny_padding"
+        android:background="@drawable/next_lecture_select"
+        android:padding="0dp"
+        android:text="2"
+        android:textColor="@android:color/white"
+        app:cornerRadius="20dp"
+        tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/lecture_2"
-            android:layout_width="@dimen/next_lecture_select_width"
-            android:layout_height="@dimen/next_lecture_select_width"
-            android:layout_margin="1dp"
-            android:background="@drawable/next_lecture_select"
-            android:text="2"
-            android:textColor="#ffffffff"
-            tools:ignore="HardcodedText" />
+    <android.support.design.button.MaterialButton
+        android:id="@+id/lecture_3"
+        android:layout_width="@dimen/next_lecture_select_width"
+        android:layout_height="@dimen/next_lecture_select_height"
+        android:layout_marginStart="@dimen/material_tiny_padding"
+        android:background="@drawable/next_lecture_select"
+        android:padding="0dp"
+        android:text="3"
+        android:textColor="@android:color/white"
+        app:cornerRadius="20dp"
+        tools:ignore="HardcodedText" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/lecture_3"
-            android:layout_width="@dimen/next_lecture_select_width"
-            android:layout_height="@dimen/next_lecture_select_width"
-            android:layout_margin="1dp"
-            android:background="@drawable/next_lecture_select"
-            android:text="3"
-            android:textColor="#ffffffff"
-            tools:ignore="HardcodedText" />
-
-        <Button
-            android:id="@+id/lecture_4"
-            android:layout_width="@dimen/next_lecture_select_width"
-            android:layout_height="@dimen/next_lecture_select_width"
-            android:layout_margin="1dp"
-            android:background="@drawable/next_lecture_select"
-            android:text="4"
-            android:textColor="#ffffffff"
-            tools:ignore="HardcodedText" />
-
-    </LinearLayout>
+    <android.support.design.button.MaterialButton
+        android:id="@+id/lecture_4"
+        android:layout_width="@dimen/next_lecture_select_width"
+        android:layout_height="@dimen/next_lecture_select_height"
+        android:layout_marginStart="@dimen/material_tiny_padding"
+        android:background="@drawable/next_lecture_select"
+        android:padding="0dp"
+        android:text="4"
+        android:textColor="@android:color/white"
+        app:cornerRadius="20dp"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>

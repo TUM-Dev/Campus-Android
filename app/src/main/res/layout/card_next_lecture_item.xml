@@ -37,7 +37,7 @@
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
             app:layout_constraintBottom_toTopOf="@id/lectureLocationTextView"
-            app:layout_constraintEnd_toStartOf="@id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lectureTitleTextView"
             tools:text="Time" />
@@ -56,7 +56,7 @@
             android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#00a7de"
-            app:layout_constraintEnd_toStartOf="@id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lectureTimeTextView"
             tools:text="Location" />
@@ -75,8 +75,8 @@
             android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#00a7de"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/linearLayout"
+            app:layout_constraintBottom_toTopOf="@id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lectureLocationTextView"
             tools:text="Event" />
@@ -84,12 +84,15 @@
         <include
             android:id="@+id/linearLayout"
             layout="@layout/layout_lecture_selection"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_small_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/cardMoreIcon" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lectureEventTextView" />
 
     </android.support.constraint.ConstraintLayout>
 
