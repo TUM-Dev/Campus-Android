@@ -1,10 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.tumui
 
 import android.app.SearchManager
-import android.content.Intent
 import android.os.Bundle
-import android.support.design.button.MaterialButton
 import android.view.View
+import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
@@ -23,9 +22,16 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
     fun bind(items: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
         showLecture(items.first(), 0)
 
+        /*
+        if (items.size == 1) {
+            linearLayout.visibility = View.GONE
+            return
+        }
+        */
+
         IDS.forEachIndexed { index, buttonResId ->
-            val button = findViewById<MaterialButton>(buttonResId)
-            if (index < items.size && items.size > 1) {
+            val button = findViewById<TextView>(buttonResId)
+            if (index < items.size) {
                 val lecture = items[index]
                 button.setOnClickListener { showLecture(lecture, index) }
             } else {
@@ -36,7 +42,7 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
 
     private fun showLecture(lecture: NextLectureCard.CardCalendarItem, index: Int) = with(itemView) {
         for (i in 0 until 4) {
-            val button = findViewById<MaterialButton>(IDS[i])
+            val button = findViewById<TextView>(IDS[i])
             button.isSelected = (i == index)
         }
 
@@ -64,9 +70,10 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
 
         lectureEventTextView.text = String.format("%s, %s–%s", dayOfWeek, startTime, endTime)
         lectureEventTextView.setOnClickListener {
-            val intent = Intent(context, CalendarActivity::class.java)
-            intent.putExtra(Const.EVENT_TIME, lecture.start.getMillis())
-            context.startActivity(intent)
+            val bundle = Bundle()
+            bundle.putLong(Const.EVENT_TIME, lecture.start.millis)
+            val destination = SystemActivity(CalendarActivity::class.java, bundle)
+            NavigationManager.open(context, destination)
         }
 
     }
