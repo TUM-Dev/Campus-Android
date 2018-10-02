@@ -61,75 +61,7 @@ public class NextLectureCard extends Card {
             NextLectureCardViewHolder holder = (NextLectureCardViewHolder) viewHolder;
             holder.bind(lectures);
         }
-
-        /*
-        super.updateViewHolder(viewHolder);
-        setCardView(viewHolder.itemView);
-        setContentLayout(getCardView().findViewById(R.id.card_view));
-        setTitleView(getCardView().findViewById(R.id.card_title));
-        mTimeView = getCardView().findViewById(R.id.card_time);
-        mLocation = getCardView().findViewById(R.id.card_location_action);
-        mEvent = getCardView().findViewById(R.id.card_event_action);
-
-        showItem(0);
-
-        int i = 0;
-        if (lectures.size() > 1) {
-            for (; i < lectures.size(); i++) {
-                final int j = i;
-                Button text = getCardView().findViewById(IDS[i]);
-                text.setOnClickListener(view -> showItem(j));
-            }
-        }
-        for (; i < 4; i++) {
-            View text = getCardView().findViewById(IDS[i]);
-            text.setVisibility(View.GONE);
-        }
-        */
     }
-
-    /*
-    private void showItem(int selected) {
-        // Set selection on the buttons
-        mSelected = selected;
-        for (int i = 0; i < 4; i++) {
-            getCardView().findViewById(IDS[i])
-                      .setSelected(i == selected);
-        }
-
-        final CalendarItem item = getSelected();
-
-        // Set current title
-        getTitleView().setText(item.title);
-
-        //Add content
-        mTimeView.setText(DateTimeUtils.INSTANCE.formatFutureTime(item.start, getContext()));
-
-        //Add location with link to room finder
-        if (item.location == null || item.location.isEmpty()) {
-            mLocation.setVisibility(View.GONE);
-        } else {
-            mLocation.setText(item.location);
-            mLocation.setOnClickListener(v -> {
-                Bundle bundle = new Bundle();
-                bundle.putString(SearchManager.QUERY, item.locationForSearch);
-                NavigationDestination destination =
-                        new SystemActivity(RoomFinderActivity.class, bundle);
-                NavigationManager.INSTANCE.open(getContext(), destination);
-            });
-        }
-
-        DateTimeFormatter dayOfWeek = DateTimeFormat.forPattern("EEEE, ").withLocale(Locale.getDefault());
-        DateTimeFormatter time = DateTimeFormat.shortTime();
-        mEvent.setText(String.format("%s%s - %s", dayOfWeek.print(item.start), time.print(item.start), time.print(item.end)));
-        mEvent.setOnClickListener(view -> {
-            Intent i = new Intent(getContext(), CalendarActivity.class);
-            CalendarItem selectedItem = lectures.get(mSelected);
-            i.putExtra(Const.EVENT_TIME, selectedItem.start.getMillis());
-            getContext().startActivity(i);
-        });
-    }
-    */
 
     @Override
     protected void discard(@NonNull SharedPreferences.Editor editor) {

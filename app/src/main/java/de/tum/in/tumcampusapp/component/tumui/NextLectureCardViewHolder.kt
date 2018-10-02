@@ -40,14 +40,14 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
             findViewById<Button>(IDS[i]).isSelected = (i == index)
         }
 
-        card_title.text = lecture.title
-        card_time.text = DateTimeUtils.formatFutureTime(lecture.start, context)
+        lectureTitleTextView.text = lecture.title
+        lectureTimeTextView.text = DateTimeUtils.formatFutureTime(lecture.start, context)
 
         if (lecture.location == null || lecture.location.isEmpty()) {
-            card_location_action.visibility = View.GONE
+            lectureLocationTextView.visibility = View.GONE
         } else {
-            card_location_action.text = lecture.location
-            card_location_action.setOnClickListener {
+            lectureLocationTextView.text = lecture.location
+            lectureLocationTextView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString(SearchManager.QUERY, lecture.locationForSearch)
                 val destination = SystemActivity(RoomFinderActivity::class.java, bundle)
@@ -55,11 +55,15 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
             }
         }
 
-        val dayOfWeek = DateTimeFormat.forPattern("EEEE, ").withLocale(Locale.getDefault())
+        val dayOfWeekFormatter = DateTimeFormat.forPattern("EEEE").withLocale(Locale.getDefault())
         val timeFormatter = DateTimeFormat.shortTime()
 
-        card_event_action.text = String.format("%s%s - %s", dayOfWeek.print(lecture.start), timeFormatter.print(lecture.start), timeFormatter.print(lecture.end)) // TODO
-        card_event_action.setOnClickListener {
+        val dayOfWeek = dayOfWeekFormatter.print(lecture.start)
+        val startTime = timeFormatter.print(lecture.start)
+        val endTime = timeFormatter.print(lecture.end)
+
+        lectureEventTextView.text = String.format("%s, %s - %s", dayOfWeek, startTime, endTime)
+        lectureEventTextView.setOnClickListener {
             val intent = Intent(context, CalendarActivity::class.java)
             intent.putExtra(Const.EVENT_TIME, lecture.start.getMillis())
             context.startActivity(intent)
