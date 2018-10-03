@@ -10,7 +10,7 @@
         <ImageButton
             android:id="@+id/cardMoreIcon"
             style="@style/CardMoreIcon"
-            android:layout_margin="@dimen/material_small_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
