@@ -106,7 +106,7 @@ dependencies {
 
     // Play services
     implementation 'com.google.android.gms:play-services-base:15.0.1'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.3'
