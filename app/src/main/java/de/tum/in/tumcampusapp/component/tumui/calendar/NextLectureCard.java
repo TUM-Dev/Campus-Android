@@ -67,21 +67,12 @@ public class NextLectureCard extends Card {
     }
 
     public void setLectures(List<CalendarItem> calendarItems) {
-        List<CalendarItem> duplicates = new ArrayList<>(calendarItems);
-        calendarItems.addAll(duplicates);
         for (CalendarItem calendarItem : calendarItems) {
             CardCalendarItem item = new CardCalendarItem();
             item.start = calendarItem.getDtstart();
             item.end = calendarItem.getDtend();
-
-            // Extract course title
             item.title = calendarItem.getFormattedTitle();
-
-            // Handle location
             item.location = calendarItem.getEventLocation();
-            // This is the location in a format which is useful for searches:
-            item.locationForSearch = calendarItem.getLocation();
-
             lectures.add(item);
         }
     }
@@ -91,7 +82,6 @@ public class NextLectureCard extends Card {
         public DateTime start;
         public DateTime end;
         public String location;
-        public String locationForSearch;
     }
 
 }
