@@ -7,92 +7,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/lectureTitleTextView"
-            style="@style/CardTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginTop="@dimen/material_default_padding"
-            android:layout_marginBottom="0dp"
-            android:layout_weight="1"
-            app:layout_constraintEnd_toStartOf="@id/cardMoreIcon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Title" />
-
         <ImageButton
             android:id="@+id/cardMoreIcon"
             style="@style/CardMoreIcon"
-            android:layout_marginEnd="@dimen/material_small_padding"
-            app:layout_constraintBottom_toBottomOf="@id/lectureTitleTextView"
+            android:layout_margin="@dimen/material_small_padding"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/lectureTitleTextView" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/lectureTimeTextView"
-            style="@style/CardBody"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            app:layout_constraintBottom_toTopOf="@id/lectureLocationTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lectureTitleTextView"
-            tools:text="Time" />
+            android:orientation="vertical"
+            android:paddingTop="@dimen/material_small_padding">
 
-        <TextView
-            android:id="@+id/lectureLocationTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginTop="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_tiny_padding"
-            android:background="?attr/selectableItemBackground"
-            android:drawableStart="@drawable/ic_outline_location_on_24px_light_blue"
-            android:drawablePadding="@dimen/material_small_padding"
-            android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#00a7de"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lectureTimeTextView"
-            tools:text="Location" />
+            <include
+                android:id="@+id/lectureContainer1"
+                layout="@layout/layout_card_lecture" />
 
-        <TextView
-            android:id="@+id/lectureEventTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginTop="@dimen/material_tiny_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_default_padding"
-            android:background="?attr/selectableItemBackground"
-            android:drawableStart="@drawable/ic_event"
-            android:drawablePadding="@dimen/material_small_padding"
-            android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#00a7de"
-            app:layout_constraintBottom_toTopOf="@id/linearLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lectureLocationTextView"
-            tools:text="Event" />
+            <TextView
+                android:id="@+id/moreTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_small_padding"
+                android:paddingStart="@dimen/material_default_padding"
+                android:paddingTop="@dimen/material_small_padding"
+                android:paddingEnd="@dimen/material_default_padding"
+                android:paddingBottom="@dimen/material_small_padding"
+                android:textColor="@color/tum_blue"
+                tools:text="Show 3 more ..." />
 
-        <include
-            android:id="@+id/linearLayout"
-            layout="@layout/layout_lecture_selection"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_small_padding"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lectureEventTextView" />
+            <LinearLayout
+                android:id="@+id/additionalLecturesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/material_small_padding"
+                android:visibility="gone">
+
+                <!-- Add more NextLectureViews here -->
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 

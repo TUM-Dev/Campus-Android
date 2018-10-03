@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/material_default_padding"
+    android:paddingTop="@dimen/material_small_padding"
+    android:paddingEnd="@dimen/material_default_padding"
+    android:paddingBottom="@dimen/material_small_padding">
+
+    <TextView
+        android:id="@+id/lectureTitleTextView"
+        style="@style/CardTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        tools:text="Title" />
+
+    <TextView
+        android:id="@+id/lectureTimeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/material_tiny_padding"
+        tools:text="Time" />
+
+    <TextView
+        android:id="@+id/lectureLocationTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Location" />
+
+</LinearLayout>

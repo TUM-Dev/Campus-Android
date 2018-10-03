@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.tumui.NextLectureCardViewHolder;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -68,6 +67,8 @@ public class NextLectureCard extends Card {
     }
 
     public void setLectures(List<CalendarItem> calendarItems) {
+        List<CalendarItem> duplicates = new ArrayList<>(calendarItems);
+        calendarItems.addAll(duplicates);
         for (CalendarItem calendarItem : calendarItems) {
             CardCalendarItem item = new CardCalendarItem();
             item.start = calendarItem.getDtstart();
