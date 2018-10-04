@@ -412,7 +412,20 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
         List<CalendarItem> calendarItems = calendarController.getFromDbBetweenDates(begin, end);
         boolean filterCanceled = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
-        for (CalendarItem calendarItem : calendarItems) {
+
+        for (int i = 0; i < calendarItems.size(); i++) {
+            CalendarItem calendarItem = calendarItems.get(i);
+
+            StringBuilder location = new StringBuilder();
+            location.append(calendarItem.getLocation());
+            while (i+1 < calendarItems.size()
+                    && calendarItem.isSameEventButForLocation(calendarItems.get(i + 1))) {
+                location.append(" + ");
+                location.append(calendarItems.get(i + 1).getLocation());
+                i++;
+            }
+            calendarItem.setLocation(location.toString());
+
             if (filterCanceled || !calendarItem.getStatus().equals("CANCEL")) {
                 events.add(new IntegratedCalendarEvent(calendarItem, this));
             }

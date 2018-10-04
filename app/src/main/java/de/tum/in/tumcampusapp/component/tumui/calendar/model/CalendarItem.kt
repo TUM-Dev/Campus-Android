@@ -101,4 +101,10 @@ data class CalendarItem(@PrimaryKey
         values.put(CalendarContract.Events.EVENT_LOCATION, location)
         return values
     }
+
+    fun isSameEventButForLocation(other: CalendarItem): Boolean {
+        return title.equals(other.title)
+                && dtstart.equals(other.dtstart)
+                && dtend.equals(other.dtend)
+    }
 }

@@ -21,7 +21,7 @@ public interface CalendarDao {
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
             + "AND STATUS != 'CANCEL'"
-            + "ORDER BY dtstart ASC")
+            + "ORDER BY dtstart, title ASC")
     List<CalendarItem> getAllBetweenDates(DateTime from, DateTime to);
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
@@ -31,7 +31,7 @@ public interface CalendarDao {
             + "ORDER BY dtstart ASC")
     List<CalendarItem> getNextDays(DateTime from, DateTime to, String widgetId);
 
-    @Query("SELECT c.* FROM calendar c WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status != 'CANCEL'")
+    @Query("SELECT c.* FROM calendar c WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status != 'CANCEL' ORDER BY title")
     List<CalendarItem> getCurrentLectures();
 
     @Query("SELECT COUNT(*) FROM calendar")

@@ -90,6 +90,9 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return CalendarHelper.deleteCalendar(c);
     }
 
+    /**
+     * Adds events to the content provider
+     */
     private static void addEvents(Context c, Uri uri) throws SQLiteException {
         if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return;
