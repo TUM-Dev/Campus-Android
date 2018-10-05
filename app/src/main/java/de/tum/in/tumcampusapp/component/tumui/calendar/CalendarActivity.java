@@ -506,8 +506,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
         String eventId = String.valueOf(weekViewEvent.getId());
 
-        CalendarItem item = calendarController.getCalendarItemById(eventId);
-        if (item == null) {
+        List<CalendarItem> item = calendarController.getCalendarItemsById(eventId);
+        if (item == null || item.isEmpty()) {
             return;
         }
 

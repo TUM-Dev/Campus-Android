@@ -36,7 +36,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         dao = TcaDb.getInstance(context).calendarDao()
 
         arguments?.let { args ->
-            calendarId = args.getString(CALENDAR_ID_PARAM)
+            calendarId = args.getString(CALENDAR_ID_PARAM)!!
         }
     }
 
@@ -46,11 +46,13 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val calendarItem = dao.getCalendarItemById(calendarId)
+        val calendarItem = dao.getCalendarItemsById(calendarId)
         updateView(calendarItem)
     }
 
-    private fun updateView(calendarItem: CalendarItem) {
+    private fun updateView(calendarItemList: List<CalendarItem>) {
+        val calendarItem = calendarItemList[0]
+
         if (calendarItem.status == "CANCEL") {
             cancelButtonsContainer.visibility = View.VISIBLE
             descriptionTextView.setTextColor(Color.RED)
@@ -58,12 +60,14 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
         titleTextView.text = calendarItem.title
         dateTextView.text = calendarItem.getEventDateString()
-        locationTextView.text = calendarItem.location
 
-        if (calendarItem.location.isEmpty()) {
+        val locationList = toLocationsList(calendarItemList)
+        locationTextView.text = locationList.toString() // TODO remove
+        if (calendarItem.location.isEmpty() && calendarItemList.size == 1) {
             locationTextView.visibility = View.GONE
         } else {
             locationTextView.visibility = View.VISIBLE
+            // TODO init the list of locations
         }
 
         if (calendarItem.description.isEmpty()) {
@@ -120,6 +124,14 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         Utils.showToast(c, messageResId)
     }
 
+    private fun toLocationsList(calendarItemList: List<CalendarItem>): List<String> {
+        val locationList = ArrayList<String>()
+        for (calendarItem in calendarItemList) {
+            locationList.add(calendarItem.location)
+        }
+        return locationList
+    }
+
     private fun onLocationClicked(location: String) {
         val findStudyRoomIntent = Intent()
         findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
@@ -128,18 +140,16 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance(calendarItem: CalendarItem,
+        fun newInstance(calendarItem: List<CalendarItem>,
                         listener: OnEventInteractionListener): CalendarDetailsFragment {
             return CalendarDetailsFragment().apply {
                 this.arguments = Bundle().apply {
-                    putString(Const.CALENDAR_ID_PARAM, calendarItem.nr)
+                    putString(Const.CALENDAR_ID_PARAM, calendarItem[0].nr)
                 }
                 this.listener = listener
             }
         }
-
     }
 
     interface OnEventInteractionListener {

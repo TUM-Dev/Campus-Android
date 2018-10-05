@@ -194,9 +194,13 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return lectures;
     }
 
+    /**
+     * Gets the event by its id and duplicates of this event with different locations.
+     * The first item is the one with the given id.
+     */
     @Nullable
-    CalendarItem getCalendarItemById(String id) {
-        return calendarDao.getCalendarItemById(id);
+    List<CalendarItem> getCalendarItemsById(String id) {
+        return calendarDao.getCalendarItemsById(id);
     }
 
     void scheduleNotifications(List<Event> events) {
