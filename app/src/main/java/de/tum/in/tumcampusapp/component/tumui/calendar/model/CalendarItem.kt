@@ -107,4 +107,6 @@ data class CalendarItem(@PrimaryKey
                 && dtstart.equals(other.dtstart)
                 && dtend.equals(other.dtend)
     }
+
+    fun isCancelled(): Boolean = status.equals("CANCEL")
 }
