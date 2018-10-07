@@ -22,6 +22,7 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
         showLecture(items.first())
 
         if (items.size == 1) {
+            divider.visibility = View.GONE
             moreTextView.visibility = View.GONE
             return
         }
@@ -44,8 +45,8 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
     }
 
     private fun toggleMoreButton(remainingItems: Int) = with(itemView) {
-        val textFormatString = if (isExpanded) R.string.next_lecture_hide_more else R.string.next_lecture_show_more
-        moreTextView.text = context.getString(textFormatString, remainingItems)
+        val moreTextFormatString = if (isExpanded) R.string.next_lecture_hide else R.string.next_lecture_show_more
+        moreTextView.text = context.getString(moreTextFormatString, remainingItems)
 
         val icon = if (isExpanded) R.drawable.ic_arrow_up_blue else R.drawable.ic_arrow_down_blue
         moreTextView.addCompoundDrawablesWithIntrinsicBounds(start = icon)

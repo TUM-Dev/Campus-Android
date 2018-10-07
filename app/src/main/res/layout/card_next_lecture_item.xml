@@ -22,12 +22,15 @@
 
             <include
                 android:id="@+id/lectureContainer1"
-                layout="@layout/layout_card_lecture" />
+                layout="@layout/layout_card_lecture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_small_padding" />
 
             <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/material_small_padding"
                 android:background="@color/spinner_border" />
 
             <TextView
