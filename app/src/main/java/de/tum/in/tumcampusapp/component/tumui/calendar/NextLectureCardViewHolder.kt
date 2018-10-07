@@ -10,6 +10,7 @@ import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import de.tum.`in`.tumcampusapp.utils.addCompoundDrawablesWithIntrinsicBounds
 import kotlinx.android.synthetic.main.card_next_lecture_item.view.*
 import kotlinx.android.synthetic.main.layout_card_lecture.view.*
 
@@ -45,6 +46,10 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
     private fun toggleMoreButton(remainingItems: Int) = with(itemView) {
         val textFormatString = if (isExpanded) R.string.next_lecture_hide_more else R.string.next_lecture_show_more
         moreTextView.text = context.getString(textFormatString, remainingItems)
+
+        val icon = if (isExpanded) R.drawable.ic_arrow_up_blue else R.drawable.ic_arrow_down_blue
+        moreTextView.addCompoundDrawablesWithIntrinsicBounds(start = icon)
+
         TransitionManager.beginDelayedTransition(this as ViewGroup)
     }
 
