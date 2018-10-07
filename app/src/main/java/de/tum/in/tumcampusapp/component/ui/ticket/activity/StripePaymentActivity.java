@@ -210,14 +210,14 @@ public class StripePaymentActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data == null) {
-            // Data might be null if user tapped the back button from credit cardView selection
+            // Data might be null if user tapped the back button from credit card selection
             return;
         }
 
         String selectedSource = data.getStringExtra(PaymentMethodsActivity.EXTRA_SELECTED_PAYMENT);
         Source source = Source.fromString(selectedSource);
 
-        // Note: It isn't possible for a null or non-cardView source to be returned.
+        // Note: It isn't possible for a null or non-card source to be returned.
         if (source != null && Source.CARD.equals(source.getType())) {
             SourceCardData cardData = (SourceCardData) source.getSourceTypeModel();
 

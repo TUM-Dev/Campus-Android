@@ -16,7 +16,7 @@
 
     <android.support.v7.preference.PreferenceCategory android:title="@string/cards_settings">
 
-        <!-- Cafeteria cardView -->
+        <!-- Cafeteria card -->
         <android.support.v7.preference.PreferenceScreen
             android:icon="@drawable/ic_cutlery"
             android:key="card_cafeteria"
@@ -110,7 +110,7 @@
 
         </android.support.v7.preference.PreferenceScreen>
 
-        <!-- MVV cardView -->
+        <!-- MVV card-->
         <android.support.v7.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_train_24px"
             android:key="card_mvv"
@@ -153,7 +153,7 @@
 
         </android.support.v7.preference.PreferenceScreen>
 
-        <!-- Next lecture cardView -->
+        <!-- Next lecture card -->
         <android.support.v7.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_event_24px"
             android:key="card_next_lecture"
@@ -176,7 +176,7 @@
 
         </android.support.v7.preference.PreferenceScreen>
 
-        <!-- Tuition fee cardView -->
+        <!-- Tuition fee card -->
         <android.support.v7.preference.PreferenceScreen
             android:icon="@drawable/ic_money"
             android:key="card_tuition_fee"
@@ -199,7 +199,7 @@
 
         </android.support.v7.preference.PreferenceScreen>
 
-        <!-- News cardView -->
+        <!-- News card -->
         <android.support.v7.preference.PreferenceScreen
             android:icon="@drawable/ic_rss"
             android:key="card_news"
@@ -246,7 +246,7 @@
 
         </android.support.v7.preference.PreferenceScreen>
 
-        <!-- Chat cardView -->
+        <!-- Chat card -->
         <android.support.v7.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_chat_bubble_outline_24px"
             android:key="card_chat"
@@ -269,7 +269,7 @@
 
         </android.support.v7.preference.PreferenceScreen>
 
-        <!-- Eduroam cardView -->
+        <!-- Eduroam card -->
         <android.support.v7.preference.PreferenceScreen
             android:icon="@drawable/ic_action_network_wifi"
             android:key="card_eduroam"

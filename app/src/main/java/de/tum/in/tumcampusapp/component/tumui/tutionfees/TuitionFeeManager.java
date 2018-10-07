@@ -24,7 +24,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Response;
 
 /**
- * Tuition manager, handles tuition cardView
+ * Tuition manager, handles tuition card
  */
 public class TuitionFeeManager implements ProvidesCard, ProvidesNotifications {
 

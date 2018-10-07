@@ -23,7 +23,7 @@ import io.reactivex.Observable
 import java.util.*
 
 /**
- * Transport Manager, handles querying data from mvv and cardView creation
+ * Transport Manager, handles querying data from mvv and card creation
  */
 class TransportController(private val context: Context) : ProvidesCard, ProvidesNotifications {
 

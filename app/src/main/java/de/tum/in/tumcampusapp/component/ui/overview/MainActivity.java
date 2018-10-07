@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity
                 R.color.tum_A100,
                 R.color.tum_A200);
 
-        // Setup cardView RecyclerView
+        // Setup card RecyclerView
         mCardsView = findViewById(R.id.cards_view);
         registerForContextMenu(mCardsView);
 
@@ -258,7 +258,7 @@ public class MainActivity extends BaseActivity
                             super.onDismissed(snackbar, event);
                             if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
                                 // DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
-                                // and therefore, we didn't really dismiss the cardView
+                                // and therefore, we didn't really dismiss the card
 
                                 if (card != null) {
                                     card.discardCard();

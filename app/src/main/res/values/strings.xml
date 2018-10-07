@@ -325,7 +325,7 @@
     <string name="description">Description</string>
 
     <string name="no_movies">No upcoming movies</string>
-    <!-- Eduroam cardView -->
+    <!-- Eduroam card -->
     <string name="eduroam" translatable="false">Eduroam</string>
     <string name="setup">Setup</string>
     <string name="setup_eduroam">Setup eduroam</string>

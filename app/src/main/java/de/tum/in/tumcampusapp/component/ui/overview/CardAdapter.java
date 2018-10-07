@@ -116,7 +116,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
         Card card = mItems.remove(fromPosition);
         mItems.add(toPosition, card);
 
-        //Update cardView positions so they stay the same even when the app is closed
+        //Update card positions so they stay the same even when the app is closed
         for (int index = 0; index < mItems.size(); index++) {
             mItems.get(index).setPosition(index);
         }
@@ -127,9 +127,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
         Card selectedCard = mItems.get(fromPosition);
         Card cardAtPosition = mItems.get(toPosition);
 
-        // If there is a support cardView, it should always be the first one
+        // If there is a support card, it should always be the first one
         // except when it's been dismissed.
-        // Restore cardView should stay at the bottom
+        // Restore card should stay at the bottom
         if (selectedCard instanceof RestoreCard) {
             return fromPosition;
         } else if (selectedCard instanceof SupportCard) {

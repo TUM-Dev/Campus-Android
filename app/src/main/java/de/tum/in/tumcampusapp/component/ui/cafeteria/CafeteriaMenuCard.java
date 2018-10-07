@@ -59,9 +59,9 @@ public class CafeteriaMenuCard extends Card {
     }
 
     /**
-     * Sets the information needed to build the cardView
+     * Sets the information needed to build the card
      *
-     * @param cafeteria The CafeteriaWithMenus object to be displayed in the cardView
+     * @param cafeteria The CafeteriaWithMenus object to be displayed in the card
      */
     public void setCafeteriaWithMenus(CafeteriaWithMenus cafeteria) {
         this.mCafeteria = cafeteria;
