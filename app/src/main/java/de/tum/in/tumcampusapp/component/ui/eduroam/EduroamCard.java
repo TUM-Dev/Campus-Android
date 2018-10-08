@@ -38,6 +38,11 @@ public class EduroamCard extends Card {
     }
 
     @Override
+    public int getOptionsMenuResId() {
+        return R.menu.card_popup_menu;
+    }
+
+    @Override
     public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         MaterialButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
         button.setOnClickListener(v -> {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.transportation.MVVSymbolView;
+import de.tum.in.tumcampusapp.component.ui.transportation.MVVSymbol;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures;
@@ -60,6 +61,7 @@ public class MVVWidgetService extends RemoteViewsService {
             return this.departures.size();
         }
 
+        @Nullable
         @Override
         public RemoteViews getViewAt(int position) {
             RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.departure_line_widget);
@@ -75,9 +77,9 @@ public class MVVWidgetService extends RemoteViewsService {
 
             // Setup the line symbol
             rv.setTextViewText(R.id.line_symbol, currentItem.getSymbol());
-            MVVSymbolView d = new MVVSymbolView(currentItem.getSymbol());
-            rv.setTextColor(R.id.line_symbol, d.getTextColor());
-            rv.setInt(R.id.line_symbol_background, "setColorFilter", d.getBackgroundColor());
+            MVVSymbol mvvSymbol = new MVVSymbol(currentItem.getSymbol());
+            rv.setTextColor(R.id.line_symbol, mvvSymbol.getTextColor());
+            rv.setInt(R.id.line_symbol_background, "setColorFilter", mvvSymbol.getBackgroundColor());
 
             // Setup the line name and the departure time
             rv.setTextViewText(R.id.line_name, currentItem.getFormattedDirection());
@@ -86,6 +88,7 @@ public class MVVWidgetService extends RemoteViewsService {
             return rv;
         }
 
+        @Nullable
         @Override
         public RemoteViews getLoadingView() {
             return null;

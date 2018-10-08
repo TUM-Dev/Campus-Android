@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -33,13 +34,11 @@ import de.tum.in.tumcampusapp.utils.Utils;
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
-public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends BaseActivity
+        implements SwipeRefreshLayout.OnRefreshListener, CardInteractionListener {
 
     private boolean mIsConnectivityChangeReceiverRegistered;
 
-    /**
-     * Card list
-     */
     private RecyclerView mCardsView;
     private CardAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -87,6 +86,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         mAdapter = new CardAdapter();
         mCardsView.setAdapter(mAdapter);
+
+        showToolbar();
 
         // Add equal spacing between CardViews in the RecyclerView
         int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
@@ -186,12 +187,16 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mCardsView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
         mCardsView.dispatchNestedFling(0, Integer.MIN_VALUE, true);
         mCardsView.stopNestedScroll();
-        mCardsView.getLayoutManager()
-                  .smoothScrollToPosition(mCardsView, null, 0);
+
+        RecyclerView.LayoutManager layoutManager = mCardsView.getLayoutManager();
+        if (layoutManager != null) {
+            layoutManager.smoothScrollToPosition(mCardsView, null, 0);
+        }
     }
 
-    public interface ItemTouchHelperAdapter {
-        void onItemMove(int fromPosition, int toPosition);
+    @Override
+    public void onAlwaysHideCard(int position) {
+        mAdapter.remove(position);
     }
 
     /**
@@ -199,21 +204,25 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      */
     private class MainActivityTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
-        public MainActivityTouchHelperCallback() {
+        MainActivityTouchHelperCallback() {
             super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         }
 
         @Override
-        public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        public int getSwipeDirs(@NonNull RecyclerView recyclerView,
+                                @NonNull RecyclerView.ViewHolder viewHolder) {
             CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
-            if (!cardViewHolder.getCurrentCard().isDismissible()) {
+            Card card = cardViewHolder.getCurrentCard();
+            if (card == null || !card.isDismissible()) {
                 return 0;
             }
             return super.getSwipeDirs(recyclerView, viewHolder);
         }
 
         @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        public boolean onMove(@NonNull RecyclerView recyclerView,
+                              @NonNull RecyclerView.ViewHolder viewHolder,
+                              @NonNull RecyclerView.ViewHolder target) {
             mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
             return true;
         }
@@ -224,7 +233,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         }
 
         @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
             final Card card = cardViewHolder.getCurrentCard();
             final int lastPos = cardViewHolder.getAdapterPosition();
@@ -236,8 +245,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             Snackbar.make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo, v -> {
                         mAdapter.insert(lastPos, card);
-                        mCardsView.getLayoutManager()
-                                  .smoothScrollToPosition(mCardsView, null, lastPos);
+
+                        RecyclerView.LayoutManager layoutManager = mCardsView.getLayoutManager();
+                        if (layoutManager != null) {
+                            layoutManager.smoothScrollToPosition(mCardsView, null, lastPos);
+                        }
                     })
                     .setActionTextColor(color)
                     .addCallback(new Snackbar.Callback() {
@@ -245,9 +257,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                         public void onDismissed(Snackbar snackbar, int event) {
                             super.onDismissed(snackbar, event);
                             if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                                //DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
-                                //and therefore, we didn't really dismiss the card
-                                card.discardCard();
+                                // DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
+                                // and therefore, we didn't really dismiss the card
+
+                                if (card != null) {
+                                    card.discardCard();
+                                }
                             }
                         }
                     })

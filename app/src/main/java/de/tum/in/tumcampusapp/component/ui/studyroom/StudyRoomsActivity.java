@@ -14,11 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.net.UnknownHostException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
@@ -168,7 +168,7 @@ public class StudyRoomsActivity extends ProgressActivity
                     public void onFailure(@NonNull Call<List<StudyRoomGroup>> call,
                                           @NonNull Throwable t) {
                         Utils.log(t);
-                        if (t instanceof NoNetworkConnectionException) {
+                        if (t instanceof UnknownHostException) {
                             showNoInternetLayout();
                         } else {
                             showErrorLayout();

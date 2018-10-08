@@ -28,13 +28,16 @@ import java.util.*
 class ChatMessagesCard(context: Context,
                        room: ChatRoomDbRow) : Card(CARD_CHAT, context, "card_chat") {
 
-    private var mUnread: List<ChatMessage> = ArrayList<ChatMessage>()
+    private var mUnread: List<ChatMessage> = ArrayList()
     private var nrUnread = 0;
     private var mRoomName = ""
     private var mRoomId = 0
     private var mRoomIdString = ""
 
     private val chatMessageDao: ChatMessageDao
+
+    override val optionsMenuResId: Int
+        get() = R.menu.card_popup_menu
 
     init {
         val tcaDb = TcaDb.getInstance(context)

@@ -1,21 +1,50 @@
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StandardCard">
 
-    <LinearLayout
-        android:id="@+id/contentContainerLayout"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/material_default_padding">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/chatRoomNameTextView"
             style="@style/CardTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/material_default_padding"
+            app:layout_constraintEnd_toStartOf="@id/cardMoreIcon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Title" />
 
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/cardMoreIcon"
+            style="@style/CardMoreIcon"
+            android:layout_marginEnd="@dimen/material_small_padding"
+            app:layout_constraintBottom_toBottomOf="@id/chatRoomNameTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/chatRoomNameTextView" />
+
+        <LinearLayout
+            android:id="@+id/contentContainerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chatRoomNameTextView"
+            tools:ignore="UselessLeaf">
+
+            <!-- Content will be filled in here -->
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.design.card.MaterialCardView>

@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.component.ui.transportation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -43,12 +44,17 @@ public class MVVCard extends Card {
         return new MVVCardViewHolder(view);
     }
 
+    @Override
+    public int getOptionsMenuResId() {
+        return R.menu.card_popup_menu;
+    }
+
     public String getTitle() {
         return mStation.getStation();
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
 
         if (viewHolder instanceof MVVCardViewHolder) {
@@ -64,12 +70,12 @@ public class MVVCard extends Card {
     }
 
     @Override
-    protected void discard(Editor editor) {
+    protected void discard(@NonNull Editor editor) {
         editor.putLong(MVV_TIME, System.currentTimeMillis());
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         final long prevDate = prefs.getLong(MVV_TIME, 0);
         return prevDate + DateUtils.HOUR_IN_MILLIS < System.currentTimeMillis();
     }

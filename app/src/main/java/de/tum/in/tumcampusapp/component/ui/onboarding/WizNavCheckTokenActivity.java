@@ -8,8 +8,9 @@ import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.Toast;
 
+import java.net.UnknownHostException;
+
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
@@ -101,7 +102,7 @@ public class WizNavCheckTokenActivity extends ProgressActivity {
     private void handleDownloadFailure(Throwable t) {
         int messageResId;
 
-        if (t instanceof NoNetworkConnectionException) {
+        if (t instanceof UnknownHostException) {
             messageResId = R.string.no_internet_connection;
         } else if (t instanceof InactiveTokenException) {
             messageResId = R.string.error_access_token_inactive;

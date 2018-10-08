@@ -358,7 +358,7 @@ Signatur: %5$s</string>
     <string name="semester_summer">Sommersemester</string>
     <string name="semester_winter">Wintersemester</string>
     <string name="update_notification_description">Eine neue Version der Tum Campus App wurde am %s released. Hier tippen zum herunterladen.</string>
-    <string name="support_us">Hilf uns die TUM Campus App besser zu machen. Like uns auf Facebook, schlage neue Ideen auf GitHub vor oder sage uns deine Meinung per E-Mail.</string>
+    <string name="support_us">Hilf uns, die TUM Campus App besser zu machen. Like uns auf Facebook, schlage neue Ideen auf GitHub vor oder sage uns deine Meinung per E-Mail.</string>
     <string name="support_us_title">Unterstütze uns</string>
     <string name="permission_location_explanation">Die TUM Campus App braucht die Erlaubnis, auf deinen Standort zugreifen zu dürfen, um Mensa-Speisepläne in deiner Nähe oder Fahrpläne der nächstgelegenen MVV-Station anzeigen zu können. Wenn du das nicht willst, kannst du deinen Standort in den Einstellungen konfigurieren.</string>
     <string name="permission_calendar_explanation">Die TUM Campus App braucht die Erlaubnis, auf deinen Kalender zugreifen zu dürfen, um diesen mit deinem TUM-Kalender abgleichen zu können.</string>

@@ -8,6 +8,7 @@ import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -47,7 +48,7 @@ public class EduroamFixCard extends Card {
     }
 
     @Override
-    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+    public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
         setMCard(viewHolder.itemView);
         setMLinearLayout(getMCard().findViewById(R.id.card_view));
@@ -85,7 +86,7 @@ public class EduroamFixCard extends Card {
     }
 
     @Override
-    protected boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         //Check if wifi is turned on at all, as we cannot say if it was configured if its off
         WifiManager wifi = (WifiManager) getContext().getApplicationContext()
                                                      .getSystemService(Context.WIFI_SERVICE);
@@ -97,7 +98,7 @@ public class EduroamFixCard extends Card {
     }
 
     @Override
-    protected void discard(SharedPreferences.Editor editor) {
+    protected void discard(@NonNull SharedPreferences.Editor editor) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit()
              .putBoolean("card_eduroam_fix_start", false)

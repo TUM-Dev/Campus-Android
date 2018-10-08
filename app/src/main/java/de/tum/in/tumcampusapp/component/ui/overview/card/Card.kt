@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
@@ -39,10 +40,17 @@ abstract class Card(
     }
 
     /**
-     * Tells the list adapter and indirectly the SwipeDismissList if the item is dismissible, e.g.: The restore card is not dismissible.
+     * Tells the list adapter and indirectly the SwipeDismissList if the item is dismissible.
+     * E.g.: The restore card is not dismissible.
      */
     open val isDismissible: Boolean
         get() = true
+
+    /**
+     * The options menu that should be inflated when the user presses the options icon in a card.
+     */
+    open val optionsMenuResId: Int
+        get() = R.menu.card_popup_menu_no_settings
 
     open var position: Int
         get() =

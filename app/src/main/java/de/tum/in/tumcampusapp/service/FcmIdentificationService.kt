@@ -15,10 +15,7 @@ import retrofit2.Response
 import java.io.IOException
 import java.util.*
 
-class FcmIdentificationService(val context: Context? = null) : FirebaseInstanceIdService() {
-
-    private val currentToken: String
-        get() = Utils.getSetting(this.context, Const.FCM_TOKEN_ID, "")
+class FcmIdentificationService : FirebaseInstanceIdService() {
 
     /**
      * Registers this phone with InstanceID and returns a valid token to be transmitted to the server
@@ -26,32 +23,34 @@ class FcmIdentificationService(val context: Context? = null) : FirebaseInstanceI
      * @return String token that can be used to transmit messages to this client
      */
     @Throws(IOException::class)
-    fun register(): String? {
+    private fun register(context: Context): String? {
         val instanceID = FirebaseInstanceId.getInstance()
         val token = instanceID.token
         Utils.setSetting(context, Const.FCM_INSTANCE_ID, instanceID.id)
-        Utils.setSetting(context, Const.FCM_TOKEN_ID, token)
+        Utils.setSetting(context, Const.FCM_TOKEN_ID, token ?: "")
         return token
     }
 
     override fun onTokenRefresh() {
         val refreshedToken = FirebaseInstanceId.getInstance().token
-        Utils.setSetting(this, Const.FCM_TOKEN_ID, refreshedToken)
+        Utils.setSetting(this, Const.FCM_TOKEN_ID, refreshedToken ?: "")
     }
 
-    fun checkSetup() {
+    fun checkSetup(context: Context) {
+        val currentToken = Utils.getSetting(context, Const.FCM_TOKEN_ID, "")
+
         // If we failed, we need to re register
         if (currentToken.isEmpty()) {
-            registerInBackground()
+            registerInBackground(context)
         } else {
             // If the regId is not empty, we still need to check whether it was successfully sent to the
             // TCA server, because this can fail due to user not confirming their private key
             if (!Utils.getSettingBool(context, Const.FCM_REG_ID_SENT_TO_SERVER, false)) {
-                sendTokenToBackend(currentToken)
+                sendTokenToBackend(context, currentToken)
             }
 
             // Update the reg id in steady intervals
-            checkRegisterIdUpdate(currentToken)
+            checkRegisterIdUpdate(context, currentToken)
         }
     }
 
@@ -62,17 +61,17 @@ class FcmIdentificationService(val context: Context? = null) : FirebaseInstanceI
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
-    private fun registerInBackground() {
+    private fun registerInBackground(context: Context) {
         try {
             //Register a new ID
-            val token = register()
+            val token = register(context)
 
             //Reset the lock in case we are updating and maybe failed
             Utils.setSetting(context, Const.FCM_REG_ID_SENT_TO_SERVER, false)
             Utils.setSetting(context, Const.FCM_REG_ID_LAST_TRANSMISSION, Date().time)
 
             // Let the server know of our new registration ID
-            sendTokenToBackend(token)
+            sendTokenToBackend(context, token)
 
             Utils.log("GCM registration successful")
         } catch (e: IOException) {
@@ -86,14 +85,10 @@ class FcmIdentificationService(val context: Context? = null) : FirebaseInstanceI
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-     fun sendTokenToBackend(token: String?) {
+    private fun sendTokenToBackend(context: Context, token: String?) {
         //Check if all parameters are present
         if (token == null || token.isEmpty()) {
             Utils.logv("Parameter missing for sending reg id")
-            return
-        }
-
-        if (context == null) {
             return
         }
 
@@ -129,12 +124,12 @@ class FcmIdentificationService(val context: Context? = null) : FirebaseInstanceI
      *
      * @param regId registration ID
      */
-    private fun checkRegisterIdUpdate(regId: String) {
+    private fun checkRegisterIdUpdate(context: Context, regId: String) {
         // Regularly (once a day) update the server with the reg id
         val lastTransmission = Utils.getSettingLong(context, Const.FCM_REG_ID_LAST_TRANSMISSION, 0L)
         val now = Date()
         if (now.time - 24 * 3600000 > lastTransmission) {
-            this.sendTokenToBackend(regId)
+            sendTokenToBackend(context, regId)
         }
     }
 

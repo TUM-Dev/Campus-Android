@@ -544,6 +544,27 @@
             android:name=".component.ui.transportation.widget.MVVWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
+        <activity
+            android:name=".component.ui.transportation.widget.MVVWidgetConfigureActivity"
+            android:allowTaskReparenting="false"
+            android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:label="@string/mvv_widget_select_station"
+            android:launchMode="singleTop"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_mvv" />
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <!-- receiver for the TimetableWidget -->
 
         <receiver
@@ -569,7 +590,6 @@
             android:excludeFromRecents="true"
             android:label="@string/timetable_widget_select_lectures"
             android:launchMode="singleTop"
-            android:taskAffinity=""
             android:theme="@style/AppTheme.NoDrawerLayout">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

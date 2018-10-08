@@ -4,13 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.exception.NoNetworkConnectionException;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
-import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.MissingPermissionException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
-import de.tum.in.tumcampusapp.api.tumonline.exception.TokenLimitReachedException;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,6 +64,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                showLoadingEnded();
                 onDownloadFailure(t);
             }
         });
@@ -100,22 +95,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
 
     protected final void onDownloadFailure(@NonNull Throwable throwable) {
         Utils.log(throwable);
-
-        if (throwable instanceof NoNetworkConnectionException) {
-            showNoInternetLayout();
-        } else if (throwable instanceof InactiveTokenException) {
-            showFailedTokenLayout(R.string.error_access_token_inactive);
-        } else if (throwable instanceof InvalidTokenException) {
-            showFailedTokenLayout(R.string.error_invalid_access_token);
-        } else if (throwable instanceof MissingPermissionException) {
-            showFailedTokenLayout(R.string.error_no_rights_to_access_function);
-        } else if (throwable instanceof TokenLimitReachedException) {
-            showFailedTokenLayout(R.string.error_access_token_limit_reached);
-        } else if (throwable instanceof RequestLimitReachedException) {
-            showFailedTokenLayout(R.string.error_request_limit_reached);
-        } else {
-            showError(R.string.error_unknown);
-        }
+        showErrorLayout(throwable);
     }
 
 }

@@ -35,21 +35,15 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 545
-        versionName "2.0-dev"
-
-        targetSdkVersion 28
-        versionCode 546
-        versionName "2.0-beta2-dev"
+        versionCode 549
+        versionName "2.0-beta5-dev"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        kapt {
+        kapt.arguments {
             generateStubs = true
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas".toString())
-            }
         }
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
     }
     lintOptions {
         checkAllWarnings true
@@ -78,7 +72,7 @@ android {
     }
 }
 
-def androidSupportVersion = '28.0.0-rc02'
+def androidSupportVersion = '28.0.0'
 def retrofitVersion = '2.4.0'
 def tikXmlVersion = '0.8.13'
 

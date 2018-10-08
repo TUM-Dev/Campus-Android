@@ -149,7 +149,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 if (c != null) {
                     name.setText(c.getName());
                     address.setText(c.getAddress());
-                    dist.setText(Utils.formatDist(c.getDistance()));
+                    dist.setText(Utils.formatDistance(c.getDistance()));
                 }
 
                 return v;

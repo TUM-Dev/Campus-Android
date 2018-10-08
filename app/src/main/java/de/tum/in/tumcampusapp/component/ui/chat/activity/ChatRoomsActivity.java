@@ -21,6 +21,7 @@ import android.widget.EditText;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -150,6 +151,12 @@ public class ChatRoomsActivity
                 manager.replaceIntoRooms(rooms);
             } catch (IOException e) {
                 Utils.log(e);
+
+                if (e instanceof UnknownHostException) {
+                    showErrorSnackbar(R.string.error_no_internet_connection);
+                } else {
+                    showErrorSnackbar(R.string.error_something_wrong);
+                }
             }
         }
 

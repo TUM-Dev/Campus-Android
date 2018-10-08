@@ -39,7 +39,7 @@ public class StudyRoomsPagerAdapter extends FragmentStatePagerAdapter {
         return 1;
     }
 
-    public void setStudyRoomGroupId(int selectedGroupId) {
+    void setStudyRoomGroupId(int selectedGroupId) {
         mCurrentStudyRoomGroupId = selectedGroupId;
     }
 }

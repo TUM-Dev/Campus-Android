@@ -5,12 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.ConcurrentSkipListSet;
-
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -29,27 +24,26 @@ public final class CardManager {
     /**
      * Card typ constants
      */
-    public static final int CARD_CAFETERIA = 1;
-    public static final int CARD_TUITION_FEE = 2;
-    public static final int CARD_NEXT_LECTURE = 3;
-    public static final int CARD_RESTORE = 4;
-    public static final int CARD_NO_INTERNET = 7;
-    public static final int CARD_MVV = 8;
-    public static final int CARD_NEWS = 9;
-    public static final int CARD_NEWS_FILM = 10;
-    public static final int CARD_EDUROAM = 11;
-    public static final int CARD_CHAT = 12;
-    public static final int CARD_SUPPORT = 13;
-    public static final int CARD_LOGIN = 14;
-    public static final int CARD_EDUROAM_FIX = 15;
-    public static final int CARD_TOP_NEWS = 16;
-    public static final int CARD_EVENT = 17;
-
+    public static final int CARD_CAFETERIA = R.layout.card_cafeteria_menu;
+    public static final int CARD_TUITION_FEE = R.layout.card_tuition_fees;
+    public static final int CARD_NEXT_LECTURE = R.layout.card_next_lecture_item;
+    public static final int CARD_RESTORE = R.layout.card_restore;
+    public static final int CARD_NO_INTERNET = R.layout.card_no_internet;
+    public static final int CARD_MVV = R.layout.card_mvv;
+    public static final int CARD_NEWS = R.layout.card_news_item;
+    public static final int CARD_NEWS_FILM = R.layout.card_news_film_item;
+    public static final int CARD_EDUROAM = R.layout.card_eduroam;
+    public static final int CARD_CHAT = R.layout.card_chat_messages;
+    public static final int CARD_SUPPORT = R.layout.card_support;
+    public static final int CARD_LOGIN = R.layout.card_login_prompt;
+    public static final int CARD_EDUROAM_FIX = R.layout.card_eduroam_fix;
+    public static final int CARD_TOP_NEWS = R.layout.card_top_news;
+    public static final int CARD_EVENT = R.layout.card_events_item;
 
     private CardManager() {}
 
     /**
-     * Resets dismiss settingsPrefix for all cards
+     * Resets dismiss settings for all cards
      */
     public static void restoreCards(Context context) {
         context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
@@ -68,8 +62,8 @@ public final class CardManager {
     private static void restoreCardPositions(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Editor editor = preferences.edit();
-        for (String s : preferences.getAll()
-                                   .keySet()) {
+
+        for (String s : preferences.getAll().keySet()) {
             if (s.endsWith(CARD_POSITION_PREFERENCE_SUFFIX)) {
                 editor.remove(s);
             }

@@ -8,7 +8,6 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.app.exception.NoNetworkConnectionException
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearching
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
@@ -18,6 +17,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.net.UnknownHostException
 
 /**
  * Activity to show transport stations and departures
@@ -95,7 +95,7 @@ class TransportationActivity : ActivityForSearching(
                     // Something went wrong
                     Utils.log(t)
                     when (t) {
-                        is NoNetworkConnectionException -> showNoInternetLayout()
+                        is UnknownHostException -> showNoInternetLayout()
                         else -> showError(R.string.something_wrong)
                     }
                 })

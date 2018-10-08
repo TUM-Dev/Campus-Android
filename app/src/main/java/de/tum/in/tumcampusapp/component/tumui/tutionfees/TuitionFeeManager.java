@@ -40,6 +40,11 @@ public class TuitionFeeManager implements ProvidesCard, ProvidesNotifications {
         List<Card> results = new ArrayList<>();
         Tuition tuition = loadTuition(cacheControl);
 
+        if (tuition == null) {
+            return results;
+        }
+
+
         TuitionFeesCard card = new TuitionFeesCard(mContext);
         card.setTuition(tuition);
 
