@@ -69,6 +69,7 @@ public class NextLectureCard extends Card {
     public void setLectures(List<CalendarItem> calendarItems) {
         for (CalendarItem calendarItem : calendarItems) {
             CardCalendarItem item = new CardCalendarItem();
+            item.id = calendarItem.getNr();
             item.start = calendarItem.getDtstart();
             item.end = calendarItem.getDtend();
             item.title = calendarItem.getFormattedTitle();
@@ -78,6 +79,7 @@ public class NextLectureCard extends Card {
     }
 
     public static class CardCalendarItem {
+        public String id;
         public String title;
         public DateTime start;
         public DateTime end;

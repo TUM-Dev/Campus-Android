@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.layout_card_lecture.view.*
 class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
 
     private var isExpanded = false
+    private var didBind = false
 
     fun bind(items: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
         showLecture(items.first())
@@ -28,11 +29,16 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
         }
 
         val remaining = items.drop(1)
-        remaining.forEach { item ->
-            val lectureView = NextLectureView(context).apply {
-                setLecture(item)
+        if (didBind.not()) {
+            // This is the first call of bind. Therefore, we inflate any additional NextLectureViews
+            // for upcoming events.
+            remaining.forEach { item ->
+                val lectureView = NextLectureView(context).apply {
+                    setLecture(item)
+                }
+                additionalLecturesLayout.addView(lectureView)
             }
-            additionalLecturesLayout.addView(lectureView)
+            didBind = didBind.not()
         }
 
         toggleMoreButton(remaining.size)
@@ -65,7 +71,10 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
         }
 
         setOnClickListener {
-            val bundle = Bundle().apply { putLong(Const.EVENT_TIME, lecture.start.millis) }
+            val bundle = Bundle().apply {
+                putString(Const.KEY_EVENT_ID, lecture.id)
+                putLong(Const.EVENT_TIME, lecture.start.millis)
+            }
             val destination = SystemActivity(CalendarActivity::class.java, bundle)
             NavigationManager.open(context, destination)
         }
