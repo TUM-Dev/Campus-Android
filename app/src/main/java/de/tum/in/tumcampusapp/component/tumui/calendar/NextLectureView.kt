@@ -31,7 +31,10 @@ class NextLectureView @JvmOverloads constructor(
         }
 
         view.setOnClickListener {
-            val bundle = Bundle().apply { putLong(Const.EVENT_TIME, lecture.start.millis) }
+            val bundle = Bundle().apply {
+                putLong(Const.EVENT_TIME, lecture.start.millis)
+                putString(Const.KEY_EVENT_ID, lecture.id)
+            }
             val destination = SystemActivity(CalendarActivity::class.java, bundle)
             NavigationManager.open(context, destination)
         }
