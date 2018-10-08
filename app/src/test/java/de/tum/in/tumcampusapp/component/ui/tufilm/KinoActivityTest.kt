@@ -90,7 +90,7 @@ class KinoActivityTest {
         waitForUI()
         Thread.sleep(100)
 
-        onView(withId(R.id.no_movies_layout))
+        onView(withId(R.id.error_layout))
                 .check(matches(isDisplayed()))
     }
 
