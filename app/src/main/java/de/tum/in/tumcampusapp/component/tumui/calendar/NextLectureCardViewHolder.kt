@@ -38,10 +38,9 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
                 }
                 additionalLecturesLayout.addView(lectureView)
             }
+            toggleMoreButton(remaining.size)
             didBind = didBind.not()
         }
-
-        toggleMoreButton(remaining.size)
 
         moreTextView.setOnClickListener {
             isExpanded = isExpanded.not()

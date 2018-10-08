@@ -95,6 +95,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         super.onCreate(savedInstanceState);
 
         mWeekView = findViewById(R.id.weekView);
+        calendarController = new CalendarController(this);
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
@@ -135,7 +136,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
 
         disableRefresh();
-        calendarController = new CalendarController(this);
         loadEvents(CacheControl.USE_CACHE);
     }
 
