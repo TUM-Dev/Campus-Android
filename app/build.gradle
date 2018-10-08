@@ -40,10 +40,12 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        kapt.arguments {
+        kapt {
             generateStubs = true
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
         }
-        arg("room.schemaLocation", "$projectDir/schemas".toString())
     }
     lintOptions {
         checkAllWarnings true
