@@ -27,7 +27,9 @@
     <dimen name="time_line_thickness">1px</dimen>
     <dimen name="icon_small">48dp</dimen>
     <dimen name="card_text_padding">10dp</dimen>
-    <dimen name="next_lecture_select_width">30dp</dimen>
+    <dimen name="next_lecture_select_height">32dp</dimen>
+    <dimen name="next_lecture_select_width">48dp</dimen>
+
     <dimen name="card_padding_vertical">0dp</dimen>
     <dimen name="card_padding_horizontal">16dp</dimen>
     <dimen name="card_view_elevation">4dp</dimen>

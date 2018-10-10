@@ -58,14 +58,14 @@ public class CardsDetailActivity extends ActivityForLoadingInBackground<Void, St
 
     @Override
     protected StudyCard onLoadInBackground(Void... arg) {
-        /* if (!card.is_valid()) {
+        /* if (!cardView.is_valid()) {
             return null;
         }
         try {
             ChatMember chatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
             final TUMCabeVerification v = TUMCabeVerification.create(this, chatMember);
             final Context c = this;
-            return TUMCabeClient.getInstance(c).addStudyCard(card, v);
+            return TUMCabeClient.getInstance(c).addStudyCard(cardView, v);
         } catch (IOException | NoPrivateKey e) {
             Utils.log(e);
         }

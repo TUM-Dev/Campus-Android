@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.eduroam;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiEnterpriseConfig;
@@ -9,14 +8,10 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.button.MaterialButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,53 +39,23 @@ public class EduroamFixCard extends Card {
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_eduroam_fix, parent, false);
-        return new CardViewHolder(view);
+        return new EduroamFixCardViewHolder(view);
     }
 
     @Override
     public void updateViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
-        super.updateViewHolder(viewHolder);
-        setMCard(viewHolder.itemView);
-        setMLinearLayout(getMCard().findViewById(R.id.card_view));
-
-        TextView errorsTv = getMCard().findViewById(R.id.eduroam_errors);
-        if (errors != null && !errors.isEmpty()) {
-            errorsTv.setVisibility(View.VISIBLE);
-            errorsTv.setText(Joiner.on("\n").join(errors));
+        if (viewHolder instanceof EduroamFixCardViewHolder) {
+            EduroamFixCardViewHolder holder = (EduroamFixCardViewHolder) viewHolder;
+            holder.bind(eduroam, errors);
         }
-
-        MaterialButton button = viewHolder.itemView.findViewById(R.id.eduroam_action_button);
-        button.setOnClickListener(v -> performEduroamFix());
-
-        // only error is missing realm which is not insecure per se but also not right
-        if (errors.size() == 1 && errors.get(0)
-                                        .equals(getContext().getString(R.string.wifi_identity_zone))) {
-            getMCard().findViewById(R.id.eduroam_insecure_message)
-                      .setVisibility(View.GONE);
-        }
-    }
-
-    private void performEduroamFix() {
-        if (eduroam != null) {
-            WifiManager wifi = (WifiManager) getContext().getApplicationContext()
-                    .getSystemService(Context.WIFI_SERVICE);
-            if (wifi != null) {
-                wifi.removeNetwork(eduroam.networkId);
-            }
-        }
-
-        Intent intent = new Intent(getContext(), SetupEduroamActivity.class);
-        // TCA should only produce correct profiles, so incorrect ones were configured somewhere else
-        intent.putExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, true);
-        getContext().startActivity(intent);
     }
 
     @Override
     protected boolean shouldShow(@NonNull SharedPreferences prefs) {
-        //Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        WifiManager wifi = (WifiManager) getContext().getApplicationContext()
-                                                     .getSystemService(Context.WIFI_SERVICE);
-        if (!wifi.isWifiEnabled()) {
+        // Check if wifi is turned on at all, as we cannot say if it was configured if its off
+        WifiManager wifi = (WifiManager) getContext()
+                .getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifi == null || !wifi.isWifiEnabled()) {
             return false;
         }
 
