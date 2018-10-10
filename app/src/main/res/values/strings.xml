@@ -698,4 +698,6 @@ Signature: %5$s</string>
     <string name="chat_message_send_error">Message couldn’t be sent</string>
     <string name="chat_message_try_again">The message couldn’t be send. Try again?</string>
     <string name="today">Today</string>
+    <string name="next_lecture_hide">Hide</string>
+    <string name="next_lecture_show_more">Show %d more …</string>
 </resources>

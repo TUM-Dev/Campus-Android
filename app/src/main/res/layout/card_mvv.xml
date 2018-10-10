@@ -25,7 +25,6 @@
         <ImageButton
             android:id="@+id/cardMoreIcon"
             style="@style/CardMoreIcon"
-            android:layout_marginEnd="@dimen/material_small_padding"
             app:layout_constraintBottom_toBottomOf="@id/stationNameTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/stationNameTextView" />

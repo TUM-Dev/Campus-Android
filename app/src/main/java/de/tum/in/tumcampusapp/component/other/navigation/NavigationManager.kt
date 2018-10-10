@@ -93,7 +93,7 @@ object NavigationManager {
         }
 
         val isNavigationItem = current::class.java in topLevelActivities
-        val showDrawer = current.intent.extras?.getBoolean(Const.SHOW_DRAWER) ?: true
+        val showDrawer = current.intent.extras?.getBoolean(Const.SHOW_DRAWER) ?: false
 
         if (isNavigationItem && showDrawer) {
             openNavigationDrawer(current)
