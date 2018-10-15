@@ -70,14 +70,29 @@ public interface CalendarDao {
             "ORDER BY dtend, dtstart LIMIT 4")
     List<CalendarItem> getNextCalendarItems();
 
+    @Query("SELECT * FROM calendar " +
+            "WHERE status!='CANCEL' " +
+            "AND dtstart > datetime('now', 'localtime') " +
+            "GROUP BY title, dtstart, dtend " +
+            "ORDER BY dtstart LIMIT 4")
+    List<CalendarItem> getNextUniqueCalendarItems();
+
+    @Query("SELECT location FROM calendar "
+            + "WHERE title = (SELECT title FROM calendar WHERE nr=:id) "
+            + "AND dtstart = (SELECT dtstart FROM calendar WHERE nr=:id) "
+            + "AND dtend = (SELECT dtend FROM calendar WHERE nr=:id) "
+            + "AND status != 'CANCEL' "
+            + "ORDER BY location ASC")
+    List<String> getNonCancelledLocationsById(String id);
+
     @Query("SELECT * FROM calendar WHERE nr=:id"
-           + " UNION "
-           + "SELECT * FROM calendar "
-           + "WHERE title = (SELECT title FROM calendar WHERE nr=:id) "
-           + "AND dtstart = (SELECT dtstart FROM calendar WHERE nr=:id) "
-           + "AND dtend = (SELECT dtend FROM calendar WHERE nr=:id) "
-           + "AND nr != :id "
-           + "ORDER BY location ASC")
+            + " UNION "
+            + "SELECT * FROM calendar "
+            + "WHERE title = (SELECT title FROM calendar WHERE nr=:id) "
+            + "AND dtstart = (SELECT dtstart FROM calendar WHERE nr=:id) "
+            + "AND dtend = (SELECT dtend FROM calendar WHERE nr=:id) "
+            + "AND nr != :id "
+            + "ORDER BY location ASC")
     List<CalendarItem> getCalendarItemsById(String id);
 
     @Query("SELECT * FROM calendar WHERE nr=:id")

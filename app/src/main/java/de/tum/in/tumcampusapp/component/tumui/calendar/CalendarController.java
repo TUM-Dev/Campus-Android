@@ -264,19 +264,8 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
     }
 
     @Nullable
-    public CalendarItem getNextCalendarItem() {
-        List<CalendarItem> items = getNextCalendarItems();
-        if (items.isEmpty()) {
-            return null;
-        }
-
-        Collections.sort(items, (lhs, rhs) -> lhs.getEventStart().compareTo(rhs.getEventStart()));
-        return items.get(0);
-    }
-
-    @Nullable
-    public CalendarItem getNextCalendarItem(String eventId) {
-        return calendarDao.getCalendarItemById(eventId);
+    public List<String> getLocationsForEvent(String eventId) {
+        return calendarDao.getNonCancelledLocationsById(eventId);
     }
 
     /**
@@ -295,7 +284,7 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
     @NotNull
     @Override
     public List<Card> getCards(@NonNull CacheControl cacheControl) {
-        List<CalendarItem> nextCalendarItems = getNextCalendarItems();
+        List<CalendarItem> nextCalendarItems = calendarDao.getNextUniqueCalendarItems();
         List<Card> results = new ArrayList<>();
 
         if (!nextCalendarItems.isEmpty()) {
