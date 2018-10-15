@@ -140,8 +140,11 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
                     override fun onFailure(call: Call<List<TicketStatus>>, t: Throwable) {
                         Utils.log(t)
-                        remainingTicketsTextView.setText(R.string.unknown)
-                        swipeRefreshLayout.isRefreshing = false
+
+                        if (isDetached.not()) {
+                            remainingTicketsTextView.setText(R.string.unknown)
+                            swipeRefreshLayout.isRefreshing = false
+                        }
                     }
                 })
     }

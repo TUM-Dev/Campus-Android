@@ -6,9 +6,6 @@ import android.content.SharedPreferences.Editor
 import android.preference.PreferenceManager
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
@@ -27,13 +24,8 @@ abstract class Card(
         val settingsPrefix: String = ""
 ) : Comparable<Card> {
 
-    // UI Elements
-    protected var mCard: View? = null
-    protected var mLinearLayout: LinearLayout? = null
-    protected var mTitleView: TextView? = null
-
     // Settings for showing this card on start page or as notification
-    protected var mShowStart = Utils.getSettingBool(context, settingsPrefix + "_start", true)
+    private var showStart = Utils.getSettingBool(context, settingsPrefix + "_start", true)
 
     open fun getId(): Int {
         return 0
@@ -53,10 +45,10 @@ abstract class Card(
         get() = R.menu.card_popup_menu_no_settings
 
     open var position: Int
-        get() =
-            Utils.getSettingInt(context, "${this.javaClass.simpleName}${CARD_POSITION_PREFERENCE_SUFFIX}", -1)
+        get()  =
+            Utils.getSettingInt(context, "${this.javaClass.simpleName}$CARD_POSITION_PREFERENCE_SUFFIX", -1)
         set(position) =
-            Utils.setSetting(context, "${this.javaClass.simpleName}${CARD_POSITION_PREFERENCE_SUFFIX}", position)
+            Utils.setSetting(context, "${this.javaClass.simpleName}$CARD_POSITION_PREFERENCE_SUFFIX", position)
 
     /**
      * Returns the [NavigationDestination] when the card is clicked, or null if nothing should happen
@@ -76,19 +68,6 @@ abstract class Card(
     }
 
     /**
-     * Adds a new text view to the main card layout
-     *
-     * @param text Text that should be shown
-     * @return Handle to the [TextView]
-     */
-    protected fun addTextView(text: CharSequence): TextView {
-        val textView = TextView(context)
-        textView.text = text
-        mLinearLayout!!.addView(textView)
-        return textView
-    }
-
-    /**
      * Should be called after the user has dismissed the card
      */
     fun discardCard() {
@@ -104,7 +83,7 @@ abstract class Card(
      * @return The Card to be displayed or null
      */
     open fun getIfShowOnStart(): Card? {
-        if (mShowStart) {
+        if (showStart) {
             val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
             if (shouldShow(prefs)) {
                 return this
@@ -141,7 +120,7 @@ abstract class Card(
     }
 
     /**
-     * Save information about the dismissed card/notification to decide later if the card should be shown again
+     * Save information about the dismissed card/notification to decide later if the cardView should be shown again
      *
      * @param editor Editor to be used for saving values
      */
