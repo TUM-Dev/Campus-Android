@@ -21,7 +21,7 @@ public interface CalendarDao {
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
             + "AND STATUS != 'CANCEL'"
-            + "ORDER BY dtstart, title ASC")
+            + "ORDER BY dtstart, title, location ASC")
     List<CalendarItem> getAllBetweenDates(DateTime from, DateTime to);
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
@@ -69,6 +69,16 @@ public interface CalendarDao {
             "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
             "ORDER BY dtend, dtstart LIMIT 4")
     List<CalendarItem> getNextCalendarItems();
+
+    @Query("SELECT * FROM calendar WHERE nr=:id"
+           + " UNION "
+           + "SELECT * FROM calendar "
+           + "WHERE title = (SELECT title FROM calendar WHERE nr=:id) "
+           + "AND dtstart = (SELECT dtstart FROM calendar WHERE nr=:id) "
+           + "AND dtend = (SELECT dtend FROM calendar WHERE nr=:id) "
+           + "AND nr != :id "
+           + "ORDER BY location ASC")
+    List<CalendarItem> getCalendarItemsById(String id);
 
     @Query("SELECT * FROM calendar WHERE nr=:id")
     CalendarItem getCalendarItemById(String id);

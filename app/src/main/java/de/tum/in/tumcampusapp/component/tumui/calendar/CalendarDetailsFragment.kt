@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
@@ -20,6 +21,7 @@ import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_calendar_details.*
+import org.jetbrains.anko.support.v4.dimen
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,7 +38,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         dao = TcaDb.getInstance(context).calendarDao()
 
         arguments?.let { args ->
-            calendarId = args.getString(CALENDAR_ID_PARAM)
+            calendarId = args.getString(CALENDAR_ID_PARAM)!!
         }
     }
 
@@ -46,11 +48,13 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val calendarItem = dao.getCalendarItemById(calendarId)
+        val calendarItem = dao.getCalendarItemsById(calendarId)
         updateView(calendarItem)
     }
 
-    private fun updateView(calendarItem: CalendarItem) {
+    private fun updateView(calendarItemList: List<CalendarItem>) {
+        val calendarItem = calendarItemList[0]
+
         if (calendarItem.status == "CANCEL") {
             cancelButtonsContainer.visibility = View.VISIBLE
             descriptionTextView.setTextColor(Color.RED)
@@ -58,12 +62,32 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
         titleTextView.text = calendarItem.title
         dateTextView.text = calendarItem.getEventDateString()
-        locationTextView.text = calendarItem.location
 
-        if (calendarItem.location.isEmpty()) {
-            locationTextView.visibility = View.GONE
+        val locationList = toLocationsList(calendarItemList)
+        if (areLocationsEmpty(locationList)) {
+            locationIcon.visibility = View.GONE
         } else {
-            locationTextView.visibility = View.VISIBLE
+            locationIcon.visibility = View.VISIBLE
+            for ((index, item) in calendarItemList.withIndex()) {
+                if (item.location.isBlank()) {
+                    continue
+                }
+                val locationText = TextView(context)
+                if (item.isCancelled()) {
+                    locationText.setTextColor(resources.getColor(R.color.event_canceled))
+                    locationText.text = "${item.location} (${R.string.event_canceled})"
+                } else {
+                    locationText.setTextColor(resources.getColor(R.color.location_color))
+                    locationText.text = item.location
+                }
+                // Add padding between locations.
+                if (index + 1 < calendarItemList.size) {
+                    locationText.setPadding(0,0,0, dimen(R.dimen.material_small_padding))
+                }
+                locationText.textSize = 18f
+                locationText.setOnClickListener { onLocationClicked(item.location) }
+                locationLinearLayout.addView(locationText, index)
+            }
         }
 
         if (calendarItem.description.isEmpty()) {
@@ -72,8 +96,6 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             descriptionTextView.text = calendarItem.description
         }
 
-        locationTextView.setOnClickListener { onLocationClicked(calendarItem.location) }
-
         if (calendarItem.url.isEmpty()) {
             buttonsContainer.visibility = View.VISIBLE
             deleteButton.setOnClickListener { displayDeleteDialog(calendarItem.nr) }
@@ -81,6 +103,21 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         } else {
             buttonsContainer.visibility = View.GONE
         }
+    }
+
+    private fun toLocationsList(calendarItemList: List<CalendarItem>): List<String> {
+        val locationList = ArrayList<String>()
+        for (calendarItem in calendarItemList) {
+            locationList.add(calendarItem.location)
+        }
+        return locationList
+    }
+
+    private fun areLocationsEmpty(locationsList: List<String>): Boolean {
+        for (location in locationsList){
+            if (!location.isBlank()) return false
+        }
+        return true
     }
 
     private fun displayDeleteDialog(eventId: String) {
@@ -128,18 +165,16 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance(calendarItem: CalendarItem,
+        fun newInstance(calendarItem: List<CalendarItem>,
                         listener: OnEventInteractionListener): CalendarDetailsFragment {
             return CalendarDetailsFragment().apply {
                 this.arguments = Bundle().apply {
-                    putString(Const.CALENDAR_ID_PARAM, calendarItem.nr)
+                    putString(Const.CALENDAR_ID_PARAM, calendarItem[0].nr)
                 }
                 this.listener = listener
             }
         }
-
     }
 
     interface OnEventInteractionListener {
