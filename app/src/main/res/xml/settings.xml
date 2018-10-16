@@ -110,7 +110,7 @@
 
         </android.support.v7.preference.PreferenceScreen>
 
-        <!-- MVV card -->
+        <!-- MVV card-->
         <android.support.v7.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_train_24px"
             android:key="card_mvv"

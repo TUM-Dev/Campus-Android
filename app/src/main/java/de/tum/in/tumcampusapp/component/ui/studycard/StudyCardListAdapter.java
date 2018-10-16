@@ -58,7 +58,7 @@ public class StudyCardListAdapter extends BaseAdapter {
         }
 
         if (card != null) {
-            // viewHolder.title.setText(card.getTitle());
+            // viewHolder.title.setText(cardView.getTitle());
         }
 
         return view;

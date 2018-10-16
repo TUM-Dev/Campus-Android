@@ -31,7 +31,6 @@ public class TuitionFeesCard extends Card {
     private static final String LAST_FEE_FRIST = "fee_frist";
     private static final String LAST_FEE_SOLL = "fee_soll";
 
-    @NonNull
     private Tuition mTuition;
 
     TuitionFeesCard(Context context) {
