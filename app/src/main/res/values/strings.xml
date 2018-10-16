@@ -114,7 +114,7 @@
     <string name="information">Information</string>
     <string name="facebook" translatable="false">Facebook</string>
     <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
-    <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
+    <string name="facebook_link_app" translatable="false">fb://facewebmodal/f?href=https://www.facebook.com/TUMCampus</string>
     <string name="github" translatable="false">GitHub</string>
     <string name="github_contribute">Contribute on GitHub</string>
     <string name="github_link" translatable="false">https://github.com/TCA-Team/TumCampusApp</string>
