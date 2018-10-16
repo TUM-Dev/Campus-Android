@@ -30,7 +30,6 @@ class NextLectureView @JvmOverloads constructor(
         } else {
             lectureLocationTextView.visibility = View.VISIBLE
             lectureLocationTextView.text = lecture.locationString
-            Log.v("NextLectureView", lecture.locationString)
         }
 
         view.setOnClickListener {
