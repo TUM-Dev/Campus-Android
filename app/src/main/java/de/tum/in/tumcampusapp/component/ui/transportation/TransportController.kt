@@ -120,7 +120,10 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
             setStation(station)
             setDepartures(departures)
         }
-        results.add(card.getIfShowOnStart()!!)
+
+        card.getIfShowOnStart()?.let {
+            results.add(it)
+        }
 
         return results
     }

@@ -105,12 +105,12 @@ dependencies {
     kapt 'android.arch.persistence.room:compiler:1.1.1'
 
     // Play services
-    implementation 'com.google.android.gms:play-services-base:15.0.1'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.google.android.gms:play-services-base:16.0.1'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.3'
-    implementation 'com.google.firebase:firebase-messaging:17.3.2'
+    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-messaging:17.3.3'
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
     // Helpers
