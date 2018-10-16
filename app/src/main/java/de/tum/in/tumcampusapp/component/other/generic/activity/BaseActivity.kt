@@ -210,7 +210,11 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
                 Const.TUM_ONLINE_PROFILE_PICTURE_URL_FORMAT_STRING, group, personId)
 
         val imageView = headerView.findViewById<CircleImageView>(R.id.profileImageView)
-        Picasso.get().load(url).into(imageView)
+        Picasso.get()
+                .load(url)
+                .error(R.drawable.photo_not_available)
+                .placeholder(R.drawable.photo_not_available)
+                .into(imageView)
     }
 
     override fun onBackPressed() {

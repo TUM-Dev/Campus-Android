@@ -24,7 +24,7 @@
             android:id="@+id/cardMoreIconBackground"
             android:layout_width="@dimen/icon_default"
             android:layout_height="@dimen/icon_default"
-            android:layout_margin="@dimen/material_default_padding"
+            android:layout_margin="@dimen/material_small_padding"
             android:alpha="0.7"
             android:background="@drawable/circle_background"
             android:backgroundTint="@android:color/white"
@@ -34,7 +34,6 @@
         <ImageButton
             android:id="@+id/cardMoreIcon"
             style="@style/CardOutlinedMoreIcon"
-            android:layout_margin="@dimen/material_small_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
