@@ -57,21 +57,16 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
     }
 
     /**
-     * Open the Facebook app or view page in a browser if Facebook is not installed
+     * Open the Facebook app or view page in a browser if Facebook is not installed.
      */
     private fun openFacebook() {
-        val default = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)))
-        val facebook = try {
-            packageManager.getPackageInfo("com.facebook.katana", 0)
-            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)))
-        } catch (e: Exception) {
-            default
-        }
-
         try {
-            startActivity(facebook)
+            packageManager.getPackageInfo("com.facebook.katana", 0)
+            val intent = Intent(ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)))
+            startActivity(intent)
         } catch (e: Exception) {
             // Don't make any assumptions about another app, just start the browser instead
+            val default = Intent(ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)))
             startActivity(default)
         }
     }
