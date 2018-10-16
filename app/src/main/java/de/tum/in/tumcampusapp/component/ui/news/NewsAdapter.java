@@ -23,7 +23,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     @NonNull
     @Override
     public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return newsInflater.onCreateNewsView(parent, viewType);
+        return newsInflater.onCreateNewsView(parent, viewType, false);
     }
 
     @Override

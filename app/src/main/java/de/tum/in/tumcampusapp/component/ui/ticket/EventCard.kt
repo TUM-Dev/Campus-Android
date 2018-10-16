@@ -50,7 +50,7 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
         fun inflateViewHolder(parent: ViewGroup): CardViewHolder {
             val card = LayoutInflater.from(parent.context)
                     .inflate(R.layout.card_events_item, parent, false)
-            return EventsAdapter.EventViewHolder(card)
+            return EventsAdapter.EventViewHolder(card, true)
         }
 
     }

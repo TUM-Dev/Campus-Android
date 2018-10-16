@@ -37,10 +37,15 @@
         <ImageButton
             android:id="@+id/cardMoreIcon"
             style="@style/CardMoreIcon"
-            android:layout_marginEnd="@dimen/material_small_padding"
-            app:layout_constraintBottom_toBottomOf="@id/news_title"
+            android:layout_marginTop="@dimen/material_small_padding"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/news_title" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.Group
+            android:id="@+id/cardMoreIconGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="cardMoreIconBackground,cardMoreIcon" />
 
         <TextView
             android:id="@+id/news_src_date"
