@@ -13,106 +13,110 @@
 
         <include layout="@layout/toolbar" />
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipChildren="false"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginTop="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:layout_marginBottom="@dimen/material_default_padding"
-                android:autoLink="all"
-                android:lineSpacingMultiplier="1.1"
-                android:text="@string/app_info_text"
-                android:textSize="15sp" />
+                android:clipChildren="false"
+                android:orientation="vertical">
 
-            <android.support.design.button.MaterialButton
-                android:id="@+id/button_facebook"
-                style="@style/Widget.MaterialComponents.Button.Icon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:text="@string/facebook"
-                android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_corner_radius"
-                app:icon="@drawable/ic_facebook_white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:layout_marginBottom="@dimen/material_default_padding"
+                    android:autoLink="all"
+                    android:lineSpacingMultiplier="1.1"
+                    android:text="@string/app_info_text"
+                    android:textSize="15sp" />
 
-            <android.support.design.button.MaterialButton
-                android:id="@+id/button_github"
-                style="@style/Widget.MaterialComponents.Button.Icon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:text="@string/github_contribute"
-                android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_corner_radius"
-                app:icon="@drawable/ic_github_white" />
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/button_facebook"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:text="@string/facebook"
+                    android:textAllCaps="false"
+                    app:cornerRadius="@dimen/material_corner_radius"
+                    app:icon="@drawable/ic_facebook_white" />
 
-            <android.support.design.button.MaterialButton
-                android:id="@+id/button_privacy"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:text="@string/privacy_policy"
-                android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_corner_radius" />
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/button_github"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:text="@string/github_contribute"
+                    android:textAllCaps="false"
+                    app:cornerRadius="@dimen/material_corner_radius"
+                    app:icon="@drawable/ic_github_white" />
 
-            <android.support.design.button.MaterialButton
-                android:id="@+id/button_chat_terms"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:text="@string/open_chat_terms"
-                android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_corner_radius" />
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/button_privacy"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:text="@string/privacy_policy"
+                    android:textAllCaps="false"
+                    app:cornerRadius="@dimen/material_corner_radius" />
 
-            <android.support.design.button.MaterialButton
-                android:id="@+id/button_licenses"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:text="@string/licences"
-                android:textAllCaps="false"
-                app:cornerRadius="@dimen/material_corner_radius" />
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/button_chat_terms"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:text="@string/open_chat_terms"
+                    android:textAllCaps="false"
+                    app:cornerRadius="@dimen/material_corner_radius" />
 
-            <TextView
-                android:id="@+id/txt_version"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginTop="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:autoLink="all"
-                android:clickable="true"
-                android:focusable="true"
-                android:lineSpacingMultiplier="1.1"
-                android:text="@string/add_info"
-                android:textSize="@dimen/large_text_size" />
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/button_licenses"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:text="@string/licences"
+                    android:textAllCaps="false"
+                    app:cornerRadius="@dimen/material_corner_radius" />
 
-            <TableLayout
-                android:id="@+id/debugInfos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:layout_marginBottom="@dimen/material_default_padding"
-                android:visibility="invisible" />
+                <TextView
+                    android:id="@+id/txt_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:autoLink="all"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:lineSpacingMultiplier="1.1"
+                    android:text="@string/add_info"
+                    android:textSize="@dimen/large_text_size" />
 
-        </LinearLayout>
+                <TableLayout
+                    android:id="@+id/debugInfos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:layout_marginBottom="@dimen/material_default_padding"
+                    android:visibility="invisible" />
 
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>
