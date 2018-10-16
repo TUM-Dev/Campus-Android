@@ -40,6 +40,14 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <TextView
+            style="@style/InfoBox"
+            android:id="@+id/fees_aid"
+            android:layout_marginTop="25dp"
+            android:text="@string/ticket_sale_beta"
+            android:autoLink="email"
+            android:textColorLink="@android:color/white"/>
+
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
