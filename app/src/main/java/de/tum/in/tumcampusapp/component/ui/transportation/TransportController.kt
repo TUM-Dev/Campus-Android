@@ -149,6 +149,7 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
                         current.startTime.dayOfYear != next.startTime.dayOfYear
                     }
                 }
+                .take(100) // Some manufacturers cap the amount of alarms you can schedule (https://stackoverflow.com/a/29610474)
 
         val notifications = notificationCandidates.mapNotNull { it.toNotification(context) }
         NotificationScheduler(context).schedule(notifications)
