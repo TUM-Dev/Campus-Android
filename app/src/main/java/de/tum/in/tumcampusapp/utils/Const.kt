@@ -161,7 +161,7 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
 
-    const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_MQjLRRi8jzpOEhrNqbMeMY8g"
+    const val STRIPE_API_PUBLISHABLE_KEY = "pk_live_bjSAhBM3WFUqeNI4cJn9upDW"
     const val KEY_EVENT = "event"
     const val KEY_EVENT_ID = "eventId"
     const val KEY_CARD_HOLDER = "cardholder"
