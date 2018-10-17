@@ -95,6 +95,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         super.onCreate(savedInstanceState);
 
         mWeekView = findViewById(R.id.weekView);
+        calendarController = new CalendarController(this);
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
@@ -119,18 +120,22 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         getSwipeRefreshLayout().setProgressViewOffset(false, startOffset, endOffset);
 
         // Get time to show e.g. a lectures starting time or 0 for now
-        Intent i = getIntent();
+        Intent intent = getIntent();
         mShowDate = DateTime.now();
-        if (i != null && i.hasExtra(Const.EVENT_TIME)) {
-            long time = i.getLongExtra(Const.EVENT_TIME, 0);
+        if (intent != null && intent.hasExtra(Const.EVENT_TIME)) {
+            long time = intent.getLongExtra(Const.EVENT_TIME, 0);
             mShowDate = mShowDate.withMillis(time);
+
+            String eventId = intent.getStringExtra(Const.KEY_EVENT_ID);
+            if (eventId != null) {
+                openEvent(eventId);
+            }
         }
 
         // Get setting from sharedprefs and refresh the view with everything
         mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
 
         disableRefresh();
-        calendarController = new CalendarController(this);
         loadEvents(CacheControl.USE_CACHE);
     }
 
@@ -488,7 +493,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
         String eventId = String.valueOf(weekViewEvent.getId());
+        openEvent(eventId);
+    }
 
+    private void openEvent(String eventId) {
         CalendarItem item = calendarController.getCalendarItemById(eventId);
         if (item == null) {
             return;

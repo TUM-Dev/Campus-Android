@@ -1,6 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -212,23 +212,17 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
         dialog.show();
     }
 
-    /**
-     * Resets the LRZ ID (TUM ID) to null.
-     */
     private void resetLrzId() {
-        Utils.setSetting(this, Const.LRZ_ID, null);
+        Utils.setSetting(this, Const.LRZ_ID, "");
     }
 
-    /**
-     * Resets the TUMonline access token to null.
-     */
     private void resetAccessToken() {
-        Utils.setSetting(this, Const.ACCESS_TOKEN, null);
+        Utils.setSetting(this, Const.ACCESS_TOKEN, "");
     }
 
     private void hideKeyboard() {
         InputMethodManager inputMethodManager =
-                (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(lrzIdEditText.getWindowToken(), 0);
         }

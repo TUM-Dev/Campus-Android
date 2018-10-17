@@ -257,8 +257,8 @@ public class AuthenticationManager {
         if (Utils.getSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)
             && GoogleApiAvailability.getInstance()
                                     .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
-            FcmIdentificationService idService = new FcmIdentificationService(mContext);
-            idService.checkSetup();
+            FcmIdentificationService idService = new FcmIdentificationService();
+            idService.checkSetup(mContext);
         }
     }
 

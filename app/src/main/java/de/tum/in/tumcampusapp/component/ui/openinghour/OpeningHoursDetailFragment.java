@@ -136,7 +136,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                                   .inflate(R.layout.two_line_list_item, parent, false);
+                    .inflate(R.layout.card_header_details_button, parent, false);
             return new RecyclerView.ViewHolder(v) {
             };
         }

@@ -120,3 +120,8 @@ fun TextView.addCompoundDrawablesWithIntrinsicBounds(
         start: Drawable? = null, top: Drawable? = null, right: Drawable? = null, bottom: Drawable? = null) {
     setCompoundDrawablesWithIntrinsicBounds(start, top, right, bottom)
 }
+
+fun TextView.addCompoundDrawablesWithIntrinsicBounds(
+        start: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0) {
+    setCompoundDrawablesWithIntrinsicBounds(start, top, right, bottom)
+}
