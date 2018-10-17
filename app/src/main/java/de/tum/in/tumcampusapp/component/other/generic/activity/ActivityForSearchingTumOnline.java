@@ -20,6 +20,7 @@ import retrofit2.Response;
 public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching {
 
     protected final TUMOnlineClient apiClient;
+    private Call<T> apiCall;
 
     /**
      * Standard constructor for ActivityForSearchingTumOnline.
@@ -47,10 +48,14 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * @param call The {@link Call} to fetch
      */
     protected final void fetch(Call<T> call) {
+        apiCall = call;
+
         showLoadingStart();
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+                apiCall = null;
+
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
                     onDownloadSuccessful(body);
@@ -64,6 +69,11 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+
+                apiCall = null;
                 showLoadingEnded();
                 onDownloadFailure(t);
             }
@@ -98,4 +108,12 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
         showErrorLayout(throwable);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (apiCall != null) {
+            apiCall.cancel();
+        }
+    }
 }
