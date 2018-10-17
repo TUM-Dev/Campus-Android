@@ -163,15 +163,9 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         fun getDeparturesFromExternal(context: Context, stationID: String): Observable<List<Departure>> {
             return MvvClient.getInstance(context)
                     .getDepartures(stationID)
-                    .map {
-                        it.departureList?.map { (servingLine, dateTime, countdown) ->
-                            Departure(servingLine.name,
-                                    servingLine.direction,
-                                    servingLine.symbol,
-                                    countdown,
-                                    dateTime)
-                        }?.sortedBy { it.countDown }
-                    }
+                    .map { it.departures.orEmpty() }
+                    .map { it.map { mvvDeparture -> Departure.create(mvvDeparture) } }
+                    .map { it.sortedBy { departure -> departure.countDown } }
         }
 
         /**
@@ -182,8 +176,9 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
          */
         @JvmStatic
         fun getStationsFromExternal(context: Context, prefix: String): Observable<List<StationResult>> {
-            return MvvClient.getInstance(context).getStations(prefix)
-                    .map { it.stations.sortedBy { it.quality } }
+            return MvvClient.getInstance(context)
+                    .getStations(prefix)
+                    .map { it.stations.sortedBy { station -> station.quality } }
         }
 
         @JvmStatic

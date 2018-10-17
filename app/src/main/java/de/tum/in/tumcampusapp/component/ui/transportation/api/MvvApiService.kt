@@ -6,6 +6,7 @@ import retrofit2.http.Query
 import java.util.*
 
 interface MvvApiService {
+    
     /*  Documentation for using efa.mvv-muenchen.de
      *
      *  use XML_STOPFINDER_REQUEST to find available stops, e.g.: "Gar"
@@ -49,9 +50,10 @@ interface MvvApiService {
             "&mergeDep=1" +
             "&useAllStops=1" +
             "&mode=direct")
-    fun getDepartures(@Query("name_dm") stationId: String,
-                      @Query("language") language: String = Locale.getDefault().language)
-            : Observable<MvvDepartureList>
+    fun getDepartures(
+            @Query("name_dm") stationId: String,
+            @Query("language") language: String = Locale.getDefault().language
+    ): Observable<MvvDepartureList>
 
     /**
      * Find stations by station name prefix
@@ -66,8 +68,10 @@ interface MvvApiService {
             "&reducedAnyPostcodeObjFilter_sf=64" +
             "&reducedAnyTooManyObjFilter_sf=2" +
             "&useHouseNumberList=true")
-    fun getStations(@Query("name_sf") namePrefix: String,
-                    @Query("anyMaxSizeHitList") maxResults: Int = 10,
-                    @Query("language") language: String = Locale.getDefault().language)
-            : Observable<MvvStationList>
+    fun getStations(
+            @Query("name_sf") namePrefix: String,
+            @Query("anyMaxSizeHitList") maxResults: Int = 10,
+            @Query("language") language: String = Locale.getDefault().language
+    ) : Observable<MvvStationList>
+
 }
