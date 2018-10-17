@@ -57,7 +57,8 @@ class WidgetDepartures(station: String = "",
      */
     fun getDepartures(context: Context, forceServerLoad: Boolean): List<Departure> {
         // download only id there is no data or the last loading is more than X min ago
-        if (this.departures.isEmpty() || forceServerLoad || this.autoReload && System.currentTimeMillis() - this.lastLoad > MVVWidget.DOWNLOAD_DELAY) {
+        val shouldAutoReload = System.currentTimeMillis() - this.lastLoad > MVVWidget.DOWNLOAD_DELAY
+        if (this.departures.isEmpty() || forceServerLoad || this.autoReload && shouldAutoReload) {
             val departures = TransportController.getDeparturesFromExternal(context, this.stationId).blockingFirst()
             if (departures.isEmpty()) {
                 this.isOffline = true

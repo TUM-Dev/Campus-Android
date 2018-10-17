@@ -1,11 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.fragment
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +13,6 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.observeNonNull
-import kotlinx.android.synthetic.main.fragment_events.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,14 +26,20 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
             val events = response.body() ?: return
             eventsController.storeEvents(events)
-            eventsRefreshLayout.isRefreshing = false
+
+            if (this@EventsFragment.isDetached.not()) {
+                eventsRefreshLayout.isRefreshing = false
+            }
         }
 
         override fun onFailure(call: Call<List<Event>>, t: Throwable) {
             val c = requireContext()
             Utils.log(t)
             Utils.showToast(c, R.string.error_something_wrong)
-            eventsRefreshLayout.isRefreshing = false
+
+            if (this@EventsFragment.isDetached.not()) {
+                eventsRefreshLayout.isRefreshing = false
+            }
         }
     }
 
