@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -50,6 +52,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.os.Build.VERSION.SDK_INT;
 
 /**
  * Shows an ongoing chat conversation.
@@ -167,12 +171,21 @@ public class ChatActivity extends ActivityForDownloadingExternal
                 // Possibly only vibration is enabled
                 Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 if (vibrator != null) {
-                    vibrator.vibrate(500);
+                    vibrate(vibrator);
                 }
             }
         }
 
         getNextHistoryFromServer(true);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void vibrate(@NonNull Vibrator vibrator) {
+        if (SDK_INT >= VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(500, 128));
+        } else {
+            vibrator.vibrate(500);
+        }
     }
 
     @Override
