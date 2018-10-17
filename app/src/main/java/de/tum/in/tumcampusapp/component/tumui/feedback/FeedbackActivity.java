@@ -304,9 +304,9 @@ public class FeedbackActivity extends BaseActivity {
         boolean isValid = Patterns.EMAIL_ADDRESS.matcher(email)
                                                 .matches();
         if (isValid) {
-            customEmailView.setTextColor(getResources().getColor(R.color.valid));
+            customEmailView.setTextColor(ContextCompat.getColor(this, R.color.valid));
         } else {
-            customEmailView.setTextColor(getResources().getColor(R.color.error));
+            customEmailView.setTextColor(ContextCompat.getColor(this, R.color.error));
         }
         return isValid;
     }
