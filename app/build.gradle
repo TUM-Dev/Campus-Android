@@ -22,7 +22,7 @@ android {
             proguardFiles(file('../proguard').listFiles())
             proguardFile getDefaultProguardFile('proguard-android.txt')
             minifyEnabled true
-            shrinkResources true
+            shrinkResources false
             useProguard true
         }
         release.debuggable false
