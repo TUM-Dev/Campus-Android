@@ -126,7 +126,6 @@ public class FeedbackThumbnailsAdapter extends RecyclerView.Adapter<FeedbackThum
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
 
         return BitmapFactory.decodeFile(path, bmOptions);
     }
