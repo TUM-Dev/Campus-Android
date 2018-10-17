@@ -235,8 +235,10 @@
     </style>
 
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog">
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/white</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent
+        </item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/white
+        </item>
     </style>
 
     <style name="InfoBox">
@@ -245,10 +247,10 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:drawableStart">@drawable/ic_action_info_black</item>
-        <item name="android:drawablePadding">10dp</item>
+        <item name="android:drawablePadding">@dimen/material_default_padding</item>
         <item name="android:drawableTint">@android:color/white</item>
-        <item name="android:background">@drawable/widget_header_rounded_corners_background</item>
-        <item name="android:padding">12dp</item>
+        <item name="android:background">@drawable/info_box_background</item>
+        <item name="android:padding">@dimen/material_default_padding</item>
     </style>
 
 </resources>

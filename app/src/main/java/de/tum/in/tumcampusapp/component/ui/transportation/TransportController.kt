@@ -11,6 +11,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvClient
+import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvDepartureList
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.TransportFavorites
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.WidgetsTransport
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
@@ -148,6 +149,7 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
                         current.startTime.dayOfYear != next.startTime.dayOfYear
                     }
                 }
+                .take(100) // Some manufacturers cap the amount of alarms you can schedule (https://stackoverflow.com/a/29610474)
 
         val notifications = notificationCandidates.mapNotNull { it.toNotification(context) }
         NotificationScheduler(context).schedule(notifications)
@@ -166,15 +168,10 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         fun getDeparturesFromExternal(context: Context, stationID: String): Observable<List<Departure>> {
             return MvvClient.getInstance(context)
                     .getDepartures(stationID)
-                    .map {
-                        it.departureList?.map { (servingLine, dateTime, countdown) ->
-                            Departure(servingLine.name,
-                                    servingLine.direction,
-                                    servingLine.symbol,
-                                    countdown,
-                                    dateTime)
-                        }?.sortedBy { it.countDown }
-                    }
+                    .onErrorReturn { MvvDepartureList(emptyList()) }
+                    .map { it.departures.orEmpty() }
+                    .map { it.map { mvvDeparture -> Departure.create(mvvDeparture) } }
+                    .map { it.sortedBy { departure -> departure.countDown } }
         }
 
         /**
@@ -185,8 +182,9 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
          */
         @JvmStatic
         fun getStationsFromExternal(context: Context, prefix: String): Observable<List<StationResult>> {
-            return MvvClient.getInstance(context).getStations(prefix)
-                    .map { it.stations.sortedBy { it.quality } }
+            return MvvClient.getInstance(context)
+                    .getStations(prefix)
+                    .map { it.stations.sortedBy { station -> station.quality } }
         }
 
         @JvmStatic

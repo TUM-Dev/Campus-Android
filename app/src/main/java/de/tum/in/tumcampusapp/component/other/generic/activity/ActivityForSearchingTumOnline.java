@@ -1,7 +1,10 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+
+import org.jetbrains.annotations.Nullable;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
@@ -19,7 +22,8 @@ import retrofit2.Response;
  */
 public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching {
 
-    protected final TUMOnlineClient apiClient;
+    protected TUMOnlineClient apiClient;
+    private Call<T> apiCall;
 
     /**
      * Standard constructor for ActivityForSearchingTumOnline.
@@ -33,6 +37,11 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      */
     public ActivityForSearchingTumOnline(int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         apiClient = TUMOnlineClient.getInstance(this);
     }
 
@@ -47,10 +56,14 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * @param call The {@link Call} to fetch
      */
     protected final void fetch(Call<T> call) {
+        apiCall = call;
+
         showLoadingStart();
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+                apiCall = null;
+
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
                     onDownloadSuccessful(body);
@@ -64,6 +77,11 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+
+                apiCall = null;
                 showLoadingEnded();
                 onDownloadFailure(t);
             }
@@ -98,4 +116,12 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
         showErrorLayout(throwable);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (apiCall != null) {
+            apiCall.cancel();
+        }
+    }
 }

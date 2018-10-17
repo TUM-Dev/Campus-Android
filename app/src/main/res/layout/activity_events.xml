@@ -41,12 +41,14 @@
         </android.support.design.widget.AppBarLayout>
 
         <TextView
-            style="@style/InfoBox"
             android:id="@+id/fees_aid"
-            android:layout_marginTop="25dp"
-            android:text="@string/ticket_sale_beta"
+            style="@style/InfoBox"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
             android:autoLink="email"
-            android:textColorLink="@android:color/white"/>
+            android:text="@string/ticket_sale_beta"
+            android:textColorLink="@android:color/white" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
