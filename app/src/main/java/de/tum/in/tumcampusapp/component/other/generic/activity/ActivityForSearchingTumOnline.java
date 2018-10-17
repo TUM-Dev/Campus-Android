@@ -1,7 +1,10 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+
+import org.jetbrains.annotations.Nullable;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
@@ -19,7 +22,7 @@ import retrofit2.Response;
  */
 public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching {
 
-    protected final TUMOnlineClient apiClient;
+    protected TUMOnlineClient apiClient;
     private Call<T> apiCall;
 
     /**
@@ -34,6 +37,11 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      */
     public ActivityForSearchingTumOnline(int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         apiClient = TUMOnlineClient.getInstance(this);
     }
 
