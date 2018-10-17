@@ -80,7 +80,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private ArrayList<String> picturePaths;
 
-    private RecyclerView.Adapter thumbnailsAdapter;
+    private RecyclerView.Adapter<?> thumbnailsAdapter;
 
     private int sentCount;
     private Dialog progress;
