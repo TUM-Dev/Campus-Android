@@ -26,6 +26,7 @@ class EventsViewModel(
             private val eventType: EventType
     ) : ViewModelProvider.AndroidViewModelFactory(application) {
 
+        @Suppress("UNCHECKED_CAST") // no good way around this
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return EventsViewModel(application, eventType) as T
         }
