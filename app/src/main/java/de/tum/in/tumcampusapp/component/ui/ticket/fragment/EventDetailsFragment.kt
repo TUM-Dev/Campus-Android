@@ -170,7 +170,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         .setPositiveButton(R.string.ok) { _, _ -> activity?.finish() }
                         .create()
 
-                dialog.window.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+                dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
                 dialog.show()
             }
             return
@@ -240,7 +240,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 .setCancelable(true)
                 .create()
 
-        dialog.window.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
         dialog.show()
     }
 
