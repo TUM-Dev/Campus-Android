@@ -66,7 +66,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching(
         // TODO add handling for use location
 
         listViewResults = findViewById(R.id.activity_transport_listview_result)
-        listViewResults.setOnItemClickListener { adapterView, _, position, id ->
+        listViewResults.setOnItemClickListener { adapterView, _, position, _ ->
             val (station, stationId) = adapterView.adapter.getItem(position) as StationResult
             widgetDepartures.station = station
             widgetDepartures.stationId = stationId
