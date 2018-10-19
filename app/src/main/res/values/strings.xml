@@ -127,7 +127,7 @@
     <string name="welcome_msg">To setup TUMonline access, you need to provide your <b>TUM ID</b>.\n\nThe ID has the format <i>ga12abc</i>.</string>
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
-    <string name="need_to_enable"><b>The TUMonline access token was successfully generated</b>\n\nPlease enable the token in TUMonline now via <i>Services/Token-Management</i>. Make sure the rights you want to gain the app are set under <i>Active Rights</i>.</string>
+    <string name="need_to_enable"><b>The TUMonline access token was successfully generated</b>\n\nPlease enable the token in TUMonline now via <i>Services/Token-Management</i> or follow the link in the email from TUMonline which you will receive shortly.\nMake sure the rights you want to gain in the app are set under <i>Specific Rights</i>.</string>
     <string name="step_1">Step 1</string>
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
