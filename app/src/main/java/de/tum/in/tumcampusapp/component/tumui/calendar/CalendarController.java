@@ -122,6 +122,10 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return calendarDao.getAllBetweenDates(begin, end);
     }
 
+    public List<CalendarItem> getFromDbNotCancelledBetweenDates(DateTime begin, DateTime end) {
+        return calendarDao.getAllNotCancelledBetweenDates(begin, end);
+    }
+
     /**
      * Returns all stored events in the next days from db.
      * If there is a valid widget id (> 0) the events are filtered by the widgets blacklist

@@ -33,7 +33,7 @@ data class CalendarItem(@PrimaryKey
      * Returns the color of the event
      */
     fun getEventColor(context: Context): Int {
-        return if (status == "CANCEL") {
+        return if (isCancelled()) {
             IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_canceled))
         } else if (title.endsWith("VO") || title.endsWith("VU")) {
             IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_lecture))
@@ -108,5 +108,5 @@ data class CalendarItem(@PrimaryKey
                 && dtend.equals(other.dtend)
     }
 
-    fun isCancelled(): Boolean = status.equals("CANCEL")
+    fun isCancelled(): Boolean = status == "CANCEL"
 }

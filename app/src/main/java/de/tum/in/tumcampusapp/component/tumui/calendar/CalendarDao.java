@@ -20,9 +20,13 @@ public interface CalendarDao {
     List<CalendarItem> getAllByDate(DateTime date);
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
-            + "AND STATUS != 'CANCEL'"
             + "ORDER BY dtstart, title, location ASC")
     List<CalendarItem> getAllBetweenDates(DateTime from, DateTime to);
+
+    @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
+            + "AND STATUS != 'CANCEL'"
+            + "ORDER BY dtstart, title, location ASC")
+    List<CalendarItem> getAllNotCancelledBetweenDates(DateTime from, DateTime to);
 
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to "
             + "AND STATUS != 'CANCEL'"

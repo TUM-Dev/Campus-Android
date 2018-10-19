@@ -410,33 +410,36 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         int daysInMonth = begin.dayOfMonth()
                                .getMaximumValue();
         DateTime end = new DateTime().withDate(newYear, newMonth, daysInMonth);
-        return filterCalendarItems(calendarController.getFromDbBetweenDates(begin, end));
+        return prepareCalendarItems(begin, end);
+    }
+
+    private List<WeekViewDisplayable> prepareCalendarItems(DateTime begin, DateTime end) {
+        boolean showCancelledEvents = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
+        List<CalendarItem> calendarItems = showCancelledEvents
+                ? calendarController.getFromDbBetweenDates(begin, end)
+                : calendarController.getFromDbNotCancelledBetweenDates(begin, end);
+        return mergeSimilarCalendarItems(calendarItems);
     }
 
     /**
-     * Handles cancelled events and events with multiple locations.
+     * Creates one event out of multiple instances of the same event that have different locations.
+     * List must already be sorted so that event duplicates are right after each other.
      */
-    private List<WeekViewDisplayable> filterCalendarItems(List<CalendarItem> calendarItems) {
+    private List<WeekViewDisplayable> mergeSimilarCalendarItems(List<CalendarItem> calendarItems) {
         List<WeekViewDisplayable> events = new ArrayList<>();
-        boolean filterCanceled = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
         for (int i = 0; i < calendarItems.size(); i++) {
             CalendarItem calendarItem = calendarItems.get(i);
-            if (!filterCanceled || !calendarItem.isCancelled()) {
-                StringBuilder location = new StringBuilder();
-                location.append(calendarItem.getLocation());
-                while (i + 1 < calendarItems.size()
-                       && calendarItem.isSameEventButForLocation(calendarItems.get(i + 1))) {
-                    i++;
-                    if (!filterCanceled || !calendarItems.get(i)
-                                                         .isCancelled()) {
-                        location.append(" + ");
-                        location.append(calendarItems.get(i)
-                                                     .getLocation());
-                    }
-                }
-                calendarItem.setLocation(location.toString());
-                events.add(new IntegratedCalendarEvent(calendarItem, this));
+            StringBuilder location = new StringBuilder();
+            location.append(calendarItem.getLocation());
+            while (i + 1 < calendarItems.size()
+                    && calendarItem.isSameEventButForLocation(calendarItems.get(i + 1))) {
+                i++;
+                location.append(" + ");
+                location.append(calendarItems.get(i).getLocation());
+
             }
+            calendarItem.setLocation(location.toString());
+            events.add(new IntegratedCalendarEvent(calendarItem, this));
         }
         return events;
     }
@@ -540,9 +543,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     protected void initFilterCheckboxes() {
-        boolean settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
-        menuItemFilterCanceled.setChecked(settings);
-        applyFilterCanceled(settings);
+        boolean showCancelledEvents = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
+        Utils.log(showCancelledEvents ? "Show cancelled events" : "Hide cancelled events");
+        menuItemFilterCanceled.setChecked(showCancelledEvents);
+        applyFilterCanceled(showCancelledEvents);
     }
 
     protected void applyFilterCanceled(boolean val) {

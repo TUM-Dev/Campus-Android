@@ -55,7 +55,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun updateView(calendarItemList: List<CalendarItem>) {
         val calendarItem = calendarItemList[0]
 
-        if (calendarItem.status == "CANCEL") {
+        if (calendarItemList.all { it.isCancelled() }) {
             cancelButtonsContainer.visibility = View.VISIBLE
             descriptionTextView.setTextColor(Color.RED)
         }
@@ -63,8 +63,8 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         titleTextView.text = calendarItem.title
         dateTextView.text = calendarItem.getEventDateString()
 
-        val locationList = toLocationsList(calendarItemList)
-        if (areLocationsEmpty(locationList)) {
+        val locationList = calendarItemList.map { it.location }
+        if (locationList.all { it.isBlank() }) {
             locationIcon.visibility = View.GONE
         } else {
             locationIcon.visibility = View.VISIBLE
@@ -75,7 +75,8 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 val locationText = TextView(context)
                 if (item.isCancelled()) {
                     locationText.setTextColor(resources.getColor(R.color.event_canceled))
-                    locationText.text = "${item.location} (${R.string.event_canceled})"
+                    val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
+                    locationText.text = textForCancelledEvent
                 } else {
                     locationText.setTextColor(resources.getColor(R.color.location_color))
                     locationText.text = item.location
@@ -103,21 +104,6 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         } else {
             buttonsContainer.visibility = View.GONE
         }
-    }
-
-    private fun toLocationsList(calendarItemList: List<CalendarItem>): List<String> {
-        val locationList = ArrayList<String>()
-        for (calendarItem in calendarItemList) {
-            locationList.add(calendarItem.location)
-        }
-        return locationList
-    }
-
-    private fun areLocationsEmpty(locationsList: List<String>): Boolean {
-        for (location in locationsList){
-            if (!location.isBlank()) return false
-        }
-        return true
     }
 
     private fun displayDeleteDialog(eventId: String) {
