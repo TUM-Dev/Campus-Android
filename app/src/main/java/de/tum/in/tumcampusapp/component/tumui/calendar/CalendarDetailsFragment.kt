@@ -20,6 +20,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
+import kotlinx.android.synthetic.main.dialog_calendar_filter_limits.*
 import kotlinx.android.synthetic.main.fragment_calendar_details.*
 import org.jetbrains.anko.support.v4.dimen
 import retrofit2.Call
@@ -68,26 +69,21 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             locationIcon.visibility = View.GONE
         } else {
             locationIcon.visibility = View.VISIBLE
-            for ((index, item) in calendarItemList.withIndex()) {
+            for (item in calendarItemList) {
                 if (item.location.isBlank()) {
                     continue
                 }
-                val locationText = TextView(context)
+                val locationText: TextView = layoutInflater
+                        .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
                 if (item.isCancelled()) {
                     locationText.setTextColor(resources.getColor(R.color.event_canceled))
                     val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
                     locationText.text = textForCancelledEvent
                 } else {
-                    locationText.setTextColor(resources.getColor(R.color.location_color))
                     locationText.text = item.location
                 }
-                // Add padding between locations.
-                if (index + 1 < calendarItemList.size) {
-                    locationText.setPadding(0,0,0, dimen(R.dimen.material_small_padding))
-                }
-                locationText.textSize = 18f
                 locationText.setOnClickListener { onLocationClicked(item.location) }
-                locationLinearLayout.addView(locationText, index)
+                locationLinearLayout.addView(locationText)
             }
         }
 

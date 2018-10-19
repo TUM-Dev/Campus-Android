@@ -57,8 +57,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_small_padding">
+            android:layout_marginEnd="@dimen/material_default_padding">
             <ImageView
                 android:id="@+id/locationIcon"
                 android:layout_width="@dimen/icon_default"
@@ -69,7 +68,7 @@
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"/>
+                android:layout_marginStart="@dimen/material_default_padding" />
         </LinearLayout>
 
 
