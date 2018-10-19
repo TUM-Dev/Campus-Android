@@ -19,6 +19,7 @@ import retrofit2.Response;
 public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity {
 
     protected TUMOnlineClient apiClient;
+    private Call<T> apiCall;
     private boolean hadSuccessfulRequest;
 
     /**
@@ -54,10 +55,13 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
      * @param call The {@link Call} to fetch
      */
     protected final void fetch(Call<T> call) {
+        apiCall = call;
+
         showLoadingStart();
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+                apiCall = null;
                 T body = response.body();
                 if (response.isSuccessful() && body != null) {
                     hadSuccessfulRequest = true;
@@ -72,6 +76,11 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+
+                apiCall = null;
                 showLoadingEnded();
                 onDownloadFailure(t);
             }
@@ -114,4 +123,12 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (apiCall != null) {
+            apiCall.cancel();
+        }
+    }
 }

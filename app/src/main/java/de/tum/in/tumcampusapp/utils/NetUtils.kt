@@ -9,9 +9,11 @@ import org.jetbrains.anko.connectivityManager
 
 object NetUtils {
 
+    @JvmStatic
+    val internetCapability = if (SDK_INT < M) NET_CAPABILITY_INTERNET else NET_CAPABILITY_VALIDATED
+
     private fun NetworkCapabilities.hasConnectivity(): Boolean {
-        val capability = if (SDK_INT < M) NET_CAPABILITY_INTERNET else NET_CAPABILITY_VALIDATED
-        return hasCapability(capability)
+        return hasCapability(internetCapability)
     }
 
     private inline fun anyConnectedNetwork(context: Context,
