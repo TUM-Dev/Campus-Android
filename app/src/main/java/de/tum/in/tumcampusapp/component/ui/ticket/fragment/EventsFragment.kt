@@ -33,14 +33,20 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
             val events = response.body() ?: return
             eventsController.storeEvents(events)
-            eventsRefreshLayout.isRefreshing = false
+
+            if (this@EventsFragment.isDetached.not()) {
+                eventsRefreshLayout.isRefreshing = false
+            }
         }
 
         override fun onFailure(call: Call<List<Event>>, t: Throwable) {
             val c = requireContext()
             Utils.log(t)
             Utils.showToast(c, R.string.error_something_wrong)
-            eventsRefreshLayout.isRefreshing = false
+
+            if (this@EventsFragment.isDetached.not()) {
+                eventsRefreshLayout.isRefreshing = false
+            }
         }
     }
 

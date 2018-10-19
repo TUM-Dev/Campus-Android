@@ -1,11 +1,12 @@
 package de.tum.in.tumcampusapp.component.ui.overview;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.ConnectivityManager.NetworkCallback;
+import android.net.Network;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -45,16 +46,11 @@ public class MainActivity extends BaseActivity
 
     private MainActivityViewModel mViewModel;
 
-    final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+    ConnectivityManager connectivityManager;
+    final NetworkCallback networkCallback = new NetworkCallback() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            if (NetUtils.isConnected(context)) {
-                refreshCards();
-                runOnUiThread(() -> {
-                    unregisterReceiver(connectivityChangeReceiver);
-                    mIsConnectivityChangeReceiverRegistered = false;
-                });
-            }
+        public void onAvailable(Network network) {
+            runOnUiThread(MainActivity.this::refreshCards);
         }
     };
 
@@ -65,6 +61,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         // Setup pull to refresh
         mSwipeRefreshLayout = findViewById(R.id.ptr_layout);
@@ -116,8 +113,10 @@ public class MainActivity extends BaseActivity
         mAdapter.updateItems(cards);
 
         if (!NetUtils.isConnected(this) && !mIsConnectivityChangeReceiverRegistered) {
-            registerReceiver(connectivityChangeReceiver,
-                             new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            NetworkRequest request = new NetworkRequest.Builder()
+                    .addCapability(NetUtils.getInternetCapability())
+                    .build();
+            connectivityManager.registerNetworkCallback(request, networkCallback);
             mIsConnectivityChangeReceiverRegistered = true;
         }
     }
@@ -138,7 +137,7 @@ public class MainActivity extends BaseActivity
     protected void onDestroy() {
         super.onDestroy();
         if (mIsConnectivityChangeReceiverRegistered) {
-            unregisterReceiver(connectivityChangeReceiver);
+            connectivityManager.unregisterNetworkCallback(networkCallback);
             mIsConnectivityChangeReceiverRegistered = false;
         }
     }
@@ -147,7 +146,7 @@ public class MainActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
 
-        if (Utils.getSettingBool(this, Const.REFRESH_CARDS, false)){
+        if (Utils.getSettingBool(this, Const.REFRESH_CARDS, false)) {
             refreshCards();
             Utils.setSetting(this, Const.REFRESH_CARDS, false);
         }
@@ -268,7 +267,5 @@ public class MainActivity extends BaseActivity
                     })
                     .show();
         }
-
     }
-
 }

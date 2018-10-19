@@ -28,7 +28,7 @@ import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
-import de.tum.in.tumcampusapp.service.FcmIdentificationService;
+import de.tum.in.tumcampusapp.service.FcmTokenHandler;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -257,8 +257,7 @@ public class AuthenticationManager {
         if (Utils.getSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)
             && GoogleApiAvailability.getInstance()
                                     .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
-            FcmIdentificationService idService = new FcmIdentificationService();
-            idService.checkSetup(mContext);
+            FcmTokenHandler.checkSetup(mContext);
         }
     }
 

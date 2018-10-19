@@ -3,11 +3,12 @@ package de.tum.`in`.tumcampusapp.component.ui.overview
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.Intent.ACTION_VIEW
 import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.content.pm.PackageInfoCompat
 import android.text.format.DateUtils
 import android.view.View
 import android.view.ViewGroup
@@ -34,16 +35,16 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         this.displayDebugInfo()
 
         button_facebook.setOnClickListener {
-            openFacebook();
+            openFacebook()
         }
         button_github.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))))
+            startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.github_link))))
         }
         button_privacy.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy))))
+            startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy))))
         }
         button_chat_terms.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_chat_terms))))
+            startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.url_chat_terms))))
         }
         button_licenses.setOnClickListener {
             LicensesDialog.Builder(this)
@@ -55,16 +56,19 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         }
     }
 
+    /**
+     * Open the Facebook app or view page in a browser if Facebook is not installed.
+     */
     private fun openFacebook() {
-        // Open the Facebook app or view page in a browser if Facebook is not installed
-        val facebook = try {
+        try {
             packageManager.getPackageInfo("com.facebook.katana", 0)
-            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)))
-        } catch (e: PackageManager.NameNotFoundException) {
-            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)))
+            val intent = Intent(ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)))
+            startActivity(intent)
+        } catch (e: Exception) {
+            // Don't make any assumptions about another app, just start the browser instead
+            val default = Intent(ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)))
+            startActivity(default)
         }
-
-        startActivity(facebook)
     }
 
     private fun displayDebugInfo() {
@@ -82,7 +86,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         if (token == "") {
             this.addDebugRow(debugInfos, "TUM access token", "")
         } else {
-            this.addDebugRow(debugInfos, "TUM access token", token.substring(0, 5) + "...")
+            this.addDebugRow(debugInfos, "TUM access token", token?.substring(0, 5) + "...")
         }
         this.addDebugRow(debugInfos, "Bug reports", sp.getBoolean(Const.BUG_REPORTS, false).toString() + " ")
 
@@ -92,7 +96,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
                 DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0).toString())
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
-            this.addDebugRow(debugInfos, "Version code", packageInfo.versionCode.toString())
+            this.addDebugRow(debugInfos, "Version code", PackageInfoCompat.getLongVersionCode(packageInfo).toString())
         } catch (ignore: NameNotFoundException) {
         }
 

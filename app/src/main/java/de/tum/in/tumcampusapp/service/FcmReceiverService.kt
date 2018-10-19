@@ -19,6 +19,7 @@ package de.tum.`in`.tumcampusapp.service
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Bundle
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
@@ -26,6 +27,7 @@ import de.tum.`in`.tumcampusapp.component.other.general.Update
 import de.tum.`in`.tumcampusapp.component.other.generic.GenericNotification
 import de.tum.`in`.tumcampusapp.component.ui.alarm.AlarmNotification
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatNotification
+import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import java.io.IOException
 
@@ -100,6 +102,13 @@ class FcmReceiverService : FirebaseMessagingService() {
             }
 
         }
+    }
+
+    override fun onNewToken(token: String?) {
+        super.onNewToken(token)
+        Utils.log("new FCM token received")
+        Utils.setSetting(this, Const.FCM_INSTANCE_ID, FirebaseInstanceId.getInstance().id)
+        Utils.setSetting(this, Const.FCM_TOKEN_ID, token ?: "")
     }
 
     /**
