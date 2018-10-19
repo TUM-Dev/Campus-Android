@@ -161,6 +161,9 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
     private void setDateAndTimeListeners() {
         // DATE
+        
+        // Month +/- 1 is needed because the date picker uses zero-based month values while DateTime
+        // starts counting months at 1.
         startDateView.setOnClickListener(view -> {
             hideKeyboard();
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
