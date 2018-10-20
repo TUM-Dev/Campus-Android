@@ -88,7 +88,7 @@
     <string name="welcome_msg">Um den Zugriff auf TUMonline-Dienste zu ermöglichen, wird deine <b>TUM-Kennung</b> benötigt.\n\nDie Kennung hat das Format <i>ga12abc</i>.</string>
     <string name="button_skip">Überspringen</string>
     <string name="button_next">Weiter</string>
-    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nBitte aktiviere das Token in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
+    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nBitte aktiviere das Token in TUMonline unter <i>Dienste/Token-Verwaltung</i> oder folge dem Link in der Email, die du in Kürze von TUMonline erhalten wirst. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
     <string name="step_1">Schritt 1</string>
     <string name="step_2">Schritt 2</string>
     <string name="step_3">Schritt 3</string>
