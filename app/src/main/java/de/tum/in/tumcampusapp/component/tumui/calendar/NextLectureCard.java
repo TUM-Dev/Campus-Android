@@ -22,11 +22,13 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 public class NextLectureCard extends Card {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
+    private CalendarController calendarController;
 
     private final List<CardCalendarItem> lectures = new ArrayList<>();
 
     NextLectureCard(Context context) {
         super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture");
+        calendarController = new CalendarController(context);
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -73,7 +75,7 @@ public class NextLectureCard extends Card {
             item.start = calendarItem.getDtstart();
             item.end = calendarItem.getDtend();
             item.title = calendarItem.getFormattedTitle();
-            item.location = calendarItem.getEventLocation();
+            item.locations = calendarController.getLocationsForEvent(item.id);
             lectures.add(item);
         }
     }
@@ -83,7 +85,19 @@ public class NextLectureCard extends Card {
         public String title;
         public DateTime start;
         public DateTime end;
-        public String location;
+        public List<String> locations;
+
+        String getLocationString() {
+            StringBuilder locationString = new StringBuilder();
+            for (String location: locations) {
+                locationString.append(location);
+                locationString.append("\n");
+            }
+            // Remove the last new line character.
+            locationString.deleteCharAt(locationString.length() - 1);
+            return locationString.toString();
+        }
+
     }
 
 }

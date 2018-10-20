@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
@@ -19,7 +20,9 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
+import kotlinx.android.synthetic.main.dialog_calendar_filter_limits.*
 import kotlinx.android.synthetic.main.fragment_calendar_details.*
+import org.jetbrains.anko.support.v4.dimen
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,7 +39,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         dao = TcaDb.getInstance(context).calendarDao()
 
         arguments?.let { args ->
-            calendarId = args.getString(CALENDAR_ID_PARAM)
+            calendarId = args.getString(CALENDAR_ID_PARAM)!!
         }
     }
 
@@ -46,24 +49,42 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val calendarItem = dao.getCalendarItemById(calendarId)
+        val calendarItem = dao.getCalendarItemsById(calendarId)
         updateView(calendarItem)
     }
 
-    private fun updateView(calendarItem: CalendarItem) {
-        if (calendarItem.status == "CANCEL") {
+    private fun updateView(calendarItemList: List<CalendarItem>) {
+        val calendarItem = calendarItemList[0]
+
+        if (calendarItemList.all { it.isCancelled() }) {
             cancelButtonsContainer.visibility = View.VISIBLE
             descriptionTextView.setTextColor(Color.RED)
         }
 
         titleTextView.text = calendarItem.title
         dateTextView.text = calendarItem.getEventDateString()
-        locationTextView.text = calendarItem.location
 
-        if (calendarItem.location.isEmpty()) {
-            locationTextView.visibility = View.GONE
+        val locationList = calendarItemList.map { it.location }
+        if (locationList.all { it.isBlank() }) {
+            locationIcon.visibility = View.GONE
         } else {
-            locationTextView.visibility = View.VISIBLE
+            locationIcon.visibility = View.VISIBLE
+            for (item in calendarItemList) {
+                if (item.location.isBlank()) {
+                    continue
+                }
+                val locationText: TextView = layoutInflater
+                        .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
+                if (item.isCancelled()) {
+                    locationText.setTextColor(resources.getColor(R.color.event_canceled))
+                    val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
+                    locationText.text = textForCancelledEvent
+                } else {
+                    locationText.text = item.location
+                }
+                locationText.setOnClickListener { onLocationClicked(item.location) }
+                locationLinearLayout.addView(locationText)
+            }
         }
 
         if (calendarItem.description.isEmpty()) {
@@ -71,8 +92,6 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         } else {
             descriptionTextView.text = calendarItem.description
         }
-
-        locationTextView.setOnClickListener { onLocationClicked(calendarItem.location) }
 
         if (calendarItem.url.isEmpty()) {
             buttonsContainer.visibility = View.VISIBLE
@@ -128,18 +147,16 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance(calendarItem: CalendarItem,
+        fun newInstance(calendarItem: List<CalendarItem>,
                         listener: OnEventInteractionListener): CalendarDetailsFragment {
             return CalendarDetailsFragment().apply {
                 this.arguments = Bundle().apply {
-                    putString(Const.CALENDAR_ID_PARAM, calendarItem.nr)
+                    putString(Const.CALENDAR_ID_PARAM, calendarItem[0].nr)
                 }
                 this.listener = listener
             }
         }
-
     }
 
     interface OnEventInteractionListener {
