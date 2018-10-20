@@ -406,23 +406,41 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     public List<WeekViewDisplayable> onMonthChange(int newYear, int newMonth) {
         // Populate the week view with the events of the month to display
-        List<WeekViewDisplayable> events = new ArrayList<>();
-
         DateTime begin = new DateTime().withDate(newYear, newMonth, 1);
-
         int daysInMonth = begin.dayOfMonth()
-                               .getMaximumValue();
-
+                .getMaximumValue();
         DateTime end = new DateTime().withDate(newYear, newMonth, daysInMonth);
+        return prepareCalendarItems(begin, end);
+    }
 
-        List<CalendarItem> calendarItems = calendarController.getFromDbBetweenDates(begin, end);
-        boolean filterCanceled = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
-        for (CalendarItem calendarItem : calendarItems) {
-            if (filterCanceled || !calendarItem.getStatus().equals("CANCEL")) {
-                events.add(new IntegratedCalendarEvent(calendarItem, this));
+    private List<WeekViewDisplayable> prepareCalendarItems(DateTime begin, DateTime end) {
+        boolean showCancelledEvents = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
+        List<CalendarItem> calendarItems = showCancelledEvents
+                ? calendarController.getFromDbBetweenDates(begin, end)
+                : calendarController.getFromDbNotCancelledBetweenDates(begin, end);
+        return mergeSimilarCalendarItems(calendarItems);
+    }
+
+    /**
+     * Creates one event out of multiple instances of the same event that have different locations.
+     * List must already be sorted so that event duplicates are right after each other.
+     */
+    private List<WeekViewDisplayable> mergeSimilarCalendarItems(List<CalendarItem> calendarItems) {
+        List<WeekViewDisplayable> events = new ArrayList<>();
+        for (int i = 0; i < calendarItems.size(); i++) {
+            CalendarItem calendarItem = calendarItems.get(i);
+            StringBuilder location = new StringBuilder();
+            location.append(calendarItem.getLocation());
+            while (i + 1 < calendarItems.size()
+                    && calendarItem.isSameEventButForLocation(calendarItems.get(i + 1))) {
+                i++;
+                location.append(" + ");
+                location.append(calendarItems.get(i).getLocation());
+
             }
+            calendarItem.setLocation(location.toString());
+            events.add(new IntegratedCalendarEvent(calendarItem, this));
         }
-
         return events;
     }
 
@@ -465,10 +483,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     public void onEventDeleted(@NotNull String eventId) {
         TcaDb db = TcaDb.getInstance(this);
-        db.calendarDao().delete(eventId);
+        db.calendarDao()
+                .delete(eventId);
 
         int id = Integer.parseInt(eventId);
-        db.scheduledNotificationsDao().delete(NotificationType.CALENDAR.getId(), id);
+        db.scheduledNotificationsDao()
+                .delete(NotificationType.CALENDAR.getId(), id);
 
         refreshWeekView();
         Utils.showToast(this, R.string.delete_event_confirmation);
@@ -497,11 +517,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     private void openEvent(String eventId) {
-        CalendarItem item = calendarController.getCalendarItemById(eventId);
-        if (item == null) {
+        List<CalendarItem> item = calendarController.getCalendarItemsById(eventId);
+        if (item == null || item.isEmpty()) {
             return;
         }
-
         detailsFragment = CalendarDetailsFragment.newInstance(item, this);
         detailsFragment.show(getSupportFragmentManager(), null);
     }
@@ -524,9 +543,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     protected void initFilterCheckboxes() {
-        boolean settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
-        menuItemFilterCanceled.setChecked(settings);
-        applyFilterCanceled(settings);
+        boolean showCancelledEvents = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
+        Utils.log(showCancelledEvents ? "Show cancelled events" : "Hide cancelled events");
+        menuItemFilterCanceled.setChecked(showCancelledEvents);
+        applyFilterCanceled(showCancelledEvents);
     }
 
     protected void applyFilterCanceled(boolean val) {

@@ -112,5 +112,6 @@
     <color name="event_lecture">#86c415</color>
     <color name="event_exercise">#fcad18</color>
     <color name="event_other">#5598D3</color>
+    <color name="location_color">#00A7DE</color>
 
 </resources>

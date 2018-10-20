@@ -6,7 +6,6 @@ import android.arch.persistence.room.PrimaryKey
 import android.content.ContentValues
 import android.content.Context
 import android.provider.CalendarContract
-import android.support.v4.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent
 import org.joda.time.DateTime
@@ -33,7 +32,7 @@ data class CalendarItem(@PrimaryKey
      * Returns the color of the event
      */
     fun getEventColor(context: Context): Int {
-        return if (status == "CANCEL") {
+        return if (isCancelled()) {
             IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_canceled))
         } else if (title.endsWith("VO") || title.endsWith("VU")) {
             IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_lecture))
@@ -101,4 +100,12 @@ data class CalendarItem(@PrimaryKey
         values.put(CalendarContract.Events.EVENT_LOCATION, location)
         return values
     }
+
+    fun isSameEventButForLocation(other: CalendarItem): Boolean {
+        return title.equals(other.title)
+                && dtstart.equals(other.dtstart)
+                && dtend.equals(other.dtend)
+    }
+
+    fun isCancelled(): Boolean = status == "CANCEL"
 }
