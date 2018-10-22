@@ -24,8 +24,6 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklist
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
-import de.tum.in.tumcampusapp.component.tumui.person.FacultyDao;
-import de.tum.in.tumcampusapp.component.tumui.person.model.Faculty;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
@@ -58,16 +56,6 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorit
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
 import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.database.migrations.Migration11to12;
-import de.tum.in.tumcampusapp.database.migrations.Migration12to13;
-import de.tum.in.tumcampusapp.database.migrations.Migration13to14;
-import de.tum.in.tumcampusapp.database.migrations.Migration14to15;
-import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
-import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
-import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
-import de.tum.in.tumcampusapp.database.migrations.Migration4to5;
-import de.tum.in.tumcampusapp.database.migrations.Migration5to6;
-import de.tum.in.tumcampusapp.database.migrations.Migration6to7;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
@@ -77,7 +65,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 15, entities = {
+@Database(version = 1, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -96,7 +84,6 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         WidgetsTimetableBlacklist.class,
         WifiMeasurement.class,
         Recent.class,
-        Faculty.class,
         StudyRoomGroup.class,
         StudyRoom.class,
         FcmNotification.class,
@@ -108,16 +95,6 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
     private static final Migration[] migrations = {
-            new Migration1to2(),
-            new Migration2to3(),
-            new Migration3to4(),
-            new Migration4to5(),
-            new Migration5to6(),
-            new Migration6to7(),
-            new Migration11to12(),
-            new Migration12to13(),
-            new Migration13to14(),
-            new Migration14to15()
     };
 
     private static TcaDb instance;
@@ -126,8 +103,7 @@ public abstract class TcaDb extends RoomDatabase {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
                     .allowMainThreadQueries()
-                    //.addMigrations(migrations) TODO: Temporary measure as there have been crashes when executing the migrations
-                    .fallbackToDestructiveMigration()
+                    .addMigrations(migrations)
                     .build();
         }
         return instance;
@@ -168,8 +144,6 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract WifiMeasurementDao wifiMeasurementDao();
 
     public abstract RecentsDao recentsDao();
-
-    public abstract FacultyDao facultyDao();
 
     public abstract StudyRoomGroupDao studyRoomGroupDao();
 
