@@ -93,7 +93,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     }
 
     private void loadLectureDetails(@NonNull String lectureId, CacheControl cacheControl) {
-        Call<LectureDetailsResponse> apiCall = apiClient.getLectureDetails(lectureId, cacheControl);
+        Call<LectureDetailsResponse> apiCall = getApiClient().getLectureDetails(lectureId, cacheControl);
         fetch(apiCall);
     }
 

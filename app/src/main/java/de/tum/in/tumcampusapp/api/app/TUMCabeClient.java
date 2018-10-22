@@ -295,22 +295,16 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public List<RoomFinderRoom> getListOfToilets() throws IOException {
-        return service.getListOfToilets()
-                .execute()
-                .body();
+    public Call<List<RoomFinderRoom>> getListOfToilets() {
+        return service.getListOfToilets();
     }
 
-    public List<RoomFinderRoom> getListOfElevators() throws IOException {
-        return service.getListOfElevators()
-                .execute()
-                .body();
+    public Call<List<RoomFinderRoom>> getListOfElevators() {
+        return service.getListOfElevators();
     }
 
-    public List<RoomFinderRoom> getListOfNearbyFacilities(String buildingId) throws IOException {
-        return service.getListOfNearbyFacilities(buildingId)
-                .execute()
-                .body();
+    public Call<List<RoomFinderRoom>> getListOfNearbyFacilities(String buildingId) {
+        return service.getListOfNearbyFacilities(buildingId);
     }
 
     public List<BuildingToGps> getBuilding2Gps() throws IOException {

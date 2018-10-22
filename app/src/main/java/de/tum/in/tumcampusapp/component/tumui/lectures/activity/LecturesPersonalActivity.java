@@ -70,12 +70,12 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
     }
 
     private void loadPersonalLectures(CacheControl cacheControl) {
-        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(cacheControl);
+        Call<LecturesResponse> apiCall = getApiClient().getPersonalLectures(cacheControl);
         fetch(apiCall);
     }
 
     private void searchLectures(String query) {
-        Call<LecturesResponse> apiCall = apiClient.searchLectures(query);
+        Call<LecturesResponse> apiCall = getApiClient().searchLectures(query);
         fetch(apiCall);
     }
 

@@ -229,7 +229,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         // request), we use a short Toast to let the user know that something is happening.
         Toast.makeText(this, R.string.updating_event, Toast.LENGTH_SHORT).show();
 
-        apiClient
+        getApiClient()
                 .deleteEvent(eventId)
                 .enqueue(new Callback<DeleteEventResponse>() {
                     @Override
@@ -284,7 +284,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         }
         event.setDescription(description);
 
-        Call<CreateEventResponse> apiCall = apiClient.createEvent(event, null);
+        Call<CreateEventResponse> apiCall = getApiClient().createEvent(event, null);
         fetch(apiCall);
     }
 

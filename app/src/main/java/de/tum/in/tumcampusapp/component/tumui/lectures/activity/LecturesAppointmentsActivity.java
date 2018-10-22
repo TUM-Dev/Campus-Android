@@ -67,7 +67,7 @@ public class LecturesAppointmentsActivity
 
     private void loadLectureAppointments(@NonNull String lectureId, CacheControl cacheControl) {
         Call<LectureAppointmentsResponse> apiCall =
-                apiClient.getLectureAppointments(lectureId, cacheControl);
+                getApiClient().getLectureAppointments(lectureId, cacheControl);
         fetch(apiCall);
     }
 

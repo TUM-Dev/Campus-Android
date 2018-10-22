@@ -114,7 +114,7 @@ public class ChatRoomsActivity
     }
 
     private void loadPersonalLectures(CacheControl cacheControl) {
-        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(cacheControl);
+        Call<LecturesResponse> apiCall = getApiClient().getPersonalLectures(cacheControl);
         fetch(apiCall);
     }
 
