@@ -39,7 +39,11 @@ public class MensaWidget extends AppWidgetProvider {
 
             int cafeteriaId = mensaManager.getBestMatchMensaId();
             Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
-            rv.setTextViewText(R.id.mensa_widget_header, cafeteria.getName());
+
+            // TODO: Investigate how this can be null
+            if (cafeteria != null) {
+                rv.setTextViewText(R.id.mensa_widget_header, cafeteria.getName());
+            }
 
             // Set the properly formatted date in the subhead
             LocalDate localDate = DateTime.now().toLocalDate();

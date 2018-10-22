@@ -294,8 +294,7 @@ class LocationManager(c: Context) {
      */
     private fun fetchRoomGeo(archId: String): Optional<Geo> {
         try {
-            val coordinate = TUMCabeClient.getInstance(mContext)
-                    .fetchCoordinates(archId)
+            val coordinate = TUMCabeClient.getInstance(mContext).fetchCoordinates(archId)
             return convertRoomFinderCoordinateToGeo(coordinate)
         } catch (e: IOException) {
             Utils.log(e)
