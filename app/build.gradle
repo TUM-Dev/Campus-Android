@@ -115,7 +115,7 @@ dependencies {
 
     // Helpers
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'net.danlew:android.joda:2.9.9.4'
+    implementation 'net.danlew:android.joda:2.10.0'
 
     // XML Parsing
     implementation "com.tickaroo.tikxml:annotation:$tikXmlVersion"
