@@ -20,9 +20,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.dialog_calendar_filter_limits.*
 import kotlinx.android.synthetic.main.fragment_calendar_details.*
-import org.jetbrains.anko.support.v4.dimen
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +31,8 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private lateinit var listener: OnEventInteractionListener
     private lateinit var dao: CalendarDao
     private lateinit var calendarId: String
+
+    private var deleteApiCall: Call<DeleteEventResponse>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,20 +113,23 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private fun deleteEvent(eventId: String) {
         val c = requireContext()
-        TUMOnlineClient
-                .getInstance(c)
-                .deleteEvent(eventId)
-                .enqueue(object : Callback<DeleteEventResponse> {
-                    override fun onResponse(call: Call<DeleteEventResponse>,
-                                            response: Response<DeleteEventResponse>) {
-                        dismiss()
-                        listener.onEventDeleted(eventId)
-                    }
+        deleteApiCall = TUMOnlineClient.getInstance(c).deleteEvent(eventId)
+        deleteApiCall?.enqueue(object : Callback<DeleteEventResponse> {
+            override fun onResponse(call: Call<DeleteEventResponse>,
+                                    response: Response<DeleteEventResponse>) {
+                dismiss()
+                listener.onEventDeleted(eventId)
+                deleteApiCall = null
+            }
 
-                    override fun onFailure(call: Call<DeleteEventResponse>, t: Throwable) {
-                        handleDeleteEventError(t)
-                    }
-                })
+            override fun onFailure(call: Call<DeleteEventResponse>, t: Throwable) {
+                if (call.isCanceled) {
+                    return
+                }
+                deleteApiCall = null
+                handleDeleteEventError(t)
+            }
+        })
     }
 
     private fun handleDeleteEventError(t: Throwable) {
@@ -157,6 +160,11 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 this.listener = listener
             }
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        deleteApiCall?.cancel()
     }
 
     interface OnEventInteractionListener {

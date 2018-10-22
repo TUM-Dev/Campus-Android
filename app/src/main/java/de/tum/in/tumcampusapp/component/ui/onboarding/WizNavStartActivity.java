@@ -45,6 +45,8 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
     private EditText lrzIdEditText;
     private MaterialButton nextButton;
 
+    private Call<AccessToken> mTokenRequestCall;
+
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
     }
@@ -133,27 +135,34 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
     private void requestNewToken(String publicKey) {
         showLoadingStart();
         String tokenName = "TUMCampusApp-" + Build.PRODUCT;
-        TUMOnlineClient
-                .getInstance(this)
-                .requestToken(publicKey, tokenName)
-                .enqueue(new Callback<AccessToken>() {
-                    @Override
-                    public void onResponse(@NonNull Call<AccessToken> call,
-                                           @NonNull Response<AccessToken> response) {
-                        AccessToken accessToken = response.body();
-                        if (accessToken != null) {
-                            handleTokenDownloadSuccess(accessToken);
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(@NonNull Call<AccessToken> call, @NonNull Throwable t) {
-                        Utils.log(t);
-                        showLoadingEnded();
-                        resetAccessToken();
-                        displayErrorDialog(t);
-                    }
-                });
+        mTokenRequestCall = TUMOnlineClient.getInstance(this).requestToken(publicKey, tokenName);
+        mTokenRequestCall.enqueue(new Callback<AccessToken>() {
+            @Override
+            public void onResponse(@NonNull Call<AccessToken> call,
+                                   @NonNull Response<AccessToken> response) {
+                AccessToken accessToken = response.body();
+                if (accessToken != null) {
+                    handleTokenDownloadSuccess(accessToken);
+                }
+
+                mTokenRequestCall = null;
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<AccessToken> call, @NonNull Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+
+                Utils.log(t);
+                showLoadingEnded();
+                resetAccessToken();
+                displayErrorDialog(t);
+
+                mTokenRequestCall = null;
+            }
+        });
     }
 
     /**
@@ -258,6 +267,10 @@ public class WizNavStartActivity extends ProgressActivity implements TextWatcher
     protected void onStop() {
         super.onStop();
         lrzIdEditText.removeTextChangedListener(this);
+
+        if (mTokenRequestCall != null) {
+            mTokenRequestCall.cancel();
+        }
     }
 
 }
