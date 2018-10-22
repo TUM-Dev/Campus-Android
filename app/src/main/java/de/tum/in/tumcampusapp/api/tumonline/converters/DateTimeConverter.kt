@@ -14,8 +14,6 @@ class DateTimeConverter : TypeConverter<DateTime?> {
             "yyyy-MM-dd HH:mm:ss"
     )
 
-    private val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
-
     override fun read(value: String?): DateTime? {
         value?.let {
             return parseString(it)

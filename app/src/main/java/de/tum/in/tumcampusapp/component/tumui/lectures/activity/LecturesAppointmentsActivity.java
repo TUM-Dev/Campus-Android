@@ -72,7 +72,7 @@ public class LecturesAppointmentsActivity
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull LectureAppointmentsResponse response) {
+    public void onDownloadSuccessful(@NonNull LectureAppointmentsResponse response) {
         List<LectureAppointment> appointments = response.getLectureAppointments();
         if (appointments == null || appointments.isEmpty()) {
             showError(R.string.no_appointments); // TODO Why is this not shown?

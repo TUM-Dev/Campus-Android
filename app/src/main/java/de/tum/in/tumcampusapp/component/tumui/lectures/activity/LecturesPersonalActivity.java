@@ -80,7 +80,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull LecturesResponse response) {
+    public void onDownloadSuccessful(@NonNull LecturesResponse response) {
         if (response.getLectures().isEmpty()) {
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
         } else {

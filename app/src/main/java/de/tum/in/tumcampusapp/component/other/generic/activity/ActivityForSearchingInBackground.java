@@ -87,10 +87,10 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
         }
 
         observable.compose(provider.bindToLifecycle())
-                  .subscribeOn(Schedulers.io())
-                  .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .onErrorReturnItem(Optional.absent())
-                  .subscribe(this::onSearchFinished);
+                .subscribe(this::onSearchFinished);
     }
 
 }

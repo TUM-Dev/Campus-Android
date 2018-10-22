@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.api.tumonline
 import android.content.Context
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
-import de.tum.`in`.tumcampusapp.api.app.Helper
+import de.tum.`in`.tumcampusapp.api.app.ApiHelper
 import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.AddTokenInterceptor
 import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CacheResponseInterceptor
 import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CheckErrorInterceptor
@@ -109,7 +109,7 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
         private fun buildAPIClient(context: Context): TUMOnlineClient {
             val cacheManager = CacheManager(context)
 
-            val client = Helper.getOkHttpClient(context)
+            val client = ApiHelper.getOkHttpClient(context)
                     .newBuilder()
                     .cache(cacheManager.cache)
                     .addInterceptor(AddTokenInterceptor(context))

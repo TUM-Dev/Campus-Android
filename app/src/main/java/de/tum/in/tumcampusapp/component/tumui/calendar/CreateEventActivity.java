@@ -289,7 +289,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull CreateEventResponse response) {
+    public void onDownloadSuccessful(@NonNull CreateEventResponse response) {
         String nr = response.getEventId();
         event.setNr(nr);
         TcaDb.getInstance(this).calendarDao().insert(event);
@@ -347,7 +347,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;

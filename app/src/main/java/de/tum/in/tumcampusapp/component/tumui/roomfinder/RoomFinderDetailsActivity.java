@@ -19,7 +19,7 @@ import com.google.common.base.Optional;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.Helper;
+import de.tum.in.tumcampusapp.api.app.ApiHelper;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
@@ -167,9 +167,9 @@ public class RoomFinderDetailsActivity
         String archId = room.getArch_id();
         String url;
         if (mapId == null || mapId.isEmpty()) {
-            url = Const.URL_DEFAULT_MAP_IMAGE + Helper.encodeUrl(archId);
+            url = Const.URL_DEFAULT_MAP_IMAGE + ApiHelper.encodeUrl(archId);
         } else {
-            url = Const.URL_MAP_IMAGE + Helper.encodeUrl(archId) + '/' + Helper.encodeUrl(mapId);
+            url = Const.URL_MAP_IMAGE + ApiHelper.encodeUrl(archId) + '/' + ApiHelper.encodeUrl(mapId);
         }
         return url;
     }

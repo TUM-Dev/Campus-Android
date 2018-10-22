@@ -156,7 +156,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull EventsResponse response) {
+    public void onDownloadSuccessful(@NonNull EventsResponse response) {
         isFetched = true;
 
         List<Event> events = response.getEvents();

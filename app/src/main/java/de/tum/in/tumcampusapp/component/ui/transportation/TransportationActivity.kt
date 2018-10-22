@@ -22,7 +22,7 @@ import java.net.UnknownHostException
 /**
  * Activity to show transport stations and departures
  */
-class TransportationActivity : ActivityForSearching(
+class TransportationActivity : ActivityForSearching<Unit>(
         R.layout.activity_transportation,
         MVVStationSuggestionProvider.AUTHORITY, 3
 ), OnItemClickListener {

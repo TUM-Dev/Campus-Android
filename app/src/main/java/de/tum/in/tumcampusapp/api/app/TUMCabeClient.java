@@ -36,13 +36,10 @@ import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
-import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
@@ -114,7 +111,7 @@ public final class TUMCabeClient {
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(Helper.getOkHttpClient(c))
+                .client(ApiHelper.getOkHttpClient(c))
                 .build()
                 .create(TUMCabeAPIService.class);
     }
@@ -161,19 +158,6 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public List<StudyCard> getStudyCards() throws IOException {
-        return service.getStudyCards()
-                .execute()
-                .body();
-    }
-
-    public StudyCard addStudyCard(StudyCard card, TUMCabeVerification verification) throws IOException {
-        verification.setData(card);
-        return service.addStudyCard(verification)
-                .execute()
-                .body();
-    }
-
     public void leaveChatRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
         service.leaveChatRoom(chatRoom.getId(), verification)
                 .enqueue(cb);
@@ -211,17 +195,7 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public void getPublicKeysForMember(ChatMember member, Callback<List<ChatPublicKey>> cb) {
-        service.getPublicKeysForMember(member.getId())
-                .enqueue(cb);
-    }
-
-    public void uploadRegistrationId(int memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
-        service.uploadRegistrationId(memberId, regId)
-                .enqueue(cb);
-    }
-
-    public Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids){
+    Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids){
         return service.uploadObfuscatedIds(lrzId, ids);
     }
 
@@ -236,19 +210,13 @@ public final class TUMCabeClient {
                 .execute();
     }
 
-    public List<FcmNotificationLocation> getAllLocations() throws IOException {
-        return service.getAllLocations()
-                .execute()
-                .body();
-    }
-
     public FcmNotificationLocation getLocation(int locationId) throws IOException {
         return service.getLocation(locationId)
                 .execute()
                 .body();
     }
 
-    public void deviceRegister(DeviceRegister verification, Callback<TUMCabeStatus> cb) {
+    void deviceRegister(DeviceRegister verification, Callback<TUMCabeStatus> cb) {
         service.deviceRegister(verification)
                 .enqueue(cb);
     }
@@ -314,31 +282,31 @@ public final class TUMCabeClient {
     }
 
     public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) {
-        service.fetchAvailableMaps(Helper.encodeUrl(archId))
+        service.fetchAvailableMaps(ApiHelper.encodeUrl(archId))
                 .enqueue(cb);
     }
 
     public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
-        return service.fetchRooms(Helper.encodeUrl(searchStrings))
+        return service.fetchRooms(ApiHelper.encodeUrl(searchStrings))
                 .execute()
                 .body();
     }
 
     public RoomFinderCoordinate fetchCoordinates(String archId)
             throws IOException {
-        return service.fetchCoordinates(Helper.encodeUrl(archId))
+        return service.fetchCoordinates(ApiHelper.encodeUrl(archId))
                 .execute()
                 .body();
     }
 
     public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) {
-        service.fetchCoordinates(Helper.encodeUrl(archId))
+        service.fetchCoordinates(ApiHelper.encodeUrl(archId))
                 .enqueue(cb);
     }
 
     public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException {
-        return service.fetchSchedule(Helper.encodeUrl(roomId),
-                Helper.encodeUrl(start), Helper.encodeUrl(end))
+        return service.fetchSchedule(ApiHelper.encodeUrl(roomId),
+                ApiHelper.encodeUrl(start), ApiHelper.encodeUrl(end))
                 .execute()
                 .body();
     }
@@ -391,8 +359,8 @@ public final class TUMCabeClient {
         return service.getNewsAlert();
     }
 
-    public void getStudyRoomGroups(Callback<List<StudyRoomGroup>> callback) {
-        service.getStudyRoomGroups().enqueue(callback);
+    public Call<List<StudyRoomGroup>> getStudyRoomGroups() {
+        return service.getStudyRoomGroups();
     }
 
     // TICKET SALE
@@ -400,14 +368,6 @@ public final class TUMCabeClient {
     // Getting event information
     public void fetchEvents(Callback<List<Event>> cb) {
         service.getEvents().enqueue(cb);
-    }
-
-    public Event getEvent(int eventID) throws IOException {
-        return service.getEvent(eventID).execute().body();
-    }
-
-    public List<Event> searchEvents(String searchTerm) throws IOException {
-        return service.searchEvents(searchTerm).execute().body();
     }
 
     // Getting ticket information
