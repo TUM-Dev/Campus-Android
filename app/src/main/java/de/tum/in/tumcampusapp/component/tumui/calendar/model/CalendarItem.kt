@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.content.ContentValues
 import android.content.Context
 import android.provider.CalendarContract
+import android.support.v4.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent
 import org.joda.time.DateTime
