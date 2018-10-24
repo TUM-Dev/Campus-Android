@@ -62,7 +62,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
-import retrofit2.http.HEAD;
 
 /**
  * Proxy class for Retrofit client to our API hosted @app.tum.de
@@ -89,7 +88,6 @@ public final class TUMCabeClient {
     static final String API_FEEDBACK = "feedback/";
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
-    static final String API_CARD = "cards/";
     static final String API_NEWS = "news/";
     static final String API_EVENTS = "event/";
     static final String API_TICKET = "ticket/";
