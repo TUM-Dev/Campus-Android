@@ -43,7 +43,6 @@ public class RoomFinderDetailsActivity
         implements DialogInterface.OnClickListener, com.squareup.picasso.Callback {
 
     public static final String EXTRA_ROOM_INFO = "roomInfo";
-    public static final String EXTRA_LOCATION = "location";
 
     private ImageViewTouchFragment mImage;
 
@@ -63,18 +62,17 @@ public class RoomFinderDetailsActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mImage = ImageViewTouchFragment.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                                   .add(R.id.fragment_container, mImage)
-                                   .commit();
-
-        room = (RoomFinderRoom) getIntent().getExtras()
-                                           .getSerializable(EXTRA_ROOM_INFO);
+        room = (RoomFinderRoom) getIntent().getExtras().getSerializable(EXTRA_ROOM_INFO);
         if (room == null) {
             Utils.showToast(this, "No room information passed");
             this.finish();
             return;
         }
+
+        mImage = ImageViewTouchFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.fragment_container, mImage)
+                                   .commit();
 
         startLoading();
     }
@@ -192,24 +190,27 @@ public class RoomFinderDetailsActivity
 
     private void loadMapList() {
         showLoadingStart();
-        TUMCabeClient.getInstance(this)
-                     .fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
-                         @Override
-                         public void onResponse(@NonNull Call<List<RoomFinderMap>> call, @NonNull Response<List<RoomFinderMap>> response) {
-                             List<RoomFinderMap> data = response.body();
-                             if (!response.isSuccessful() || data == null) {
-                                 onMapListLoadFailed();
-                                 return;
-                             }
+        TUMCabeClient
+                .getInstance(this)
+                .fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<RoomFinderMap>> call,
+                                           @NonNull Response<List<RoomFinderMap>> response) {
+                        List<RoomFinderMap> data = response.body();
+                        if (!response.isSuccessful() || data == null) {
+                            onMapListLoadFailed();
+                            return;
+                        }
 
-                             onMapListLoadFinished(Optional.of(data));
-                         }
+                        onMapListLoadFinished(Optional.of(data));
+                    }
 
-                         @Override
-                         public void onFailure(@NonNull Call<List<RoomFinderMap>> call, @NonNull Throwable throwable) {
-                             onMapListLoadFailed();
-                         }
-                     });
+                    @Override
+                    public void onFailure(@NonNull Call<List<RoomFinderMap>> call,
+                                          @NonNull Throwable throwable) {
+                        onMapListLoadFailed();
+                    }
+                });
     }
 
     private void onMapListLoadFailed() {
@@ -269,11 +270,10 @@ public class RoomFinderDetailsActivity
         }
 
         // Build get directions intent and see if some app can handle it
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + result.get()
-                                                                                                .getLatitude() + ',' + result.get()
-                                                                                                                             .getLongitude()));
+        String coordinates = result.get().getLatitude() + ',' + result.get().getLongitude();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + coordinates));
         List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager()
-                                                               .queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+                .queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
 
         // If some app can handle this intent start it
         if (!pkgAppsList.isEmpty()) {
@@ -299,7 +299,7 @@ public class RoomFinderDetailsActivity
     public void onError(Exception e) {
         // map could not be shown
         if (NetUtils.isConnected(this)) {
-            showErrorLayout();
+            showError(R.string.error_something_wrong);
         } else {
             showNoInternetLayout();
         }
