@@ -151,7 +151,7 @@
             <android.support.design.button.MaterialButton
                 android:id="@+id/showInCalendarButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/material_default_padding"
                 android:layout_marginTop="@dimen/material_small_padding"
