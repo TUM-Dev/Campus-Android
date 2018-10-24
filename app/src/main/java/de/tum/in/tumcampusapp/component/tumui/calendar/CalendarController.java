@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -208,12 +207,20 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
     }
 
     void scheduleNotifications(List<Event> events) {
+        // Be responsible when scheduling alarms. We don't want to exceed system resources
+        // By only using up half of the remaining resources, we achieve fair distribution of the
+        // remaining usable notifications
+        int maxNotificationsToSchedule = NotificationScheduler.maxRemainingAlarms(mContext) / 2;
+
         List<FutureNotification> notifications = new ArrayList<>();
         for (Event event : events) {
             if (event.isFutureEvent()) {
                 FutureNotification notification = event.toNotification(mContext);
                 if (notification != null) {
                     notifications.add(notification);
+                    if (notifications.size() >= maxNotificationsToSchedule) {
+                        break;
+                    }
                 }
             }
         }
