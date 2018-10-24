@@ -103,7 +103,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             showInCalendarButton.setOnClickListener { openEventInCalendarActivity(calendarItem) }
         }
 
-        if (calendarItem.isEditable && !isShownInCalendarActivity) {
+        if (calendarItem.isEditable && isShownInCalendarActivity) {
             // We only provide edit and delete functionality if the user is in CalendarActivity,
             // but not if the user opens the fragment from MainActivity.
             buttonsContainer.visibility = View.VISIBLE
