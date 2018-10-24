@@ -62,6 +62,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.HEAD;
 
 /**
  * Proxy class for Retrofit client to our API hosted @app.tum.de
@@ -281,9 +282,8 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public void fetchAvailableMaps(final String archId, Callback<List<RoomFinderMap>> cb) {
-        service.fetchAvailableMaps(ApiHelper.encodeUrl(archId))
-                .enqueue(cb);
+    public Call<List<RoomFinderMap>> fetchAvailableMaps(final String archId) {
+        return service.fetchAvailableMaps(ApiHelper.encodeUrl(archId));
     }
 
     public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
@@ -292,16 +292,12 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public RoomFinderCoordinate fetchCoordinates(String archId)
-            throws IOException {
-        return service.fetchCoordinates(ApiHelper.encodeUrl(archId))
-                .execute()
-                .body();
+    public RoomFinderCoordinate fetchCoordinates(String archId) throws IOException {
+        return fetchRoomFinderCoordinates(archId).execute().body();
     }
 
-    public void fetchCoordinates(String archId, Callback<RoomFinderCoordinate> cb) {
-        service.fetchCoordinates(ApiHelper.encodeUrl(archId))
-                .enqueue(cb);
+    public Call<RoomFinderCoordinate> fetchRoomFinderCoordinates(String archId) {
+        return service.fetchCoordinates(ApiHelper.encodeUrl(archId));
     }
 
     public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException {

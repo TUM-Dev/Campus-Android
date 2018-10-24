@@ -52,7 +52,11 @@ public class RoomFinderDetailsActivity
     private String mapId = "";
     private List<RoomFinderMap> mapsList;
     private boolean infoLoaded;
+
     private Fragment fragment;
+
+    private Call<RoomFinderCoordinate> mRoomFinderCoordinateCall;
+    private Call<List<RoomFinderMap>> mRoomFinderMapsCall;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);
@@ -62,10 +66,15 @@ public class RoomFinderDetailsActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        room = (RoomFinderRoom) getIntent().getExtras().getSerializable(EXTRA_ROOM_INFO);
+        mImageFragment = ImageViewTouchFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.fragment_container, mImageFragment)
+                                   .commit();
+
+        room = (RoomFinderRoom) getIntent().getSerializableExtra(EXTRA_ROOM_INFO);
         if (room == null) {
             Utils.showToast(this, "No room information passed");
-            this.finish();
+            finish();
             return;
         }
 
@@ -91,7 +100,7 @@ public class RoomFinderDetailsActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_room_timetable) {
             getRoomTimetable();
@@ -129,6 +138,7 @@ public class RoomFinderDetailsActivity
             fragment = null;
             return;
         }
+
         String roomApiCode = room.getRoom_id();
         fragment = WeekViewFragment.newInstance(roomApiCode);
         ft.replace(R.id.fragment_container, fragment);
@@ -154,8 +164,7 @@ public class RoomFinderDetailsActivity
     @Override
     public void onClick(DialogInterface dialog, int whichButton) {
         dialog.dismiss();
-        int selectedPosition = ((AlertDialog) dialog).getListView()
-                                                     .getCheckedItemPosition();
+        int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
         mapId = mapsList.get(selectedPosition).getMap_id();
         startLoading();
     }
@@ -187,27 +196,34 @@ public class RoomFinderDetailsActivity
 
     private void loadMapList() {
         showLoadingStart();
-        TUMCabeClient
-                .getInstance(this)
-                .fetchAvailableMaps(room.getArch_id(), new Callback<List<RoomFinderMap>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<List<RoomFinderMap>> call,
-                                           @NonNull Response<List<RoomFinderMap>> response) {
-                        List<RoomFinderMap> data = response.body();
-                        if (!response.isSuccessful() || data == null) {
-                            onMapListLoadFailed();
-                            return;
-                        }
 
-                        onMapListLoadFinished(Optional.of(data));
-                    }
+        mRoomFinderMapsCall = TUMCabeClient.getInstance(this).fetchAvailableMaps(room.getArch_id());
+        mRoomFinderMapsCall.enqueue(new Callback<List<RoomFinderMap>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<RoomFinderMap>> call,
+                                   @NonNull Response<List<RoomFinderMap>> response) {
+                List<RoomFinderMap> data = response.body();
+                mRoomFinderMapsCall = null;
 
-                    @Override
-                    public void onFailure(@NonNull Call<List<RoomFinderMap>> call,
-                                          @NonNull Throwable throwable) {
-                        onMapListLoadFailed();
-                    }
-                });
+                if (!response.isSuccessful() || data == null) {
+                    onMapListLoadFailed();
+                    return;
+                }
+
+                onMapListLoadFinished(Optional.of(data));
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<RoomFinderMap>> call,
+                                  @NonNull Throwable throwable) {
+                if (call.isCanceled()) {
+                    return;
+                }
+
+                onMapListLoadFailed();
+                mRoomFinderMapsCall = null;
+            }
+        });
     }
 
     private void onMapListLoadFailed() {
@@ -234,25 +250,34 @@ public class RoomFinderDetailsActivity
 
     private void loadGeo() {
         showLoadingStart();
-        TUMCabeClient.getInstance(this)
-                     .fetchCoordinates(room.getArch_id(), new Callback<RoomFinderCoordinate>() {
-                         @Override
-                         public void onResponse(@NonNull Call<RoomFinderCoordinate> call,
-                                                @NonNull Response<RoomFinderCoordinate> response) {
-                             RoomFinderCoordinate data = response.body();
-                             if (!response.isSuccessful() || data == null) {
-                                 onLoadGeoFailed();
-                                 return;
-                             }
+        mRoomFinderCoordinateCall = TUMCabeClient.getInstance(this)
+                .fetchRoomFinderCoordinates(room.getArch_id());
+        mRoomFinderCoordinateCall.enqueue(new Callback<RoomFinderCoordinate>() {
+            @Override
+            public void onResponse(@NonNull Call<RoomFinderCoordinate> call,
+                                   @NonNull Response<RoomFinderCoordinate> response) {
+                RoomFinderCoordinate data = response.body();
+                mRoomFinderCoordinateCall = null;
 
-                             onGeoLoadFinished(LocationManager.Companion.convertRoomFinderCoordinateToGeo(data));
-                         }
+                if (!response.isSuccessful() || data == null) {
+                    onLoadGeoFailed();
+                    return;
+                }
 
-                         @Override
-                         public void onFailure(@NonNull Call<RoomFinderCoordinate> call, @NonNull Throwable throwable) {
-                             onLoadGeoFailed();
-                         }
-                     });
+                onGeoLoadFinished(LocationManager.Companion.convertRoomFinderCoordinateToGeo(data));
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RoomFinderCoordinate> call,
+                                  @NonNull Throwable throwable) {
+                if (call.isCanceled()) {
+                    return;
+                }
+
+                onLoadGeoFailed();
+                mRoomFinderCoordinateCall = null;
+            }
+        });
     }
 
     private void onLoadGeoFailed() {
@@ -292,6 +317,19 @@ public class RoomFinderDetailsActivity
             showError(R.string.error_something_wrong);
         } else {
             showNoInternetLayout();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mRoomFinderMapsCall != null) {
+            mRoomFinderMapsCall.cancel();
+        }
+
+        if (mRoomFinderCoordinateCall != null) {
+            mRoomFinderCoordinateCall.cancel();
         }
     }
 }

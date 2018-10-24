@@ -60,13 +60,13 @@ data class CalendarItem(@PrimaryKey
      * Formats title to exclude codes
      */
     fun getFormattedTitle(): String {
-        return Pattern.compile("\\([A-Z0-9\\.]+\\)")
-                .matcher(Pattern.compile("\\([A-Z]+[0-9]+\\)")
-                        .matcher(Pattern.compile("[A-Z, 0-9(LV\\.Nr)=]+$")
-                                .matcher(title)
-                                .replaceAll(""))
+        // remove lecture codes in round or square brackets e.g. (IN0003), [MA0902]
+        return Pattern.compile("[(\\[][A-Z0-9.]+[)\\]]")
+                // remove type of lecture (VO, UE, SE, PR) at the end of the line
+                .matcher(Pattern.compile(" (UE|VO|SE|PR)$")
+                        .matcher(title)
                         .replaceAll(""))
-                .replaceAll("")!!
+                .replaceAll("")
                 .trim { it <= ' ' }
     }
 

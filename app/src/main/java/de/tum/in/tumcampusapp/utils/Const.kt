@@ -14,7 +14,7 @@ object Const {
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
     const val EVENT_BOOKED_MODE = "event_booked_mode"
     const val COMPLETED = "completed"
-    const val DATABASE_NAME = "database.db"
+    const val DATABASE_NAME = "tca.db"
     const val DATE = "date"
     const val DOWNLOAD_ALL_FROM_EXTERNAL = "download_all_from_external"
     const val ERROR = "error"

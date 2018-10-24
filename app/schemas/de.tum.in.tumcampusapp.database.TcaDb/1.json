@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 15,
-    "identityHash": "e2fcf9703f2ca22285c1a899798d7131",
+    "version": 1,
+    "identityHash": "f77ff14a73ed0f2f6e528879ccf39410",
     "entities": [
       {
         "tableName": "Cafeteria",
@@ -882,32 +882,6 @@
         "foreignKeys": []
       },
       {
-        "tableName": "faculties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`faculty` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`faculty`))",
-        "fields": [
-          {
-            "fieldPath": "faculty",
-            "columnName": "faculty",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "faculty"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "study_room_groups",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `details` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
@@ -1234,7 +1208,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e2fcf9703f2ca22285c1a899798d7131\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f77ff14a73ed0f2f6e528879ccf39410\")"
     ]
   }
 }

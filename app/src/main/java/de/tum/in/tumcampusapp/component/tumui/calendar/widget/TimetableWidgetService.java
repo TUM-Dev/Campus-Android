@@ -82,10 +82,11 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
-            RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.timetable_widget_item);
-            if (this.calendarEvents == null) {
-                return rv;
+            if (calendarEvents == null || position >= calendarEvents.size()) {
+                return null;
             }
+
+            RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.timetable_widget_item);
 
             // Get the lecture for this view
             IntegratedCalendarEvent currentItem = this.calendarEvents.get(position);
