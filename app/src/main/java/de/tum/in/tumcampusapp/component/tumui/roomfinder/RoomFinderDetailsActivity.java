@@ -40,11 +40,11 @@ import retrofit2.Response;
  */
 public class RoomFinderDetailsActivity
         extends ActivityForLoadingInBackground<Void, String>
-        implements DialogInterface.OnClickListener, com.squareup.picasso.Callback {
+        implements DialogInterface.OnClickListener {
 
     public static final String EXTRA_ROOM_INFO = "roomInfo";
 
-    private ImageViewTouchFragment mImage;
+    private ImageViewTouchFragment mImageFragment;
 
     private boolean mapsLoaded;
 
@@ -69,9 +69,9 @@ public class RoomFinderDetailsActivity
             return;
         }
 
-        mImage = ImageViewTouchFragment.newInstance();
+        mImageFragment = ImageViewTouchFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
-                                   .add(R.id.fragment_container, mImage)
+                                   .add(R.id.fragment_container, mImageFragment)
                                    .commit();
 
         startLoading();
@@ -124,7 +124,7 @@ public class RoomFinderDetailsActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         // Remove if fragment is already present
         if (fragment != null) {
-            ft.replace(R.id.fragment_container, mImage);
+            ft.replace(R.id.fragment_container, mImageFragment);
             ft.commit();
             fragment = null;
             return;
@@ -174,10 +174,7 @@ public class RoomFinderDetailsActivity
 
     @Override
     protected void onLoadFinished(String url) {
-        mImage = ImageViewTouchFragment.newInstance(url, this);
-        getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.fragment_container, mImage)
-                                   .commit();
+        mImageFragment.loadImage(url, this::showImageLoadingError);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(room.getInfo());
@@ -290,14 +287,7 @@ public class RoomFinderDetailsActivity
         }
     }
 
-    @Override
-    public void onSuccess() {
-        // map was successfully loaded, do nothing
-    }
-
-    @Override
-    public void onError(Exception e) {
-        // map could not be shown
+    private void showImageLoadingError() {
         if (NetUtils.isConnected(this)) {
             showError(R.string.error_something_wrong);
         } else {
