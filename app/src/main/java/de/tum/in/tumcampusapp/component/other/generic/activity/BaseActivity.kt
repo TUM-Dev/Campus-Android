@@ -44,6 +44,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
     }
 
     private var drawerToggle: ActionBarDrawerToggle? = null
+    private var previouslyEmployeeMode = false
 
     private val shouldShowDrawer: Boolean by lazy {
         val askedToShowDrawer = intent.getBooleanExtra(Const.SHOW_DRAWER, false)
@@ -53,9 +54,20 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
-
+        previouslyEmployeeMode = Utils.getSettingBool(this, Const.EMPLOYEE_MODE, false)
         setUpToolbar()
         setUpDrawer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val newIsEmployeeMode = Utils.getSettingBool(this, Const.EMPLOYEE_MODE, false)
+        if (previouslyEmployeeMode != newIsEmployeeMode) {
+            // Update the drawer contents (not the header).
+            (drawerList as NavigationView).menu.clear()
+            DrawerMenuHelper(this).populateMenu(drawerList as NavigationView)
+            previouslyEmployeeMode = previouslyEmployeeMode.not()
+        }
     }
 
     open fun setUpToolbar() {
