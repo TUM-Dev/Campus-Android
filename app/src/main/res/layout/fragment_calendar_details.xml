@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_behavior="@string/bottom_sheet_behavior">
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        android:layout_marginBottom="@dimen/material_default_padding">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -49,23 +50,27 @@
                 android:layout_gravity="start|center_vertical"
                 android:textAppearance="@android:style/TextAppearance.Large"
                 tools:text="Title" />
-
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/locationTextView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
+            android:orientation="horizontal"
             android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginTop="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_small_padding"
-            android:drawableStart="@drawable/ic_outline_location_on_24px_light_blue"
-            android:drawablePadding="@dimen/material_default_padding"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:textColor="#00A7DE"
-            tools:text="Location" />
+            android:layout_marginEnd="@dimen/material_default_padding">
+            <ImageView
+                android:id="@+id/locationIcon"
+                android:layout_width="@dimen/icon_default"
+                android:layout_height="@dimen/icon_default"
+                android:src="@drawable/ic_outline_location_on_24px_light_blue"/>
+            <LinearLayout
+                android:id="@+id/locationLinearLayout"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/dateTextView"

@@ -90,6 +90,9 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return CalendarHelper.deleteCalendar(c);
     }
 
+    /**
+     * Adds events to the content provider
+     */
     private static void addEvents(Context c, Uri uri) throws SQLiteException {
         if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -117,6 +120,10 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
 
     public List<CalendarItem> getFromDbBetweenDates(DateTime begin, DateTime end) {
         return calendarDao.getAllBetweenDates(begin, end);
+    }
+
+    public List<CalendarItem> getFromDbNotCancelledBetweenDates(DateTime begin, DateTime end) {
+        return calendarDao.getAllNotCancelledBetweenDates(begin, end);
     }
 
     /**
@@ -191,9 +198,13 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return lectures;
     }
 
+    /**
+     * Gets the event by its id and duplicates of this event with different locations.
+     * The first item is the one with the given id.
+     */
     @Nullable
-    CalendarItem getCalendarItemById(String id) {
-        return calendarDao.getCalendarItemById(id);
+    List<CalendarItem> getCalendarItemsById(String id) {
+        return calendarDao.getCalendarItemsById(id);
     }
 
     void scheduleNotifications(List<Event> events) {
@@ -257,19 +268,8 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
     }
 
     @Nullable
-    public CalendarItem getNextCalendarItem() {
-        List<CalendarItem> items = getNextCalendarItems();
-        if (items.isEmpty()) {
-            return null;
-        }
-
-        Collections.sort(items, (lhs, rhs) -> lhs.getEventStart().compareTo(rhs.getEventStart()));
-        return items.get(0);
-    }
-
-    @Nullable
-    public CalendarItem getNextCalendarItem(String eventId) {
-        return calendarDao.getCalendarItemById(eventId);
+    public List<String> getLocationsForEvent(String eventId) {
+        return calendarDao.getNonCancelledLocationsById(eventId);
     }
 
     /**
@@ -288,7 +288,7 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
     @NotNull
     @Override
     public List<Card> getCards(@NonNull CacheControl cacheControl) {
-        List<CalendarItem> nextCalendarItems = getNextCalendarItems();
+        List<CalendarItem> nextCalendarItems = calendarDao.getNextUniqueCalendarItems();
         List<Card> results = new ArrayList<>();
 
         if (!nextCalendarItems.isEmpty()) {

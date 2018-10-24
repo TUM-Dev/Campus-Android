@@ -63,10 +63,11 @@ class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
         lectureTitleTextView.text = lecture.title
         lectureTimeTextView.text = DateTimeUtils.formatFutureTime(lecture.start, context)
 
-        if (lecture.location == null || lecture.location.isEmpty()) {
+        if (lecture.locations == null || lecture.locations.isEmpty()) {
             lectureLocationTextView.visibility = View.GONE
         } else {
-            lectureLocationTextView.text = lecture.location
+            lectureLocationTextView.visibility = View.VISIBLE
+            lectureLocationTextView.text = lecture.locationString
         }
 
         setOnClickListener {
