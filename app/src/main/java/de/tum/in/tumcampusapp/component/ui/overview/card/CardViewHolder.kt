@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview.card
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
@@ -20,8 +20,9 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var currentCard: Card? = null
 
     private val context: Context by lazy { itemView.context }
-    private val activity: Activity by lazy { context as Activity }
     private val listener: CardInteractionListener? by lazy { context as? CardInteractionListener }
+
+    protected val activity: AppCompatActivity by lazy { context as AppCompatActivity }
 
     init {
         itemView.setOnClickListener {

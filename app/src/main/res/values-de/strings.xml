@@ -648,4 +648,5 @@ Signatur: %5$s</string>
     <string name="next_lecture_show_more">Zeige %d weitere …</string>
     <string name="next_lecture_hide">Verbergen</string>
     <string name="event_imminent_error">Tickets können nur bis zu vier Stunden vor Beginn über die App erworben werden.</string>
+    <string name="show_in_calendar">Im Kalender öffnen</string>
 </resources>
