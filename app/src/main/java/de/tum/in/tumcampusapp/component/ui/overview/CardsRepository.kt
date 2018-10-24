@@ -18,6 +18,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
+import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.doAsync
 
 class CardsRepository(private val context: Context) {
@@ -74,8 +75,12 @@ class CardsRepository(private val context: Context) {
         }
 
         providers.forEach { provider ->
-            val cards = provider.getCards(cacheControl)
-            results.addAll(cards)
+            try {
+                val cards = provider.getCards(cacheControl)
+                results.addAll(cards)
+            } catch (e: Exception) {
+                Utils.log(e)
+            }
         }
 
         results.add(RestoreCard(context).getIfShowOnStart())
