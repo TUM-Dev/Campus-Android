@@ -69,6 +69,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                                                           Manifest.permission.WRITE_CALENDAR};
 
     private CalendarController calendarController;
+    private boolean isPaused;
 
     /**
      * Used as a flag, if there are results fetched from internet
@@ -96,6 +97,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
         mWeekView = findViewById(R.id.weekView);
         calendarController = new CalendarController(this);
+        isPaused = false;
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
@@ -137,12 +139,19 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
         disableRefresh();
         loadEvents(CacheControl.USE_CACHE);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        isPaused = false;
         refreshWeekView();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        isPaused = true;
     }
 
     @Override
@@ -512,6 +521,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
+        // Don't call openEvent if the activity is paused.
+        if (isPaused) {
+            return;
+        }
         String eventId = String.valueOf(weekViewEvent.getId());
         openEvent(eventId);
     }
