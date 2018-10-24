@@ -61,7 +61,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             descriptionTextView.setTextColor(Color.RED)
         }
 
-        titleTextView.text = calendarItem.title
+        titleTextView.text = calendarItem.getFormattedTitle()
         dateTextView.text = calendarItem.getEventDateString()
 
         val locationList = calendarItemList.map { it.location }
