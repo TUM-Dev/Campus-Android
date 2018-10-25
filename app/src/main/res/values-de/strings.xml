@@ -647,5 +647,7 @@ Signatur: %5$s</string>
     <string name="ticket_sale_beta">Der Ticketverkauf befindet sich momentan im Testbetrieb und es können Fehler auftreten. Solltet ihr Probleme haben, könnt ihr uns unter app@tum.de erreichen.</string>
     <string name="next_lecture_show_more">Zeige %d weitere …</string>
     <string name="next_lecture_hide">Verbergen</string>
+    <string name="employee_mode">Mitarbeitermodus</string>
+    <string name="employee_mode_info">Menüpunkte wie die Notenansicht oder Studienbeitrag werden in dieser Ansicht nicht angezeigt.</string>
     <string name="event_imminent_error">Tickets können nur bis zu vier Stunden vor Beginn über die App erworben werden.</string>
 </resources>

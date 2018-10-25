@@ -94,6 +94,8 @@
     <string name="account" translatable="false">Account</string>
     <string name="logout">Log out</string>
     <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="employee_mode">Employee Mode</string>
+    <string name="employee_mode_info">Some unnecessary items like grades and tuition fees are hidden in this mode.</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="clear_cache_detail">Deletes all data which was downloaded by the TUM Campus App and stored on your device.</string>
     <string name="delete_cache_sure">Are you sure you want to delete all data?</string>
