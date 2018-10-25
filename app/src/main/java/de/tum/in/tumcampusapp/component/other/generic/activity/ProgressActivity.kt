@@ -131,9 +131,12 @@ abstract class ProgressActivity<T>(
         })
     }
 
-    open fun onDownloadSuccessful(body: T) {
-        // Subclasses can implement this method
-    }
+    /**
+     * Called if the response from the API call is successful. Provides the unwrapped response body.
+     * Subclasses need to override this method to be alerted of successful responses after calling
+     * the [fetch] method.
+     */
+    open fun onDownloadSuccessful(body: T) = Unit
 
     /**
      * Called if the response from the API call is successful, but empty.
@@ -204,7 +207,7 @@ abstract class ProgressActivity<T>(
         }
     }
 
-    protected fun showErrorLayout(throwable: Throwable) {
+    private fun showErrorLayout(throwable: Throwable) {
         when (throwable) {
             is UnknownHostException -> showNoInternetLayout()
             is InactiveTokenException -> showFailedTokenLayout(R.string.error_access_token_inactive)
@@ -310,22 +313,16 @@ abstract class ProgressActivity<T>(
      * Should start the background refresh task.
      * Override this if you use a [SwipeRefreshLayout]
      */
-    override fun onRefresh() {
-        // Free ad space
-    }
+    override fun onRefresh() = Unit
 
     private fun retryRequest() {
         showLoadingStart()
         onRefresh()
     }
 
-    override fun onStop() {
-        super.onStop()
-        apiCall?.cancel()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
+        apiCall?.cancel()
         if (registered) {
             connectivityManager.unregisterNetworkCallback(networkCallback)
             registered = false

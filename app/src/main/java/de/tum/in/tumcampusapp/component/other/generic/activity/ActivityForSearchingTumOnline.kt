@@ -19,8 +19,4 @@ abstract class ActivityForSearchingTumOnline<T>(
         TUMOnlineClient.getInstance(this)
     }
 
-    override fun onRefresh() {
-        // Subclasses can override this method
-    }
-
 }

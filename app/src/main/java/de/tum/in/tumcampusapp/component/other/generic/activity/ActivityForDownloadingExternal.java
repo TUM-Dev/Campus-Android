@@ -37,8 +37,8 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onStart() {
+        super.onStart();
         IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }

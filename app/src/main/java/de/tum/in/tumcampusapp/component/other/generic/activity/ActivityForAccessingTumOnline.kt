@@ -13,12 +13,4 @@ abstract class ActivityForAccessingTumOnline<T>(layoutId: Int) : ProgressActivit
         TUMOnlineClient.getInstance(this)
     }
 
-    /**
-     * Called when the user refreshes the screen via a pull-to-refresh gesture. Subclasses that
-     * want to react to such gestures must override this method.
-     */
-    override fun onRefresh() {
-        // Subclasses can override this method
-    }
-
 }
