@@ -29,6 +29,8 @@ import java.net.UnknownHostException
 
 /**
  * Generic class which handles can handle a long running background task
+ *
+ * @param T The type of object that is to be retrieved via the [apiCall]
  */
 abstract class ProgressActivity<T>(
         layoutId: Int
