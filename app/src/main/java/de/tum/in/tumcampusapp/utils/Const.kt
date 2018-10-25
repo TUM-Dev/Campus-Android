@@ -14,7 +14,7 @@ object Const {
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
     const val EVENT_BOOKED_MODE = "event_booked_mode"
     const val COMPLETED = "completed"
-    const val DATABASE_NAME = "database.db"
+    const val DATABASE_NAME = "tca.db"
     const val DATE = "date"
     const val DOWNLOAD_ALL_FROM_EXTERNAL = "download_all_from_external"
     const val ERROR = "error"
@@ -48,6 +48,7 @@ object Const {
     const val TUMO_EXTERNAL_ID = "tumoExternNr"
     const val TUMO_EMPLOYEE_ID = "tumoBediensteteNr"
     const val TUMO_DISABLED = "tumo_is_disabled"
+    const val EMPLOYEE_MODE = "employee_mode"
 
     const val FCM_REG_ID = "gcm_registration_id"
     const val FCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server"
@@ -161,7 +162,7 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
 
-    const val STRIPE_API_PUBLISHABLE_KEY = "pk_test_MQjLRRi8jzpOEhrNqbMeMY8g"
+    const val STRIPE_API_PUBLISHABLE_KEY = "pk_live_bjSAhBM3WFUqeNI4cJn9upDW"
     const val KEY_EVENT = "event"
     const val KEY_EVENT_ID = "eventId"
     const val KEY_CARD_HOLDER = "cardholder"

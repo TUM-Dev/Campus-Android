@@ -36,10 +36,6 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
         return localRepository.getCafeteriaWithMenus(cafeteriaId)
     }
 
-    private fun getCafeteriaNameFromId(id: Int): String {
-        return localRepository.getCafeteria(id).name
-    }
-
     fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> {
         return Flowable
                 .fromCallable { localRepository.getCafeteriaMenus(id, date) }

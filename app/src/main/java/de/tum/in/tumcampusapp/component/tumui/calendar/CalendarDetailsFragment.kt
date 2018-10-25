@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
@@ -31,12 +32,14 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private lateinit var dao: CalendarDao
     private lateinit var calendarId: String
 
+    private var deleteApiCall: Call<DeleteEventResponse>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dao = TcaDb.getInstance(context).calendarDao()
 
         arguments?.let { args ->
-            calendarId = args.getString(CALENDAR_ID_PARAM)
+            calendarId = args.getString(CALENDAR_ID_PARAM)!!
         }
     }
 
@@ -46,24 +49,42 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val calendarItem = dao.getCalendarItemById(calendarId)
+        val calendarItem = dao.getCalendarItemsById(calendarId)
         updateView(calendarItem)
     }
 
-    private fun updateView(calendarItem: CalendarItem) {
-        if (calendarItem.status == "CANCEL") {
+    private fun updateView(calendarItemList: List<CalendarItem>) {
+        val calendarItem = calendarItemList[0]
+
+        if (calendarItemList.all { it.isCancelled() }) {
             cancelButtonsContainer.visibility = View.VISIBLE
             descriptionTextView.setTextColor(Color.RED)
         }
 
-        titleTextView.text = calendarItem.title
+        titleTextView.text = calendarItem.getFormattedTitle()
         dateTextView.text = calendarItem.getEventDateString()
-        locationTextView.text = calendarItem.location
 
-        if (calendarItem.location.isEmpty()) {
-            locationTextView.visibility = View.GONE
+        val locationList = calendarItemList.map { it.location }
+        if (locationList.all { it.isBlank() }) {
+            locationIcon.visibility = View.GONE
         } else {
-            locationTextView.visibility = View.VISIBLE
+            locationIcon.visibility = View.VISIBLE
+            for (item in calendarItemList) {
+                if (item.location.isBlank()) {
+                    continue
+                }
+                val locationText: TextView = layoutInflater
+                        .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
+                if (item.isCancelled()) {
+                    locationText.setTextColor(resources.getColor(R.color.event_canceled))
+                    val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
+                    locationText.text = textForCancelledEvent
+                } else {
+                    locationText.text = item.location
+                }
+                locationText.setOnClickListener { onLocationClicked(item.location) }
+                locationLinearLayout.addView(locationText)
+            }
         }
 
         if (calendarItem.description.isEmpty()) {
@@ -71,8 +92,6 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         } else {
             descriptionTextView.text = calendarItem.description
         }
-
-        locationTextView.setOnClickListener { onLocationClicked(calendarItem.location) }
 
         if (calendarItem.url.isEmpty()) {
             buttonsContainer.visibility = View.VISIBLE
@@ -94,20 +113,23 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private fun deleteEvent(eventId: String) {
         val c = requireContext()
-        TUMOnlineClient
-                .getInstance(c)
-                .deleteEvent(eventId)
-                .enqueue(object : Callback<DeleteEventResponse> {
-                    override fun onResponse(call: Call<DeleteEventResponse>,
-                                            response: Response<DeleteEventResponse>) {
-                        dismiss()
-                        listener.onEventDeleted(eventId)
-                    }
+        deleteApiCall = TUMOnlineClient.getInstance(c).deleteEvent(eventId)
+        deleteApiCall?.enqueue(object : Callback<DeleteEventResponse> {
+            override fun onResponse(call: Call<DeleteEventResponse>,
+                                    response: Response<DeleteEventResponse>) {
+                dismiss()
+                listener.onEventDeleted(eventId)
+                deleteApiCall = null
+            }
 
-                    override fun onFailure(call: Call<DeleteEventResponse>, t: Throwable) {
-                        handleDeleteEventError(t)
-                    }
-                })
+            override fun onFailure(call: Call<DeleteEventResponse>, t: Throwable) {
+                if (call.isCanceled) {
+                    return
+                }
+                deleteApiCall = null
+                handleDeleteEventError(t)
+            }
+        })
     }
 
     private fun handleDeleteEventError(t: Throwable) {
@@ -128,18 +150,21 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance(calendarItem: CalendarItem,
+        fun newInstance(calendarItem: List<CalendarItem>,
                         listener: OnEventInteractionListener): CalendarDetailsFragment {
             return CalendarDetailsFragment().apply {
                 this.arguments = Bundle().apply {
-                    putString(Const.CALENDAR_ID_PARAM, calendarItem.nr)
+                    putString(Const.CALENDAR_ID_PARAM, calendarItem[0].nr)
                 }
                 this.listener = listener
             }
         }
+    }
 
+    override fun onDetach() {
+        super.onDetach()
+        deleteApiCall?.cancel()
     }
 
     interface OnEventInteractionListener {

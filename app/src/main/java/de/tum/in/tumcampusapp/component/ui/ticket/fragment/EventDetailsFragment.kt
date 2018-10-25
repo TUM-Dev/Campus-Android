@@ -28,6 +28,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.into
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
+import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -78,6 +79,36 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onRefresh() {
         event?.let {
             loadAvailableTicketCount(it)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        event?.let {
+            if (!eventsController.isEventBooked(event) && isEventImminent(event as Event)) {
+                ticketButton.visibility = View.GONE
+            }
+        }
+    }
+
+    /**
+     * Checks if the event starts less than 4 hours from now.
+     * (-> user won't be able to buy tickets anymore)
+     */
+    private fun isEventImminent(event: Event): Boolean {
+        val eventStart = DateTime(event.startTime)
+        return eventStart.minusHours(4).isAfterNow
+    }
+
+    private fun showEventImminentDialog() {
+        context?.let {
+            val dialog = AlertDialog.Builder(it)
+                    .setTitle(R.string.error)
+                    .setMessage(R.string.event_imminent_error)
+                    .setPositiveButton(R.string.ok, null)
+                    .create()
+            dialog.window.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+            dialog.show()
         }
     }
 
@@ -158,6 +189,13 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun buyTicket(event: Event) {
         val c = context ?: return
+
+        if (isEventImminent(event)) {
+            showEventImminentDialog()
+            ticketButton.visibility = View.GONE
+            return
+        }
+
         val lrzId = Utils.getSetting(c, Const.LRZ_ID, "")
         val chatRoomName = Utils.getSetting(c, Const.CHAT_ROOM_DISPLAY_NAME, "")
         val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)

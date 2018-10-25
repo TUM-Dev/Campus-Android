@@ -27,7 +27,7 @@ object CafeteriaLocalRepository {
         }
     }
 
-    private fun getCafeteriaNameFromId(id: Int): String = getCafeteria(id).name
+    private fun getCafeteriaNameFromId(id: Int): String? = getCafeteria(id)?.name
 
     // Menu methods //
 
@@ -42,7 +42,7 @@ object CafeteriaLocalRepository {
 
     fun getAllCafeterias(): Flowable<List<Cafeteria>> = db.cafeteriaDao().all
 
-    fun getCafeteria(id: Int): Cafeteria = db.cafeteriaDao().getById(id)
+    fun getCafeteria(id: Int): Cafeteria? = db.cafeteriaDao().getById(id)
 
     fun addCafeteria(cafeteria: Cafeteria) = executor.execute { db.cafeteriaDao().insert(cafeteria) }
 
