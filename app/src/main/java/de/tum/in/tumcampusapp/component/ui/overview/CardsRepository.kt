@@ -3,6 +3,8 @@ package de.tum.`in`.tumcampusapp.component.ui.overview
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import com.crashlytics.android.Crashlytics
+import com.google.firebase.crash.FirebaseCrash
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
@@ -75,11 +77,14 @@ class CardsRepository(private val context: Context) {
         }
 
         providers.forEach { provider ->
+            // Don't prevent a single card exception to block other cards from being displayed.
             try {
                 val cards = provider.getCards(cacheControl)
                 results.addAll(cards)
             } catch (e: Exception) {
+                // We still want to know about it though
                 Utils.log(e)
+                Crashlytics.logException(e)
             }
         }
 
