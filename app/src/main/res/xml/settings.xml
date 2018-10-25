@@ -342,6 +342,12 @@
 
     <android.support.v7.preference.PreferenceCategory android:title="@string/account">
 
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:icon="@drawable/ic_outline_people_outline_24px"
+            android:key="employee_mode"
+            android:defaultValue="false"
+            android:summary="@string/employee_mode_info"
+            android:title="@string/employee_mode" />
         <android.support.v7.preference.Preference
             android:icon="@drawable/ic_outline_exit_to_app_24px"
             android:key="button_logout"

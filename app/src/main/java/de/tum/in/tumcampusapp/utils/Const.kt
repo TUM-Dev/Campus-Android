@@ -48,6 +48,7 @@ object Const {
     const val TUMO_EXTERNAL_ID = "tumoExternNr"
     const val TUMO_EMPLOYEE_ID = "tumoBediensteteNr"
     const val TUMO_DISABLED = "tumo_is_disabled"
+    const val EMPLOYEE_MODE = "employee_mode"
 
     const val FCM_REG_ID = "gcm_registration_id"
     const val FCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server"
