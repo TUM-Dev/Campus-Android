@@ -64,6 +64,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (key == Const.EMPLOYEE_MODE && drawerList != null) {
+            // Update the drawer contents (not the header).
             (drawerList as NavigationView).menu.clear()
             DrawerMenuHelper(this).populateMenu(drawerList as NavigationView)
         }
