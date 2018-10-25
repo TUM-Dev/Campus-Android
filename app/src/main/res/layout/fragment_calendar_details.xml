@@ -120,6 +120,7 @@
                 android:text="@string/delete_event_button"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
+                android:theme="@style/AppTheme"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
             <android.support.design.button.MaterialButton
@@ -131,6 +132,7 @@
                 android:text="@string/edit_event_button"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
+                android:theme="@style/AppTheme"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
         </LinearLayout>
@@ -155,8 +157,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/material_default_padding"
                 android:layout_marginTop="@dimen/material_small_padding"
-                android:layout_marginBottom="@dimen/material_small_padding"
                 android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_small_padding"
                 android:gravity="start|center_vertical"
                 android:text="@string/show_in_calendar"
                 android:textAllCaps="false"

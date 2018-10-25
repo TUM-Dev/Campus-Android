@@ -128,8 +128,9 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 .setMessage(R.string.delete_event_info)
                 .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
                 .setNegativeButton(R.string.cancel, null)
+                .create()
 
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+        alertDialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
         alertDialog.show()
     }
 
