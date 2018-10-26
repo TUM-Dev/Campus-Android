@@ -39,7 +39,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         dao = TcaDb.getInstance(context).calendarDao()
 
         arguments?.let { args ->
-            calendarId = args.getString(CALENDAR_ID_PARAM)!!
+            calendarId = args.getString(CALENDAR_ID_PARAM).orEmpty()
         }
     }
 
@@ -145,7 +145,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun onLocationClicked(location: String) {
         val findStudyRoomIntent = Intent()
         findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
-        findStudyRoomIntent.setClass(context, RoomFinderActivity::class.java)
+        findStudyRoomIntent.setClass(requireContext(), RoomFinderActivity::class.java)
         startActivity(findStudyRoomIntent)
     }
 

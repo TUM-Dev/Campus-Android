@@ -126,7 +126,7 @@ public class BuyTicketActivity extends BaseActivity {
             ticketTypeNames.add(ticketType.getDescription());
         }
 
-        ArrayAdapter adapter = new ArrayAdapter<>(
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_dropdown_item, ticketTypeNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ticketTypeSpinner.setAdapter(adapter);

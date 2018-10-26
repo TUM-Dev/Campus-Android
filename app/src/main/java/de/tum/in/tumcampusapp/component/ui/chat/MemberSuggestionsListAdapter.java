@@ -88,9 +88,10 @@ public class MemberSuggestionsListAdapter extends BaseAdapter implements Filtera
                 return results;
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                members = (ArrayList<ChatMember>)filterResults.values;
+                members = (List<ChatMember>)filterResults.values;
                 notifyDataSetChanged();
             }
         };

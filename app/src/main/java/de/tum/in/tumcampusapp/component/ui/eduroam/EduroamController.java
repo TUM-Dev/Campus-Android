@@ -70,10 +70,7 @@ public class EduroamController {
         conf.allowedKeyManagement.set(KeyMgmt.IEEE8021X);
         conf.allowedGroupCiphers.set(GroupCipher.TKIP);
         conf.allowedGroupCiphers.set(GroupCipher.CCMP);
-        conf.allowedGroupCiphers.set(GroupCipher.WEP40);
-        conf.allowedGroupCiphers.set(GroupCipher.WEP104);
         conf.allowedPairwiseCiphers.set(PairwiseCipher.CCMP);
-        conf.allowedPairwiseCiphers.set(PairwiseCipher.TKIP);
         conf.allowedProtocols.set(Protocol.RSN);
         conf.status = WifiConfiguration.Status.ENABLED;
 

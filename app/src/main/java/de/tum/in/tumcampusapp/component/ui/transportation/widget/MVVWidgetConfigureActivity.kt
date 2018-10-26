@@ -1,7 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation.widget
 
 import android.app.Activity
-import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID
+import android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -51,8 +52,8 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
         }
 
         // Get appWidgetId from intent
-        appWidgetId = intent.extras.getInt(
-                AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+        appWidgetId = intent.extras?.getInt(EXTRA_APPWIDGET_ID, INVALID_APPWIDGET_ID)
+                ?: INVALID_APPWIDGET_ID
 
         val controller = TransportController(this)
         widgetDepartures = controller.getWidget(appWidgetId)
@@ -65,7 +66,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
         // TODO add handling for use location
 
         listViewResults = findViewById(R.id.activity_transport_listview_result)
-        listViewResults.setOnItemClickListener { adapterView, _, position, id ->
+        listViewResults.setOnItemClickListener { adapterView, _, position, _ ->
             val (station, stationId) = adapterView.adapter.getItem(position) as StationResult
             widgetDepartures.station = station
             widgetDepartures.stationId = stationId
@@ -149,12 +150,12 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
         // update widget
         val reloadIntent = Intent(this, MVVWidget::class.java)
         reloadIntent.action = MVVWidget.MVV_WIDGET_FORCE_RELOAD
-        reloadIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+        reloadIntent.putExtra(EXTRA_APPWIDGET_ID, appWidgetId)
         sendBroadcast(reloadIntent)
 
         // return to widget
         val resultValue = Intent()
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+        resultValue.putExtra(EXTRA_APPWIDGET_ID, appWidgetId)
         setResult(Activity.RESULT_OK, resultValue)
         finish()
     }
@@ -167,7 +168,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
         if (!(widgetDepartures.station.isEmpty() || widgetDepartures.stationId.isEmpty())) {
             saveAndReturn()
         } else {
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            resultValue.putExtra(EXTRA_APPWIDGET_ID, appWidgetId)
             setResult(Activity.RESULT_CANCELED, resultValue)
             finish()
         }
