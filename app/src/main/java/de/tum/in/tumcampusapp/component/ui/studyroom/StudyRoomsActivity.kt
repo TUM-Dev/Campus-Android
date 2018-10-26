@@ -14,21 +14,17 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.component.other.generic.activity.ProgressActivity
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup
-import de.tum.`in`.tumcampusapp.utils.Utils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.net.UnknownHostException
+import kotlinx.android.synthetic.main.activity_study_rooms.*
 
 /**
  * Shows information about reservable study rooms.
  */
-class StudyRoomsActivity : ProgressActivity(R.layout.activity_study_rooms),
-        AdapterView.OnItemSelectedListener {
+class StudyRoomsActivity : ActivityForAccessingTumCabe<List<StudyRoomGroup>>(
+        R.layout.activity_study_rooms
+), AdapterView.OnItemSelectedListener {
     private var groups: List<StudyRoomGroup> = emptyList()
     private var groupId = -1
 
@@ -45,7 +41,6 @@ class StudyRoomsActivity : ProgressActivity(R.layout.activity_study_rooms),
 
                 override fun getDropDownView(pos: Int, ignored: View?, parent: ViewGroup): View {
                     val v = inflater.inflate(simple_spinner_dropdown_item, parent, false)
-
                     val studyRoomGroup = getItem(pos) ?: return v
                     val nameTextView = v.findViewById<TextView>(text1)
                     nameTextView.text = studyRoomGroup.name
@@ -112,47 +107,21 @@ class StudyRoomsActivity : ProgressActivity(R.layout.activity_study_rooms),
     }
 
     private fun loadStudyRooms() {
-        showLoadingStart()
-        TUMCabeClient.getInstance(this)
-                .getStudyRoomGroups(object : Callback<List<StudyRoomGroup>> {
-                    override fun onResponse(call: Call<List<StudyRoomGroup>>,
-                                            response: Response<List<StudyRoomGroup>>) {
-                        val newGroups = response.body()
-                        if (!response.isSuccessful || newGroups == null) {
-                            showErrorLayout()
-                            return
-                        }
-                        if (newGroups.isEmpty()) {
-                            showError(R.string.error_no_data_to_show)
-                            return
-                        }
-
-                        studyRoomGroupManager.updateDatabase(newGroups)
-                        runOnUiThread {
-                            groups = newGroups
-                            displayStudyRooms()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<StudyRoomGroup>>, t: Throwable) {
-                        Utils.log(t)
-                        if (t is UnknownHostException) {
-                            showNoInternetLayout()
-                        } else {
-                            showErrorLayout()
-                        }
-                    }
-                })
+        fetch(apiClient.studyRoomGroups)
     }
 
+    override fun onDownloadSuccessful(body: List<StudyRoomGroup>) {
+        studyRoomGroupManager.updateDatabase(body) {
+            runOnUiThread {
+                groups = body
+                displayStudyRooms()
+            }
+        }
+    }
 
     private fun displayStudyRooms() {
-        if (groups.isEmpty()) {
-            showErrorLayout()
-            return
-        }
         selectCurrentSpinnerItem()
-        findViewById<View>(R.id.spinnerContainer).visibility = View.VISIBLE
+        spinnerContainer.visibility = View.VISIBLE
         showLoadingEnded()
     }
 }

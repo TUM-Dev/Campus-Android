@@ -24,7 +24,7 @@ import io.reactivex.schedulers.Schedulers
  *
  * NEEDS: EXTRA_STATION set in incoming bundle (station name)
  */
-class TransportationDetailsActivity : ProgressActivity(R.layout.activity_transportation_detail) {
+class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_transportation_detail) {
 
     private lateinit var mViewResults: LinearLayout
     private lateinit var recentsDao: RecentsDao

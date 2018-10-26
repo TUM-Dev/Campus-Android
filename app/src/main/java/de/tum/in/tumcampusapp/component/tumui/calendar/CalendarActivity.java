@@ -160,12 +160,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     private void loadEvents(CacheControl cacheControl) {
-        Call<EventsResponse> apiCall = apiClient.getCalendar(cacheControl);
+        Call<EventsResponse> apiCall = getApiClient().getCalendar(cacheControl);
         fetch(apiCall);
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull EventsResponse response) {
+    public void onDownloadSuccessful(@NonNull EventsResponse response) {
         isFetched = true;
 
         List<Event> events = response.getEvents();

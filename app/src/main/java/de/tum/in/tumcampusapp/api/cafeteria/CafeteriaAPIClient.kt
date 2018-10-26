@@ -2,8 +2,8 @@ package de.tum.`in`.tumcampusapp.api.cafeteria
 
 import android.content.Context
 import com.google.gson.GsonBuilder
+import de.tum.`in`.tumcampusapp.api.app.ApiHelper
 import de.tum.`in`.tumcampusapp.api.app.DateSerializer
-import de.tum.`in`.tumcampusapp.api.app.Helper
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CacheResponseInterceptor
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaResponse
@@ -40,7 +40,7 @@ class CafeteriaAPIClient(private val apiService: CafeteriaAPIService) {
             // cache-control headers to the response.
             val cacheManager = CacheManager(context)
 
-            val client = Helper.getOkHttpClient(context)
+            val client = ApiHelper.getOkHttpClient(context)
                     .newBuilder()
                     .cache(cacheManager.cache)
                     .addNetworkInterceptor(CacheResponseInterceptor())

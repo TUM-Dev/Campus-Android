@@ -23,7 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class MVVWidgetConfigureActivity : ActivityForSearching(
+class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
         R.layout.activity_mvv_widget_configure, MVVStationSuggestionProvider.AUTHORITY, 3) {
 
     private var appWidgetId: Int = 0
