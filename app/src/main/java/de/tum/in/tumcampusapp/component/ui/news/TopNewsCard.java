@@ -43,7 +43,7 @@ public class TopNewsCard extends Card {
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         return new CardViewHolder(LayoutInflater.from(parent.getContext())
-                                                .inflate(R.layout.card_top_news, parent, false));
+                .inflate(R.layout.card_top_news, parent, false));
     }
 
     private void updateImageView() {
@@ -52,19 +52,19 @@ public class TopNewsCard extends Card {
             return;
         }
         Picasso.get()
-               .load(imageURL)
-               .into(imageView, new Callback() {
-                   @Override
-                   public void onSuccess() {
-                       // remove progress bar
-                       progress.setVisibility(View.GONE);
-                   }
+                .load(imageURL)
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // remove progress bar
+                        progress.setVisibility(View.GONE);
+                    }
 
-                   @Override
-                   public void onError(Exception e) {
-                       discardCard();
-                   }
-               });
+                    @Override
+                    public void onError(Exception e) {
+                        discardCard();
+                    }
+                });
     }
 
     @Override
@@ -97,13 +97,16 @@ public class TopNewsCard extends Card {
     protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         // don't show if the showUntil date does not exist or is in the past
         String untilDateString = Utils.getSetting(context, Const.NEWS_ALERT_SHOW_UNTIL, "");
-        DateTime until = DateTimeUtils.INSTANCE.parseIsoDateWithMillis(untilDateString);
+        if (untilDateString.isEmpty()) {
+            return false;
+        }
 
+        DateTime until = DateTimeUtils.INSTANCE.parseIsoDateWithMillis(untilDateString);
         if (until == null) {
             return false;
         }
         return Utils.getSettingBool(context, CardManager.SHOW_TOP_NEWS, true)
-               && until.isAfterNow();
+                && until.isAfterNow();
     }
 
     @Override

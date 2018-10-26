@@ -18,6 +18,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
+import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.doAsync
 
 class CardsRepository(private val context: Context) {
@@ -74,8 +75,15 @@ class CardsRepository(private val context: Context) {
         }
 
         providers.forEach { provider ->
-            val cards = provider.getCards(cacheControl)
-            results.addAll(cards)
+            // Don't prevent a single card exception to block other cards from being displayed.
+            try {
+                val cards = provider.getCards(cacheControl)
+                results.addAll(cards)
+            } catch (e: Exception) {
+                // We still want to know about it though
+                Utils.log(e)
+                Crashlytics.logException(e)
+            }
         }
 
         results.add(RestoreCard(context).getIfShowOnStart())

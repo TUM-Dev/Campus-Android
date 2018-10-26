@@ -105,17 +105,17 @@ dependencies {
     kapt 'android.arch.persistence.room:compiler:1.1.1'
 
     // Play services
-    implementation 'com.google.android.gms:play-services-base:15.0.1'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.google.android.gms:play-services-base:16.0.1'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.3'
-    implementation 'com.google.firebase:firebase-messaging:17.3.2'
-    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
     // Helpers
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'net.danlew:android.joda:2.9.9.4'
+    implementation 'net.danlew:android.joda:2.10.0'
 
     // XML Parsing
     implementation "com.tickaroo.tikxml:annotation:$tikXmlVersion"
@@ -124,7 +124,7 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.anko:anko:0.10.5"
+    implementation "org.jetbrains.anko:anko:0.10.7"
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
