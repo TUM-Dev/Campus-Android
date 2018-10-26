@@ -57,6 +57,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         mContext = getActivity();
 
         populateNewsSources();
+        setUpEmployeeSettings();
 
         // Disables silence service if the app is used without TUMOnline access
         SwitchPreferenceCompat silentSwitch =
@@ -135,6 +136,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
             if (newsSourcesPreference != null) {
                 newsSourcesPreference.addPreference(pref);
             }
+        }
+    }
+
+    /**
+     * Disable setting for non-employees.
+     */
+    private void setUpEmployeeSettings() {
+        boolean isEmployee = !Utils.getSetting(mContext, Const.TUMO_EMPLOYEE_ID, "").isEmpty();
+        if (!isEmployee) {
+            findPreference(Const.EMPLOYEE_MODE).setEnabled(false);
         }
     }
 

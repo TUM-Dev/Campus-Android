@@ -33,7 +33,7 @@ data class CalendarItem(@PrimaryKey
      * Returns the color of the event
      */
     fun getEventColor(context: Context): Int {
-        return if (status == "CANCEL") {
+        return if (isCancelled()) {
             IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_canceled))
         } else if (title.endsWith("VO") || title.endsWith("VU")) {
             IntegratedCalendarEvent.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_lecture))
@@ -60,13 +60,13 @@ data class CalendarItem(@PrimaryKey
      * Formats title to exclude codes
      */
     fun getFormattedTitle(): String {
-        return Pattern.compile("\\([A-Z0-9\\.]+\\)")
-                .matcher(Pattern.compile("\\([A-Z]+[0-9]+\\)")
-                        .matcher(Pattern.compile("[A-Z, 0-9(LV\\.Nr)=]+$")
-                                .matcher(title)
-                                .replaceAll(""))
+        // remove lecture codes in round or square brackets e.g. (IN0003), [MA0902]
+        return Pattern.compile("[(\\[][A-Z0-9.]+[)\\]]")
+                // remove type of lecture (VO, UE, SE, PR) at the end of the line
+                .matcher(Pattern.compile(" (UE|VO|SE|PR)$")
+                        .matcher(title)
                         .replaceAll(""))
-                .replaceAll("")!!
+                .replaceAll("")
                 .trim { it <= ' ' }
     }
 
@@ -101,4 +101,12 @@ data class CalendarItem(@PrimaryKey
         values.put(CalendarContract.Events.EVENT_LOCATION, location)
         return values
     }
+
+    fun isSameEventButForLocation(other: CalendarItem): Boolean {
+        return title.equals(other.title)
+                && dtstart.equals(other.dtstart)
+                && dtend.equals(other.dtend)
+    }
+
+    fun isCancelled(): Boolean = status == "CANCEL"
 }

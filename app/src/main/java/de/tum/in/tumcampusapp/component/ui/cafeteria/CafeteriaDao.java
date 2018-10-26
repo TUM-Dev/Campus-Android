@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface CafeteriaDao {
     @Query("SELECT * FROM cafeteria")
     Flowable<List<Cafeteria>> getAll();
 
+    @Nullable
     @Query("SELECT * FROM cafeteria WHERE id = :id")
     Cafeteria getById(int id);
 

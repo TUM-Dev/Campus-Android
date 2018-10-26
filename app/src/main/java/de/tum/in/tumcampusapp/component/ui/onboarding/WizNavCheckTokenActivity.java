@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.component.ui.onboarding;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.view.View;
@@ -25,6 +26,8 @@ import retrofit2.Response;
 public class WizNavCheckTokenActivity extends ProgressActivity {
 
     private Toast mToast;
+
+    private Call<IdentitySet> mIdentityCall;
 
     public WizNavCheckTokenActivity() {
         super(R.layout.activity_wiznav_checktoken);
@@ -55,27 +58,31 @@ public class WizNavCheckTokenActivity extends ProgressActivity {
         mToast = Toast.makeText(this, R.string.checking_if_token_enabled, Toast.LENGTH_LONG);
         mToast.show();
 
-        TUMOnlineClient
-                .getInstance(this)
-                .getIdentity()
-                .enqueue(new Callback<IdentitySet>() {
-                    @Override
-                    public void onResponse(@NonNull Call<IdentitySet> call,
-                                           @NonNull Response<IdentitySet> response) {
-                        mToast.cancel();
-                        IdentitySet identitySet = response.body();
-                        if (identitySet != null) {
-                            handleDownloadSuccess(identitySet);
-                        } else {
-                            displayErrorToast(R.string.error_unknown);
-                        }
-                    }
+        mIdentityCall = TUMOnlineClient.getInstance(this).getIdentity();
+        mIdentityCall.enqueue(new Callback<IdentitySet>() {
+            @Override
+            public void onResponse(@NonNull Call<IdentitySet> call,
+                                   @NonNull Response<IdentitySet> response) {
+                mToast.cancel();
+                IdentitySet identitySet = response.body();
+                if (identitySet != null) {
+                    handleDownloadSuccess(identitySet);
+                } else {
+                    displayErrorToast(R.string.error_unknown);
+                }
+                mIdentityCall = null;
+            }
 
-                    @Override
-                    public void onFailure(@NonNull Call<IdentitySet> call, @NonNull Throwable t) {
-                        handleDownloadFailure(t);
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Call<IdentitySet> call, @NonNull Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+
+                handleDownloadFailure(t);
+                mIdentityCall = null;
+            }
+        });
     }
 
     private void handleDownloadSuccess(@NonNull IdentitySet identitySet) {
@@ -91,6 +98,11 @@ public class WizNavCheckTokenActivity extends ProgressActivity {
                 .getExtern());
         Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscated_ids()
                 .getBedienstete());
+        if (!identity.getObfuscated_ids().getBedienstete().isEmpty()
+                && identity.getObfuscated_ids().getStudierende().isEmpty()
+                && identity.getObfuscated_ids().getExtern().isEmpty()) {
+            Utils.setSetting(this, Const.EMPLOYEE_MODE, true);
+        }
 
         // can't upload the obfuscated ids here since we might not have a (chat) member yet
 
@@ -117,4 +129,12 @@ public class WizNavCheckTokenActivity extends ProgressActivity {
         Utils.showToast(this, resId);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mIdentityCall != null) {
+            mIdentityCall.cancel();
+        }
+    }
 }

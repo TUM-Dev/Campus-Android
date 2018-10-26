@@ -161,23 +161,26 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
 
     private void setDateAndTimeListeners() {
         // DATE
+        
+        // Month +/- 1 is needed because the date picker uses zero-based month values while DateTime
+        // starts counting months at 1.
         startDateView.setOnClickListener(view -> {
             hideKeyboard();
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
-                start = start.withDate(year, month, dayOfMonth);
+                start = start.withDate(year, month + 1, dayOfMonth);
                 if (end.isBefore(start)) {
-                    end = end.withDate(year, month, dayOfMonth);
+                    end = end.withDate(year, month + 1, dayOfMonth);
                 }
                 updateDateViews();
-            }, start.getYear(), start.getMonthOfYear(), start.getDayOfMonth()).show();
+            }, start.getYear(), start.getMonthOfYear() - 1, start.getDayOfMonth()).show();
 
         });
         endDateView.setOnClickListener(view -> {
             hideKeyboard();
             new DatePickerDialog(this, (datePicker, year, month, dayOfMonth) -> {
-                end = end.withDate(year, month, dayOfMonth);
+                end = end.withDate(year, month + 1, dayOfMonth);
                 updateDateViews();
-            }, start.getYear(), start.getMonthOfYear(), start.getDayOfMonth()).show();
+            }, start.getYear(), start.getMonthOfYear() - 1, start.getDayOfMonth()).show();
         });
 
         // TIME

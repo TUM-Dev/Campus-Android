@@ -54,6 +54,9 @@
     <!-- To potentially change the Do Not Disturb mode -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
+    <!-- Do not collect crashes by default -->
+    <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+
     <application
         android:name=".App"
         android:allowBackup="true"

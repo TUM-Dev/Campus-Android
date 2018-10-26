@@ -94,6 +94,8 @@
     <string name="account" translatable="false">Account</string>
     <string name="logout">Log out</string>
     <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="employee_mode">Employee Mode</string>
+    <string name="employee_mode_info">Some unnecessary items like grades and tuition fees are hidden in this mode.</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="clear_cache_detail">Deletes all data which was downloaded by the TUM Campus App and stored on your device.</string>
     <string name="delete_cache_sure">Are you sure you want to delete all data?</string>
@@ -127,7 +129,7 @@
     <string name="welcome_msg">To setup TUMonline access, you need to provide your <b>TUM ID</b>.\n\nThe ID has the format <i>ga12abc</i>.</string>
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
-    <string name="need_to_enable"><b>The TUMonline access token was successfully generated</b>\n\nPlease enable the token in TUMonline now via <i>Services/Token-Management</i>. Make sure the rights you want to gain the app are set under <i>Active Rights</i>.</string>
+    <string name="need_to_enable"><b>The TUMonline access token was successfully generated</b>\n\nPlease enable the token in TUMonline now via <i>Services/Token-Management</i> or follow the link in the email from TUMonline which you will receive shortly.\nMake sure the rights you want to gain in the app are set under <i>Specific Rights</i>.</string>
     <string name="step_1">Step 1</string>
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
@@ -660,6 +662,7 @@ Signature: %5$s</string>
     <string name="creditcard_ending_in">ending in</string>
     <string name="empty_cardholder_message">No cardholder specified.</string>
     <string name="not_logged_in_error">To purchase tickets, you must be logged in and allow access to your name and TUM ID in the TUMonline access token.</string>
+    <string name="event_imminent_error">Tickets can only be purchased up to four hours before the event starts.</string>
     <string name="ticket_retrieval_error">Failure while receiving ticket from server.</string>
     <string name="reserving_ticket">Reserving your ticket, please wait…</string>
     <string name="remaining_tickets_format_string" formatted="true">%d tickets remaining</string>

@@ -197,7 +197,7 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
         }
 
         filterSpinner.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val filter = filters[position]
                 spinnerPosition = position
 

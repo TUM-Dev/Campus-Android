@@ -61,7 +61,7 @@ import retrofit2.Call;
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline<EventsResponse>
         implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener,
-        CalendarDetailsFragment.OnEventInteractionListener {
+                   CalendarDetailsFragment.OnEventInteractionListener {
 
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
@@ -69,6 +69,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                                                           Manifest.permission.WRITE_CALENDAR};
 
     private CalendarController calendarController;
+    private boolean isPaused;
 
     /**
      * Used as a flag, if there are results fetched from internet
@@ -96,6 +97,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
         mWeekView = findViewById(R.id.weekView);
         calendarController = new CalendarController(this);
+        isPaused = false;
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
@@ -137,12 +139,19 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
         disableRefresh();
         loadEvents(CacheControl.USE_CACHE);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        isPaused = false;
         refreshWeekView();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        isPaused = true;
     }
 
     @Override
@@ -234,22 +243,22 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
         mDisposable.add(
                 Completable.fromAction(() -> CalendarController.syncCalendar(this))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(() -> {
-                            if (!isFinishing()) {
-                                new AlertDialog.Builder(this)
-                                        .setMessage(getString(R.string.dialog_show_calendar))
-                                        .setNegativeButton(getString(R.string.no), null)
-                                        .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
-                                            displayCalendarOnGoogleCalendar();
-                                        })
-                                        .show();
-                            }
-                        }, throwable -> {
-                            Utils.log(throwable);
-                            Utils.showToast(this, R.string.export_to_google_error);
-                        })
+                           .subscribeOn(Schedulers.io())
+                           .observeOn(AndroidSchedulers.mainThread())
+                           .subscribe(() -> {
+                               if (!isFinishing()) {
+                                   new AlertDialog.Builder(this)
+                                           .setMessage(getString(R.string.dialog_show_calendar))
+                                           .setNegativeButton(getString(R.string.no), null)
+                                           .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
+                                               displayCalendarOnGoogleCalendar();
+                                           })
+                                           .show();
+                               }
+                           }, throwable -> {
+                               Utils.log(throwable);
+                               Utils.showToast(this, R.string.export_to_google_error);
+                           })
         );
     }
 
@@ -335,7 +344,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
      */
     private boolean isPermissionGranted(int id) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             // Provide an additional rationale to the user if the permission was not granted
@@ -406,23 +415,41 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     public List<WeekViewDisplayable> onMonthChange(int newYear, int newMonth) {
         // Populate the week view with the events of the month to display
-        List<WeekViewDisplayable> events = new ArrayList<>();
-
         DateTime begin = new DateTime().withDate(newYear, newMonth, 1);
-
         int daysInMonth = begin.dayOfMonth()
                                .getMaximumValue();
-
         DateTime end = new DateTime().withDate(newYear, newMonth, daysInMonth);
+        return prepareCalendarItems(begin, end);
+    }
 
-        List<CalendarItem> calendarItems = calendarController.getFromDbBetweenDates(begin, end);
-        boolean filterCanceled = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
-        for (CalendarItem calendarItem : calendarItems) {
-            if (filterCanceled || !calendarItem.getStatus().equals("CANCEL")) {
-                events.add(new IntegratedCalendarEvent(calendarItem, this));
+    private List<WeekViewDisplayable> prepareCalendarItems(DateTime begin, DateTime end) {
+        boolean showCancelledEvents = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
+        List<CalendarItem> calendarItems = showCancelledEvents
+                ? calendarController.getFromDbBetweenDates(begin, end)
+                : calendarController.getFromDbNotCancelledBetweenDates(begin, end);
+        return mergeSimilarCalendarItems(calendarItems);
+    }
+
+    /**
+     * Creates one event out of multiple instances of the same event that have different locations.
+     * List must already be sorted so that event duplicates are right after each other.
+     */
+    private List<WeekViewDisplayable> mergeSimilarCalendarItems(List<CalendarItem> calendarItems) {
+        List<WeekViewDisplayable> events = new ArrayList<>();
+        for (int i = 0; i < calendarItems.size(); i++) {
+            CalendarItem calendarItem = calendarItems.get(i);
+            StringBuilder location = new StringBuilder();
+            location.append(calendarItem.getLocation());
+            while (i + 1 < calendarItems.size()
+                    && calendarItem.isSameEventButForLocation(calendarItems.get(i + 1))) {
+                i++;
+                location.append(" + ");
+                location.append(calendarItems.get(i).getLocation());
+
             }
+            calendarItem.setLocation(location.toString());
+            events.add(new IntegratedCalendarEvent(calendarItem, this));
         }
-
         return events;
     }
 
@@ -465,10 +492,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     public void onEventDeleted(@NotNull String eventId) {
         TcaDb db = TcaDb.getInstance(this);
-        db.calendarDao().delete(eventId);
+        db.calendarDao()
+          .delete(eventId);
 
         int id = Integer.parseInt(eventId);
-        db.scheduledNotificationsDao().delete(NotificationType.CALENDAR.getId(), id);
+        db.scheduledNotificationsDao()
+          .delete(NotificationType.CALENDAR.getId(), id);
 
         refreshWeekView();
         Utils.showToast(this, R.string.delete_event_confirmation);
@@ -492,16 +521,19 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
+        // Don't call openEvent if the activity is paused.
+        if (isPaused) {
+            return;
+        }
         String eventId = String.valueOf(weekViewEvent.getId());
         openEvent(eventId);
     }
-
+    
     private void openEvent(String eventId) {
-        CalendarItem item = calendarController.getCalendarItemById(eventId);
-        if (item == null) {
+        List<CalendarItem> item = calendarController.getCalendarItemsById(eventId);
+        if (item == null || item.isEmpty()) {
             return;
         }
-
         detailsFragment = CalendarDetailsFragment.newInstance(item, this);
         detailsFragment.show(getSupportFragmentManager(), null);
     }
@@ -524,9 +556,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     protected void initFilterCheckboxes() {
-        boolean settings = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
-        menuItemFilterCanceled.setChecked(settings);
-        applyFilterCanceled(settings);
+        boolean showCancelledEvents = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
+        Utils.log(showCancelledEvents ? "Show cancelled events" : "Hide cancelled events");
+        menuItemFilterCanceled.setChecked(showCancelledEvents);
+        applyFilterCanceled(showCancelledEvents);
     }
 
     protected void applyFilterCanceled(boolean val) {

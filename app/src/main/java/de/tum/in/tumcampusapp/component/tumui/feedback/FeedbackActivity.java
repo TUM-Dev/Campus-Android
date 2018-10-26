@@ -57,7 +57,7 @@ import retrofit2.Response;
 public class FeedbackActivity extends BaseActivity {
 
     private static final int GENERAL_FEEDBACK = 0;
-    private static final int TCA_FEEDBACK = 0;
+    private static final int TCA_FEEDBACK = 1;
 
     private static final int REQUEST_TAKE_PHOTO = 11;
     private static final int REQUEST_GALLERY = 12;
