@@ -1,9 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.ui.studyroom.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
-import android.arch.persistence.room.RoomWarnings
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 

@@ -1,14 +1,14 @@
 package de.tum.`in`.tumcampusapp.utils
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.design.button.MaterialButton
-import android.support.v4.widget.DrawerLayout
+import com.google.android.material.button.MaterialButton
+import androidx.drawerlayout.widget.DrawerLayout
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View

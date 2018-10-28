@@ -3,8 +3,8 @@ package de.tum.`in`.tumcampusapp.component.ui.overview.card
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.RecyclerView
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View

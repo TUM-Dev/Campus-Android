@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.ui.news.model
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
-import android.arch.persistence.room.RoomWarnings
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.RoomWarnings
 import android.content.Context
 import android.content.Intent
 import android.net.Uri

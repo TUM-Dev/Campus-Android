@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -75,7 +75,7 @@
 
             </ScrollView>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <View
             android:id="@+id/divider"
@@ -90,7 +90,7 @@
             android:clipChildren="false"
             android:orientation="horizontal">
 
-            <android.support.design.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/open_tum_online_button"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
@@ -104,7 +104,7 @@
                 android:textColor="@color/color_primary"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
-            <android.support.design.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/next_button"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"

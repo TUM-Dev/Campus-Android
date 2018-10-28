@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -53,7 +53,7 @@
                         android:text="@string/welcome_msg"
                         android:textSize="15sp" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                         android:layout_marginBottom="@dimen/material_default_padding"
                         android:hint="@string/enter_your_tum_id">
 
-                        <android.support.design.widget.TextInputEditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/lrz_id"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                             android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -83,7 +83,7 @@
 
             </ScrollView>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <View
             android:id="@+id/divider"
@@ -91,7 +91,7 @@
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
-        <android.support.design.button.MaterialButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/next_button"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"

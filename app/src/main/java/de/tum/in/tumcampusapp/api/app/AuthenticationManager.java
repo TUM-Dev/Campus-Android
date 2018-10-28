@@ -3,7 +3,7 @@ package de.tum.in.tumcampusapp.api.app;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Base64;
 
 import com.google.android.gms.common.ConnectionResult;

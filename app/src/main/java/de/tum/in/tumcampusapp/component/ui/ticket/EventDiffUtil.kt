@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 
 class EventDiffUtil(

@@ -1,7 +1,7 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.arch.lifecycle.Lifecycle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.lifecycle.Lifecycle;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.common.base.Optional;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;

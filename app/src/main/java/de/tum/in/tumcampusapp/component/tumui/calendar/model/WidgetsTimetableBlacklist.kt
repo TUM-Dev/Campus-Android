@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.RoomWarnings
+import androidx.room.Entity
+import androidx.room.RoomWarnings
 
 /**
  * Entity for storing blacklisted lectures to not be shown in the widget
