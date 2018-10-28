@@ -138,6 +138,11 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
             return
         }
 
+        // Be responsible when scheduling alarms. We don't want to exceed system resources
+        // By only using up half of the remaining resources, we achieve fair distribution of the
+        // remaining usable notifications
+        val maxNotificationsToSchedule = NotificationScheduler.maxRemainingAlarms(context) / 2
+
         // Schedule a notification alarm for every last calendar item of a day
         val notificationCandidates = events
                 .dropLast(1)
@@ -149,7 +154,7 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
                         current.startTime.dayOfYear != next.startTime.dayOfYear
                     }
                 }
-                .take(100) // Some manufacturers cap the amount of alarms you can schedule (https://stackoverflow.com/a/29610474)
+                .take(maxNotificationsToSchedule) // Some manufacturers cap the amount of alarms you can schedule (https://stackoverflow.com/a/29610474)
 
         val notifications = notificationCandidates.mapNotNull { it.toNotification(context) }
         NotificationScheduler(context).schedule(notifications)

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationManagerCompat
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.utils.Const
 
 class NotificationReceiver : BroadcastReceiver() {
@@ -16,6 +17,8 @@ class NotificationReceiver : BroadcastReceiver() {
 
         val notificationId = intent.getIntExtra(Const.KEY_NOTIFICATION_ID, 0)
         val notification = intent.getParcelableExtra<Notification>(Const.KEY_NOTIFICATION) ?: return
+
+        NotificationScheduler.removeActiveAlarm(context, notificationId.toLong())
 
         NotificationManagerCompat
                 .from(context)
