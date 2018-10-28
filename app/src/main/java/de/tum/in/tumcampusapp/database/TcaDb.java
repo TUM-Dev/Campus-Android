@@ -8,6 +8,8 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.Intent;
 
+import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarm;
+import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarmsDao;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotification;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotificationsDao;
 import de.tum.in.tumcampusapp.component.other.general.NotificationDao;
@@ -56,6 +58,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.TransportFavorit
 import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport;
 import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
@@ -65,7 +68,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 1, entities = {
+@Database(version = 2, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -90,11 +93,13 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         TransportFavorites.class,
         WidgetsTransport.class,
         ChatRoomDbRow.class,
-        ScheduledNotification.class
+        ScheduledNotification.class,
+        ActiveAlarm.class
 })
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
     private static final Migration[] migrations = {
+            new Migration1to2()
     };
 
     private static TcaDb instance;
@@ -156,6 +161,8 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract ChatRoomDao chatRoomDao();
 
     public abstract ScheduledNotificationsDao scheduledNotificationsDao();
+
+    public abstract ActiveAlarmsDao activeNotificationsDao();
 
     /**
      * Drop all tables, so we can do a complete clean start
