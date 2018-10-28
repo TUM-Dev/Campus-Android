@@ -110,10 +110,10 @@ class StudyRoomsActivity : ActivityForAccessingTumCabe<List<StudyRoomGroup>>(
         fetch(apiClient.studyRoomGroups)
     }
 
-    override fun onDownloadSuccessful(body: List<StudyRoomGroup>) {
-        studyRoomGroupManager.updateDatabase(body) {
+    override fun onDownloadSuccessful(response: List<StudyRoomGroup>) {
+        studyRoomGroupManager.updateDatabase(response) {
             runOnUiThread {
-                groups = body
+                groups = response
                 displayStudyRooms()
             }
         }

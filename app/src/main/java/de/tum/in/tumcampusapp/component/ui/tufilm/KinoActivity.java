@@ -20,7 +20,7 @@ import io.reactivex.disposables.Disposable;
 /**
  * Activity to show TU Kino films
  */
-public class KinoActivity extends ProgressActivity {
+public class KinoActivity extends ProgressActivity<Void> {
 
     private int startPosition;
     private ViewPager mPager;
