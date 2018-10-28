@@ -36,7 +36,6 @@ import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -201,11 +200,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
         // If the background mode was activated, start the service. This will invoke
         // the service to call onHandleIntent which updates all background data
         if (key.equals(Const.BACKGROUND_MODE)) {
-            Intent service = new Intent(mContext, BackgroundService.class);
+            // TODO: periodically start BackgroundService
+            //Intent service = new Intent(mContext, BackgroundService.class);
             if (sharedPreferences.getBoolean(key, false)) {
-                mContext.startService(service);
+              //  mContext.startService(service);
             } else {
-                mContext.stopService(service);
+              //  mContext.stopService(service);
             }
         }
     }

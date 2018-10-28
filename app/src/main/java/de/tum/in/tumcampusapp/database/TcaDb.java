@@ -172,13 +172,13 @@ public abstract class TcaDb extends RoomDatabase {
      * @param c context
      */
     public static void resetDb(Context c) {
+        // TODO: calcel all work from workmanager
+
         // Stop all services, since they might have instantiated Managers and cause SQLExceptions
         Class<?>[] services = new Class<?>[]{
                 CalendarController.QueryLocationsService.class,
                 SendMessageService.class,
-                SilenceService.class,
-                DownloadService.class,
-                BackgroundService.class};
+                SilenceService.class};
         for (Class<?> service : services) {
             c.stopService(new Intent(c, service));
         }

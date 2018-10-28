@@ -34,7 +34,8 @@ class StartSyncReceiver : BroadcastReceiver() {
             val newIntent = Intent().apply {
                 putExtra(Const.APP_LAUNCHES, isLaunch)
             }
-            BackgroundService.enqueueWork(context, newIntent)
+            // TODO
+            //BackgroundService.enqueueWork(context, newIntent)
         }
 
         SendMessageService.enqueueWork(context, Intent())

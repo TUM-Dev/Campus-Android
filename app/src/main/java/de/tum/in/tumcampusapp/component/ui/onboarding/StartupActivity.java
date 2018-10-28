@@ -1,7 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -23,7 +21,6 @@ import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
-import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -45,18 +42,9 @@ public class StartupActivity extends AppCompatActivity {
     final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private int tapCounter; // for easter egg
 
-    /**
-     * Broadcast receiver gets notified if {@link de.tum.in.tumcampusapp.service.BackgroundService}
-     * has prepared cards to be displayed
-     */
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (DownloadService.BROADCAST_NAME.equals(intent.getAction())) {
-                openMainActivityIfInitializationFinished();
-            }
-        }
-    };
+
+    // TODO: register background download finished WorkStatus
+    // openMainActivityIfInitializationFinished();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +104,6 @@ public class StartupActivity extends AppCompatActivity {
             ContentLoadingProgressBar progressBar = findViewById(R.id.startupLoadingProgressBar);
             progressBar.show();
         });
-
-        // Register receiver for background service
-        IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
         // Start background service and ensure cards are set
         Intent i = new Intent(this, StartSyncReceiver.class);
@@ -197,13 +181,4 @@ public class StartupActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // Unregister the BroadcastReceiver in onStop() (rather than onDestroy()),
-        // so the BroadcastReceiver is unregistered when MainActivity.onCreate() is called
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-    }
-
 }

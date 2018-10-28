@@ -43,9 +43,9 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
      * Lastly updates last sync
      *
      */
-    fun getKinosFromService(force: Boolean): Boolean {
+    fun getKinosFromService(force: Boolean) {
         val latestId = KinoLocalRepository.getLatestId() ?: "0"
-        return compositeDisposable.add(
+        compositeDisposable.add(
                 remoteRepository
                         .getAllKinos(latestId)
                         .filter { localRepository.getLastSync() == null || force }

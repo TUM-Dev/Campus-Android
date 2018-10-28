@@ -9,7 +9,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -36,22 +35,16 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity<Vo
         this.method = method;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
-    }
-
     /**
      * Broadcast receiver getting notifications from the download service, if downloading was successful or not
      */
+    // TODO: add LiveData<List<WorkStatus>> handler
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
-                return;
-            }
+            //if (!intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
+            //    return;
+            //}
 
             String action = intent.getStringExtra(Const.ACTION_EXTRA);
             if (!action.isEmpty()) {
@@ -95,11 +88,13 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity<Vo
         }
 
         showLoadingStart();
-        Intent service = new Intent(this, DownloadService.class);
-        service.putExtra(Const.ACTION_EXTRA, method);
-        service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
-        service.putExtra("callback", new Bundle());
-        startService(service);
+
+        // TODO: start DownloadWorker
+        //Intent service = new Intent(this, DownloadService.class);
+        //service.putExtra(Const.ACTION_EXTRA, method);
+        //service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
+        //service.putExtra("callback", new Bundle());
+        //startService(service);
     }
 
 }

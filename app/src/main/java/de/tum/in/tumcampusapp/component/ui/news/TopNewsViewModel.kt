@@ -18,8 +18,8 @@ class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
     /**
      * Downloads the NewsAlert and stores it in the sharedPreferences
      */
-    fun getNewsAlertFromService(context: Context): Boolean {
-        return compositeDisposable.add(
+    fun getNewsAlertFromService(context: Context) {
+        compositeDisposable.add(
                 remoteRepository
                         .getNewsAlert()
                         .subscribeOn(Schedulers.computation())
