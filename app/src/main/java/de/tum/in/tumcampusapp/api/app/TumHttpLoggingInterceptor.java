@@ -45,7 +45,6 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
 
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
-
         Request request = chain.request();
 
         boolean logBody = true;

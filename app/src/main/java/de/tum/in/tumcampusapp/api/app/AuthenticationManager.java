@@ -70,7 +70,7 @@ public class AuthenticationManager {
         return uniqueID;
     }
 
-    public static KeyPairGenerator getKeyPairGeneratorInstance() {
+    private static KeyPairGenerator getKeyPairGeneratorInstance() {
         try {
             return KeyPairGenerator.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {

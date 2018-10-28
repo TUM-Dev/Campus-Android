@@ -17,14 +17,14 @@ import org.joda.time.format.DateTimeFormat
 /**
  * Event
  *
- * @param id      Event-ID
- * @param image   Image url e.g. http://www.tu-film.de/img/film/poster/Fack%20ju%20Ghte.jpg
- * @param title   Title
+ * @param id          Event-ID
+ * @param imageUrl    Image url e.g. http://www.tu-film.de/img/film/poster/Fack%20ju%20Ghte.jpg
+ * @param title       Title
  * @param description Description
- * @param locality Locality
- * @param start   Date
- * @param end     Date
- * @param link    Url, e.g. http://www.in.tum.de
+ * @param locality    Locality
+ * @param startTime   DateTime
+ * @param endTime     DateTime
+ * @param eventUrl    Url, e.g. http://www.in.tum.de
  */
 @Entity(tableName = "events")
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
@@ -50,27 +50,18 @@ data class Event(
         var dismissed: Int = 0
 ) : Parcelable, Comparable<Event> {
 
+    // Unsafe calls are only ok because we control writeToParcel().
+    // Keep in sync with writeToParcel()!
     constructor(parcel: Parcel) : this(
-            parcel.readInt(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            DateTime(parcel.readLong()),
-            parcel.readDateTime(),
-            parcel.readString(),
-            parcel.readInt())
-
-    fun getFormattedStartDateTime(context: Context): String {
-        val date = DateTimeFormat.longDate().print(startTime)
-        val pattern = if (DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
-        val time = DateTimeFormat.forPattern(pattern).print(startTime)
-        return "$date, $time"
-    }
-
-    override fun compareTo(other: Event): Int {
-        return startTime.compareTo(other.startTime)
-    }
+            id = parcel.readInt(),
+            imageUrl = parcel.readString(),
+            title = parcel.readString()!!,
+            description = parcel.readString()!!,
+            locality = parcel.readString()!!,
+            startTime = DateTime(parcel.readLong()),
+            endTime = parcel.readDateTime(),
+            eventUrl = parcel.readString()!!,
+            dismissed = parcel.readInt())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
@@ -82,6 +73,17 @@ data class Event(
         parcel.writeDateTime(endTime)
         parcel.writeString(eventUrl)
         parcel.writeInt(dismissed)
+    }
+
+    fun getFormattedStartDateTime(context: Context): String {
+        val date = DateTimeFormat.longDate().print(startTime)
+        val pattern = if (DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
+        val time = DateTimeFormat.forPattern(pattern).print(startTime)
+        return "$date, $time"
+    }
+
+    override fun compareTo(other: Event): Int {
+        return startTime.compareTo(other.startTime)
     }
 
     override fun describeContents(): Int {

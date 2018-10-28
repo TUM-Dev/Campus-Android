@@ -31,7 +31,7 @@ public class ImageViewTouchFragment extends Fragment {
         return mRootView;
     }
 
-    public void loadImage(String url, Callback callback) {
+    public void loadImage(String url, ImageLoadingListener listener) {
         ImageView imageView = mRootView.findViewById(R.id.image_view_touch_fragment);
         Utils.log("room finder url: " + url);
 
@@ -43,7 +43,21 @@ public class ImageViewTouchFragment extends Fragment {
         Picasso.get()
                 .load(url)
                 .placeholder(icon)
-                .into(imageView, callback);
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Free ad space
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        listener.onImageLoadingError();
+                    }
+                });
+    }
+
+    public interface ImageLoadingListener {
+        void onImageLoadingError();
     }
 
 }

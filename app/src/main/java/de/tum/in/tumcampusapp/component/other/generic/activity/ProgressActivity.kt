@@ -18,17 +18,26 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.*
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.*
 import de.tum.`in`.tumcampusapp.utils.NetUtils.internetCapability
+import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
 import org.jetbrains.anko.connectivityManager
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.net.UnknownHostException
 
 /**
  * Generic class which handles can handle a long running background task
+ *
+ * @param T The type of object that is to be retrieved via the [apiCall]
  */
-abstract class ProgressActivity(
+abstract class ProgressActivity<T>(
         layoutId: Int
 ) : BaseActivity(layoutId), SwipeRefreshLayout.OnRefreshListener {
+
+    private var apiCall: Call<T>? = null
+    private var hadSuccessfulRequest = false
 
     private val contentView: ViewGroup by lazy {
         findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
@@ -89,6 +98,83 @@ abstract class ProgressActivity(
     }
 
     /**
+     * Fetches a call from TUMonline and uses the provided listener if the request was successful.
+     *
+     * @param call The [Call] to fetch
+     */
+    protected fun fetch(call: Call<T>) {
+        apiCall = call
+
+        showLoadingStart()
+        call.enqueue(object : Callback<T> {
+            override fun onResponse(call: Call<T>, response: Response<T>) {
+                apiCall = null
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    hadSuccessfulRequest = true
+                    onDownloadSuccessful(body)
+                } else if (response.isSuccessful) {
+                    onEmptyDownloadResponse()
+                } else {
+                    onDownloadUnsuccessful(response.code())
+                }
+                showLoadingEnded()
+            }
+
+            override fun onFailure(call: Call<T>, t: Throwable) {
+                if (call.isCanceled) {
+                    return
+                }
+
+                apiCall = null
+                showLoadingEnded()
+                onDownloadFailure(t)
+            }
+        })
+    }
+
+    /**
+     * Called if the response from the API call is successful. Provides the unwrapped response body.
+     * Subclasses need to override this method to be alerted of successful responses after calling
+     * the [fetch] method.
+     */
+    open fun onDownloadSuccessful(body: T) = Unit
+
+    /**
+     * Called if the response from the API call is successful, but empty.
+     */
+    protected fun onEmptyDownloadResponse() {
+        showError(R.string.error_no_data_to_show)
+    }
+
+    /**
+     * Called when a response is received, but that response is not successful. Displays the
+     * appropriate error message, either in an error layout, or as a dialog or Snackbar.
+     */
+    protected fun onDownloadUnsuccessful(statusCode: Int) {
+        if (statusCode == 503) {
+            // The service is unavailable
+            showError(R.string.error_tum_online_unavailable)
+        } else {
+            showErrorSnackbar(R.string.error_unknown)
+        }
+    }
+
+    /**
+     * Called when an Exception is raised during an API call. Displays an error layout.
+     * @param throwable The error that has occurred
+     */
+    protected fun onDownloadFailure(throwable: Throwable) {
+        Utils.log(throwable)
+
+        if (hadSuccessfulRequest) {
+            showErrorSnackbar(throwable)
+        } else {
+            showErrorLayout(throwable)
+        }
+    }
+
+    /**
      * Shows error layout and toasts the given message.
      * Hides any progress indicator.
      *
@@ -100,7 +186,7 @@ abstract class ProgressActivity(
         }
     }
 
-    protected fun showErrorSnackbar(t: Throwable) {
+    private fun showErrorSnackbar(t: Throwable) {
         val messageResId = when (t) {
             is UnknownHostException -> R.string.no_internet_connection
             is InactiveTokenException -> R.string.error_access_token_inactive
@@ -123,7 +209,7 @@ abstract class ProgressActivity(
         }
     }
 
-    protected fun showErrorLayout(throwable: Throwable) {
+    private fun showErrorLayout(throwable: Throwable) {
         when (throwable) {
             is UnknownHostException -> showNoInternetLayout()
             is InactiveTokenException -> showFailedTokenLayout(R.string.error_access_token_inactive)
@@ -135,7 +221,7 @@ abstract class ProgressActivity(
         }
     }
 
-    protected fun showFailedTokenLayout(messageResId: Int = R.string.error_accessing_tumonline_body) {
+    private fun showFailedTokenLayout(messageResId: Int = R.string.error_accessing_tumonline_body) {
         runOnUiThread {
             showError(FailedTokenViewState(messageResId))
         }
@@ -229,9 +315,7 @@ abstract class ProgressActivity(
      * Should start the background refresh task.
      * Override this if you use a [SwipeRefreshLayout]
      */
-    override fun onRefresh() {
-        // Free ad space
-    }
+    override fun onRefresh() = Unit
 
     private fun retryRequest() {
         showLoadingStart()
@@ -240,6 +324,7 @@ abstract class ProgressActivity(
 
     override fun onDestroy() {
         super.onDestroy()
+        apiCall?.cancel()
         if (registered) {
             connectivityManager.unregisterNetworkCallback(networkCallback)
             registered = false

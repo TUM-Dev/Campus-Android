@@ -19,7 +19,7 @@ import com.google.common.base.Optional;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.Helper;
+import de.tum.in.tumcampusapp.api.app.ApiHelper;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
@@ -40,10 +40,9 @@ import retrofit2.Response;
  */
 public class RoomFinderDetailsActivity
         extends ActivityForLoadingInBackground<Void, String>
-        implements DialogInterface.OnClickListener, com.squareup.picasso.Callback {
+        implements DialogInterface.OnClickListener {
 
     public static final String EXTRA_ROOM_INFO = "roomInfo";
-    public static final String EXTRA_LOCATION = "location";
 
     private ImageViewTouchFragment mImageFragment;
 
@@ -78,6 +77,11 @@ public class RoomFinderDetailsActivity
             finish();
             return;
         }
+
+        mImageFragment = ImageViewTouchFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.fragment_container, mImageFragment)
+                                   .commit();
 
         startLoading();
     }
@@ -170,16 +174,16 @@ public class RoomFinderDetailsActivity
         String archId = room.getArch_id();
         String url;
         if (mapId == null || mapId.isEmpty()) {
-            url = Const.URL_DEFAULT_MAP_IMAGE + Helper.encodeUrl(archId);
+            url = Const.URL_DEFAULT_MAP_IMAGE + ApiHelper.encodeUrl(archId);
         } else {
-            url = Const.URL_MAP_IMAGE + Helper.encodeUrl(archId) + '/' + Helper.encodeUrl(mapId);
+            url = Const.URL_MAP_IMAGE + ApiHelper.encodeUrl(archId) + '/' + ApiHelper.encodeUrl(mapId);
         }
         return url;
     }
 
     @Override
     protected void onLoadFinished(String url) {
-        mImageFragment.loadImage(url, this);
+        mImageFragment.loadImage(url, this::showImageLoadingError);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(room.getInfo());
@@ -192,6 +196,7 @@ public class RoomFinderDetailsActivity
 
     private void loadMapList() {
         showLoadingStart();
+
         mRoomFinderMapsCall = TUMCabeClient.getInstance(this).fetchAvailableMaps(room.getArch_id());
         mRoomFinderMapsCall.enqueue(new Callback<List<RoomFinderMap>>() {
             @Override
@@ -287,11 +292,10 @@ public class RoomFinderDetailsActivity
         }
 
         // Build get directions intent and see if some app can handle it
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + result.get()
-                                                                                                .getLatitude() + ',' + result.get()
-                                                                                                                             .getLongitude()));
+        String coordinates = result.get().getLatitude() + ',' + result.get().getLongitude();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + coordinates));
         List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager()
-                                                               .queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+                .queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
 
         // If some app can handle this intent start it
         if (!pkgAppsList.isEmpty()) {
@@ -308,16 +312,9 @@ public class RoomFinderDetailsActivity
         }
     }
 
-    @Override
-    public void onSuccess() {
-        // map was successfully loaded, do nothing
-    }
-
-    @Override
-    public void onError(Exception e) {
-        // map could not be shown
+    private void showImageLoadingError() {
         if (NetUtils.isConnected(this)) {
-            showErrorLayout();
+            showError(R.string.error_something_wrong);
         } else {
             showNoInternetLayout();
         }

@@ -92,7 +92,7 @@ class CafeteriaNotificationSettingsAdapter(
                 timePicker.show()
             }
 
-            notificationActiveCheckBox.setOnCheckedChangeListener { view, isChecked ->
+            notificationActiveCheckBox.setOnCheckedChangeListener { _, isChecked ->
                 listener.onCheckChanged(adapterPosition, isChecked)
             }
         }

@@ -37,10 +37,10 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        LocalBroadcastManager.getInstance(this)
-                             .registerReceiver(receiver, new IntentFilter(DownloadService.BROADCAST_NAME));
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }
 
     /**
@@ -80,8 +80,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(this)
-                             .unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     /**
@@ -94,6 +93,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
         if (!NetUtils.isConnected(this)) {
             Utils.showToast(this, R.string.no_internet_connection);
         }
+
         showLoadingStart();
         Intent service = new Intent(this, DownloadService.class);
         service.putExtra(Const.ACTION_EXTRA, method);
@@ -101,4 +101,5 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
         service.putExtra("callback", new Bundle());
         startService(service);
     }
+
 }

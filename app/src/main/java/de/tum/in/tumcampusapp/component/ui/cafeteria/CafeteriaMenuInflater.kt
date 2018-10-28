@@ -44,7 +44,7 @@ class CafeteriaMenuInflater(
         )
 
         if (!isBigLayout && !shouldShow) {
-            return null;
+            return null
         }
 
         if (isFirstInSection) {
@@ -67,7 +67,7 @@ class CafeteriaMenuInflater(
         if (isPriceAvailable) {
             inflateWithPrice(menuView, menu)
         } else {
-            inflateWithoutPrice(menuView, menu)
+            inflateWithoutPrice(menuView)
         }
 
         return menuView
@@ -98,7 +98,7 @@ class CafeteriaMenuInflater(
         }
     }
 
-    private fun inflateWithoutPrice(view: View, menu: CafeteriaMenu) = with(view) {
+    private fun inflateWithoutPrice(view: View) = with(view) {
         line_price.visibility = View.GONE
         favoriteDish.visibility = View.GONE
     }

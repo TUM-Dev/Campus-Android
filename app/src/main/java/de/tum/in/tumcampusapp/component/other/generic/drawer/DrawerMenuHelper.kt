@@ -35,6 +35,7 @@ class DrawerMenuHelper(private val activity: Activity) {
     fun populateMenu(navigationView: NavigationView) {
         val hasTUMOAccess = AccessTokenManager.hasValidAccessToken(activity)
         val chatEnabled = Utils.getSettingBool(activity, Const.GROUP_CHAT_ENABLED, false)
+        val employeeMode = Utils.getSettingBool(activity, Const.EMPLOYEE_MODE, false)
 
         val allItems = mutableListOf<SideNavigationItem>()
         val navigationMenu = navigationView.menu
@@ -44,7 +45,11 @@ class DrawerMenuHelper(private val activity: Activity) {
 
         val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
         if (hasTUMOAccess) {
-            val items = MY_TUM.filterNot { it.needsChatAccess && !chatEnabled }
+            var items = MY_TUM.filterNot {
+                it.needsChatAccess && !chatEnabled }
+            if (employeeMode) {
+                items = items.filterNot { it.hideForEmployees }
+            }
             items.forEach {
                 myTumMenu.add(activity, it, drawerBundle)
                 allItems.add(it)
@@ -85,10 +90,10 @@ class DrawerMenuHelper(private val activity: Activity) {
 
         private val MY_TUM = arrayOf(
                 SideNavigationItem(R.string.schedule, R.drawable.ic_outline_event_24px, CalendarActivity::class.java, true),
-                SideNavigationItem(R.string.my_lectures, R.drawable.ic_outline_school_24px, LecturesPersonalActivity::class.java, true),
+                SideNavigationItem(R.string.my_lectures, R.drawable.ic_outline_school_24px, LecturesPersonalActivity::class.java, true, hideForEmployees = true),
                 SideNavigationItem(R.string.chat_rooms, R.drawable.ic_outline_chat_bubble_outline_24px, ChatRoomsActivity::class.java, true, true),
-                SideNavigationItem(R.string.my_grades, R.drawable.ic_outline_insert_chart_outlined_24px, GradesActivity::class.java, true),
-                SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesActivity::class.java, true)
+                SideNavigationItem(R.string.my_grades, R.drawable.ic_outline_insert_chart_outlined_24px, GradesActivity::class.java, true, hideForEmployees = true),
+                SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesActivity::class.java, true, hideForEmployees = true)
         )
 
         private val COMMON_TUM = arrayOf(

@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.component.ui.onboarding;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.view.View;
@@ -97,6 +98,11 @@ public class WizNavCheckTokenActivity extends ProgressActivity {
                 .getExtern());
         Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscated_ids()
                 .getBedienstete());
+        if (!identity.getObfuscated_ids().getBedienstete().isEmpty()
+                && identity.getObfuscated_ids().getStudierende().isEmpty()
+                && identity.getObfuscated_ids().getExtern().isEmpty()) {
+            Utils.setSetting(this, Const.EMPLOYEE_MODE, true);
+        }
 
         // can't upload the obfuscated ids here since we might not have a (chat) member yet
 

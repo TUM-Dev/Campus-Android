@@ -24,20 +24,16 @@ import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRegistrationId;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
-import de.tum.in.tumcampusapp.component.ui.studycard.model.StudyCard;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketSuccessResponse;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -59,7 +55,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_LIST
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_MORE_INFO;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_NERBY_FACILITIES;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CAFETERIAS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CARD;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
@@ -120,12 +115,6 @@ public interface TUMCabeAPIService {
     @POST(API_CHAT_MEMBERS + "{memberId}/rooms/")
     Call<List<ChatRoom>> getMemberRooms(@Path("memberId") int memberId, @Body TUMCabeVerification verification);
 
-    @GET(API_CHAT_MEMBERS + "{memberId}/pubkeys/")
-    Call<List<ChatPublicKey>> getPublicKeysForMember(@Path("memberId") int memberId);
-
-    @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
-    Call<ChatRegistrationId> uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId);
-
     @POST(API_MEMBERS + "uploadIds/{lrzId}/")
     Observable<TUMCabeStatus> uploadObfuscatedIds(@Path("lrzId") String lrzId, @Body ObfuscatedIdsUpload ids);
 
@@ -134,10 +123,6 @@ public interface TUMCabeAPIService {
 
     @GET(API_NOTIFICATIONS + "confirm/{notification}/")
     Call<String> confirm(@Path("notification") int notification);
-
-    //Locations
-    @GET(API_LOCATIONS)
-    Call<List<FcmNotificationLocation>> getAllLocations();
 
     @GET(API_LOCATIONS + "{locationId}/")
     Call<FcmNotificationLocation> getLocation(@Path("locationId") int locationId);
@@ -213,12 +198,6 @@ public interface TUMCabeAPIService {
     @GET(API_KINOS + "{lastId}")
     Flowable<List<Kino>> getKinos(@Path("lastId") String lastId);
 
-    @GET(API_CARD)
-    Call<List<StudyCard>> getStudyCards();
-
-    @PUT(API_CARD)
-    Call<StudyCard> addStudyCard(@Body TUMCabeVerification verification);
-
     @GET(API_NEWS + "{lastNewsId}")
     Call<List<News>> getNews(@Path("lastNewsId") String lastNewsId);
 
@@ -238,12 +217,6 @@ public interface TUMCabeAPIService {
     @GET(API_EVENTS + "list")
     Call<List<Event>> getEvents();
 
-    @GET(API_EVENTS + "list/{eventID}")
-    Call<Event> getEvent(@Path("eventID") int eventID);
-
-    @GET(API_EVENTS + "list/search/{searchTerm}")
-    Call<List<Event>> searchEvents(@Path("searchTerm") String searchTerm);
-
     // Getting Ticket information
 
     @POST(API_EVENTS + API_TICKET + "my")
@@ -259,9 +232,6 @@ public interface TUMCabeAPIService {
 
     @POST(API_EVENTS + API_TICKET + "reserve")
     Call<TicketReservationResponse> reserveTicket(@Body TUMCabeVerification verification);
-
-    @POST(API_EVENTS + API_TICKET + "reserve/cancel")
-    Call<TicketSuccessResponse> cancelTicketReservation(@Body TUMCabeVerification verification);
 
     // Ticket purchase
 

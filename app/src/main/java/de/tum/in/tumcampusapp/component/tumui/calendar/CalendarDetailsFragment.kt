@@ -66,7 +66,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             descriptionTextView.setTextColor(Color.RED)
         }
 
-        titleTextView.text = calendarItem.title
+        titleTextView.text = calendarItem.getFormattedTitle()
         dateTextView.text = calendarItem.getEventDateString()
 
         val locationList = calendarItemList.map { it.location }
@@ -168,7 +168,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun onLocationClicked(location: String) {
         val findStudyRoomIntent = Intent()
         findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
-        findStudyRoomIntent.setClass(context, RoomFinderActivity::class.java)
+        findStudyRoomIntent.setClass(requireContext(), RoomFinderActivity::class.java)
         startActivity(findStudyRoomIntent)
     }
 

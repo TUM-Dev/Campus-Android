@@ -10,7 +10,6 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,12 +113,12 @@ public class ChatRoomsActivity
     }
 
     private void loadPersonalLectures(CacheControl cacheControl) {
-        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(cacheControl);
+        Call<LecturesResponse> apiCall = getApiClient().getPersonalLectures(cacheControl);
         fetch(apiCall);
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull LecturesResponse response) {
+    public void onDownloadSuccessful(@NonNull LecturesResponse response) {
         List<Lecture> lectures = response.getLectures();
 
         // We're starting more background work, so we show a loading indicator again
@@ -193,7 +192,7 @@ public class ChatRoomsActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_add_chat_room) {
             newChatRoom();
@@ -245,8 +244,7 @@ public class ChatRoomsActivity
      */
     private void newChatRoom() {
         // Set an EditText view to get user input
-        final View view = LayoutInflater.from(this)
-                .inflate(R.layout.dialog_input, null);
+        final View view = View.inflate(this, R.layout.dialog_input, null);
         final EditText input = view.findViewById(R.id.inputEditText);
 
         AlertDialog dialog = new AlertDialog.Builder(this)

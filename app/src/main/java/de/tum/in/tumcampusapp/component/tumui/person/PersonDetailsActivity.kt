@@ -32,7 +32,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val person = intent.extras.getSerializable("personObject") as? Person
+        val person = intent.extras?.getSerializable("personObject") as? Person
         if (person == null) {
             finish()
             return

@@ -30,7 +30,8 @@ import static de.tum.in.tumcampusapp.utils.Const.API_HOSTNAME;
 import static de.tum.in.tumcampusapp.utils.Const.API_HOSTNAME_NEW;
 import static de.tum.in.tumcampusapp.utils.Const.STUDY_ROOMS_HOSTNAME;
 
-public final class Helper {
+public final class ApiHelper {
+
     private static final String TAG = "TUM_API_CALL";
     private static final int HTTP_TIMEOUT = 25000;
     private static OkHttpClient client;
@@ -69,14 +70,14 @@ public final class Helper {
                 .certificatePinner(certificatePinner);
 
         //Add the device identifying header
-        builder.addInterceptor(Helper.getDeviceInterceptor(c));
+        builder.addInterceptor(ApiHelper.getDeviceInterceptor(c));
 
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(new ChaosMonkeyInterceptor());
         }
 
-        builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
-        builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
+        builder.connectTimeout(ApiHelper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
+        builder.readTimeout(ApiHelper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
 
         builder.addNetworkInterceptor(new TumHttpLoggingInterceptor(message -> Utils.logwithTag(TAG, message)));
 
@@ -138,7 +139,4 @@ public final class Helper {
         }
     }
 
-    private Helper() {
-        // Helper is a utility class
-    }
 }
