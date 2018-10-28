@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
  * Generic class which can handle a long running search in background.
  * Class parameter should be the class that holds the results of the background task.
  */
-public abstract class ActivityForSearchingInBackground<T> extends ActivityForSearching {
+public abstract class ActivityForSearchingInBackground<T> extends ActivityForSearching<T> {
     protected final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
 
     /**

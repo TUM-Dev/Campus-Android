@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Generic class which handles can handle a long running background task
  */
-public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity {
+public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity<T> {
 
     private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
     private AtomicBoolean isRunning = new AtomicBoolean(false);

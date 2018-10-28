@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * external source. It uses the DownloadService to download from external and
  * implements a rich user feedback with error progress and token related layouts.
  */
-public abstract class ActivityForDownloadingExternal extends ProgressActivity {
+public abstract class ActivityForDownloadingExternal extends ProgressActivity<Void> {
     private final String method;
 
     /**

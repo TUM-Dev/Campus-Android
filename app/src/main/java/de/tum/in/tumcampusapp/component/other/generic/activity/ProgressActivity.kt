@@ -138,7 +138,7 @@ abstract class ProgressActivity<T>(
      * Subclasses need to override this method to be alerted of successful responses after calling
      * the [fetch] method.
      */
-    open fun onDownloadSuccessful(body: T) = Unit
+    open fun onDownloadSuccessful(response: T) = Unit
 
     /**
      * Called if the response from the API call is successful, but empty.

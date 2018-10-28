@@ -29,6 +29,10 @@ data class CalendarItem(@PrimaryKey
                         var location: String = "",
                         @Ignore
                         var blacklisted: Boolean = false) {
+
+    val isEditable: Boolean
+        get() = url.isBlank()
+
     /**
      * Returns the color of the event
      */

@@ -1,16 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.content.Context
-import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
-import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
-import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import kotlinx.android.synthetic.main.layout_card_lecture.view.*
 
@@ -33,13 +29,15 @@ class NextLectureView @JvmOverloads constructor(
         }
 
         view.setOnClickListener {
-            val bundle = Bundle().apply {
-                putLong(Const.EVENT_TIME, lecture.start.millis)
-                putString(Const.KEY_EVENT_ID, lecture.id)
-            }
-            val destination = SystemActivity(CalendarActivity::class.java, bundle)
-            NavigationManager.open(context, destination)
+            openEventBottomSheet(lecture)
         }
+    }
+
+    private fun openEventBottomSheet(item: NextLectureCard.CardCalendarItem) {
+        val detailsFragment =
+                CalendarDetailsFragment.newInstance(item.id, isShownInCalendarActivity = false)
+        val activity = context as AppCompatActivity
+        detailsFragment.show(activity.supportFragmentManager, null)
     }
 
 }

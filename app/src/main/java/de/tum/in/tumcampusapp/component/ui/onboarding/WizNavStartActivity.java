@@ -38,7 +38,7 @@ import retrofit2.Response;
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
  */
-public class WizNavStartActivity extends ProgressActivity implements TextWatcher {
+public class WizNavStartActivity extends ProgressActivity<Void> implements TextWatcher {
 
     private String lrzId;
 

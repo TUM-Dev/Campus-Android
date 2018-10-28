@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.card_chat_messages.view.*
 
 class ChatMessagesCardViewHolder(itemView: View) : CardViewHolder(itemView) {
 
+    @Suppress("UNUSED_PARAMETER")
     fun bind(roomName: String, roomId: Int, roomIdStr: String, unreadMessages: List<ChatMessage>) {
         with(itemView) {
             chatRoomNameTextView.text = if (unreadMessages.size > 5) {

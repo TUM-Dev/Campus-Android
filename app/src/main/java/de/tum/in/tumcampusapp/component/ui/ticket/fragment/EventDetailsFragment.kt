@@ -107,7 +107,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     .setMessage(R.string.event_imminent_error)
                     .setPositiveButton(R.string.ok, null)
                     .create()
-            dialog.window.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+            dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
             dialog.show()
         }
     }

@@ -20,9 +20,8 @@
             android:orientation="vertical"
             android:paddingTop="@dimen/material_small_padding">
 
-            <include
+            <de.tum.in.tumcampusapp.component.tumui.calendar.NextLectureView
                 android:id="@+id/lectureContainer1"
-                layout="@layout/layout_card_lecture"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_small_padding" />

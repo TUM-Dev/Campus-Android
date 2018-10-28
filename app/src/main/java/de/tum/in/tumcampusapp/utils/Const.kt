@@ -117,6 +117,7 @@ object Const {
     const val DISCARD_SETTINGS_START = "discard_settings_start"
     const val DISCARD_SETTINGS_PHONE = "discard_settings_phone"
     const val CALENDAR_ID_PARAM = "calendar_id"
+    const val CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM = "calendar_shown_in_calendar_activity"
 
     const val RAINBOW_MODE = "rainbow_enabled"
     const val REFRESH_CARDS = "refresh_cards"
