@@ -211,7 +211,7 @@ public class RoomFinderDetailsActivity
                     return;
                 }
 
-                onMapListLoadFinished(Optional.of(data));
+                onMapListLoadFinished(data);
             }
 
             @Override
@@ -228,12 +228,12 @@ public class RoomFinderDetailsActivity
     }
 
     private void onMapListLoadFailed() {
-        onMapListLoadFinished(Optional.absent());
+        onMapListLoadFinished(null);
     }
 
-    private void onMapListLoadFinished(Optional<List<RoomFinderMap>> result) {
+    private void onMapListLoadFinished(@Nullable List<RoomFinderMap> result) {
         showLoadingEnded();
-        if (!result.isPresent()) {
+        if (result == null) {
             if (NetUtils.isConnected(this)) {
                 showErrorLayout();
             } else {
@@ -241,7 +241,7 @@ public class RoomFinderDetailsActivity
             }
             return;
         }
-        mapsList = result.get();
+        mapsList = result;
         if (mapsList.size() > 1) {
             mapsLoaded = true;
         }
