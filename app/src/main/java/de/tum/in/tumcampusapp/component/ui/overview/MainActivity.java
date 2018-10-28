@@ -21,8 +21,6 @@ import android.view.View;
 
 import java.util.List;
 
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
@@ -34,9 +32,6 @@ import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
-
-import static de.tum.in.tumcampusapp.utils.Const.ACTION_EXTRA;
-import static de.tum.in.tumcampusapp.utils.Const.DOWNLOAD_ALL_FROM_EXTERNAL;
 
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
@@ -134,15 +129,8 @@ public class MainActivity extends BaseActivity
     }
 
     public void downloadNewsAlert() {
-        WorkManager workManager = WorkManager.getInstance();
-        Data data = new Data.Builder()
-                .putString(ACTION_EXTRA, DOWNLOAD_ALL_FROM_EXTERNAL)
-                .build();
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
-                .setInputData(data)
-                .build();
-
-        workManager.enqueue(workRequest);
+        WorkManager.getInstance()
+                .enqueue(DownloadWorker.getWorkRequest());
     }
 
     @Override

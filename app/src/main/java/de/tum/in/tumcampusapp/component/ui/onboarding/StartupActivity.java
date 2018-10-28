@@ -1,15 +1,16 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -17,6 +18,8 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import androidx.work.State;
+import androidx.work.WorkStatus;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
@@ -42,9 +45,16 @@ public class StartupActivity extends AppCompatActivity {
     final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private int tapCounter; // for easter egg
 
+    @Nullable
+    LiveData<WorkStatus> downloadStatus;
 
     // TODO: register background download finished WorkStatus
-    // openMainActivityIfInitializationFinished();
+    Observer<WorkStatus> downloadObserver = workStatus -> {
+        if (workStatus == null || workStatus.getState() != State.SUCCEEDED) {
+            return;
+        }
+        openMainActivityIfInitializationFinished();
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +115,7 @@ public class StartupActivity extends AppCompatActivity {
             progressBar.show();
         });
 
+        // TODO: manually start DownloadWorker to listen to success
         // Start background service and ensure cards are set
         Intent i = new Intent(this, StartSyncReceiver.class);
         i.putExtra(Const.APP_LAUNCHES, true);

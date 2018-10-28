@@ -10,6 +10,7 @@ import android.content.Intent;
 
 import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarm;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarmsDao;
+import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotification;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotificationsDao;
 import de.tum.in.tumcampusapp.component.other.general.NotificationDao;
@@ -65,6 +66,7 @@ import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
@@ -172,8 +174,6 @@ public abstract class TcaDb extends RoomDatabase {
      * @param c context
      */
     public static void resetDb(Context c) {
-        // TODO: calcel all work from workmanager
-
         // Stop all services, since they might have instantiated Managers and cause SQLExceptions
         Class<?>[] services = new Class<?>[]{
                 CalendarController.QueryLocationsService.class,
@@ -181,6 +181,13 @@ public abstract class TcaDb extends RoomDatabase {
                 SilenceService.class};
         for (Class<?> service : services) {
             c.stopService(new Intent(c, service));
+        }
+
+        // Stop all work tasks in WorkManager, since they might access the DB
+        try {
+            WorkManager.getInstance().cancelAllWork().wait();
+        } catch (InterruptedException e) {
+            Utils.log(e);
         }
 
         // Clear our cache table

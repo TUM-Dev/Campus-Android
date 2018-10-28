@@ -1,11 +1,10 @@
 package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
-import androidx.work.Data
+import androidx.work.*
 import androidx.work.ListenableWorker.Result.RETRY
 import androidx.work.ListenableWorker.Result.SUCCESS
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.NetworkType.CONNECTED
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
@@ -25,6 +24,10 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Const.ACTION_EXTRA
+import de.tum.`in`.tumcampusapp.utils.Const.APP_LAUNCHES
+import de.tum.`in`.tumcampusapp.utils.Const.DOWNLOAD_ALL_FROM_EXTERNAL
+import de.tum.`in`.tumcampusapp.utils.Const.FORCE_DOWNLOAD
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
@@ -152,6 +155,24 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
         private const val LAST_UPDATE = "last_update"
         private const val CSV_LOCATIONS = "locations.csv"
 
+        @JvmOverloads
+        @JvmStatic
+        fun getWorkRequest(action: String = DOWNLOAD_ALL_FROM_EXTERNAL, forceDownload: Boolean = false,
+                           appLaunches: Boolean = false): OneTimeWorkRequest {
+            val constraints = Constraints.Builder()
+                    .setRequiredNetworkType(CONNECTED)
+                    .build()
+            val data = Data.Builder()
+                    .putString(ACTION_EXTRA, action)
+                    .putBoolean(FORCE_DOWNLOAD, forceDownload)
+                    .putBoolean(APP_LAUNCHES, appLaunches)
+                    .build()
+            return OneTimeWorkRequest.Builder(DownloadWorker::class.java)
+                    .setConstraints(constraints)
+                    .setInputData(data)
+                    .build()
+        }
+
         /**
          * Gets the time when BackgroundService was called last time
          *
@@ -167,9 +188,9 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
          */
         @Synchronized
         private fun download(data: Data, service: DownloadWorker) {
-            val action = data.getString(Const.ACTION_EXTRA) ?: return
-            val force = data.getBoolean(Const.FORCE_DOWNLOAD, false)
-            val launch = data.getBoolean(Const.APP_LAUNCHES, false)
+            val action = data.getString(ACTION_EXTRA) ?: return
+            val force = data.getBoolean(FORCE_DOWNLOAD, false)
+            val launch = data.getBoolean(APP_LAUNCHES, false)
 
 
             // Check if device has a internet connection
@@ -196,7 +217,7 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
             }
 
             // Update the last run time saved in shared prefs
-            if (action == Const.DOWNLOAD_ALL_FROM_EXTERNAL) {
+            if (action == DOWNLOAD_ALL_FROM_EXTERNAL) {
                 service.importLocationsDefaults()
             }
         }

@@ -1,16 +1,12 @@
 package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
-import android.content.Intent
 import android.os.Looper
-import androidx.work.ListenableWorker
+import androidx.work.*
 import androidx.work.ListenableWorker.Result.SUCCESS
-import androidx.work.Worker
-import androidx.work.WorkerParameters
 import de.tum.`in`.tumcampusapp.utils.Const.APP_LAUNCHES
-import de.tum.`in`.tumcampusapp.utils.Const.ACTION_EXTRA
 import de.tum.`in`.tumcampusapp.utils.Const.DOWNLOAD_ALL_FROM_EXTERNAL
-import de.tum.`in`.tumcampusapp.utils.Const.FORCE_DOWNLOAD
+import java.util.concurrent.TimeUnit
 
 /**
  * Worker to sync data periodically in background
@@ -22,22 +18,33 @@ class BackgroundWorker(context: Context, workerParams: WorkerParameters) :
      * Starts [DownloadWorker] with appropriate extras
      */
     override fun doWork(): ListenableWorker.Result {
-        // Download all from external
         val appLaunches = inputData.getBoolean(APP_LAUNCHES, false)
-        val service = Intent().apply {
-            putExtra(ACTION_EXTRA, DOWNLOAD_ALL_FROM_EXTERNAL)
-            putExtra(FORCE_DOWNLOAD, false)
-            putExtra(APP_LAUNCHES, appLaunches)
-        }
-        // TODO
-        // DownloadService.enqueueWork(baseContext, service)
+
+        // Trigger periodic download in background
+        WorkManager.getInstance()
+                .beginUniqueWork(UNIQUE_DOWNLOAD, ExistingWorkPolicy.KEEP,
+                        DownloadWorker.getWorkRequest(
+                                DOWNLOAD_ALL_FROM_EXTERNAL, false, appLaunches)
+                ).enqueue()
 
         if (Looper.myLooper() == null) {
             Looper.prepare()
         }
 
         WifiScanHandler.getInstance().startRepetition(applicationContext)
-
         return SUCCESS
+    }
+
+    companion object {
+        private const val UNIQUE_DOWNLOAD = "BACKGROUND_DOWNLOAD"
+
+        fun getWorkRequest(appLaunches: Boolean = false): PeriodicWorkRequest {
+            val data = Data.Builder()
+                    .putBoolean(APP_LAUNCHES, appLaunches)
+                    .build()
+            return PeriodicWorkRequest.Builder(BackgroundWorker::class.java, 3, TimeUnit.HOURS)
+                    .setInputData(data)
+                    .build()
+        }
     }
 }

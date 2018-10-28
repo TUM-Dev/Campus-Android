@@ -1,15 +1,14 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import android.arch.lifecycle.Observer;
+import android.support.v4.widget.SwipeRefreshLayout;
 
+import androidx.work.State;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+import androidx.work.WorkStatus;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -18,7 +17,8 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * external source. It uses the DownloadService to download from external and
  * implements a rich user feedback with error progress and token related layouts.
  */
-public abstract class ActivityForDownloadingExternal extends ProgressActivity<Void> {
+public abstract class ActivityForDownloadingExternal extends ProgressActivity {
+    protected final WorkManager workManager;
     private final String method;
 
     /**
@@ -33,47 +33,31 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity<Vo
     public ActivityForDownloadingExternal(String method, int layoutId) {
         super(layoutId);
         this.method = method;
+        workManager = WorkManager.getInstance();
     }
 
     /**
-     * Broadcast receiver getting notifications from the download service, if downloading was successful or not
+     * Gets notifications from the DownloadWorker, if downloading was successful or not
      */
-    // TODO: add LiveData<List<WorkStatus>> handler
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //if (!intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
-            //    return;
-            //}
-
-            String action = intent.getStringExtra(Const.ACTION_EXTRA);
-            if (!action.isEmpty()) {
-                Utils.logv("Broadcast received  <" + action + ">");
-                if (action.equals(Const.COMPLETED)) {
-                    showLoadingEnded();
-                    // Calls onStart() to simulate a new start of the activity
-                    // without downloading new data, since this receiver
-                    // receives data from a new download
-                    onStart();
-                }
-
-                if (action.equals(Const.ERROR)) {
-                    int messageResId = intent.getIntExtra(Const.MESSAGE, 0);
-                    showError(messageResId);
-                }
-            }
+    private final Observer<WorkStatus> workStatusObserver = workStatus -> {
+        if (workStatus == null || !workStatus.getState().isFinished()) {
+            return;
         }
+        if (workStatus.getState() == State.SUCCEEDED) {
+            showLoadingEnded();
+            // Calls onStart() to simulate a new start of the activity
+            // without downloading new data, since this receiver
+            // receives data from a new download
+            onStart();
+            return;
+        }
+        // Finished state without success -> some kind of error
+        showError(R.string.something_wrong);
     };
 
     @Override
     public void onRefresh() {
         requestDownload(true);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     /**
@@ -89,12 +73,10 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity<Vo
 
         showLoadingStart();
 
-        // TODO: start DownloadWorker
-        //Intent service = new Intent(this, DownloadService.class);
-        //service.putExtra(Const.ACTION_EXTRA, method);
-        //service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
-        //service.putExtra("callback", new Bundle());
-        //startService(service);
+        WorkRequest workRequest = DownloadWorker.getWorkRequest(method, forceDownload);
+        workManager.enqueue(workRequest);
+        workManager.getStatusByIdLiveData(workRequest.getId())
+                .observe(this, workStatusObserver);
     }
 
 }
