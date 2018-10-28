@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.component.tumui.roomfinder;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
@@ -13,14 +14,13 @@ import android.view.ViewGroup;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewDisplayable;
-import com.google.common.base.Optional;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -119,13 +119,15 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
     }
 
     private List<WeekViewDisplayable> fetchEventList(String roomId, String startDate, String endDate) {
-        List<WeekViewDisplayable> events = new ArrayList<>();
         try {
-            Optional<List<RoomFinderSchedule>> result = Optional.of(TUMCabeClient.getInstance(context)
-                    .fetchSchedule(roomId, startDate, endDate));
-            List<RoomFinderSchedule> schedules = result.get();
+            @Nullable List<RoomFinderSchedule> schedules = TUMCabeClient.getInstance(context)
+                    .fetchSchedule(roomId, startDate, endDate);
+            if(schedules == null) {
+                return Collections.emptyList();
+            }
 
-            //Convert to the proper type
+            // Convert to the proper type
+            List<WeekViewDisplayable> events = new ArrayList<>();
             for (RoomFinderSchedule schedule : schedules) {
                 DateTime start = DateTimeUtils.INSTANCE.getDateTime(schedule.getStart());
                 DateTime end = DateTimeUtils.INSTANCE.getDateTime(schedule.getEnd());
@@ -139,11 +141,10 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
             }
 
             return events;
-
-        } catch (IOException | NullPointerException | IllegalStateException e) {
+        } catch (Exception e) {
             Utils.log(e);
         }
-        return events;
+        return Collections.emptyList();
     }
 
 }
