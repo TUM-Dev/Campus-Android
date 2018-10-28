@@ -4,8 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-
-import javax.annotation.Nullable;
+import android.support.annotation.Nullable;
 
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 

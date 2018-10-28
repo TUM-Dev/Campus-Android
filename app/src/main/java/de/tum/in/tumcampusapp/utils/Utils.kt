@@ -17,7 +17,6 @@ import android.text.Html
 import android.text.Spanned
 import android.util.Log
 import android.widget.Toast
-import com.google.common.base.Charsets
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.BuildConfig
 import org.jetbrains.anko.defaultSharedPreferences

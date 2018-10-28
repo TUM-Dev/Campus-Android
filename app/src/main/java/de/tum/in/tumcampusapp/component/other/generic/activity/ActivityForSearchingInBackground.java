@@ -1,12 +1,11 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
 import android.arch.lifecycle.Lifecycle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 import com.trello.rxlifecycle2.LifecycleProvider;
-
-import javax.annotation.Nullable;
 
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import io.reactivex.Observable;
