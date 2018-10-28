@@ -3,11 +3,10 @@ package de.tum.in.tumcampusapp.component.tumui.roomfinder;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-
-import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -66,25 +65,24 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
     }
 
     @Override
-    protected Optional<List<RoomFinderRoom>> onSearchInBackground() {
-        return Optional.of(getRecents());
+    protected List<RoomFinderRoom> onSearchInBackground() {
+        return getRecents();
     }
 
     @Override
-    protected Optional<List<RoomFinderRoom>> onSearchInBackground(String query) {
+    protected @Nullable List<RoomFinderRoom> onSearchInBackground(String query) {
         try {
-            List<RoomFinderRoom> rooms = TUMCabeClient.getInstance(this)
+            return TUMCabeClient.getInstance(this)
                     .fetchRooms(userRoomSearchMatching(query));
-            return Optional.of(rooms);
         } catch (IOException e) {
             Utils.log(e);
+            return null;
         }
-        return Optional.absent();
     }
 
     @Override
-    protected void onSearchFinished(Optional<List<RoomFinderRoom>> result) {
-        if (!result.isPresent()) {
+    protected void onSearchFinished(@Nullable List<RoomFinderRoom> searchResult) {
+        if (searchResult == null) {
             if (NetUtils.isConnected(this)) {
                 showErrorLayout();
             } else {
@@ -93,7 +91,6 @@ public class RoomFinderActivity extends ActivityForSearchingInBackground<List<Ro
             return;
         }
 
-        List<RoomFinderRoom> searchResult = result.get();
         if (searchResult.isEmpty()) {
             list.setAdapter(new NoResultsAdapter(this));
         } else {

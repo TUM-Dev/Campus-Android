@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.component.other.generic.activity;
 import android.arch.lifecycle.Lifecycle;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import com.google.common.base.Optional;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
@@ -40,21 +39,21 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      * This method is always called from a thread that is not the UI thread, so long running
      * operations can be invoked directly in this method.
      * To bring the loaded results to the UI return the results and apply it in
-     * {@link ActivityForSearchingInBackground#onSearchFinished(Optional)}
+     * {@link ActivityForSearchingInBackground#onSearchFinished(T)}
      */
-    protected abstract Optional<T> onSearchInBackground();
+    protected abstract @Nullable T onSearchInBackground();
 
     /**
      * Gets called if a search query has been entered.
      * This method is always called from a thread that is not the UI thread, so long running
      * operations can be invoked directly in this method.
      * To bring the loaded results to the UI return the results and apply it in
-     * {@link ActivityForSearchingInBackground#onSearchFinished(Optional)}
+     * {@link ActivityForSearchingInBackground#onSearchFinished(T)}
      *
      * @param query Query to search for
      * @return Loaded results
      */
-    protected abstract Optional<T> onSearchInBackground(String query);
+    protected abstract @Nullable T onSearchInBackground(String query);
 
     /**
      * Gets called after background task has finished. The
@@ -63,7 +62,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      *
      * @param result Result from background task
      */
-    protected abstract void onSearchFinished(Optional<T> result);
+    protected abstract void onSearchFinished(@Nullable T result);
 
     @Override
     public final void onStartSearch() {
@@ -79,7 +78,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
 
         showLoadingStart();
 
-        Observable<Optional<T>> observable;
+        Observable<T> observable;
         if (query == null) {
             observable = Observable.fromCallable(this::onSearchInBackground);
         } else {
@@ -89,7 +88,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
         observable.compose(provider.bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturnItem(Optional.absent())
+                .onErrorReturnItem(null)
                 .subscribe(this::onSearchFinished);
     }
 
