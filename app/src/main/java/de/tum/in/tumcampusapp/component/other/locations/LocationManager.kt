@@ -241,7 +241,7 @@ class LocationManager(c: Context) {
      *
      * @return the id of current building
      */
-    fun getBuildingIDFromCurrentLocation(): Optional<String> = getBuildingIDFromLocation(getCurrentOrNextLocation())
+    fun getBuildingIDFromCurrentLocation(): String? = getBuildingIDFromLocation(getCurrentOrNextLocation())
 
     /**
      * This might be battery draining
@@ -339,11 +339,11 @@ class LocationManager(c: Context) {
      * @param location the give location
      * @return the id of current building
      */
-    private fun getBuildingIDFromLocation(location: Location): Optional<String> {
+    private fun getBuildingIDFromLocation(location: Location): String? {
         val buildingToGpsList = orFetchBuildingsToGps
 
         if (buildingToGpsList.isEmpty()) {
-            return Optional.absent()
+            return null
         }
 
         val lat = location.latitude
@@ -365,9 +365,9 @@ class LocationManager(c: Context) {
         }
 
         return if (bestDistance < 1000) {
-            Optional.of(bestBuilding)
+            bestBuilding
         } else {
-            Optional.absent()
+            null
         }
     }
 
