@@ -530,11 +530,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
     
     private void openEvent(String eventId) {
-        List<CalendarItem> item = calendarController.getCalendarItemsById(eventId);
-        if (item == null || item.isEmpty()) {
+        List<CalendarItem> items = calendarController.getCalendarItemAndDuplicatesById(eventId);
+        if (items == null || items.isEmpty()) {
             return;
         }
-        detailsFragment = CalendarDetailsFragment.newInstance(item, this);
+
+        CalendarItem originalItem = items.get(0);
+        detailsFragment = CalendarDetailsFragment.newInstance(originalItem.getNr(), true, this);
         detailsFragment.show(getSupportFragmentManager(), null);
     }
 

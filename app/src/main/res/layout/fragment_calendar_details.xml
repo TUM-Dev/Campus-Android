@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_behavior="@string/bottom_sheet_behavior"
-        android:layout_marginBottom="@dimen/material_default_padding">
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -50,31 +49,34 @@
                 android:layout_gravity="start|center_vertical"
                 android:textAppearance="@android:style/TextAppearance.Large"
                 tools:text="Title" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding">
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:orientation="horizontal">
+
             <ImageView
                 android:id="@+id/locationIcon"
                 android:layout_width="@dimen/icon_default"
                 android:layout_height="@dimen/icon_default"
-                android:src="@drawable/ic_outline_location_on_24px_light_blue"/>
+                android:src="@drawable/ic_outline_location_on_24px_light_blue" />
+
             <LinearLayout
                 android:id="@+id/locationLinearLayout"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding" />
-        </LinearLayout>
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:orientation="vertical" />
 
+        </LinearLayout>
 
         <TextView
             android:id="@+id/dateTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_marginStart="@dimen/material_default_padding"
@@ -88,13 +90,13 @@
 
         <TextView
             android:id="@+id/descriptionTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_small_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_small_padding"
+            android:layout_marginBottom="@dimen/material_default_padding"
             android:drawableStart="@drawable/ic_action_info_black"
             android:drawablePadding="@dimen/material_default_padding"
             android:textAppearance="@android:style/TextAppearance.Medium"
@@ -105,7 +107,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginTop="@dimen/material_small_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginBottom="@dimen/material_small_padding"
             android:gravity="end"
@@ -119,6 +120,7 @@
                 android:text="@string/delete_event_button"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
+                android:theme="@style/AppTheme"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
             <android.support.design.button.MaterialButton
@@ -130,6 +132,38 @@
                 android:text="@string/edit_event_button"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
+                android:theme="@style/AppTheme"
+                app:cornerRadius="@dimen/material_corner_radius" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/showInCalendarButtonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/list_divider" />
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/showInCalendarButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_small_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginBottom="@dimen/material_small_padding"
+                android:gravity="start|center_vertical"
+                android:text="@string/show_in_calendar"
+                android:textAllCaps="false"
+                android:textColor="@color/color_primary"
+                android:theme="@style/AppTheme"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
         </LinearLayout>

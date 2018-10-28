@@ -12,12 +12,15 @@ import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
+import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
+import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_calendar_details.*
@@ -28,20 +31,22 @@ import java.net.UnknownHostException
 
 class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
-    private lateinit var listener: OnEventInteractionListener
-    private lateinit var dao: CalendarDao
-    private lateinit var calendarId: String
+    private var listener: OnEventInteractionListener? = null
+
+    private val dao: CalendarDao by lazy {
+        TcaDb.getInstance(context).calendarDao()
+    }
+
+    private val calendarItemId: String by lazy {
+        arguments?.getString(CALENDAR_ID_PARAM) ?: throw IllegalStateException("No calendar item ID passed")
+    }
+
+    private val isShownInCalendarActivity: Boolean by lazy {
+        arguments?.getBoolean(CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM)
+                ?: throw IllegalStateException("Incomplete Bundle when opening calendar details fragment")
+    }
 
     private var deleteApiCall: Call<DeleteEventResponse>? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        dao = TcaDb.getInstance(context).calendarDao()
-
-        arguments?.let { args ->
-            calendarId = args.getString(CALENDAR_ID_PARAM).orEmpty()
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -49,7 +54,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val calendarItem = dao.getCalendarItemsById(calendarId)
+        val calendarItem = dao.getCalendarItemsById(calendarItemId)
         updateView(calendarItem)
     }
 
@@ -93,22 +98,40 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             descriptionTextView.text = calendarItem.description
         }
 
-        if (calendarItem.url.isEmpty()) {
+        if (!isShownInCalendarActivity) {
+            showInCalendarButtonContainer.visibility = View.VISIBLE
+            showInCalendarButton.setOnClickListener { openEventInCalendarActivity(calendarItem) }
+        }
+
+        if (calendarItem.isEditable && isShownInCalendarActivity) {
+            // We only provide edit and delete functionality if the user is in CalendarActivity,
+            // but not if the user opens the fragment from MainActivity.
             buttonsContainer.visibility = View.VISIBLE
             deleteButton.setOnClickListener { displayDeleteDialog(calendarItem.nr) }
-            editButton.setOnClickListener { listener.onEditEvent(calendarItem) }
+            editButton.setOnClickListener { listener?.onEditEvent(calendarItem) }
         } else {
             buttonsContainer.visibility = View.GONE
         }
     }
 
+    private fun openEventInCalendarActivity(calendarItem: CalendarItem) {
+        val bundle = Bundle().apply {
+            putLong(Const.EVENT_TIME, calendarItem.eventStart.millis)
+        }
+        val destination = SystemActivity(CalendarActivity::class.java, bundle)
+        NavigationManager.open(requireContext(), destination)
+    }
+
     private fun displayDeleteDialog(eventId: String) {
-        AlertDialog.Builder(requireContext())
+        val alertDialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.event_delete_title)
                 .setMessage(R.string.delete_event_info)
                 .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
                 .setNegativeButton(R.string.cancel, null)
-                .show()
+                .create()
+
+        alertDialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+        alertDialog.show()
     }
 
     private fun deleteEvent(eventId: String) {
@@ -118,7 +141,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             override fun onResponse(call: Call<DeleteEventResponse>,
                                     response: Response<DeleteEventResponse>) {
                 dismiss()
-                listener.onEventDeleted(eventId)
+                listener?.onEventDeleted(eventId)
                 deleteApiCall = null
             }
 
@@ -150,16 +173,20 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     companion object {
+
         @JvmStatic
-        fun newInstance(calendarItem: List<CalendarItem>,
-                        listener: OnEventInteractionListener): CalendarDetailsFragment {
+        fun newInstance(calendarItemId: String,
+                        isShownInCalendarActivity: Boolean = true,
+                        listener: OnEventInteractionListener? = null): CalendarDetailsFragment {
             return CalendarDetailsFragment().apply {
                 this.arguments = Bundle().apply {
-                    putString(Const.CALENDAR_ID_PARAM, calendarItem[0].nr)
+                    putString(CALENDAR_ID_PARAM, calendarItemId)
+                    putBoolean(CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM, isShownInCalendarActivity)
                 }
                 this.listener = listener
             }
         }
+
     }
 
     override fun onDetach() {

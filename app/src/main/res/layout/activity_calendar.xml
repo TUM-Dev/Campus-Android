@@ -47,7 +47,7 @@
                         app:noOfVisibleDays="3"
                         app:nowLineColor="@color/tum_blue"
                         app:nowLineThickness="1dp"
-                        app:overlappingEventGap="@dimen/material_small_padding"
+                        app:eventMarginVertical="@dimen/material_tiny_padding"
                         app:showNowLine="true"
                         app:singleDayHorizontalMargin="@dimen/material_small_padding"
                         app:textSize="14sp"

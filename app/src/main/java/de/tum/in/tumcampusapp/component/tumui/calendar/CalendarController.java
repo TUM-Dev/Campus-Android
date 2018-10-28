@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -203,7 +202,7 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
      * The first item is the one with the given id.
      */
     @Nullable
-    List<CalendarItem> getCalendarItemsById(String id) {
+    List<CalendarItem> getCalendarItemAndDuplicatesById(String id) {
         return calendarDao.getCalendarItemsById(id);
     }
 
