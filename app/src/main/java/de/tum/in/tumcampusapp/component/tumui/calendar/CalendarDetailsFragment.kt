@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
@@ -81,7 +82,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 val locationText: TextView = layoutInflater
                         .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
                 if (item.isCancelled()) {
-                    locationText.setTextColor(resources.getColor(R.color.event_canceled))
+                    locationText.setTextColor(ContextCompat.getColor(requireContext(), R.color.event_canceled))
                     val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
                     locationText.text = textForCancelledEvent
                 } else {

@@ -52,10 +52,10 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
         }
     }
 
-    override fun onDownloadSuccessful(body: List<RoomFinderRoom>) {
-        barrierFreeFacilitiesListView.adapter = RoomFinderListAdapter(this, body)
+    override fun onDownloadSuccessful(response: List<RoomFinderRoom>) {
+        barrierFreeFacilitiesListView.adapter = RoomFinderListAdapter(this, response)
         barrierFreeFacilitiesListView.setOnItemClickListener { _, _, index, _ ->
-            val facility = body[index]
+            val facility = response[index]
             recents.insert(Recent(facility.toString(), RecentsDao.ROOMS))
             openRoomFinderDetails(facility)
         }

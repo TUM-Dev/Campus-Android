@@ -68,7 +68,7 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
                     .setPositiveButton(android.R.string.ok, null)
                     .create()
 
-            dialog.window.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+            dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
             dialog.show()
             return true
         }
