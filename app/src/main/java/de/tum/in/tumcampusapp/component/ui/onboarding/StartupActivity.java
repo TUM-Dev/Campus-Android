@@ -18,7 +18,6 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import androidx.work.State;
 import androidx.work.WorkStatus;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
@@ -50,7 +49,7 @@ public class StartupActivity extends AppCompatActivity {
 
     // TODO: register background download finished WorkStatus
     Observer<WorkStatus> downloadObserver = workStatus -> {
-        if (workStatus == null || workStatus.getState() != State.SUCCEEDED) {
+        if (workStatus == null || workStatus.getState().isFinished()) {
             return;
         }
         openMainActivityIfInitializationFinished();

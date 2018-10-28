@@ -24,8 +24,8 @@ class StartSyncReceiver : BroadcastReceiver() {
         // TODO(pfent)
         SendMessageService.enqueueWork(context, Intent())
 
-        // TODO(pfent)
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
+        // SilenceService also needs accurate timings, so we can't use WorkManager
         SilenceService.enqueueWork(context, Intent())
         if (intent.action != ACTION_WIFI_STATE_CHANGED && Utils.getSettingBool(context, Const.WIFI_SCANS_ALLOWED, false)) {
             SendWifiMeasurementService.enqueueWork(context, Intent())
