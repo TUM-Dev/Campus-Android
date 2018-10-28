@@ -21,14 +21,13 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
-import com.google.common.base.Strings;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -230,7 +229,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private void initIncludeEmail(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            if (!Strings.isNullOrEmpty(lrzId)) {
+            if (!TextUtils.isEmpty(lrzId)) {
                 email = lrzId + "@mytum.de";
                 includeEmail.setText(getResources().getString(R.string.feedback_include_email_tum_id, email));
                 includeEmail.setChecked(true);
@@ -248,7 +247,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private void onIncludeEmailClick() {
         if (includeEmail.isChecked()) {
-            if (Strings.isNullOrEmpty(lrzId)) {
+            if (TextUtils.isEmpty(lrzId)) {
                 customEmailViewLayout.setVisibility(View.VISIBLE);
                 customEmailView.setText(email);
             }
@@ -354,7 +353,7 @@ public class FeedbackActivity extends BaseActivity {
         sentCount = 0;
         stopListeningForLocation();
 
-        if (includeEmail.isChecked() && Strings.isNullOrEmpty(lrzId) && !isValidEmail()) {
+        if (includeEmail.isChecked() && TextUtils.isEmpty(lrzId) && !isValidEmail()) {
             return;
         }
 

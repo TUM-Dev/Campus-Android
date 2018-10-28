@@ -13,10 +13,10 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -137,7 +137,8 @@ public class ChatNotification extends GenericNotification {
     }
 
     private void onDataLoaded() {
-        List<ChatMessage> messages = Lists.reverse(chatMessageDao.getLastUnread(chatRoom.getId()));
+        List<ChatMessage> messages = chatMessageDao.getLastUnread(chatRoom.getId());
+        Collections.reverse(messages);
         Intent intent = new Intent(Const.CHAT_BROADCAST_NAME);
         intent.putExtra("FcmChat", this.extras);
         LocalBroadcastManager.getInstance(context)

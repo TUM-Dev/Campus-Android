@@ -15,8 +15,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.common.base.Optional;
-
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;

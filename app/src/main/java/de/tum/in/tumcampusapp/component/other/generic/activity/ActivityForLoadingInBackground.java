@@ -1,9 +1,9 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
 import android.arch.lifecycle.Lifecycle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import com.google.common.base.Optional;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
@@ -30,14 +30,14 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      * @return Result of the loading task
      */
     @SuppressWarnings("unchecked")
-    protected abstract T onLoadInBackground(S... arg);
+    protected abstract @Nullable T onLoadInBackground(S... arg);
 
     /**
      * Gets called from the UI thread after background task has finished.
      *
      * @param result Result returned by {@link #onLoadInBackground(Object[])}
      */
-    protected abstract void onLoadFinished(T result);
+    protected abstract void onLoadFinished(@Nullable T result);
 
     /**
      * Standard constructor for ActivityForLoadingInBackground.
@@ -68,14 +68,14 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
         lastArg = arg;
 
         showLoadingStart();
-        Observable.fromCallable(() -> Optional.fromNullable(onLoadInBackground(arg)))
+        Observable.fromCallable(() -> onLoadInBackground(arg))
                 .compose(provider.bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturnItem(Optional.absent())
+                .onErrorReturnItem(null)
                 .subscribe((result) -> {
                     showLoadingEnded();
-                    onLoadFinished(result.orNull());
+                    onLoadFinished(result);
                     isRunning.set(false);
                 });
     }
