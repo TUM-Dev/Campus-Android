@@ -1,14 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.notifications.persistence
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 
 @Dao
 interface ActiveAlarmsDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun addActiveAlarm(alarm: ActiveAlarm)
 
     @Delete
