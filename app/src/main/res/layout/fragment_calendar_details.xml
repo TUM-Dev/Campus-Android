@@ -150,7 +150,7 @@
                 android:layout_height="1dp"
                 android:background="@color/list_divider" />
 
-            <android.support.design.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/showInCalendarButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"

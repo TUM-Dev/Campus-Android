@@ -92,7 +92,6 @@ dependencies {
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'com.google.guava:guava:27.0-android'
 
     // Android arch components
     implementation 'androidx.room:room-rxjava2:2.1.0-alpha01'

@@ -1,14 +1,12 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
+import java.util.List;
+
+import androidx.annotation.Nullable;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 
 @Dao

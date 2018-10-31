@@ -298,6 +298,7 @@ public final class TUMCabeClient {
         return service.fetchCoordinates(ApiHelper.encodeUrl(archId));
     }
 
+    @Nullable
     public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException {
         return service.fetchSchedule(ApiHelper.encodeUrl(roomId),
                 ApiHelper.encodeUrl(start), ApiHelper.encodeUrl(end))

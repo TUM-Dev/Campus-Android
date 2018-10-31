@@ -1,17 +1,12 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import androidx.lifecycle.Lifecycle;
+import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.google.common.base.Optional;
-import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
-import com.trello.rxlifecycle2.LifecycleProvider;
-
-import javax.annotation.Nullable;
-
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -19,7 +14,8 @@ import io.reactivex.schedulers.Schedulers;
  * Class parameter should be the class that holds the results of the background task.
  */
 public abstract class ActivityForSearchingInBackground<T> extends ActivityForSearching<T> {
-    protected final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
+
+    private Disposable searchDisposable;
 
     /**
      * Initializes an activity for searching in background.
@@ -40,21 +36,22 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      * This method is always called from a thread that is not the UI thread, so long running
      * operations can be invoked directly in this method.
      * To bring the loaded results to the UI return the results and apply it in
-     * {@link ActivityForSearchingInBackground#onSearchFinished(Optional)}
+     * {@link ActivityForSearchingInBackground#onSearchFinished(T)}
      */
-    protected abstract Optional<T> onSearchInBackground();
+    protected abstract @Nullable
+    T onSearchInBackground();
 
     /**
      * Gets called if a search query has been entered.
      * This method is always called from a thread that is not the UI thread, so long running
      * operations can be invoked directly in this method.
      * To bring the loaded results to the UI return the results and apply it in
-     * {@link ActivityForSearchingInBackground#onSearchFinished(Optional)}
+     * {@link ActivityForSearchingInBackground#onSearchFinished(T)}
      *
      * @param query Query to search for
      * @return Loaded results
      */
-    protected abstract Optional<T> onSearchInBackground(String query);
+    protected abstract @Nullable T onSearchInBackground(String query);
 
     /**
      * Gets called after background task has finished. The
@@ -63,7 +60,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      *
      * @param result Result from background task
      */
-    protected abstract void onSearchFinished(Optional<T> result);
+    protected abstract void onSearchFinished(@Nullable T result);
 
     @Override
     public final void onStartSearch() {
@@ -79,18 +76,24 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
 
         showLoadingStart();
 
-        Observable<Optional<T>> observable;
+        Observable<T> observable;
         if (query == null) {
             observable = Observable.fromCallable(this::onSearchInBackground);
         } else {
             observable = Observable.fromCallable(() -> onSearchInBackground(query));
         }
 
-        observable.compose(provider.bindToLifecycle())
+        searchDisposable = observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturnItem(Optional.absent())
-                .subscribe(this::onSearchFinished);
+                .subscribe(this::onSearchFinished, t -> showError(R.string.error_something_wrong));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (searchDisposable != null) {
+            searchDisposable.dispose();
+        }
+    }
 }

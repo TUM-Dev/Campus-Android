@@ -1,16 +1,13 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import androidx.lifecycle.Lifecycle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.google.common.base.Optional;
-import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
-import com.trello.rxlifecycle2.LifecycleProvider;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import de.tum.in.tumcampusapp.R;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -18,7 +15,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity<T> {
 
-    private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
+    private Disposable loadingDisposable;
     private AtomicBoolean isRunning = new AtomicBoolean(false);
     private S[] lastArg;
 
@@ -30,14 +27,15 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      * @return Result of the loading task
      */
     @SuppressWarnings("unchecked")
-    protected abstract T onLoadInBackground(S... arg);
+    protected abstract @Nullable
+    T onLoadInBackground(S... arg);
 
     /**
      * Gets called from the UI thread after background task has finished.
      *
      * @param result Result returned by {@link #onLoadInBackground(Object[])}
      */
-    protected abstract void onLoadFinished(T result);
+    protected abstract void onLoadFinished(@Nullable T result);
 
     /**
      * Standard constructor for ActivityForLoadingInBackground.
@@ -68,16 +66,14 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
         lastArg = arg;
 
         showLoadingStart();
-        Observable.fromCallable(() -> Optional.fromNullable(onLoadInBackground(arg)))
-                .compose(provider.bindToLifecycle())
+        loadingDisposable = Observable.fromCallable(() -> onLoadInBackground(arg))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturnItem(Optional.absent())
                 .subscribe((result) -> {
                     showLoadingEnded();
-                    onLoadFinished(result.orNull());
+                    onLoadFinished(result);
                     isRunning.set(false);
-                });
+                }, t -> showError(R.string.error_something_wrong));
     }
 
     @Override
@@ -85,4 +81,11 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
         startLoading(lastArg);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (loadingDisposable != null) {
+            loadingDisposable.dispose();
+        }
+    }
 }

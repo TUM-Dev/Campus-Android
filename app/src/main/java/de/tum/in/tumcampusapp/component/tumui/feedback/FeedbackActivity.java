@@ -13,14 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.annotation.RequiresApi;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
@@ -28,7 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.common.base.Strings;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -41,6 +35,12 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -230,7 +230,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private void initIncludeEmail(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            if (!Strings.isNullOrEmpty(lrzId)) {
+            if (!TextUtils.isEmpty(lrzId)) {
                 email = lrzId + "@mytum.de";
                 includeEmail.setText(getResources().getString(R.string.feedback_include_email_tum_id, email));
                 includeEmail.setChecked(true);
@@ -248,7 +248,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private void onIncludeEmailClick() {
         if (includeEmail.isChecked()) {
-            if (Strings.isNullOrEmpty(lrzId)) {
+            if (TextUtils.isEmpty(lrzId)) {
                 customEmailViewLayout.setVisibility(View.VISIBLE);
                 customEmailView.setText(email);
             }
@@ -354,7 +354,7 @@ public class FeedbackActivity extends BaseActivity {
         sentCount = 0;
         stopListeningForLocation();
 
-        if (includeEmail.isChecked() && Strings.isNullOrEmpty(lrzId) && !isValidEmail()) {
+        if (includeEmail.isChecked() && TextUtils.isEmpty(lrzId) && !isValidEmail()) {
             return;
         }
 

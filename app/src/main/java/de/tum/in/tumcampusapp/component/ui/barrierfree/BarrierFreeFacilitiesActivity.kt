@@ -44,12 +44,8 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
     }
 
     private fun getApiCallForCurrentLocation(): Call<List<RoomFinderRoom>>? {
-        val buildingId = locationManager.getBuildingIDFromCurrentLocation()
-        return if (buildingId.isPresent) {
-            apiClient.getListOfNearbyFacilities(buildingId.get())
-        } else {
-            null
-        }
+        val buildingId = locationManager.getBuildingIDFromCurrentLocation() ?: return null
+        return apiClient.getListOfNearbyFacilities(buildingId)
     }
 
     override fun onDownloadSuccessful(response: List<RoomFinderRoom>) {

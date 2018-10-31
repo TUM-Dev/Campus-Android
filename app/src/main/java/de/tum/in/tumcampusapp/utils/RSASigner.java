@@ -2,13 +2,13 @@ package de.tum.in.tumcampusapp.utils;
 
 import android.util.Base64;
 
-import com.google.common.base.Charsets;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
+
+import kotlin.text.Charsets;
 
 /**
  * Class providing an API to generate signatures of strings.
