@@ -12,6 +12,7 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRep
 import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
+import java.util.concurrent.TimeUnit
 
 /**
  * Service used to send chat messages.
@@ -53,6 +54,15 @@ class SendMessageWorker(context: Context, workerParams: WorkerParameters) :
                     .setRequiredNetworkType(CONNECTED)
                     .build()
             return OneTimeWorkRequestBuilder<SendMessageWorker>()
+                    .setConstraints(constraints)
+                    .build()
+        }
+
+        fun getPeriodicWorkRequest(): PeriodicWorkRequest {
+            val constraints = Constraints.Builder()
+                    .setRequiredNetworkType(CONNECTED)
+                    .build()
+            return PeriodicWorkRequestBuilder<SendMessageWorker>(3, TimeUnit.HOURS)
                     .setConstraints(constraints)
                     .build()
         }

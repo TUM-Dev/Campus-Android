@@ -21,8 +21,7 @@ class StartSyncReceiver : BroadcastReceiver() {
         val isLaunch = intent.getBooleanExtra(Const.APP_LAUNCHES, false)
         startBackground(context, isLaunch)
 
-        WorkManager.getInstance()
-                .enqueue(SendMessageWorker.getWorkRequest())
+        startSendMessage()
 
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
         // SilenceService also needs accurate timings, so we can't use WorkManager
@@ -31,7 +30,13 @@ class StartSyncReceiver : BroadcastReceiver() {
 
     companion object {
         private const val UNIQUE_BACKGROUND = "START_SYNC_BACKGROUND"
-        private const val UNIQUE_SENDMESSAGE = "START_SYNC_SENDMESSAGE"
+        private const val UNIQUE_SEND_MESSAGE = "START_SYNC_SEND_MESSAGE"
+
+        fun startSendMessage() {
+            WorkManager.getInstance()
+                    .enqueueUniquePeriodicWork(
+                            UNIQUE_SEND_MESSAGE, KEEP, SendMessageWorker.getPeriodicWorkRequest())
+        }
 
         /**
          * Start the periodic BackgroundWorker, ensuring only one task is ever running
