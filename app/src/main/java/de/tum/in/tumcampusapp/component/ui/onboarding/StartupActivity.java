@@ -10,19 +10,20 @@ import com.crashlytics.android.Crashlytics;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 import androidx.work.WorkStatus;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
+import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -31,6 +32,7 @@ import io.fabric.sdk.android.Fabric;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static de.tum.in.tumcampusapp.utils.Const.DOWNLOAD_ALL_FROM_EXTERNAL;
 
 /**
  * Entrance point of the App.
@@ -39,16 +41,12 @@ public class StartupActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 0;
     private static final String[] PERMISSIONS_LOCATION = {ACCESS_COARSE_LOCATION,
-                                                          ACCESS_FINE_LOCATION};
+            ACCESS_FINE_LOCATION};
 
-    final AtomicBoolean initializationFinished = new AtomicBoolean(false);
+    private final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private int tapCounter; // for easter egg
 
-    @Nullable
-    LiveData<WorkStatus> downloadStatus;
-
-    // TODO: register background download finished WorkStatus
-    Observer<WorkStatus> downloadObserver = workStatus -> {
+    private Observer<WorkStatus> downloadObserver = workStatus -> {
         if (workStatus == null || workStatus.getState().isFinished()) {
             return;
         }
@@ -114,7 +112,15 @@ public class StartupActivity extends AppCompatActivity {
             progressBar.show();
         });
 
-        // TODO: manually start DownloadWorker to listen to success
+        // DownloadWorker and listen for finalization
+        WorkManager workManager = WorkManager.getInstance();
+        WorkRequest download = DownloadWorker.getWorkRequest(DOWNLOAD_ALL_FROM_EXTERNAL, false, true);
+        workManager.enqueue(download);
+        runOnUiThread(() ->
+                workManager.getStatusByIdLiveData(download.getId())
+                        .observe(this, downloadObserver)
+        );
+
         // Start background service and ensure cards are set
         Intent i = new Intent(this, StartSyncReceiver.class);
         i.putExtra(Const.APP_LAUNCHES, true);
@@ -143,10 +149,10 @@ public class StartupActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 AlertDialog dialog = new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.permission_location_explanation))
-                        .setPositiveButton(R.string.ok, (dialogInterface, id) -> {
+                        .setPositiveButton(R.string.ok, (dialogInterface, id) ->
                             ActivityCompat.requestPermissions(
-                                    this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
-                        })
+                                    this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
+                        )
                         .create();
 
                 if (dialog.getWindow() != null) {
