@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.preference.PreferenceManager
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
@@ -63,7 +63,7 @@ abstract class Card(
      *
      * @param viewHolder The Card specific view holder
      */
-    open fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
+    open fun updateViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         context = viewHolder.itemView.context
     }
 

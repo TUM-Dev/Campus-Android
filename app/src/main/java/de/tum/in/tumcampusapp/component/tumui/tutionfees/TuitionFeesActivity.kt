@@ -3,8 +3,8 @@ package de.tum.`in`.tumcampusapp.component.tumui.tutionfees
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.button.MaterialButton
-import android.support.v4.content.ContextCompat
+import com.google.android.material.button.MaterialButton
+import androidx.core.content.ContextCompat
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl

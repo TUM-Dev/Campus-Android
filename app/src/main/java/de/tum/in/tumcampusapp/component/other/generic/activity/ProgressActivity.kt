@@ -5,9 +5,9 @@ import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.support.design.button.MaterialButton
-import android.support.design.widget.Snackbar
-import android.support.v4.widget.SwipeRefreshLayout
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout

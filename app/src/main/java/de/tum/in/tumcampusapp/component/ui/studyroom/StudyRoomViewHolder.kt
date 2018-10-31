@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.ui.studyroom
 
-import android.support.design.button.MaterialButton
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R

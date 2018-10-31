@@ -217,7 +217,7 @@
         android:paddingEnd="@dimen/material_default_padding"
         android:paddingBottom="@dimen/material_small_padding">
 
-        <android.support.design.button.MaterialButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/appointmentsButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"

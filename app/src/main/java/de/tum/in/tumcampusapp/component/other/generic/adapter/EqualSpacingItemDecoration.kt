@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.adapter
 
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 class EqualSpacingItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {

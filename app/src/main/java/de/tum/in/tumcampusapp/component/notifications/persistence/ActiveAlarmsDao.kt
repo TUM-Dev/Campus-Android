@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.notifications.persistence
 
-import android.arch.persistence.room.*
+import androidx.room.*
 
 @Dao
 interface ActiveAlarmsDao {
