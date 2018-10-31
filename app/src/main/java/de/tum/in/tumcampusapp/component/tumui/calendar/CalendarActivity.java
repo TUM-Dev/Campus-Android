@@ -49,6 +49,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.EventsResponse;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -413,10 +414,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     public List<WeekViewDisplayable> onMonthChange(int newYear, int newMonth) {
         // Populate the week view with the events of the month to display
-        DateTime begin = new DateTime().withDate(newYear, newMonth, 1);
-        int daysInMonth = begin.dayOfMonth()
-                               .getMaximumValue();
-        DateTime end = new DateTime().withDate(newYear, newMonth, daysInMonth);
+        DateTime begin = DateTimeUtils.dateWithStartOfDay()
+                .withYear(newYear)
+                .withMonthOfYear(newMonth)
+                .withDayOfMonth(1);
+
+        int daysInMonth = begin.dayOfMonth().getMaximumValue();
+        DateTime end = DateTimeUtils.dateWithEndOfDay()
+                .withYear(newYear)
+                .withMonthOfYear(newMonth)
+                .withDayOfMonth(daysInMonth);
+
         return prepareCalendarItems(begin, end);
     }
 
