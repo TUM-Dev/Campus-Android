@@ -1,8 +1,7 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.arch.lifecycle.Observer;
-import android.support.v4.widget.SwipeRefreshLayout;
-
+import androidx.lifecycle.Observer;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.work.State;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;

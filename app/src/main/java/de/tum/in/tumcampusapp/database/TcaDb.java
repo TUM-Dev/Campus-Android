@@ -1,16 +1,16 @@
 package de.tum.in.tumcampusapp.database;
 
+import android.content.Context;
+import android.content.Intent;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
-import android.content.Context;
-import android.content.Intent;
-
+import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarm;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarmsDao;
-import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotification;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotificationsDao;
 import de.tum.in.tumcampusapp.component.other.general.NotificationDao;
@@ -60,8 +60,6 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport
 import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
-import de.tum.in.tumcampusapp.service.BackgroundService;
-import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.CacheManager;
