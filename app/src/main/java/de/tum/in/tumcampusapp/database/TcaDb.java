@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.database;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -60,7 +61,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport
 import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
-import de.tum.in.tumcampusapp.service.SendMessageService;
+import de.tum.in.tumcampusapp.service.SendMessageWorker;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -104,6 +105,7 @@ public abstract class TcaDb extends RoomDatabase {
 
     private static TcaDb instance;
 
+    @NonNull
     public static synchronized TcaDb getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
@@ -175,7 +177,7 @@ public abstract class TcaDb extends RoomDatabase {
         // Stop all services, since they might have instantiated Managers and cause SQLExceptions
         Class<?>[] services = new Class<?>[]{
                 CalendarController.QueryLocationsService.class,
-                SendMessageService.class,
+                SendMessageWorker.class,
                 SilenceService.class};
         for (Class<?> service : services) {
             c.stopService(new Intent(c, service));

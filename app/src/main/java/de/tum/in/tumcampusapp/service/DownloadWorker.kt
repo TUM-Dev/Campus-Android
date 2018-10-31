@@ -167,7 +167,7 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
                     .putBoolean(FORCE_DOWNLOAD, forceDownload)
                     .putBoolean(APP_LAUNCHES, appLaunches)
                     .build()
-            return OneTimeWorkRequest.Builder(DownloadWorker::class.java)
+            return OneTimeWorkRequestBuilder<DownloadWorker>()
                     .setConstraints(constraints)
                     .setInputData(data)
                     .build()

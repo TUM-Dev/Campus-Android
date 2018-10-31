@@ -45,7 +45,7 @@ class BackgroundWorker(context: Context, workerParams: WorkerParameters) :
             val data = Data.Builder()
                     .putBoolean(APP_LAUNCHES, appLaunches)
                     .build()
-            return PeriodicWorkRequest.Builder(BackgroundWorker::class.java, 3, TimeUnit.HOURS)
+            return PeriodicWorkRequestBuilder<BackgroundWorker>(3, TimeUnit.HOURS)
                     .setConstraints(constraints)
                     .setInputData(data)
                     .build()

@@ -613,10 +613,6 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".service.SendMessageService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
             android:name=".service.SendWifiMeasurementService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />

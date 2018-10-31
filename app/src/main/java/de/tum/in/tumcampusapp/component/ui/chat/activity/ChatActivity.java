@@ -11,10 +11,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
@@ -28,6 +24,11 @@ import com.google.gson.Gson;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
@@ -44,7 +45,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepos
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.service.SendMessageService;
+import de.tum.in.tumcampusapp.service.SendMessageWorker;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Observable;
@@ -337,7 +338,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
         chatHistoryAdapter.add(message);
         chatMessageViewModel.addToUnsent(message);
 
-        SendMessageService.enqueueWork(this, new Intent());
+        WorkManager.getInstance()
+                .enqueue(SendMessageWorker.getWorkRequest());
     }
 
     @Override
