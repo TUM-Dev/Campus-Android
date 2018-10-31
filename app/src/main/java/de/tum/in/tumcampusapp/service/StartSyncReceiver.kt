@@ -27,14 +27,11 @@ class StartSyncReceiver : BroadcastReceiver() {
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
         // SilenceService also needs accurate timings, so we can't use WorkManager
         SilenceService.enqueueWork(context, Intent())
-        if (intent.action != ACTION_WIFI_STATE_CHANGED && Utils.getSettingBool(context, Const.WIFI_SCANS_ALLOWED, false)) {
-            SendWifiMeasurementService.enqueueWork(context, Intent())
-        }
     }
 
     companion object {
-        private const val ACTION_WIFI_STATE_CHANGED = "android.net.wifi.WIFI_STATE_CHANGED"
         private const val UNIQUE_BACKGROUND = "START_SYNC_BACKGROUND"
+        private const val UNIQUE_SENDMESSAGE = "START_SYNC_SENDMESSAGE"
 
         /**
          * Start the periodic BackgroundWorker, ensuring only one task is ever running

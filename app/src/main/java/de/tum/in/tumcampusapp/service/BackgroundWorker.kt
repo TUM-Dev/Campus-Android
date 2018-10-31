@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
-import android.os.Looper
 import androidx.work.*
 import androidx.work.ListenableWorker.Result.SUCCESS
 import de.tum.`in`.tumcampusapp.utils.Const.APP_LAUNCHES
@@ -27,11 +26,6 @@ class BackgroundWorker(context: Context, workerParams: WorkerParameters) :
                                 DOWNLOAD_ALL_FROM_EXTERNAL, false, appLaunches)
                 ).enqueue()
 
-        if (Looper.myLooper() == null) {
-            Looper.prepare()
-        }
-
-        WifiScanHandler.getInstance().startRepetition(applicationContext)
         return SUCCESS
     }
 
