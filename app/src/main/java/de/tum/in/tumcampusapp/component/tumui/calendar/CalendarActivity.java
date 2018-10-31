@@ -10,11 +10,6 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.text.format.DateUtils;
 import android.transition.TransitionManager;
 import android.util.TypedValue;
@@ -27,6 +22,7 @@ import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewDisplayable;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -39,6 +35,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
@@ -49,6 +49,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.EventsResponse;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -415,10 +416,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     public List<WeekViewDisplayable> onMonthChange(int newYear, int newMonth) {
         // Populate the week view with the events of the month to display
-        DateTime begin = new DateTime().withDate(newYear, newMonth, 1);
-        int daysInMonth = begin.dayOfMonth()
-                               .getMaximumValue();
-        DateTime end = new DateTime().withDate(newYear, newMonth, daysInMonth);
+        DateTime begin = DateTimeUtils.dateWithStartOfDay()
+                .withYear(newYear)
+                .withMonthOfYear(newMonth)
+                .withDayOfMonth(1);
+
+        int daysInMonth = begin.dayOfMonth().getMaximumValue();
+        DateTime end = DateTimeUtils.dateWithEndOfDay()
+                .withYear(newYear)
+                .withMonthOfYear(newMonth)
+                .withDayOfMonth(daysInMonth);
+
         return prepareCalendarItems(begin, end);
     }
 
