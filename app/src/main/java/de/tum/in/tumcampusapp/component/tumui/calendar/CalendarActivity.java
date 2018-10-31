@@ -10,11 +10,6 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.text.format.DateUtils;
 import android.transition.TransitionManager;
 import android.util.TypedValue;
@@ -27,6 +22,7 @@ import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewDisplayable;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -39,6 +35,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
@@ -314,14 +314,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-            mWeekView.setXScrollingSpeed(1);
         } else {
             icon = R.drawable.ic_outline_view_column_24px;
             mWeekView.setNumberOfVisibleDays(1);
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
-            mWeekView.setXScrollingSpeed(0.4f);
         }
 
         // Go to current date or the one given in the intent
