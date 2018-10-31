@@ -19,7 +19,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
  */
 class NewsActivity : ActivityForDownloadingExternal(Const.NEWS, R.layout.activity_news), DialogInterface.OnMultiChoiceClickListener {
 
-    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.activity_news_list_view) as RecyclerView }
+    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.activity_news_list_view) }
     private var state = -1
     private val newsController: NewsController by lazy { NewsController(this) }
 
