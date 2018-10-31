@@ -10,6 +10,20 @@ import java.text.ParseException
 import java.util.*
 
 object DateTimeUtils {
+
+    @JvmStatic
+    fun dateWithStartOfDay(): DateTime {
+        return DateTime.now().withTimeAtStartOfDay();
+    }
+
+    @JvmStatic
+    fun dateWithEndOfDay(): DateTime {
+        return dateWithStartOfDay()
+                .withHourOfDay(23)
+                .withMinuteOfHour(59)
+                .withSecondOfMinute(59)
+    }
+
     /**
      * TODO this uses inconsistent capitalization: "Just now" and "in 30 minutes"
      * Format an upcoming string nicely by being more precise as time comes closer
