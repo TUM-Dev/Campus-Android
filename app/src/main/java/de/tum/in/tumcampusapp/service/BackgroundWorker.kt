@@ -39,10 +39,14 @@ class BackgroundWorker(context: Context, workerParams: WorkerParameters) :
         private const val UNIQUE_DOWNLOAD = "BACKGROUND_DOWNLOAD"
 
         fun getWorkRequest(appLaunches: Boolean = false): PeriodicWorkRequest {
+            val constraints = Constraints.Builder()
+                    .setRequiresBatteryNotLow(true)
+                    .build()
             val data = Data.Builder()
                     .putBoolean(APP_LAUNCHES, appLaunches)
                     .build()
             return PeriodicWorkRequest.Builder(BackgroundWorker::class.java, 3, TimeUnit.HOURS)
+                    .setConstraints(constraints)
                     .setInputData(data)
                     .build()
         }
