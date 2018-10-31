@@ -9,7 +9,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import android.util.Base64;
 
-import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -30,6 +29,7 @@ import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
+import kotlin.text.Charsets;
 
 /**
  * TUM Alarmierung

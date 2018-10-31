@@ -15,8 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.google.common.base.Optional;
-
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
@@ -334,10 +332,10 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
                     continue;
                 }
 
-                Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
-                if (geo.isPresent()) {
+                @Nullable Geo geo = locationManager.roomLocationStringToGeo(location);
+                if (geo != null) {
                     Utils.logv("inserted " + location + ' ' + geo);
-                    roomLocationsDao.insert(new RoomLocations(location, geo.get()));
+                    roomLocationsDao.insert(new RoomLocations(location, geo));
                 }
             }
 

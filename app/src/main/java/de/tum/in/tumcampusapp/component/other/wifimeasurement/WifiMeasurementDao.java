@@ -1,13 +1,11 @@
 package de.tum.in.tumcampusapp.component.other.wifimeasurement;
 
+import java.util.List;
+
+import androidx.annotation.Nullable;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 
 @Dao

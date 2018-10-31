@@ -1,11 +1,10 @@
 package de.tum.in.tumcampusapp.component.other.general;
 
+import androidx.annotation.Nullable;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-
-import javax.annotation.Nullable;
 
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 

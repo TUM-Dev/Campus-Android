@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.google.common.collect.Lists
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
@@ -64,7 +63,7 @@ class ChatMessagesCard(context: Context,
                 .trim()
         chatMessageDao.deleteOldEntries()
         nrUnread = chatMessageDao.getNumberUnread(roomId)
-        mUnread = Lists.reverse(chatMessageDao.getLastUnread(roomId))
+        mUnread = chatMessageDao.getLastUnread(roomId).asReversed()
         mRoomIdString = roomIdString
         mRoomId = roomId
     }

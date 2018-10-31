@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.component.ui.chat;
 
 import android.util.Base64;
 
-import com.google.common.base.Charsets;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -19,6 +18,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatPublicKey;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
+import kotlin.text.Charsets;
 
 /**
  * A class allowing a convenient API to check the validity of ChatMessages based
