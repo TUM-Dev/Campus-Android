@@ -11,8 +11,8 @@ import android.graphics.Canvas
 import android.os.BatteryManager
 import android.os.Build
 import android.preference.PreferenceManager
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.pm.PackageInfoCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.pm.PackageInfoCompat
 import android.text.Html
 import android.text.Spanned
 import android.util.Log

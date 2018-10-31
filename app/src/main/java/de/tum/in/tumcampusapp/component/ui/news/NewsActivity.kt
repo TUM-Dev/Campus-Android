@@ -2,25 +2,24 @@ package de.tum.`in`.tumcampusapp.component.ui.news
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import java.util.*
 
 /**
  * Activity to show News (message, image, date)
  */
 class NewsActivity : ActivityForDownloadingExternal(Const.NEWS, R.layout.activity_news), DialogInterface.OnMultiChoiceClickListener {
 
-    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.activity_news_list_view) as RecyclerView }
+    private val recyclerView by lazy { findViewById(R.id.activity_news_list_view) as RecyclerView }
     private var state = -1
     private val newsController: NewsController by lazy { NewsController(this) }
 

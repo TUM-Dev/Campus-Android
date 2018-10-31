@@ -3,9 +3,6 @@ package de.tum.in.tumcampusapp.component.tumui.roomfinder;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent;
@@ -120,9 +119,11 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
 
     private List<WeekViewDisplayable> fetchEventList(String roomId, String startDate, String endDate) {
         try {
-            @Nullable List<RoomFinderSchedule> schedules = TUMCabeClient.getInstance(context)
+            List<RoomFinderSchedule> schedules = TUMCabeClient
+                    .getInstance(context)
                     .fetchSchedule(roomId, startDate, endDate);
-            if(schedules == null) {
+
+            if (schedules == null) {
                 return Collections.emptyList();
             }
 

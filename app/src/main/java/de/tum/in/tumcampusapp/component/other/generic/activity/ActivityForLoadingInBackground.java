@@ -1,24 +1,21 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.arch.lifecycle.Lifecycle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-
-import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
-import com.trello.rxlifecycle2.LifecycleProvider;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import de.tum.in.tumcampusapp.R;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Generic class which handles can handle a long running background task
  */
-public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity {
+public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity<T> {
 
-    private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
+    private Disposable loadingDisposable;
     private AtomicBoolean isRunning = new AtomicBoolean(false);
     private S[] lastArg;
 
@@ -30,7 +27,8 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      * @return Result of the loading task
      */
     @SuppressWarnings("unchecked")
-    protected abstract @Nullable T onLoadInBackground(S... arg);
+    protected abstract @Nullable
+    T onLoadInBackground(S... arg);
 
     /**
      * Gets called from the UI thread after background task has finished.
@@ -68,16 +66,14 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
         lastArg = arg;
 
         showLoadingStart();
-        Observable.fromCallable(() -> onLoadInBackground(arg))
-                .compose(provider.bindToLifecycle())
+        loadingDisposable = Observable.fromCallable(() -> onLoadInBackground(arg))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturnItem(null)
                 .subscribe((result) -> {
                     showLoadingEnded();
                     onLoadFinished(result);
                     isRunning.set(false);
-                });
+                }, t -> showError(R.string.error_something_wrong));
     }
 
     @Override
@@ -85,4 +81,11 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
         startLoading(lastArg);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (loadingDisposable != null) {
+            loadingDisposable.dispose();
+        }
+    }
 }

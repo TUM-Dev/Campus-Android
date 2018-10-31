@@ -5,15 +5,15 @@ import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.support.design.button.MaterialButton
-import android.support.design.widget.Snackbar
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.*
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.*
@@ -138,7 +138,7 @@ abstract class ProgressActivity<T>(
      * Subclasses need to override this method to be alerted of successful responses after calling
      * the [fetch] method.
      */
-    open fun onDownloadSuccessful(body: T) = Unit
+    open fun onDownloadSuccessful(response: T) = Unit
 
     /**
      * Called if the response from the API call is successful, but empty.

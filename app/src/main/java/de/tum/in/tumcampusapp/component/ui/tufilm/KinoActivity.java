@@ -1,7 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.tufilm;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import io.reactivex.disposables.Disposable;
 /**
  * Activity to show TU Kino films
  */
-public class KinoActivity extends ProgressActivity {
+public class KinoActivity extends ProgressActivity<Void> {
 
     private int startPosition;
     private ViewPager mPager;

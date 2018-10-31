@@ -1,6 +1,6 @@
 package de.tum.in.tumcampusapp.api.app;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.EOFException;
 import java.io.IOException;

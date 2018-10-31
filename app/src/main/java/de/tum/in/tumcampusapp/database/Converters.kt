@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.database
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember

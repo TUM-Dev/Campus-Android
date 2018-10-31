@@ -3,9 +3,9 @@ package de.tum.`in`.tumcampusapp.component.other.navigation
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.NavUtils
-import android.support.v4.app.TaskStackBuilder
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.NavUtils
+import androidx.core.app.TaskStackBuilder
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity

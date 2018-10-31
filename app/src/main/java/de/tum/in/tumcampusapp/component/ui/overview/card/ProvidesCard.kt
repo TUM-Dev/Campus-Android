@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview.card
 
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 
 /**

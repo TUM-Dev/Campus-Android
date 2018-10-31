@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatRadioButton
+                <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/tumInGeneralRadioButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                     android:checked="true"
                     android:text="@string/general" />
 
-                <android.support.v7.widget.AppCompatRadioButton
+                <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/tumCampusAppRadioButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
 
             </RadioGroup>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
                 app:boxStrokeColor="@color/input_layout_border"
                 app:boxStrokeWidth="@dimen/input_layout_border">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/feedback_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                     android:scrollbars="vertical"
                     android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatImageButton
+                <androidx.appcompat.widget.AppCompatImageButton
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="@dimen/add_thumbnail_button_size"
                     android:layout_height="@dimen/add_thumbnail_button_size"
@@ -94,7 +94,7 @@
                     android:tint="@color/color_primary"
                     app:cornerRadius="@dimen/material_corner_radius" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/feedback_image_list"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
                 android:checked="true"
                 android:text="@string/feedback_include_email" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/feedback_custom_email_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                 android:layout_width="match_parent"
@@ -131,7 +131,7 @@
                 app:boxStrokeWidth="@dimen/input_layout_border"
                 tools:visibility="visible">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/feedback_custom_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
                     android:visibility="gone"
                     tools:visibility="visible" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/feedback_include_location"
@@ -149,7 +149,7 @@
                 android:checked="false"
                 android:text="@string/feedback_include_location" />
 
-            <android.support.design.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

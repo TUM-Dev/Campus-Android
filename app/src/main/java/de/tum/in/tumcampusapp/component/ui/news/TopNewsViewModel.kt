@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.news;
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import android.content.Context
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager

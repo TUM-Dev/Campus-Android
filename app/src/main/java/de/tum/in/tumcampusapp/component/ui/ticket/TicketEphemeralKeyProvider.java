@@ -1,8 +1,8 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Size;
+import androidx.annotation.NonNull;
+import androidx.annotation.Size;
 
 import com.stripe.android.EphemeralKeyProvider;
 import com.stripe.android.EphemeralKeyUpdateListener;

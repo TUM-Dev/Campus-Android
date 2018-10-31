@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.component.other.generic.drawer
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.design.widget.NavigationView
+import com.google.android.material.navigation.NavigationView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity

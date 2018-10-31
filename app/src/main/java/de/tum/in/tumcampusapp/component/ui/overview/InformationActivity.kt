@@ -8,7 +8,7 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.content.pm.PackageInfoCompat
+import androidx.core.content.pm.PackageInfoCompat
 import android.text.format.DateUtils
 import android.view.View
 import android.view.ViewGroup

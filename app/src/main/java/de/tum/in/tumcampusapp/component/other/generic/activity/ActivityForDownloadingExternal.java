@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.service.DownloadService;
@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * external source. It uses the DownloadService to download from external and
  * implements a rich user feedback with error progress and token related layouts.
  */
-public abstract class ActivityForDownloadingExternal extends ProgressActivity {
+public abstract class ActivityForDownloadingExternal extends ProgressActivity<Void> {
     private final String method;
 
     /**

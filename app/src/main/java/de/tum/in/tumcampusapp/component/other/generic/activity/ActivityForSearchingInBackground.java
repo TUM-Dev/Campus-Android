@@ -1,23 +1,21 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.arch.lifecycle.Lifecycle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-
-import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
-import com.trello.rxlifecycle2.LifecycleProvider;
-
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Generic class which can handle a long running search in background.
  * Class parameter should be the class that holds the results of the background task.
  */
-public abstract class ActivityForSearchingInBackground<T> extends ActivityForSearching {
-    protected final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
+public abstract class ActivityForSearchingInBackground<T> extends ActivityForSearching<T> {
+
+    private Disposable searchDisposable;
 
     /**
      * Initializes an activity for searching in background.
@@ -40,7 +38,8 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      * To bring the loaded results to the UI return the results and apply it in
      * {@link ActivityForSearchingInBackground#onSearchFinished(T)}
      */
-    protected abstract @Nullable T onSearchInBackground();
+    protected abstract @Nullable
+    T onSearchInBackground();
 
     /**
      * Gets called if a search query has been entered.
@@ -84,11 +83,17 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
             observable = Observable.fromCallable(() -> onSearchInBackground(query));
         }
 
-        observable.compose(provider.bindToLifecycle())
+        searchDisposable = observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturnItem(null)
-                .subscribe(this::onSearchFinished);
+                .subscribe(this::onSearchFinished, t -> showError(R.string.error_something_wrong));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (searchDisposable != null) {
+            searchDisposable.dispose();
+        }
+    }
 }
