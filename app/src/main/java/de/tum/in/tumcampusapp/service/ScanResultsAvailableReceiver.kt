@@ -12,8 +12,8 @@ import android.location.Criteria
 import android.location.LocationManager
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.wifimeasurement.WifiMeasurementLocationListener
 import de.tum.`in`.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement

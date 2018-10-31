@@ -2,7 +2,7 @@ package de.tum.in.tumcampusapp.component.ui.tufilm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;

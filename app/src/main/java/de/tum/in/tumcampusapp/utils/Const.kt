@@ -48,6 +48,7 @@ object Const {
     const val TUMO_EXTERNAL_ID = "tumoExternNr"
     const val TUMO_EMPLOYEE_ID = "tumoBediensteteNr"
     const val TUMO_DISABLED = "tumo_is_disabled"
+    const val EMPLOYEE_MODE = "employee_mode"
 
     const val FCM_REG_ID = "gcm_registration_id"
     const val FCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server"
@@ -116,6 +117,7 @@ object Const {
     const val DISCARD_SETTINGS_START = "discard_settings_start"
     const val DISCARD_SETTINGS_PHONE = "discard_settings_phone"
     const val CALENDAR_ID_PARAM = "calendar_id"
+    const val CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM = "calendar_shown_in_calendar_activity"
 
     const val RAINBOW_MODE = "rainbow_enabled"
     const val REFRESH_CARDS = "refresh_cards"

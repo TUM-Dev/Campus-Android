@@ -22,8 +22,10 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  *
  * @param <T> The model of data
  */
-abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListHeadersAdapter.SimpleStickyListItem>
+abstract public class SimpleStickyListHeadersAdapter<T
+        extends SimpleStickyListHeadersAdapter.SimpleStickyListItem>
         extends BaseAdapter implements StickyListHeadersAdapter {
+
     protected List<T> infoList;
     public Context context;
     private final List<String> filters;
@@ -43,7 +45,7 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
         }
     }
 
-    // getView mtehod need to be implemented by subclass
+    // getView method need to be implemented by subclass
     @Override
     abstract public View getView(int position, View convertView, ViewGroup parent);
 
@@ -88,8 +90,7 @@ abstract public class SimpleStickyListHeadersAdapter<T extends SimpleStickyListH
 
     @Override
     public long getHeaderId(int i) {
-        return filters.indexOf(infoList.get(i)
-                                       .getHeaderId());
+        return filters.indexOf(infoList.get(i).getHeaderId());
     }
 
     @Override

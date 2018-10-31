@@ -1,7 +1,7 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.arch.lifecycle.Lifecycle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.lifecycle.Lifecycle;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.common.base.Optional;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
  * Generic class which can handle a long running search in background.
  * Class parameter should be the class that holds the results of the background task.
  */
-public abstract class ActivityForSearchingInBackground<T> extends ActivityForSearching {
+public abstract class ActivityForSearchingInBackground<T> extends ActivityForSearching<T> {
     protected final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
 
     /**
@@ -87,10 +87,10 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
         }
 
         observable.compose(provider.bindToLifecycle())
-                  .subscribeOn(Schedulers.io())
-                  .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .onErrorReturnItem(Optional.absent())
-                  .subscribe(this::onSearchFinished);
+                .subscribe(this::onSearchFinished);
     }
 
 }

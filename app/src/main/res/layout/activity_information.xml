@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                     android:text="@string/app_info_text"
                     android:textSize="15sp" />
 
-                <android.support.design.button.MaterialButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_facebook"
                     style="@style/Widget.MaterialComponents.Button.Icon"
                     android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                     app:cornerRadius="@dimen/material_corner_radius"
                     app:icon="@drawable/ic_facebook_white" />
 
-                <android.support.design.button.MaterialButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_github"
                     style="@style/Widget.MaterialComponents.Button.Icon"
                     android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                     app:cornerRadius="@dimen/material_corner_radius"
                     app:icon="@drawable/ic_github_white" />
 
-                <android.support.design.button.MaterialButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_privacy"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                     android:textAllCaps="false"
                     app:cornerRadius="@dimen/material_corner_radius" />
 
-                <android.support.design.button.MaterialButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_chat_terms"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                     android:textAllCaps="false"
                     app:cornerRadius="@dimen/material_corner_radius" />
 
-                <android.support.design.button.MaterialButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_licenses"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
@@ -119,4 +119,4 @@
         </ScrollView>
     </LinearLayout>
 
-</android.support.v4.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -5,10 +5,10 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.button.MaterialButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import com.google.android.material.button.MaterialButton;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -229,7 +229,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         // request), we use a short Toast to let the user know that something is happening.
         Toast.makeText(this, R.string.updating_event, Toast.LENGTH_SHORT).show();
 
-        apiClient
+        getApiClient()
                 .deleteEvent(eventId)
                 .enqueue(new Callback<DeleteEventResponse>() {
                     @Override
@@ -284,12 +284,12 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
         }
         event.setDescription(description);
 
-        Call<CreateEventResponse> apiCall = apiClient.createEvent(event, null);
+        Call<CreateEventResponse> apiCall = getApiClient().createEvent(event, null);
         fetch(apiCall);
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull CreateEventResponse response) {
+    public void onDownloadSuccessful(@NonNull CreateEventResponse response) {
         String nr = response.getEventId();
         event.setNr(nr);
         TcaDb.getInstance(this).calendarDao().insert(event);
@@ -347,7 +347,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;

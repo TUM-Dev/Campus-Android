@@ -1,15 +1,17 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.design.button.MaterialButton
-import android.support.design.widget.NavigationView
-import android.support.v4.app.NavUtils
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import android.preference.PreferenceManager
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.navigation.NavigationView
+import androidx.core.app.NavUtils
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -31,7 +33,8 @@ import java.util.*
 /**
  * Takes care of the navigation drawer which might be attached to the activity and also handles up navigation
  */
-abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
+abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val toolbar: Toolbar by lazy { findViewById<Toolbar>(R.id.main_toolbar) }
 
@@ -53,9 +56,18 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
-
         setUpToolbar()
         setUpDrawer()
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        if (key == Const.EMPLOYEE_MODE && drawerList != null) {
+            // Update the drawer contents (not the header).
+            (drawerList as NavigationView).menu.clear()
+            DrawerMenuHelper(this).populateMenu(drawerList as NavigationView)
+        }
     }
 
     open fun setUpToolbar() {

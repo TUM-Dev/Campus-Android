@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
 import android.content.Context
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.R

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <android.support.design.card.MaterialCardView
+                <com.google.android.material.card.MaterialCardView
                     style="@style/StandardCard"
                     android:layout_margin="@dimen/material_default_padding">
 
@@ -82,7 +82,7 @@
                             android:textSize="16sp"
                             tools:text="Due on Aug 15, 2018" />
 
-                        <android.support.design.button.MaterialButton
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/financialAidButton"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="wrap_content"
@@ -97,14 +97,14 @@
 
                     </LinearLayout>
 
-                </android.support.design.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
 
             </FrameLayout>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
     <include layout="@layout/navigation_drawer" />
 
-</android.support.v4.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

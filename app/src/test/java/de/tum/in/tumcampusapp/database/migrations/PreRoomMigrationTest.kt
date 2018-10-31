@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.database.migrations
 
-import android.arch.persistence.room.util.TableInfo
+import androidx.room.util.TableInfo
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build

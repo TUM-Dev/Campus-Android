@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.button.MaterialButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import com.google.android.material.button.MaterialButton;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -38,7 +38,7 @@ import retrofit2.Response;
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
  */
-public class WizNavStartActivity extends ProgressActivity implements TextWatcher {
+public class WizNavStartActivity extends ProgressActivity<Void> implements TextWatcher {
 
     private String lrzId;
 

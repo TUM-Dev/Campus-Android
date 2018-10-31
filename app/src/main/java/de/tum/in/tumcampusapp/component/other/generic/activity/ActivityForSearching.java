@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
 import android.provider.SearchRecentSuggestions;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.SearchView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Generic class for searching. Provides basic functions for a {@link SearchView}
  * and typical processes related to search.
  */
-public abstract class ActivityForSearching extends ProgressActivity {
+public abstract class ActivityForSearching<T> extends ProgressActivity<T> {
     /**
      * Search authority and minimum query length
      */

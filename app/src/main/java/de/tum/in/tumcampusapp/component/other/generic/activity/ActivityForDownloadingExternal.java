@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.service.DownloadService;
@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * external source. It uses the DownloadService to download from external and
  * implements a rich user feedback with error progress and token related layouts.
  */
-public abstract class ActivityForDownloadingExternal extends ProgressActivity {
+public abstract class ActivityForDownloadingExternal extends ProgressActivity<Void> {
     private final String method;
 
     /**
@@ -37,10 +37,10 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        LocalBroadcastManager.getInstance(this)
-                             .registerReceiver(receiver, new IntentFilter(DownloadService.BROADCAST_NAME));
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }
 
     /**
@@ -80,8 +80,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(this)
-                             .unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     /**
@@ -94,6 +93,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
         if (!NetUtils.isConnected(this)) {
             Utils.showToast(this, R.string.no_internet_connection);
         }
+
         showLoadingStart();
         Intent service = new Intent(this, DownloadService.class);
         service.putExtra(Const.ACTION_EXTRA, method);
@@ -101,4 +101,5 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
         service.putExtra("callback", new Bundle());
         startService(service);
     }
+
 }

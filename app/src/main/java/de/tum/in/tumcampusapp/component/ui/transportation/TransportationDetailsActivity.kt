@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation
 
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
@@ -24,7 +24,7 @@ import io.reactivex.schedulers.Schedulers
  *
  * NEEDS: EXTRA_STATION set in incoming bundle (station name)
  */
-class TransportationDetailsActivity : ProgressActivity(R.layout.activity_transportation_detail) {
+class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_transportation_detail) {
 
     private lateinit var mViewResults: LinearLayout
     private lateinit var recentsDao: RecentsDao
@@ -68,7 +68,7 @@ class TransportationDetailsActivity : ProgressActivity(R.layout.activity_transpo
                     .setPositiveButton(android.R.string.ok, null)
                     .create()
 
-            dialog.window.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+            dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
             dialog.show()
             return true
         }

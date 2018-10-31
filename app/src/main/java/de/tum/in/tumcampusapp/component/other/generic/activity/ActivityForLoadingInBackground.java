@@ -1,7 +1,7 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import android.arch.lifecycle.Lifecycle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.lifecycle.Lifecycle;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.common.base.Optional;
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle;
@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Generic class which handles can handle a long running background task
  */
-public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity {
+public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity<T> {
 
     private final LifecycleProvider<Lifecycle.Event> provider = AndroidLifecycle.createLifecycleProvider(this);
     private AtomicBoolean isRunning = new AtomicBoolean(false);

@@ -1,7 +1,7 @@
 package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -67,12 +67,12 @@ public class LecturesAppointmentsActivity
 
     private void loadLectureAppointments(@NonNull String lectureId, CacheControl cacheControl) {
         Call<LectureAppointmentsResponse> apiCall =
-                apiClient.getLectureAppointments(lectureId, cacheControl);
+                getApiClient().getLectureAppointments(lectureId, cacheControl);
         fetch(apiCall);
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull LectureAppointmentsResponse response) {
+    public void onDownloadSuccessful(@NonNull LectureAppointmentsResponse response) {
         List<LectureAppointment> appointments = response.getLectureAppointments();
         if (appointments == null || appointments.isEmpty()) {
             showError(R.string.no_appointments); // TODO Why is this not shown?

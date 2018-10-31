@@ -8,13 +8,16 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.NotificationStore
+import de.tum.`in`.tumcampusapp.component.notifications.persistence.ActiveAlarm
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationReceiver
+import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import org.jetbrains.anko.alarmManager
 import org.jetbrains.anko.notificationManager
 import org.joda.time.DateTime
+import kotlin.math.max
 
 /**
  * This class is responsible for scheduling notifications. This can either be a concrete notification
@@ -33,7 +36,11 @@ class NotificationScheduler(private val context: Context) {
      * @param futureNotifications The list of [FutureNotification]s to schedule
      */
     fun schedule(futureNotifications: List<FutureNotification>) {
-        futureNotifications.forEach { schedule(it) }
+        futureNotifications
+                // Prevent excessive alarm scheduling
+                // Clients should be responsible enough to not exceed that amount
+                .take(maxRemainingAlarms(context))
+                .forEach { schedule(it) }
     }
 
     /**
@@ -129,6 +136,7 @@ class NotificationScheduler(private val context: Context) {
         val alarmIntent = getAlarmIntent(notification, globalId)
         val alarmManager = context.alarmManager
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, notification.time.millis, alarmIntent)
+        addActiveAlarm(context, globalId)
     }
 
     /**
@@ -164,4 +172,24 @@ class NotificationScheduler(private val context: Context) {
         return PendingIntent.getBroadcast(context, type.id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
+    companion object {
+        private fun addActiveAlarm(context: Context, id: Long) {
+            TcaDb.getInstance(context)
+                    .activeNotificationsDao()
+                    .addActiveAlarm(ActiveAlarm(id))
+        }
+
+        fun removeActiveAlarm(context: Context, id: Long) {
+            TcaDb.getInstance(context)
+                    .activeNotificationsDao()
+                    .deleteActiveAlarm(ActiveAlarm(id))
+        }
+
+        @JvmStatic
+        fun maxRemainingAlarms(context: Context): Int {
+            return TcaDb.getInstance(context)
+                    .activeNotificationsDao()
+                    .maxAlarmsToSchedule()
+        }
+    }
 }

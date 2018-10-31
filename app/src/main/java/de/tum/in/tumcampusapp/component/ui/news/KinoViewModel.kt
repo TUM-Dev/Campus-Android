@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.news
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino

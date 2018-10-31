@@ -1,4 +1,4 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
@@ -13,7 +13,7 @@
 
         <include layout="@layout/toolbar" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -47,14 +47,14 @@
                         app:noOfVisibleDays="3"
                         app:nowLineColor="@color/tum_blue"
                         app:nowLineThickness="1dp"
-                        app:overlappingEventGap="@dimen/material_small_padding"
+                        app:eventMarginVertical="@dimen/material_tiny_padding"
                         app:showNowLine="true"
                         app:singleDayHorizontalMargin="@dimen/material_small_padding"
                         app:textSize="14sp"
                         app:todayBackgroundColor="#1848adff"
                         app:todayHeaderTextColor="@color/color_primary" />
 
-                    <android.support.design.button.MaterialButton
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/todayButton"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="wrap_content"
@@ -71,10 +71,10 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
     <include layout="@layout/navigation_drawer" />
 
-</android.support.v4.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

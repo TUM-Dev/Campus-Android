@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.preference.PreferenceManager
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.common.base.Optional
@@ -15,14 +15,11 @@ import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.doAsync
-import retrofit2.Callback
 import java.io.IOException
 import java.util.*
 
@@ -245,8 +242,6 @@ class LocationManager(c: Context) {
      * @return the id of current building
      */
     fun getBuildingIDFromCurrentLocation(): Optional<String> = getBuildingIDFromLocation(getCurrentOrNextLocation())
-
-
 
     /**
      * This might be battery draining

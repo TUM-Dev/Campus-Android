@@ -3,8 +3,8 @@ package de.tum.in.tumcampusapp.component.ui.chat;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.inputmethod.EditorInfo;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.Helper;
+import de.tum.in.tumcampusapp.api.app.ApiHelper;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
@@ -150,7 +150,7 @@ public class AddChatMemberActivity extends BaseActivity {
         });
 
         ImageView qrCode = findViewById(R.id.join_chat_qr_code);
-        qrCode.setImageBitmap(Helper.createQRCode(room.getName()));
+        qrCode.setImageBitmap(ApiHelper.createQRCode(room.getName()));
     }
 
     private void getSuggestions() {

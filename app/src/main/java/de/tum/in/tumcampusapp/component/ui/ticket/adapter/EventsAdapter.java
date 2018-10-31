@@ -2,12 +2,12 @@ package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.constraint.Group;
-import android.support.design.button.MaterialButton;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.Group;
+import com.google.android.material.button.MaterialButton;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

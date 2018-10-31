@@ -1,6 +1,6 @@
 package de.tum.in.tumcampusapp.api.app;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -45,7 +45,6 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
 
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
-
         Request request = chain.request();
 
         boolean logBody = true;

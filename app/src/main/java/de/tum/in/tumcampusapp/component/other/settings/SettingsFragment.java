@@ -10,17 +10,17 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.preference.CheckBoxPreference;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.preference.SwitchPreferenceCompat;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreferenceCompat;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
@@ -57,6 +57,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         mContext = getActivity();
 
         populateNewsSources();
+        setUpEmployeeSettings();
 
         // Disables silence service if the app is used without TUMOnline access
         SwitchPreferenceCompat silentSwitch =
@@ -135,6 +136,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
             if (newsSourcesPreference != null) {
                 newsSourcesPreference.addPreference(pref);
             }
+        }
+    }
+
+    /**
+     * Disable setting for non-employees.
+     */
+    private void setUpEmployeeSettings() {
+        boolean isEmployee = !Utils.getSetting(mContext, Const.TUMO_EMPLOYEE_ID, "").isEmpty();
+        if (!isEmployee) {
+            findPreference(Const.EMPLOYEE_MODE).setEnabled(false);
         }
     }
 

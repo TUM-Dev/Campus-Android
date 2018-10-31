@@ -252,6 +252,7 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     /**
      * Toggles between list view and chart view in landscape mode.
      */
+    @Suppress("UNUSED_PARAMETER") // onClick methods need the view parameter
     fun toggleInLandscape(view: View) {
         val showChart = chartsContainer.visibility == View.GONE
 

@@ -5,10 +5,9 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,9 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.M;
 
 public class EduroamFixCard extends Card {
 
@@ -124,9 +126,9 @@ public class EduroamFixCard extends Card {
     }
 
     private void checkDNSName() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !isValidSubjectMatchAPI18(eduroam)) {
+        if (SDK_INT < M && !isValidSubjectMatchAPI18(eduroam)) {
             errors.add(getContext().getString(R.string.wifi_dns_name_not_set));
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+        } else if (SDK_INT >= M
                    && (!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS)
                        || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))
                    && !isValidSubjectMatchAPI18(eduroam)) {
@@ -143,6 +145,7 @@ public class EduroamFixCard extends Card {
                || pattern.matcher(identity).matches();
     }
 
+    @SuppressWarnings("deprecation") // AltSubjectMatch is not available for API18
     private boolean isValidSubjectMatchAPI18(WifiConfiguration eduroam) {
         Utils.log("SubjectMatch: " + eduroam.enterpriseConfig.getSubjectMatch());
         return eduroam.enterpriseConfig.getSubjectMatch().equals(RADIUS_DNS);

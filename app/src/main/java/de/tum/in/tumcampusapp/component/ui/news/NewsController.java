@@ -1,7 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;

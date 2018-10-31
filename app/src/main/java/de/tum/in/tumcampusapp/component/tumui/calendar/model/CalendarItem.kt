@@ -1,12 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import android.content.ContentValues
 import android.content.Context
 import android.provider.CalendarContract
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent
 import org.joda.time.DateTime
@@ -29,6 +29,10 @@ data class CalendarItem(@PrimaryKey
                         var location: String = "",
                         @Ignore
                         var blacklisted: Boolean = false) {
+
+    val isEditable: Boolean
+        get() = url.isBlank()
+
     /**
      * Returns the color of the event
      */

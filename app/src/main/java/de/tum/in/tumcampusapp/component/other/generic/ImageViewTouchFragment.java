@@ -3,9 +3,9 @@ package de.tum.in.tumcampusapp.component.other.generic;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +31,7 @@ public class ImageViewTouchFragment extends Fragment {
         return mRootView;
     }
 
-    public void loadImage(String url, Callback callback) {
+    public void loadImage(String url, ImageLoadingListener listener) {
         ImageView imageView = mRootView.findViewById(R.id.image_view_touch_fragment);
         Utils.log("room finder url: " + url);
 
@@ -43,7 +43,21 @@ public class ImageViewTouchFragment extends Fragment {
         Picasso.get()
                 .load(url)
                 .placeholder(icon)
-                .into(imageView, callback);
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Free ad space
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        listener.onImageLoadingError();
+                    }
+                });
+    }
+
+    public interface ImageLoadingListener {
+        void onImageLoadingError();
     }
 
 }

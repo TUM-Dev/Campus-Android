@@ -1,9 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
-import android.arch.persistence.room.RoomWarnings
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.RoomWarnings
 import android.content.Context
 import android.text.format.DateFormat
 import com.google.gson.annotations.SerializedName

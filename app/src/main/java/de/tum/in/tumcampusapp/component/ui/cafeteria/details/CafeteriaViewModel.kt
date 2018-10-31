@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.details
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import android.location.Location
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu

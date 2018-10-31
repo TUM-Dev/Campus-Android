@@ -2,8 +2,8 @@ package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.JobIntentService
-import android.support.v4.content.LocalBroadcastManager
+import androidx.core.app.JobIntentService
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient

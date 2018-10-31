@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.activities
 
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.view.View
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R

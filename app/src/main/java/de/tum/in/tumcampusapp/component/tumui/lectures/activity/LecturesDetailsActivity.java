@@ -2,8 +2,8 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.button.MaterialButton;
+import androidx.annotation.NonNull;
+import com.google.android.material.button.MaterialButton;
 import android.view.View;
 import android.widget.TextView;
 
@@ -93,12 +93,12 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     }
 
     private void loadLectureDetails(@NonNull String lectureId, CacheControl cacheControl) {
-        Call<LectureDetailsResponse> apiCall = apiClient.getLectureDetails(lectureId, cacheControl);
+        Call<LectureDetailsResponse> apiCall = getApiClient().getLectureDetails(lectureId, cacheControl);
         fetch(apiCall);
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull LectureDetailsResponse response) {
+    public void onDownloadSuccessful(@NonNull LectureDetailsResponse response) {
         List<LectureDetails> lectureDetails = response.getLectureDetails();
         if (lectureDetails.isEmpty()) {
             Utils.showToast(this, R.string.error_no_data_to_show);

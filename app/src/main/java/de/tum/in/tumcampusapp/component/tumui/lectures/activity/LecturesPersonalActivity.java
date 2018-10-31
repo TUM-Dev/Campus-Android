@@ -2,7 +2,7 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -70,17 +70,17 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
     }
 
     private void loadPersonalLectures(CacheControl cacheControl) {
-        Call<LecturesResponse> apiCall = apiClient.getPersonalLectures(cacheControl);
+        Call<LecturesResponse> apiCall = getApiClient().getPersonalLectures(cacheControl);
         fetch(apiCall);
     }
 
     private void searchLectures(String query) {
-        Call<LecturesResponse> apiCall = apiClient.searchLectures(query);
+        Call<LecturesResponse> apiCall = getApiClient().searchLectures(query);
         fetch(apiCall);
     }
 
     @Override
-    protected void onDownloadSuccessful(@NonNull LecturesResponse response) {
+    public void onDownloadSuccessful(@NonNull LecturesResponse response) {
         if (response.getLectures().isEmpty()) {
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
         } else {
