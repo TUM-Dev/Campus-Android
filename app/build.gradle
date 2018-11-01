@@ -37,6 +37,9 @@ android {
         targetSdkVersion 28
         versionCode 551
         versionName "2.1-dev"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
         kapt.arguments {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
@@ -70,7 +73,6 @@ android {
         }
     }
     sourceSets {
-        androidTest.assets.srcDirs += files("$projectDir/src/test/java".toString())
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 }
@@ -147,13 +149,17 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     
-    // Used for testing
+    // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testImplementation 'androidx.room:room-testing:2.1.0-alpha02'
-    testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+    testImplementation 'com.android.support.test:rules:1.0.2'
+    testImplementation 'com.android.support.test:runner:1.0.2'
+    testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "org.robolectric:robolectric:4.0.1"
 
     // TicketSale
     implementation 'com.stripe:stripe-android:6.1.2'
