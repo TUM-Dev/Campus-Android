@@ -5,12 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.CalendarContract
-import androidx.fragment.app.Fragment
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.appcompat.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
@@ -85,7 +85,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onResume() {
         super.onResume()
         event?.let {
-            if (!eventsController.isEventBooked(event) && isEventImminent(event as Event)) {
+            if (!eventsController.isEventBooked(it) && isEventImminent(it)) {
                 ticketButton.visibility = View.GONE
             }
         }
@@ -97,7 +97,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
      */
     private fun isEventImminent(event: Event): Boolean {
         val eventStart = DateTime(event.startTime)
-        return eventStart.minusHours(4).isAfterNow
+        return DateTime.now().isAfter(eventStart.minusHours(4))
     }
 
     private fun showEventImminentDialog() {
