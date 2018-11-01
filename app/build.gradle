@@ -96,12 +96,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
     // Android arch components
-    implementation 'androidx.room:room-rxjava2:2.1.0-alpha01'
-    implementation 'androidx.room:room-runtime:2.1.0-alpha01'
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha02'
+    implementation 'androidx.room:room-runtime:2.1.0-alpha02'
     implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
-    kapt 'androidx.room:room-compiler:2.1.0-alpha01'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha02'
 
     // Play services
     implementation 'com.google.android.gms:play-services-base:16.0.1'
@@ -153,7 +153,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
-    testImplementation 'androidx.room:room-testing:2.1.0-alpha01'
+    testImplementation 'androidx.room:room-testing:2.1.0-alpha02'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
     testImplementation 'com.android.support.test:rules:1.0.2'
