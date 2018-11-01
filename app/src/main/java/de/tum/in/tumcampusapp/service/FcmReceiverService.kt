@@ -118,7 +118,9 @@ class FcmReceiverService : FirebaseMessagingService() {
         genericNotification?.let {
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val note = it.notification
-            notificationManager.notify(it.notificationIdentification, note)
+            if (note != null) {
+                notificationManager.notify(it.notificationIdentification, note)
+            }
         }
     }
 
