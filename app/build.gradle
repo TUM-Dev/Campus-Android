@@ -151,7 +151,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
-    testImplementation 'androidx.room:room-testing:2.1.0-alpha01'
+    testImplementation 'androidx.room:room-testing:2.1.0-alpha02'
     testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
