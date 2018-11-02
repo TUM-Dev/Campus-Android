@@ -68,30 +68,6 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
         }
     }
 
-    /**
-     * Create a legacy chat notification from a bundle
-     */
-    constructor(extras: Bundle, context: Context, notification: Int) :
-            this(context = context, notification = notification, fcmChatPayload = FcmChat().apply {
-                // Get the update details
-                room = Integer.parseInt(extras.getString("room")!!)
-                member = Integer.parseInt(extras.getString("member")!!)
-                // Message part is only present if we have a updated message
-                message = if (extras.containsKey("message")) {
-                    Integer.parseInt(extras.getString("message")!!)
-                } else {
-                    -1
-                }
-            })
-
-    /**
-     * Create a chat notification from a json payload
-     * @param payload JSON encoded FcmChat payload
-     */
-    constructor(payload: String, context: Context, notification: Int) :
-            this(context = context, notification = notification,
-                    fcmChatPayload = Gson().fromJson(payload, FcmChat::class.java))
-
     @SuppressLint("CheckResult")
     private fun getNewMessages(chatRoom: ChatRoom, messageId: Int) {
         val verification = TUMCabeVerification.create(context, null) ?: return
@@ -187,5 +163,35 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
 
     companion object {
         private const val NOTIFICATION_ID = CardManager.CARD_CHAT
+
+        /**
+         * Create a legacy chat notification from a bundle
+         */
+        fun fromBundle(extras: Bundle, context: Context, notification: Int): ChatPushNotification? {
+            val room = extras.getString("room")?.toIntOrNull() ?: return null
+            val member = extras.getString("member")?.toIntOrNull() ?: return null
+            // Message part is only present if we have a updated message
+            val message = extras.getString("message")?.toIntOrNull() ?: -1
+
+            return ChatPushNotification(context = context, notification = notification,
+                    fcmChatPayload = FcmChat().apply {
+                        this.room = room
+                        this.member = member
+                        this.message = message
+                    })
+        }
+
+
+        /**
+         * Create a chat notification from a json payload
+         * @param payload JSON encoded FcmChat payload
+         */
+        fun fromJson(payload: String, context: Context, notification: Int): ChatPushNotification? {
+            val fcmChatPayload = tryOrNull {
+                Gson().fromJson(payload, FcmChat::class.java)
+            } ?: return null
+            return ChatPushNotification(context = context, notification = notification,
+                    fcmChatPayload = fcmChatPayload)
+        }
     }
 }

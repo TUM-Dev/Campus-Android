@@ -56,7 +56,7 @@ class FcmReceiverService : FirebaseMessagingService() {
     private fun createPushNotificationOfType(type: Int, notificationId: Int, payload: String):
             PushNotification? {
         return when (type) {
-            CHAT_NOTIFICATION -> ChatPushNotification(payload, this, notificationId)
+            CHAT_NOTIFICATION -> ChatPushNotification.fromJson(payload, this, notificationId)
             UPDATE -> UpdatePushNotification(payload, this, notificationId)
             ALERT -> AlarmPushNotification(payload, this, notificationId)
             else -> { // Nothing to do, just confirm the retrieved notificationId
@@ -81,7 +81,9 @@ class FcmReceiverService : FirebaseMessagingService() {
             val bundle = Bundle().apply {
                 data.entries.forEach { entry -> putString(entry.key, entry.value) }
             }
-            postNotification(ChatPushNotification(bundle, this, -1))
+            ChatPushNotification.fromBundle(bundle, this, -1)?.also {
+                postNotification(it)
+            }
         } catch (e: Exception) {
             Utils.log(e)
         }
