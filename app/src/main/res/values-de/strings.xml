@@ -101,7 +101,6 @@
     <string name="info_title">Neuigkeiten:</string>
 
     <!-- Kino -->
-    <string name="kino">TU Kino</string>
     <string name="imdb_rating">IMDb-Wertung</string>
     <string name="year">Erscheinungsjahr</string>
     <string name="runtime">Laufzeit</string>
