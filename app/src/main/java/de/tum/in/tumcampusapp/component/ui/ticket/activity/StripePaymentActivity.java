@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.view.autofill.AutofillManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ public class StripePaymentActivity extends BaseActivity {
     private EditText cardholderEditText;
     private ViewSwitcher selectMethodSwitcher;
     private MaterialButton purchaseButton;
+    private CheckBox termsOfServiceCheckBox;
 
     private PaymentSession paymentSession;
     private boolean didSelectPaymentMethod;
@@ -121,11 +123,16 @@ public class StripePaymentActivity extends BaseActivity {
         purchaseButton = findViewById(R.id.complete_purchase_button);
         purchaseButton.setText(purchaseButtonString);
         purchaseButton.setOnClickListener(v -> purchaseTicket());
+
+        termsOfServiceCheckBox = findViewById(R.id.terms_of_service_checkbox);
+        termsOfServiceCheckBox.setOnClickListener((view) -> updateBuyButton());
     }
 
     private void updateBuyButton() {
         boolean hasCardholder = !cardholderEditText.getText().toString().isEmpty();
-        boolean enabled = hasCardholder && didSelectPaymentMethod;
+        boolean enabled = hasCardholder
+                && didSelectPaymentMethod
+                && termsOfServiceCheckBox.isChecked();
         float alpha = enabled ? 1.0f : 0.5f;
 
         purchaseButton.setEnabled(enabled);
@@ -296,7 +303,7 @@ public class StripePaymentActivity extends BaseActivity {
 
             @Override
             public void onPaymentSessionDataChanged(@NonNull PaymentSessionData data) {
-                purchaseButton.setEnabled(true);
+                updateBuyButton();
                 selectMethodSwitcher.setEnabled(true);
             }
 
