@@ -3,11 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import com.google.android.material.button.MaterialButton;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.transition.TransitionManager;
@@ -18,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.google.android.material.button.MaterialButton;
 import com.stripe.android.CustomerSession;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.PaymentSession;
@@ -30,6 +26,10 @@ import com.stripe.android.view.PaymentMethodsActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
@@ -111,7 +111,11 @@ public class StripePaymentActivity extends BaseActivity {
         });
 
         selectMethodSwitcher = findViewById(R.id.select_payment_method_switcher);
-        selectMethodSwitcher.setOnClickListener(v -> paymentSession.presentPaymentMethodSelection());
+        selectMethodSwitcher.setOnClickListener(v -> {
+            if (paymentSession != null) {
+                paymentSession.presentPaymentMethodSelection();
+            }
+        });
 
         String purchaseButtonString = getString(R.string.buy_format_string, ticketPrice);
         purchaseButton = findViewById(R.id.complete_purchase_button);
