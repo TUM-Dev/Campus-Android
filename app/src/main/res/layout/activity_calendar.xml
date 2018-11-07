@@ -33,10 +33,11 @@
                         android:id="@+id/weekView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:columnGap="8dp"
+                        app:columnGap="2dp"
                         app:dayBackgroundColor="@android:color/white"
                         app:eventCornerRadius="4dp"
-                        app:eventPadding="6dp"
+                        app:eventMarginVertical="2dp"
+                        app:eventPadding="4dp"
                         app:eventTextColor="@android:color/white"
                         app:headerColumnBackground="#ffffffff"
                         app:headerColumnPadding="8dp"
@@ -44,15 +45,14 @@
                         app:headerRowBackgroundColor="@android:color/white"
                         app:headerRowPadding="12dp"
                         app:hourHeight="60dp"
-                        app:noOfVisibleDays="3"
                         app:nowLineColor="@color/tum_blue"
                         app:nowLineThickness="1dp"
-                        app:eventMarginVertical="@dimen/material_tiny_padding"
+                        app:overlappingEventGap="1dp"
                         app:showNowLine="true"
-                        app:singleDayHorizontalMargin="@dimen/material_small_padding"
-                        app:textSize="14sp"
+                        app:singleDayHorizontalMargin="2dp"
                         app:todayBackgroundColor="#1848adff"
-                        app:todayHeaderTextColor="@color/color_primary" />
+                        app:todayHeaderTextColor="@color/color_primary"
+                        app:xScrollingSpeed="1" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/todayButton"
