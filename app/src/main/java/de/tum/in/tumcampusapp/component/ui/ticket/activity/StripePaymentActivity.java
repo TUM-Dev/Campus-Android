@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -59,6 +60,8 @@ public class StripePaymentActivity extends BaseActivity {
                                // we need the ID to init the purchase
 
     private String ticketPrice;
+    private String termsOfServiceLink;
+    private String stripePublishableKey;
 
     public StripePaymentActivity() {
         super(R.layout.activity_payment_stripe);
@@ -70,8 +73,13 @@ public class StripePaymentActivity extends BaseActivity {
 
         ticketPrice = getIntent().getStringExtra(Const.KEY_TICKET_PRICE);
         ticketHistory = getIntent().getIntExtra(Const.KEY_TICKET_HISTORY, -1);
+        termsOfServiceLink = getIntent().getStringExtra(Const.KEY_TERMS_LINK);
+        stripePublishableKey = getIntent().getStringExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY);
 
-        if (ticketHistory < 0 || ticketPrice == null) {
+        if (ticketHistory < 0
+                || ticketPrice == null
+                || termsOfServiceLink.isEmpty()
+                || stripePublishableKey == null) {
             Utils.showToast(this, R.string.error_something_wrong);
             finish();
             return;
@@ -126,6 +134,12 @@ public class StripePaymentActivity extends BaseActivity {
 
         termsOfServiceCheckBox = findViewById(R.id.terms_of_service_checkbox);
         termsOfServiceCheckBox.setOnClickListener((view) -> updateBuyButton());
+
+        findViewById(R.id.terms_of_service_button).setOnClickListener((view -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+            browserIntent.setData(Uri.parse(termsOfServiceLink));
+            view.getContext().startActivity(browserIntent);
+        }));
     }
 
     private void updateBuyButton() {
@@ -246,7 +260,7 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
     private void initStripeSession() {
-        PaymentConfiguration.init(Const.STRIPE_API_PUBLISHABLE_KEY);
+        PaymentConfiguration.init(stripePublishableKey);
         initCustomerSession();
     }
 

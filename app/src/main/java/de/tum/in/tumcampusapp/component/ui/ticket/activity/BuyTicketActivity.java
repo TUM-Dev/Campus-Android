@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +14,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
@@ -204,6 +204,8 @@ public class BuyTicketActivity extends BaseActivity {
         Intent intent = new Intent(this, StripePaymentActivity.class);
         intent.putExtra(Const.KEY_TICKET_PRICE, ticketType.getFormattedPrice());
         intent.putExtra(Const.KEY_TICKET_HISTORY, response.getTicketHistory());
+        intent.putExtra(Const.KEY_TERMS_LINK, ticketType.getPaymentInfo().getTermsLink());
+        intent.putExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY, ticketType.getPaymentInfo().getStripePublicKey());
         startActivity(intent);
     }
 
