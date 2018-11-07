@@ -173,7 +173,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/terms_of_service_button"
-                        style="@style/Widget.MaterialComponents.Button.Icon"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/material_small_padding"
