@@ -705,4 +705,7 @@ Signature: %5$s</string>
     <string name="next_lecture_hide">Hide</string>
     <string name="next_lecture_show_more">Show %d more …</string>
     <string name="show_in_calendar">Show in Calendar</string>
+
+    <string name="stripe_terms_of_service_checkbox">I agree to the terms of service.</string>
+    <string name="stripe_terms_of_service_button">Terms of Service</string>
 </resources>
