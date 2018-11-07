@@ -173,12 +173,14 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/terms_of_service_button"
+                        style="@style/Widget.MaterialComponents.Button.Icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/ic_external_link"
+                        android:layout_marginStart="@dimen/material_small_padding"
                         android:text="@string/stripe_terms_of_service_button"
                         android:textAllCaps="false"
-                        app:cornerRadius="@dimen/material_corner_radius"/>
+                        app:cornerRadius="@dimen/material_corner_radius"
+                        app:icon="@drawable/ic_external_link" />
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
