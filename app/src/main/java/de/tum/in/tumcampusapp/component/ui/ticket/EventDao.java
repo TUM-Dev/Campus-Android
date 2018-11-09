@@ -1,20 +1,19 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
+import java.util.List;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-
-import java.util.List;
-
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 
 @Dao
 public interface EventDao {
 
-    @Query("SELECT * FROM events ORDER BY start_time")
-    LiveData<List<Event>> getAll();
+    @Query("SELECT * FROM events WHERE start_time > date('now') ORDER BY start_time")
+    LiveData<List<Event>> getAllFutureEvents();
 
     @Query("SELECT * FROM events WHERE start_time > date('now') ORDER BY start_time LIMIT 1")
     Event getNextEvent();
