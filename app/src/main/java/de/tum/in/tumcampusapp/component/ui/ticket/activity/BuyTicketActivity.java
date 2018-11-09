@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +14,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
@@ -178,10 +178,17 @@ public class BuyTicketActivity extends BaseActivity {
                         // ResponseBody can be null if the user has already bought a ticket
                         // but has not fetched it from the server yet
                         TicketReservationResponse reservationResponse = response.body();
-                        if (response.isSuccessful() && reservationResponse != null) {
+                        if (response.isSuccessful()
+                                && reservationResponse != null
+                                && reservationResponse.getError() == null) {
                             handleTicketReservationSuccess(ticketType, reservationResponse);
                         } else {
-                            handleTicketNotFetched();
+                            if (reservationResponse == null || !response.isSuccessful()) {
+                                handleTicketNotFetched();
+                            } else {
+                                handleTicketReservationFailure(R.string.event_imminent_error);
+                                finish();
+                            }
                         }
                     }
 
