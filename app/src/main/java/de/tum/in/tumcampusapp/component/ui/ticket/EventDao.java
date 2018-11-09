@@ -27,7 +27,7 @@ public interface EventDao {
     @Query("UPDATE events SET dismissed = 1 WHERE id = :eventId")
     void setDismissed(int eventId);
 
-    @Query("DELETE FROM events WHERE start_time < date('now')")
+    @Query("DELETE FROM events WHERE end_time < date('now')")
     void removePastEvents();
 
     @Query("DELETE FROM events")
