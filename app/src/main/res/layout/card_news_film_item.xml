@@ -76,6 +76,36 @@
             app:layout_constraintStart_toEndOf="@id/news_img"
             tools:text="Source Title" />
 
+        <ImageView
+            android:id="@+id/tickets_icon"
+            android:layout_width="@dimen/icon_default"
+            android:layout_height="@dimen/icon_default"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
+            android:src="@drawable/tickets"
+            android:tint="@color/color_primary"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/news_img"
+            app:layout_constraintTop_toBottomOf="@id/news_src_date" />
+
+        <TextView
+            android:id="@+id/tickets_available"
+            style="@style/CardDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/material_tiny_padding"
+            android:layout_marginTop="@dimen/material_small_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:textColor="@color/color_primary"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tickets_icon"
+            app:layout_constraintTop_toBottomOf="@id/news_src_date"
+            tools:text="@string/tickets_available_here" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
