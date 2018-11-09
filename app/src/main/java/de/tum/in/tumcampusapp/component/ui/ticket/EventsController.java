@@ -1,15 +1,15 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import android.content.Context;
-import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
@@ -144,7 +144,7 @@ public class EventsController implements ProvidesCard {
     }
 
     public LiveData<List<Event>> getEvents() {
-        return eventDao.getAll();
+        return eventDao.getAllFutureEvents();
     }
 
     /**
