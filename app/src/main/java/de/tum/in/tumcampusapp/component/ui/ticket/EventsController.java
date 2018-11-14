@@ -1,15 +1,15 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import android.content.Context;
-import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
@@ -19,6 +19,7 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -36,6 +37,7 @@ public class EventsController implements ProvidesCard {
 
     private final EventDao eventDao;
     private final TicketDao ticketDao;
+    private final KinoDao kinoDao;
     private final TicketTypeDao ticketTypeDao;
 
     /**
@@ -48,6 +50,7 @@ public class EventsController implements ProvidesCard {
         TcaDb db = TcaDb.getInstance(context);
         eventDao = db.eventDao();
         ticketDao = db.ticketDao();
+        kinoDao = db.kinoDao();
         ticketTypeDao = db.ticketTypeDao();
     }
 
@@ -170,6 +173,13 @@ public class EventsController implements ProvidesCard {
         });
 
         return events;
+    }
+
+    public boolean isKinoEvent(Event event) {
+        // TODO(bronger) return event.getTuFilm() != -1;
+        String eventLink = "https://www." + event.getLink().substring(8);
+        int nrOfKinoEvents = eventDao.getKinoCountForEvent(eventLink);
+        return nrOfKinoEvents != 0;
     }
 
     public boolean isEventBooked(Event event) {
