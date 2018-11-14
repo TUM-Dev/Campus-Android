@@ -31,6 +31,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * This activity shows an overview of the available tickets and a selection of all ticket types
+ * Directs the user to the PaymentConfirmationActivity or back to EventDetailsActivity
+ */
 public class BuyTicketActivity extends BaseActivity {
 
     private EventsController eventsController;
