@@ -16,8 +16,18 @@ public interface EventDao {
     @Query("SELECT * FROM events WHERE start_time > date('now') ORDER BY start_time")
     LiveData<List<Event>> getAllFutureEvents();
 
-    @Query("SELECT * FROM events WHERE start_time > date('now') ORDER BY start_time LIMIT 1")
-    Event getNextEvent();
+    // TODO(bronger) replace with AND events.tu_film != -1
+    @Query("SELECT * " +
+            "FROM events " +
+            "WHERE start_time > date('now') " +
+            "AND start_time NOT IN " +
+                "(SELECT datetime(date) as date FROM news " +
+                "WHERE datetime(date) > datetime('now') " +
+                "AND src = 2 " +
+                "ORDER BY datetime(date)) " +
+            "ORDER BY start_time " +
+            "LIMIT 1")
+    Event getNextEventWithoutMovie();
 
     @Query("SELECT * FROM events where id = :id")
     Event getEventById(int id);
