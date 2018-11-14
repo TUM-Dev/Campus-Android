@@ -61,4 +61,11 @@ public interface NewsDao {
 
     @Query("DELETE FROM news")
     void flush();
+
+    @Query("SELECT count(*) " +
+            "FROM news, kino, events " +
+            "WHERE  news.id =:newsId " +
+            "AND news.link = kino.link " +
+            "AND kino.id = events.tu_film ")
+    int hasEventAssociated(String newsId);
 }
