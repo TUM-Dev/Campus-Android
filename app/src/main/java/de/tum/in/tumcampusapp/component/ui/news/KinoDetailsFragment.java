@@ -29,6 +29,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
@@ -46,6 +47,7 @@ import retrofit2.Response;
 public class KinoDetailsFragment extends Fragment {
 
     private View rootView;
+    private Event event;
 
     private KinoViewModel kinoViewModel;
     private final CompositeDisposable disposables = new CompositeDisposable();
@@ -74,6 +76,15 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (event != null && EventHelper.Companion.isEventImminent(event)) {
+            rootView.findViewById(R.id.buyTicketButton).setVisibility(View.GONE);
+            rootView.findViewById(R.id.eventInformation).setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -85,10 +96,15 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     private void showEventTicketDetails(Event event) {
+        this.event = event;
+        if (EventHelper.Companion.isEventImminent(event)) {
+            return;
+        }
         rootView.findViewById(R.id.eventInformation).setVisibility(View.VISIBLE);
         MaterialButton buyButton = rootView.findViewById(R.id.buyTicketButton);
         buyButton.setVisibility(View.VISIBLE);
-        // TODO(bronger) add onClickListener
+        buyButton.setOnClickListener(
+                view -> EventHelper.Companion.buyTicket(this.event, buyButton, getContext()));
 
         ((TextView) rootView.findViewById(R.id.locationTextView)).setText(event.getLocality());
         loadAvailableTicketCount(event);

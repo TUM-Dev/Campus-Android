@@ -14,10 +14,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CreateEventActivity
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
-import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
@@ -28,7 +27,6 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.into
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
-import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -85,30 +83,9 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onResume() {
         super.onResume()
         event?.let {
-            if (!eventsController.isEventBooked(it) && isEventImminent(it)) {
+            if (!eventsController.isEventBooked(it) && EventHelper.isEventImminent(it)) {
                 ticketButton.visibility = View.GONE
             }
-        }
-    }
-
-    /**
-     * Checks if the event starts less than 4 hours from now.
-     * (-> user won't be able to buy tickets anymore)
-     */
-    private fun isEventImminent(event: Event): Boolean {
-        val eventStart = DateTime(event.startTime)
-        return DateTime.now().isAfter(eventStart.minusHours(4))
-    }
-
-    private fun showEventImminentDialog() {
-        context?.let {
-            val dialog = AlertDialog.Builder(it)
-                    .setTitle(R.string.error)
-                    .setMessage(R.string.event_imminent_error)
-                    .setPositiveButton(R.string.ok, null)
-                    .create()
-            dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            dialog.show()
         }
     }
 
@@ -130,7 +107,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             ticketButton.setOnClickListener { showTicket(event) }
         } else {
             ticketButton.text = getString(R.string.buy_ticket)
-            ticketButton.setOnClickListener { buyTicket(event) }
+            ticketButton.setOnClickListener { EventHelper.buyTicket(event, ticketButton, context) }
         }
 
         context?.let {
@@ -182,39 +159,6 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun showTicket(event: Event) {
         val intent = Intent(context, ShowTicketActivity::class.java).apply {
-            putExtra(KEY_EVENT_ID, event.id)
-        }
-        startActivity(intent)
-    }
-
-    private fun buyTicket(event: Event) {
-        val c = context ?: return
-
-        if (isEventImminent(event)) {
-            showEventImminentDialog()
-            ticketButton.visibility = View.GONE
-            return
-        }
-
-        val lrzId = Utils.getSetting(c, Const.LRZ_ID, "")
-        val chatRoomName = Utils.getSetting(c, Const.CHAT_ROOM_DISPLAY_NAME, "")
-        val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)
-
-        if (!isLoggedIn || lrzId.isEmpty() || chatRoomName.isEmpty()) {
-            context?.let {
-                val dialog = AlertDialog.Builder(it)
-                        .setTitle(R.string.error)
-                        .setMessage(R.string.not_logged_in_error)
-                        .setPositiveButton(R.string.ok) { _, _ -> activity?.finish() }
-                        .create()
-
-                dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-                dialog.show()
-            }
-            return
-        }
-
-        val intent = Intent(context, BuyTicketActivity::class.java).apply {
             putExtra(KEY_EVENT_ID, event.id)
         }
         startActivity(intent)
