@@ -36,9 +36,8 @@ public interface EventDao {
 
     // TODO(bronger) use events.tu_film instead
     @Query("SELECT events.* FROM events, kino " +
-            "WHERE kino.id =:movieId " +
-            "AND kino.link = events.link " +
+            "WHERE events.link =:kinoLink " +
             "LIMIT 1")
-    Flowable<Event> getEventByMovie(String movieId);
+    Flowable<Event> getEventByMovie(String kinoLink);
 
 }
