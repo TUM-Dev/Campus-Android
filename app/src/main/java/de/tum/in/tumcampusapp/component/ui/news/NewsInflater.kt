@@ -11,6 +11,9 @@ class NewsInflater(context: Context) {
     private val newsSourcesDao: NewsSourcesDao by lazy {
         TcaDb.getInstance(context).newsSourcesDao()
     }
+    private val newsDao: NewsDao by lazy {
+        TcaDb.getInstance(context).newsDao()
+    }
 
     fun onCreateNewsView(parent: ViewGroup,
                          layoutId: Int, showOptionsButton: Boolean = true): NewsViewHolder {
@@ -20,7 +23,9 @@ class NewsInflater(context: Context) {
 
     fun onBindNewsView(viewHolder: NewsViewHolder, newsItem: News) {
         val newsSource = newsSourcesDao.getNewsSource(newsItem.src.toInt())
-        viewHolder.bind(newsItem, newsSource)
+        val nrOfEvents = newsDao.hasEventAssociated(newsItem.id)
+        val hasEvents = nrOfEvents != 0
+        viewHolder.bind(newsItem, newsSource, hasEvents)
     }
 
 }
