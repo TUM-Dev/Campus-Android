@@ -40,4 +40,9 @@ public interface EventDao {
             "LIMIT 1")
     Flowable<Event> getEventByMovie(String kinoLink);
 
+    @Query("SELECT count(*) FROM events, kino " +
+            "WHERE kino.link =:eventLink " +
+            "LIMIT 1")
+    int getKinoCountForEvent(String eventLink);
+
 }
