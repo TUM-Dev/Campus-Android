@@ -42,17 +42,37 @@
 
         </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/trailerButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/material_default_padding"
-            android:text="@string/watch_trailer"
-            android:textAllCaps="false"
-            android:textColor="@color/color_primary"
-            app:cornerRadius="@dimen/material_corner_radius" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/trailerButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/material_small_padding"
+                android:text="@string/watch_trailer"
+                android:textAllCaps="false"
+                android:textColor="@color/color_primary"
+                app:cornerRadius="@dimen/material_corner_radius" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buyTicketButton"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/material_small_padding"
+                android:text="@string/buy_ticket"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                app:cornerRadius="@dimen/material_corner_radius" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,6 +116,65 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text_dark_primary"
                 tools:text="7 / 10" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/eventInformation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:background="@color/list_divider" />
+
+            <TextView
+                android:id="@+id/remainingTicketsHeaderTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/remaining_tickets"
+                android:textColor="@color/color_primary" />
+
+            <TextView
+                android:id="@+id/remainingTicketsTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:lineSpacingMultiplier="1.1"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text_dark_primary"
+                tools:text="Actors" />
+
+            <TextView
+                android:id="@+id/locationHeaderTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/location"
+                android:textColor="@color/color_primary" />
+
+            <TextView
+                android:id="@+id/locationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_default_padding"
+                android:layout_marginEnd="@dimen/material_default_padding"
+                android:lineSpacingMultiplier="1.1"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text_dark_primary"
+                tools:text="Actors" />
 
         </LinearLayout>
 

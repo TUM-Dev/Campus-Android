@@ -8,6 +8,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import io.reactivex.Flowable;
 
 @Dao
 public interface EventDao {
@@ -32,5 +33,12 @@ public interface EventDao {
 
     @Query("DELETE FROM events")
     void removeAll();
+
+    // TODO(bronger) use events.tu_film instead
+    @Query("SELECT events.* FROM events, kino " +
+            "WHERE kino.id =:movieId " +
+            "AND kino.link = events.link " +
+            "LIMIT 1")
+    Flowable<Event> getEventByMovie(String movieId);
 
 }
