@@ -214,8 +214,8 @@ public class EventsController implements ProvidesCard {
     public List<Card> getCards(@NonNull @NotNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
-        // Only add the next upcoming event for now
-        Event event = eventDao.getNextEvent();
+        // Add the next upcoming event that is not the next kino event
+        Event event = eventDao.getNextEventWithoutMovie();
         if (event != null) {
             EventCard eventCard = new EventCard(context);
             eventCard.setEvent(event);
