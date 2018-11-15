@@ -1,15 +1,15 @@
 package de.tum.in.tumcampusapp.component.ui.chat.model;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.joda.time.DateTime;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
@@ -27,7 +27,7 @@ public class ChatMessage implements Parcelable {
     private int previous;
     private int room;
     private String text;
-    private String timestamp;
+    private DateTime timestamp;
 
     private String signature;
     private ChatMember member;
@@ -61,7 +61,7 @@ public class ChatMessage implements Parcelable {
         this.member = member;
         this.sendingStatus = STATUS_SENDING;
         this.previous = 0;
-        this.timestamp = DateTimeUtils.INSTANCE.getDateTimeString(DateTime.now());
+        this.timestamp = DateTime.now();
     }
 
     @Ignore
@@ -70,7 +70,7 @@ public class ChatMessage implements Parcelable {
         this.id = id;
         this.text = text;
         this.member = member;
-        this.timestamp = DateTimeUtils.INSTANCE.getDateTimeString(timestamp);
+        this.timestamp = timestamp;
         this.sendingStatus = STATUS_SENDING;
         this.previous = previous;
     }
@@ -80,7 +80,7 @@ public class ChatMessage implements Parcelable {
         previous = in.readInt();
         room = in.readInt();
         text = in.readString();
-        timestamp = in.readString();
+        timestamp = DateTimeUtils.INSTANCE.getDateTime(in.readString());
         signature = in.readString();
         member = in.readParcelable(ChatMember.class.getClassLoader());
         sendingStatus = in.readInt();
@@ -146,19 +146,16 @@ public class ChatMessage implements Parcelable {
         this.member = member;
     }
 
-    public String getTimestamp() {
+
+    public DateTime getTimestamp() {
         return timestamp;
     }
 
-    public DateTime getDateTime() {
-        return DateTimeUtils.INSTANCE.getDate(timestamp);
-    }
-
     public String getFormattedTimestamp(Context context) {
-        return DateTimeUtils.INSTANCE.formatTimeOrDay(getDateTime(), context);
+        return DateTimeUtils.INSTANCE.formatTimeOrDay(timestamp, context);
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(DateTime timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -193,7 +190,7 @@ public class ChatMessage implements Parcelable {
         parcel.writeInt(id);
         parcel.writeInt(previous);
         parcel.writeString(text);
-        parcel.writeString(timestamp);
+        parcel.writeString(DateTimeUtils.INSTANCE.getDateTimeString(timestamp));
         parcel.writeString(signature);
         parcel.writeParcelable(member, flags);
         parcel.writeInt(sendingStatus);
