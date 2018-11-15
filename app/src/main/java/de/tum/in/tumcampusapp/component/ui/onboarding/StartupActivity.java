@@ -5,13 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -19,6 +12,13 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
@@ -66,6 +66,8 @@ public class StartupActivity extends AppCompatActivity {
         // Only use Crashlytics if we are not compiling debug
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
+            Crashlytics.setString("TUMID", Utils.getSetting(this, Const.LRZ_ID, ""));
+            Crashlytics.setString("DeviceID", AuthenticationManager.getDeviceID(this));
         }
 
         initEasterEgg();
