@@ -84,13 +84,11 @@
             android:layout_marginTop="@dimen/material_small_padding"
             android:src="@drawable/tickets"
             android:tint="@color/color_primary"
-            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@id/news_img"
             app:layout_constraintTop_toBottomOf="@id/news_src_date" />
 
         <TextView
             android:id="@+id/tickets_available"
-            style="@style/CardDetails"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -98,12 +96,11 @@
             android:layout_marginTop="@dimen/material_small_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginBottom="@dimen/material_default_padding"
+            android:text="@string/tickets_available_here"
             android:textColor="@color/color_primary"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tickets_icon"
-            app:layout_constraintTop_toBottomOf="@id/news_src_date"
-            tools:text="@string/tickets_available_here" />
+            app:layout_constraintTop_toBottomOf="@id/news_src_date"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
