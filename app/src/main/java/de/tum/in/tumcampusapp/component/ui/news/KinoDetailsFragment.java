@@ -144,10 +144,8 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     private void showMovieDetails(Kino kino) {
-        // TODO(bronger) replace kino.link with kino.id as soon as event has a reference to the movie
-        String link = kino.getLink().replace("www.", "");
         Disposable disposable = kinoViewModel
-                .getEventByMovieId(link)
+                .getEventByMovieId(kino.getId())
                 .subscribe(this::showEventTicketDetails);
         disposables.add(disposable);
 

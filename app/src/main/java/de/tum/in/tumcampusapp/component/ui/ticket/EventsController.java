@@ -175,13 +175,6 @@ public class EventsController implements ProvidesCard {
         return events;
     }
 
-    public boolean isKinoEvent(Event event) {
-        // TODO(bronger) return event.getTuFilm() != -1;
-        String eventLink = "https://www." + event.getLink().substring(8);
-        int nrOfKinoEvents = eventDao.getKinoCountForEvent(eventLink);
-        return nrOfKinoEvents != 0;
-    }
-
     public boolean isEventBooked(Event event) {
         Ticket ticket = ticketDao.getByEventId(event.getId());
         return ticket != null;
