@@ -40,7 +40,7 @@ public class ChatMessage implements Parcelable {
      */
     @Ignore
     public ChatMessage() {
-        this.sendingStatus = STATUS_SENDING;
+        this.sendingStatus = STATUS_SENT;
     }
 
     @Ignore

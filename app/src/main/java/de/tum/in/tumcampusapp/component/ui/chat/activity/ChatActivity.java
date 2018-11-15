@@ -334,6 +334,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
     private void sendMessage(String text) {
         final ChatMessage message = new ChatMessage(text, currentChatMember);
         message.setRoom(currentChatRoom.getId());
+        message.setSendingStatus(ChatMessage.STATUS_SENDING);
         chatHistoryAdapter.add(message);
         chatMessageViewModel.addToUnsent(message);
 
