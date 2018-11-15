@@ -49,8 +49,8 @@ data class Event(
         @ColumnInfo(name = "dismissed")
         var dismissed: Int = 0,
         var link: String = "",
-        @ColumnInfo(name = "tu_film")
-        var tuFilm: Int = -1
+        var kino: Int = -1,
+        var news: Int = -1
 ) : Parcelable, Comparable<Event> {
 
     // Unsafe calls are only ok because we control writeToParcel().
@@ -66,7 +66,7 @@ data class Event(
             eventUrl = parcel.readString()!!,
             dismissed = parcel.readInt(),
             link = parcel.readString()!!,
-            tuFilm = parcel.readInt())
+            kino = parcel.readInt())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
@@ -79,7 +79,7 @@ data class Event(
         parcel.writeString(eventUrl)
         parcel.writeInt(dismissed)
         parcel.writeString(link)
-        parcel.writeInt(tuFilm)
+        parcel.writeInt(kino)
     }
 
     fun getFormattedStartDateTime(context: Context): String {

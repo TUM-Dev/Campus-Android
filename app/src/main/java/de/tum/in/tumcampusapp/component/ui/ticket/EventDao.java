@@ -16,15 +16,10 @@ public interface EventDao {
     @Query("SELECT * FROM events WHERE start_time > date('now') ORDER BY start_time")
     LiveData<List<Event>> getAllFutureEvents();
 
-    // TODO(bronger) replace with AND events.tu_film != -1
     @Query("SELECT * " +
             "FROM events " +
             "WHERE start_time > date('now') " +
-            "AND start_time NOT IN " +
-                "(SELECT datetime(date) as date FROM news " +
-                "WHERE datetime(date) > datetime('now') " +
-                "AND src = 2 " +
-                "ORDER BY datetime(date)) " +
+            "AND events.kino = -1 " +
             "ORDER BY start_time " +
             "LIMIT 1")
     Event getNextEventWithoutMovie();
@@ -44,11 +39,10 @@ public interface EventDao {
     @Query("DELETE FROM events")
     void removeAll();
 
-    // TODO(bronger) use events.tu_film instead
     @Query("SELECT events.* FROM events, kino " +
-            "WHERE events.link =:kinoLink " +
+            "WHERE events.kino =:kinoId " +
             "LIMIT 1")
-    Flowable<Event> getEventByMovie(String kinoLink);
+    Flowable<Event> getEventByMovie(String kinoId);
 
     @Query("SELECT count(*) FROM events, kino " +
             "WHERE kino.link =:eventLink " +

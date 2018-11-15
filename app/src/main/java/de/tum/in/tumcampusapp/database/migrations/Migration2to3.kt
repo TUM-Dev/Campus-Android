@@ -17,7 +17,8 @@ class Migration2to3 : Migration(2, 3) {
                 "`event_url` TEXT NOT NULL, " +
                 "`dismissed` INTEGER NOT NULL, " +
                 "`link` TEXT NOT NULL, " +
-                "`tu_film` INTEGER NOT NULL, " +
+                "`kino` INTEGER NOT NULL, " +
+                "`news` INTEGER NOT NULL, " +
                 "PRIMARY KEY(`id`))")
     }
 }

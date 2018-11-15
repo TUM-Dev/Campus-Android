@@ -20,7 +20,6 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
-import org.joda.time.DateTime
 
 class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_event") {
 
@@ -36,10 +35,10 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
     }
 
     override fun getNavigationDestination(): NavigationDestination? {
-        if (event != null && eventsController.isKinoEvent(event)) {
+        val event = this.event
+        if (event != null && event.kino != -1) {
             val intent = Intent(context, KinoActivity::class.java)
-            intent.putExtra(Const.KINO_DATE,
-                    DateTimeUtils.getDateTimeString(event?.startTime ?: DateTime()))
+            intent.putExtra(Const.KINO_DATE, DateTimeUtils.getDateTimeString(event.startTime))
             return SystemIntent(intent)
         }
         val bundle = Bundle().apply { putParcelable("event", event) }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "30c7d240ad4bf9c316b57d3f741c4441",
+    "identityHash": "a5c9048030f5e6acff79f00c0deb7b9e",
     "entities": [
       {
         "tableName": "Cafeteria",
@@ -312,7 +312,7 @@
       },
       {
         "tableName": "events",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `image_url` TEXT, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `locality` TEXT NOT NULL, `start_time` TEXT NOT NULL, `end_time` TEXT, `event_url` TEXT NOT NULL, `dismissed` INTEGER NOT NULL, `link` TEXT NOT NULL, `tu_film` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `image_url` TEXT, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `locality` TEXT NOT NULL, `start_time` TEXT NOT NULL, `end_time` TEXT, `event_url` TEXT NOT NULL, `dismissed` INTEGER NOT NULL, `link` TEXT NOT NULL, `kino` INTEGER NOT NULL, `news` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -375,8 +375,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "tuFilm",
-            "columnName": "tu_film",
+            "fieldPath": "kino",
+            "columnName": "kino",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "news",
+            "columnName": "news",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1241,7 +1247,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"30c7d240ad4bf9c316b57d3f741c4441\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a5c9048030f5e6acff79f00c0deb7b9e\")"
     ]
   }
 }
