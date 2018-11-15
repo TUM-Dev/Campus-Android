@@ -44,11 +44,11 @@ data class Event(
         @SerializedName("end")
         @ColumnInfo(name = "end_time")
         var endTime: DateTime? = null,
+        @SerializedName("link")
         @ColumnInfo(name = "event_url")
         var eventUrl: String = "",
         @ColumnInfo(name = "dismissed")
         var dismissed: Int = 0,
-        var link: String = "",
         var kino: Int = -1,
         var news: Int = -1
 ) : Parcelable, Comparable<Event> {
@@ -65,8 +65,8 @@ data class Event(
             endTime = parcel.readDateTime(),
             eventUrl = parcel.readString()!!,
             dismissed = parcel.readInt(),
-            link = parcel.readString()!!,
-            kino = parcel.readInt())
+            kino = parcel.readInt(),
+            news = parcel.readInt())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
@@ -78,8 +78,8 @@ data class Event(
         parcel.writeDateTime(endTime)
         parcel.writeString(eventUrl)
         parcel.writeInt(dismissed)
-        parcel.writeString(link)
         parcel.writeInt(kino)
+        parcel.writeInt(news)
     }
 
     fun getFormattedStartDateTime(context: Context): String {
