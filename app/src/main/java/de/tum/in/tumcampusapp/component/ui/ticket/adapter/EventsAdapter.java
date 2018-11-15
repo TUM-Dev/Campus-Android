@@ -93,7 +93,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         ProgressBar progressBar;
         ImageView imageView;
         TextView titleTextView;
-        TextView localityTextView;
         TextView dateTextView;
         MaterialButton ticketButton;
 
@@ -106,7 +105,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             optionsButtonGroup = view.findViewById(R.id.cardMoreIconGroup);
             imageView = view.findViewById(R.id.events_img);
             titleTextView = view.findViewById(R.id.events_title);
-            localityTextView = view.findViewById(R.id.events_src_locality);
             dateTextView = view.findViewById(R.id.events_src_date);
             ticketButton = view.findViewById(R.id.ticketButton);
         }
@@ -140,9 +138,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             String title = event.getTitle();
             title = COMPILE.matcher(title).replaceAll("");
             titleTextView.setText(title);
-
-            String locality = event.getLocality();
-            localityTextView.setText(locality);
 
             String startTime = event.getFormattedStartDateTime(itemView.getContext());
             dateTextView.setText(startTime);
