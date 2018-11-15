@@ -11,10 +11,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
@@ -28,6 +24,10 @@ import com.google.gson.Gson;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
@@ -433,7 +433,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         List<ChatMessage> unsent = chatMessageViewModel.getUnsentInChatRoom(currentChatRoom);
         messages.addAll(unsent);
 
-        Collections.sort(messages, (lhs, rhs) -> lhs.getDateTime().compareTo(rhs.getDateTime()));
+        Collections.sort(messages, (lhs, rhs) -> lhs.getTimestamp().compareTo(rhs.getTimestamp()));
         chatHistoryAdapter.updateHistory(messages);
 
         if (messages.isEmpty()) {

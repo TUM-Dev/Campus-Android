@@ -148,13 +148,12 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
                 holder.membersTextView.setVisibility(View.GONE);
             }
 
-            String timestamp = room.getTimestamp();
+            DateTime timestamp = room.getTimestamp();
             String lastMessageText = "";
 
             if (timestamp != null) {
                 // TODO: Switch to DateTime in ChatRoomAndLastMessage
-                DateTime timestampDate = DateTimeUtils.INSTANCE.getDateTime(timestamp);
-                lastMessageText = DateTimeUtils.INSTANCE.formatTimeOrDay(timestampDate, mContext);
+                lastMessageText = DateTimeUtils.INSTANCE.formatTimeOrDay(timestamp, mContext);
             }
 
             if (!lastMessageText.isEmpty()) {

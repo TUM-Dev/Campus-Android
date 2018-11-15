@@ -1,9 +1,7 @@
 package de.tum.`in`.tumcampusapp.api.app
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonParseException
+import com.google.gson.*
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.lang.reflect.Type
@@ -14,7 +12,7 @@ import java.util.*
  *
  * Allows additional date formats to be serialized.
  */
-class DateSerializer : JsonDeserializer<DateTime> {
+class DateSerializer : JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
     private val formatStrings = arrayOf(
             "yyyy-MM-dd",
             "yyyy-MM-dd HH:mm:ss",
@@ -34,5 +32,9 @@ class DateSerializer : JsonDeserializer<DateTime> {
             }
         }
         throw JsonParseException("Unparseable date: \"${json?.asString.orEmpty()}\". Supported formats: ${Arrays.toString(formatStrings)}")
+    }
+
+    override fun serialize(time: DateTime, typeOfT: Type, context: JsonSerializationContext): JsonElement {
+        return JsonPrimitive(DateTimeUtils.getDateString(time))
     }
 }
