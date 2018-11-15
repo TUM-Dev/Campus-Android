@@ -2,12 +2,16 @@ package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
+
 import com.google.android.material.button.MaterialButton;
+
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +43,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
 
+    enum Orientation {VERTICAL, HORIZONTAL}
+
     private Context mContext;
     private EventsController mEventsController;
 
@@ -52,9 +58,25 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_events_item, parent, false);
+        View view;
+        if (viewType == Orientation.HORIZONTAL.ordinal()) {
+            view = LayoutInflater.from(parent.getContext())
+                                 .inflate(R.layout.card_events_item, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext())
+                                 .inflate(R.layout.card_events_item_vertical, parent, false);
+        }
         return new EventViewHolder(view, false);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (mEvents.get(position)
+                   .getKino() != -1) {
+            return Orientation.VERTICAL.ordinal();
+        } else {
+            return Orientation.HORIZONTAL.ordinal();
+        }
     }
 
     @Override
@@ -117,26 +139,27 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
             if (showImage) {
                 Picasso.get()
-                        .load(imageUrl)
-                        .into(imageView, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                progressBar.setVisibility(GONE);
-                            }
+                       .load(imageUrl)
+                       .into(imageView, new Callback() {
+                           @Override
+                           public void onSuccess() {
+                               progressBar.setVisibility(GONE);
+                           }
 
-                            @Override
-                            public void onError(Exception e) {
-                                Utils.log(e);
-                                progressBar.setVisibility(GONE);
-                            }
-                        });
+                           @Override
+                           public void onError(Exception e) {
+                               Utils.log(e);
+                               progressBar.setVisibility(GONE);
+                           }
+                       });
             } else {
                 progressBar.setVisibility(GONE);
                 imageView.setVisibility(GONE);
             }
 
             String title = event.getTitle();
-            title = COMPILE.matcher(title).replaceAll("");
+            title = COMPILE.matcher(title)
+                           .replaceAll("");
             titleTextView.setText(title);
 
             String startTime = event.getFormattedStartDateTime(itemView.getContext());

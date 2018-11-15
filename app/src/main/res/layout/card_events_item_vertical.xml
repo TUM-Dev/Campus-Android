@@ -8,6 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/cardMoreIconGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="cardMoreIcon" />
+
         <ImageButton
             android:id="@+id/cardMoreIcon"
             style="@style/CardMoreIcon"
@@ -33,7 +39,7 @@
             tools:visibility="visible"/>
 
         <ImageView
-            android:id="@+id/event_img"
+            android:id="@+id/events_img"
             android:layout_width="160dp"
             android:layout_height="240dp"
             android:scaleType="centerCrop"
@@ -48,10 +54,10 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:indeterminate="true"
-            app:layout_constraintBottom_toBottomOf="@+id/event_img"
-            app:layout_constraintEnd_toEndOf="@+id/event_img"
-            app:layout_constraintStart_toStartOf="@+id/event_img"
-            app:layout_constraintTop_toTopOf="@+id/event_img"/>
+            app:layout_constraintBottom_toBottomOf="@+id/events_img"
+            app:layout_constraintEnd_toEndOf="@+id/events_img"
+            app:layout_constraintStart_toStartOf="@+id/events_img"
+            app:layout_constraintTop_toTopOf="@+id/events_img"/>
 
         <TextView
             android:id="@+id/events_title"
@@ -65,7 +71,7 @@
             android:layout_weight="1"
             android:text="@string/info_title"
             app:layout_constraintEnd_toStartOf="@id/cardMoreIcon"
-            app:layout_constraintStart_toEndOf="@id/event_img"
+            app:layout_constraintStart_toEndOf="@id/events_img"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Title"/>
 
@@ -78,7 +84,7 @@
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_small_padding"
             app:layout_constraintEnd_toStartOf="@id/cardMoreIcon"
-            app:layout_constraintStart_toEndOf="@id/event_img"
+            app:layout_constraintStart_toEndOf="@id/events_img"
             app:layout_constraintTop_toBottomOf="@id/events_title"
             tools:text="Date"/>
 
