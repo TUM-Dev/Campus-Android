@@ -39,11 +39,11 @@ import de.tum.in.tumcampusapp.utils.Utils;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
 
-    enum Orientation {VERTICAL, HORIZONTAL}
+    enum CardType {INFO, VERTICAL, HORIZONTAL}
 
     private Context mContext;
     private EventsController mEventsController;
@@ -57,43 +57,52 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     @NonNull
     @Override
-    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
-        if (viewType == Orientation.HORIZONTAL.ordinal()) {
-            view = LayoutInflater.from(parent.getContext())
-                                 .inflate(R.layout.card_events_item, parent, false);
-        } else {
-            view = LayoutInflater.from(parent.getContext())
-                                 .inflate(R.layout.card_events_item_vertical, parent, false);
+    public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int layoutRes;
+        if (viewType == CardType.INFO.ordinal()) {
+            return new CardViewHolder(LayoutInflater.from(parent.getContext())
+                                                    .inflate(R.layout.card_events_info, parent, false));
         }
+        if (viewType == CardType.HORIZONTAL.ordinal()) {
+            layoutRes = R.layout.card_events_item;
+        } else {
+            layoutRes = R.layout.card_events_item_vertical;
+        }
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(layoutRes, parent, false);
         return new EventViewHolder(view, false);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mEvents.get(position)
-                   .getKino() != -1) {
-            return Orientation.VERTICAL.ordinal();
-        } else {
-            return Orientation.HORIZONTAL.ordinal();
+        if (position == 0) {
+            return CardType.INFO.ordinal();
         }
+        if (mEvents.get(position - 1)
+                   .getKino() != -1) {
+            return CardType.VERTICAL.ordinal();
+        }
+        return CardType.HORIZONTAL.ordinal();
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        Event event = mEvents.get(position);
+    public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
+        if (position == 0) {
+            return;
+        }
+        Event event = mEvents.get(position - 1);
 
         EventCard eventCard = new EventCard(mContext);
         eventCard.setEvent(event);
         holder.setCurrentCard(eventCard);
 
         boolean hasTicket = mEventsController.isEventBooked(event);
-        holder.bind(event, hasTicket);
+        ((EventViewHolder) holder).bind(event, hasTicket);
     }
 
     @Override
     public int getItemCount() {
-        return mEvents.size();
+        return mEvents.size() + 1;
     }
 
     public void update(List<Event> newEvents) {
