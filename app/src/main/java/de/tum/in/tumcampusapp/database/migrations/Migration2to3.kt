@@ -16,7 +16,6 @@ class Migration2to3 : Migration(2, 3) {
                 "`end_time` TEXT, " +
                 "`event_url` TEXT NOT NULL, " +
                 "`dismissed` INTEGER NOT NULL, " +
-                "`link` TEXT NOT NULL, " +
                 "`kino` INTEGER NOT NULL, " +
                 "`news` INTEGER NOT NULL, " +
                 "PRIMARY KEY(`id`))")
