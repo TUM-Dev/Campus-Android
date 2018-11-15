@@ -13,8 +13,8 @@ import io.reactivex.Flowable;
 @Dao
 public interface EventDao {
 
-    @Query("SELECT * FROM events ORDER BY start_time")
-    LiveData<List<Event>> getAll();
+    @Query("SELECT * FROM events WHERE start_time > date('now') ORDER BY start_time")
+    LiveData<List<Event>> getAllFutureEvents();
 
     // TODO(bronger) replace with AND events.tu_film != -1
     @Query("SELECT * " +
@@ -38,7 +38,7 @@ public interface EventDao {
     @Query("UPDATE events SET dismissed = 1 WHERE id = :eventId")
     void setDismissed(int eventId);
 
-    @Query("DELETE FROM events WHERE start_time < date('now')")
+    @Query("DELETE FROM events WHERE end_time < date('now')")
     void removePastEvents();
 
     @Query("DELETE FROM events")

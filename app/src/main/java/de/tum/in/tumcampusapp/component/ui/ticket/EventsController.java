@@ -147,7 +147,7 @@ public class EventsController implements ProvidesCard {
     }
 
     public LiveData<List<Event>> getEvents() {
-        return eventDao.getAll();
+        return eventDao.getAllFutureEvents();
     }
 
     /**
