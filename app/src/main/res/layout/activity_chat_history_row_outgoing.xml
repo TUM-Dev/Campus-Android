@@ -26,6 +26,7 @@
             android:layout_marginBottom="@dimen/material_tiny_padding"
             android:textColor="@color/text_dark_primary"
             android:textSize="16sp"
+            android:autoLink="all"
             tools:text="Message" />
 
         <LinearLayout

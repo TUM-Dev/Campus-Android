@@ -289,7 +289,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.leave_chat_room)
                 .setMessage(getResources().getString(R.string.leave_chat_room_body))
-                .setPositiveButton(R.string.leave, (dialogInterface, i) -> removeUserFromChatRoom())
+                .setPositiveButton(R.string.leave, (dialogInterface, i) -> leaveChatRoom())
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
 
@@ -300,7 +300,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         dialog.show();
     }
 
-    private void removeUserFromChatRoom() {
+    private void leaveChatRoom() {
         TUMCabeVerification verification = TUMCabeVerification.create(this, null);
         if (verification == null) {
             return;
