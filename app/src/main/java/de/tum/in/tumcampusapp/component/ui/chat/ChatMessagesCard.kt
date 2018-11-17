@@ -3,9 +3,9 @@ package de.tum.`in`.tumcampusapp.component.ui.chat
 import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
@@ -16,7 +16,6 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoomDbRow
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager.CARD_CHAT
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
-import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import java.util.*
@@ -83,7 +82,7 @@ class ChatMessagesCard(context: Context,
 
     companion object {
         fun inflateViewHolder(parent: ViewGroup) =
-                CardViewHolder(LayoutInflater.from(parent.context)
+                ChatMessagesCardViewHolder(LayoutInflater.from(parent.context)
                         .inflate(R.layout.card_chat_messages, parent, false))
     }
 
