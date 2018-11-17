@@ -47,7 +47,8 @@ data class Kino(@PrimaryKey
 
     val formattedDate: String
         get() {
-            val formatter = DateTimeFormat.mediumDate().withLocale(Locale.getDefault())
+            // e.g. Nov 20, 2018 8:00 PM (Style MS = medium date and short time)
+            val formatter = DateTimeFormat.forStyle("MS").withLocale(Locale.getDefault())
             return formatter.print(date)
         }
 

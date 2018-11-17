@@ -4,14 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -19,6 +13,13 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
@@ -40,7 +41,7 @@ public class StartupActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 0;
     private static final String[] PERMISSIONS_LOCATION = {ACCESS_COARSE_LOCATION,
-                                                          ACCESS_FINE_LOCATION};
+            ACCESS_FINE_LOCATION};
 
     final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private int tapCounter; // for easter egg
@@ -64,8 +65,11 @@ public class StartupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_startup);
 
         // Only use Crashlytics if we are not compiling debug
-        if (!BuildConfig.DEBUG) {
+        boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+        if (!BuildConfig.DEBUG && !isDebuggable) {
             Fabric.with(this, new Crashlytics());
+            Crashlytics.setString("TUMID", Utils.getSetting(this, Const.LRZ_ID, ""));
+            Crashlytics.setString("DeviceID", AuthenticationManager.getDeviceID(this));
         }
 
         initEasterEgg();

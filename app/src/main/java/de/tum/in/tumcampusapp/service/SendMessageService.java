@@ -2,11 +2,11 @@ package de.tum.in.tumcampusapp.service;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.core.app.JobIntentService;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
@@ -64,6 +64,7 @@ public class SendMessageService extends JobIntentService {
 
                 return;
             } catch (NoPrivateKey noPrivateKey) {
+                Utils.log(noPrivateKey);
                 return; //Nothing can be done, just exit
             } catch (Exception e) {
                 Utils.log(e);

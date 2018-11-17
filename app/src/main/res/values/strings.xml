@@ -119,7 +119,7 @@
     <string name="facebook_link_app" translatable="false">fb://facewebmodal/f?href=https://www.facebook.com/TUMCampus</string>
     <string name="github" translatable="false">GitHub</string>
     <string name="github_contribute">Contribute on GitHub</string>
-    <string name="github_link" translatable="false">https://github.com/TCA-Team/TumCampusApp</string>
+    <string name="github_link" translatable="false">https://github.com/TUM-Dev/Campus-Android</string>
     <string name="licences">Open-source licences</string>
     <string name="licences_summary">Legal notes to licences</string>
 
@@ -705,7 +705,8 @@ Signature: %5$s</string>
     <string name="next_lecture_hide">Hide</string>
     <string name="next_lecture_show_more">Show %d more …</string>
     <string name="show_in_calendar">Show in Calendar</string>
-
+  
     <string name="stripe_terms_of_service_checkbox">I agree to the terms of service.</string>
     <string name="stripe_terms_of_service_button">Terms of Service</string>
+    <string name="tickets_available_here">Tickets available here!</string>
 </resources>

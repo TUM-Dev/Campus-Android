@@ -1,34 +1,18 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.tum.`in`.tumcampusapp.service
 
-import android.app.NotificationManager
-import android.content.Context
 import android.os.Bundle
+import androidx.annotation.IntDef
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.component.other.general.Update
-import de.tum.`in`.tumcampusapp.component.other.generic.GenericNotification
-import de.tum.`in`.tumcampusapp.component.ui.alarm.AlarmNotification
-import de.tum.`in`.tumcampusapp.component.ui.chat.ChatNotification
+import de.tum.`in`.tumcampusapp.component.other.general.UpdatePushNotification
+import de.tum.`in`.tumcampusapp.component.other.generic.PushNotification
+import de.tum.`in`.tumcampusapp.component.ui.alarm.AlarmPushNotification
+import de.tum.`in`.tumcampusapp.component.ui.chat.ChatPushNotification
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import org.jetbrains.anko.notificationManager
 import java.io.IOException
 
 /**
@@ -40,67 +24,68 @@ import java.io.IOException
  */
 class FcmReceiverService : FirebaseMessagingService() {
 
-    /**
-     * Called when message is received.
-     */
-    // [START receive_message]
     override fun onMessageReceived(message: RemoteMessage?) {
-        Utils.log("Notification received...")
         val data = message?.data ?: return
+        Utils.log("Notification received: $data")
 
-        //Legacy messages need to be handled - maybe some data is missing?
-        if (data.containsKey(PAYLOAD) && data.containsKey("type")) {
-            //Get some important values
-            val notification = data["notification"]?.toInt() ?: return
-            val type = data["type"]?.toInt() ?: return
-            val payload = data[PAYLOAD]
+        // Legacy messages need to be handled - maybe some data is missing?
+        if (!data.containsKey(PAYLOAD) || !data.containsKey("type")) {
+            handleLegacyNotification(data)
+            return
+        }
 
-            //Initialize our outputs
-            var genericNotification: GenericNotification? = null
-            Utils.log("Notification received: $data")
+        val notificationId = data["notificationId"]?.toInt() ?: return
+        val type = data["type"]?.toInt() ?: return
+        val payload = data[PAYLOAD] ?: return
 
-            // Switch on the type as both the type and payload must be present
-            when (type) {
-                //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
-                CHAT_NOTIFICATION -> genericNotification = ChatNotification(payload, this, notification)
-                UPDATE -> genericNotification = Update(payload, this, notification)
-                ALERT -> genericNotification = AlarmNotification(payload, this, notification)
-                else -> {
-                    // Nothing to do, just confirm the retrieved notification
-                    try {
-                        TUMCabeClient
-                                .getInstance(this)
-                                .confirm(notification)
-                    } catch (e: IOException) {
-                        Utils.log(e)
-                    }
-                }
+        createPushNotificationOfType(type, notificationId, payload)?.let {
+            postNotification(it)
+            try {
+                it.sendConfirmation()
+            } catch (e: IOException) {
+                Utils.log(e)
             }
+        }
+    }
 
-            genericNotification?.let {
-                postNotification(it)
+    /**
+     * Try to map the given parameters to a notification.
+     * We handle type specific actions in the respective classes
+     * See: https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
+     */
+    private fun createPushNotificationOfType(type: Int, notificationId: Int, payload: String):
+            PushNotification? {
+        return when (type) {
+            CHAT_NOTIFICATION -> ChatPushNotification.fromJson(payload, this, notificationId)
+            UPDATE -> UpdatePushNotification(payload, this, notificationId)
+            ALERT -> AlarmPushNotification(payload, this, notificationId)
+            else -> { // Nothing to do, just confirm the retrieved notificationId
                 try {
-                    it.sendConfirmation()
+                    TUMCabeClient
+                            .getInstance(this)
+                            .confirm(notificationId)
                 } catch (e: IOException) {
                     Utils.log(e)
                 }
-
-                //TODO
-                //de.tum.in.tumcampusapp.managers.NotificationManager notificationManager
-                //        = new de.tum.in.tumcampusapp.managers.NotificationManager(this);
-                //notificationManager.replaceInto(n);
+                null
             }
-        } else {
-            //Try to match it as a legacy chat notification
-            try {
-                val bundle = Bundle().apply {
-                    data.entries.forEach { entry -> putString(entry.key, entry.value) }
-                }
-                postNotification(ChatNotification(bundle, this, -1))
-            } catch (e: Exception) {
-                Utils.log(e)
-            }
+        }
+    }
 
+    /**
+     * Try to support old notifications by matching it as a legacy chat notificationId
+     * TODO(kordianbruck): do we still need this?
+     */
+    private fun handleLegacyNotification(data: Map<String, String>) {
+        try {
+            val bundle = Bundle().apply {
+                data.entries.forEach { entry -> putString(entry.key, entry.value) }
+            }
+            ChatPushNotification.fromBundle(bundle, this, -1)?.also {
+                postNotification(it)
+            }
+        } catch (e: Exception) {
+            Utils.log(e)
         }
     }
 
@@ -112,26 +97,28 @@ class FcmReceiverService : FirebaseMessagingService() {
     }
 
     /**
-     * @param genericNotification the Notification to post
+     * Post the corresponding local android notification for the received PushNotification (if any)
+     * @param pushNotification the PushNotification containing a notification to post
      */
-    private fun postNotification(genericNotification: GenericNotification?) {
-        genericNotification?.let {
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val note = it.notification
-            if (note != null) {
-                notificationManager.notify(it.notificationIdentification, note)
-            }
+    private fun postNotification(pushNotification: PushNotification) {
+        pushNotification.notification?.also {
+            applicationContext.notificationManager
+                    .notify(pushNotification.displayNotificationId, it)
         }
     }
 
     companion object {
+        /**
+         * The possible Notification types
+         */
+        @Retention(AnnotationRetention.SOURCE)
+        @IntDef(CHAT_NOTIFICATION, UPDATE, ALERT)
+        annotation class PushNotificationType
 
-        private const val CHAT_NOTIFICATION = 1
-        private const val UPDATE = 2
-        private const val ALERT = 3
+        const val CHAT_NOTIFICATION = 1
+        const val UPDATE = 2
+        const val ALERT = 3
 
         private const val PAYLOAD = "payload"
-
     }
-
 }

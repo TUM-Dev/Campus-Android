@@ -102,7 +102,7 @@ class DrawerMenuHelper(private val activity: Activity) {
                 SideNavigationItem(R.string.roomfinder, R.drawable.ic_outline_location_on_24px, RoomFinderActivity::class.java),
                 SideNavigationItem(R.string.person_search, R.drawable.ic_outline_people_outline_24px, PersonSearchActivity::class.java, true),
                 SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity::class.java),
-                SideNavigationItem(R.string.events_tickets, R.drawable.ic_outline_event_seat_24px, EventsActivity::class.java),
+                SideNavigationItem(R.string.events_tickets, R.drawable.tickets, EventsActivity::class.java),
                 SideNavigationItem(R.string.barrier_free, R.drawable.ic_outline_accessible_24px, BarrierFreeInfoActivity::class.java),
                 SideNavigationItem(R.string.opening_hours, R.drawable.ic_outline_access_time_24px, OpeningHoursListActivity::class.java)
         )

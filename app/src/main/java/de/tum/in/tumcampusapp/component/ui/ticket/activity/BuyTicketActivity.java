@@ -31,6 +31,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * This activity shows an overview of the available tickets and a selection of all ticket types
+ * Directs the user to the PaymentConfirmationActivity or back to EventDetailsActivity
+ */
 public class BuyTicketActivity extends BaseActivity {
 
     private EventsController eventsController;
@@ -178,10 +182,17 @@ public class BuyTicketActivity extends BaseActivity {
                         // ResponseBody can be null if the user has already bought a ticket
                         // but has not fetched it from the server yet
                         TicketReservationResponse reservationResponse = response.body();
-                        if (response.isSuccessful() && reservationResponse != null) {
+                        if (response.isSuccessful()
+                                && reservationResponse != null
+                                && reservationResponse.getError() == null) {
                             handleTicketReservationSuccess(ticketType, reservationResponse);
                         } else {
-                            handleTicketNotFetched();
+                            if (reservationResponse == null || !response.isSuccessful()) {
+                                handleTicketNotFetched();
+                            } else {
+                                handleTicketReservationFailure(R.string.event_imminent_error);
+                                finish();
+                            }
                         }
                     }
 

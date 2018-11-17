@@ -1,13 +1,13 @@
 package de.tum.in.tumcampusapp.database;
 
+import android.content.Context;
+import android.content.Intent;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
-import android.content.Context;
-import android.content.Intent;
-
 import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarm;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarmsDao;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotification;
@@ -59,6 +59,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport
 import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
+import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
@@ -68,7 +69,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 2, entities = {
+@Database(version = 3, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -99,7 +100,8 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
     private static final Migration[] migrations = {
-            new Migration1to2()
+            new Migration1to2(),
+            new Migration2to3()
     };
 
     private static TcaDb instance;

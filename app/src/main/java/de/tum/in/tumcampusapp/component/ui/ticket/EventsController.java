@@ -1,15 +1,15 @@
 package de.tum.in.tumcampusapp.component.ui.ticket;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import android.content.Context;
-import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
@@ -19,6 +19,7 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -36,6 +37,7 @@ public class EventsController implements ProvidesCard {
 
     private final EventDao eventDao;
     private final TicketDao ticketDao;
+    private final KinoDao kinoDao;
     private final TicketTypeDao ticketTypeDao;
 
     /**
@@ -48,6 +50,7 @@ public class EventsController implements ProvidesCard {
         TcaDb db = TcaDb.getInstance(context);
         eventDao = db.eventDao();
         ticketDao = db.ticketDao();
+        kinoDao = db.kinoDao();
         ticketTypeDao = db.ticketTypeDao();
     }
 
@@ -144,7 +147,7 @@ public class EventsController implements ProvidesCard {
     }
 
     public LiveData<List<Event>> getEvents() {
-        return eventDao.getAll();
+        return eventDao.getAllFutureEvents();
     }
 
     /**
@@ -204,8 +207,8 @@ public class EventsController implements ProvidesCard {
     public List<Card> getCards(@NonNull @NotNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
-        // Only add the next upcoming event for now
-        Event event = eventDao.getNextEvent();
+        // Add the next upcoming event that is not the next kino event
+        Event event = eventDao.getNextEventWithoutMovie();
         if (event != null) {
             EventCard eventCard = new EventCard(context);
             eventCard.setEvent(event);

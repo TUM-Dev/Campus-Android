@@ -312,7 +312,7 @@
     <string name="view_mode">Ansicht wechseln</string>
     <string name="Refresh">Aktualisieren</string>
     <string name="bug_reports">Anonyme Fehlerberichte</string>
-    <string name="set_bug_reports">Unterstütze das TCA-Team mit anonymen Fehlerberichten. Diese beinhalten: Stacktrace, Logdateien, Android-Version, App-Version und Bildschirmauflösung</string>
+    <string name="set_bug_reports">Unterstütze das uns mit anonymen Fehlerberichten. Diese beinhalten: Stacktrace, Logdateien, Android-Version, App-Version und Bildschirmauflösung</string>
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
     <string name="error_pk_verification">Es ist ein Problem bei der Authentifizierung aufgetreten</string>
     <string name="room_timetable">Belegungsplan</string>
@@ -557,7 +557,7 @@ Signatur: %5$s</string>
 
     <string name="app_info_text">
         Die TUM Campus App wird von Freiwilligen Helfern, Studierenden des Android Praktikums und Lehrstuhlmitarbeitern des Informatik Fachgebiet 13 unter
-        Professor Dr. Baumgarten entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird vom TCA-Team für Android und iOS bereitgestellt.\n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
+        Professor Dr. Baumgarten entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird für Android und iOS bereitgestellt.\n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
     </string>
     <string name="dialog_add_to_contacts">Zu Kontakten hinzufügen?</string>
     <string name="add">Hinzufügen</string>
@@ -653,4 +653,5 @@ Signatur: %5$s</string>
     <string name="show_in_calendar">Im Kalender öffnen</string>
     <string name="stripe_terms_of_service_checkbox">Ich stimme den allgemeinen Geschäftsbedingungen (AGB) zu.</string>
     <string name="stripe_terms_of_service_button">AGB</string>
+    <string name="tickets_available_here">Tickets hier erhältlich!</string>
 </resources>

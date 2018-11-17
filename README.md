@@ -1,4 +1,4 @@
-# TumCampusApp [![Build Status](https://travis-ci.org/TCA-Team/TumCampusApp.svg?branch=master)](https://travis-ci.org/TCA-Team/TumCampusApp)
+# TumCampusApp [![Build Status](https://travis-ci.org/TUM-Dev/Campus-Android.svg?branch=master)](https://travis-ci.org/TUM-Dev/Campus-Android)
 ### An excellent app for students by students
 The TUM Campus App (TCA) is an open source project, which is mainly developed by volunteers with significant contributions by the Android Practical course. The TCA mostly targets phones, but can also be used on tablets or any Android device.
 
@@ -13,8 +13,8 @@ The TUM Campus App (TCA) is an open source project, which is mainly developed by
 - Automatic muting while lectures are held
 - Available in English and German
 
-## [Contributors](https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md)
-Special thanks to everybody that has contributed to this project. If you also want to contribute to the TCA, don't hesitate to ask us about anything, open an issue or just correct our spelling mistakes. We've also collected a bunch of guidelines in the [Wiki](https://github.com/TCA-Team/TumCampusApp/wiki).  
+## [Contributors](https://github.com/TUM-Dev/Campus-Android/blob/master/CONTRIBUTORS.md)
+Special thanks to everybody that has contributed to this project. If you also want to contribute to the TCA, don't hesitate to ask us about anything, open an issue or just correct our spelling mistakes. We've also collected a bunch of guidelines in the [Wiki](https://github.com/TUM-Dev/Campus-Android/wiki).  
 Just don't forget: Be excellent to each other :heart:
 
 ## Used Permissions:
@@ -32,7 +32,7 @@ This is not an official app of the Technische Universität München. There's no 
 [T&Cs of the lecture chat](https://app.tum.de/landing/chatterms/)
 
 ## Support:
-You can reach us on [Facebook](https://www.facebook.com/TUMCampus), [Github](https://github.com/TCA-Team/TumCampusApp) or via E-Mail [app@tum.de](mailto:app@tum.de)
+You can reach us on [Facebook](https://www.facebook.com/TUMCampus), [Github](https://github.com/TUM-Dev/Campus-Android) or via E-Mail [app@tum.de](mailto:app@tum.de)
 
 ## License:
 [GNU GPL v3](http://www.gnu.org/licenses/gpl.html)  

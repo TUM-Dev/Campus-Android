@@ -10,17 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.preference.CheckBoxPreference;
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceCategory;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreferenceCompat;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
@@ -28,6 +17,17 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreferenceCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
@@ -144,7 +144,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
      */
     private void setUpEmployeeSettings() {
         boolean isEmployee = !Utils.getSetting(mContext, Const.TUMO_EMPLOYEE_ID, "").isEmpty();
-        if (!isEmployee) {
+        Preference checkbox = findPreference(Const.EMPLOYEE_MODE);
+        if (!isEmployee && checkbox != null) {
             findPreference(Const.EMPLOYEE_MODE).setEnabled(false);
         }
     }

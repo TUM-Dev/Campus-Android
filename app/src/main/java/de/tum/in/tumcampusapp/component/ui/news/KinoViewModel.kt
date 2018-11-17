@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.news
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable
@@ -31,6 +32,11 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
      */
     fun getKinoByPosition(position: Int): Flowable<Kino> =
             KinoLocalRepository.getKinoByPosition(position)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+
+    fun getEventByMovieId(movieId: String): Flowable<Event> =
+            KinoLocalRepository.getEventByMovieId(movieId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
 
