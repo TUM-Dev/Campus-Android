@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
@@ -20,7 +21,10 @@ data class TicketType(
         @SerializedName("ticket_type")
         var id: Int = 0,
         var price: Int = 0,
-        var description: String = ""
+        var description: String = "",
+        @Ignore
+        @SerializedName("payment")
+        var paymentInfo: Payment = Payment()
 ) {
 
     val formattedPrice: String
