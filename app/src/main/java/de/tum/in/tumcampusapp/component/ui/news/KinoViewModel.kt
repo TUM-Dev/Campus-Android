@@ -57,14 +57,14 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
                         .filter { localRepository.getLastSync() == null || force }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnNext { localRepository.clear() }
                         .doAfterNext { localRepository.updateLastSync() }
                         .flatMapIterable { it }
-                        .filter { it.isFutureMovie() }
-                        .subscribe({ localRepository.addKino(it) }, { Utils.log(it) })
+                        .subscribe({ localRepository.addKino(it) }, { Utils.log("Added Kino: $it") })
         )
     }
 
-    fun getPosition(date: String) = localRepository.getPosition(date)
+    fun getPositionByDate(date: String) = localRepository.getPositionByDate(date)
+
+    fun getPositionById(id: String) = localRepository.getPositionById(id)
 
 }

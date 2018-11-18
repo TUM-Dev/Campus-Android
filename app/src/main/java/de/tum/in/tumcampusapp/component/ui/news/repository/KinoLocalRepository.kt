@@ -27,8 +27,8 @@ object KinoLocalRepository {
 
     fun getEventByMovieId(movieId: String): Flowable<Event> = db.eventDao().getEventByMovie(movieId)
 
-    fun clear() = db.kinoDao().cleanUp()
+    fun getPositionByDate(date: String) = db.kinoDao().getPositionByDate(date)
 
-    fun getPosition(date: String) = db.kinoDao().getPosition(date)
+    fun getPositionById(id: String) = db.kinoDao().getPositionById(id)
 
 }

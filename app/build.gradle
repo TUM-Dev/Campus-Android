@@ -22,12 +22,15 @@ android {
             proguardFiles(file('../proguard').listFiles())
             proguardFile getDefaultProguardFile('proguard-android.txt')
             minifyEnabled true
-            shrinkResources true
             useProguard true
         }
-        release.debuggable false
+        release {
+            debuggable false
+            shrinkResources true
+        }
         debug {
             debuggable true
+            shrinkResources false
             testCoverageEnabled true
         }
     }
@@ -108,9 +111,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-core:16.0.5'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
 
     // Helpers
     implementation 'com.google.code.gson:gson:2.8.5'
@@ -148,7 +151,7 @@ dependencies {
     implementation 'com.github.thellmund:Android-Week-View:2.0.1'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    
+
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.0'

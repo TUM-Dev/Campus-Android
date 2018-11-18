@@ -19,7 +19,6 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 
 class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_event") {
 
@@ -38,7 +37,7 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
         val event = this.event
         if (event != null && event.kino != -1) {
             val intent = Intent(context, KinoActivity::class.java)
-            intent.putExtra(Const.KINO_DATE, DateTimeUtils.getDateTimeString(event.startTime))
+            intent.putExtra(Const.KINO_ID, event.kino)
             return SystemIntent(intent)
         }
         val bundle = Bundle().apply { putParcelable("event", event) }
