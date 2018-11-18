@@ -20,8 +20,6 @@ import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.other.wifimeasurement.WifiMeasurementDao;
-import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao;
@@ -62,6 +60,7 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
+import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
 import de.tum.in.tumcampusapp.service.SendMessageWorker;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.CacheManager;
@@ -87,7 +86,6 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         CalendarItem.class,
         RoomLocations.class,
         WidgetsTimetableBlacklist.class,
-        WifiMeasurement.class,
         Recent.class,
         StudyRoomGroup.class,
         StudyRoom.class,
@@ -102,7 +100,8 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 public abstract class TcaDb extends RoomDatabase {
     private static final Migration[] migrations = {
             new Migration1to2(),
-            new Migration2to3()
+            new Migration2to3(),
+            new Migration3to4()
     };
 
     private static TcaDb instance;
@@ -149,8 +148,6 @@ public abstract class TcaDb extends RoomDatabase {
     public abstract RoomLocationsDao roomLocationsDao();
 
     public abstract WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao();
-
-    public abstract WifiMeasurementDao wifiMeasurementDao();
 
     public abstract RecentsDao recentsDao();
 

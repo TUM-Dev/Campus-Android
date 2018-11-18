@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "be961deb5640fa65588a23f4da4551ef",
+    "identityHash": "35d321bb6f33e9abe6d7e3736b174d20",
     "entities": [
       {
         "tableName": "Cafeteria",
@@ -812,62 +812,6 @@
         "foreignKeys": []
       },
       {
-        "tableName": "wifi_measurement",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `ssid` TEXT NOT NULL, `bssid` TEXT NOT NULL, `dBm` INTEGER NOT NULL, `accuracyInMeters` REAL NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, PRIMARY KEY(`date`))",
-        "fields": [
-          {
-            "fieldPath": "date",
-            "columnName": "date",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "ssid",
-            "columnName": "ssid",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "bssid",
-            "columnName": "bssid",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "dBm",
-            "columnName": "dBm",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "accuracyInMeters",
-            "columnName": "accuracyInMeters",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "latitude",
-            "columnName": "latitude",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "longitude",
-            "columnName": "longitude",
-            "affinity": "REAL",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "date"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "Recent",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `type` INTEGER NOT NULL, PRIMARY KEY(`name`))",
         "fields": [
@@ -1241,7 +1185,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"be961deb5640fa65588a23f4da4551ef\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"35d321bb6f33e9abe6d7e3736b174d20\")"
     ]
   }
 }
