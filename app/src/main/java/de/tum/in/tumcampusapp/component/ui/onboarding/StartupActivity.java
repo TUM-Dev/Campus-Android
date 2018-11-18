@@ -31,6 +31,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
@@ -126,6 +127,7 @@ public class StartupActivity extends AppCompatActivity {
                             }
                             return Unit.INSTANCE;
                         }).onErrorReturnItem(Unit.INSTANCE)
+                        .subscribeOn(Schedulers.io())
                 ).observe(this, downloadCompletionHandler)
         );
 

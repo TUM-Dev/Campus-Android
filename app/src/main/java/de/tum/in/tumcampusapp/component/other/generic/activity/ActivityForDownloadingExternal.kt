@@ -10,6 +10,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDownloadAction
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Generic class which handles all basic tasks to download JSON or files from an external source.
@@ -33,10 +34,10 @@ abstract class ActivityForDownloadingExternal(layoutId: Int) :
      * Gets notifications from the DownloadWorker, if downloading was successful or not
      */
     private val completionHandler = Observer<Unit> {
-            // Calls onStart() to simulate a new start of the activity
-            // without downloading new data, since this receiver
-            // receives data from a new download
-            onStart()
+        // Calls onStart() to simulate a new start of the activity
+        // without downloading new data, since this receiver
+        // receives data from a new download
+        onStart()
     }
 
     private val errorHandler = {
@@ -58,13 +59,13 @@ abstract class ActivityForDownloadingExternal(layoutId: Int) :
         }
 
         showLoadingStart()
-
         LiveDataReactiveStreams.fromPublisher<Unit>(
                 Flowable.fromCallable {
                     method(forceDownload)
                 }.doOnError {
                     errorHandler()
                 }.onErrorReturnItem(Unit)
+                        .subscribeOn(Schedulers.io())
         ).observe(this, completionHandler)
     }
 

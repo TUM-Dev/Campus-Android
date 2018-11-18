@@ -30,7 +30,6 @@ class NewsActivity : ActivityForDownloadingExternal(R.layout.activity_news), Dia
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestDownload(USE_CACHE)
-        showLoadingEnded()
         initRecyclerView()
     }
 
@@ -64,6 +63,7 @@ class NewsActivity : ActivityForDownloadingExternal(R.layout.activity_news), Dia
         } else {
             recyclerView.scrollToPosition(state)
         }
+        showLoadingEnded()
     }
 
     override fun onClick(dialog: DialogInterface, which: Int, isChecked: Boolean) {
