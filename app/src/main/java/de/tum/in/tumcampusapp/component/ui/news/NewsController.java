@@ -25,6 +25,8 @@ import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
+import static de.tum.in.tumcampusapp.api.tumonline.CacheControl.USE_CACHE;
+
 /**
  * News Manager, handles database stuff, external imports
  */
@@ -53,9 +55,9 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
      *
      * @param force True to force download over normal sync period, else false
      */
-    public void downloadFromExternal(boolean force) {
+    public void downloadFromExternal(CacheControl force) {
         SyncManager sync = new SyncManager(context);
-        if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
+        if (force == USE_CACHE && !sync.needSync(this, TIME_TO_SYNC)) {
             return;
         }
 

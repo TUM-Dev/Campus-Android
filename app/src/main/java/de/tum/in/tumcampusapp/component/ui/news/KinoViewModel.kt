@@ -1,6 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.ui.news
 
 import androidx.lifecycle.ViewModel
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.*
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
@@ -49,12 +51,12 @@ class KinoViewModel(private val localRepository: KinoLocalRepository,
      * Lastly updates last sync
      *
      */
-    fun getKinosFromService(force: Boolean) {
+    fun getKinosFromService(behaviour: CacheControl) {
         val latestId = KinoLocalRepository.getLatestId() ?: "0"
         compositeDisposable.add(
                 remoteRepository
                         .getAllKinos(latestId)
-                        .filter { localRepository.getLastSync() == null || force }
+                        .filter { localRepository.getLastSync() == null || behaviour == BYPASS_CACHE }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext { localRepository.clear() }

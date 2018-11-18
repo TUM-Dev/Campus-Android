@@ -5,64 +5,32 @@ import androidx.work.*
 import androidx.work.ListenableWorker.Result.RETRY
 import androidx.work.ListenableWorker.Result.SUCCESS
 import androidx.work.NetworkType.CONNECTED
-import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
+import de.tum.`in`.tumcampusapp.api.app.IdUploadAction
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel
-import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
-import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
-import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.BYPASS_CACHE
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.USE_CACHE
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDownloadAction
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaLocationImportAction
+import de.tum.`in`.tumcampusapp.component.ui.news.NewsDownloadAction
+import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsDownloadAction
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsDownloadAction
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.FilmDownloadAction
 import de.tum.`in`.tumcampusapp.utils.CacheManager
-import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Const.ACTION_EXTRA
-import de.tum.`in`.tumcampusapp.utils.Const.APP_LAUNCHES
-import de.tum.`in`.tumcampusapp.utils.Const.DOWNLOAD_ALL_FROM_EXTERNAL
 import de.tum.`in`.tumcampusapp.utils.Const.FORCE_DOWNLOAD
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import io.reactivex.disposables.CompositeDisposable
-import java.io.IOException
-
 
 class DownloadWorker(context: Context, workerParams: WorkerParameters) :
         Worker(context, workerParams) {
 
-    private val tumCabeClient by lazy { TUMCabeClient.getInstance(applicationContext) }
-    private val database by lazy { TcaDb.getInstance(applicationContext) }
-
-    private val cafeteriaViewModel: CafeteriaViewModel
-    private val kinoViewModel: KinoViewModel
-    private val topNewsViewModel: TopNewsViewModel
-
     private val disposable = CompositeDisposable()
+
+    private val downloadActions = getAllDownloadActions(applicationContext, disposable)
 
     init {
         Utils.log("DownloadService service has started")
-
-        // Starts a new sync in constructor; should be moved to explicit method call
-        SyncManager(applicationContext)
-
-        CafeteriaRemoteRepository.tumCabeClient = tumCabeClient
-        CafeteriaLocalRepository.db = database
-        cafeteriaViewModel = CafeteriaViewModel(CafeteriaLocalRepository, CafeteriaRemoteRepository, disposable)
-
-        KinoLocalRepository.db = database
-        KinoRemoteRepository.tumCabeClient = tumCabeClient
-        kinoViewModel = KinoViewModel(KinoLocalRepository, KinoRemoteRepository, disposable)
-
-        TopNewsRemoteRepository.tumCabeClient = tumCabeClient
-        topNewsViewModel = TopNewsViewModel(TopNewsRemoteRepository, disposable)
     }
 
     override fun doWork(): Result {
@@ -84,93 +52,27 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
     /**
      * Download all external data and returns whether the download was successful
      *
-     * @param force True to force download over normal sync period
+     * @param behaviour BYPASS_CACHE to force download over normal sync period
      * @return if all downloads were successful
      */
-    private fun downloadAll(force: Boolean) {
-        uploadMissingIds()
-        downloadCafeterias(force)
-        downloadKino(force)
-        downloadNews(force)
-        downloadEvents()
-        downloadTopNews()
-    }
-
-    /**
-     * asks to verify private key, uploads fcm token and obfuscated ids (if missing)
-     */
-    private fun uploadMissingIds() {
-        val lrzId = Utils.getSetting(applicationContext, Const.LRZ_ID, "")
-
-        val uploadStatus = tumCabeClient.getUploadStatus(lrzId) ?: return
-        Utils.log("upload missing ids: " + uploadStatus.toString())
-
-        // upload FCM Token if not uploaded or invalid
-        if (uploadStatus.fcmToken != UploadStatus.UPLOADED) {
-            Utils.log("upload fcm token")
-            AuthenticationManager(applicationContext).tryToUploadFcmToken()
-        }
-
-        if (lrzId.isEmpty()) {
-            return // nothing else to be done
-        }
-
-        // ask server to verify our key
-        if (uploadStatus.publicKey == UploadStatus.UPLOADED) { // uploaded but not verified
-            Utils.log("ask server to verify key")
-            val keyStatus = tumCabeClient.verifyKey()
-            if (keyStatus?.status != UploadStatus.VERIFIED) {
-                return // we can only upload obfuscated ids if we are verified
-            }
-        }
-
-        // upload obfuscated ids
-        AuthenticationManager(applicationContext).uploadObfuscatedIds(uploadStatus)
-    }
-
-    private fun downloadCafeterias(force: Boolean) {
-        CafeteriaMenuManager(applicationContext).downloadMenus(force)
-        cafeteriaViewModel.getCafeteriasFromService(force)
-    }
-
-    private fun downloadKino(force: Boolean) = kinoViewModel.getKinosFromService(force)
-
-    private fun downloadNews(force: Boolean) =
-            NewsController(applicationContext).downloadFromExternal(force)
-
-    private fun downloadEvents() = EventsController(applicationContext).downloadFromService()
-
-
-    private fun downloadTopNews() = topNewsViewModel.getNewsAlertFromService(applicationContext)
-
-    /**
-     * Import default location and opening hours from assets
-     */
-    @Throws(IOException::class)
-    private fun importLocationsDefaults() {
-        val dao = database.locationDao()
-        if (dao.isEmpty) {
-            Utils.readCsv(applicationContext.assets.open(CSV_LOCATIONS))
-                    .map(Location.Companion::fromCSVRow)
-                    .forEach(dao::replaceInto)
+    private fun downloadAll(behaviour: CacheControl) {
+        downloadActions.forEach { action ->
+            action(behaviour)
         }
     }
 
     companion object {
         private const val LAST_UPDATE = "last_update"
-        private const val CSV_LOCATIONS = "locations.csv"
 
         @JvmOverloads
         @JvmStatic
-        fun getWorkRequest(action: String = DOWNLOAD_ALL_FROM_EXTERNAL, forceDownload: Boolean = false,
-                           appLaunches: Boolean = false): OneTimeWorkRequest {
+        fun getWorkRequest(behaviour: CacheControl = USE_CACHE)
+                : OneTimeWorkRequest {
             val constraints = Constraints.Builder()
                     .setRequiredNetworkType(CONNECTED)
                     .build()
             val data = Data.Builder()
-                    .putString(ACTION_EXTRA, action)
-                    .putBoolean(FORCE_DOWNLOAD, forceDownload)
-                    .putBoolean(APP_LAUNCHES, appLaunches)
+                    .putBoolean(FORCE_DOWNLOAD, behaviour == BYPASS_CACHE)
                     .build()
             return OneTimeWorkRequestBuilder<DownloadWorker>()
                     .setConstraints(constraints)
@@ -193,38 +95,37 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
          */
         @Synchronized
         private fun download(data: Data, service: DownloadWorker) {
-            val action = data.getString(ACTION_EXTRA) ?: return
-            val force = data.getBoolean(FORCE_DOWNLOAD, false)
-            val launch = data.getBoolean(APP_LAUNCHES, false)
-
+            val force = if (data.getBoolean(FORCE_DOWNLOAD, false)) {
+                CacheControl.BYPASS_CACHE
+            } else {
+                USE_CACHE
+            }
 
             // Check if device has a internet connection
             val backgroundServicePermitted = Utils.isBackgroundServicePermitted(service.applicationContext)
-
-            if (NetUtils.isConnected(service.applicationContext) && (launch || backgroundServicePermitted)) {
-                Utils.logv("Handle action <$action>")
-
-                when (action) {
-                    Const.EVENTS -> service.downloadEvents()
-                    Const.NEWS -> service.downloadNews(force)
-                    Const.CAFETERIAS -> service.downloadCafeterias(force)
-                    Const.KINO -> service.downloadKino(force)
-                    Const.TOP_NEWS -> service.downloadTopNews()
-                    else -> {
-                        service.downloadAll(force)
-
-                        if (AccessTokenManager.hasValidAccessToken(service.applicationContext)) {
-                            val cacheManager = CacheManager(service.applicationContext)
-                            cacheManager.fillCache()
-                        }
-                    }
-                }
+            if (!NetUtils.isConnected(service.applicationContext) || !backgroundServicePermitted) {
+                return
             }
-
-            // Update the last run time saved in shared prefs
-            if (action == DOWNLOAD_ALL_FROM_EXTERNAL) {
-                service.importLocationsDefaults()
+            service.downloadAll(force)
+            if (!AccessTokenManager.hasValidAccessToken(service.applicationContext)) {
+                return
             }
+            val cacheManager = CacheManager(service.applicationContext)
+            cacheManager.fillCache()
+        }
+
+        @JvmStatic
+        fun getAllDownloadActions(context: Context, disposable: CompositeDisposable):
+                List<(CacheControl) -> Unit> {
+            return listOf(
+                    CafeteriaDownloadAction(context, disposable),
+                    CafeteriaLocationImportAction(context),
+                    EventsDownloadAction(context),
+                    FilmDownloadAction(context, disposable),
+                    IdUploadAction(context),
+                    NewsDownloadAction(context),
+                    TopNewsDownloadAction(context, disposable)
+            )
         }
     }
 }

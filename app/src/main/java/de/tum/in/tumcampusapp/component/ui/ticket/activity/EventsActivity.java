@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsDownloadAction;
 import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventsFragment;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.EventType;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -26,7 +27,8 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     private ViewPager viewPager;
 
     public EventsActivity() {
-        super(Const.EVENTS, R.layout.activity_events);
+        super(R.layout.activity_events);
+        method = new EventsDownloadAction(this);
     }
 
     @Override

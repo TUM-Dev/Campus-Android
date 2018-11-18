@@ -3,8 +3,6 @@ package de.tum.`in`.tumcampusapp.service
 import android.content.Context
 import androidx.work.*
 import androidx.work.ListenableWorker.Result.SUCCESS
-import de.tum.`in`.tumcampusapp.utils.Const.APP_LAUNCHES
-import de.tum.`in`.tumcampusapp.utils.Const.DOWNLOAD_ALL_FROM_EXTERNAL
 import java.util.concurrent.TimeUnit
 
 /**
@@ -17,13 +15,10 @@ class BackgroundWorker(context: Context, workerParams: WorkerParameters) :
      * Starts [DownloadWorker] with appropriate extras
      */
     override fun doWork(): ListenableWorker.Result {
-        val appLaunches = inputData.getBoolean(APP_LAUNCHES, false)
-
         // Trigger periodic download in background
         WorkManager.getInstance()
                 .beginUniqueWork(UNIQUE_DOWNLOAD, ExistingWorkPolicy.KEEP,
-                        DownloadWorker.getWorkRequest(
-                                DOWNLOAD_ALL_FROM_EXTERNAL, false, appLaunches)
+                        DownloadWorker.getWorkRequest()
                 ).enqueue()
 
         return SUCCESS
@@ -32,16 +27,12 @@ class BackgroundWorker(context: Context, workerParams: WorkerParameters) :
     companion object {
         private const val UNIQUE_DOWNLOAD = "BACKGROUND_DOWNLOAD"
 
-        fun getWorkRequest(appLaunches: Boolean = false): PeriodicWorkRequest {
+        fun getWorkRequest(): PeriodicWorkRequest {
             val constraints = Constraints.Builder()
                     .setRequiresBatteryNotLow(true)
                     .build()
-            val data = Data.Builder()
-                    .putBoolean(APP_LAUNCHES, appLaunches)
-                    .build()
             return PeriodicWorkRequestBuilder<BackgroundWorker>(3, TimeUnit.HOURS)
                     .setConstraints(constraints)
-                    .setInputData(data)
                     .build()
         }
     }

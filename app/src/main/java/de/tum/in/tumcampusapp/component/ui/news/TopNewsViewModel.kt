@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.ui.news;
+package de.tum.`in`.tumcampusapp.component.ui.news
 
 import androidx.lifecycle.ViewModel
 import android.content.Context
@@ -30,7 +30,7 @@ class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
                             Utils.setSetting(context, Const.NEWS_ALERT_LINK, newsAlert.link)
 
                             val oldShowUntil = Utils.getSetting(context, Const.NEWS_ALERT_SHOW_UNTIL, "")
-                            val oldImage = Utils.getSetting(context, Const.NEWS_ALERT_IMAGE, "");
+                            val oldImage = Utils.getSetting(context, Const.NEWS_ALERT_IMAGE, "")
 
                             // there is a NewsAlert update if the image link or the date changed
                             // --> Card should be displayed again

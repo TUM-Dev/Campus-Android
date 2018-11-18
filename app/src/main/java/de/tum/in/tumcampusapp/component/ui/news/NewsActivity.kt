@@ -8,24 +8,28 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.USE_CACHE
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
-import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**
  * Activity to show News (message, image, date)
  */
-class NewsActivity : ActivityForDownloadingExternal(Const.NEWS, R.layout.activity_news), DialogInterface.OnMultiChoiceClickListener {
+class NewsActivity : ActivityForDownloadingExternal(R.layout.activity_news), DialogInterface.OnMultiChoiceClickListener {
 
     private val recyclerView by lazy { findViewById<RecyclerView>(R.id.activity_news_list_view) }
     private var state = -1
     private val newsController: NewsController by lazy { NewsController(this) }
 
+    init {
+        method = NewsDownloadAction(this)
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestDownload(false)
+        requestDownload(USE_CACHE)
         showLoadingEnded()
         initRecyclerView()
     }
@@ -72,7 +76,7 @@ class NewsActivity : ActivityForDownloadingExternal(Const.NEWS, R.layout.activit
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             state = layoutManager.findFirstVisibleItemPosition()
 
-            requestDownload(false)
+            requestDownload(USE_CACHE)
         }
     }
 

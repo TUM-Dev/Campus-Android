@@ -18,8 +18,7 @@ class StartSyncReceiver : BroadcastReceiver() {
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     override fun onReceive(context: Context, intent: Intent) {
         // Check intent if called from StartupActivity
-        val isLaunch = intent.getBooleanExtra(Const.APP_LAUNCHES, false)
-        startBackground(context, isLaunch)
+        startBackground(context)
 
         startSendMessage()
 
@@ -42,14 +41,13 @@ class StartSyncReceiver : BroadcastReceiver() {
          * Start the periodic BackgroundWorker, ensuring only one task is ever running
          */
         @JvmStatic
-        @JvmOverloads
-        fun startBackground(context: Context, isLaunch: Boolean = false) {
+        fun startBackground(context: Context) {
             if (!Utils.isBackgroundServicePermitted(context)) {
                 return
             }
             WorkManager.getInstance()
                     .enqueueUniquePeriodicWork(UNIQUE_BACKGROUND, KEEP,
-                            BackgroundWorker.getWorkRequest(isLaunch))
+                            BackgroundWorker.getWorkRequest())
         }
 
         /**

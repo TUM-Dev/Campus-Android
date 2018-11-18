@@ -2,6 +2,8 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.details
 
 import androidx.lifecycle.ViewModel
 import android.location.Location
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
+import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.*
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
@@ -62,9 +64,9 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
      * Lastly updates last sync
      *
      */
-    fun getCafeteriasFromService(force: Boolean): Boolean =
+    fun getCafeteriasFromService(force: CacheControl): Boolean =
             compositeDisposable.add(Observable.just(1)
-                    .filter { localRepository.getLastSync() == null || force }
+                    .filter { localRepository.getLastSync() == null || force == BYPASS_CACHE }
                     .subscribeOn(Schedulers.computation())
                     .observeOn(Schedulers.io())
                     .doOnNext { localRepository.clear() }

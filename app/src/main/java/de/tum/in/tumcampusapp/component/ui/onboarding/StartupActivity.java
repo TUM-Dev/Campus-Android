@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
@@ -16,24 +17,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.Observer;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
-import androidx.work.WorkStatus;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
+import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.CompositeDisposable;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static de.tum.in.tumcampusapp.utils.Const.DOWNLOAD_ALL_FROM_EXTERNAL;
 
 /**
  * Entrance point of the App.
@@ -46,13 +49,10 @@ public class StartupActivity extends AppCompatActivity {
 
     private final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private int tapCounter; // for easter egg
+    private CompositeDisposable mDisposable = new CompositeDisposable();
 
-    private Observer<WorkStatus> downloadObserver = workStatus -> {
-        if (workStatus == null || workStatus.getState().isFinished()) {
-            return;
-        }
-        openMainActivityIfInitializationFinished();
-    };
+    private Observer<Unit> downloadCompletionHandler = ignored ->
+            openMainActivityIfInitializationFinished();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,18 +117,20 @@ public class StartupActivity extends AppCompatActivity {
         });
 
         // DownloadWorker and listen for finalization
-        WorkManager workManager = WorkManager.getInstance();
-        WorkRequest download = DownloadWorker.getWorkRequest(DOWNLOAD_ALL_FROM_EXTERNAL, false, true);
-        workManager.enqueue(download);
+        List<Function1<CacheControl, Unit>> downloadActions =
+                DownloadWorker.getAllDownloadActions(this, mDisposable);
         runOnUiThread(() ->
-                workManager.getStatusByIdLiveData(download.getId())
-                        .observe(this, downloadObserver)
+                LiveDataReactiveStreams.fromPublisher(Flowable.fromCallable(() -> {
+                            for (Function1<CacheControl, Unit> action : downloadActions) {
+                                action.invoke(CacheControl.USE_CACHE);
+                            }
+                            return Unit.INSTANCE;
+                        }).onErrorReturnItem(Unit.INSTANCE)
+                ).observe(this, downloadCompletionHandler)
         );
 
         // Start background service and ensure cards are set
-        Intent i = new Intent(this, StartSyncReceiver.class);
-        i.putExtra(Const.APP_LAUNCHES, true);
-        sendBroadcast(i);
+        sendBroadcast(new Intent(this, StartSyncReceiver.class));
 
         // Request Permissions for Android 6.0
         requestLocationPermission();

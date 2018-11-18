@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity
         registerForContextMenu(mCardsView);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         mCardsView.setLayoutManager(layoutManager);
         mCardsView.setHasFixedSize(true);
 

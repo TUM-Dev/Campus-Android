@@ -50,6 +50,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import kotlin.Unit;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,7 +88,9 @@ public class ChatActivity extends ActivityForDownloadingExternal
     };
 
     public ChatActivity() {
-        super(Const.CURRENT_CHAT_ROOM, R.layout.activity_chat);
+        super(R.layout.activity_chat);
+        // TODO: Const.CURRENT_CHAT_ROOM was previously non-existent
+        method = cacheControl -> Unit.INSTANCE;
     }
 
     @Override

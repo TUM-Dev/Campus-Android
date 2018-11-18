@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDownloadAction;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
@@ -54,7 +55,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     private final CompositeDisposable mDisposable = new CompositeDisposable();
 
     public CafeteriaActivity() {
-        super(Const.CAFETERIAS, R.layout.activity_cafeteria);
+        super(R.layout.activity_cafeteria);
+        method = new CafeteriaDownloadAction(this, mDisposable);
     }
 
     @Override
@@ -99,7 +101,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_ingredients) {
             // Build a alert dialog containing the mapping of ingredients to the numbers
             String ingredients = getString(R.string.cafeteria_ingredients);
