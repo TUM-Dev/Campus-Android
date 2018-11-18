@@ -18,15 +18,12 @@
 
             <ImageView
                 android:id="@+id/posterView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@color/placeholder"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/kino_cover_description"
-                android:scaleType="centerCrop"
-                app:layout_constraintDimensionRatio="H,16:9"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:scaleType="centerCrop"/>
 
             <ProgressBar
                 android:id="@+id/posterProgressBar"

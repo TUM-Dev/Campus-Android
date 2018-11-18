@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,8 +60,11 @@ public class StartupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_startup);
 
         // Only use Crashlytics if we are not compiling debug
-        if (!BuildConfig.DEBUG) {
+        boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+        if (!BuildConfig.DEBUG && !isDebuggable) {
             Fabric.with(this, new Crashlytics());
+            Crashlytics.setString("TUMID", Utils.getSetting(this, Const.LRZ_ID, ""));
+            Crashlytics.setString("DeviceID", AuthenticationManager.getDeviceID(this));
         }
 
         initEasterEgg();
@@ -150,8 +154,8 @@ public class StartupActivity extends AppCompatActivity {
                 AlertDialog dialog = new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.permission_location_explanation))
                         .setPositiveButton(R.string.ok, (dialogInterface, id) ->
-                            ActivityCompat.requestPermissions(
-                                    this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
+                                ActivityCompat.requestPermissions(
+                                        this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
                         )
                         .create();
 

@@ -35,8 +35,11 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 551
-        versionName "2.1-dev"
+        versionCode 558
+        versionName "3.0-dev"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
         kapt.arguments {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
@@ -70,7 +73,6 @@ android {
         }
     }
     sourceSets {
-        androidTest.assets.srcDirs += files("$projectDir/src/test/java".toString())
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 }
@@ -94,13 +96,13 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
     // Android arch components
-    implementation 'androidx.room:room-rxjava2:2.1.0-alpha01'
-    implementation 'androidx.room:room-runtime:2.1.0-alpha01'
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha02'
+    implementation 'androidx.room:room-runtime:2.1.0-alpha02'
     implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha10"
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
-    kapt 'androidx.room:room-compiler:2.1.0-alpha01'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha02'
 
     // Play services
     implementation 'com.google.android.gms:play-services-base:16.0.1'
@@ -148,13 +150,17 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     
-    // Used for testing
+    // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
-    testImplementation 'androidx.room:room-testing:2.1.0-alpha01'
-    testImplementation 'org.robolectric:robolectric:3.8'
+    testImplementation 'androidx.room:room-testing:2.1.0-alpha02'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+    testImplementation 'com.android.support.test:rules:1.0.2'
+    testImplementation 'com.android.support.test:runner:1.0.2'
+    testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "org.robolectric:robolectric:4.0.1"
 
     // TicketSale
     implementation 'com.stripe:stripe-android:6.1.2'

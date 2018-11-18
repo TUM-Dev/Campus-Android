@@ -7,11 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.button.MaterialButton;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +14,32 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.List;
+import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Fragment for KinoDetails. Manages content that gets shown on the pagerView
@@ -37,6 +47,7 @@ import io.reactivex.disposables.Disposable;
 public class KinoDetailsFragment extends Fragment {
 
     private View rootView;
+    private Event event;
 
     private KinoViewModel kinoViewModel;
     private final CompositeDisposable disposables = new CompositeDisposable();
@@ -65,6 +76,15 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (event != null && EventHelper.Companion.isEventImminent(event)) {
+            rootView.findViewById(R.id.buyTicketButton).setVisibility(View.GONE);
+            rootView.findViewById(R.id.eventInformation).setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -75,7 +95,60 @@ public class KinoDetailsFragment extends Fragment {
         disposables.add(disposable);
     }
 
+    private void showEventTicketDetails(Event event) {
+        this.event = event;
+        if (EventHelper.Companion.isEventImminent(event)) {
+            return;
+        }
+        rootView.findViewById(R.id.eventInformation).setVisibility(View.VISIBLE);
+        MaterialButton buyButton = rootView.findViewById(R.id.buyTicketButton);
+        buyButton.setVisibility(View.VISIBLE);
+        buyButton.setOnClickListener(
+                view -> EventHelper.Companion.buyTicket(this.event, buyButton, getContext()));
+
+        ((TextView) rootView.findViewById(R.id.locationTextView)).setText(event.getLocality());
+        loadAvailableTicketCount(event);
+    }
+
+    private void loadAvailableTicketCount(Event event) {
+        TUMCabeClient.getInstance(getContext())
+                .fetchTicketStats(event.getId(), new Callback<List<TicketStatus>>() {
+                    @Override
+                    public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
+                        List<TicketStatus> statusList = response.body();
+                        if (statusList == null) {
+                            if (!isDetached()) {
+                                ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
+                                        .setText(R.string.unknown);
+                            }
+                        }
+                        int sum = 0;
+                        for (TicketStatus status : statusList) {
+                            sum += status.getAvailableTicketCount();
+                        }
+                        String text = String.format(Locale.getDefault(), "%d", sum);
+                        if (!isDetached()) {
+                            ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
+                                    .setText(text);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
+                        if (!isDetached()) {
+                            ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
+                                    .setText(R.string.unknown);
+                        }
+                    }
+                });
+    }
+
     private void showMovieDetails(Kino kino) {
+        Disposable disposable = kinoViewModel
+                .getEventByMovieId(kino.getId())
+                .subscribe(this::showEventTicketDetails);
+        disposables.add(disposable);
+
         loadPoster(kino);
 
         TextView dateTextView = rootView.findViewById(R.id.dateTextView);

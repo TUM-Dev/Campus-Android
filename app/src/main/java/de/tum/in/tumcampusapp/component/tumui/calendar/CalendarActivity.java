@@ -315,14 +315,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-            mWeekView.setXScrollingSpeed(1);
         } else {
             icon = R.drawable.ic_outline_view_column_24px;
             mWeekView.setNumberOfVisibleDays(1);
             // Lets change some dimensions to best fit the view.
             mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
-            mWeekView.setXScrollingSpeed(0.4f);
         }
 
         // Go to current date or the one given in the intent

@@ -156,6 +156,33 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_small_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/terms_of_service_checkbox"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/stripe_terms_of_service_checkbox" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/terms_of_service_button"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/material_small_padding"
+                        android:text="@string/stripe_terms_of_service_button"
+                        android:textAllCaps="false"
+                        app:cornerRadius="@dimen/material_corner_radius"
+                        app:icon="@drawable/ic_external_link" />
+                </LinearLayout>
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/complete_purchase_button"
                     style="@style/Widget.MaterialComponents.Button"

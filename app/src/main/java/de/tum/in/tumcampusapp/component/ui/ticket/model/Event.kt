@@ -1,13 +1,13 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.RoomWarnings
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.text.format.DateFormat
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
 import de.tum.`in`.tumcampusapp.utils.readDateTime
 import de.tum.`in`.tumcampusapp.utils.writeDateTime
@@ -44,10 +44,13 @@ data class Event(
         @SerializedName("end")
         @ColumnInfo(name = "end_time")
         var endTime: DateTime? = null,
+        @SerializedName("link")
         @ColumnInfo(name = "event_url")
         var eventUrl: String = "",
         @ColumnInfo(name = "dismissed")
-        var dismissed: Int = 0
+        var dismissed: Int = 0,
+        var kino: Int = -1,
+        var news: Int = -1
 ) : Parcelable, Comparable<Event> {
 
     // Unsafe calls are only ok because we control writeToParcel().
@@ -61,7 +64,9 @@ data class Event(
             startTime = DateTime(parcel.readLong()),
             endTime = parcel.readDateTime(),
             eventUrl = parcel.readString()!!,
-            dismissed = parcel.readInt())
+            dismissed = parcel.readInt(),
+            kino = parcel.readInt(),
+            news = parcel.readInt())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
@@ -73,6 +78,8 @@ data class Event(
         parcel.writeDateTime(endTime)
         parcel.writeString(eventUrl)
         parcel.writeInt(dismissed)
+        parcel.writeInt(kino)
+        parcel.writeInt(news)
     }
 
     fun getFormattedStartDateTime(context: Context): String {

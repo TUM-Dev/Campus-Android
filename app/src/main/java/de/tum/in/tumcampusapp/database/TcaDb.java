@@ -61,6 +61,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.model.WidgetsTransport
 import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
+import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.service.SendMessageWorker;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.CacheManager;
@@ -69,7 +70,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 2, entities = {
+@Database(version = 3, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -100,7 +101,8 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 @TypeConverters(Converters.class)
 public abstract class TcaDb extends RoomDatabase {
     private static final Migration[] migrations = {
-            new Migration1to2()
+            new Migration1to2(),
+            new Migration2to3()
     };
 
     private static TcaDb instance;
