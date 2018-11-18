@@ -76,6 +76,11 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
         }
     }
 
+    override fun onStopped(cancelled: Boolean) {
+        super.onStopped(cancelled)
+        disposable.clear()
+    }
+
     /**
      * Download all external data and returns whether the download was successful
      *
