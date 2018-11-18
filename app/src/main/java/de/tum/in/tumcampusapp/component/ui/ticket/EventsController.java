@@ -19,7 +19,6 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
-import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -37,11 +36,10 @@ public class EventsController implements ProvidesCard {
 
     private final EventDao eventDao;
     private final TicketDao ticketDao;
-    private final KinoDao kinoDao;
     private final TicketTypeDao ticketTypeDao;
 
     /**
-     * Constructor, open/create database, create table if necessary
+     * Constructor, open/create database
      *
      * @param context Context
      */
@@ -50,7 +48,6 @@ public class EventsController implements ProvidesCard {
         TcaDb db = TcaDb.getInstance(context);
         eventDao = db.eventDao();
         ticketDao = db.ticketDao();
-        kinoDao = db.kinoDao();
         ticketTypeDao = db.ticketTypeDao();
     }
 

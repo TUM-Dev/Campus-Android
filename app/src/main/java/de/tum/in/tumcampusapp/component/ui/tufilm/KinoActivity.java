@@ -1,10 +1,10 @@
 package de.tum.in.tumcampusapp.component.ui.tufilm;
 
 import android.os.Bundle;
-import androidx.viewpager.widget.ViewPager;
 
 import java.util.List;
 
+import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.ui.news.KinoViewModel;
@@ -41,9 +41,15 @@ public class KinoActivity extends ProgressActivity<Void> {
         KinoViewModel kinoViewModel = new KinoViewModel(
                 KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposables);
 
-        String date = getIntent().getStringExtra(Const.KINO_DATE);
-        startPosition = (date != null) ? kinoViewModel.getPosition(date) : 0;
-
+        String movieDate = getIntent().getStringExtra(Const.KINO_DATE);
+        int movieId = getIntent().getIntExtra(Const.KINO_ID, -1);
+        if (movieDate != null) {
+            startPosition = kinoViewModel.getPositionByDate(movieDate);
+        } else if (movieId != -1) {
+            startPosition = kinoViewModel.getPositionById("" + movieId);
+        } else {
+            startPosition = 0;
+        }
         mPager = findViewById(R.id.pager);
 
         int margin = getResources().getDimensionPixelSize(R.dimen.material_default_padding);

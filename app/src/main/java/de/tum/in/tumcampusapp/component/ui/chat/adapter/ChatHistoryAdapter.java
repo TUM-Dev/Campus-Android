@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.component.ui.chat.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
@@ -31,8 +31,6 @@ public class ChatHistoryAdapter extends BaseAdapter {
     private OnRetrySendListener mRetryListener;
 
     private ChatMember currentChatMember;
-    //public ChatMessage mCheckedItem;
-    //public ChatMessage mEditedItem;
 
     public ChatHistoryAdapter(Context context, ChatMember member) {
         mContext = context;
@@ -147,20 +145,6 @@ public class ChatHistoryAdapter extends BaseAdapter {
             }
 
             containerLayout.setOnClickListener(view -> resendIfError(context, message, retryListener));
-
-            // TODO
-            /*
-            if ((mCheckedItem != null
-                    && mCheckedItem.getId() == message.getId()
-                    && (mCheckedItem.getSendingStatus() == message.getSendingStatus()))
-                    || (mEditedItem != null
-                    && mEditedItem.getId() == message.getId()
-                    && mEditedItem.getSendingStatus() == message.getSendingStatus())) {
-                holder.containerLayout.setBackgroundResource(R.drawable.bg_message_outgoing_selected);
-            } else if (isOutgoing) {
-                holder.containerLayout.setBackgroundResource(R.drawable.bg_message_outgoing);
-            }
-            */
         }
 
         private void resendIfError(Context context,

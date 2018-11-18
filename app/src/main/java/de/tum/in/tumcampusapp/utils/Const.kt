@@ -138,6 +138,7 @@ object Const {
     const val EVENT_TIME = "event_time"
 
     const val KINO_DATE = "kinoDate"
+    const val KINO_ID = "kinoId"
 
     const val CALENDAR_MONTHS_BEFORE = 2
     const val CALENDAR_MONTHS_AFTER = 2
