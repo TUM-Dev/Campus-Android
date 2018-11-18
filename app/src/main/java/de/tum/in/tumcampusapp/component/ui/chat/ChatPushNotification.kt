@@ -147,7 +147,7 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
         val n = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CHAT)
                 .setSmallIcon(defaultIcon)
                 .setLargeIcon(Utils.getLargeIcon(context, R.drawable.ic_chat_with_lines))
-                .setContentTitle(chatRoom.name.substring(4))
+                .setContentTitle(chatRoom.title)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(text))
                 .setContentText(text)
                 .setContentIntent(contentIntent)

@@ -93,7 +93,7 @@ public class ChatRoomController implements ProvidesCard {
         Utils.log("reset join status of all rooms");
 
         for (ChatRoom room : rooms) {
-            String roomName = room.getActualName();
+            String roomName = room.getTitle();
             String semester = room.getSemester();
 
             List<Integer> roomIds = chatRoomDao.getGivenLecture(roomName, semester);
@@ -109,11 +109,11 @@ public class ChatRoomController implements ProvidesCard {
     }
 
     public void join(ChatRoom currentChatRoom) {
-        chatRoomDao.updateJoinedRooms(currentChatRoom.getId(), currentChatRoom.getActualName(), currentChatRoom.getSemester());
+        chatRoomDao.updateJoinedRooms(currentChatRoom.getId(), currentChatRoom.getTitle(), currentChatRoom.getSemester());
     }
 
     public void leave(ChatRoom currentChatRoom) {
-        chatRoomDao.updateLeftRooms(currentChatRoom.getId(), currentChatRoom.getActualName(), currentChatRoom.getSemester());
+        chatRoomDao.updateLeftRooms(currentChatRoom.getId(), currentChatRoom.getTitle(), currentChatRoom.getSemester());
     }
 
     @NotNull

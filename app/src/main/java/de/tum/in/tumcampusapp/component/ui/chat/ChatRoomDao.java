@@ -1,13 +1,12 @@
 package de.tum.in.tumcampusapp.component.ui.chat;
 
+import java.util.List;
+
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
-
-import java.util.List;
-
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 
@@ -65,8 +64,8 @@ public interface ChatRoomDao {
     @Query("UPDATE chat_room SET room=:room, joined=0 WHERE name=:name AND semester_id=:semesterId")
     void updateLeftRooms(int room, String name, String semesterId);
 
-    @Query("UPDATE chat_room SET members=:memberCount WHERE room=:roomId AND name=:roomName")
-    void updateMemberCount(int memberCount, int roomId, String roomName);
+    @Query("UPDATE chat_room SET members=:memberCount WHERE room=:roomId")
+    void updateMemberCount(int memberCount, int roomId);
 
     @Query("SELECT r.* " +
            "FROM chat_room r, (SELECT semester_id FROM chat_room " +
