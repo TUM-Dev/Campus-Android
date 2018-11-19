@@ -1,9 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.ui.chat
 
 
-import androidx.lifecycle.ViewModel
 import android.content.Context
 import android.content.Intent
+import androidx.lifecycle.ViewModel
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import de.tum.`in`.tumcampusapp.api.app.model.TUMCabeVerification
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
@@ -40,7 +40,7 @@ class ChatMessageViewModel(
                          verification: TUMCabeVerification): Observable<List<ChatMessage>> {
         return remoteRepository
                 .getMessages(room.id, messageId, verification)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .doOnNext { localRepository.replaceMessages(it) }
                 .observeOn(AndroidSchedulers.mainThread())
     }
@@ -49,7 +49,7 @@ class ChatMessageViewModel(
                        verification: TUMCabeVerification): Observable<List<ChatMessage>> {
         return remoteRepository
                 .getNewMessages(room.id, verification)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .doOnNext { localRepository.replaceMessages(it) }
                 .observeOn(AndroidSchedulers.mainThread())
     }
@@ -59,8 +59,7 @@ class ChatMessageViewModel(
         val verification = TUMCabeVerification.create(context, chatMessage)
 
         return remoteRepository.sendMessage(roomId, verification)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
                 .subscribe({ message ->
                     message.sendingStatus = ChatMessage.STATUS_SENT
                     localRepository.replaceMessage(message)
