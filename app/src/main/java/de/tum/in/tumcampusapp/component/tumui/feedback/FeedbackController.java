@@ -16,10 +16,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Patterns;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.common.util.Strings;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,10 +40,7 @@ import retrofit2.Response;
 /**
  * Handles choosing images and network operations and corresponding dialogs.
  */
-public class FeedbackController {
-
-    public static final int GENERAL_FEEDBACK = 0;
-    public static final int TCA_FEEDBACK = 1;
+class FeedbackController {
 
     static final int REQUEST_TAKE_PHOTO = 11;
     static final int REQUEST_GALLERY = 12;
@@ -111,15 +105,8 @@ public class FeedbackController {
         activity.startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
     }
 
-    private boolean isEmailValid(TextView customEmailView) {
-        String email = customEmailView.getText().toString();
-        boolean isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
-        if (isValid) {
-            customEmailView.setTextColor(mContext.getResources().getColor(R.color.valid));
-        } else {
-            customEmailView.setTextColor(mContext.getResources().getColor(R.color.error));
-        }
-        return isValid;
+    private boolean isEmailValid(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     void sendFeedback(Activity activity, Feedback feedback, String lrzId) {
@@ -127,9 +114,8 @@ public class FeedbackController {
         imagesSent = 0;
         stopListeningForLocation();
 
-        if (feedback.getIncludeEmail()
-                && (Strings.isEmptyOrWhitespace(lrzId)
-                || !isEmailValid(activity.findViewById(R.id.feedback_custom_email)))) {
+        if (feedback.getIncludeEmail() && !isEmailValid(feedback.getEmail())) {
+            Toast.makeText(activity.getApplicationContext(), "Email is not valid", Toast.LENGTH_SHORT).show();
             return;
         }
 

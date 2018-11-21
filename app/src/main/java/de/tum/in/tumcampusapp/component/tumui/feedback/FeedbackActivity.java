@@ -14,8 +14,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -40,14 +38,11 @@ public class FeedbackActivity extends BaseActivity {
     private TextInputLayout customEmailViewLayout;
     private TextInputEditText feedbackView, customEmailView;
 
-    private int feedbackTopic;
-    private String email;
-    private String lrzId;
-
     private RecyclerView.Adapter thumbnailsAdapter;
-    private List<String> picturePaths;
 
     private FeedbackController controller;
+    private Feedback feedback;
+    private String lrzId;
 
     public FeedbackActivity() {
         super(R.layout.activity_feedback);
@@ -59,7 +54,12 @@ public class FeedbackActivity extends BaseActivity {
 
         controller = new FeedbackController(this);
 
-        feedbackTopic = FeedbackController.GENERAL_FEEDBACK; // General feedback by default
+        boolean loadingSavedState = savedInstanceState != null;
+        if (loadingSavedState) {
+            feedback = savedInstanceState.getParcelable(Const.FEEDBACK);
+        } else {
+            feedback = new Feedback();
+        }
 
         feedbackView = findViewById(R.id.feedback_message);
         customEmailViewLayout = findViewById(R.id.feedback_custom_email_layout);
@@ -69,41 +69,41 @@ public class FeedbackActivity extends BaseActivity {
 
         lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
 
-        initRadioGroup(savedInstanceState);
-        initIncludeLocation(savedInstanceState);
-        initIncludeEmail(savedInstanceState);
-        initPictureGalley(savedInstanceState);
+        feedbackView.setText(feedback.getMessage());
+        initFeedbackType();
+        initIncludeLocation();
+        initIncludeEmail(loadingSavedState);
+        initPictureGalley();
+    }
 
-        if (savedInstanceState != null) {
-            feedbackView.setText(savedInstanceState.getString(Const.FEEDBACK_MESSAGE));
-        }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Const.FEEDBACK, getFeedback());
     }
 
     private Feedback getFeedback() {
-        Feedback feedback = new Feedback();
-        feedback.setTopic(feedbackTopic);
+        if (feedback == null) {
+            feedback = new Feedback();
+        }
+        // get values whose state we don't observe
         feedback.setMessage(feedbackView.getText().toString());
-        feedback.setEmail(email);
-        feedback.setIncludeEmail(includeEmail.isChecked());
-        if (includeLocation.isChecked()) {
+        if (lrzId == null || lrzId.isEmpty()) {
+            feedback.setEmail(customEmailView.getText().toString());
+        }
+        feedback.setIncludeLocation(includeLocation.isChecked());
+        if (controller.getLocation() != null) {
             feedback.setLatitude(controller.getLocation().getLatitude());
             feedback.setLongitude(controller.getLocation().getLongitude());
         }
-        feedback.setPicturePaths(picturePaths);
         return feedback;
     }
 
-    private void initPictureGalley(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            picturePaths = new ArrayList<>();
-        } else {
-            picturePaths = savedInstanceState.getStringArrayList(Const.FEEDBACK_PIC_PATHS);
-        }
-
+    private void initPictureGalley() {
         RecyclerView pictureList = findViewById(R.id.feedback_image_list);
         pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        thumbnailsAdapter = new FeedbackThumbnailsAdapter(picturePaths);
+        thumbnailsAdapter = new FeedbackThumbnailsAdapter(feedback.getPicturePaths());
         pictureList.setAdapter(thumbnailsAdapter);
 
         findViewById(R.id.feedback_add_image).setOnClickListener(
@@ -112,7 +112,7 @@ public class FeedbackActivity extends BaseActivity {
 
 
     @SuppressLint("NewApi")
-    private void initIncludeLocation(Bundle savedInstanceState) {
+    private void initIncludeLocation() {
         includeLocation.setOnClickListener(view -> {
             if (includeLocation.isChecked()
                     && controller.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
@@ -122,64 +122,59 @@ public class FeedbackActivity extends BaseActivity {
             }
         });
 
-        if (savedInstanceState != null) {
-            includeLocation.setChecked(savedInstanceState.getBoolean(Const.FEEDBACK_INCL_LOCATION));
-        } else {
-            includeLocation.setChecked(false);
-        }
-
+        includeLocation.setChecked(feedback.getIncludeLocation());
         if (includeLocation.isChecked()
                 && controller.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
             controller.saveLocation();
         }
     }
 
-    private void initIncludeEmail(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            if (!TextUtils.isEmpty(lrzId)) {
-                email = lrzId + "@mytum.de";
-                includeEmail.setText(getResources()
-                        .getString(R.string.feedback_include_email_tum_id, email));
-                includeEmail.setChecked(true);
+    private void initIncludeEmail(boolean loadingSavedState) {
+        if (!loadingSavedState) {
+            // set initial values based on lrzId availability
+            if (lrzId != null && !lrzId.isEmpty()) {
+                feedback.setEmail(lrzId + "@mytum.de");
+                feedback.setIncludeEmail(true);
             } else {
-                includeEmail.setChecked(false);
+                feedback.setIncludeEmail(false);
             }
-        } else {
-            includeEmail.setChecked(savedInstanceState.getBoolean(Const.FEEDBACK_INCL_EMAIL));
-            email = savedInstanceState.getString(Const.FEEDBACK_EMAIL);
-            onIncludeEmailClick();
         }
 
-        includeEmail.setOnClickListener(view -> onIncludeEmailClick());
+        includeEmail.setChecked(feedback.getIncludeEmail());
+        includeEmail.setText(getResources()
+                .getString(R.string.feedback_include_email_tum_id, feedback.getEmail()));
+        hideOrShowEmailInput();
+
+        includeEmail.setOnClickListener(view -> {
+            feedback.setIncludeEmail(!feedback.getIncludeEmail());
+            hideOrShowEmailInput();
+        });
     }
 
-    private void onIncludeEmailClick() {
+    private void hideOrShowEmailInput() {
         if (includeEmail.isChecked()) {
             if (TextUtils.isEmpty(lrzId)) {
                 customEmailViewLayout.setVisibility(View.VISIBLE);
-                customEmailView.setText(email);
+                customEmailView.setText(feedback.getEmail());
             }
         } else {
             customEmailViewLayout.setVisibility(View.GONE);
         }
     }
 
-    private void initRadioGroup(Bundle savedInstanceState) {
+    private void initFeedbackType() {
         RadioGroup radioGroup = findViewById(R.id.radioButtonsGroup);
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            feedbackTopic = (checkedId == R.id.tumInGeneralRadioButton)
-                    ? FeedbackController.GENERAL_FEEDBACK
-                    : FeedbackController.TCA_FEEDBACK;
+            feedback.setTopic(checkedId == R.id.tumInGeneralRadioButton
+                    ? Const.FEEDBACK_TOPIC_GENERAL
+                    : Const.FEEDBACK_TOPIC_APP);
         });
 
-        if (savedInstanceState != null) {
-            int feedbackTopic = savedInstanceState.getInt(Const.FEEDBACK_TOPIC);
-            int radioButtonId = (feedbackTopic == FeedbackController.GENERAL_FEEDBACK)
-                    ? R.id.tumInGeneralRadioButton
-                    : R.id.tumCampusAppRadioButton;
-            radioGroup.check(-1); // Clear the selection
-            radioGroup.check(radioButtonId);
-        }
+        int selectedButtonId = (feedback.getTopic().equals(Const.FEEDBACK_TOPIC_GENERAL))
+                ? R.id.tumInGeneralRadioButton
+                : R.id.tumCampusAppRadioButton;
+        radioGroup.check(-1); // Clear the selection
+        radioGroup.check(selectedButtonId);
     }
 
     @Override
@@ -191,28 +186,16 @@ public class FeedbackActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (String path : picturePaths) {
+        for (String path : feedback.getPicturePaths()) {
             new File(path).delete();
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(Const.FEEDBACK_TOPIC, feedbackTopic);
-        outState.putString(Const.FEEDBACK_MESSAGE, feedbackView.getText().toString());
-        outState.putStringArray(Const.FEEDBACK_PIC_PATHS, picturePaths.toArray(new String[0]));
-        outState.putBoolean(Const.FEEDBACK_INCL_EMAIL, includeEmail.isChecked());
-        outState.putBoolean(Const.FEEDBACK_INCL_LOCATION, includeLocation.isChecked());
-        outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText().toString());
-    }
-
     public void onSendClicked(View view) {
-        if (feedbackView.getText()
-                .toString()
-                .trim()
-                .isEmpty()) {
-            if (picturePaths.isEmpty()) {
+        getFeedback();
+
+        if (feedback.getMessage().trim().isEmpty()) {
+            if (feedback.getPicturePaths().isEmpty()) {
                 feedbackView.setError(getString(R.string.feedback_empty));
             } else {
                 feedbackView.setError(getString(R.string.feedback_img_without_text));
@@ -223,14 +206,12 @@ public class FeedbackActivity extends BaseActivity {
                 .setTitle(R.string.send_feedback_question)
                 .setPositiveButton(R.string.send,
                         (dialogInterface, i)
-                                -> controller.sendFeedback(this, getFeedback(), lrzId))
+                                -> controller.sendFeedback(this, feedback, lrzId))
                 .setNegativeButton(R.string.no, null)
                 .create();
-
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
-
         dialog.show();
     }
 
@@ -239,11 +220,11 @@ public class FeedbackActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_TAKE_PHOTO) {
                 ImageUtils.rescaleBitmap(this, controller.getCurrentPhotoPath());
-                picturePaths.add(controller.getCurrentPhotoPath());
+                feedback.getPicturePaths().add(controller.getCurrentPhotoPath());
                 thumbnailsAdapter.notifyDataSetChanged();
             } else if (requestCode == REQUEST_GALLERY) {
                 String filePath = ImageUtils.rescaleBitmap(this, data.getData());
-                picturePaths.add(filePath);
+                feedback.getPicturePaths().add(filePath);
                 thumbnailsAdapter.notifyDataSetChanged();
             }
         }

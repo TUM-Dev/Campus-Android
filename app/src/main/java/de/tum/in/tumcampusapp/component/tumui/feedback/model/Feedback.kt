@@ -1,10 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback.model
 
 import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
 import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackController
 import de.tum.`in`.tumcampusapp.utils.Const
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @param id to associate the pictures with the message
@@ -21,17 +23,44 @@ data class Feedback(
         var message: String = "",
         var email: String = "",
         var includeEmail: Boolean = false,
+        var includeLocation: Boolean = false,
         var latitude: Double = 0.toDouble(),
         var longitude: Double = 0.toDouble(),
-        var osVersion: String = Build.VERSION.RELEASE,
-        var appVersion: String = BuildConfig.VERSION_NAME,
-        var picturePaths: List<String> = ArrayList()) {
+        val osVersion: String = Build.VERSION.RELEASE,
+        val appVersion: String = BuildConfig.VERSION_NAME,
+        var picturePaths: List<String> = ArrayList()): Parcelable {
 
-    fun setTopic(topicId: Int) {
-        if (topicId == FeedbackController.GENERAL_FEEDBACK) {
-            topic = Const.FEEDBACK_TOPIC_GENERAL
-        } else {
-            topic = Const.FEEDBACK_TOPIC_APP
+    constructor(parcel: Parcel) : this() {
+        topic = parcel.readString()!!
+        message = parcel.readString()!!
+        email = parcel.readString()!!
+        includeEmail = parcel.readInt() == 1
+        includeLocation = parcel.readInt() == 1
+        latitude = parcel.readDouble()
+        longitude = parcel.readDouble()
+        parcel.readStringList(picturePaths)
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(topic)
+        parcel.writeString(message)
+        parcel.writeString(email)
+        parcel.writeInt(if (includeEmail) 1 else 0)
+        parcel.writeInt(if (includeLocation) 1 else 0)
+        parcel.writeDouble(latitude)
+        parcel.writeDouble(longitude)
+        parcel.writeStringList(picturePaths)
+    }
+
+    override fun describeContents() = 0
+
+    companion object CREATOR : Parcelable.Creator<Feedback> {
+        override fun createFromParcel(parcel: Parcel): Feedback {
+            return Feedback(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Feedback?> {
+            return arrayOfNulls(size)
         }
     }
 }
