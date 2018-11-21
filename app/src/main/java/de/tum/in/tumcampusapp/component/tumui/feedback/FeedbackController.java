@@ -19,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.util.Strings;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -126,8 +128,8 @@ public class FeedbackController {
         stopListeningForLocation();
 
         if (feedback.getIncludeEmail()
-                && (lrzId == null || lrzId.isEmpty())
-                && !isEmailValid(activity.findViewById(R.id.feedback_custom_email))) {
+                && (Strings.isEmptyOrWhitespace(lrzId)
+                || !isEmailValid(activity.findViewById(R.id.feedback_custom_email)))) {
             return;
         }
 
