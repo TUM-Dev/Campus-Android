@@ -55,7 +55,7 @@ public class FeedbackController {
     static final int PERMISSION_FILES = 15;
 
     private final Context mContext;
-    private int sentCount;
+    private int imagesSent;
 
     private String mCurrentPhotoPath;
 
@@ -124,7 +124,7 @@ public class FeedbackController {
 
     void sendFeedback(Activity activity, Feedback feedback, String lrzId) {
         Utils.log("Feedback: " + feedback.toString());
-        sentCount = 0;
+        imagesSent = 0;
         stopListeningForLocation();
 
         if (feedback.getIncludeEmail()
@@ -135,21 +135,12 @@ public class FeedbackController {
 
         showProgressBarDialog();
         TUMCabeClient client = TUMCabeClient.getInstance(mContext);
-
-        client.sendFeedback(feedback, feedback.getPicturePaths().toArray(new String[0]), new Callback<Success>() {
+        client.sendFeedback(feedback, new Callback<Success>() {
             @Override
             public void onResponse(@NonNull Call<Success> call, @NonNull Response<Success> response) {
                 Success success = response.body();
                 if (success != null && success.wasSuccessfullySent()) {
-                    sentCount++;
-                    Utils.log(success.getSuccess());
-                    if (sentCount == feedback.getPicturePaths().size() + 1) {
-                        progress.cancel();
-                        activity.finish();
-                        Toast.makeText(mContext, R.string.feedback_send_success, Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                    Utils.log("sent " + sentCount + " of " + (feedback.getPicturePaths().size() + 1) + " message parts");
+                    sendImages(feedback, activity, lrzId);
                 } else {
                     showErrorDialog((dialogInterface, i) -> sendFeedback(activity, feedback, lrzId));
                 }
@@ -161,6 +152,35 @@ public class FeedbackController {
             }
         });
     }
+
+    private void sendImages(Feedback feedback, Activity activity, String lrzId) {
+        TUMCabeClient client = TUMCabeClient.getInstance(mContext);
+        client.sendFeedbackImages(feedback, feedback.getPicturePaths().toArray(new String[0]), new Callback<Success>() {
+            @Override
+            public void onResponse(@NonNull Call<Success> call, @NonNull Response<Success> response) {
+                Success success = response.body();
+                if (success == null || !success.wasSuccessfullySent()) {
+                    showErrorDialog((dialogInterface, i) -> sendFeedback(activity, feedback, lrzId));
+                    return;
+                }
+
+                imagesSent++;
+                if (imagesSent == feedback.getPicturePaths().size()) {
+                    progress.cancel();
+                    activity.finish();
+                    Toast.makeText(mContext, R.string.feedback_send_success, Toast.LENGTH_SHORT)
+                            .show();
+                }
+                Utils.log("sent " + imagesSent + " of " + (feedback.getPicturePaths().size()) + " images");
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Success> call, @NonNull Throwable t) {
+                showErrorDialog((dialogInterface, i) -> sendFeedback(activity, feedback, lrzId));
+            }
+        });
+    }
+
 
     /**
      * @return true if user has given permission before
